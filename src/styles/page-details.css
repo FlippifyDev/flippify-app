@@ -1,12 +1,41 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
-.page-details {
-    grid-row: 2;
-    height: 100%;
+.Title {
+    position: absolute;
+    width: 872px;
+    height: 248px;
+    left: 524px;
+    right: -524px;
+    top: 250px;
+    bottom: -250px;
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    margin-top: 50px; /* Adding a margin from the top so its not too high up */
-    font-family: "Inter", bold;
+    flex-direction: row;
+    align-items: center;
+    color: rgb(0, 0, 0);
+    font-family: Inter;
     font-size: 75px;
+    font-weight: 700;
+    line-height: 150%;
+    letter-spacing: 0%;
+    text-align: center;
+}
+
+.Description {
+    position: absolute;
+    width: 644px;
+    height: 73px;
+    left: 625px;
+    right: -397px;
+    top: 425px;
+    bottom: -250px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: rgb(74, 74, 74);
+    font-family: Inter;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 150%;
+    letter-spacing: 0%;
+    text-align: center;
 }

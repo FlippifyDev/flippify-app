@@ -1,41 +1,50 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
-.Title {
-    position: absolute;
-    width: 872px;
-    height: 248px;
-    left: 524px;
-    right: -524px;
-    top: 250px;
-    bottom: -250px;
-    display: flex;
-    flex-direction: row;
+
+/* Page Details Container */
+
+#page-details-container {
+    border: 2px solid magenta;
+    display: grid;
+    justify-content: center;
     align-items: center;
+    grid-template-rows: 2;
+    grid-template-columns: 1;
+}
+
+
+/* Welcome to Flippify message with sub title (description)*/
+
+
+.title {
+    border: 2px solid green;
+    grid-row: 1;
+    text-align: center;
     color: rgb(0, 0, 0);
     font-family: Inter;
-    font-size: 75px;
+    font-size: 60px;
     font-weight: 700;
     line-height: 150%;
     letter-spacing: 0%;
-    text-align: center;
 }
 
-.Description {
-    position: absolute;
-    width: 644px;
-    height: 73px;
-    left: 625px;
-    right: -397px;
-    top: 425px;
-    bottom: -250px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+.description {
+    border: 2px solid green;
+    grid-row: 1;
+    text-align: center;
     color: rgb(74, 74, 74);
     font-family: Inter;
     font-size: 24px;
     font-weight: 400;
     line-height: 150%;
     letter-spacing: 0%;
-    text-align: center;
+}
+
+
+/* Sign in container */
+
+#sign-in-container {
+    border: 2px solid blue;
+    grid-row: 2;
+    width: 40%
 }

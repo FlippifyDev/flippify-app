@@ -1,6 +1,26 @@
 import React from 'react';
 
-import './styles/banner.css'
+
+
+// PascalCasing for function names
+function Banner() {
+    const title = <Title />
+    const imageLogo = <ImageLogo />
+    const bannerTabsContainer = <BannerTabsContainer />
+    const signInButtonContainer = <SignInButtonContainer />;
+
+    let banner = (
+        <div className="banner">
+            {imageLogo}{title}{bannerTabsContainer}{signInButtonContainer}
+        </div>
+    );
+
+    return banner;
+}
+
+export default Banner;
+
+
 
 /* --------------------------------------------------------------- */
 
@@ -9,13 +29,23 @@ class Title extends React.Component {
     title = <div id="banner-title-div"><h1 id="banner-title">Flippify</h1></div>
 
     render() {
-        return (this.title)
+        return this.title
     }
      
 }
 
 
+class ImageLogo extends React.Component {
+    image = <img src="./public/flippify-logo.png" alt="flippify logo" />
+
+    render() {
+        return this.image
+    }
+}
+
+
 /* --------------------------------------------------------------- */
+
 
 class BannerTabsContainer extends React.Component {
     homeButton = <HomeButton />; 
@@ -98,11 +128,11 @@ function getStartedPressed() {
 }
 
 
-class SignInContainer extends React.Component {
+class SignInButtonContainer extends React.Component {
     loginButton = <LoginButton />; 
     getStartedButton = <GetStartedButton />
 
-    signInContainer = <div id="sign-in-container">
+    signInContainer = <div id="sign-in-btn-container">
         {this.loginButton}
         {this.getStartedButton}
     </div>
@@ -155,22 +185,4 @@ class GetStartedButton extends React.Component {
 /* --------------------------------------------------------------- */
 
 
-
-
-// PascalCasing for function names
-function Banner() {
-    const title = <Title />
-    const bannerTabsContainer = <BannerTabsContainer />
-    const signInContainer = <SignInContainer />;
-
-    let banner = (
-        <div className="banner">
-            {title}{bannerTabsContainer}{signInContainer}
-        </div>
-    );
-
-    return banner;
-}
-
-export default Banner;
 

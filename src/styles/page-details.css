@@ -8,4 +8,5 @@
     align-items: flex-start;
     margin-top: 50px; /* Adding a margin from the top so its not too high up */
     font-family: "Inter", bold;
+    font-size: 75px;
 }

@@ -6,7 +6,7 @@ class PageDetailsContainer extends React.Component {
     pageContainer = <div id="page-details-container">
         <div>
             <h1 className="title">Welcome to Flippify</h1>
-            <p className="description">Fast-track your profits with our lightning-quick deal bots, from lego to sneakers.</p>
+            <p className="description">Your All-in-One Reselling Powerhouse</p>
         </div>
         {this.signInContainer}
 

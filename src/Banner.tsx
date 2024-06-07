@@ -36,7 +36,7 @@ class Title extends React.Component {
 
 
 class ImageLogo extends React.Component {
-    image = <img src="/public/flippify-logo.png" alt="flippify logo" />
+    image = <img src="/public/flippify-favicon.svg" alt="Flippify Logo" />
 
     render() {
         return this.image

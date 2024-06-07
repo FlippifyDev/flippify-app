@@ -18,9 +18,6 @@
     grid-column: 1;
 }
 
-#banner-title {
-    
-}
 
 
 /* Banner Tabs Container */
@@ -92,9 +89,6 @@
     justify-items: center;
 }
 
-.sign-in-button {
-
-}
 
 #login-button-div {
     grid-column: 1;

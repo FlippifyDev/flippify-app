@@ -21,7 +21,7 @@ export default function Login() {
           </label>
         </div>
         <button className="btn btn-outline btn-primary mt-3 w-40">Login</button>
-        <p className='mt-5'>Don't have an account?<a  href="/l/sign-up" className="link link-primary ml-2">Create Account</a></p>
+        <p className="mt-5">Don&apos;t have an account?<a  href="/l/sign-up" className="link link-primary ml-2">Create Account</a></p>
       </div>
     </div>
   );

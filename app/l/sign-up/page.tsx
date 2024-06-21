@@ -3,7 +3,10 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import Navbar from "../components/Navbar";
 
+
 export default function SignUp() {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // State to hold error message
+
   // State to store form input values
   const [formData, setFormData] = useState({
     email: "",
@@ -21,12 +24,40 @@ export default function SignUp() {
   };
 
   // Function to handle form submission
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     // Log the form data to the console (or send it to a backend)
-    console.log(formData);
-  };
+    // https://stripe-manager.vercel.app/create-new-stripe-customer
+    e.preventDefault();
 
+    try {
+      const queryParams = new URLSearchParams(formData).toString();
+      const response = await fetch(`https://stripe-manager.vercel.app/create-new-stripe-customer?${queryParams}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+
+      if (data.url) {
+        window.location.href = data.url; // Redirect the user to the received URL
+      } else if (data.code === 1) {
+        setErrorMessage('An account already exists with this email address.'); // Set error message state
+      } else {
+        console.error('Error: Redirect URL not found in server response');
+      }
+
+    } catch (error) {
+      console.error('Error:', error);
+      setErrorMessage('An error occurred. Please try again later.'); // Set generic error message
+    }
+  };
+  
   return (
     <div>
       <Navbar />
@@ -100,6 +131,13 @@ export default function SignUp() {
           </button>
         </form>
 
+        {/* Error message display */}
+        {errorMessage && (
+          <div className="mb-3">
+            <strong className="text-red-700">{errorMessage}</strong>
+          </div>
+        )}
+
         <p>
           Already have an account?
           <a href="/l/login" className="link link-primary ml-2">
@@ -107,6 +145,9 @@ export default function SignUp() {
           </a>
         </p>
       </div>
+
+
     </div>
   );
+  
 }

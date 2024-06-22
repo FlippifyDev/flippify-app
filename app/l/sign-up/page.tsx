@@ -1,21 +1,77 @@
 "use client";
 
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState } from "react";
 import Navbar from "../components/Navbar";
+import bcrypt from "bcryptjs";
+
+
+interface FormData {
+  email: string;
+  discordUsername: string;
+  password: string;
+}
+
+async function createStripeCustomer(formData: FormData) {
+  const salt = bcrypt.genSaltSync(10);
+  const hashedPassword = bcrypt.hashSync(formData.password, salt);
+
+  const formDataWithHashedPassword = {
+    ...formData,
+    password: hashedPassword
+  };
+
+  const queryParams = new URLSearchParams(formDataWithHashedPassword as any).toString();
+  const response = await fetch(`https://stripe-manager.vercel.app/create-new-stripe-customer?${queryParams}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+
+  return await response.json();
+}
+
+
+function checkInputError(formData: FormData) {
+  // Confirm all fields are filled in
+  if (!formData.email || !formData.discordUsername || !formData.password) {
+    return 'Please fill in all fields.';
+  }
+
+  // Email validation using regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(formData.email)) {
+    return 'Please enter a valid email address.';
+  }
+
+  // Password validation
+  if (formData.password.length < 8) {
+    return 'Password must be at least 8 characters long.';
+  }
+
+  // Optional: Additional password complexity checks (e.g., uppercase, lowercase, numbers, special characters)
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  if (!passwordRegex.test(formData.password)) {
+    return "Password requires at least one of (@$!%*?&), (0-9), Upper & Lower";
+  }
+
+  return false;
+}
 
 
 export default function SignUp() {
-  const [errorMessage, setErrorMessage] = useState<string | null>(null); // State to hold error message
-
-  // State to store form input values
-  const [formData, setFormData] = useState({
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [formData, setFormData] = useState<FormData>({
     email: "",
     discordUsername: "",
     password: ""
   });
 
-  // Function to handle input changes
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -23,38 +79,32 @@ export default function SignUp() {
     });
   };
 
-  // Function to handle form submission
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    // Log the form data to the console (or send it to a backend)
-    // https://stripe-manager.vercel.app/create-new-stripe-customer
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    // Validate all inputs
+    const inputError = checkInputError(formData);
+    if (inputError !== false) {
+      setErrorMessage(inputError)
+      return;
+    } 
 
     try {
-      const queryParams = new URLSearchParams(formData).toString();
-      const response = await fetch(`https://stripe-manager.vercel.app/create-new-stripe-customer?${queryParams}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const data = await response.json();
+      const data = await createStripeCustomer(formData); // Await the async function call
 
       if (data.url) {
-        window.location.href = data.url; // Redirect the user to the received URL
+        window.location.href = data.url;
       } else if (data.code === 1) {
-        setErrorMessage('An account already exists with this email address.'); // Set error message state
+        setErrorMessage('An account already exists with this email address.');
+      } else if (data.code === 3) {
+        setErrorMessage("The username you entered doesn't exist");
       } else {
         console.error('Error: Redirect URL not found in server response');
       }
 
     } catch (error) {
       console.error('Error:', error);
-      setErrorMessage('An error occurred. Please try again later.'); // Set generic error message
+      setErrorMessage('An error occurred. Please try again later.');
     }
   };
   

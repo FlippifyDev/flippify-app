@@ -93,9 +93,10 @@ export default function SignUp() {
 
     try {
       const data = await createStripeCustomer(formData); // Await the async function call
+      const customer = data.customer
 
-      if (data.url) {
-        window.location.href = data.url;
+      if (data.code === 0) {
+        window.location.href = customer.billing_portal_url;
       } else if (data.code === 1) {
         setErrorMessage('An account already exists with this email address.');
       } else if (data.code === 3) {

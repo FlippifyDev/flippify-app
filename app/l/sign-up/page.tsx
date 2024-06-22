@@ -56,7 +56,7 @@ function checkInputError(formData: FormData) {
   }
 
   // Optional: Additional password complexity checks (e.g., uppercase, lowercase, numbers, special characters)
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const passwordRegex = /^(?=.*[@$!%*?&])(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{8,}$/;
   if (!passwordRegex.test(formData.password)) {
     return "Password requires at least one of (@$!%*?&), (0-9), Upper & Lower";
   }

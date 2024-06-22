@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import bcrypt from "bcryptjs";
+import { handleClientScriptLoad } from "next/script";
 
 
 interface FormData {
@@ -10,6 +11,7 @@ interface FormData {
   discordUsername: string;
   password: string;
 }
+
 
 async function createStripeCustomer(formData: FormData) {
   const salt = bcrypt.genSaltSync(10);

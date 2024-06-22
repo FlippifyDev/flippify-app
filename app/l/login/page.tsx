@@ -2,16 +2,66 @@
 
 import { useState, ChangeEvent, FormEvent } from "react";
 import Navbar from "../components/Navbar";
+import bcrypt from "bcryptjs";
+
+
+interface FormData {
+  email: string;
+  password: string;
+}
+
+
+async function comparePasswords(enteredPassword: string, hashedPassword: string): Promise<boolean> {
+  return await bcrypt.compare(enteredPassword, hashedPassword);
+}
+
+
+async function fetchStripeCustomer(formData: FormData) {
+  const formDataWithoutPassword = {
+    ...formData,
+    password: ""
+  };
+
+  const queryParams = new URLSearchParams(formDataWithoutPassword as any).toString();
+  const response = await fetch(`https://stripe-manager.vercel.app/fetch-stripe-customer?${queryParams}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+
+  return await response.json();
+}
+
+
+function checkInputError(formData: FormData) {
+  // Confirm all fields are filled in
+  if (!formData.email || !formData.password) {
+    return 'Please fill in all fields.';
+  }
+
+  // Email validation using regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(formData.email)) {
+    return 'Please enter a valid email address.';
+  }
+
+  return false;
+}
+
 
 export default function Login() {
-  // State to store form input values
-  const [formData, setFormData] = useState({
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [formData, setFormData] = useState<FormData>({
     email: "",
     password: ""
   });
 
-  // Function to handle input changes
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -19,12 +69,38 @@ export default function Login() {
     });
   };
 
-  // Function to handle form submission
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Log the form data to the console (or send it to a backend)
-    console.log(formData);
-  };
+    
+    // Validate all inputs
+    const inputError = checkInputError(formData);
+    if (inputError !== false) {
+      setErrorMessage(inputError)
+      return;
+    } 
+
+    try {
+      const data = await fetchStripeCustomer(formData); // Await the async function call
+
+      if (data.code === 0) {
+        const customer = data.customer
+
+        const passwordsMatch = await comparePasswords(formData.password, customer.password);
+        if (passwordsMatch) {
+          window.location.href = customer.billing_portal_url;
+        } else {
+          setErrorMessage('Incorrect password. Please try again.');
+        }
+      } else if (data.code === 4) {
+        setErrorMessage(data.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setErrorMessage('An error occurred. Please try again later.');
+    }
+  }
+
 
   return (
     <div>
@@ -81,6 +157,13 @@ export default function Login() {
           </button>
         </form>
 
+        {/* Error message display */}
+        {errorMessage && (
+          <div className="mb-3">
+            <strong className="text-red-700">{errorMessage}</strong>
+          </div>
+        )}
+
         <p>
           Don&apos;t have an account?
           <a href="/l/sign-up" className="link link-primary ml-2">
@@ -88,6 +171,8 @@ export default function Login() {
           </a>
         </p>
       </div>
+
+
     </div>
   );
 }

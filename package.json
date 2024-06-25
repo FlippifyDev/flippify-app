@@ -10,24 +10,24 @@
   },
   "dependencies": {
     "@netlify/plugin-nextjs": "^5.3.3",
+    "bcryptjs": "^2.4.3",
     "next": "14.2.4",
     "next-auth": "^4.24.7",
     "react": "^18",
-    "react-dom": "^18",
-    "bcryptjs": "^2.4.3"
+    "react-dom": "^18"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.13",
-    "@types/node": "^20",
+    "@types/node": "20.14.8",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "10.4.15",
+    "bcryptjs": "^2.4.3",
     "daisyui": "^4.0.5",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5",
-    "bcryptjs": "^2.4.3"
+    "typescript": "^5"
   }
 }

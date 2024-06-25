@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 
 import { usePathname, useRouter } from 'next/navigation';
 
@@ -16,15 +17,19 @@ const Navbar = () => {
         <h1 className="text-3xl font-bold">Flippify</h1>
 
         <div role="tablist" className="tabs tabs-bordered">
-          <a href="/l/home" className={`tab ${isActive('/l/home')}`}>Home</a>
-          <a href="/l/products" className={`tab ${isActive('/l/products')}`}>Products</a>
-          <a href="/l/about" className={`tab ${isActive('/l/about')}`}>About</a>
-          <a href="https://discord.com" className="tab">Discord</a>
+          <Link href="/l/home" className={`tab ${isActive('/l/home')}`}>Home</Link>
+          <Link href="/l/products" className={`tab ${isActive('/l/products')}`}>Products</Link>
+          <Link href="/l/about" className={`tab ${isActive('/l/about')}`}>About</Link>
+          <Link href="https://discord.gg/gNPYfe7YFm" className="tab">Discord</Link>
         </div>
-
         <ul className="menu menu-vertical lg:menu-horizontal bg-base-200 rounded-box">
-          <li><a href="/l/login">Login</a></li>
-          <li><a href="/l/sign-up">Sign Up</a></li>
+        <div className="avatar online">
+          <div className="w-10 rounded-full">
+            <img src="https://i.imgur.com/PyZ3xLX.png" />
+          </div>
+        </div>
+          <li><Link href="/l/login">Login</Link></li>
+          <li><Link href="/l/sign-up">Sign Up</Link></li>
         </ul>
       </div>
       <hr className="my-1 h-px bg-gray-200 border-0 dark:bg-gray-700" />

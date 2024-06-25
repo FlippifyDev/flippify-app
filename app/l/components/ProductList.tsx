@@ -1,4 +1,6 @@
-const ProductList = () => {
+import BuyNow from "./BuyNow";
+
+const ProductList: React.FC = () => {
     return (
         <div className="flex justify-center space-x-10 mt-10">
             <div className="card card-compact w-80 bg-base-100 shadow-xl">
@@ -7,7 +9,7 @@ const ProductList = () => {
                     <h2 className="card-title">Sneaker Deals</h2>
                     <p>If a dog chews shoes whose shoes does he choose?</p>
                     <div className="card-actions justify-end">
-                        <button className="btn btn-primary"><a href="/landing/sign-up">Buy Now</a></button>
+                        <BuyNow redirectURL="/l/login"/>
                     </div>
                 </div>
             </div>
@@ -18,7 +20,7 @@ const ProductList = () => {
                     <h2 className="card-title">Lego Retirement Sales</h2>
                     <p>Monitor soon to retire lego sets across multiple websites.</p>
                     <div className="card-actions justify-end">
-                        <button className="btn btn-primary"><a href="/landing/sign-up">Buy Now</a></button>
+                        <BuyNow redirectURL="/l/login"/>
                     </div>
                 </div>
             </div>

@@ -14,7 +14,7 @@ const Navbar = () => {
   };
 
   const handleSignIn = () => {
-    signIn('discord');
+    signIn('discord', {callbackUrl: '/u/user/'});
   };
 
   const handleSignOut = () => {
@@ -53,7 +53,6 @@ const Navbar = () => {
                   <li><button onClick={handleSignOut}>Sign out</button></li>
                 </ul>
               </div>
-              <li><span>Access Token: {session.accessToken}</span></li>
             </>
           ) : (
             <li><button onClick={handleSignIn}>Sign in with Discord</button></li>

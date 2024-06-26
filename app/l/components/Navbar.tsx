@@ -13,22 +13,23 @@ const Navbar = () => {
 
 
   return (
-    <div>
-      <div className="navbar bg-base-100 flex justify-between">
+    <div className="navbar bg-base-100 flex justify-between items-center px-4 py-2">
+      <div className="flex items-center flex-1">
         <h1 className="text-3xl font-bold">Flippify</h1>
+      </div>
 
-        <div className="tabs tabs-bordered">
-          <Link href="/l/home" className={`tab ${isActive('/l/home')}`}>Home</Link>
-          <Link href="/l/products" className={`tab ${isActive('/l/products')}`}>Products</Link>
-          <Link href="/l/about" className={`tab ${isActive('/l/about')}`}>About</Link>
-          <a href="https://discord.gg/gNPYfe7YFm" className="tab">Discord</a>
-        </div>
+      <div role="tablist" className="tabs tabs-boxed">
+        <Link href="/l/home" className={`tab ${isActive('/l/home')}`}>Home</Link>
+        <Link href="/l/products" className={`tab ${isActive('/l/products')}`}>Products</Link>
+        <Link href="/l/about" className={`tab ${isActive('/l/about')}`}>About</Link>
+        <Link href="https://discord.gg/gNPYfe7YFm" className="tab">Discord</Link>
+      </div>
 
         <div>
           <SignInWithDiscord />
         </div>
+
       </div>
-      <hr className="my-1 h-px bg-gray-200 border-0 dark:bg-gray-700" />
     </div>
   );
 };

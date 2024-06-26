@@ -74,15 +74,15 @@ const Sidebar = () => {
         </div>
         <ul
           tabIndex={0}
-          className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+          className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow hover:bg-violet-600">
           <li>
-            <a className="justify-between">
+            <a className="justify-between hover:bg-violet-900">
               Profile
-              <span className="badge">New</span>
+              <span className="badge">Not work</span>
             </a>
           </li>
-          <li><a>Settings</a></li>
-          <SignOutButton />
+          <li><a className="hover:bg-violet-900">Settings</a></li>
+          <li><a className="hover:bg-red-800"><SignOutButton /></a></li>
           {/*<button onClick={handleLogout} className="btn btn-ghost">Logout</button>*/}
         </ul>
       </div>

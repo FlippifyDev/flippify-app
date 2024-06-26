@@ -14,7 +14,7 @@ const Navbar = () => {
   };
 
   const handleSignIn = () => {
-    signIn('discord');
+    signIn('discord', {callbackUrl: '/u/user/'});
   };
 
   const handleSignOut = () => {
@@ -22,18 +22,20 @@ const Navbar = () => {
   };
 
   return (
-    <div>
-      <div className="navbar bg-base-100 flex justify-between">
+    <div className="navbar bg-base-100 flex justify-between items-center px-4 py-2">
+      <div className="flex items-center flex-1">
         <h1 className="text-3xl font-bold">Flippify</h1>
+      </div>
 
-        <div className="tabs tabs-bordered">
-          <Link href="/l/home" className={`tab ${isActive('/l/home')}`}>Home</Link>
-          <Link href="/l/products" className={`tab ${isActive('/l/products')}`}>Products</Link>
-          <Link href="/l/about" className={`tab ${isActive('/l/about')}`}>About</Link>
-          <a href="https://discord.gg/gNPYfe7YFm" className="tab">Discord</a>
-        </div>
+      <div role="tablist" className="tabs tabs-boxed">
+        <Link href="/l/home" className={`tab ${isActive('/l/home')}`}>Home</Link>
+        <Link href="/l/products" className={`tab ${isActive('/l/products')}`}>Products</Link>
+        <Link href="/l/about" className={`tab ${isActive('/l/about')}`}>About</Link>
+        <Link href="https://discord.gg/gNPYfe7YFm" className="tab">Discord</Link>
+      </div>
 
-        <ul className="menu menu-vertical lg:menu-horizontal bg-base-200 rounded-box">
+      <div className="flex items-center justify-end flex-1">
+        <ul className="menu menu-vertical lg:menu-horizontal bg-base-200 rounded-box flex items-center">
           {session ? (
             <>
               <div className="avatar online">
@@ -47,20 +49,18 @@ const Navbar = () => {
               </div>
               <li><span>{session.user?.name ?? 'User'}</span></li>
               <div className="dropdown dropdown-hover">
-                <div tabIndex={0} role="button" className="btn m-1"><BsJustify /></div>
+                <div tabIndex={0} role="button" className="btn m-1 text-2xl"><BsJustify /></div>
                 <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
                   <li><a>Settings</a></li>
                   <li><button onClick={handleSignOut}>Sign out</button></li>
                 </ul>
               </div>
-              <li><span>Access Token: {session.accessToken}</span></li>
             </>
           ) : (
             <li><button onClick={handleSignIn}>Sign in with Discord</button></li>
           )}
         </ul>
       </div>
-      <hr className="my-1 h-px bg-gray-200 border-0 dark:bg-gray-700" />
     </div>
   );
 };

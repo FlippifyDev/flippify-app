@@ -27,7 +27,7 @@ const SignInWithDiscord = () => {
     };
     
     return (
-        <button className="btn btn-primary" onClick={handleSignIn}><FaDiscord />Sign in with Discord</button>
+        <button className="btn btn-primary text-white bg-discordBlue" onClick={handleSignIn}><FaDiscord className="text-3xl mr-2"/>Sign in with Discord</button>
     )
 }
 

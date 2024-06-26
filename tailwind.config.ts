@@ -13,6 +13,13 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      colors: {
+        white: '#FFFFFF',
+        lightGreyBackground: '#F1F1F1',
+        greyStroke: '#A9A9A9',
+        houseBlue: '#4C8BFA',
+        discordBlue: '#5865F2',
+      },
     },
   },
   plugins: [require("@tailwindcss/typography"), require('daisyui')],

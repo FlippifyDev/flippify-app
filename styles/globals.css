@@ -2,3 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    background-image: url('https://i.imgur.com/t1WQprP.jpeg');
+    background-size: cover;
+    background-position: relative;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}

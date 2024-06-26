@@ -1,6 +1,17 @@
 "use client"
 import SignOutButton from "../components/SignOutButton"
 import { IoMenu } from "react-icons/io5";
+import { GiMoneyStack } from "react-icons/gi";
+import { useRouter } from 'next/navigation';
+
+import { Metadata } from 'next';
+ 
+export const metadata: Metadata = {
+  title: 'Making bank',
+  description: 'Money Money Money',
+  
+};
+
 const Sidebar = () => {
   const handleLogout = () => {
     // Logic for logging out the user
@@ -8,8 +19,14 @@ const Sidebar = () => {
     <SignOutButton />
   };
 
+  const handleNavigateToPlans = () => {
+    router.push('/u/Plans');
+  };
+  const router = useRouter();
   return (
+   
     <div className="navbar bg-base-100">
+      <title>Making bank <GiMoneyStack /></title>
     <div className="flex-1">
       {/*<a className="btn btn-ghost text-xl">sdasd</a> */}
       
@@ -29,7 +46,7 @@ const Sidebar = () => {
       <li><a className="hover:bg-violet-800 focus:bg-violet-900">Home</a></li>
       <li><a className="hover:bg-violet-800 focus:bg-violet-900">Products</a></li>
       <li><a className="hover:bg-violet-800 focus:bg-violet-900">Alerts</a></li>
-      <li><a className="hover:bg-violet-800 focus:bg-violet-900">Plans</a></li>
+      <li><button className="hover:bg-violet-800 focus:bg-violet-900" onClick={handleNavigateToPlans}>Plans</button></li>
       <li className="mt-auto"><a className="hover:bg-violet-800 focus:bg-violet-900 ">Legal</a></li>
     </ul>
   </div>

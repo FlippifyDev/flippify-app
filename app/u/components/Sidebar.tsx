@@ -1,7 +1,11 @@
 "use client"
-
+import SignOutButton from "../components/SignOutButton"
 const Sidebar = () => {
- 
+  const handleLogout = () => {
+    // Logic for logging out the user
+    console.log('User logged out');
+    <SignOutButton />
+  };
 
   return (
     <div className="navbar bg-base-100">
@@ -12,8 +16,11 @@ const Sidebar = () => {
   <input id="my-drawer" type="checkbox" className="drawer-toggle" />
   <div className="drawer-content">
     {/* Page content here */}
+    
+    
     <label htmlFor="my-drawer" className="btn btn-ghost text-xl">Flippify mother fucker</label>
   </div>
+  
   <div className="drawer-side">
     <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
     <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
@@ -74,7 +81,8 @@ const Sidebar = () => {
             </a>
           </li>
           <li><a>Settings</a></li>
-          <li><a>Logout</a></li>
+          <SignOutButton />
+          {/*<button onClick={handleLogout} className="btn btn-ghost">Logout</button>*/}
         </ul>
       </div>
     </div>

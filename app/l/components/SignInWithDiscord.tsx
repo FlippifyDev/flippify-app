@@ -4,6 +4,7 @@ import React from 'react'
 import { useSession, signIn } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { FaDiscord } from 'react-icons/fa6';
 
 const SignInWithDiscord = () => {
     const { data: session } = useSession();
@@ -26,7 +27,7 @@ const SignInWithDiscord = () => {
     };
     
     return (
-        <button className="btn btn-primary" onClick={handleSignIn}>Sign in with Discord</button>
+        <button className="btn btn-primary" onClick={handleSignIn}><FaDiscord />Sign in with Discord</button>
     )
 }
 

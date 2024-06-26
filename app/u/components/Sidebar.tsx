@@ -24,11 +24,13 @@ const Sidebar = () => {
   
   <div className="drawer-side">
     <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-    <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
+    <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4 flex flex-col">
       {/* Sidebar content here */}
-      <li><a>Home</a></li>
-      <li><a>Settings</a></li>
-      <li><a>Some other shit that probably wotn work for three</a></li>
+      <li><a className="hover:bg-violet-800 focus:bg-violet-900">Home</a></li>
+      <li><a className="hover:bg-violet-800 focus:bg-violet-900">Products</a></li>
+      <li><a className="hover:bg-violet-800 focus:bg-violet-900">Alerts</a></li>
+      <li><a className="hover:bg-violet-800 focus:bg-violet-900">Plans</a></li>
+      <li className="mt-auto"><a className="hover:bg-violet-800 focus:bg-violet-900 ">Legal</a></li>
     </ul>
   </div>
 </div>

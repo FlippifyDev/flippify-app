@@ -1,5 +1,6 @@
 "use client"
 import SignOutButton from "../components/SignOutButton"
+import { IoMenu } from "react-icons/io5";
 const Sidebar = () => {
   const handleLogout = () => {
     // Logic for logging out the user
@@ -18,7 +19,7 @@ const Sidebar = () => {
     {/* Page content here */}
     
     
-    <label htmlFor="my-drawer" className="btn btn-ghost text-xl">Flippify mother fucker</label>
+    <label htmlFor="my-drawer" className="btn btn-ghost text-xl"><IoMenu /></label>
   </div>
   
   <div className="drawer-side">

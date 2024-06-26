@@ -1,7 +1,6 @@
 import NextAuth, { AuthOptions } from 'next-auth';
 import type { JWT } from 'next-auth/jwt';
 import type { Session } from 'next-auth';
-import type { User as NextAuthUser } from 'next-auth';
 import DiscordProvider from 'next-auth/providers/discord';
 import mongoose from 'mongoose';
 
@@ -36,13 +35,20 @@ export const authOptions: AuthOptions = {
       return session;
     },
     async signIn({ profile }: { profile?: any }): Promise<boolean> {
-      const { id, username, email } = profile as { id: string; username: string; email: string };
-      await User.findOneAndUpdate(
-        { discordId: id },
-        { name: username, email },
-        { upsert: true }
-      );
-      return true;
+      try {
+        const { id, username, email } = profile as { id: string; username: string; email: string };
+
+        await User.findOneAndUpdate(
+          { discordId: id },
+          { username, email}, 
+          { upsert: true }
+        );
+
+        return true;
+      } catch (error) {
+        console.error('Error in signIn callback:', error);
+        throw error;
+      }
     },
   },
 };

@@ -14,7 +14,7 @@ const Navbar = () => {
   };
 
   const handleSignIn = () => {
-    signIn('discord');
+    signIn('discord', {callbackUrl: '/u/user/'});
   };
 
   const handleSignOut = () => {

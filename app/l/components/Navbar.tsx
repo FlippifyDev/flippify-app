@@ -8,9 +8,10 @@ const Navbar = () => {
   const pathname = usePathname();
 
   const isActive = (route: string) => {
-    return pathname === route ? 'tab-active border-b-2 border-greyStroke bg-discordBlue text-white' : 'text-black';
+    return pathname === route ? 'tab-active border-b-2 border-greyStroke' : 'text-black';
   };
 
+  // Working on all this its being a bitch with colours like a child
 
   return (
     <div>

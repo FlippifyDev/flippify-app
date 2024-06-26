@@ -22,6 +22,20 @@ const config: Config = {
       },
     },
   },
+  
+  // All Daisy UI Customization
   plugins: [require("@tailwindcss/typography"), require('daisyui')],
+
+  daisyui: {
+    themes: [
+      {
+        light: {
+          ...require("daisyui/src/theming/themes")["light"],
+          "--greyStroke": ""
+        }
+      }
+    ]
+  }
+
 };
 export default config;

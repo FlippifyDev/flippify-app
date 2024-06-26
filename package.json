@@ -11,7 +11,9 @@
   "dependencies": {
     "@netlify/plugin-nextjs": "^5.3.3",
     "bcryptjs": "^2.4.3",
-    "next": "14.2.4",
+    "mongoos": "^0.0.1-security",
+    "mongoose": "^8.4.4",
+    "next": "^14.2.4",
     "next-auth": "^4.24.7",
     "react": "^18",
     "react-dom": "^18",

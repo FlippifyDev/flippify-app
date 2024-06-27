@@ -3,7 +3,8 @@ import SignOutButton from "../components/SignOutButton"
 import { IoMenu } from "react-icons/io5";
 import { GiMoneyStack } from "react-icons/gi";
 import { useRouter } from 'next/navigation';
-
+import { useSession, signIn } from 'next-auth/react';
+import { useEffect } from 'react';
 import { Metadata } from 'next';
  
 export const metadata: Metadata = {
@@ -13,6 +14,8 @@ export const metadata: Metadata = {
 };
 
 const Sidebar = () => {
+  const router = useRouter();
+  const { data: session } = useSession();
   const handleLogout = () => {
     // Logic for logging out the user
     console.log('User logged out');
@@ -20,14 +23,29 @@ const Sidebar = () => {
   };
 
   const handleNavigateToPlans = () => {
-    router.push('/u/Plans');
+    
+    useEffect(() => {
+      if (session) {
+          // Redirect to the username-specific URL
+          {session.user?.name ? (
+            router.push(`/u/${session.user.name}/Plans`)
+          ) : (
+              router.push(`/l/home`)
+          )
+      }
+      }
+    }, [session, router]);
+    
+    return (
+    <button className="hover:bg-violet-800 focus:bg-violet-900" onClick={handleNavigateToPlans}>Plans</button>
+    );
   };
 
   const handleNavigationHome = () => {
     router.push('');
 
   };
-  const router = useRouter();
+  
   return (
    
     <div className="navbar bg-base-100">
@@ -51,7 +69,7 @@ const Sidebar = () => {
       <li><button className="hover:bg-violet-800 focus:bg-violet-900" onClick={handleNavigationHome}>Home</button></li>
       <li><a className="hover:bg-violet-800 focus:bg-violet-900">Products</a></li>
       <li><a className="hover:bg-violet-800 focus:bg-violet-900">Alerts</a></li>
-      <li><button className="hover:bg-violet-800 focus:bg-violet-900" onClick={handleNavigateToPlans}>Plans</button></li>
+      <li></li>
       <li className="mt-auto"><a className="hover:bg-violet-800 focus:bg-violet-900 ">Legal</a></li>
     </ul>
   </div>

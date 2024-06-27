@@ -11,24 +11,18 @@ const Navbar = () => {
     return pathname === route ? 'tab-active' : '';
   };
 
-  const activeTabStyle = {
-    backgroundColor: '#F1F1F1',
-    borderColor: '#A9A9A9',
-    color: 'black',
-  };
-
   return (
-    <div>
-      <div className="navbar border-b-2 border-greyStroke bg-lightGreyBackground h-30 flex justify-between items-center px-4 py-7 text-black">
+    <div className="bg-lightGreyBackground">
+      <div className="navbar flex justify-between items-center px-4 py-5 text-black border-b-2 border-greyStroke">
         <div className="flex items-center flex-1">
           <h1 className="text-3xl font-bold">Flippify</h1>
         </div>
 
-        <div role="tablist" className="tabs tabs-boxed border-b-2 border-greyStroke bg-white">
-          <Link href="/l/home" className={`tab ${isActive('/l/home')}`} style={isActive('/l/home') ? activeTabStyle : {}}>Home</Link>
-          <Link href="/l/products" className={`tab ${isActive('/l/products')}`} style={isActive('/l/products') ? activeTabStyle : {}}>Products</Link>
-          <Link href="/l/about" className={`tab ${isActive('/l/about')}`} style={isActive('/l/about') ? activeTabStyle : {}}>About</Link>
-          <Link href="https://discord.gg/gNPYfe7YFm" className={`tab ${isActive('https://discord.gg/gNPYfe7YFm')}`} style={isActive('https://discord.gg/gNPYfe7YFm') ? activeTabStyle : {}}>Discord</Link>
+        <div role="tablist" className="tabs flex justify border rounded-full overflow-hidden bg-white">
+          <Link href="/l/home" className={`tab ${isActive('/l/home')}`}>Home</Link>
+          <Link href="/l/products" className={`tab ${isActive('/l/products')}`}>Products</Link>
+          <Link href="/l/about" className={`tab ${isActive('/l/about')}`}>About</Link>
+          <Link href="https://discord.gg/gNPYfe7YFm" className={`tab ${isActive('https://discord.gg/gNPYfe7YFm')}`}>Discord</Link>
         </div>
 
         <div className="flex items-center justify-end flex-1">

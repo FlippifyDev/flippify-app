@@ -9,3 +9,30 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
+
+.tab {
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    color: #000;
+  }
+  
+.tab-active {
+    background-color: #F1F1F1;
+    border: 1.5px solid #A9A9A9;
+    color: #000;
+    border-radius: 9999px;
+}
+
+.tabs {
+    display: flex;
+    border-radius: 9999px;
+    background-color: #FFFFFF;
+    border: 1.5px solid #A9A9A9
+}
+
+.tabs .tab:not(.tab-active):hover {
+    background-color: #FFFFFF;
+}
+  
+  

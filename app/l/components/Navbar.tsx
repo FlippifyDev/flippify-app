@@ -37,16 +37,16 @@ const Navbar = () => {
 
   return (
     <div className="bg-lightGreyBackground">
-      <div className="navbar flex justify-between items-center px-4 py-5 text-black border-b-2 border-greyStroke">
+      <div className="navbar flex justify-between items-center px-4 py-3 text-black border-b-2 border-greyStroke">
         <div className="flex items-center flex-1">
-          <h1 className="text-3xl font-bold">Flippify</h1>
+          <h1 className="text-3xl font-bold transition duration-1 hover:blur-lg">Flippify</h1>
         </div>
 
-        <ul role="tablist" className="tabs flex rounded-full overflow-hidden bg-white flex-row list-none p-0">
-          <li className="flex-auto"><Link href="/l/home" className={`tab ${isActive('/l/home')}`} style={isActive('/l/home') ? activeTabStyle : commonTabStyle}>Home</Link></li>
-          <li><Link href="/l/products" className={`tab ${isActive('/l/products')}`} style={isActive('/l/products') ? activeTabStyle : commonTabStyle}>Products</Link></li>
-          <li><Link href="/l/about" className={`tab ${isActive('/l/about')}`} style={isActive('/l/about') ? activeTabStyle : commonTabStyle}>About</Link></li>
-          <li><Link href="https://discord.gg/gNPYfe7YFm" className={`tab ${isActive('https://discord.gg/gNPYfe7YFm')}`} style={isActive('https://discord.gg/gNPYfe7YFm') ? activeTabStyle : commonTabStyle}>Discord</Link></li>
+        <ul role="tablist" className="tabs flex overflow-hidden flex-row p-2 space-x-4">
+          <li className="flex-auto transition duration-500 hover:scale-110 hover:bg-slate-400 hover:bg-opacity-20 rounded-btn p-1"><Link href="/l/home" >Home</Link></li>
+          <li className="flex-auto transition duration-500 hover:scale-110 hover:bg-slate-400 hover:bg-opacity-20 rounded-btn p-1"><Link href="/l/products">Products</Link></li>
+          <li className="flex-auto transition duration-500 hover:scale-110 hover:bg-slate-400 hover:bg-opacity-20 rounded-btn p-1"><Link href="/l/about">About</Link></li>
+          <li className="flex-auto transition duration-500 hover:scale-110 hover:bg-slate-400 hover:bg-opacity-20 rounded-btn p-1"><Link href="https://discord.gg/gNPYfe7YFm">Discord</Link></li>
         </ul>
 
 

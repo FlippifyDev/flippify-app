@@ -18,8 +18,8 @@ const Navbar = () => {
           <h1 className="text-3xl font-bold">Flippify</h1>
         </div>
 
-        <div role="tablist" className="tabs flex justify border rounded-full overflow-hidden bg-white">
-          <Link href="/l/home" className={`tab ${isActive('/l/home')}`}>Home</Link>
+        <div role="tablist" className="tabs flex justify-center border rounded-full overflow-hidden bg-white">
+          <Link href="/l/home" className={`tab ${isActive('/l/home')} flex justify-center items-center`}>Home</Link>
           <Link href="/l/products" className={`tab ${isActive('/l/products')}`}>Products</Link>
           <Link href="/l/about" className={`tab ${isActive('/l/about')}`}>About</Link>
           <Link href="https://discord.gg/gNPYfe7YFm" className={`tab ${isActive('https://discord.gg/gNPYfe7YFm')}`}>Discord</Link>

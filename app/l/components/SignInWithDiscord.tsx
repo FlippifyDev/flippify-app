@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaDiscord } from 'react-icons/fa6';
 
+
 const SignInWithDiscord = () => {
     const { data: session } = useSession();
     const router = useRouter();
@@ -14,9 +15,9 @@ const SignInWithDiscord = () => {
         if (session) {
             // Redirect to the username-specific URL
             {session.user?.name ? (
-                router.push(`/u/${session.user.name}`)
+                router.push(`/u/${session.user.name}/dashboard`)
             ) : (
-                router.push(`/l/home`)
+                router.push(`/loading`)
             )
         }
         }

@@ -12,7 +12,6 @@ body {
 
 .tab {
     padding: 0.5rem 1rem;
-    transition: all 0.3s ease;
     border: 1px solid transparent;
     color: #000;
   }

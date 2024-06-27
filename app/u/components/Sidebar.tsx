@@ -22,6 +22,11 @@ const Sidebar = () => {
   const handleNavigateToPlans = () => {
     router.push('/u/Plans');
   };
+
+  const handleNavigationHome = () => {
+    router.push('');
+
+  };
   const router = useRouter();
   return (
    
@@ -43,7 +48,7 @@ const Sidebar = () => {
     <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
     <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4 flex flex-col">
       {/* Sidebar content here */}
-      <li><a className="hover:bg-violet-800 focus:bg-violet-900">Home</a></li>
+      <li><button className="hover:bg-violet-800 focus:bg-violet-900" onClick={handleNavigationHome}>Home</button></li>
       <li><a className="hover:bg-violet-800 focus:bg-violet-900">Products</a></li>
       <li><a className="hover:bg-violet-800 focus:bg-violet-900">Alerts</a></li>
       <li><button className="hover:bg-violet-800 focus:bg-violet-900" onClick={handleNavigateToPlans}>Plans</button></li>

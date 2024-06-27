@@ -12,7 +12,7 @@ const Navbar = () => {
   };
 
   const activeTabStyle = {
-    backgroundColor: '#A9A9A9',
+    backgroundColor: '#F1F1F1',
     borderColor: '#A9A9A9',
     color: 'black',
   };

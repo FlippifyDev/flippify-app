@@ -16,12 +16,27 @@ const config: Config = {
       colors: {
         white: '#FFFFFF',
         lightGreyBackground: '#F1F1F1',
+        greyText: '#4A4A4A',
         greyStroke: '#A9A9A9',
         houseBlue: '#4C8BFA',
         discordBlue: '#5865F2',
       },
     },
   },
+  
+  // All Daisy UI Customization
   plugins: [require("@tailwindcss/typography"), require('daisyui')],
+
+  daisyui: {
+    themes: [
+      {
+        light: {
+          ...require("daisyui/src/theming/themes")["light"],
+          "--greyStroke": ""
+        }
+      }
+    ]
+  }
+
 };
 export default config;

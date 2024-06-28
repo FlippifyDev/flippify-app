@@ -2,14 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    background-image: url('https://i.imgur.com/t1WQprP.jpeg');
-    background-size: cover;
-    background-position: relative;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-}
-
 .tab {
     padding: 0.5rem 1rem;
     border: 1px solid transparent;
@@ -21,13 +13,6 @@ body {
     border: 1.5px solid #A9A9A9;
     color: #000;
     border-radius: 9999px;
-}
-
-.tabs {
-    display: flex;
-    border-radius: 9999px;
-    background-color: #FFFFFF;
-    border: 1.5px solid #A9A9A9
 }
 
 .tabs .tab:not(.tab-active):hover {

@@ -9,9 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        'texture-pattern': 'url(https://i.imgur.com/ZxA0OGq.png)',
       },
       colors: {
         white: '#FFFFFF',
@@ -19,6 +17,7 @@ const config: Config = {
         greyText: '#4A4A4A',
         greyStroke: '#A9A9A9',
         houseBlue: '#4C8BFA',
+        darkBlue: '#09111f',
         discordBlue: '#5865F2',
       },
     },

@@ -7,8 +7,12 @@ export default function userPage() {
 
     return (
         <div>
-            <SideBar />
+            
             <Plans />
+            
+ 
+            <SideBar/>
+
         </div>
     )
 }

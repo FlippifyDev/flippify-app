@@ -30,15 +30,18 @@ const Legal = () => {
               <input id="my-drawer" type="checkbox" className="drawer-toggle" />
               <div className="drawer-content">
                 {/* Page content here */}
+                
                 <div className="flex items-center justify-center min-h-screen bg-base-200 relative">
                 <div className="card bg-neutral text-neutral-content w-96 justify-center">
                 <div className="card-body items-center text-center">
                     <h2 className="card-title">Legal</h2>
                     <p>Policies concerning privacy and terms of use can be found here</p>
+                    <p><script>Date()</script></p>
                     <div className="card-actions justify-end">
                     <button className="btn  hover:bg-violet-600">Privacy Policy</button>
                     <button className="btn bg-transparent hover:bg-violet-600">Terms of Use</button>
                     </div>
+
                 </div>
                 </div>
                 </div>

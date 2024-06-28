@@ -11,7 +11,7 @@ export default function userPage() {
             <Plans />
             
  
-            <SideBar/>
+            
 
         </div>
     )

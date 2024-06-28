@@ -5,7 +5,7 @@ import Plans from "../../components/Plans"
 export default function PlansPage() {
     return (
         <div>
-            <SideBar />
+            
             <Plans />
         </div>
     )

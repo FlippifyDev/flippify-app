@@ -9,15 +9,17 @@ const config: Config = {
   theme: {
     extend: {
       backgroundImage: {
-        'texture-pattern': 'url(https://i.imgur.com/ZxA0OGq.png)',
+        'texture-pattern': 'url(https://i.imgur.com/VvU51ts.png)',
+        'custom-gradient': 'linear-gradient(to bottom right, #4C8BFA 30%, #FFFFFF 100%)',
       },
       colors: {
         white: '#FFFFFF',
         lightGreyBackground: '#F1F1F1',
-        greyText: '#4A4A4A',
+        greyText: '#dedede',
         greyStroke: '#A9A9A9',
         houseBlue: '#4C8BFA',
-        darkBlue: '#09111f',
+        textGradStart: '#65FF8A',
+        textGradEnd: '#43B1E6',
         discordBlue: '#5865F2',
       },
     },
@@ -31,6 +33,9 @@ const config: Config = {
       {
         light: {
           ...require("daisyui/src/theming/themes")["light"],
+        },
+        colors: {
+          primary: '#5865F2'
         }
       }
     ]

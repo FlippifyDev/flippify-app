@@ -28,7 +28,7 @@ const SideBarButton: React.FC<SideBarButtonProps> = ({ text, redirect }) => {
     };
 
     return (
-        <button onClick={redirectUser}>{text}</button>
+        <button className="hover:bg-violet-800 focus:bg-violet-900 " onClick={redirectUser}>{text}</button>
     );
 }
 

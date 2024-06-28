@@ -9,7 +9,7 @@ interface PlanCardProps {
 
 const PlanCard: React.FC<PlanCardProps> = ({ image, title, description }) => {
   return (
-      <div className="card bg-base-100 w-96 shadow-xl flex flex-col transform transition-transform duration-300 hover:scale-105">
+      <div className="card bg-base-100 w-96 shadow-xl flex flex-col transform transition-transform duration-160 hover:scale-105">
           <figure>
               <img src={image} alt={title} className="object-cover w-full h-60" />
           </figure>

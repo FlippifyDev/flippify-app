@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  plugins: [require("@tailwindcss/typography"), require('daisyui')],
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -13,6 +14,7 @@ const config: Config = {
         'custom-gradient': 'linear-gradient(to bottom right, #4C8BFA 30%, #FFFFFF 100%)',
       },
       colors: {
+        primary: '#5865F2',
         white: '#FFFFFF',
         lightGreyBackground: '#F1F1F1',
         greyText: '#dedede',
@@ -24,18 +26,12 @@ const config: Config = {
       },
     },
   },
-  
-  // All Daisy UI Customization
-  plugins: [require("@tailwindcss/typography"), require('daisyui')],
-
   daisyui: {
     themes: [
       {
         light: {
           ...require("daisyui/src/theming/themes")["light"],
-        },
-        colors: {
-          primary: '#5865F2'
+          primary: '#5865F2',
         }
       }
     ]

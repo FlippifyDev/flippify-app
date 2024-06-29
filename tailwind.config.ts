@@ -21,6 +21,7 @@ const config: Config = {
         greyStroke: '#A9A9A9',
         houseBlue: '#4C8BFA',
         textGradStart: '#DBC4FF',
+        textGradEnd: '#AAA0FF',
         discordBlue: '#5865F2',
       },
     },

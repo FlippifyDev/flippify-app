@@ -1,10 +1,10 @@
-import Footer from'../components/Footer'
+// Local Imports
 import Navbar from "../components/Navbar";
-import HomeContent from "../components/HomeContent";
+import PricingContent from "../components/PricingContent";
 
 import { Suspense } from "react";
 
-export default function HomePage() {
+export default function Pricing() {
   return (
     <Suspense fallback={<Loading />}>
       <div
@@ -16,8 +16,7 @@ export default function HomePage() {
             <Navbar />
           </div>
           <div className="flex-1 mt-16 overflow-y-auto">
-            <HomeContent />
-            <Footer />
+            <PricingContent />
           </div>
         </div>
       </div>

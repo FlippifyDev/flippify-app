@@ -27,14 +27,7 @@ const config: Config = {
     },
   },
   daisyui: {
-    themes: [
-      {
-        light: {
-          ...require("daisyui/src/theming/themes")["light"],
-          primary: '#5865F2',
-        }
-      }
-    ]
+    themes: ['light', 'dark'],
   }
 
 };

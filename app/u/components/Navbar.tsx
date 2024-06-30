@@ -1,6 +1,6 @@
 import UserProfile from "./UserProfile";
 import Sidebar from "./Sidebar";
-
+import ThemeController from "./ThemeController";
 
 
 import React from "react";
@@ -11,6 +11,7 @@ const Navbar = () => {
       <div className="flex-1 flex items-center justify-between z-50">
         <Sidebar />
       </div>
+      <ThemeController/>
       <UserProfile />
     </div>
   );

@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { useSession } from 'next-auth/react';
+import Image from "next/image";
 
 const UserAvatar = () => {
     const { data: session } = useSession();
@@ -18,7 +19,7 @@ const UserAvatar = () => {
     return (
         <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
             <div className="w-10 rounded-full">
-                <img
+                <Image
                     alt="Avatar"
                     src={avatar}
                 />

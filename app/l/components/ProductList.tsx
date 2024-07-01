@@ -1,12 +1,12 @@
 import ViewPrices from "./ViewPrices";
-import PhoneMockup from "./PhoneMockup";
+import Image from "next/image";
 
 const ProductList: React.FC = () => {
     return (
         <div className="h-56 grid grid-cols-2 gap-10 px-10 py-10 content-stretch">
             <div className="card bg-base-100 image-full shadow-xl">
                 <figure>
-                    <img
+                    <Image
                     src="https://cdn.leonardo.ai/users/a47d5e66-3419-4c70-8651-b3e13a1a92ff/generations/6a422faf-65dd-424c-a0d4-7d2af4659275/Default_A_vibrant_masterpiece_of_a_rough_color_pencil_sketch_o_2.jpg"
                     alt="Lego Retirement Deals" />
                 </figure>
@@ -30,7 +30,7 @@ const ProductList: React.FC = () => {
             </div>  
             <div className="card bg-base-100 image-full shadow-xl">
                 <figure>
-                    <img
+                    <Image
                     src="https://i.imgur.com/lok7Wcq.png"
                     alt="Shoes" />
                 </figure>

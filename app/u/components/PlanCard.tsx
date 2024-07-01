@@ -1,5 +1,6 @@
 import React from 'react'
 import BuyButton from './BuyButton';
+import Image from "next/image";
 
 interface PlanCardProps {
   image: string;
@@ -13,7 +14,7 @@ const PlanCard: React.FC<PlanCardProps> = ({ image, title, description, productI
       <div className="card bg-base-100 shadow-xl flex flex-col transform transition-transform duration-160 hover:scale-105">
                 <div className='h-60'>
             <figure className='relative'>
-                    <img src={image} alt={title} className="object-cover w-full h-auto" />
+                    <Image src={image} alt={title} className="object-cover w-full h-auto" />
             </figure>
                 </div>
             <div className="card-body flex flex-col flex-grow p-4">

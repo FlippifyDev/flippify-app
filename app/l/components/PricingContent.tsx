@@ -9,23 +9,15 @@ const PricingContent = () => {
         monthly_plan={29.99}
         three_month_plan={24.99}
         yearly_plan={19.99}
-        image="https://i.imgur.com/Ia2ldBC.png"
+        image="https://i.imgur.com/3rj6JKr.png"
       />
       <PlanCard
-        title="Lego Retirement Deals"
-        description="Monitors soon to retire lego sets across multiple websites"
+        title="Coming Soon..."
+        description="Many more deals coming your way shortly."
         monthly_plan={19.99}
         three_month_plan={14.99}
         yearly_plan={12.99}
-        image="https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.jpg"
-      />
-      <PlanCard
-        title="Lego Retirement Deals"
-        description="Monitors soon to retire lego sets across multiple websites"
-        monthly_plan={19.99}
-        three_month_plan={14.99}
-        yearly_plan={12.99}
-        image="https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.jpg"
+        image="https://i.imgur.com/lok7Wcq.png"
       />
     </div>
   );

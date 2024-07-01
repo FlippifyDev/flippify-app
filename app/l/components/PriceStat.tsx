@@ -21,8 +21,8 @@ const PriceStat: React.FC<PriceStatProps> = ({monthly_plan, three_month_plan, ye
 
       <div className="stat place-items-center">
         <div className="stat-title">Yearly Plan</div>
-        <div className="stat-value text-secondary">£{yearly_plan}</div>
-        <div className="stat-desc text-secondary">Yearly Fee £{yearly_plan * 12}</div>
+        <div className="stat-value text-paymentPlanText">£{yearly_plan}</div>
+        <div className="stat-desc text-paymentPlanText">Yearly Fee £{yearly_plan * 12}</div>
       </div>
     </div>
   );

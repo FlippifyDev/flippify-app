@@ -12,14 +12,7 @@ const nextConfig = {
     ];
   },
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'i.ibb.co',
-        port: '',
-        pathname: '/wgp29vn/phone-mockup-image.jpg',
-      },
-    ],
+    domains: ['img.daisyui.com', 'i.imgur.com', 'i.ibb.co', 'cdn.leonardo.ai', 'cdn.discordapp.com', 'i.pinimg.com', 'images-na.ssl-images-amazon.com'],
   },
   env: {
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,

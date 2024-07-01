@@ -1,4 +1,4 @@
-import Plans from "../../components/Plans"
+import PlanList from "../../components/PlansList"
 import Navbar from "../../components/Navbar"
 
 
@@ -9,7 +9,7 @@ export default function PlansPage() {
                 <Navbar />
             </div>
             <div className="mt-16 flex-1 overflow-y-auto">
-                <Plans />
+                <PlanList />
             </div>
         </div>
     )

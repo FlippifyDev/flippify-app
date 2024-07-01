@@ -39,9 +39,7 @@ const Sidebar = () => {
             <SideBarButton text="Plans" redirect="plans" />
           </li>
           <li className="mt-auto">
-            <a className="hover:bg-violet-800 focus:bg-violet-900 ">
-              Legal
-            </a>
+            <a className="hover:bg-violet-800 focus:bg-violet-900 ">Legal</a>
           </li>
         </ul>
       </div>

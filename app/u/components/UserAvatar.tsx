@@ -22,6 +22,8 @@ const UserAvatar = () => {
                 <Image
                     alt="Avatar"
                     src={avatar}
+                    width={50}
+                    height={50}
                 />
             </div>
         </div>

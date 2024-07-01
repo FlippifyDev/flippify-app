@@ -23,14 +23,14 @@ const PlanCard: React.FC<PlanCardProps> = ({ title, monthly_plan, three_month_pl
         </figure>
         <div className="card-body">
             <div>
-                <h2 className="card-title mb-4">{title}</h2>
+                <h2 className="card-title mb-4 text-white">{title}</h2>
                 <p>{description}</p>
             </div>
             <div className="my-auto">
                 <PriceStat monthly_plan={monthly_plan} three_month_plan={three_month_plan} yearly_plan={yearly_plan}/>
             </div>
             <div className="card-actions justify-end">
-                <button className="btn btn-outline btn-primary">Subscribe Now</button>
+                <button className="btn btn-primary bg-discordBlue border-discordBlue text-white">Subscribe Now</button>
             </div>
         </div>
     </div>

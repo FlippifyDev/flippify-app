@@ -9,11 +9,11 @@ interface CustomUser {
   customerId?: string;
 }
 
-interface SubscripeNowButtonProps {
-  productId: string
+interface SubscribeNowProps {
+  productId: string;
 }
 
-const SubscripeNowButton: React.FC<SubscripeNowButtonProps> = ({ productId }) => {
+const SubscribeNow: React.FC<SubscribeNowProps> = ({ productId }) => {
   const { data: session } = useSession();
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
   const customerIdRef = useRef<string | null>(null);
@@ -52,10 +52,10 @@ const SubscripeNowButton: React.FC<SubscripeNowButtonProps> = ({ productId }) =>
   };
 
   return (
-    <button className="btn btn-primary" onClick={handleBuyButtonClick} disabled={!checkoutUrl}>
+    <button className="btn btn-primary bg-discordBlue border-white text-white border-1" onClick={handleBuyButtonClick} disabled={!checkoutUrl}>
       {checkoutUrl ? 'Subscribe Now' : 'Loading...'}
     </button>
   );
 };
 
-export default SubscripeNowButton
+export default SubscribeNow;

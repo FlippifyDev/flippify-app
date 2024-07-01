@@ -7,7 +7,7 @@ const nextConfig = {
       {
         source: '/',
         destination: '/l/home',
-        permanent: true,
+        permanent: false,
       }
     ];
   },
@@ -21,6 +21,9 @@ const nextConfig = {
       },
     ],
   },
+  env: {
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+  }
 };
 
 

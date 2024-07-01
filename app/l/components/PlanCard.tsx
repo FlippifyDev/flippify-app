@@ -1,4 +1,6 @@
 import PriceStat from "./PriceStat";
+import SubscribeNow from "./SubscribeNow";
+import Image from "next/image";
 
 interface PlanCardProps {
     title: string;
@@ -12,9 +14,9 @@ interface PlanCardProps {
 
 const PlanCard: React.FC<PlanCardProps> = ({ title, monthly_plan, three_month_plan, yearly_plan, description, image}) => {
   return (
-    <div className="card lg:card-side bg-base-100 shadow-xl">
+    <div className="card lg:card-side bg-base-100 shadow-xl border border-white opacity-90">
         <figure>
-            <img
+            <Image
             src={image}
             alt="Product Image"
             className="w-100 h-96"
@@ -30,7 +32,7 @@ const PlanCard: React.FC<PlanCardProps> = ({ title, monthly_plan, three_month_pl
                 <PriceStat monthly_plan={monthly_plan} three_month_plan={three_month_plan} yearly_plan={yearly_plan}/>
             </div>
             <div className="card-actions justify-end">
-                <button className="btn btn-primary bg-discordBlue border-discordBlue text-white">Subscribe Now</button>
+                <SubscribeNow />
             </div>
         </div>
     </div>

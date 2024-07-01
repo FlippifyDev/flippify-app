@@ -1,6 +1,6 @@
 // Local Imports
 import Navbar from "../components/Navbar";
-import PricingContent from "../components/PricingContent";
+import PriceList from "../components/PriceList";
 import Loading from "../../components/Loading"
 
 import { Suspense } from "react";
@@ -16,8 +16,8 @@ export default function Pricing() {
           <div className="fixed top-0 left-0 right-0 z-10">
             <Navbar />
           </div>
-          <div className="flex-1 mt-16 overflow-y-auto">
-            <PricingContent />
+          <div className="mt-16 overflow-y-auto flex justify-center border">
+            <PriceList />
           </div>
         </div>
       </div>

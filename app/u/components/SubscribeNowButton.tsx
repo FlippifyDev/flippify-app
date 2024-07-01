@@ -12,11 +12,11 @@ interface CustomUser extends Session {
   customerId?: string;
 }
 
-interface BuyButtonProps {
+interface SubscripeNowButtonProps {
   productId: string
 }
 
-const BuyButton: React.FC<BuyButtonProps> = ({ productId }) => {
+const SubscripeNowButton: React.FC<SubscripeNowButtonProps> = ({ productId }) => {
   const { data: session } = useSession();
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
   let customerId = null;
@@ -51,9 +51,9 @@ const BuyButton: React.FC<BuyButtonProps> = ({ productId }) => {
 
   return (
     <button className="btn btn-primary" onClick={handleBuyButtonClick} disabled={!checkoutUrl}>
-      {checkoutUrl ? 'Buy Now' : 'Loading...'}
+      {checkoutUrl ? 'Subscribe Now' : 'Loading...'}
     </button>
   );
 };
 
-export default BuyButton
+export default SubscripeNowButton

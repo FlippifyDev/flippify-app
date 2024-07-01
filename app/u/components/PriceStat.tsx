@@ -1,5 +1,5 @@
 interface PriceStatProps {
-  plans: number[]
+  plans: number[];
 }
 
 const PriceStat: React.FC<PriceStatProps> = ({plans}) => {

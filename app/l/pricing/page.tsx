@@ -1,6 +1,7 @@
 // Local Imports
 import Navbar from "../components/Navbar";
 import PricingContent from "../components/PricingContent";
+import Loading from "../../components/Loading"
 
 import { Suspense } from "react";
 
@@ -22,8 +23,4 @@ export default function Pricing() {
       </div>
     </Suspense>
   );
-}
-
-function Loading() {
-  return <span className="loading loading-dots loading-lg"></span>;
 }

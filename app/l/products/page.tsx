@@ -1,5 +1,6 @@
 import Navbar from "../components/Navbar";
 import ProductsList from "../components/ProductList";
+import Loading from "../../components/Loading"
 
 import { Suspense } from "react";
 
@@ -21,8 +22,4 @@ export default function Products() {
       </div>
     </Suspense>
   );
-}
-
-function Loading() {
-  return <span className="loading loading-dots loading-lg"></span>;
 }

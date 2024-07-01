@@ -16,6 +16,7 @@ const config: Config = {
       colors: {
         primary: '#5865F2',
         white: '#FFFFFF',
+        lightGreyText: '#',
         lightGreyBackground: '#F1F1F1',
         greyText: '#dedede',
         greyStroke: '#A9A9A9',

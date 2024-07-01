@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
+import Link from 'next/link';
 import { BsTwitterX } from "react-icons/bs";
-import { FaDiscord } from 'react-icons/fa6';
+import { FaDiscord, FaInstagram, FaTiktok } from 'react-icons/fa6';
 
 const Footer = () => {
   return (
@@ -24,8 +25,10 @@ const Footer = () => {
         </aside>
         <nav className="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
             <div className="flex flex-row text-white">
-                <button className="mx-2"><BsTwitterX className="text-2xl"/></button>
-                <button className="mx-2"><FaDiscord className="text-2xl"/></button>
+              <Link href='https://www.instagram.com/flippifyuk/'><button className="mx-2"><FaInstagram className="text-2xl"/></button></Link>
+              <Link href='https://www.tiktok.com/@flippifyuk?lang=en'><button className="mx-2"><FaTiktok className="text-2xl"/></button></Link>
+              <Link href='https://x.com/FlippifyUK'><button className="mx-2"><BsTwitterX className="text-2xl"/></button></Link>
+              <Link href='https://discord.gg/gNPYfe7YFm'><button className="mx-2"><FaDiscord className="text-2xl"/></button></Link>
             </div>
         </nav>
       </footer>

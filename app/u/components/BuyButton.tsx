@@ -1,40 +1,42 @@
-"use client"
+"use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useSession } from 'next-auth/react';
-import { Session } from 'next-auth';
-
 import createCheckoutSession from '@/app/api/stripe-handlers/create-checkout-session';
 
-
-interface CustomUser extends Session {
+interface CustomUser {
   name: string;
   customerId?: string;
 }
 
 interface BuyButtonProps {
-  productId: string
+  productId: string;
 }
 
 const BuyButton: React.FC<BuyButtonProps> = ({ productId }) => {
   const { data: session } = useSession();
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
-  let customerId = null;
-  let username = null;
+  const customerIdRef = useRef<string | null>(null);
+  const usernameRef = useRef<string | null>(null);
 
   useEffect(() => {
     const fetchCheckoutUrl = async () => {
       if (session?.user) {
         const user = session.user as CustomUser;
-        customerId = user.customerId;
-        username = user.name;
-        if (customerId) {
+        customerIdRef.current = user.customerId || null;
+        usernameRef.current = user.name;
+
+        if (customerIdRef.current && usernameRef.current) {
           try {
-            const url = await createCheckoutSession(username, customerId, productId);
+            const url = await createCheckoutSession(
+              usernameRef.current,
+              customerIdRef.current,
+              productId
+            );
             setCheckoutUrl(url);
           } catch (error) {
             console.error('Failed to create checkout session:', error);
-            setCheckoutUrl('http://localhost:3000/u/failed-to-create-checkout-session'); // Default URL on failure
+            setCheckoutUrl('http://localhost:3000/u/failed-to-create-checkout-session');
           }
         }
       }
@@ -56,4 +58,4 @@ const BuyButton: React.FC<BuyButtonProps> = ({ productId }) => {
   );
 };
 
-export default BuyButton
+export default BuyButton;

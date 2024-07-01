@@ -17,7 +17,7 @@ const ProductList: React.FC = () => {
                         <br/><br/>Currently Supporting: 
                         <br/>• Amazon
                         <br/>• John Lewis
-                        <br/>• Toys R' Us
+                        <br/>• Toys R&apos; Us
                         <br/>• Ebay
                         <br/>• Kerrisontoys
                         <br/>• Zavvi

@@ -1,8 +1,9 @@
 import NextAuth, { AuthOptions } from 'next-auth';
 import type { JWT } from 'next-auth/jwt';
-import type { Session } from 'next-auth';
 import DiscordProvider from 'next-auth/providers/discord';
 import mongoose from 'mongoose';
+
+import retrieveStripeCustomer from '../../stripe-handlers/retrieve-customer';
 
 // Connecting to MongoDB
 mongoose.connect(process.env.MONGO_URL as string);
@@ -11,9 +12,11 @@ const UserSchema = new mongoose.Schema({
   name: String,
   discordId: String,
   email: String,
+  stripeCustomerId: String
 });
 
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
+
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -24,23 +27,24 @@ export const authOptions: AuthOptions = {
   ],
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async jwt({ token, account }: { token: JWT; account?: any }): Promise<JWT> {
-      if (account) {
-        token.accessToken = account.access_token as string;
-      }
-      return token;
+    async jwt({ token, user }: any): Promise<JWT> {
+      return { ...token, ...user}
     },
-    async session({ session, token }: { session: Session; token: JWT }): Promise<Session> {
-      session.accessToken = token.accessToken as string;
+    async session({ session, token }: any): Promise<any> {
+      const stripeCustomer = await retrieveStripeCustomer(token.id, token.name, token.email)
+
+      if (token?.sub) {
+        session.user.customerId = stripeCustomer.id;
+      }
       return session;
     },
-    async signIn({ profile }: { profile?: any }): Promise<boolean> {
+    async signIn({ profile }: any): Promise<boolean> {
       try {
         const { id, username, email } = profile as { id: string; username: string; email: string };
 
         await User.findOneAndUpdate(
           { discordId: id },
-          { username, email}, 
+          { username, email }, 
           { upsert: true }
         );
 

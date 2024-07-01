@@ -1,7 +1,10 @@
+"use client"
+
 import SignOutButton from "./SignOutButton";
 import UserAvatar from "./UserAvatar";
 
 import React from 'react'
+
 
 
 const UserProfile = () => {

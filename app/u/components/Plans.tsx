@@ -1,24 +1,26 @@
 // Local Imports
-import PlanCard from "./PlanCard";
+import Navbar from "../components/Navbar";
+import PricingContent from "./PricingContent";
+import Loading from "../../components/Loading"
 
+import { Suspense } from "react";
 
-const Plans = () => {
+export default function Pricing() {
   return (
-    <div className="flex flex-col justify-center items-center p-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        <PlanCard image="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" title="Shoes" description="If a dog chews shoes whose shoes does he choose?" productId="price_1PQoNRJJRepiHZ8da9O9ni43"/>
-        <PlanCard image="https://images-na.ssl-images-amazon.com/images/I/91K5JOBomKL._SL1500_.jpg" title="Lego Retirement Sales" description="Monitor soon to retire lego sets across multiple websites." productId="price_1PQoNRJJRepiHZ8da9O9ni43"/>
-        <PlanCard image="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" title="Shoes" description="If a dog chews shoes whose shoes does he choose?" productId="price_1PQoNRJJRepiHZ8da9O9ni43"/>
-        <PlanCard image="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" title="Shoes" description="If a dog chews shoes whose shoes does he choose?" productId="price_1PQoNRJJRepiHZ8da9O9ni43"/>
-        <PlanCard image="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" title="Shoes" description="If a dog chews shoes whose shoes does he choose?" productId="price_1PQoNRJJRepiHZ8da9O9ni43"/>
-        <PlanCard image="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" title="Shoes" description="If a dog chews shoes whose shoes does he choose?" productId="price_1PQoNRJJRepiHZ8da9O9ni43"/>
-        <PlanCard image="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" title="Shoes" description="If a dog chews shoes whose shoes does he choose?" productId="price_1PQoNRJJRepiHZ8da9O9ni43"/>
-        <PlanCard image="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" title="Shoes" description="If a dog chews shoes whose shoes does he choose?" productId="price_1PQoNRJJRepiHZ8da9O9ni43"/>
-        <PlanCard image="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" title="Shoes" description="If a dog chews shoes whose shoes does he choose?" productId="price_1PQoNRJJRepiHZ8da9O9ni43"/>
+    <Suspense fallback={<Loading />}>
+      <div
+        className="min-h-screen bg-cover bg-center bg-fixed overflow-x-hidden"
+        style={{ backgroundImage: "url('https://i.imgur.com/2dItFcN.png')" }}
+      >
+        <div className="flex flex-col min-h-screen">
+          <div className="fixed top-0 left-0 right-0 z-10">
+            <Navbar />
+          </div>
+          <div className="flex-1 mt-16 overflow-y-auto">
+            <PricingContent />
+          </div>
+        </div>
       </div>
-    </div>
-  )
+    </Suspense>
+  );
 }
-
-
-export default Plans;

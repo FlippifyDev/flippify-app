@@ -1,6 +1,7 @@
 import Footer from'../components/Footer'
 import Navbar from "../components/Navbar";
 import HomeContent from "../components/HomeContent";
+import Loading from "../../components/Loading"
 
 import { Suspense } from "react";
 
@@ -23,8 +24,4 @@ export default function HomePage() {
       </div>
     </Suspense>
   );
-}
-
-function Loading() {
-  return <span className="loading loading-dots loading-lg"></span>;
 }

@@ -1,5 +1,5 @@
 import Navbar from '../components/Navbar';
-import Loading from '../components/Loading';
+import Loading from "../../components/Loading"
 
 
 import { Suspense } from "react";

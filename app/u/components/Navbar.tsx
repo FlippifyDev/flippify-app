@@ -1,7 +1,6 @@
 import React from "react";
 import UserProfile from "./UserProfile";
 import Sidebar from "./Sidebar";
-import ThemeController from "./ThemeController";
 
 const Navbar = () => {
   return (

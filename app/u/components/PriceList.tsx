@@ -1,7 +1,6 @@
 import React from 'react'
 import PriceCard from './PriceCard'
 
-//"https://cdn.leonardo.ai/users/a47d5e66-3419-4c70-8651-b3e13a1a92ff/generations/7663f3db-8d99-4334-8575-a54492383aa4/Default_A_masterpiece_rough_color_pencil_sketch_of_a_realistic_3.jpg"
 const PriceList = () => {
   return (
     <div className="flex flex-wrap justify-center w-11/12 h-full mb-5 mt-5">

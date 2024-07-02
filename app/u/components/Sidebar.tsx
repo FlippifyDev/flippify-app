@@ -38,13 +38,10 @@ const Sidebar = () => {
               <a className="text-white text-lg font-bold">Dashboard</a>
             </div>
             <li>
-              <SideBarButton text="Home" redirect="dashboard" symbol={<FaHouse />}/>
+              <SideBarButton text="Home" redirect="dashboard" symbol={<FaHouse className="text-lg" />}/>
             </li>
             <li>
-              <SideBarButton text="Profile" redirect="profile" symbol={<BsPersonFillGear className="text-lg" />}/>
-            </li>
-            <li>
-              <SideBarButton text="Plans" redirect="plans" symbol={<FaSearch />}/>
+              <SideBarButton text="Plans" redirect="plans" symbol={<FaSearch className="text-lg" />}/>
             </li>
             <li>
               <BillingPortalButton />
@@ -75,10 +72,7 @@ const Sidebar = () => {
           {/* Settings and Other*/}
           <div className="mt-auto flex flex-col">
             <li className="mt-auto">
-              <SideBarButton text="Legal" redirect="legal" symbol={ <BsClipboard2Fill/> } />
-            </li>
-            <li className="mt-auto">
-              <SideBarButton text="Settings" redirect="settings" symbol={ <FaCog/> } />
+              <SideBarButton text="Legal" redirect="legal" symbol={ <BsClipboard2Fill className="text-lg" /> } />
             </li>
             <li className="mt-auto">
               <SignOutButton />

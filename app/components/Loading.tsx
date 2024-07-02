@@ -1,18 +1,16 @@
 import React from "react";
+import Image from "next/image";
 
+//https://i.imgur.com/vdLCoNO.png
 const Loading = () => {
   return (
     <div
       className="flex justify-center items-center h-screen"
       style={{ backgroundImage: "url('https://i.imgur.com/2dItFcN.png')" }}
     >
-      <div className="relative w-24 h-24 animate-spin rounded-full bg-gradient-to-r from-white via-blue-500 to-purple-400">
-        <div
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full border-2 border-black bg-center bg-cover"
-          style={{
-            backgroundImage: "url('https://i.imgur.com/vdLCoNO.png')",
-          }}
-        ></div>
+      <div className="relative flex justify-center items-center">
+          <div className="absolute animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-purple-500"></div>
+          <Image src="https://i.imgur.com/vdLCoNO.png" alt="Loading" className="rounded-full h-28 w-28" width={28} height={28}/>
       </div>
     </div>
   );

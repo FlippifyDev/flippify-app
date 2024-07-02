@@ -68,7 +68,7 @@ const Sidebar = () => {
             </li>
           </div>
 
-          {/* Settings and Other  - MAKE THESE BUTTONS A SEPARATE COMPONENT SO THAT WE CAN USE SERVER ON THIS FILE AND CLIENT ON JSUT THEM*/}
+          {/* Settings and Other*/}
           <div className="mt-auto flex flex-col">
             <li className="mt-auto">
               <SideBarButton text="Legal" redirect="/legal" symbol={ <BsClipboard2Fill className="text-lg"/> } />

@@ -39,36 +39,42 @@ const authOptions: AuthOptions = {
       }
 
       const { id, name, email } = token as { id: string; name: string; email: string };
-
+	  
+	  // Retrieve the Stripe customer
       const stripeCustomer = await retrieveStripeCustomer(id, name, email);
       if (!stripeCustomer) {
         console.error(`Stripe customer not found for id ${id}`);
         return session;
       }
 
-      let customer_id = stripeCustomer.id;
-
-      (session.user as { customerId?: string }).customerId = customer_id;
+      (session.user as { customerId?: string }).customerId = stripeCustomer.id;
     
-      const active_roles: number[] = [];
-
-      try {
-        const discordId: number = Number(id);
-        await User.findOneAndUpdate(
-          { discord_id: discordId },
-          { discord_id: discordId, username: name, email, stripe_customer_id: customer_id, active_roles },
-          { upsert: true }
-        );
-
-      } catch (error) {
-        console.error('Error updating user:', error);
-      }
-
       return session;
     },
     async signIn({ profile }: any) {
       try {
         const { id, username, email } = profile as { id: string; username: string; email: string };
+
+		const stripeCustomer = await retrieveStripeCustomer(id, username, email);
+		if (!stripeCustomer) {
+			console.error(`Stripe customer not found for id ${id}`);
+			return false;
+		}
+		
+		// Create the stripe customer
+		try {
+			const discordId: number = Number(id);
+			const customer_id = stripeCustomer.id
+			const active_roles: number[] = [];
+			await User.findOneAndUpdate(
+			  { discord_id: discordId },
+			  { username: username, email, stripe_customer_id: customer_id, active_roles },
+			  { upsert: true }
+			);
+	
+		  } catch (error) {
+			console.error('Error updating user:', error);
+		  }
 
         return true;
       } catch (error) {

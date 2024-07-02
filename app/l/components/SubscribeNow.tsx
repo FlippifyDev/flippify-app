@@ -27,7 +27,7 @@ const SignInWithDiscord = () => {
     };
     
     return (
-        <button className="btn btn-primary bg-discordBlue border-white text-white border-1" onClick={handleSignIn}>Subscribe Now</button>
+        <button className="btn btn-primary bg-discordBlue text-white" onClick={handleSignIn}>Subscribe Now</button>
     )
 }
 

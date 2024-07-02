@@ -20,7 +20,7 @@ const SignOutButton = () => {
   };
 
   return (
-    <button className="text-greyText" onClick={handleSignOut}><FaSignOutAlt/>Sign Out</button>
+    <button className="text-greyText" onClick={handleSignOut}><FaSignOutAlt className="text-lg"/>Sign Out</button>
   );
 };
 

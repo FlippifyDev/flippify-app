@@ -7,11 +7,11 @@ interface PriceCardProps {
     prices: number[]
     description: string;
     image: string;
-    productId: string;
+    priceId: string;
 }
   
 
-const PriceCard: React.FC<PriceCardProps> = ({ title, prices, description, image, productId}) => {
+const PriceCard: React.FC<PriceCardProps> = ({ title, prices, description, image, priceId}) => {
     return (
         <div className="m-5 w-96 lg:w-4/5 xl:w-3/5">
             <div className="card lg:card-side bg-base-100 shadow-xl opacity-90 border border-white">
@@ -36,7 +36,7 @@ const PriceCard: React.FC<PriceCardProps> = ({ title, prices, description, image
                     )}
                     {prices.length > 0 && (
                         <div className="card-actions justify-end">
-                            <SubscribeNow productId={ productId }/>
+                            <SubscribeNow priceId={ priceId }/>
                         </div>
                     )}
                 </div>

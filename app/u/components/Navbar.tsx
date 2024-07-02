@@ -8,7 +8,7 @@ const Navbar = () => {
       <Sidebar />
       <div className="flex flex-col flex-grow">
         <div className="navbar z-50">
-          <div className="flex-1 flex items-center justify-between z-50 bg-base-100 bg-opacity-90 rounded-3xl border border-white text-white">
+          <div className="flex-1 flex items-center justify-between z-50 bg-base-100 bg-opacity-90 rounded-2xl text-white">
             <UserProfile />
           </div>
         </div>

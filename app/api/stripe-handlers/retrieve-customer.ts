@@ -16,7 +16,6 @@ const retrieveStripeCustomer = async (discordId: string, username: string, email
             email: email,
             limit: 1,
         });
-        console.log(customer)
 
         if (customer.data.length > 0) {
             // Customer already exists, return the existing customer

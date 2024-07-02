@@ -44,8 +44,8 @@ const Sidebar = () => {
             <li className={isActive('/dashboard') ? 'active' : ''}>
               <SideBarButton text="Home" redirect="/dashboard" symbol={<FaHouse />} />
             </li>
-            <li className={isActive('/alerts') ? 'active' : ''}>
-              <SideBarButton text="Profile" redirect="/alerts" symbol={<BsPersonFillGear className="text-lg" />} />
+            <li className={isActive('/profile') ? 'active' : ''}>
+              <SideBarButton text="Profile" redirect="/profile" symbol={<BsPersonFillGear className="text-lg" />} />
             </li>
             <li className={isActive('/plans') ? 'active' : ''}>
               <SideBarButton text="Plans" redirect="/plans" symbol={<FaSearch />} />
@@ -68,7 +68,7 @@ const Sidebar = () => {
             </li>
           </div>
 
-          {/* Settings and Other */}
+          {/* Settings and Other  - MAKE THESE BUTTONS A SEPARATE COMPONENT SO THAT WE CAN USE SERVER ON THIS FILE AND CLIENT ON JSUT THEM*/}
           <div className="mt-auto flex flex-col">
             <li className="mt-auto">
               <a className="text-greyText"><BsClipboard2Fill/>Legal</a>

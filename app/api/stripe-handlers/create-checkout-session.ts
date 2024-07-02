@@ -1,7 +1,7 @@
 import Stripe from 'stripe';
 
 
-const createCheckoutSession = async (username: string, customerId: string, productId: string) => {
+const createCheckoutSession = async (username: string, customerId: string, priceId: string) => {
     const stripeAPIKey = process.env.STRIPE_SECRET_KEY as string;
 
     if (!stripeAPIKey) {
@@ -19,7 +19,7 @@ const createCheckoutSession = async (username: string, customerId: string, produ
             payment_method_types: ['card'],
             line_items: [
                 {
-                    price: productId,
+                    price: priceId,
                     quantity: 1,
                 },
             ],

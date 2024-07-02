@@ -10,7 +10,7 @@ const PlanList = () => {
         plans={[29.99, 24.99, 19.99]}
         description="Monitor soon to retire lego sets across multiple websites." 
         image="https://i.imgur.com/lOcRZPP.jpeg" 
-        productId="price_1PQoNRJJRepiHZ8da9O9ni43"
+        priceId="price_1PQoNRJJRepiHZ8da9O9ni43"
       />
     </div>
   )

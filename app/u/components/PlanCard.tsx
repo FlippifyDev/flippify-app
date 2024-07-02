@@ -8,11 +8,11 @@ interface PlanCardProps {
     plans: number[];
     description: string;
     image: string;
-    productId: string
+    priceId: string
 }
 
 
-const PlanCard: React.FC<PlanCardProps> = ({ title, plans, description, image, productId }) => {
+const PlanCard: React.FC<PlanCardProps> = ({ title, plans, description, image, priceId }) => {
     return (
         <div className="m-5 w-96 lg:w-4/5 xl:w-3/5">
             <div className="card lg:card-side bg-base-100 shadow-xl opacity-90">
@@ -37,7 +37,7 @@ const PlanCard: React.FC<PlanCardProps> = ({ title, plans, description, image, p
                     )}
                     {plans.length > 0 && (
                         <div className="card-actions justify-end">
-                            <SubscribeNowButton productId={productId}/>
+                            <SubscribeNowButton priceId={priceId}/>
                         </div>
                     )}
                 </div>

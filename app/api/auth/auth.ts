@@ -7,13 +7,14 @@ import retrieveStripeCustomer from '../stripe-handlers/retrieve-customer';
 mongoose.connect(process.env.MONGO_URL as string);
 
 const UserSchema = new mongoose.Schema({
-  name: String,
-  discordId: String,
-  email: String,
-  stripeCustomerId: String,
+  discord_id: Number,
+  username: String,
+  email:String,
+  stripe_customer_id:String,
+  active_roles:[Number],
 });
 
-const User = mongoose.models.User || mongoose.model('User', UserSchema);
+const User = mongoose.models.users || mongoose.model('users', UserSchema);
 
 const authOptions: AuthOptions = {
   providers: [
@@ -37,25 +38,37 @@ const authOptions: AuthOptions = {
         session.user = {};
       }
 
-      const stripeCustomer = await retrieveStripeCustomer(
-        token.id as string,
-        token.name as string,
-        token.email as string
-      );
+      const { id, name, email } = token as { id: string; name: string; email: string };
 
-      (session.user as { customerId?: string }).customerId = stripeCustomer.id;
+      const stripeCustomer = await retrieveStripeCustomer(id, name, email);
+      if (!stripeCustomer) {
+        console.error(`Stripe customer not found for id ${id}`);
+        return session;
+      }
+
+      let customer_id = stripeCustomer.id;
+
+      (session.user as { customerId?: string }).customerId = customer_id;
+    
+      const active_roles: number[] = [];
+
+      try {
+        const discordId: number = Number(id);
+        await User.findOneAndUpdate(
+          { discord_id: discordId },
+          { discord_id: discordId, username: name, email, stripe_customer_id: customer_id, active_roles },
+          { upsert: true }
+        );
+
+      } catch (error) {
+        console.error('Error updating user:', error);
+      }
 
       return session;
     },
-    async signIn({ profile }) {
+    async signIn({ profile }: any) {
       try {
         const { id, username, email } = profile as { id: string; username: string; email: string };
-
-        await User.findOneAndUpdate(
-          { discordId: id },
-          { username, email },
-          { upsert: true }
-        );
 
         return true;
       } catch (error) {

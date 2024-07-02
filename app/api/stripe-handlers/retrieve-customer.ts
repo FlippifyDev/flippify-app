@@ -1,7 +1,7 @@
 import Stripe from 'stripe';
 
 
-const retrieveStripeCustomer = async (discordID: string, username: string, email: string) => {
+const retrieveStripeCustomer = async (discordId: string, username: string, email: string) => {
     const stripeAPIKey = process.env.STRIPE_SECRET_KEY as string;
 
     if (!stripeAPIKey) {
@@ -16,6 +16,7 @@ const retrieveStripeCustomer = async (discordID: string, username: string, email
             email: email,
             limit: 1,
         });
+        console.log(customer)
 
         if (customer.data.length > 0) {
             // Customer already exists, return the existing customer
@@ -25,8 +26,8 @@ const retrieveStripeCustomer = async (discordID: string, username: string, email
             const customer = await stripe.customers.create({
                 email: email,
                 metadata: {
-                    discordID: discordID,
-                    username: username,
+                    discord_id: discordId,
+                    discord_username: username,
                 },
             });
             return customer;

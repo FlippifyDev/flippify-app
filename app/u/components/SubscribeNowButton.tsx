@@ -10,10 +10,10 @@ interface CustomUser {
 }
 
 interface SubscripeNowButtonProps {
-  productId: string
+  priceId: string
 }
 
-const SubscripeNowButton: React.FC<SubscripeNowButtonProps> = ({ productId }) => {
+const SubscripeNowButton: React.FC<SubscripeNowButtonProps> = ({ priceId }) => {
   const { data: session } = useSession();
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
   const customerIdRef = useRef<string | null>(null);
@@ -31,7 +31,7 @@ const SubscripeNowButton: React.FC<SubscripeNowButtonProps> = ({ productId }) =>
             const url = await createCheckoutSession(
               usernameRef.current,
               customerIdRef.current,
-              productId
+              priceId
             );
             setCheckoutUrl(url);
           } catch (error) {
@@ -43,7 +43,7 @@ const SubscripeNowButton: React.FC<SubscripeNowButtonProps> = ({ productId }) =>
     };
 
     fetchCheckoutUrl();
-  }, [session, productId]);
+  }, [session, priceId]);
 
   const handleBuyButtonClick = () => {
     if (checkoutUrl) {

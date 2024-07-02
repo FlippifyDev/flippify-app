@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 import SubscribeNowButton from './SubscribeNowButton';
-import Image from "next/image";
+import Image from 'next/image';
 import PriceStat from './PriceStat';
 
 interface PlanCardProps {
@@ -46,4 +46,4 @@ const PlanCard: React.FC<PlanCardProps> = ({ title, plans, description, image, p
     )
 }
 
-export default PlanCard
+export default PlanCard;

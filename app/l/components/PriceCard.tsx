@@ -4,16 +4,16 @@ import Image from "next/image";
 
 interface PriceCardProps {
     title: string;
-    plans: number[]
+    prices: number[]
     description: string;
     image: string;
 }
   
 
-const PriceCard: React.FC<PriceCardProps> = ({ title, plans, description, image}) => {
+const PriceCard: React.FC<PriceCardProps> = ({ title, prices, description, image}) => {
     return (
         <div className="m-5 w-96 lg:w-4/5 xl:w-3/5">
-            <div className="card lg:card-side bg-base-100 shadow-xl opacity-90">
+            <div className="card lg:card-side bg-base-100 shadow-xl opacity-90 border border-white">
                 <figure className="w-full lg:w-1/3 max-w-96 min-w-54">
                     <Image
                         src={image}
@@ -23,17 +23,17 @@ const PriceCard: React.FC<PriceCardProps> = ({ title, plans, description, image}
                         height={1000} 
                     />
                 </figure>
-                <div className="card-body border p-1">
+                <div className="card-body">
                     <div className="ml-2">
-                        <h2 className="card-title mb-1 text-2xl sm:text-xl md:text-xl lg:text-xl text-white">{title}</h2>
+                        <h2 className="card-title mb-2 text-white">{title}</h2>
                         <p className="text-wrap">{description}</p>
                     </div>
-                    {plans.length > 0 && (
+                    {prices.length > 0 && (
                         <div className="my-auto">
-                            <PriceStat plans={plans}/>
+                            <PriceStat prices={prices}/>
                         </div>
                     )}
-                    {plans.length > 0 && (
+                    {prices.length > 0 && (
                         <div className="card-actions justify-end">
                             <SubscribeNow />
                         </div>

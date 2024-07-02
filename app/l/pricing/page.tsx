@@ -16,7 +16,7 @@ export default function Pricing() {
           <div className="fixed top-0 left-0 right-0 z-10">
             <Navbar />
           </div>
-          <div className="mt-16 overflow-y-auto flex justify-center border">
+          <div className="mt-16 overflow-y-auto flex justify-center">
             <PriceList />
           </div>
         </div>

@@ -1,9 +1,8 @@
 import Navbar from "../../components/Navbar";
-import Legal from "../../components/Legal";
 import { Suspense } from "react";
 import Loading from "../../../components/Loading";
 
-export default function legal() {
+export default function SettingsPage() {
     return (
     <Suspense fallback={<Loading />}>
         <div
@@ -13,9 +12,6 @@ export default function legal() {
             <div className="flex flex-col min-h-screen">
                 <div className="fixed top-0 left-0 right-0">
                     <Navbar />
-                </div>
-                <div className="mt-16 flex justify-center">
-                    <Legal />
                 </div>
             </div>
         </div>

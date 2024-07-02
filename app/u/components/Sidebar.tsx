@@ -61,20 +61,20 @@ const Sidebar = () => {
               <a className="text-white text-lg font-bold">Your Bots</a>
             </div>
             <li className={isActive('/dashboard') ? 'active' : ''}>
-              <SideBarButton text="Lego Retirement" redirect="/dashboard" symbol={<TbLegoFilled className="text-lg" />} />
+              <SideBarButton text="Lego Retirement" redirect="/dashboard" symbol={ <TbLegoFilled className="text-lg" /> } />
             </li>
             <li className={isActive('/dashboard') ? 'active' : ''}>
-              <SideBarButton text="Sneakers" redirect="/dashboard" symbol={<PiSneakerMoveFill className="text-lg" />} />
+              <SideBarButton text="Sneakers" redirect="/dashboard" symbol={ <PiSneakerMoveFill className="text-lg" /> } />
             </li>
           </div>
 
           {/* Settings and Other  - MAKE THESE BUTTONS A SEPARATE COMPONENT SO THAT WE CAN USE SERVER ON THIS FILE AND CLIENT ON JSUT THEM*/}
           <div className="mt-auto flex flex-col">
             <li className="mt-auto">
-              <a className="text-greyText"><BsClipboard2Fill/>Legal</a>
+              <SideBarButton text="Legal" redirect="/legal" symbol={ <BsClipboard2Fill/> } />
             </li>
             <li className="mt-auto">
-              <a className="text-greyText"><FaCog/>Settings</a>
+              <SideBarButton text="Settings" redirect="/settings" symbol={ <FaCog/> } />
             </li>
             <li className="mt-auto">
               <SignOutButton />

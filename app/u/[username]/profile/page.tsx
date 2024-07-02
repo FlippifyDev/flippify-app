@@ -1,14 +1,20 @@
-import Navbar from "../../components/Navbar"
+import Navbar from "../../components/Navbar";
+import { Suspense } from "react";
+import Loading from "../../../components/Loading";
 
-export default function ProductsPage() {
+export default function ProfilePage() {
     return (
-        <div className="h-screen w-screen flex flex-col">
-            <div className="fixed top-0 left-0 right-0 z-10">
-                <Navbar />
-            </div>
-            <div className="mt-16 flex-1 overflow-y-auto">
-                {/* Page content */}
+    <Suspense fallback={<Loading />}>
+        <div
+            className="min-h-screen bg-cover bg-center bg-fixed overflow-x-hidden"
+            style={{ backgroundImage: "url('https://i.imgur.com/2dItFcN.png')" }}
+        >
+            <div className="flex flex-col min-h-screen">
+                <div className="fixed top-0 left-0 right-0">
+                    <Navbar />
+                </div>
             </div>
         </div>
+    </Suspense>
     )
 }

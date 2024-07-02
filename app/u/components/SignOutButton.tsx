@@ -20,7 +20,12 @@ const SignOutButton = () => {
   };
 
   return (
-    <button className="text-greyText" onClick={handleSignOut}><FaSignOutAlt/>Sign Out</button>
+    <button 
+      className="text-greyText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transition-colors duration-600 ease-in-out hover:bg-gray-100 hover:text-gray-800 focus:outline-none" 
+      onClick={handleSignOut}>
+            <span className="col-span-2 text-lg"><FaSignOutAlt /></span>
+            <span className="col-span-10 text-base">Sign Out</span>
+      </button>
   );
 };
 

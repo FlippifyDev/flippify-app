@@ -2,8 +2,8 @@
 
 import SideBarButton from "./SideBarButton";
 import SignOutButton from "./SignOutButton";
+import BillingPortalButton from "./BillingPortalButton"
 
-import { usePathname } from 'next/navigation';
 import { Lato } from 'next/font/google';
 import Link from 'next/link';
 
@@ -17,10 +17,6 @@ import { TbLegoFilled } from "react-icons/tb";
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin']});
 
 const Sidebar = () => {
-  const pathname = usePathname();
-  
-  const isActive = (path: string) => pathname === path;
-
   return (
     <div className="drawer drawer-mobile lg:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
@@ -41,17 +37,25 @@ const Sidebar = () => {
             <div>
               <a className="text-white text-lg font-bold">Dashboard</a>
             </div>
-            <li className={isActive('/dashboard') ? 'active' : ''}>
-              <SideBarButton text="Home" redirect="/dashboard" symbol={<FaHouse />} />
-            </li>
-            <li className={isActive('/profile') ? 'active' : ''}>
-              <SideBarButton text="Profile" redirect="/profile" symbol={<BsPersonFillGear className="text-lg" />} />
-            </li>
-            <li className={isActive('/plans') ? 'active' : ''}>
-              <SideBarButton text="Plans" redirect="/plans" symbol={<FaSearch />} />
+            <li>
+              <SideBarButton text="Home" redirect="dashboard" symbol={<FaHouse />}/>
             </li>
             <li>
-              <Link href="https://discord.gg/gNPYfe7YFm" className="text-greyText"><FaDiscord className="text-lg" />Discord</Link>
+              <SideBarButton text="Profile" redirect="profile" symbol={<BsPersonFillGear className="text-lg" />}/>
+            </li>
+            <li>
+              <SideBarButton text="Plans" redirect="plans" symbol={<FaSearch />}/>
+            </li>
+            <li>
+              <BillingPortalButton />
+            </li>
+            <li>
+              <Link 
+                href="https://discord.gg/gNPYfe7YFm" 
+                className="text-greyText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transition-colors duration-600 ease-in-out hover:bg-gray-100 hover:text-gray-800 focus:outline-none">
+                  <span className="col-span-2 text-lg"><FaDiscord/></span>
+                  <span className="col-span-10 text-base">Discord</span>
+                  </Link>
             </li>
           </div>
 
@@ -60,21 +64,21 @@ const Sidebar = () => {
             <div>
               <a className="text-white text-lg font-bold">Your Bots</a>
             </div>
-            <li className={isActive('/dashboard') ? 'active' : ''}>
-              <SideBarButton text="Lego Retirement" redirect="/dashboard" symbol={ <TbLegoFilled className="text-lg" /> } />
+            <li>
+              <SideBarButton text="Lego Retirement" redirect="lego-retirement" symbol={ <TbLegoFilled className="text-lg" /> } />
             </li>
-            <li className={isActive('/dashboard') ? 'active' : ''}>
-              <SideBarButton text="Sneakers" redirect="/dashboard" symbol={ <PiSneakerMoveFill className="text-lg" /> } />
+            <li>
+              <SideBarButton text="Sneakers" redirect="sneakers" symbol={ <PiSneakerMoveFill className="text-lg" /> }/>
             </li>
           </div>
 
           {/* Settings and Other  - MAKE THESE BUTTONS A SEPARATE COMPONENT SO THAT WE CAN USE SERVER ON THIS FILE AND CLIENT ON JSUT THEM*/}
           <div className="mt-auto flex flex-col">
             <li className="mt-auto">
-              <SideBarButton text="Legal" redirect="/legal" symbol={ <BsClipboard2Fill/> } />
+              <SideBarButton text="Legal" redirect="legal" symbol={ <BsClipboard2Fill/> } />
             </li>
             <li className="mt-auto">
-              <SideBarButton text="Settings" redirect="/settings" symbol={ <FaCog/> } />
+              <SideBarButton text="Settings" redirect="settings" symbol={ <FaCog/> } />
             </li>
             <li className="mt-auto">
               <SignOutButton />

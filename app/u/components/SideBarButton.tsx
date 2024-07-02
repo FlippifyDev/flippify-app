@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 
 interface SideBarButtonProps {
@@ -15,6 +15,63 @@ interface SideBarButtonProps {
 const SideBarButton: React.FC<SideBarButtonProps> = ({ text, redirect, symbol }) => {
     const { data: session } = useSession();
     const router = useRouter();
+    const pathname = usePathname();
+
+    // Extract the base path without the username prefix
+    const basePath = `/u/${session?.user?.name}`; // Adjust as per your session structure
+
+    // Determine if the button should be active
+    const isActive = pathname === `${basePath}/${redirect}`;
+    console.log(isActive)
+
+    const redirectUser = () => {
+        if (session) {
+            // Redirect to the username-specific URL or default redirect
+            if (session.user?.name) {
+                router.push(`${basePath}/${redirect}`);
+            } else {
+                router.push(`/u/loading`);
+            }
+        }
+    };
+
+    return (
+        <button
+            className={`text-greyText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transition-colors duration-100 ease-in-out 
+                        ${isActive ? 'bg-gray-400 text-gray-800' : 'hover:bg-gray-100 hover:text-gray-800'}`}
+            onClick={redirectUser}
+        >
+            <span className="col-span-2 text-lg">{symbol}</span>
+            <span className="col-span-10 text-base">{text}</span>
+        </button>
+    );
+}
+
+export default SideBarButton
+
+/*
+'use client';
+
+import React from 'react'
+import { useSession } from 'next-auth/react';
+import { useRouter, usePathname } from 'next/navigation';
+
+
+interface SideBarButtonProps {
+    text: string;
+    redirect: string;
+    symbol: React.ReactNode;
+}
+
+
+const SideBarButton: React.FC<SideBarButtonProps> = ({ text, redirect, symbol }) => {
+    const { data: session } = useSession();
+    const router = useRouter();
+    const pathname = usePathname();
+    console.log(pathname)
+
+    const basePath = `/u/${session?.user?.name}`;
+    const isActive = pathname === redirect;
 
     const redirectUser = () => {
         if (session) {
@@ -28,8 +85,16 @@ const SideBarButton: React.FC<SideBarButtonProps> = ({ text, redirect, symbol })
     };
 
     return (
-        <button className="text-greyText" onClick={redirectUser}>{symbol}{text}</button>
+        <button
+            className={`text-greyText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transition-colors duration-300 ease-in-out 
+                ${isActive ? 'bg-gray-200 text-gray-800' : 'hover:bg-gray-100 hover:text-gray-800'}`}
+            onClick={redirectUser}>
+            <span className="col-span-2 text-lg">{symbol}</span>
+            <span className="col-span-10 text-base">{text}</span>
+        </button>
     );
 }
 
 export default SideBarButton
+
+*/

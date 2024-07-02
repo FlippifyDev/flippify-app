@@ -1,6 +1,6 @@
 import Plans from "../../components/Plans"
 import Navbar from "../../components/Navbar"
-import Loading from "c:/Users/popco/Desktop/[CODE]/[FLIPPIFY]/flippify-app/app/components/Loading"
+import Loading from "../../../components/Loading"
 import { Suspense } from "react";
 
 

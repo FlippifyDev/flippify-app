@@ -11,7 +11,7 @@ export default function Pricing() {
         style={{ backgroundImage: "url('https://i.imgur.com/2dItFcN.png')" }}
       >
         <div className="flex flex-col min-h-screen">
-          <div className="fixed top-0 left-0 right-0 z-10">
+          <div className="fixed top-0 left-0 right-0">
             <Navbar />
           </div>
           <div className="mt-16 flex justify-center">

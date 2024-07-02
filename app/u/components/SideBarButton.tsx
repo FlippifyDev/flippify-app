@@ -8,10 +8,11 @@ import { useRouter } from 'next/navigation';
 interface SideBarButtonProps {
     text: string;
     redirect: string;
+    symbol: React.ReactNode;
 }
 
 
-const SideBarButton: React.FC<SideBarButtonProps> = ({ text, redirect }) => {
+const SideBarButton: React.FC<SideBarButtonProps> = ({ text, redirect, symbol }) => {
     const { data: session } = useSession();
     const router = useRouter();
 
@@ -27,7 +28,7 @@ const SideBarButton: React.FC<SideBarButtonProps> = ({ text, redirect }) => {
     };
 
     return (
-        <button className="hover:bg-violet-800 focus:bg-violet-900 " onClick={redirectUser}>{text}</button>
+        <button className="text-greyText" onClick={redirectUser}>{symbol}{text}</button>
     );
 }
 

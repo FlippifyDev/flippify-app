@@ -3,6 +3,7 @@
 import React, { useEffect } from 'react';
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { FaSignOutAlt } from "react-icons/fa";
 
 const SignOutButton = () => {
   const { data: session } = useSession();
@@ -19,7 +20,7 @@ const SignOutButton = () => {
   };
 
   return (
-    <button onClick={handleSignOut}>Sign Out</button>
+    <button className="text-greyText" onClick={handleSignOut}><FaSignOutAlt/>Sign Out</button>
   );
 };
 

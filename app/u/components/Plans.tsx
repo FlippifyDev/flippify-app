@@ -1,9 +1,7 @@
-// Local Imports
+import React, { Suspense } from "react";
 import Navbar from "../components/Navbar";
-import PricingContent from "./PricingContent";
-import Loading from "../../components/Loading"
-
-import { Suspense } from "react";
+import PriceList from "./PriceList";
+import Loading from "../../components/Loading";
 
 export default function Pricing() {
   return (
@@ -17,7 +15,7 @@ export default function Pricing() {
             <Navbar />
           </div>
           <div className="flex-1 mt-16 overflow-y-auto">
-            <PricingContent />
+            <PriceList />
           </div>
         </div>
       </div>

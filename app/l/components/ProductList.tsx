@@ -5,7 +5,7 @@ import ProductCard from "./ProductCard";
 const ProductList: React.FC = () => {
     const legoRetirementWebsites = ["Amazon", "John Lewis", "Toys R' Us", "Ebay", "Kerrison Toys", "Zavvi", "Argos", "Fenwick", "Hamleys"]
     return (
-        <div className="flex flex-wrap justify-center mt-10 mb-10 px-10">
+        <div className="flex flex-wrap justify-center mt-10 mb-10 md:px-10">
             <ProductCard 
                 title="Lego Retirement Deals" 
                 description="Monitors soon-to-retire lego sets across a range websites. Using this bot, gain access to high-value deals you would otherwise spend hours searching for, in seconds. These specific lego sets are on our radar as they are confirmed to be retiring shortly and are well-known to skyrocket in value not long after being taken off the shelves." 

@@ -6,8 +6,13 @@ import { CiShoppingTag } from "react-icons/ci";
 
 const ViewPrices = () => {
     return(
-        <div className="card-actions justify-end">
-            <Link href='/l/pricing'><button className="btn btn-primary bg-discordBlue border-discordBlue text-white"><CiShoppingTag className="text-xl"/>View Prices</button></Link>
+        <div className="card-actions">
+            <Link href='/l/pricing'>
+                <button className="btn btn-primary bg-discordBlue border-discordBlue text-white">
+                <CiShoppingTag className="text-xl" />
+                <span className="hidden sm:inline">View Prices</span>
+                </button>
+            </Link>
         </div>
     )
 }

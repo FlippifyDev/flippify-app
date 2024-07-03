@@ -20,15 +20,15 @@ const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   return (
     <div className="px-10 py-10">
-      <div className="card bg-black image-full max-w-lg lg:max-w-2xl mx-auto h-[36rem] shadow-lg">
+      <div className="card bg-black image-full max-w-lg lg:max-w-2xl mx-auto shadow-lg h-auto sm:h-auto md:h-[36rem]">
         <figure className="w-full">
           <Image src={image} alt={title} width={1000} height={1000} />
         </figure>
         <div className="card-body">
-          <h2 className="card-title text-white">{title}</h2>
-          <p className="text-white">{description}</p>
+          <h2 className="card-title text-white text-base md:text-xl lg:text-xl">{title}</h2>
+          <p className="text-white text-sm md:text-base hidden md:block">{description}</p>
           {websites.length > 0 && (
-            <p className="text-white">
+            <p className="text-white text-sm md:text-base">
               Currently Supporting:
               <br />
               {websites.map((website, index) => (
@@ -38,7 +38,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
               ))}
             </p>
           )}
-          <div className="card-actions justify-end">
+          <div className="card-actions flex justify-center sm:justify-end">
             <ViewPrices />
           </div>
         </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import UserLayout from '../../components/UserLayout';
 
-const DashboardPage = () => {
+const SneakerDealsPage = () => {
   return (
     <UserLayout>
         {/* Your dashboard content here */}
@@ -10,4 +10,4 @@ const DashboardPage = () => {
   );
 };
 
-export default DashboardPage;
+export default SneakerDealsPage;

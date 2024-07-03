@@ -3,10 +3,8 @@ import { GiMoneyStack } from "react-icons/gi";
 
 const Legal = () => {
       return (
-        <div className="navbar bg-base-100">
-          <title>
-            Making bank <GiMoneyStack />
-          </title>
+        <div>
+          Developing... :)
         </div>
       );
 }

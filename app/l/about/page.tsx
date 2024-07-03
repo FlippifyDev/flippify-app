@@ -9,8 +9,8 @@ import { FaPeopleGroup } from "react-icons/fa6";
 export default function About() {
   return (
     <LandingLayout>
-        <div className="flex flex-col items-center justify-center flex-grow">
-          <h1 className="text-5xl text-white font-bold mb-4">About Flippify.</h1>
+        <div className="flex flex-col items-center justify-center flex-grow mt-10">
+          <h1 className="text-5xl text-white font-bold mb-8">About Flippify.</h1>
           <p className="text-lg text-greyText text-center max-w-2xl mb-10">
             Providing lightning-fast alerts to exclusive deals on limited-release items, ensuring you never miss out on valuable opportunities.
           </p>

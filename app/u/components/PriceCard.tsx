@@ -12,7 +12,7 @@ interface PriceCardProps {
 
 const PriceCard: React.FC<PriceCardProps> = ({ title, prices, description, image, priceId }) => {
   return (
-    <div className="m-5 lg:w-3/5">
+    <div className="m-5 sm:scale-90 md:scale-90 lg:max-w-5xl xl:max-w-6xl w-auto">
       <div className="card lg:card-side bg-base-100 shadow-xl opacity-90 border border-white sm:flex sm:justify-center sm:flex-col">
         {/* Image Section */}
         <div className="lg:flex lg:flex-row lg:items-center">

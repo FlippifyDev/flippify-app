@@ -20,17 +20,16 @@ const Sidebar = () => {
   return (
     <div className="drawer drawer-mobile xl:drawer-open">
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content flex flex-col lg:ml-64">
-          {/* Toggle button for smaller screens */}
-          <label
-            htmlFor="my-drawer"
-            className="btn btn-primary text-white text-2xl bg-transparent border-transparent drawer-button xl:hidden hover:bg-transparent hover:border-transparent hover:scale-125 mr-auto z-50"
-          >
-            <IoMenu />
-          </label>
-        </div>
+      <div className="drawer-content flex flex-col">
+        {/* Toggle button for smaller screens */}
+        <label
+          htmlFor="my-drawer"
+          className="z-50 btn btn-primary text-white text-2xl bg-transparent border-transparent drawer-button xl:hidden hover:bg-transparent hover:border-transparent hover:scale-125">
+          <IoMenu />
+        </label>
+      </div>
       <div className="drawer-side">
-        <ul className="menu bg-base-100 opacity-90 border-r-2 text-base-content min-h-full w-64 p-4 flex flex-col justify-between">
+        <ul className="menu bg-base-100 opacity-90 border-r-2 text-base-content min-h-full w-80 p-4 flex flex-col justify-between">
           {/* Logo */}
           <div className="flex flex-col">
             <div className="flex justify-center mb-8 mt-4 select-none"> 
@@ -63,7 +62,7 @@ const Sidebar = () => {
           {/* Display Users' Bots */}
           <div className="mt-8">
             <div>
-              <a className="text-white text-lg font-bold select-none">Your Bots</a>
+              <a className="text-white text-lg font-bold select-none">My Bots</a>
             </div>
             <li>
               <SideBarButton text="Lego Retirement" redirect="lego-retirement-deals" symbol={ <TbLegoFilled className="text-lg" /> } />

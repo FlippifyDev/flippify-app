@@ -14,7 +14,7 @@ const Navbar = () => {
     <div className="navbar flex justify-between items-center px-4 py-3 text-white">
       {/* Logo or Brand */}
       <div className="flex items-center">
-        <a className="text-white text-4xl font-bold">flippify</a>
+        <a className={`${lato.className} text-white text-4xl select-none`}>flippify</a>
       </div>
 
       {/* Sidebar Drawer */}

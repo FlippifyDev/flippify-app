@@ -16,7 +16,7 @@ const SignInWithDiscord = () => {
             {session.user?.name ? (
                 router.push(`/u/${session.user.name}/plans`)
             ) : (
-                router.push(`/loading`)
+                router.push(`/u/loading`)
             )
         }
         }

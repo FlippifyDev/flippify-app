@@ -14,13 +14,14 @@ const PriceCard: React.FC<PriceCardProps> = ({ title, prices, description, image
     return (
         <div className="m-5 w-96 lg:w-4/5 xl:w-3/5">
             <div className="card lg:card-side bg-base-100 shadow-xl opacity-90 border border-white">
-                <figure className="w-full lg:w-1/3 max-w-96 min-w-54">
+                <figure className="w-full lg:w-1/3 max-w-96 min-w-54 p-2">
                     <Image
                         src={image}
                         alt="Product Image"
                         style={{ aspectRatio: '1' }}
                         width={1000}
-                        height={1000} 
+                        height={1000}
+                        className="object-cover rounded-lg"
                     />
                 </figure>
                 <div className="card-body">

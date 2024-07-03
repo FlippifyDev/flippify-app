@@ -19,11 +19,11 @@ const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin']});
 const Sidebar = () => {
   return (
     <div className="drawer drawer-mobile xl:drawer-open">
-      <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
+      <input id="my-drawer" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content flex flex-col lg:ml-64">
           {/* Toggle button for smaller screens */}
           <label
-            htmlFor="my-drawer-2"
+            htmlFor="my-drawer"
             className="btn btn-primary text-white text-2xl bg-transparent border-transparent drawer-button xl:hidden hover:bg-transparent hover:border-transparent hover:scale-125 mr-auto z-50"
           >
             <IoMenu />

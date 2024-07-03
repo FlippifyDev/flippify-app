@@ -9,7 +9,7 @@ import Link from 'next/link';
 
 import { IoMenu } from "react-icons/io5";
 import { FaHouse } from "react-icons/fa6";
-import { FaSearch, FaDiscord, FaCog } from "react-icons/fa";
+import { FaSearch, FaDiscord } from "react-icons/fa";
 import { BsClipboard2Fill } from "react-icons/bs";
 import { PiSneakerMoveFill } from "react-icons/pi";
 import { TbLegoFilled } from "react-icons/tb";
@@ -33,7 +33,7 @@ const Sidebar = () => {
         <ul className="menu bg-base-100 opacity-90 border-r-2 text-base-content min-h-full w-64 p-4 flex flex-col justify-between">
           {/* Logo */}
           <div className="flex flex-col">
-            <div className="flex justify-center mb-8 select-none"> 
+            <div className="flex justify-center mb-8 mt-4 select-none"> 
               <a className={`${lato.className} text-white text-4xl`}>flippify</a>
             </div>
 
@@ -84,7 +84,6 @@ const Sidebar = () => {
           </div>
         </ul>
       </div>
-
     </div>
   );
 };

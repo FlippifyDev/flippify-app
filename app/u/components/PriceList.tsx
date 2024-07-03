@@ -9,7 +9,7 @@ const PriceList = () => {
         description="Monitors soon to retire lego sets across multiple websites"
         prices={[29.99, 24.99, 19.99]}
         image="https://i.imgur.com/lOcRZPP.jpeg"
-        priceId="price_1PYSBdJJRepiHZ8d0A1qppRz"
+        priceId="price_1PYTiSJJRepiHZ8dZLk70VDe"
       />
       <PriceCard
         title="Coming Soon..."

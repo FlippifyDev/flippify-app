@@ -13,14 +13,14 @@ const PriceStat: React.FC<PriceStatProps> = ({prices}) => {
 
       <div className="stat">
         <div className="stat-title lg:text-sm">3 Month Plan</div>
-        <div className="stat-value text-2xl sm:text-2xl md:text-3xl lg:text-2xl">£{prices[1]}</div>
-        <div className="stat-desc ">Yearly Fee £{prices[1] * 12}</div>
+        <div className="stat-value text-2xl sm:text-2xl md:text-3xl lg:text-2xl line-through">£{prices[1]}</div>
+        <div className="stat-desc line-through">Yearly Fee £{prices[1] * 12}</div>
       </div>
 
       <div className="stat">
         <div className="stat-title lg:text-sm">Yearly Plan</div>
-        <div className="stat-value text-paymentPlanText text-2xl sm:text-2xl md:text-3xl lg:text-2xl">£{prices[2]}</div>
-        <div className="stat-desc text-paymentPlanText">Yearly Fee £{prices[2] * 12}</div>
+        <div className="stat-value text-paymentPlanText text-2xl sm:text-2xl md:text-3xl lg:text-2xl line-through">£{prices[2]}</div>
+        <div className="stat-desc text-paymentPlanText line-through">Yearly Fee £{prices[2] * 12}</div>
       </div>
     </div>
   );

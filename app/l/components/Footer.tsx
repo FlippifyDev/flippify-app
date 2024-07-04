@@ -10,7 +10,7 @@ const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin']});
 
 const Footer = () => {
   return (
-    <div className="w-full select-none">
+    <div className="w-full select-none bg-white">
       <footer className="footer flex flex-col md:flex-row items-center justify-between p-2">
         <aside className="grid-flow-col items-center">
           <a className={`${lato.className} text-black text-2xl`}>f</a><p className="text-black">Copyright © {new Date().getFullYear()} - All right reserved</p>

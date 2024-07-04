@@ -1,6 +1,7 @@
 import PhoneMockup from './PhoneMockup';
-import Carousel from './Carousel';
+import BrowserMockup from './BrowserMockup';
 import { Lato, Inter } from 'next/font/google';
+import Image from 'next/image';
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 const inter = Inter({ subsets: ['latin'] });
@@ -16,8 +17,8 @@ const HomeContent = ({ className = '' }) => {
         <p className='mb-8 text-greyText text-lg'>
           Fast-track your profits with our lightning-quick deal bots, from lego to sneakers.
         </p>
-        <div className='flex flex-col items-center space-y-8'>
-          <PhoneMockup />
+        <div className='flex flex-row items-center space-x-8 space-y-10'>
+          <Image src="" alt="" width={960} height={540}/>
         </div>
       </div>
     </div>

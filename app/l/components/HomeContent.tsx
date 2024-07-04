@@ -1,5 +1,3 @@
-import PhoneMockup from './PhoneMockup';
-import BrowserMockup from './BrowserMockup';
 import { Lato, Inter } from 'next/font/google';
 import Image from 'next/image';
 
@@ -17,8 +15,8 @@ const HomeContent = ({ className = '' }) => {
         <p className='mb-8 text-greyText text-lg'>
           Fast-track your profits with our lightning-quick deal bots, from lego to sneakers.
         </p>
-        <div className='flex flex-row items-center space-x-8 space-y-10'>
-          <Image src="" alt="" width={960} height={540}/>
+        <div className='flex flex-row items-center space-x-8'>
+          <Image src="https://i.imgur.com/zJ72XAg.png" alt="MobileExamples" width={960} height={540}/>
         </div>
       </div>
     </div>

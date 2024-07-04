@@ -9,19 +9,13 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <Suspense fallback={<Loading />}>
       <div className="relative overflow-hidden">
-        {/* Gradient background component */}
         <GradientBackground />
-
-        {/* White section component */}
         <WhiteSection />
-
-        {/* Main content */}
         <div className="relative z-30">
           <div className="fixed top-0 left-0 right-0 z-50">
             <Navbar />
           </div>
           <div className="flex flex-col min-h-screen mt-16">
-            {/* Content overlaying the entire structure */}
             {children}
           </div>
           <div className="mt-auto z-40">

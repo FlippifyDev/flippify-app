@@ -1,20 +1,36 @@
 import { AuthOptions } from 'next-auth';
 import DiscordProvider from 'next-auth/providers/discord';
-import mongoose from 'mongoose';
+import mongoose, { Document, Model } from 'mongoose';
 import retrieveStripeCustomer from '../stripe-handlers/retrieve-customer';
+import { Types } from 'mongoose';
+
+// Import and apply mongoose-long plugin
+const mongooseLong = require('mongoose-long')(mongoose);
+const Long = Types.Long;
 
 
 mongoose.connect(process.env.MONGO_URL as string);
 
-const UserSchema = new mongoose.Schema({
-  discord_id: Number,
+interface IUser extends Document {
+  discord_id: typeof Long;
+  username: string;
+  email: string;
+  stripe_customer_id: string;
+  active_roles: number[];
+}
+
+const UserSchema = new mongoose.Schema<IUser>({
+  discord_id: {
+    type: Long,
+    required: true,
+  },
   username: String,
-  email:String,
-  stripe_customer_id:String,
-  active_roles:[Number],
+  email: String,
+  stripe_customer_id: String,
+  active_roles: [Number],
 });
 
-const User = mongoose.models.users || mongoose.model('users', UserSchema);
+const User: Model<IUser> = mongoose.models.users || mongoose.model<IUser>('users', UserSchema);
 
 const authOptions: AuthOptions = {
   providers: [
@@ -56,14 +72,14 @@ const authOptions: AuthOptions = {
         const { id, username, email } = profile as { id: string; username: string; email: string };
 
 		const stripeCustomer = await retrieveStripeCustomer(id, username, email);
-		if (!stripeCustomer) {
+    if (!stripeCustomer) {
 			console.error(`Stripe customer not found for id ${id}`);
 			return false;
 		}
 		
 		// Create the stripe customer
 		try {
-			const discordId: number = Number(id);
+			const discordId = Long.fromString(id);
 			const customer_id = stripeCustomer.id
 			const active_roles: number[] = [];
 			await User.findOneAndUpdate(
@@ -73,7 +89,7 @@ const authOptions: AuthOptions = {
 			);
 	
 		  } catch (error) {
-			console.error('Error updating user:', error);
+			  console.error('Error updating user:', error);
 		  }
 
         return true;

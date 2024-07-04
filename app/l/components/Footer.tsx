@@ -13,10 +13,10 @@ const Footer = () => {
     <div className="w-full select-none">
       <footer className="footer flex flex-col md:flex-row items-center justify-between p-2">
         <aside className="grid-flow-col items-center">
-          <a className={`${lato.className} text-white text-2xl`}>f</a><p className="text-white">Copyright © {new Date().getFullYear()} - All right reserved</p>
+          <a className={`${lato.className} text-black text-2xl`}>f</a><p className="text-black">Copyright © {new Date().getFullYear()} - All right reserved</p>
         </aside>
         <nav className="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
-            <div className="flex flex-row text-white">
+            <div className="flex flex-row text-black">
               <Link href='https://www.instagram.com/flippifyuk/'><button className="mx-2"><FaInstagram className="text-2xl"/></button></Link>
               <Link href='https://www.tiktok.com/@flippifyuk?lang=en'><button className="mx-2"><FaTiktok className="text-2xl"/></button></Link>
               <Link href='https://x.com/FlippifyUK'><button className="mx-2"><BsTwitterX className="text-2xl"/></button></Link>

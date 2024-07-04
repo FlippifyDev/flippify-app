@@ -11,9 +11,9 @@ const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin']});
 
 const Navbar = () => {
   return (
-    <div className="navbar flex justify-between items-center px-4 py-3 text-white">
+    <div className="navbar grid grid-cols-12 grid-rows-1 items-center px-4 py-3 text-white">
       {/* Logo or Brand */}
-      <div className="flex items-center">
+      <div className="col-span-2">
         <a className={`${lato.className} text-white text-4xl select-none`}>flippify</a>
       </div>
 
@@ -54,7 +54,7 @@ const Navbar = () => {
       </div>
 
       {/* Navigation Links for Large Screens */}
-      <ul className="hidden md:flex flex-row space-x-8">
+      <ul className="hidden md:flex flex-row space-x-8 col-span-8 justify-center">
         <li className="transition duration-100 hover:scale-110 rounded-btn p-1">
           <Link href="/l/home">Home</Link>
         </li>
@@ -70,7 +70,7 @@ const Navbar = () => {
       </ul>
 
       {/* Right Side (Sign in with Discord or other actions) */}
-      <div className="hidden md:flex items-center">
+      <div className="hidden md:flex items-center col-span-2 justify-end">
         <SignInWithDiscord />
       </div>
     </div>

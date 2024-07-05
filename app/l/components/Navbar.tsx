@@ -1,17 +1,31 @@
 'use client';
 
-
 import SignInWithDiscord from './SignInWithDiscord';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+
 import { Lato } from 'next/font/google';
 import { IoMenu } from "react-icons/io5";
 
-const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin']});
+const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
 const Navbar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <div className="navbar grid grid-cols-12 grid-rows-1 items-center px-4 py-3 text-white">
+    <div className={`navbar grid grid-cols-12 grid-rows-1 items-center px-4 py-3 text-white transition duration-300 ${isScrolled ? 'bg-base-100 opacity-90 transition-colors duration-500 rounded-lg' : 'bg-transparent'}`}>
       {/* Logo or Brand */}
       <div className="col-span-2">
         <a className={`${lato.className} text-white text-4xl select-none`}>flippify</a>
@@ -44,12 +58,10 @@ const Navbar = () => {
             <li className="transition duration-100 active:scale-105 rounded-btn p-1">
               <a href="https://discord.gg/gNPYfe7YFm">Discord</a>
             </li>
-
             <div className="flex justify-center">
               <SignInWithDiscord />
             </div>
-
-            </ul>
+          </ul>
         </div>
       </div>
 
@@ -78,23 +90,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-
-/*
-      <div className="navbar flex justify-between items-center px-4 py-3 text-white">
-        <div className="flex items-center flex-1">
-          <a className={`${lato.className} text-white text-4xl`}>flippify</a>
-        </div>
-
-        <ul role="tablist" className="tabs flex overflow-hidden flex-row p-2 space-x-12">
-          <li className="flex-auto transition duration-100 hover:scale-110 rounded-btn p-1"><Link href="/l/home" >Home</Link></li>
-          <li className="flex-auto transition duration-100 hover:scale-110 rounded-btn p-1"><Link href="/l/products">Products</Link></li>
-          <li className="flex-auto transition duration-100 hover:scale-110 rounded-btn p-1"><Link href="/l/about">About</Link></li>
-          <li className="flex-auto transition duration-100 hover:scale-110 rounded-btn p-1"><Link href="https://discord.gg/gNPYfe7YFm">Discord</Link></li>
-        </ul>
-
-        <div className="flex items-center justify-end flex-1">
-          <SignInWithDiscord />
-        </div>
-      </div>
-*/

@@ -59,7 +59,7 @@ const Sidebar = () => {
             </li>
           </div>
 
-          {/* Display Users' Bots */}
+          {/* Display Users' Bots
           <div className="mt-8">
             <div>
               <a className="text-white text-lg font-bold select-none">My Bots</a>
@@ -71,6 +71,7 @@ const Sidebar = () => {
               <SideBarButton text="Sneakers" redirect="sneaker-deals" symbol={ <PiSneakerMoveFill className="text-lg" /> }/>
             </li>
           </div>
+          */}
 
           {/* Settings and Other*/}
           <div className="mt-auto flex flex-col">

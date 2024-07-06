@@ -42,7 +42,7 @@ const PriceCard: React.FC<PriceCardProps> = ({ title, prices, priceIds, descript
             {prices.length > 0 && (
               <PriceStat prices={prices} onPlanSelect={handlePlanSelect} selectedPlan={selectedPlan} />
             )}
-            <div className="flex justify-end">
+            <div className="flex justify-end mt-2">
               {prices.length > 0 && selectedPlan !== null && (
                 <SubscribeNow priceId={priceIds[selectedPlan]} />
               )}

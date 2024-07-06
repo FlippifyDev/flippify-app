@@ -7,9 +7,9 @@ const PrivacyPolicy = () => {
       <p>Last updated July 05, 2024</p>
       <br />
       <p>
-        This privacy notice for Flippify ('we', 'us', or 'our'), describes how
-        and why we might collect, store, use, and/or share ('process') your
-        information when you use our services ('Services'), such as when you:
+        This privacy notice for Flippify (&apos;we&apos;, &apos;us&apos;, or &apos;our&apos;), describes how
+        and why we might collect, store, use, and/or share (&apos;process&apos;) your
+        information when you use our services (&apos;Services&apos;), such as when you:
         Visit our website at https://www.flippify.co.uk, or any website of ours
         that links to this privacy notice Engage with us in other related ways,
         including any sales, marketing, or events Questions or concerns? Reading
@@ -102,7 +102,7 @@ const PrivacyPolicy = () => {
         account details, like your Facebook, X, or other social media account.
         If you choose to register in this way, we will collect certain profile
         information about you from the social media provider, as described in
-        the section called 'HOW DO WE HANDLE YOUR SOCIAL LOGINS?' below. All
+        the section called &apos;HOW DO WE HANDLE YOUR SOCIAL LOGINS?&apos; below. All
         personal information that you provide to us must be true, complete, and
         accurate, and you must notify us of any changes to such personal
         information.
@@ -124,7 +124,7 @@ const PrivacyPolicy = () => {
         using your social media account (e.g. Facebook or X), we receive
         personal information about you from such platforms such as your name,
         email address, and gender. Any personal information that we collect from
-        your social media account depends on your social media account's privacy
+        your social media account depends on your social media account&apos;s privacy
         settings. Please note that their own use of your information is not
         governed by this privacy notice.
       </p>
@@ -144,7 +144,7 @@ const PrivacyPolicy = () => {
         with the requested service. To fulfil and manage your orders. We may
         process your information to fulfil and manage your orders, payments,
         returns, and exchanges made through the Services. To save or protect an
-        individual's vital interest. We may process your information when
+        individual&apos;s vital interest. We may process your information when
         necessary to save or protect an individual’s vital interest, such as to
         prevent harm.
       </p>
@@ -300,8 +300,8 @@ const PrivacyPolicy = () => {
         not to be subject to automated decision-making. In certain
         circumstances, you may also have the right to object to the processing
         of your personal information. You can make such a request by contacting
-        us by using the contact details provided in the section 'HOW CAN YOU
-        CONTACT US ABOUT THIS NOTICE?' below. We will consider and act upon any
+        us by using the contact details provided in the section &apos;HOW CAN YOU
+        CONTACT US ABOUT THIS NOTICE?&apos; below. We will consider and act upon any
         request in accordance with applicable data protection laws. If you are
         located in the EEA or UK and you believe we are unlawfully processing
         your personal information, you also have the right to complain to your
@@ -312,16 +312,16 @@ const PrivacyPolicy = () => {
         may be express and/or implied consent depending on the applicable law,
         you have the right to withdraw your consent at any time. You can
         withdraw your consent at any time by contacting us by using the contact
-        details provided in the section 'HOW CAN YOU CONTACT US ABOUT THIS
-        NOTICE?' below. However, please note that this will not affect the
+        details provided in the section &apos;HOW CAN YOU CONTACT US ABOUT THIS
+        NOTICE?&apos; below. However, please note that this will not affect the
         lawfulness of the processing before its withdrawal nor, when applicable
         law allows, will it affect the processing of your personal information
         conducted in reliance on lawful processing grounds other than consent.
         Opting out of marketing and promotional communications: You can
         unsubscribe from our marketing and promotional communications at any
         time by clicking on the unsubscribe link in the emails that we send, or
-        by contacting us using the details provided in the section 'HOW CAN YOU
-        CONTACT US ABOUT THIS NOTICE?' below. You will then be removed from the
+        by contacting us using the details provided in the section &apos;HOW CAN YOU
+        CONTACT US ABOUT THIS NOTICE?&apos; below. You will then be removed from the
         marketing lists. However, we may still communicate with you — for
         example, to send you service-related messages that are necessary for the
         administration and use of your account, to respond to service requests,
@@ -340,7 +340,7 @@ const PrivacyPolicy = () => {
       <h1 className="text-white">10. CONTROLS FOR DO-NOT-TRACK FEATURES</h1>
       <p>
         Most web browsers and some mobile operating systems and mobile
-        applications include a Do-Not-Track ('DNT') feature or setting you can
+        applications include a Do-Not-Track (&apos;DNT&apos;) feature or setting you can
         activate to signal your privacy preference not to have data about your
         online browsing activities monitored and collected. At this stage, no
         uniform technology standard for recognising and implementing DNT signals
@@ -403,17 +403,17 @@ const PrivacyPolicy = () => {
         the membership period that has been paid for has expired, after a user
         has closed their account. Category H - As long as the user has an
         account with us Sources of Personal Information Learn more about the
-        sources of personal information we collect in 'WHAT INFORMATION DO WE
-        COLLECT?' How We Use and Share Personal Information Learn about how we
-        use your personal information in the section, 'HOW DO WE PROCESS YOUR
-        INFORMATION?' Will your information be shared with anyone else? We may
+        sources of personal information we collect in &apos;WHAT INFORMATION DO WE
+        COLLECT?&apos; How We Use and Share Personal Information Learn about how we
+        use your personal information in the section, &apos;HOW DO WE PROCESS YOUR
+        INFORMATION?&apos; Will your information be shared with anyone else? We may
         disclose your personal information with our service providers pursuant
         to a written contract between us and each service provider. Learn more
-        about how we disclose personal information to in the section, 'WHEN AND
-        WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?' We may use your
+        about how we disclose personal information to in the section, &apos;WHEN AND
+        WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?&apos; We may use your
         personal information for our own business purposes, such as for
         undertaking internal research for technological development and
-        demonstration. This is not considered to be 'selling' of your personal
+        demonstration. This is not considered to be &apos;selling&apos; of your personal
         information. We have not disclosed, sold, or shared any personal
         information to third parties for a business or commercial purpose in the
         preceding twelve (12) months. We will not sell or share personal
@@ -429,11 +429,11 @@ const PrivacyPolicy = () => {
         out of the processing of your personal data if it is used for targeted
         advertising (or sharing as defined under California’s privacy law), the
         sale of personal data, or profiling in furtherance of decisions that
-        produce legal or similarly significant effects ('profiling') Depending
+        produce legal or similarly significant effects (&apos;profiling&apos;) Depending
         upon the state where you live, you may also have the following rights:
         Right to obtain a list of the categories of third parties to which we
         have disclosed personal data (as permitted by applicable law, including
-        California's and Delaware's privacy law) Right to obtain a list of
+        California&apos;s and Delaware&apos;s privacy law) Right to obtain a list of
         specific third parties to which we have disclosed personal data (as
         permitted by applicable law, including Oregon’s privacy law) Right to
         limit use and disclosure of sensitive personal data (as permitted by
@@ -466,8 +466,8 @@ const PrivacyPolicy = () => {
         inform you in writing of any action taken or not taken in response to
         the appeal, including a written explanation of the reasons for the
         decisions. If your appeal is denied, you may submit a complaint to your
-        state attorney general. California 'Shine The Light' Law California
-        Civil Code Section 1798.83, also known as the 'Shine The Light' law,
+        state attorney general. California &apos;Shine The Light&apos; Law California
+        Civil Code Section 1798.83, also known as the &apos;Shine The Light&apos; law,
         permits our users who are California residents to request and obtain
         from us, once a year and free of charge, information about categories of
         personal information (if any) we disclosed to third parties for direct
@@ -475,16 +475,16 @@ const PrivacyPolicy = () => {
         which we shared personal information in the immediately preceding
         calendar year. If you are a California resident and would like to make
         such a request, please submit your request in writing to us by using the
-        contact details provided in the section 'HOW CAN YOU CONTACT US ABOUT
-        THIS NOTICE?'
+        contact details provided in the section &apos;HOW CAN YOU CONTACT US ABOUT
+        THIS NOTICE?&apos;
       </p>
       <br />
       <h1 className="text-white">12. DO OTHER REGIONS HAVE SPECIFIC PRIVACY RIGHTS?</h1>
       <p>
         In Short: You may have additional rights based on the country you reside
         in. Australia and New Zealand We collect and process your personal
-        information under the obligations and conditions set by Australia's
-        Privacy Act 1988 and New Zealand's Privacy Act 2020 (Privacy Act). This
+        information under the obligations and conditions set by Australia&apos;s
+        Privacy Act 1988 and New Zealand&apos;s Privacy Act 2020 (Privacy Act). This
         privacy notice satisfies the notice requirements defined in both Privacy
         Acts, in particular: what personal information we collect from you, from
         which sources, for which purposes, and other recipients of your personal
@@ -495,17 +495,17 @@ const PrivacyPolicy = () => {
         account with us confirm your identity and protect your account At any
         time, you have the right to request access to or correction of your
         personal information. You can make such a request by contacting us by
-        using the contact details provided in the section 'HOW CAN YOU REVIEW,
-        UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?' If you believe we are
+        using the contact details provided in the section &apos;HOW CAN YOU REVIEW,
+        UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?&apos; If you believe we are
         unlawfully processing your personal information, you have the right to
         submit a complaint about a breach of the Australian Privacy Principles
         to the Office of the Australian Information Commissioner and a breach of
-        New Zealand's Privacy Principles to the Office of New Zealand Privacy
+        New Zealand&apos;s Privacy Principles to the Office of New Zealand Privacy
         Commissioner. Republic of South Africa At any time, you have the right
         to request access to or correction of your personal information. You can
         make such a request by contacting us by using the contact details
-        provided in the section 'HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA
-        WE COLLECT FROM YOU?' If you are unsatisfied with the manner in which we
+        provided in the section &apos;HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA
+        WE COLLECT FROM YOU?&apos; If you are unsatisfied with the manner in which we
         address any complaint with regard to our processing of personal
         information, you can contact the office of the regulator, the details of
         which are: The Information Regulator (South Africa) General enquiries:
@@ -518,7 +518,7 @@ const PrivacyPolicy = () => {
       <p>
         In Short: Yes, we will update this notice as necessary to stay compliant
         with relevant laws. We may update this privacy notice from time to time.
-        The updated version will be indicated by an updated 'Revised' date at
+        The updated version will be indicated by an updated &apos;Revised&apos; date at
         the top of this privacy notice. If we make material changes to this
         privacy notice, we may notify you either by prominently posting a notice
         of such changes or by directly sending you a notification. We encourage

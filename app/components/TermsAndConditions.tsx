@@ -8,16 +8,16 @@ const TermsAndConditions = () => {
       <br />
       <h1 className="text-white">AGREEMENT TO OUR LEGAL TERMS</h1>
       <p>
-        We are Flippify ('Company', 'we', 'us', or 'our'). We operate the
-        website https://www.flippify.co.uk (the 'Site'), as well as any other
+        We are Flippify (&apos;Company&apos;, &apos;we&apos;, &apos;us&apos;, or &apos;our&apos;). We operate the
+        website https://www.flippify.co.uk (the &apos;Site&apos;), as well as any other
         related products and services that refer or link to these legal terms
-        (the 'Legal Terms') (collectively, the 'Services'). We provide services
+        (the &apos;Legal Terms&apos;) (collectively, the &apos;Services&apos;). We provide services
         that allow our users to make the most of their reselling business. With
         our services, users can access deals faster, use our tools available and
         our community to have the best chance at accelerating their profits. You
         can contact us by phone at 07842522682, email at "support@flippify.co.uk"
         These Legal Terms constitute a legally binding agreement made between
-        you, whether personally or on behalf of an entity ('you'), and Flippify,
+        you, whether personally or on behalf of an entity (&apos;you&apos;), and Flippify,
         concerning your access to and use of the Services. You agree that by
         accessing the Services, you have read, understood, and agreed to be
         bound by all of these Legal Terms. IF YOU DO NOT AGREE WITH ALL OF THESE
@@ -70,15 +70,15 @@ const TermsAndConditions = () => {
         Our intellectual property We are the owner or the licensee of all
         intellectual property rights in our Services, including all source code,
         databases, functionality, software, website designs, audio, video, text,
-        photographs, and graphics in the Services (collectively, the 'Content'),
+        photographs, and graphics in the Services (collectively, the &apos;Content&apos;),
         as well as the trademarks, service marks, and logos contained therein
-        (the 'Marks'). Our Content and Marks are protected by copyright and
+        (the &apos;Marks&apos;). Our Content and Marks are protected by copyright and
         trademark laws (and various other intellectual property rights and
         unfair competition laws) and treaties in the United States and around
         the world. The Content and Marks are provided in or through the Services
-        'AS IS' for your personal, non-commercial use or internal business
+        &apos;AS IS&apos; for your personal, non-commercial use or internal business
         purpose only. Your use of our Services Subject to your compliance with
-        these Legal Terms, including the 'PROHIBITED ACTIVITIES' section below,
+        these Legal Terms, including the &apos;PROHIBITED ACTIVITIES&apos; section below,
         we grant you a non-exclusive, non-transferable, revocable licence to:
         access the Services; and download or print a copy of any portion of the
         Content to which you have properly gained access. solely for your
@@ -100,18 +100,18 @@ const TermsAndConditions = () => {
         breach of these Intellectual Property Rights will constitute a material
         breach of our Legal Terms and your right to use our Services will
         terminate immediately. Your submissions Please review this section and
-        the 'PROHIBITED ACTIVITIES' section carefully prior to using our
+        the &apos;PROHIBITED ACTIVITIES&apos; section carefully prior to using our
         Services to understand the (a) rights you give us and (b) obligations
         you have when you post or upload any content through the Services.
         Submissions: By directly sending us any question, comment, suggestion,
-        idea, feedback, or other information about the Services ('Submissions'),
+        idea, feedback, or other information about the Services (&apos;Submissions&apos;),
         you agree to assign to us all intellectual property rights in such
         Submission. You agree that we shall own this Submission and be entitled
         to its unrestricted use and dissemination for any lawful purpose,
         commercial or otherwise, without acknowledgment or compensation to you.
         You are responsible for what you post or upload: By sending us
         Submissions through any part of the Services you: confirm that you have
-        read and agree with our 'PROHIBITED ACTIVITIES' and will not post, send,
+        read and agree with our &apos;PROHIBITED ACTIVITIES&apos; and will not post, send,
         publish, upload, or transmit through the Services any Submission that is
         illegal, harassing, hateful, harmful, defamatory, obscene, bullying,
         abusive, discriminatory, threatening to any person or group, sexually
@@ -230,15 +230,15 @@ const TermsAndConditions = () => {
         or use the username of another user. Upload or transmit (or attempt to
         upload or to transmit) any material that acts as a passive or active
         information collection or transmission mechanism, including without
-        limitation, clear graphics interchange formats ('gifs'), 1×1 pixels, web
+        limitation, clear graphics interchange formats (&apos;gifs&apos;), 1×1 pixels, web
         bugs, cookies, or other similar devices (sometimes referred to as
-        'spyware' or 'passive collection mechanisms' or 'pcms'). Interfere with,
+        &apos;spyware&apos; or &apos;passive collection mechanisms&apos; or &apos;pcms&apos;). Interfere with,
         disrupt, or create an undue burden on the Services or the networks or
         services connected to the Services. Harass, annoy, intimidate, or
         threaten any of our employees or agents engaged in providing any portion
         of the Services to you. Attempt to bypass any measures of the Services
         designed to prevent or restrict access to the Services, or any portion
-        of the Services. Copy or adapt the Services' software, including but not
+        of the Services. Copy or adapt the Services&apos; software, including but not
         limited to Flash, PHP, HTML, JavaScript, or other code. Except as
         permitted by applicable law, decipher, decompile, disassemble, or
         reverse engineer any of the software comprising or in any way making up
@@ -266,10 +266,10 @@ const TermsAndConditions = () => {
         transmit, perform, publish, distribute, or broadcast content and
         materials to us or on the Services, including but not limited to text,
         writings, video, audio, photographs, graphics, comments, suggestions, or
-        personal information or other material (collectively, 'Contributions').
+        personal information or other material (collectively, &apos;Contributions&apos;).
         Contributions may be viewable by other users of the Services and through
         third-party websites. As such, any Contributions you transmit may be
-        treated in accordance with the Services' Privacy Policy. When you create
+        treated in accordance with the Services&apos; Privacy Policy. When you create
         or make available any Contributions, you thereby represent and warrant
         that: The creation, distribution, transmission, public display, or
         performance, and the accessing, downloading, or copying of your
@@ -328,7 +328,7 @@ const TermsAndConditions = () => {
       <p>
         As part of the functionality of the Services, you may link your account
         with online accounts you have with third-party service providers (each
-        such account, a 'Third-Party Account') by either: (1) providing your
+        such account, a &apos;Third-Party Account&apos;) by either: (1) providing your
         Third-Party Account login information through the Services; or (2)
         allowing us to access your Third-Party Account, as is permitted under
         the applicable terms and conditions that govern your use of each
@@ -341,7 +341,7 @@ const TermsAndConditions = () => {
         provider of the Third-Party Account. By granting us access to any
         Third-Party Accounts, you understand that (1) we may access, make
         available, and store (if applicable) any content that you have provided
-        to and stored in your Third-Party Account (the 'Social Network Content')
+        to and stored in your Third-Party Account (the &apos;Social Network Content&apos;)
         so that it is available on and through the Services via your account,
         including without limitation any friend lists and (2) we may submit to
         and receive from your Third-Party Account additional information to the
@@ -376,10 +376,10 @@ const TermsAndConditions = () => {
       <h1 className="text-white">11. THIRD-PARTY WEBSITES AND CONTENT</h1>
       <p>
         The Services may contain (or you may be sent via the Site) links to
-        other websites ('Third-Party Websites') as well as articles,
+        other websites (&apos;Third-Party Websites&apos;) as well as articles,
         photographs, text, graphics, pictures, designs, music, sound, video,
         information, applications, software, and other content or items
-        belonging to or originating from third parties ('Third-Party Content').
+        belonging to or originating from third parties (&apos;Third-Party Content&apos;).
         Such Third-Party Websites and Third-Party Content are not investigated,
         monitored, or checked for accuracy, appropriateness, or completeness by
         us, and we are not responsible for any Third-Party Websites accessed
@@ -504,8 +504,8 @@ const TermsAndConditions = () => {
       <p>
         Informal Negotiations To expedite resolution and control the cost of any
         dispute, controversy, or claim related to these Legal Terms (each a
-        'Dispute' and collectively, the 'Disputes') brought by either you or us
-        (individually, a 'Party' and collectively, the 'Parties'), the Parties
+        &apos;Dispute&apos; and collectively, the &apos;Disputes&apos;) brought by either you or us
+        (individually, a &apos;Party&apos; and collectively, the &apos;Parties&apos;), the Parties
         agree to first attempt to negotiate any Dispute (except those Disputes
         expressly provided below) informally for at least thirty (30) days
         before initiating arbitration. Such informal negotiations commence upon
@@ -558,7 +558,7 @@ const TermsAndConditions = () => {
         IN CONNECTION WITH THE SERVICES AND YOUR USE THEREOF, INCLUDING, WITHOUT
         LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
         PARTICULAR PURPOSE, AND NON-INFRINGEMENT. WE MAKE NO WARRANTIES OR
-        REPRESENTATIONS ABOUT THE ACCURACY OR COMPLETENESS OF THE SERVICES'
+        REPRESENTATIONS ABOUT THE ACCURACY OR COMPLETENESS OF THE SERVICES&apos;
         CONTENT OR THE CONTENT OF ANY WEBSITES OR MOBILE APPLICATIONS LINKED TO
         THE SERVICES AND WE WILL ASSUME NO LIABILITY OR RESPONSIBILITY FOR ANY
         (1) ERRORS, MISTAKES, OR INACCURACIES OF CONTENT AND MATERIALS, (2)

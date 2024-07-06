@@ -8,7 +8,7 @@ const PriceList = () => {
         title="Lego Retirement Deals"
         description="Monitors soon to retire lego sets across multiple websites."
         prices={[29.99, 24.99, 19.99]}
-        priceIds={['price_1PYTiSJJRepiHZ8dZLk70VDe', 'price_2PYTiSJJRepiHZ8dZLk70VDe', 'price_3PYTiSJJRepiHZ8dZLk70VDe']} // Add the respective priceIds
+        priceIds={['price_1PYTiSJJRepiHZ8dZLk70VDe', 'price_1PYSBuJJRepiHZ8dpO4kIJq5', 'price_1PZgoFJJRepiHZ8dpr6bxex2']} // Add the respective priceIds
         image="https://i.imgur.com/lOcRZPP.jpeg"
       />
       <PriceCard

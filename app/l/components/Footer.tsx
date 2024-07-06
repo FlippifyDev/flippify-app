@@ -6,22 +6,24 @@ import { BsTwitterX } from "react-icons/bs";
 import { FaDiscord, FaInstagram, FaTiktok } from 'react-icons/fa6';
 import { Lato } from 'next/font/google';
 
-const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin']});
+const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
 const Footer = () => {
   return (
     <div className="w-full select-none bg-white">
-      <footer className="footer flex flex-col md:flex-row items-center justify-between p-2">
-        <aside className="grid-flow-col items-center">
-          <a className={`${lato.className} text-black text-2xl`}>f</a><p className="text-black">Copyright © {new Date().getFullYear()} - All right reserved</p>
+      <footer className="footer flex flex-col md:flex-row items-center justify-between p-4">
+        <aside className="flex items-center">
+          <a className={`${lato.className} text-black text-2xl font-bold`}>f</a>
+          <p className="text-black ml-2">Copyright © {new Date().getFullYear()} - All right reserved</p>
         </aside>
-        <nav className="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
-            <div className="flex flex-row text-black">
-              <Link href='https://www.instagram.com/flippifyuk/'><button className="mx-2"><FaInstagram className="text-2xl"/></button></Link>
-              <Link href='https://www.tiktok.com/@flippifyuk?lang=en'><button className="mx-2"><FaTiktok className="text-2xl"/></button></Link>
-              <Link href='https://x.com/FlippifyUK'><button className="mx-2"><BsTwitterX className="text-2xl"/></button></Link>
-              <Link href='https://discord.gg/gNPYfe7YFm'><button className="mx-2"><FaDiscord className="text-2xl"/></button></Link>
-            </div>
+        <aside className="flex justify-center w-full md:w-auto my-2 md:my-0 md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
+          <Link href="legal" className="text-black font-bold">Legal</Link>
+        </aside>
+        <nav className="flex items-center gap-4">
+          <Link href='https://www.instagram.com/flippifyuk/'><button className="mx-2 text-black"><FaInstagram className="text-2xl" /></button></Link>
+          <Link href='https://www.tiktok.com/@flippifyuk?lang=en'><button className="mx-2 text-black"><FaTiktok className="text-2xl" /></button></Link>
+          <Link href='https://x.com/FlippifyUK'><button className="mx-2 text-black"><BsTwitterX className="text-2xl" /></button></Link>
+          <Link href='https://discord.gg/gNPYfe7YFm'><button className="mx-2 text-black"><FaDiscord className="text-2xl" /></button></Link>
         </nav>
       </footer>
     </div>
@@ -29,3 +31,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

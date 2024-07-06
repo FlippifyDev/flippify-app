@@ -21,7 +21,7 @@ const SignOutButton = () => {
 
   return (
     <button
-      className="text-greyText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transform active:scale-90 transition-transform duration-200 hover:bg-red-600 hover:text-white"
+      className="text-greyText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transform active:scale-90 transition duration-200 hover:bg-red-600 hover:text-white"
       onClick={handleSignOut}
     >
       <span className="col-span-2 text-lg"><FaSignOutAlt /></span>
@@ -31,3 +31,4 @@ const SignOutButton = () => {
 };
 
 export default SignOutButton;
+    

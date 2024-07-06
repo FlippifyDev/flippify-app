@@ -53,7 +53,7 @@ const Sidebar = () => {
             <li>
             <Link
               href="https://discord.gg/gNPYfe7YFm"
-              className="text-greyText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transform active:scale-90 transition-transform duration-200"
+              className="text-greyText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transform active:scale-90 transition duration-200"
             >
               <span className="col-span-2 text-lg"><FaDiscord /></span>
               <span className="col-span-10 text-base">Discord</span>

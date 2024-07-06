@@ -5,7 +5,7 @@ import createBillingPortalUrl from '@/app/api/stripe-handlers/create-billing-por
 import { TbReportMoney } from "react-icons/tb";
 
 // External Imports
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 
 interface CustomUser {
@@ -47,7 +47,7 @@ const BillingPortalButton = () => {
 
   return (
     <button
-      className="text-greyText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transform active:scale-90 transition-transform duration-200"
+      className="text-greyText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transform active:scale-90 transition duration-200"
       onClick={handleBillingPortalButtonClick}
     >
       <span className="col-span-2 text-lg"><TbReportMoney /></span>

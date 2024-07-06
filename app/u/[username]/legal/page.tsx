@@ -1,10 +1,10 @@
-import Legal from "../../components/Legal";
-import UserLayout from '../../components/UserLayout';
+import Legal from '@/app/components/Legal';
+import UserLegalLayout from '../../components/UserLegalLayout';
 
 export default function LegalPage() {
   return (
-    <UserLayout>
+    <UserLegalLayout>
       <Legal />
-    </UserLayout>
+    </UserLegalLayout>
   );
 }

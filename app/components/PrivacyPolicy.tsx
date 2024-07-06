@@ -1,7 +1,6 @@
 import React from "react";
-import { GiMoneyStack } from "react-icons/gi";
 
-const Legal = () => {
+const PrivacyPolicy = () => {
   return (
     <div>
       <h1 className="text-white text-xl font-bold">PRIVACY POLICY</h1>
@@ -11,7 +10,7 @@ const Legal = () => {
         This privacy notice for Flippify ('we', 'us', or 'our'), describes how
         and why we might collect, store, use, and/or share ('process') your
         information when you use our services ('Services'), such as when you:
-        Visit our website at http://www.flippify.co.uk, or any website of ours
+        Visit our website at https://www.flippify.co.uk, or any website of ours
         that links to this privacy notice Engage with us in other related ways,
         including any sales, marketing, or events Questions or concerns? Reading
         this privacy notice will help you understand your privacy rights and
@@ -548,4 +547,4 @@ const Legal = () => {
   );
 };
 
-export default Legal;
+export default PrivacyPolicy;

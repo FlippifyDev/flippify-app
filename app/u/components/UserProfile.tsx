@@ -8,7 +8,7 @@ const UserProfile = () => {
 	const { data: session } = useSession();
 
 	return (
-		<div className="flex items-center space-x-3 bg-base-200 p-1 rounded-full shadow-md">
+		<div className="flex items-center space-x-3 bg-base-200 p-1 rounded-2xl shadow-md">
 			{session?.user && (
 				<div className="text-base font-medium pl-3 text-white">
 					{session.user.name}

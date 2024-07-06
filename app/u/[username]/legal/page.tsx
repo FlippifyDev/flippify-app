@@ -4,7 +4,7 @@ import UserLayout from '../../components/UserLayout';
 export default function LegalPage() {
   return (
     <UserLayout>
-    <Legal />
-  </UserLayout>
+      <Legal />
+    </UserLayout>
   );
 }

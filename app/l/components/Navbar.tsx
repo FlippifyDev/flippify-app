@@ -77,7 +77,7 @@ const Navbar = () => {
           <Link href="/l/about">About</Link>
         </li>
         <li className="transition duration-100 hover:scale-110 rounded-btn p-1">
-          <a href="https://discord.gg/gNPYfe7YFm">Discord</a>
+          <Link href="https://discord.gg/gNPYfe7YFm">Discord</Link>
         </li>
       </ul>
 

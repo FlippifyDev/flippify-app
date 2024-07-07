@@ -3,6 +3,8 @@ import Stripe from 'stripe';
 
 const createCheckoutSession = async (username: string, customerId: string, priceId: string) => {
     const stripeAPIKey = process.env.STRIPE_SECRET_KEY as string;
+    const root = "https://flippify.co.uk"
+    const local = "http://localhost:3000"
 
     if (!stripeAPIKey) {
         throw new Error('Stripe api key not found');
@@ -11,8 +13,8 @@ const createCheckoutSession = async (username: string, customerId: string, price
     const stripe = new Stripe(stripeAPIKey);
 
     try {
-        const successUrl = `http://localhost:3000/u/${username}/plans`;
-        const cancelUrl = `http://localhost:3000/u/${username}/plans`;
+        const successUrl = `${root}/u/${username}/plans`;
+        const cancelUrl = `${root}/u/${username}/plans`;
 
         const checkoutSession = await stripe.checkout.sessions.create({
             customer: customerId,

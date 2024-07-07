@@ -3,8 +3,8 @@ import Stripe from 'stripe';
 
 const createBillingPortalUrl = async ( username: string, customerId: string) => {
     const stripeAPIKey = process.env.STRIPE_SECRET_KEY as string;
-    const root = "flippify.co.uk"
-    const local = "localhost:3000"
+    const root = "https://flippify.co.uk"
+    const local = "http://localhost:3000"
 
     if (!stripeAPIKey) {
         throw new Error('Stripe api key not found');
@@ -15,7 +15,7 @@ const createBillingPortalUrl = async ( username: string, customerId: string) => 
     try {
         const billingPortal = await stripe.billingPortal.sessions.create({
             customer: customerId,
-            return_url: `http://${root}/u/${username}/dashboard`
+            return_url: `${root}/u/${username}/dashboard`
         })
 
         return billingPortal["url"]

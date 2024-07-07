@@ -3,3 +3,4 @@ Disallow:
 Crawl-delay: 5
 Disallow: /cgi-bin/
 Disallow: /api/
+x-robots-tag: index

@@ -3,7 +3,7 @@ import ProductCard from "./ProductCard";
 
 //h-56 grid grid-cols-2 gap-10 px-10 py-10 content-stretch
 const ProductList: React.FC = () => {
-    const legoRetirementWebsites = ["Amazon", "John Lewis", "Toys R' Us", "Ebay", "Kerrison Toys", "Zavvi", "Argos", "Fenwick", "Hamleys"]
+    const legoRetirementWebsites = ["Amazon", "John Lewis", "eBay", "Hamleys", "Zavvi", "More soon..."]
     return (
         <div className="flex flex-wrap justify-center mt-10 mb-10 md:px-10">
             <ProductCard 

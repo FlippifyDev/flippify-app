@@ -19,8 +19,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
   websites,
 }) => {
   return (
-    <div className="px-10 py-10">
-      <div className="card bg-black image-full max-w-lg lg:max-w-2xl mx-auto shadow-lg h-auto sm:h-auto md:h-[36rem]">
+    <div className="px-2 py-2 md:px-10 md:py-10">
+      <div className="card bg-black image-full max-w-lg lg:max-w-2xl shadow-lg h-auto sm:h-auto md:h-[36rem]">
         <figure className="w-full">
           <Image src={image} alt={title} width={1000} height={1000} />
         </figure>

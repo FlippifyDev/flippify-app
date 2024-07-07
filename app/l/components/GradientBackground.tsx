@@ -1,16 +1,10 @@
 'use client';
 
-import React, { useEffect, ReactNode } from 'react';
+import React, { useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
-import WhiteSection from "./WhiteSection";
-import Footer from "../components/Footer";
-
-interface GradientBackgroundProps {
-  children: ReactNode;
-}
 
 
-const GradientBackground: React.FC<GradientBackgroundProps> = ({ children }) => {
+const GradientBackground = () => {
   const controls = useAnimation();
 
   useEffect(() => {
@@ -37,7 +31,7 @@ const GradientBackground: React.FC<GradientBackgroundProps> = ({ children }) => 
               ease: 'linear'
             }
           });
-          await new Promise(resolve => setTimeout(resolve, 50)); // Wait for 15 seconds before starting the next animation
+          await new Promise(resolve => setTimeout(resolve, 50)); // Wait for 50 milliseconds before starting the next animation
         } catch (error) {
           console.error('Error starting animation:', error);
           break;
@@ -53,14 +47,13 @@ const GradientBackground: React.FC<GradientBackgroundProps> = ({ children }) => 
   }, [controls]);
 
   return (
-    <motion.div
-      className="relative top-0 left-0 w-full h-full"
-      animate={controls}
-      >
-      <WhiteSection>
-        {children}
-      </WhiteSection>
-    </motion.div>
+    <div>
+      <motion.div
+        className='absolute inset-0'
+        animate={controls}
+        >
+      </motion.div>
+    </div>
   );
 };
 

@@ -10,14 +10,14 @@ const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
 const Footer = () => {
   return (
-    <div className="w-full select-none bg-white">
-      <footer className="footer flex flex-col md:flex-row items-center justify-between p-4">
+    <div className=" w-full select-none bg-white flex justify-center">
+      <footer className="footer flex flex-col md:flex-row items-center md:items-end justify-between p-4">
         <aside className="flex items-center">
           <a className={`${lato.className} text-black text-2xl font-bold`}>f</a>
           <p className="text-black ml-2">Copyright © {new Date().getFullYear()} - All right reserved</p>
         </aside>
-        <aside className="flex justify-center w-full md:w-auto my-2 md:my-0 md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
-          <Link href="legal" className="text-black font-bold">Legal</Link>
+        <aside className="flex justify-center w-full md:w-auto mb-1 md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
+          <Link href="legal" className="text-black hover:underline">Legal</Link>
         </aside>
         <nav className="flex items-center gap-4">
           <Link href='https://www.instagram.com/flippifyuk/'><button className="mx-2 text-black"><FaInstagram className="text-2xl" /></button></Link>

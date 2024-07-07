@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-const WhiteSection: React.FC = () => {
+
+const WhiteSection = () => {
   return (
-    <div className="relative w-full">
-      {/* SVG with absolute positioning */}
+    <div className="absolute z-10 bottom-0 w-full">
       <svg
         id="visual"
         viewBox="0 0 900 600"
@@ -12,7 +12,7 @@ const WhiteSection: React.FC = () => {
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
         version="1.1"
-        className="absolute top-0 left-0 w-full h-auto z-10"
+        className="w-full h-auto"
       >
         {/* SVG paths */}
         <path

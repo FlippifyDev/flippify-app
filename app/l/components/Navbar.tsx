@@ -25,14 +25,14 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className={`navbar grid grid-cols-12 grid-rows-1 items-center px-4 py-3 text-white transition duration-300 ${isScrolled ? 'bg-base-100 opacity-90 transition-colors duration-500 rounded-lg' : 'bg-transparent'}`}>
+    <div className={`navbar grid grid-cols-12 grid-rows-1 items-center px-4 py-3 text-white transition duration-300 ${isScrolled ? 'bg-base-100 opacity-90 transition-colors duration-500' : 'bg-transparent'}`}>
       {/* Logo or Brand */}
       <div className="col-span-2">
-        <a className={`${lato.className} text-white text-4xl select-none`}>flippify</a>
+        <a href="/l/home" className={`${lato.className} text-white text-4xl hover:text-gray-300 transition-colors duration-400`}>flippify</a>
       </div>
 
       {/* Sidebar Drawer */}
-      <div className="drawer md:hidden flex justify-end">
+      <div className="drawer md:hidden flex justify-end col-span-10">
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
         {/* Right Side Menu (IoMenu for Small Screens) */}
         <div className="drawer-content flex flex-col lg:ml-64 right-0">

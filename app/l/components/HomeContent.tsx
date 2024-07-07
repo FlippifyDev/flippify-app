@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'] });
 const HomeContent = ({ className = '' }) => {
   return (
     <div className={`home-details-container ${className}`}>
-      <div className='flex flex-col items-center mt-10 space-y-8'>
+      <div className='flex flex-col items-center space-y-16'>
         <p className={`${lato.className} text-5xl from-textGradStart to-textGradEnd to-60% bg-gradient-to-tr bg-clip-text text-transparent py-1`}>
           Flipping
           <a className={`${inter.className} mb-8 text-white text-5xl font-bold`}> Made Easy.</a>

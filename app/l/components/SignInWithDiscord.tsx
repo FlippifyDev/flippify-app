@@ -32,8 +32,9 @@ const SignInWithDiscord = () => {
     
     return (
         <div>
-            <button className="btn btn-primary text-white bg-discordBlue border-discordBlue" onClick={handleSignIn}>
-                <FaDiscord className="text-3xl mr-2" /> Sign in with Discord
+            <button className="btn btn-primary text-white bg-discordBlue border-discordBlue lg:w-56" onClick={handleSignIn}>
+                <FaDiscord className="text-xl lg:mr-2 sm:text-3xl" /> 
+                <span className='sm:inline md:hidden lg:inline text-xs sm:text-sm'>Sign in with Discord</span>
             </button>
             {isLoading && (
                 <div className="mt-4">

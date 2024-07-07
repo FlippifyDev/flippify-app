@@ -8,6 +8,13 @@ import {
   MdOutlineSportsMartialArts,
 } from "react-icons/md";
 import { FaPeopleGroup } from "react-icons/fa6";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About Flippify",
+  description:
+    "Learn more about Flippify and how we provide lightning-fast alerts to exclusive deals on limited-release items. Discover our features including instant alerts, automated bots, constant support, community engagement, frequent updates, and proven expertise. Join us to never miss out on valuable opportunities!",
+};
 
 export default function About() {
   return (

@@ -8,7 +8,8 @@ const inter = Inter({ subsets: ['latin'] });
 
  
 export const metadata: Metadata = {
-  title: 'Flippify'
+  title: 'Flippify',
+  description: 'Flippify - Your ultimate platform for flipping, buying, and selling unique items. Join our community to discover great deals, rare finds, and a seamless trading experience. Start flipping today!'
 }
 
 

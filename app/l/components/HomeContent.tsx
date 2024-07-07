@@ -4,6 +4,7 @@ import Image from 'next/image';
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 const inter = Inter({ subsets: ['latin'] });
 
+
 const HomeContent = ({ className = '' }) => {
   return (
     <div className={`home-details-container ${className}`}>

@@ -6,10 +6,9 @@ import GradientBackground from "../l/components/GradientBackground";
 const Loading = () => {
   const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
 
-
   return (
-      <div className="z-0">
-      <GradientBackground />
+      <div>
+        <GradientBackground />
         <div className="flex flex-col items-center justify-center min-h-screen">
           <div className="mt-4 text-white text-lg font-semibold z-30">
             {randomJoke}

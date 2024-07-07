@@ -6,12 +6,11 @@ import { Metadata } from 'next'
 
 const inter = Inter({ subsets: ['latin'] });
 
- 
-export const metadata: Metadata = {
+const metadata: Metadata = {
   title: 'Flippify',
-  description: 'Flippify - Your ultimate platform for flipping, buying, and selling unique items. Join our community to discover great deals, rare finds, and a seamless trading experience. Start flipping today!',
-  robots: "all"
-}
+  description: 'Your ultimate platform for flipping, buying, and selling unique items.',
+  robots: 'index', 
+};
 
 
 export default function RootLayout({
@@ -22,9 +21,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="!scroll-smooth">
       <body className={inter.className}>
-        <Providers>
-            {children}  
-        </Providers>
+        {/* Providers component */}
+        <Providers>{children}</Providers>
       </body>
     </html>
   )

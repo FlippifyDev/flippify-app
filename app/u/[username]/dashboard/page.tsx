@@ -4,10 +4,7 @@ import UserLayout from "../../components/UserLayout";
 const DashboardPage = () => {
   return (
     <UserLayout>
-      <div>
-        <h1>Developing... :)</h1>
-        <p>To continue purchasing a plan, head to Plans.</p>
-      </div>
+      <div className="text-2xl text-white font-bold flex justify-center">Dashboard</div>
     </UserLayout>
   );
 };

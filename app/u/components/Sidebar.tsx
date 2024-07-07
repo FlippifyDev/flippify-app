@@ -39,10 +39,10 @@ const Sidebar = () => {
 
             {/* Main Menu Section */}
             <div>
-              <a className="text-white text-lg font-bold select-none">Dashboard</a>
+              <a className="text-white text-lg font-bold select-none">Home</a>
             </div>
             <li>
-              <SideBarButton text="Home" redirect="dashboard" symbol={<FaHouse className="text-lg" />} />
+              <SideBarButton text="Dashboard" redirect="dashboard" symbol={<FaHouse className="text-lg" />} />
             </li>
             <li>
               <SideBarButton text="Plans" redirect="plans" symbol={<FaSearch className="text-lg" />} />

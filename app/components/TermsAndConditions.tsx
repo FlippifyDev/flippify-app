@@ -15,7 +15,7 @@ const TermsAndConditions = () => {
         that allow our users to make the most of their reselling business. With
         our services, users can access deals faster, use our tools available and
         our community to have the best chance at accelerating their profits. You
-        can contact us by phone at 07842522682, email at "support@flippify.co.uk"
+        can contact us by phone at 07842522682, email at &quot;support@flippify.co.uk&quot;.
         These Legal Terms constitute a legally binding agreement made between
         you, whether personally or on behalf of an entity (&apos;you&apos;), and Flippify,
         concerning your access to and use of the Services. You agree that by

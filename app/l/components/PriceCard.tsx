@@ -32,6 +32,7 @@ const PriceCard: React.FC<PriceCardProps> = ({ title, prices, priceIds, descript
               width={400}
               height={400}
               className="object-cover rounded-lg"
+              loading="lazy"
             />
           </div>
 

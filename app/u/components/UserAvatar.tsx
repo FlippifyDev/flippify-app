@@ -22,6 +22,7 @@ const UserAvatar = () => {
                     src={avatar}
                     width={50}
                     height={50}
+                    loading="lazy"
                 />
             </div>
         </div>

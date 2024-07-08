@@ -13,6 +13,7 @@ const BrowserMockup = () => {
               alt="Browser Mockup"
               width={960}
               height={540}
+              loading="lazy"
             />
           </figure>
         </div>

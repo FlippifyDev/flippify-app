@@ -20,8 +20,3 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
-//flex items-center space-x-3 bg-base-200 p-3 rounded-full shadow-md
-//text-base font-medium pl-3 text-white
-
-//flex items-center space-x-3
-//text-base font-medium pl-3

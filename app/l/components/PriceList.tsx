@@ -3,7 +3,7 @@ import PriceCard from './PriceCard';
 
 const PriceList = () => {
   return (
-    <div className="flex flex-wrap justify-center xl:w-11/12 h-full mb-5 mt-5 border">
+    <div className="flex flex-wrap justify-center xl:w-11/12 h-full mb-5 mt-5">
       <PriceCard
         title="Standard Membership"
         description="Gain access to our all-in-one service providing the best tools, bots and insights needed to accelerate your profits."

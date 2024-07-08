@@ -298,7 +298,8 @@ const jokes = [
     "Ford... you're turning into a penguin. Stop it.",
     "Don't panic and carry a towel",
     "The ships hung in the sky in much the same way that bricks don't",
-    "I've been talking to the main computer...It hates me."
+    "I've been talking to the main computer...It hates me.",
+    "Never even heard of mesh monitors"
 ];
 
 export default jokes;

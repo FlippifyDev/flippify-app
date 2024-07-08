@@ -1,7 +1,7 @@
 import ProductCard from "./ProductCard";
+import ComingSoonProductCard from "./ComingSoonProductCard"
 
 
-//h-56 grid grid-cols-2 gap-10 px-10 py-10 content-stretch
 const ProductList: React.FC = () => {
     const legoRetirementWebsites = ["Amazon", "John Lewis", "eBay", "Hamleys", "Zavvi", "More soon..."]
     return (
@@ -12,11 +12,10 @@ const ProductList: React.FC = () => {
                 image="https://i.imgur.com/lOcRZPP.jpeg"
                 websites={legoRetirementWebsites}
             />
-            <ProductCard 
+            <ComingSoonProductCard 
                 title="Coming Soon..." 
-                description="Many more deals coming your way shortly." 
+                description="Many more bots coming your way shortly." 
                 image="https://i.imgur.com/lok7Wcq.png"
-                websites={[]}
             />
         </div>
     );

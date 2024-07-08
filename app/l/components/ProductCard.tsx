@@ -38,7 +38,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
               ))}
             </p>
           )}
-          <div className="card-actions flex justify-center sm:justify-end">
+          <div className="card-actions mt-auto flex justify-center sm:justify-end">
             <ViewPrices />
           </div>
         </div>

@@ -27,9 +27,6 @@ const config: Config = {
         discordBlue: '#5865F2',
       },
     },
-    borderRadius: {
-      '4xl': '50px',
-    },
   },
   daisyui: {
     themes: ['light', 'dark'],

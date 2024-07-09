@@ -1,17 +1,36 @@
+// WhiteSection.tsx
 import React from "react";
 
-const WhiteSection = () => {
+interface Props {
+  topPadding: {
+    base: number;
+    sm?: number;
+    md?: number;
+    lg?: number;
+    xl?: number;
+  };
+}
+
+const WhiteSection: React.FC<Props> = ({ topPadding }) => {
   return (
     <div className="absolute top-0 left-0 w-full z-10">
       <svg
         id="visual"
-        viewBox="0 0 900 6000" // Updated the viewBox height
+        viewBox="0 0 900 6000"
         width="900"
-        height="6000" // Updated the height
-        xmlns="http://www.w3.org/6000/svg"
+        height="6000"
+        xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
         version="1.1"
         className="w-full h-auto"
+        style={{
+          paddingTop: `${topPadding.base}px`,
+          // Responsive padding based on screen size
+          ...(topPadding.sm && { '@screen sm': { paddingTop: `${topPadding.sm}px` } }),
+          ...(topPadding.md && { '@screen md': { paddingTop: `${topPadding.md}px` } }),
+          ...(topPadding.lg && { '@screen lg': { paddingTop: `${topPadding.lg}px` } }),
+          ...(topPadding.xl && { '@screen xl': { paddingTop: `${topPadding.xl}px` } }),
+        }}
       >
         {/* SVG paths */}
         <path

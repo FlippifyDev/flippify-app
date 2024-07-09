@@ -10,13 +10,13 @@ import { FaPeopleGroup } from "react-icons/fa6";
 
 const AboutFlippify = () => {
   return (
-    <div className="flex flex-col items-center justify-center flex-grow mt-10">
-        <h1 className="text-5xl text-white font-bold mb-8">About Flippify.</h1>
-        <p className="text-lg text-greyText text-center max-w-2xl mb-10">
-          Providing lightning-fast alerts to exclusive deals on limited-release
-          items, ensuring you never miss out on valuable opportunities.
+    <div className="flex flex-col items-center justify-center flex-grow mt-16">
+        <div className="bg-base-100 bg-opacity-95 p-8 shadow-lg w-full max-w-4xl border-2 border-white" style={{ borderRadius: '40px' }}>
+            <h1 className="text-5xl text-white font-bold mb-8 border">About Flippify.</h1>
+            <p className="text-lg text-greyText text-center max-w-2xl mb-10 border">
+            Providing lightning-fast alerts to exclusive deals on limited-release
+            items, ensuring you never miss out on valuable opportunities.
         </p>
-        <div className="bg-base-100 bg-opacity-80 p-8 rounded-4xl shadow-lg w-full max-w-4xl border-2 border-white">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2">
             <FeatureCard
               title="Instant Alerts"

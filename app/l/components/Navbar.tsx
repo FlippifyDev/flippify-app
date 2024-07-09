@@ -53,6 +53,9 @@ const Navbar = () => {
               <Link href="/l/products">Products</Link>
             </li>
             <li className="transition duration-100 active:scale-105 rounded-btn p-1">
+              <Link href="l/pricing">Pricing</Link>
+            </li>
+            <li className="transition duration-100 active:scale-105 rounded-btn p-1">
               <Link href="/l/about">About</Link>
             </li>
             <li className="transition duration-100 active:scale-105 rounded-btn p-1">
@@ -72,6 +75,9 @@ const Navbar = () => {
         </li>
         <li className="transition duration-100 hover:scale-110 rounded-btn p-1">
           <Link href="/l/products">Products</Link>
+        </li>
+        <li className="transition duration-100 hover:scale-110 rounded-btn p-1">
+          <Link href="l/pricing">Pricing</Link>
         </li>
         <li className="transition duration-100 hover:scale-110 rounded-btn p-1">
           <Link href="/l/about">About</Link>

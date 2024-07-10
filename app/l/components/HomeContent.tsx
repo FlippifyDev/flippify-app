@@ -23,9 +23,6 @@ const HomeContent = ({ className = '' }) => {
         <div className='flex flex-row items-center space-x-8'>
           <Image src="https://i.imgur.com/7Q3ADqr.png" alt="MobileExamples" priority={true} width={960} height={540}/>
         </div>
-        <div className='flex flex-row items-center space-x-8'>
-          <Image src="https://i.imgur.com/7Q3ADqr.png" alt="MobileExamples" priority={true} width={960} height={540}/>
-        </div>
       </div>
     </div>
   );

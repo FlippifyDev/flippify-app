@@ -1,22 +1,30 @@
 import React from 'react';
 import PriceCard from './PriceCard';
+import { Lato, Inter } from 'next/font/google';
+
+const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
+const inter = Inter({ subsets: ['latin'] });
 
 const PriceList = () => {
   return (
     <div className="flex flex-wrap justify-center xl:w-11/12 h-full mb-5 mt-5">
+      <div className='flex flex-col items-center space-y-5'>
+        <div className="flex justify-center">
+        <p className={`${lato.className} text-5xl from-textGradStart to-textGradEnd to-60% bg-gradient-to-tr bg-clip-text text-transparent py-1`}>
+          Pricing
+          <a className={`${inter.className} mb-8 text-white text-5xl font-bold`}> Made Easy.</a>
+        </p>
+        </div>
+        
+      </div>
       <PriceCard
-        title="Lego Retirement Deals"
-        description="Monitors soon to retire lego sets across multiple websites."
-        prices={[29.99, 24.99, 19.99]}
-        priceIds={['price_1PYTiSJJRepiHZ8dZLk70VDe', 'price_1PYSBuJJRepiHZ8dpO4kIJq5', 'price_1PZgoFJJRepiHZ8dpr6bxex2']} // Add the respective priceIds
-        image="https://i.imgur.com/lOcRZPP.jpeg"
-      />
-      <PriceCard
-        title="Coming Soon..."
-        description="Many more deals coming your way shortly."
-        prices={[]}
-        priceIds={[]} // Add empty priceIds array for unavailable plans
-        image="https://cdn.leonardo.ai/users/a47d5e66-3419-4c70-8651-b3e13a1a92ff/generations/38af42da-ec10-4e55-b788-ddb0e8d7b43d/Default_A_vibrant_masterpiece_rough_color_pencil_sketch_of_a_r_2.jpg"
+        title="Early Access"
+        description="Gain access to our all-in-one service providing all tools, bots and insights needed to accelerate your profits."
+        prices={[44.99]}
+        priceIds={{
+          monthly: 'price_1Pak8GJJRepiHZ8dicYIFfd6',
+          yearly: 'price_1Pak9gJJRepiHZ8d6sB0aNlL',
+        }}
       />
     </div>
   );

@@ -8,15 +8,11 @@ import {
 } from "react-icons/md";
 import { FaPeopleGroup } from "react-icons/fa6";
 
-const AboutFlippify = () => {
+const AboutFlippify = () => { 
   return (
-    <div className="flex flex-col items-center justify-center flex-grow mt-16">
-        <div className="bg-base-100 bg-opacity-95 p-8 shadow-lg w-full max-w-4xl border-2 border-white" style={{ borderRadius: '40px' }}>
-            <h1 className="text-5xl text-white font-bold mb-8 border">About Flippify.</h1>
-            <p className="text-lg text-greyText text-center max-w-2xl mb-10 border">
-            Providing lightning-fast alerts to exclusive deals on limited-release
-            items, ensuring you never miss out on valuable opportunities.
-        </p>
+    <div className="flex flex-col items-center justify-center flex-grow mt-16 pt-12">
+        <div className="bg-base-100 bg-opacity-95 p-8 shadow-lg w-full max-w-4xl border-2 border-white text-center" style={{ borderRadius: '40px' }}>
+            <h1 className="text-xl text-white font-bold mb-8">A must-have for any reseller looking to rapidly accelerate their profits.</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2">
             <FeatureCard
               title="Instant Alerts"

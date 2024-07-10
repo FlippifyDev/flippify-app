@@ -30,7 +30,7 @@ const PriceCard: React.FC<PriceCardProps> = ({ title, prices, description, price
 
   return (
     <div className="m-5 sm:scale-90 md:scale-90 lg:max-w-2xl xl:max-w-3xl w-auto">
-      <div className="card lg:card-side bg-base-100 shadow-xl opacity-90 border border-white flex flex-col items-center justify-center mt-20 p-6">
+      <div className="card lg:card-side bg-base-100 shadow-xl opacity-90 border border-white flex flex-col items-center justify-center mt-8 p-6">
         <div className="w-full lg:w-3/4 xl:w-3/4 p-4 lg:p-6">
           <h2 className="card-title text-white text-xl lg:text-2xl font-bold mb-2 flex justify-center">{title}</h2>
           <p className="text-white text-sm lg:text-base mb-4 flex justify-center text-center">{description}</p>

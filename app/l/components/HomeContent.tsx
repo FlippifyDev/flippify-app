@@ -2,6 +2,8 @@ import { Lato, Inter } from 'next/font/google';
 import Image from 'next/image';
 import GetEarlyAccess from './GetEarlyAccess';
 import AboutFlippify from './AboutFlippify';
+import PhoneMockup from './PhoneMockup';
+import BrowserMockup from './BrowserMockup';
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 const inter = Inter({ subsets: ['latin'] });
@@ -16,13 +18,12 @@ const HomeContent = ({ className = '' }) => {
           <a className={`${inter.className} mb-8 text-white text-5xl font-bold`}> Made Easy.</a>
         </p>
         <p className='mb-8 text-greyText text-lg text-center m-2'>
-          We Provide An All-In-One Service Focused On Accelerating Your Reselling Profits.
+          Providing An All-In-One Service Focused On Accelerating Your Reselling Profits.
         </p>
         <GetEarlyAccess />
         <AboutFlippify />
-        <div className='flex flex-row items-center space-x-8'>
-          <Image src="https://i.imgur.com/7Q3ADqr.png" alt="MobileExamples" priority={true} width={960} height={540}/>
-        </div>
+        <PhoneMockup />
+        <GetEarlyAccess />
       </div>
     </div>
   );

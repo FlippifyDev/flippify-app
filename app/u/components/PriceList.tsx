@@ -11,7 +11,7 @@ const PriceList = () => {
       <div className='flex flex-col items-center space-y-5'>
         <div className="flex justify-center">
         <p className={`${lato.className} text-5xl from-textGradStart to-textGradEnd to-60% bg-gradient-to-tr bg-clip-text text-transparent py-1`}>
-          Pricing
+          Pricing 
           <a className={`${inter.className} mb-8 text-white text-5xl font-bold`}> Made Easy.</a>
         </p>
         </div>

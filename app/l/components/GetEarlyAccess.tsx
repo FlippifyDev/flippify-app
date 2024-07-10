@@ -27,7 +27,7 @@ const SignInWithDiscord = () => {
     };
     
     return (
-        <button className="btn bg-white text-black rounded-lg mr-1" onClick={handleSignIn}>Get Early Access</button>
+        <button className="btn bg-white text-black rounded-lg mr-1 hover:bg-textGradStart hover:border-white transition-color duration-300" onClick={handleSignIn}>Get Early Access</button>
     )
 }
 

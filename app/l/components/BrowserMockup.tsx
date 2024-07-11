@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Lato, Inter } from 'next/font/google';
 import GetEarlyAccess from "./GetEarlyAccess";
 
+
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,7 +24,7 @@ const BrowserMockup = () => {
       <div className="mockup-browser bg-base-300 order-1 md:order-2 w-full md:w-auto">
         <div className="mockup-browser-toolbar">
           <div className="input">https://flippify.co.uk</div>
-        </div>
+        </div> 
         <div className="bg-base-200 flex justify-center px-4 py-1">
           <figure>
             <Image

@@ -15,7 +15,7 @@ const BrowserMockup = () => {
           <a className={`${inter.className} mb-8 text-headingDarkText text-4xl font-bold`}> Reselling Efficiency.</a>
         </p>
         <p className="pt-4 text-darkGreyText text-center font-semibold">
-        Access exclusive tools to automate and streamline your reselling. Enjoy seamless integration with Discord and other platforms, offering features you won't find anywhere else.
+        Access exclusive tools to automate and streamline your reselling. Enjoy seamless integration with Discord and other platforms, offering features you won&apos;t find anywhere else.
         </p>
         <div className="flex justify-center pt-6">
           <GetEarlyAccess />

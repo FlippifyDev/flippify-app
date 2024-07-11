@@ -23,7 +23,7 @@ const HomeContent = ({ className = '' }) => {
         <GetEarlyAccess />
         <AboutFlippify />
         <PhoneMockup />
-        <GetEarlyAccess />
+        <BrowserMockup />
       </div>
     </div>
   );

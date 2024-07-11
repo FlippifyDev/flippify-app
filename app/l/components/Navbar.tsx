@@ -2,6 +2,7 @@ import SignInWithDiscord from './SignInWithDiscord';
 import { useState, useEffect, MouseEvent } from 'react';
 import { Lato } from 'next/font/google';
 import { IoMenu } from "react-icons/io5";
+import Link from 'next/link';
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
@@ -49,13 +50,13 @@ const Navbar = () => {
           <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
           <ul className="menu bg-base-200 text-base-content min-h-full w-full p-4">
             <li className="transition duration-100 active:scale-105 rounded-btn p-1">
-              <a href="#home" onClick={(e) => handleSmoothScroll(e, 'home')}>Home</a>
+              <Link href="/l/home">Home</Link>
             </li>
             <li className="transition duration-100 active:scale-105 rounded-btn p-1">
-              <a href="#products" onClick={(e) => handleSmoothScroll(e, 'products')}>Products</a>
+              <Link href="/l/products">Products</Link>
             </li>
             <li className="transition duration-100 active:scale-105 rounded-btn p-1">
-              <a href="#pricing" onClick={(e) => handleSmoothScroll(e, 'pricing')}>Pricing</a>
+              <Link href="/l/pricing">Pricing</Link>
             </li>
             <li className="transition duration-100 active:scale-105 rounded-btn p-1">
               <a href="#about" onClick={(e) => handleSmoothScroll(e, 'about')}>About</a>
@@ -72,13 +73,13 @@ const Navbar = () => {
 
       <ul className="hidden md:flex flex-row space-x-8 col-span-8 justify-center">
         <li className="transition duration-100 hover:scale-110 rounded-btn p-1">
-          <a href="#home" onClick={(e) => handleSmoothScroll(e, 'home')}>Home</a>
+          <Link href="/l/home">Home</Link>
         </li>
         <li className="transition duration-100 hover:scale-110 rounded-btn p-1">
-          <a href="#products" onClick={(e) => handleSmoothScroll(e, 'products')}>Products</a>
+          <Link href="/l/products">Products</Link>
         </li>
         <li className="transition duration-100 hover:scale-110 rounded-btn p-1">
-          <a href="#pricing" onClick={(e) => handleSmoothScroll(e, 'pricing')}>Pricing</a>
+          <Link href="/l/pricing">Pricing</Link>
         </li>
         <li className="transition duration-100 hover:scale-110 rounded-btn p-1">
           <a href="#about" onClick={(e) => handleSmoothScroll(e, 'about')}>About</a>

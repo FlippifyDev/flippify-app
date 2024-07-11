@@ -8,8 +8,8 @@ const inter = Inter({ subsets: ['latin'] });
 
 const BrowserMockup = () => {
   return (
-    <div className="grid sm:grid-cols-1 md:grid-cols-2 pt-12">
-      <div className="order-2 md:order-1 pt-6 md:pt-56 px-2">
+    <div className="grid sm:grid-cols-1 md:grid-cols-2 pt-12 mx-8">
+      <div className="order-2 md:order-1 pt-6 md:pt-44 px-2">
         <p className={`${lato.className} text-4xl from-darkTextGradStart to-darkTextGradEnd to-60% bg-gradient-to-tr bg-clip-text text-transparent py-1 text-center`}>
           Boost
           <a className={`${inter.className} mb-8 text-headingDarkText text-4xl font-bold`}> Reselling Efficiency.</a>

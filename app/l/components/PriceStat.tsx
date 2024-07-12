@@ -11,7 +11,7 @@ interface PriceStatProps {
 
 const PriceStat: React.FC<PriceStatProps> = ({ prices, onPlanSelect, selectedPlan, currencySymbol }) => {
   return (
-    <div className="stats stats-vertical xl:stats-horizontal lg:stats-horizontal md:stats-vertical shadow md:w-auto lg:w-full flex justify-equally">
+    <div className="stats stats-vertical sm:stats-horizontal shadow w-full md:w-auto lg:w-full">
       <div
         className={`stat flex flex-col items-center justify-center hover:cursor-pointer hover:bg-lightGreyHighlight hover:bg-opacity-50 transition-colors duration-200 ${
           selectedPlan === 0 ? 'bg-lightGreyHighlight bg-opacity-50' : 'bg-lightGreyHighlight bg-opacity-0'
@@ -22,8 +22,8 @@ const PriceStat: React.FC<PriceStatProps> = ({ prices, onPlanSelect, selectedPla
         <div className="stat-value text-2xl sm:text-2xl md:text-3xl lg:text-2xl">
           {currencySymbol}{prices[0].toFixed(2)}
         </div>
-        <div className="stat-desc">
-          <del>{currencySymbol}{(prices[0] * 1.28).toFixed(2)}</del> (Early Access Discount)
+        <div className="stat-desc text-center">
+          <del>{currencySymbol}{(prices[0] * 1.28).toFixed(2)}</del>
         </div>
       </div>
 

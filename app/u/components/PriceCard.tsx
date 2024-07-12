@@ -39,8 +39,8 @@ const PriceCard: React.FC<PriceCardProps> = ({
     selectedPlan === 0 ? priceIds.monthly : priceIds.yearly;
 
   return (
-    <div className="m-5 sm:scale-90 md:scale-90 lg:max-w-2xl xl:max-w-3xl w-auto px-0 sm:px-32">
-      <div className="card lg:card-side bg-base-100 shadow-xl opacity-90 border border-white flex flex-col items-center justify-center mt-20 pt-6 pb-6">
+    <div className="sm:scale-90 md:scale-90 lg:max-w-2xl xl:max-w-3xl w-auto px-0 sm:px-32 mt-8 sm:mt-0">
+      <div className="card lg:card-side bg-base-100 shadow-xl opacity-90 border border-white flex flex-col items-center justify-center pt-6 pb-6">
         <div className="w-full px-8 sm:px-6">
           <div className="flex items-center justify-center pb-2">
             <h2
@@ -74,7 +74,7 @@ const PriceCard: React.FC<PriceCardProps> = ({
             )}
             <hr className="w-full" />
           </div>
-          <div className="flex flex-col items-start text-white pt-6 pb-6 pl-2">
+          <div className="flex flex-col items-start text-white pt-6 pb-6 pl-2 sm:text-lg">
             <h2 className="mb-4 font-bold text-lg">What&apos;s included:</h2>
             <div className="grid grid-cols-12 mb-2 items-center">
               <IoMdCheckboxOutline className="col-span-1 inline-block mr-3 text-paymentPlanText" />

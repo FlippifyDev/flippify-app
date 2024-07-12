@@ -55,22 +55,22 @@ const Navbar = () => {
         <div className="drawer-side opacity-97">
           <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
           <ul className="menu bg-base-200 text-base-content min-h-full w-full pt-12">
-            <li className="transition duration-100 active:scale-105 rounded-btn p-1">
+            <li className="transition duration-100 active:scale-105 rounded-btn p-1 text-base">
               <Link href="/l/home">Home</Link>
             </li>
-            <li className="transition duration-100 active:scale-105 rounded-btn p-1">
+            <li className="transition duration-100 active:scale-105 rounded-btn p-1 text-base">
               <Link href="/l/products">Products</Link>
             </li>
-            <li className="transition duration-100 active:scale-105 rounded-btn p-1">
+            <li className="transition duration-100 active:scale-105 rounded-btn p-1 text-base">
               <Link href="/l/pricing">Pricing</Link>
             </li>
-            <li className="transition duration-100 active:scale-105 rounded-btn p-1">
+            <li className="transition duration-100 active:scale-105 rounded-btn p-1 text-base">
               <a href="#about" onClick={(e) => handleSmoothScroll(e, 'about')}>About</a>
             </li>
-            <li className="transition duration-100 active:scale-105 rounded-btn p-1">
+            <li className="transition duration-100 active:scale-105 rounded-btn p-1 text-base">
               <a href="https://discord.gg/gNPYfe7YFm">Discord</a>
             </li>
-            <li className="transition duration-100 active:scale-105 rounded-btn p-1">
+            <li className="transition duration-100 active:scale-105 rounded-btn p-1 text-base">
               <SignInWithDiscordNavbar />
             </li>
           </ul>

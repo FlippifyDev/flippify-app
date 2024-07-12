@@ -23,7 +23,7 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
         {/* Main content area */}
         <div className="flex flex-col xl:ml-80 w-full">
           {/* Navbar */}
-          <div className="fixed top-0 right-0">
+          <div className="fixed top-0 right-0 z-40">
             <Navbar />
           </div>
 

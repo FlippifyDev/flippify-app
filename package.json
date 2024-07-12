@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@netlify/plugin-nextjs": "^5.4.0",
+    "@netlify/plugin-nextjs": "^5.5.1",
     "bcryptjs": "^2.4.3",
     "framer-motion": "^11.2.13",
     "mongoose": "^8.4.4",

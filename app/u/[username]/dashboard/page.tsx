@@ -1,5 +1,11 @@
 import React from "react";
 import UserLayout from "../../components/UserLayout";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'User - Dashboard',
+  description: "Flippify's dashboard, designed to be slick and effective"
+};
 
 const DashboardPage = () => {
   return (

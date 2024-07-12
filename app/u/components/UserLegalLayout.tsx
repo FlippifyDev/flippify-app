@@ -10,7 +10,7 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <Suspense fallback={<Loading />}>
     <div
-      className="min-h-screen bg-cover bg-center bg-fixed overflow-x-hidden"
+      className="min-h-screen bg-cover bg-center bg-fixed overflow-hidden"
       style={{ backgroundImage: `url('${base64SVG}')` }}
     >
       <div className="flex flex-col min-h-screen">
@@ -27,7 +27,7 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
           </div>
 
           {/* Page content */}
-          <div className="scroll-smooth mt-16 p-4 xl:mr-80 flex justify-start">
+          <div className="scroll-smooth mt-16 xl:mr-80 flex justify-start">
             {children}
           </div>
 

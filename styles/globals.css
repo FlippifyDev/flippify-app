@@ -2,11 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
+w-full md:w-auto lg:w-full
+
+.hr-price-stat {
+    border: 0;
+    clear:both;
+    display:block;
+    width: 96%;               
+    background-color:#eeeeee;
+    height: 1px;
+}
+
+
+.mockup-shadow {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25), 0 12px 12px rgba(0, 0, 0, 0.25);
+}
+
+
 .tab {
     padding: 0.5rem 1rem;
     border: 1px solid transparent;
     color: #000;
-  }
+}
   
 .tab-active {
     background-color: #F1F1F1;
@@ -22,7 +39,7 @@
 .menu .active {
     background-color: #e0f7fa; /* Adjust the color as needed */
     color: #00796b; /* Adjust the text color as needed */
-  }
+}
 
 .menu .divider {
     border-top: 1px solid #e0e0e0; /* Adjust the color as needed */

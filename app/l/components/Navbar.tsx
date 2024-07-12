@@ -3,7 +3,7 @@ import { Lato } from 'next/font/google';
 import { IoMenu } from "react-icons/io5";
 import Link from 'next/link';
 import SignInWithDiscord from './SignInWithDiscord';
-
+import SignInWithDiscordNavbar from './SignInWithDiscordNavbar'
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
@@ -52,26 +52,26 @@ const Navbar = () => {
             <IoMenu />
           </label>
         </div>
-        <div className="drawer-side opacity-95">
+        <div className="drawer-side opacity-97">
           <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-          <ul className="menu bg-base-200 text-base-content min-h-full w-full p-4">
-            <li className="transition duration-100 active:scale-105 rounded-btn p-1">
+          <ul className="menu bg-base-200 text-base-content min-h-full w-full pt-12">
+            <li className="transition duration-100 active:scale-105 rounded-btn p-1 text-base">
               <Link href="/l/home">Home</Link>
             </li>
-            <li className="transition duration-100 active:scale-105 rounded-btn p-1">
+            <li className="transition duration-100 active:scale-105 rounded-btn p-1 text-base">
               <Link href="/l/products">Products</Link>
             </li>
-            <li className="transition duration-100 active:scale-105 rounded-btn p-1">
+            <li className="transition duration-100 active:scale-105 rounded-btn p-1 text-base">
               <Link href="/l/pricing">Pricing</Link>
             </li>
-            <li className="transition duration-100 active:scale-105 rounded-btn p-1">
+            <li className="transition duration-100 active:scale-105 rounded-btn p-1 text-base">
               <a href="#about" onClick={(e) => handleSmoothScroll(e, 'about')}>About</a>
             </li>
-            <li className="transition duration-100 active:scale-105 rounded-btn p-1">
+            <li className="transition duration-100 active:scale-105 rounded-btn p-1 text-base">
               <a href="https://discord.gg/gNPYfe7YFm">Discord</a>
             </li>
-            <li className="transition duration-100 hover:scale-110 rounded-btn p-1">
-              <a href="https://discord.gg/gNPYfe7YFm">Sign In</a>
+            <li className="transition duration-100 active:scale-105 rounded-btn p-1 text-base">
+              <SignInWithDiscordNavbar />
             </li>
           </ul>
         </div>

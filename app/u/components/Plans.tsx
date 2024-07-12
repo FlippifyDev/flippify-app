@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import PriceList from "./PriceList";
 import Loading from "../../components/Loading";
 
-export default function Pricing() {
+export default function Plans() {
   return (
     <Suspense fallback={<Loading />}>
       <div
@@ -14,7 +14,7 @@ export default function Pricing() {
           <div className="fixed top-0 left-0 right-0 z-10">
             <Navbar />
           </div>
-          <div className="flex-1 mt-16 overflow-y-auto">
+          <div className="overflow-y-auto">
             <PriceList />
           </div>
         </div>

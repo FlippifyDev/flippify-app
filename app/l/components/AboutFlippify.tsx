@@ -12,8 +12,8 @@ import GetEarlyAccess from "./GetEarlyAccess";
 const AboutFlippify = () => { 
   return (
     <div id="about" className="flex flex-col items-center justify-center flex-grow mt-16 pt-28 pb-8 px-2">
-      <div className="bg-base-100 bg-opacity-95 p-8 shadow-lg w-full max-w-4xl border-2 border-white text-center" style={{ borderRadius: '40px' }}>
-        <h1 className="text-2xl text-white font-bold mb-8">A Must-Have for resellers at every level to boost their profits.</h1>
+      <div className="bg-base-100 bg-opacity-98 p-8 mockup-shadow w-full max-w-4xl border-2 border-white text-center" style={{ borderRadius: '40px' }}>
+        <h1 className="text-2xl text-white font-bold mb-8">A Must-Have for resellers at every level to boost their profits</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2">
             <FeatureCard
               title="Instant Alerts"

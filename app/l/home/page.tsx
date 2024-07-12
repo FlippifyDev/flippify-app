@@ -1,6 +1,7 @@
 import LandingLayout from '../components/LandingLayout';
 import HomeContentWrapper from '../components/HomeContentWrapper';
 import { Metadata } from 'next';
+import Head from 'next/head';
 
 export const metadata: Metadata = {
   title: 'Home - Flippify',
@@ -9,8 +10,13 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <LandingLayout>
-      <HomeContentWrapper />
-    </LandingLayout>
+    <div>
+      <Head>
+        <meta name="google-site-verification" content="Hho6-HQ44X7tDo2PgIXmXtPOFHsg069qvKUSqF3JfkE" />
+      </Head>
+      <LandingLayout>
+        <HomeContentWrapper />
+      </LandingLayout>
+    </div>
   );
 }

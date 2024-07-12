@@ -1,8 +1,8 @@
-import SignInWithDiscord from './SignInWithDiscord';
 import { useState, useEffect, MouseEvent } from 'react';
 import { Lato } from 'next/font/google';
 import { IoMenu } from "react-icons/io5";
 import Link from 'next/link';
+import SignInWithDiscord from './SignInWithDiscord';
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
@@ -22,12 +22,17 @@ const Navbar = () => {
 
   const handleSmoothScroll = (e: MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
-    const element = document.getElementById(id);
-    if (element) {
-      window.scrollTo({
-        top: element.offsetTop - 50, // Adjust offset as needed
-        behavior: 'smooth'
-      });
+    if (window.location.pathname !== '/l/home') {
+      localStorage.setItem('scrollTo', id);
+      window.location.href = `/l/home`;
+    } else {
+      const element = document.getElementById(id);
+      if (element) {
+        window.scrollTo({
+          top: element.offsetTop - 50, // Adjust offset as needed
+          behavior: 'smooth'
+        });
+      }
     }
   };
 

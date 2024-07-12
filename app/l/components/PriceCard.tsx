@@ -61,7 +61,7 @@ const PriceCard: React.FC<PriceCardProps> = ({ title, prices, description }) => 
           )}
           </div>
           <div className="flex flex-col items-center justify-center text-white pt-6 pb-6">
-            <h2 className="mb-4">What&apos;s included:</h2>
+            <h2 className="mb-4 font-bold text-lg">What&apos;s included:</h2>
             
             <div className="flex items-center mb-2">
               <IoMdCheckboxOutline className="inline-block mr-2 text-paymentPlanText" /> 

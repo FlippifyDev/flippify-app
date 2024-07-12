@@ -4,7 +4,7 @@ import UserLayout from '../../components/UserLayout';
 export default function PlansPage() {
   return (
     <UserLayout>
-    <PriceList />
+      <PriceList />
   </UserLayout>
   );
 }

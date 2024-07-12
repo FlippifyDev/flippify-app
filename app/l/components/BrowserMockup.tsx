@@ -21,7 +21,7 @@ const BrowserMockup = () => {
           <GetEarlyAccess />
         </div>
       </div>
-      <div className="mockup-browser bg-base-300 order-1 md:order-2 w-full md:w-auto">
+      <div className="mockup-browser bg-base-300 order-1 md:order-2 w-full md:w-auto mockup-shadow">
         <div className="mockup-browser-toolbar">
           <div className="input">https://flippify.co.uk</div>
         </div> 

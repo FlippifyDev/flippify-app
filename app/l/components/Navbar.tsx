@@ -4,6 +4,7 @@ import { IoMenu } from "react-icons/io5";
 import Link from 'next/link';
 import SignInWithDiscord from './SignInWithDiscord';
 
+
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
 const Navbar = () => {
@@ -69,9 +70,9 @@ const Navbar = () => {
             <li className="transition duration-100 active:scale-105 rounded-btn p-1">
               <a href="https://discord.gg/gNPYfe7YFm">Discord</a>
             </li>
-            <div className="flex justify-center">
-              <SignInWithDiscord />
-            </div>
+            <li className="transition duration-100 hover:scale-110 rounded-btn p-1">
+              <a href="https://discord.gg/gNPYfe7YFm">Sign In</a>
+            </li>
           </ul>
         </div>
       </div>

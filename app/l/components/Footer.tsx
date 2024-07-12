@@ -20,8 +20,8 @@ const Footer = () => {
           <Link href="legal" className="text-black hover:underline">Legal</Link>
         </aside>
         <nav className="flex items-center gap-4">
-          <Link href='https://www.instagram.com/flippifyuk/'><button className="mx-2 text-black"><FaInstagram className="text-2xl" /></button></Link>
-          <Link href='https://www.tiktok.com/@flippifyuk?lang=en'><button className="mx-2 text-black"><FaTiktok className="text-2xl" /></button></Link>
+          {/*<Link href='https://www.instagram.com/flippifyuk/'><button className="mx-2 text-black"><FaInstagram className="text-2xl" /></button></Link>
+          <Link href='https://www.tiktok.com/@flippifyuk?lang=en'><button className="mx-2 text-black"><FaTiktok className="text-2xl" /></button></Link>*/}
           <Link href='https://x.com/FlippifyUK'><button className="mx-2 text-black"><BsTwitterX className="text-2xl" /></button></Link>
           <Link href='https://discord.gg/gNPYfe7YFm'><button className="mx-2 text-black"><FaDiscord className="text-2xl" /></button></Link>
         </nav>

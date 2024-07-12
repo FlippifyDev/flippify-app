@@ -60,17 +60,32 @@ const PriceCard: React.FC<PriceCardProps> = ({ title, prices, description }) => 
             />
           )}
           </div>
-          <div className="flex flex-col items-center justify-center text-white pt-6 pb-6">
+          <div className="flex flex-col items-start justify-center text-white pt-6 pb-6 ml-14">
             <h2 className="mb-4 font-bold text-lg">What&apos;s included:</h2>
             
             <div className="flex items-center mb-2">
               <IoMdCheckboxOutline className="inline-block mr-2 text-paymentPlanText" /> 
-              <p className="mb-0">All Deal-Finding Bots.</p>
+              <p className="mb-0 text-left">All Deal-Finding Bots.</p>
             </div>
-
-            <div className="flex items-center">
+            <div className="flex items-center mb-2">
               <IoMdCheckboxOutline className="inline-block mr-2 text-paymentPlanText" /> 
-              <p className="mb-0">All Deal-Finding Bots.</p>
+              <p className="mb-0 text-left">Reselling Course 1.0.</p>
+            </div>
+            <div className="flex items-center mb-2">
+              <IoMdCheckboxOutline className="inline-block mr-2 text-paymentPlanText" /> 
+              <p className="mb-0 text-left">Advanced Reselling Tools.</p>
+            </div>
+            <div className="flex items-center mb-2">
+              <IoMdCheckboxOutline className="inline-block mr-2 text-paymentPlanText" /> 
+              <p className="mb-0 text-left">Priority Support.</p>
+            </div>
+            <div className="flex items-center mb-2">
+              <IoMdCheckboxOutline className="inline-block mr-2 text-paymentPlanText" /> 
+              <p className="mb-0 text-left">Exclusive Reselling Inner Circle.</p>
+            </div>
+            <div className="flex items-center mb-2">
+              <IoMdCheckboxOutline className="inline-block mr-2 text-paymentPlanText" /> 
+              <p className="mb-0 text-left">Networking & Self Promotion Access.</p>
             </div>
           </div>
 

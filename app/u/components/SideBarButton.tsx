@@ -25,7 +25,6 @@ const SideBarButton: React.FC<SideBarButtonProps> = ({ text, redirect, symbol })
     if (session) {
       // Redirect to the username-specific URL or default redirect
       if (session.user?.name) {
-        console.log(session)
         router.push(`${basePath}/${redirect}`);
       } else {
         router.push(`/u/loading`);

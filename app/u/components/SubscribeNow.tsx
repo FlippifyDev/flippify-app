@@ -36,7 +36,7 @@ const SubscribeNow: React.FC<SubscribeNowProps> = ({ priceId }) => {
             setCheckoutUrl(url);
           } catch (error) {
             console.error('Failed to create checkout session:', error);
-            setCheckoutUrl('http://localhost:3000/u/failed-to-create-checkout-session');
+            setCheckoutUrl('http://flippify.co.uk/u/failed-to-create-checkout-session');
           }
         }
       }

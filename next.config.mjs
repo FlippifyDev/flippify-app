@@ -56,12 +56,13 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'images.ctfassets.net',
         port: '',
-      },
+      }
     ],
   },
   env: {
+    MONGO_URL: process.env.MONGO_URL,
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
-  },
+  }
 };
 
 

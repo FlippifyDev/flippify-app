@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { useSession } from 'next-auth/react';
-import { useRouter, usePathname } from 'next/navigation';
 import SideBarButton from './SideBarButton';
 import { MdManageAccounts } from "react-icons/md";
 
@@ -46,28 +45,11 @@ const UserSidebarButtons = () => {
                     <li>
                         <SideBarButton
                             text="Manage Servers"
-                            redirect='manage-server'
+                            redirect='manage-servers'
                             symbol={<MdManageAccounts className="text-md" />}
                         />
                     </li>
                 )}
-
-                {/* Render buttons for subscriptions that do not include "Server" */}
-                {subscriptions.map((subscription, index) => {
-                    if (subscription.name.toLowerCase().includes('server')) {
-                        return null; // Skip rendering if the name includes "Server"
-                    }
-
-                    return (
-                        <li key={index}>
-                            <SideBarButton
-                                text={subscription.name}
-                                redirect='' // Add your redirect logic here
-                                symbol={<MdManageAccounts className="text-md" />}
-                            />
-                        </li>
-                    );
-                })}
             </ul>
         </div>
     )

@@ -3,8 +3,8 @@ import UserLayout from "../../components/UserLayout";
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'User - Dashboard',
-  description: "Flippify's dashboard, designed to be slick and effective"
+  title: 'Manage Your Reselling Efficiently - Flippify Dashboard',
+  description: "Experience the Flippify dashboard, designed for efficiency and effectiveness. Track your reselling activities, monitor deals, and maximize your profits with our user-friendly interface."
 };
 
 const DashboardPage = () => {

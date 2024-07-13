@@ -5,8 +5,8 @@ import { Metadata } from 'next'
 
 
 export const metadata: Metadata = {
-  title: 'Pricing - Flippify',
-  description: 'Explore Flippify’s pricing plans and find the best deal to suit your needs. From monitoring soon-to-retire Lego sets to exclusive upcoming deals, discover how our affordable plans can help you maximize your flipping profits.'
+  title: 'Affordable Pricing Plans for Resellers - Flippify',
+  description: 'Discover Flippify’s pricing plans designed to suit all your reselling needs. From monitoring soon-to-retire Lego sets to exclusive deals, our affordable plans help you maximize profits and stay ahead in the flipping game.'
 }
 
 

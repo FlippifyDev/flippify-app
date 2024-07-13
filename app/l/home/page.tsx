@@ -4,8 +4,8 @@ import { Metadata } from 'next';
 import Head from 'next/head';
 
 export const metadata: Metadata = {
-  title: 'Home - Flippify',
-  description: 'Welcome to Flippify, your ultimate platform for flipping, buying, and selling unique items. Fast-track your profits with our lightning-quick deal bots, from Lego to sneakers. Discover how Flippify makes flipping easy and profitable.'
+  title: 'Transform Your Reselling Game - Flippify Home',
+  description: 'Welcome to Flippify, your ultimate reselling platform for flipping, buying, and selling unique items. Boost your profits with our fast deal bots, covering everything from Lego to sneakers. Learn how Flippify makes reselling easy and lucrative.'
 };
 
 export default function HomePage() {

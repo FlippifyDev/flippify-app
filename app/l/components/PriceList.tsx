@@ -25,8 +25,7 @@ const PriceList = () => {
         </div>
         <div className="flex justify-center">
           <p className="mx-4 sm:mx-2 text-white  text-xl text-center">
-            An all-in-one service meaning you get everything you need no matter
-            what.
+            An all-in-one service meaning you get everything you need with just one plan.
           </p>
         </div>
       </div>

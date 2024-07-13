@@ -39,14 +39,14 @@ const PriceCard: React.FC<PriceCardProps> = ({
     selectedPlan === 0 ? priceIds.monthly : priceIds.yearly;
 
   return (
-    <div className="sm:scale-90 md:scale-90 lg:max-w-2xl xl:max-w-3xl w-auto px-0 sm:px-32 mt-8 sm:mt-0">
-      <div className="card lg:card-side bg-base-100 shadow-xl opacity-90 border border-white flex flex-col items-center justify-center pt-6 pb-6">
+    <div className="max-w-md sm:mx-4 mt-8">
+      <div className="h-full card bg-base-100 shadow-xl opacity-90 border border-white flex flex-col items-center justify-center pt-6 pb-6">
         <div className="w-full px-8 sm:px-6">
           <div className="flex items-center justify-center pb-2">
             <h2
               className={`${lato.className} text-3xl from-textGradStart to-textGradEnd to-60% bg-gradient-to-tr bg-clip-text text-transparent py-1 text-center mb-2`}
             >
-              Early Access Sale
+              {title}
             </h2>
           </div>
           <p className="text-white text-sm lg:text-base mb-4 flex justify-center text-center">

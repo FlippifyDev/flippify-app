@@ -3,6 +3,7 @@
 import SideBarButton from './SideBarButton';
 import SignOutButton from './SignOutButton';
 import BillingPortalButton from './BillingPortalButton';
+import UserSideBarButtons from './UserSidebarButtons'
 
 import { Lato } from 'next/font/google';
 import Link from 'next/link';
@@ -11,8 +12,7 @@ import { IoMenu } from 'react-icons/io5';
 import { FaHouse } from 'react-icons/fa6';
 import { FaSearch, FaDiscord } from 'react-icons/fa';
 import { BsClipboard2Fill } from 'react-icons/bs';
-import { PiSneakerMoveFill } from 'react-icons/pi';
-import { TbLegoFilled } from 'react-icons/tb';
+import { MdGroups } from "react-icons/md";
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
@@ -41,38 +41,37 @@ const Sidebar = () => {
             <div>
               <a className="text-white text-lg font-bold select-none">Home</a>
             </div>
+            <ul>
+              <li>
+                <SideBarButton text="Dashboard" redirect="dashboard" symbol={<FaHouse className="text-lg" />} />
+              </li>
+              <li>
+                <SideBarButton text="Plans" redirect="plans" symbol={<FaSearch className="text-lg" />} />
+              </li>
+              <li>
+                <SideBarButton text="Server Plans" redirect="server-plans" symbol={<MdGroups className="text-2xl" />} />
+              </li>
+              <li>
+                <BillingPortalButton />
+              </li>
             <li>
-              <SideBarButton text="Dashboard" redirect="dashboard" symbol={<FaHouse className="text-lg" />} />
-            </li>
-            <li>
-              <SideBarButton text="Plans" redirect="plans" symbol={<FaSearch className="text-lg" />} />
-            </li>
-            <li>
-              <BillingPortalButton />
-            </li>
-            <li>
-            <Link
-              href="https://discord.gg/gNPYfe7YFm"
-              className="text-greyText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transform active:scale-90 transition duration-200"
-            >
-              <span className="col-span-2 text-lg"><FaDiscord /></span>
-              <span className="col-span-10 text-base">Discord</span>
-            </Link>
-            </li>
+              <Link
+                href="https://discord.gg/gNPYfe7YFm"
+                className="text-greyText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transform active:scale-90 transition duration-200"
+              >
+                <span className="col-span-2 text-lg"><FaDiscord /></span>
+                <span className="col-span-10 text-base">Discord</span>
+              </Link>
+              </li>
+            </ul>
           </div>
 
+          
           {/* Display Users' Bots */}
-          {/* <div className="mt-8">
-            <div>
-              <a className="text-white text-lg font-bold select-none">My Bots</a>
-            </div>
-            <li>
-              <SideBarButton text="Lego Retirement" redirect="lego-retirement-deals" symbol={<TbLegoFilled className="text-lg" />} />
-            </li>
-            <li>
-              <SideBarButton text="Sneakers" redirect="sneaker-deals" symbol={<PiSneakerMoveFill className="text-lg" />} />
-            </li>
-          </div> */}
+          <div className='mt-4'>
+            <a className="text-white text-lg font-bold select-none">My Account</a>
+          </div>
+          <UserSideBarButtons />
 
           {/* Settings and Other */}
           <div className="mt-auto flex flex-col">

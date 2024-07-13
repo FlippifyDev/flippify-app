@@ -28,7 +28,7 @@ const PriceStat: React.FC<PriceStatProps> = ({ prices, onPlanSelect, selectedPla
         <div className="stat-desc text-center">
           <del>
             {currencySymbol}
-            {(prices[0] * 1.28).toFixed(2)}
+            {(prices[1]).toFixed(2)}
           </del>
         </div>
       </div>

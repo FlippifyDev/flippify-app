@@ -1,5 +1,5 @@
 import React from "react";
-import ServerBotsPriceCard from "./ServerBotsPriceCard";
+import PriceCard from "./PriceCard";
 import { Lato, Inter } from "next/font/google";
 
 import ServerPlansWhatsIncluded from "./ServerPlansWhatsIncluded";

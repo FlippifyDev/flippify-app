@@ -69,7 +69,7 @@ const Sidebar = () => {
           
           {/* Display Users' Bots */}
           <div className='mt-4'>
-            <a className="text-white text-lg font-bold select-none">My Account</a>
+            <a className="text-white text-lg font-bold select-none">Tools</a>
           </div>
           <UserSideBarButtons />
 

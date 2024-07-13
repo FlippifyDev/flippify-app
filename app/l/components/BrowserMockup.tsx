@@ -12,7 +12,7 @@ const BrowserMockup = () => {
       <div className="order-2 md:order-1 px-2 pt-6 md:pt-0 lg:pt-20 xl:pt-44">
         <p className={`${lato.className} text-4xl from-darkTextGradStart to-darkTextGradEnd to-60% bg-gradient-to-tr bg-clip-text text-transparent py-1 text-center`}>
           Boost
-          <a className={`${inter.className} mb-8 text-headingDarkText text-4xl font-bold`}> Reselling Efficiency.</a>
+          <a href="#" className={`${inter.className} mb-8 text-headingDarkText text-4xl font-bold`}> Reselling Efficiency.</a>
         </p>
         <p className="pt-4 text-darkGreyText text-center font-semibold">
         Access exclusive tools to automate and streamline your reselling. Enjoy seamless integration with Discord and other platforms, offering features you won&apos;t find anywhere else.

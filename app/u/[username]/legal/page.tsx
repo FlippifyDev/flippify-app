@@ -3,8 +3,8 @@ import UserLegalLayout from '../../components/UserLegalLayout';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'User - Legal',
-  description: "Access Flippify’s legal information including Privacy Policy and Terms and Conditions. Stay informed about our practices, your rights, and our commitment to protecting your data and ensuring a fair trading platform."
+  title: 'Flippify Legal Info - Privacy & Terms',
+  description: "Access detailed legal information on Flippify, including our Privacy Policy and Terms and Conditions. Stay informed about our data practices, your rights, and our commitment to a fair trading platform."
 };
 
 

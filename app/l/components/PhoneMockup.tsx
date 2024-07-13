@@ -26,7 +26,7 @@ const PhoneMockup = () => {
       <div className="flex flex-col align-items justify-center mt-8 md:mt-0 sm:mr-24 sm:ml-24 md:ml-0 px-2">
         <p className={`${lato.className} text-4xl from-darkTextGradStart to-darkTextGradEnd to-60% bg-gradient-to-tr bg-clip-text text-transparent py-1 text-center`}>
           Instant
-          <a className={`${inter.className} mb-8 text-headingDarkText text-4xl font-bold`}> Deals Right To Your Phone.</a>
+          <a href="#" className={`${inter.className} mb-8 text-headingDarkText text-4xl font-bold`}> Deals Right To Your Phone.</a>
         </p>
         <p className="pt-4 text-darkGreyText text-center font-semibold lg:w-4/5 mx-auto">
           Real-time alerts ensuring you never miss a deal with notifications right to your phone using our extremely fast discord bots.

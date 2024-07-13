@@ -3,8 +3,8 @@ import UserLayout from '../../components/UserLayout';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'User - Plans',
-  description: "Explore Flippify’s pricing plans and find the best deal to suit your needs. From monitoring soon-to-retire Lego sets to exclusive upcoming deals, discover how our affordable plans can help you maximize your flipping profits."
+  title: 'Flexible Pricing Plans for Resellers - Flippify',
+  description: "Discover the best pricing plans tailored to your reselling needs. From monitoring soon-to-retire Lego sets to exclusive deals on all other categories of products like electronics and sneakers, Flippify’s affordable plans help you boost your flipping profits."
 };
 
 

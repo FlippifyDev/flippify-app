@@ -1,5 +1,8 @@
-import React from "react";
 import PriceCard from "./PriceCard";
+import PlansWhatsIncluded from "./PlansWhatsIncluded";
+
+
+import React from "react";
 import { Lato, Inter } from "next/font/google";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
@@ -22,7 +25,7 @@ const PriceList = () => {
           </p>
         </div>
         <div className="flex justify-center max-w-2xl">
-          <p className="mx-4 sm:mx-2 text-white  text-xl text-center">
+          <p className="mx-4 sm:mx-2 text-white  text-lg text-center">
             An all-in-one service meaning you get everything you need with just one plan
           </p>
         </div>
@@ -36,6 +39,7 @@ const PriceList = () => {
             monthly: "price_1Pak8GJJRepiHZ8dicYIFfd6",
             yearly: "price_1Pak9gJJRepiHZ8d6sB0aNlL",
           }}
+          whatsIncludedComponent={<PlansWhatsIncluded />}
         />
       </div>
     </div>

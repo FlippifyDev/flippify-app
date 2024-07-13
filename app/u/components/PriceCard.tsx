@@ -1,5 +1,8 @@
 "use client";
 
+
+
+
 import React, { useState } from "react";
 import PriceStat from "./PriceStat";
 import SubscribeNow from "./SubscribeNow";
@@ -12,6 +15,7 @@ interface PriceCardProps {
   prices: number[];
   description: string;
   priceIds: { monthly: string; yearly: string };
+  whatsIncludedComponent: any
 }
 
 const PriceCard: React.FC<PriceCardProps> = ({
@@ -19,9 +23,11 @@ const PriceCard: React.FC<PriceCardProps> = ({
   prices,
   description,
   priceIds,
+  whatsIncludedComponent
 }) => {
   const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
   const [currency, setCurrency] = useState<"USD" | "GBP">("USD");
+
 
   const handlePlanSelect = (index: number) => {
     setSelectedPlan(index);
@@ -74,46 +80,7 @@ const PriceCard: React.FC<PriceCardProps> = ({
             )}
             <hr className="w-full" />
           </div>
-          <div className="flex flex-col items-start text-white pt-6 pb-6 pl-2 sm:text-lg">
-            <h2 className="mb-4 font-bold text-lg">What&apos;s included:</h2>
-            <div className="grid grid-cols-12 mb-2 items-center">
-              <IoMdCheckboxOutline className="col-span-1 inline-block mr-3 text-paymentPlanText" />
-              <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
-                All Deal-Finding Bots
-              </p>
-            </div>
-            <div className="grid grid-cols-12 mb-2 items-center">
-              <IoMdCheckboxOutline className="col-span-1 inline-block mr-3 text-paymentPlanText" />
-              <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
-                Reselling Course 1.0
-              </p>
-            </div>
-            <div className="grid grid-cols-12 mb-2 items-center">
-              <IoMdCheckboxOutline className="col-span-1 inline-block mr-3 text-paymentPlanText" />
-              <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
-                Advanced Reselling Tools
-              </p>
-            </div>
-            <div className="grid grid-cols-12 mb-2 items-center">
-              <IoMdCheckboxOutline className="col-span-1 inline-block mr-3 text-paymentPlanText" />
-              <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
-                Priority Support
-              </p>
-            </div>
-            <div className="grid grid-cols-12 mb-2 items-center">
-              <IoMdCheckboxOutline className="col-span-1 inline-block mr-3 text-paymentPlanText" />
-              <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
-                Exclusive Reselling Inner Circle
-              </p>
-            </div>
-            <div className="grid grid-cols-12 mb-2 items-center">
-              <IoMdCheckboxOutline className="col-span-1 inline-block mr-3 text-paymentPlanText" />
-              <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
-                Networking & Self Promotion Access
-              </p>
-            </div>
-          </div>
-
+          {whatsIncludedComponent}
           <div className="flex justify-end mt-2">
             {prices.length > 0 && selectedPlan !== null && (
               <SubscribeNow priceId={selectedPriceId} />

@@ -2,6 +2,8 @@ import React from "react";
 import PriceCard from "./PriceCard";
 import { Lato, Inter } from "next/font/google";
 
+import ServerPlansWhatsIncluded from "./ServerPlansWhatsIncluded";
+
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,24 +24,25 @@ const ServerPriceList = () => {
           </p>
         </div>
         <div className="flex justify-center max-w-2xl">
-          <p className="mx-4 sm:mx-2 text-white text-xl text-center">
-            Want this bot in your server? This option is for you. Get results with powerful features tailored for enhancing your Discord community&apos;s experience.
+          <p className="mx-4 sm:mx-2 text-white text-lg text-center">
+            Looking to integrate a bot into your server? <br />Discover powerful features designed to elevate your Discord community&apos;s interaction.
           </p>
         </div>
       </div>
       <div className="mt-4 flex flex-wrap justify-center">
         <PriceCard
-          title="Lego Retirement Sales"
-          description="Want bots in your server? These options are for you. Get results with powerful features tailored for enhancing your Discord community's experience."
+          title="Lego Retirement Deals"
+          description="Enhance your reselling efficiency with our cutting-edge bot, scanning diverse websites to identify Lego sets nearing retirement and ensuring you never miss a profitable sale."
           prices={[149.99, 199.99]}
           priceIds={{
             monthly: "price_1Pc8wGJJRepiHZ8dDTmbKUHc",
             yearly: "price_1Pc8x7JJRepiHZ8dbkiJkQzx",
           }}
+          whatsIncludedComponent={<ServerPlansWhatsIncluded whatsIncludedText={["eBay Price Comparison", "Keepa Link Included", "Retirement Date Included", "Currently UK Sites Only", "Continual Website Additions"]}/>}
         />
       </div>
     </div>
   );
-};
+}
 
 export default ServerPriceList;

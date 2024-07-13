@@ -1,6 +1,7 @@
 import ProductsList from "../components/ProductList";
-import LandingLayout from '../components/LandingLayout'
-import { Metadata } from 'next'
+import LandingLayout from '../components/LandingLayout';
+import { Metadata } from 'next';
+import Head from 'next/head';
 
 
 export const metadata: Metadata = {
@@ -11,8 +12,14 @@ export const metadata: Metadata = {
 
 export default function Products() {
   return (
+    <div>
+      <Head>
+        <meta name="google-site-verification" content="Hho6-HQ44X7tDo2PgIXmXtPOFHsg069qvKUSqF3JfkE" />
+        <meta name="robots" content="index, follow" />
+      </Head>
       <LandingLayout>
         <ProductsList />
       </LandingLayout>
+      </div>
   );
 }

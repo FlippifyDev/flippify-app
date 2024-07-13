@@ -4,7 +4,7 @@ import React from 'react';
 import { useSession } from 'next-auth/react';
 import SideBarButton from './SideBarButton';
 import { MdManageAccounts } from "react-icons/md";
-
+import { AiOutlineStock } from "react-icons/ai";
 
 
 export interface Subscription {
@@ -50,6 +50,14 @@ const UserSidebarButtons = () => {
                         />
                     </li>
                 )}
+
+                <li>
+                    <SideBarButton 
+                        text="Sales & Profits"
+                        redirect='sales-tracker'
+                        symbol={<AiOutlineStock className="text-md" />}
+                    />
+                </li>
             </ul>
         </div>
     )

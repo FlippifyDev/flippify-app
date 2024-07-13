@@ -35,7 +35,7 @@ const SideBarButton: React.FC<SideBarButtonProps> = ({ text, redirect, symbol })
   return (
     <button
       className={`text-greyText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transition-colors duration-100
-        ${isActive ? 'bg-gray-600 text-gray-800 transition-transform active:scale-90 duration-10' : 'transition-transform active:scale-90 duration-10'}`
+        ${isActive ? 'bg-gray-600 text-gray-800 transition-transform active:scale-90 duration-100' : 'transition-transform active:scale-90 duration-100'}`
       }
       onClick={redirectUser}
     >

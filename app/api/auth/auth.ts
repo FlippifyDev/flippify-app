@@ -16,7 +16,7 @@ interface IUser extends Document {
   username: string;
   email: string;
   stripe_customer_id: string;
-  subscription: {};
+  subscriptions: [];
 }
 
 const UserSchema = new mongoose.Schema<IUser>({
@@ -27,7 +27,7 @@ const UserSchema = new mongoose.Schema<IUser>({
   username: String,
   email: String,
   stripe_customer_id: String,
-  subscription: {},
+  subscriptions: [],
 });
 
 const User: Model<IUser> = mongoose.models.users || mongoose.model<IUser>('users', UserSchema);
@@ -81,10 +81,10 @@ const authOptions: AuthOptions = {
 		try {
 			const discordId = Long.fromString(id);
 			const customer_id = stripeCustomer.id
-			const subscription = {};
+			const subscriptions: any = [];
 			await User.findOneAndUpdate(
 			  { discord_id: discordId },
-			  { username: username, email, stripe_customer_id: customer_id, subscription },
+			  { username: username, email, stripe_customer_id: customer_id, subscriptions },
 			  { upsert: true }
 			);
 	

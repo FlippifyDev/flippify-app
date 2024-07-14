@@ -20,8 +20,15 @@ const EstimateProfits: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setEstimate({ ...estimate, [name]: parseFloat(value) }); // Ensure numeric values are parsed correctly
+  
+    // Ensure quantity and purchasePrice are not negative
+    if ((name === 'quantity' || name === 'purchasePrice') && parseFloat(value) < 0) {
+      return; // Do not update state if input is negative
+    }
+  
+    setEstimate({ ...estimate, [name]: parseFloat(value) });
   };
+  
 
   const handleSubmit = () => {
     // Calculate profit

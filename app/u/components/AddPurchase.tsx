@@ -1,4 +1,8 @@
-import React, { useState } from 'react';
+// pages/AddPurchase.tsx
+
+import React, { useState, useEffect } from 'react';
+import { database, ref, push, get, child, set } from '../../api/firebaseConfig'; // Adjust the path as necessary
+import { useSession } from 'next-auth/react';
 
 interface Purchase {
   itemName: string;
@@ -17,20 +21,52 @@ const AddPurchase: React.FC = () => {
     websiteName: ''
   });
 
+  const { data: session } = useSession();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
+    // Ensure quantity and purchasePrice are not negative
+    if ((name === 'quantity' || name === 'purchasePrice') && parseFloat(value) < 0) {
+      return; // Do not update state if input is negative
+    }
+
     setPurchase({ ...purchase, [name]: value });
   };
 
-  const handleSubmit = () => {
-    // Logic to handle adding the purchase
-    console.log(purchase);
+  const handleSubmit = async () => {
+    if (!session?.user?.name) {
+      console.error("User is not logged in");
+      return;
+    }
+
+    const username = session.user.name; // Get the username from the session
+    const userPurchasesRef = ref(database, `purchases/${username}`);
+
+    // Fetch existing purchases to determine the next increment number
+    const snapshot = await get(userPurchasesRef);
+    const purchases = snapshot.val();
+    const incrementNumber = purchases ? Object.keys(purchases).length + 1 : 1;
+
+    // Create a unique key for the new purchase
+    const purchaseKey = `${username}-${incrementNumber}`;
+
+    // Save the purchase to the database with the unique key
+    const newPurchaseRef = child(userPurchasesRef, purchaseKey);
+    await set(newPurchaseRef, { ...purchase, username });
+
+    // Clear form after submission
+    setPurchase({
+      itemName: '',
+      purchaseDate: '',
+      quantity: 0,
+      purchasePrice: 0,
+      websiteName: ''
+    });
   };
 
-  const totalPurchaseCost = purchase.quantity * purchase.purchasePrice;
-
   return (
-    <div>
+    <div className="container mx-auto">
       <form className="form-control">
         <div className="mb-4">
           <label className="label">
@@ -52,9 +88,9 @@ const AddPurchase: React.FC = () => {
         </div>
         <div className="mb-4">
           <label className="label">
-            <span className="label-text">Total Purchase Cost</span>
+            <span className="label-text">Purchase Price</span>
           </label>
-          <input type="text" name="purchasePrice" value={purchase.purchasePrice} onChange={handleChange} className="input input-bordered w-full" />
+          <input type="number" name="purchasePrice" value={purchase.purchasePrice} onChange={handleChange} className="input input-bordered w-full" />
         </div>
         <div className="mb-4">
           <label className="label">
@@ -63,8 +99,14 @@ const AddPurchase: React.FC = () => {
           <input type="text" name="websiteName" value={purchase.websiteName} onChange={handleChange} className="input input-bordered w-full" />
         </div>
         <div className="grid grid-cols-2 gap-8">
-        <button type="button" onClick={handleSubmit} className="btn btn-primary bg-white border-black hover:bg-textGradStart ml-4 hover:border-black transition duration-200">Add Purchase</button>
-        <button type="button" onClick={handleSubmit} className="btn btn-primary bg-white border-black hover:bg-textGradStart mr-4 hover:border-black transition duration-200">Clear All</button>
+          <button type="button" onClick={handleSubmit} className="btn btn-primary bg-white border-black hover:bg-textGradStart ml-4 hover:border-black transition duration-200">Add Purchase</button>
+          <button type="button" onClick={() => setPurchase({
+            itemName: '',
+            purchaseDate: '',
+            quantity: 0,
+            purchasePrice: 0,
+            websiteName: ''
+          })} className="btn btn-primary bg-white border-black hover:bg-textGradStart mr-4 hover:border-black transition duration-200">Clear All</button>
         </div>
       </form>
     </div>

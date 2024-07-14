@@ -23,8 +23,15 @@ const AddSale: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+  
+    // Ensure numeric fields are not negative
+    if (['listingPrice', 'quantitySold', 'platformFees', 'shippingCost'].includes(name) && parseFloat(value) < 0) {
+      return; // Do not update state if input is negative
+    }
+  
     setSale({ ...sale, [name]: value });
   };
+  
 
   const handleSubmit = () => {
     // Logic to handle adding the sale

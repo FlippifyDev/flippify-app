@@ -28,6 +28,8 @@ const config: Config = {
         greyStroke: '#A9A9A9',
         darkGreyText: '#222222',
         houseBlue: '#4C8BFA',
+        userPageBlueBg: '#1b2a49',
+        userPageLightBlueBg: '#3e78b2',
         paymentPlanText: '#8678FF',
         textGradStart: '#DBC4FF',
         textGradEnd: '#AAA0FF',

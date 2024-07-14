@@ -13,6 +13,12 @@ const DashboardPage = () => {
       <div>
       <div className="text-2xl text-white font-bold flex justify-center">Dashboard</div>
       <div className="text-greyText flex justify-center">Coming Soon...</div>
+      <div>Have Analytics Section:
+Visual Charts:
+Monthly Revenue and Profit Chart: Bar graph
+Top Platforms by Revenue: Pie chart
+Profit Trends Over Time: Line graph
+Custom Reports: Option to generate custom reports based on selected criteria</div>
       </div>
     </UserLayout>
   );

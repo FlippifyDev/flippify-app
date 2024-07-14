@@ -67,7 +67,7 @@ const Sidebar = () => {
           </div>
 
           
-          {/* Display Users' Bots */}
+          {/* Display Tools */}
           <div className='mt-4'>
             <a className="text-white text-lg font-bold select-none">Tools</a>
           </div>

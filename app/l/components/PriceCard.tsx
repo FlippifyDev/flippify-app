@@ -40,7 +40,7 @@ const PriceCard: React.FC<PriceCardProps> = ({
   const currencySymbol = currency === "GBP" ? "£" : "$";
 
   return (
-    <div className="max-w-md sm:mx-4 mt-8">
+    <div className="max-w-md sm:mx-4 mt-8 mx-1">
       <div className="h-full card bg-base-100 shadow-xl opacity-90 border border-white flex flex-col items-center justify-center pt-6 pb-6">
         <div className="w-full px-8 sm:px-6">
           <div className="flex items-center justify-center pb-2">

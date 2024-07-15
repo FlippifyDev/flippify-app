@@ -81,8 +81,8 @@ const Navbar = () => {
         </div>
       </div>
       
-      {/* Main Navbar which appears on larger screens*/}
-      <ul className="hidden md:flex flex-row space-x-8 col-span-8 justify-center">
+      {/* Main Navbar which appears on larger screens */} 
+      <ul className="hidden md:flex flex-row space-x-3 xl:space-x-8 col-span-8 justify-center">
         <li className="transition duration-100 hover:scale-105 rounded-btn p-1">
           <Link href="/l/home">Home</Link>
         </li>

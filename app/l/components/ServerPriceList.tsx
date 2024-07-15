@@ -10,8 +10,8 @@ const inter = Inter({ subsets: ["latin"] });
 const ServerPriceList = () => {
   return (
     <div className="flex flex-col justify-center xl:w-11/12 h-full mb-5 mt-5">
-      <div className="flex flex-col items-center space-y-5 text-center">
-        <div className="flex justify-center">
+      <div className="flex flex-col items-center space-y-3 text-center">
+        <div className="flex justify-center mx-2">
           <p
             className={`${lato.className} text-5xl from-textGradStart to-textGradEnd to-60% bg-gradient-to-tr bg-clip-text text-transparent py-1`}
           >
@@ -24,8 +24,8 @@ const ServerPriceList = () => {
           </p>
         </div>
         <div className="flex justify-center max-w-2xl">
-          <p className="mx-4 sm:mx-2 text-white text-lg text-center">
-            Looking to integrate a bot into your server? <br />Discover powerful features designed to elevate your Discord community&apos;s interaction.
+          <p className="mx-4 sm:mx-2 text-white text-lg sm:text-xl text-center">
+            Looking to integrate a bot into your server? Discover powerful features designed to elevate your Discord community&apos;s interaction.
           </p>
         </div>
       </div>

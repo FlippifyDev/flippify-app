@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Transform Your Reselling Game - Flippify Home',
     description: 'Welcome to Flippify, your ultimate reselling platform for flipping, buying, and selling unique items. Boost your profits with our fast deal bots, covering everything from Lego to sneakers. Learn how Flippify makes reselling easy and lucrative.',
-    url: 'https://flippify.co.uk',
+    url: 'https://flippify.co.uk/',
     images: [
       {
         url: "https://i.imgur.com/iofmtlb.png",

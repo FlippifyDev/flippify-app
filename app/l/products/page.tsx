@@ -14,9 +14,6 @@ export const metadata: Metadata = {
 export default function Products() {
   return (
     <div>
-      <Head>
-        <meta name="google-site-verification" content="Hho6-HQ44X7tDo2PgIXmXtPOFHsg069qvKUSqF3JfkE" />
-      </Head>
       <LandingLayout>
         <ProductsList />
       </LandingLayout>

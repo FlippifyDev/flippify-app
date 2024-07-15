@@ -1,5 +1,7 @@
-import React from "react";
 import PriceCard from "./PriceCard";
+import PlansWhatsIncluded from "./PlansWhatsIncluded"
+
+import React from "react";
 import { Lato, Inter } from "next/font/google";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
@@ -34,6 +36,7 @@ const PriceList = () => {
           title="Early Access"
           description="Gain access to our all-in-one service providing all tools, bots and insights needed to accelerate your profits."
           prices={[44.99]}
+          whatsIncludedComponent={<PlansWhatsIncluded />}
         />
       </div>
     </div>

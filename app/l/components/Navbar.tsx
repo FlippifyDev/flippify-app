@@ -52,7 +52,8 @@ const Navbar = () => {
             <IoMenu />
           </label>
         </div>
-        <div className="drawer-side opacity-97">
+        {/* Side bar which appears on small screens */}
+        <div className="drawer-side opacity-98">
           <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
           <ul className="menu bg-base-200 text-base-content min-h-full w-full pt-12">
             <li className="transition duration-100 active:scale-105 rounded-btn p-1 text-base">
@@ -63,6 +64,9 @@ const Navbar = () => {
             </li>
             <li className="transition duration-100 active:scale-105 rounded-btn p-1 text-base">
               <Link href="/l/pricing">Pricing</Link>
+            </li>
+            <li className="transition duration-100 active:scale-105 rounded-btn p-1 text-base">
+              <Link href="/l/server-pricing">Server Pricing</Link>
             </li>
             <li className="transition duration-100 active:scale-105 rounded-btn p-1 text-base">
               <a href="#about" onClick={(e) => handleSmoothScroll(e, 'about')}>About</a>
@@ -76,21 +80,25 @@ const Navbar = () => {
           </ul>
         </div>
       </div>
-
+      
+      {/* Main Navbar which appears on larger screens*/}
       <ul className="hidden md:flex flex-row space-x-8 col-span-8 justify-center">
-        <li className="transition duration-100 hover:scale-110 rounded-btn p-1">
+        <li className="transition duration-100 hover:scale-105 rounded-btn p-1">
           <Link href="/l/home">Home</Link>
         </li>
-        <li className="transition duration-100 hover:scale-110 rounded-btn p-1">
+        <li className="transition duration-100 hover:scale-105 rounded-btn p-1">
           <Link href="/l/products">Products</Link>
         </li>
-        <li className="transition duration-100 hover:scale-110 rounded-btn p-1">
+        <li className="transition duration-100 hover:scale-105 rounded-btn p-1">
           <Link href="/l/pricing">Pricing</Link>
         </li>
-        <li className="transition duration-100 hover:scale-110 rounded-btn p-1">
+        <li className="transition duration-100 hover:scale-105 rounded-btn p-1">
+          <Link href="/l/server-pricing">Server Pricing</Link>
+        </li>
+        <li className="transition duration-100 hover:scale-105 rounded-btn p-1">
           <a href="#about" onClick={(e) => handleSmoothScroll(e, 'about')}>About</a>
         </li>
-        <li className="transition duration-100 hover:scale-110 rounded-btn p-1">
+        <li className="transition duration-100 hover:scale-105 rounded-btn p-1">
           <a href="https://discord.gg/gNPYfe7YFm">Discord</a>
         </li>
       </ul>

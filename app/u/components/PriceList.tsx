@@ -36,8 +36,8 @@ const PriceList = () => {
           description="Gain access to our all-in-one service providing all tools, bots and insights needed to accelerate your profits."
           prices={[44.99, 59.99]}
           priceIds={{
-            monthly: "price_1Pak8GJJRepiHZ8dicYIFfd6",
-            yearly: "price_1Pak9gJJRepiHZ8d6sB0aNlL",
+            monthly: "price_1PctCCJJRepiHZ8d6M7w0P7g",
+            yearly: "price_1Pcu1rJJRepiHZ8d4zAXLEpL",
           }}
           whatsIncludedComponent={<PlansWhatsIncluded />}
         />

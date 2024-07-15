@@ -11,13 +11,8 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <div>
-      <Head>
-        <meta name="google-site-verification" content="Hho6-HQ44X7tDo2PgIXmXtPOFHsg069qvKUSqF3JfkE" />
-      </Head>
-      <LandingLayout>
-        <HomeContentWrapper />
-      </LandingLayout>
-    </div>
+    <LandingLayout>
+      <HomeContentWrapper />
+    </LandingLayout>
   );
 }

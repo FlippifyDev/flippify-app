@@ -34,20 +34,12 @@ const ServerPriceList = () => {
           title="Lego Retirement Deals"
           description="Enhance your reselling efficiency with our cutting-edge bot, scanning diverse websites to identify Lego sets nearing retirement and ensuring you never miss a profitable sale."
           prices={[149.99, 199.99]}
-          priceIds={{
-            monthly: "price_1PctChJJRepiHZ8dIREA1uKf",
-            yearly: "price_1Pcu3kJJRepiHZ8dIYtT80Wl",
-          }}
           whatsIncludedComponent={<ServerPlansWhatsIncluded whatsIncludedText={["eBay Price Comparison", "Keepa Link Included", "Retirement Date Included", "Currently UK Sites Only", "Continual Website Additions"]}/>}
         />
         <PriceCard
           title="HotUKDeals"
           description="Effortlessly discover profitable reselling opportunities with our advanced webscraper, which scans hotukdeals.co.uk and compares prices with sold items on eBay to maximize your profits."
           prices={[69.99, 99.99]}
-          priceIds={{
-            monthly: "price_1PcuH1JJRepiHZ8d4HTovHWm",
-            yearly: "price_1PcuHmJJRepiHZ8duS8nBti1",
-          }}
           whatsIncludedComponent={<ServerPlansWhatsIncluded whatsIncludedText={["eBay Price Comparison", "HotUKDeals Price Tracking", "Alerts based on eBay profit potential", "UK Sites Only", "Frequent electronics deal alerts"]}/>}
         />
       </div>

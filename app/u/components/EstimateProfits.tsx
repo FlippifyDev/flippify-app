@@ -36,11 +36,6 @@ const EstimateProfits: React.FC = () => {
     }
   };
 
-  const handleSubmit = () => {
-    console.log("Estimated Profit:", estimatedProfit);
-    alert(`Estimated Profit: ${estimatedProfit}`);
-  };
-
   return (
     <div>
       <form className="form-control">
@@ -74,9 +69,9 @@ const EstimateProfits: React.FC = () => {
           </label>
           <input type="number" name="shippingCost" value={shippingCost} onChange={handleChange} className="input input-bordered w-full" />
         </div>
-        <button type="button" onClick={handleSubmit} className="btn btn-primary bg-white border-black hover:bg-textGradStart hover:border-black w-full md:w-1/2 transition duration-200 mx-auto">Calculate Estimated Profit</button>
         <div className="mt-4">
-          <h2>Estimated Profit: {estimatedProfit.toFixed(2)}</h2>
+          <h2 className="divider font-bold text-white text-lg">Estimated Profit</h2>
+          <h2 className="flex justify-center text-lg font-bold">{estimatedProfit.toFixed(2)}</h2>
         </div>
       </form>
     </div>

@@ -19,7 +19,6 @@ interface Profit {
   platformFees: number;
   shippingCost: number;
   estimatedProfit: number;
-  actualProfit: number;
 }
 
 const ReviewProfits: React.FC = () => {
@@ -50,7 +49,6 @@ const ReviewProfits: React.FC = () => {
                 const totalSaleRevenue = sale.quantitySold * sale.listingPrice;
                 const totalPurchaseCost = sale.quantitySold * purchase.purchasePrice;
                 const estimatedProfit = totalSaleRevenue - totalPurchaseCost - (totalSaleRevenue * (sale.platformFees / 100)) - sale.shippingCost;
-                const actualProfit = estimatedProfit; 
                 profitsData.push({
                   itemName: sale.itemName,
                   purchaseDate: purchase.purchaseDate,
@@ -61,7 +59,6 @@ const ReviewProfits: React.FC = () => {
                   platformFees: sale.platformFees,
                   shippingCost: sale.shippingCost,
                   estimatedProfit: estimatedProfit,
-                  actualProfit: actualProfit
                 });
               }
             }
@@ -83,7 +80,14 @@ const ReviewProfits: React.FC = () => {
 
   return (
     <div>
-      <h2>Review Profits</h2>
+      <h2 className="divider font-bold text-white text-xl">Summary</h2>
+      <div className="grid grid-cols-2 pt-2 pb-4">
+        <div>Total Revenue: {/* Calculate and display total revenue */}</div>
+        <div>Total Costs: {/* Calculate and display total costs */}</div>
+        <div>Net Profit: {/* Calculate and display net profit */}</div>
+        <div>No. Sales: {/* Calculate and display number of sales */}</div>
+      </div>
+      <h2 className="divider font-bold text-white text-xl pt-8">History Search Filter</h2>
       <form className="form-control">
         <div className="mb-4">
           <label className="label">
@@ -141,17 +145,8 @@ const ReviewProfits: React.FC = () => {
           Apply Filters
         </button>
       </form>
-      <div>
-        <h3>Profit Summary</h3>
-        <div>Total Revenue: {/* Calculate and display total revenue */}</div>
-        <div>Total Costs: {/* Calculate and display total costs */}</div>
-        <div>Net Profit: {/* Calculate and display net profit */}</div>
-        <div>
-          Top Selling Items: {/* List top-selling items with percentages */}
-        </div>
-      </div>
-      <div>
-        <h3>Detailed Table</h3>
+      <h2 className="divider pt-8 pb-2 font-bold text-white text-lg">History</h2>
+      <div className="pb-4">
         <div className="overflow-x-auto">
           <table className="table w-full">
             <thead>
@@ -163,9 +158,8 @@ const ReviewProfits: React.FC = () => {
                 <th>Purchase Price</th>
                 <th>Sale Price</th>
                 <th>Platform Fees</th>
-                <th>Shipping Cost</th>
-                <th>Estimated Profit</th>
-                <th>Actual Profit</th>
+                <th>Shipping & Other Fees</th>
+                <th>Profit</th>
               </tr>
             </thead>
             <tbody>
@@ -180,7 +174,6 @@ const ReviewProfits: React.FC = () => {
                   <td>{profit.platformFees}</td>
                   <td>{profit.shippingCost}</td>
                   <td>{profit.estimatedProfit.toFixed(2)}</td>
-                  <td>{profit.actualProfit.toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>

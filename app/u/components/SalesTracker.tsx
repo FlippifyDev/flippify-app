@@ -71,7 +71,7 @@ const SalesTracker = () => {
       </div>
       {activeComponent === "AddPurchase" && (
         <div>
-          <div role="tablist" className="flex rounded-t-2xl pt-6 md:pt-0">
+          <div role="tablist" className="flex rounded-t-2xl pt-2 md:pt-0">
             <a
               role="tab"
               className="bg-base-100 bg-opacity-90 text-white px-4 py-2 rounded-t-xl transition-colors duration-200"

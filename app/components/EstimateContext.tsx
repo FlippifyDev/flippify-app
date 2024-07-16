@@ -22,7 +22,7 @@ const EstimateContext = createContext<EstimateContextType | undefined>(undefined
 
 export const EstimateProvider: React.FC<EstimateProviderProps> = ({ children }) => {
   const [estimate, setEstimate] = useState<Estimate>({
-    quantity: 0,
+    quantity: 1,
     purchasePrice: 0,
     websiteName: ''
   });

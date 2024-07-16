@@ -168,8 +168,8 @@ const AddSale: React.FC = () => {
         </div>
         <button type="button" onClick={handleSubmit} disabled={!selectedPurchase} className={`btn ${!selectedPurchase ? 'btn-disabled' : 'btn-primary'} bg-white border-black hover:bg-textGradStart hover:border-black w-1/2 mx-auto transition duration-200`}>Add Sale</button>
         <div className="mt-4">
-          <h2>Total Sale Revenue: {isNaN(totalSaleRevenue) ? '0.00' : totalSaleRevenue.toFixed(2)}</h2>
-          <h2>Estimated Profit: {isNaN(estimatedProfit) ? '0.00' : estimatedProfit.toFixed(2)}</h2>
+          <h2 className="divider font-bold text-white text-lg">Profit Made</h2>
+          <h2 className="flex justify-center text-lg font-bold">{isNaN(estimatedProfit) ? '0.00' : estimatedProfit.toFixed(2)}</h2>
         </div>
       </form>
     </div>

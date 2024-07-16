@@ -91,7 +91,7 @@ const AddPurchase: React.FC = () => {
         </div>
         <div className="mb-4">
           <label className="label">
-            <span className="label-text">Purchase Price</span>
+            <span className="label-text">Total Purchase Price</span>
           </label>
           <input type="text" name="purchasePrice" value={purchase.purchasePrice} onChange={handleChange} className="input input-bordered w-full" />
         </div>

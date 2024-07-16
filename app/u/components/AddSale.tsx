@@ -1,3 +1,4 @@
+// pages/AddSale.tsx
 import React, { useState, useEffect } from 'react';
 import { database, ref, get, set, push } from '../../api/firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -35,7 +36,7 @@ const AddSale: React.FC = () => {
 
   const [purchases, setPurchases] = useState<Purchase[]>([]);
   const [selectedPurchase, setSelectedPurchase] = useState<string>('');
-  const [user, loading, error] = useAuthState(auth);
+  const [user] = useAuthState(auth);
 
   useEffect(() => {
     if (user) {

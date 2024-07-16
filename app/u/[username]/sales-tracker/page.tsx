@@ -1,8 +1,8 @@
+// pages/ManageServerPage.tsx
 import React from 'react';
 import UserLayout from '../../components/UserLayout';
 import SalesTracker from '../../components/SalesTracker';
-import { EstimateProvider } from '@/app/components/EstimateContext';
-
+import { EstimateProvider } from '../../../components/EstimateContext';
 
 const ManageServerPage = () => {
   return (

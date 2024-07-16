@@ -1,6 +1,6 @@
 // pages/AddPurchase.tsx
 import React, { useState } from 'react';
-import { database, ref, get, set, push } from '../../api/firebaseConfig';
+import { database, ref, set, push } from '../../api/firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../api/firebaseConfig';
 import { useEstimate } from '../../components/EstimateContext';
@@ -23,7 +23,7 @@ const AddPurchase: React.FC = () => {
   });
 
   const { setEstimate } = useEstimate();
-  const [user, loading, error] = useAuthState(auth);
+  const [user] = useAuthState(auth);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -32,9 +32,15 @@ const AddPurchase: React.FC = () => {
       return;
     }
 
-    const updatedPurchase = { ...purchase, [name]: parseFloat(value) };
+    const updatedPurchase = { ...purchase, [name]: parseFloat(value) || value };
     setPurchase(updatedPurchase);
-    setEstimate({ quantity: updatedPurchase.quantity, purchasePrice: updatedPurchase.purchasePrice, websiteName: updatedPurchase.websiteName });
+
+    // Update the context
+    setEstimate({
+      quantity: updatedPurchase.quantity,
+      purchasePrice: updatedPurchase.purchasePrice,
+      websiteName: updatedPurchase.websiteName,
+    });
   };
 
   const handleSubmit = async () => {

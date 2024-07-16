@@ -13,7 +13,7 @@ const EstimateProfits: React.FC = () => {
     if (estimate.quantity > 0 && estimate.purchasePrice > 0) {
       const totalPurchaseCost = estimate.quantity * estimate.purchasePrice;
       const totalSaleRevenue = listingPrice * estimate.quantity;
-      const totalPlatformFees = (listingPrice * (platformFees / 100)) * 2;
+      const totalPlatformFees = (totalSaleRevenue * (platformFees / 100));
       const totalShippingCost = estimate.quantity * shippingCost;
       const calculatedProfit = totalSaleRevenue - totalPlatformFees - totalShippingCost - totalPurchaseCost;
       setEstimatedProfit(calculatedProfit);
@@ -38,6 +38,7 @@ const EstimateProfits: React.FC = () => {
 
   const handleSubmit = () => {
     console.log("Estimated Profit:", estimatedProfit);
+    alert(`Estimated Profit: ${estimatedProfit}`);
   };
 
   return (

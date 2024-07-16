@@ -1,4 +1,3 @@
-// pages/ReviewProfits.tsx
 import React, { useState, useEffect } from "react";
 import { database, ref, get } from '../../api/firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -10,7 +9,6 @@ interface Filters {
   salePlatform: string;
 }
 
-// Define the types for profits
 interface Profit {
   itemName: string;
   purchaseDate: string;
@@ -31,7 +29,7 @@ const ReviewProfits: React.FC = () => {
     salePlatform: "",
   });
 
-  const [user, loading, error] = useAuthState(auth);
+  const [user] = useAuthState(auth);
   const [profits, setProfits] = useState<Profit[]>([]);
 
   useEffect(() => {
@@ -43,16 +41,16 @@ const ReviewProfits: React.FC = () => {
         const purchases = snapshot.val() || {};
         get(userSalesRef).then((snapshot) => {
           const sales = snapshot.val() || {};
-          const profitsData: Profit[] = []; // Define profitsData as an array of Profit
-          // Example transformation
+          const profitsData: Profit[] = []; 
           for (const purchaseKey in purchases) {
             const purchase = purchases[purchaseKey];
             for (const saleKey in sales) {
               const sale = sales[saleKey];
               if (sale.itemName === purchase.itemName) {
                 const totalSaleRevenue = sale.quantitySold * sale.listingPrice;
-                const estimatedProfit = totalSaleRevenue - (totalSaleRevenue * (sale.platformFees / 100)) - sale.shippingCost;
-                const actualProfit = estimatedProfit; // This could be calculated differently
+                const totalPurchaseCost = sale.quantitySold * purchase.purchasePrice;
+                const estimatedProfit = totalSaleRevenue - totalPurchaseCost - (totalSaleRevenue * (sale.platformFees / 100)) - sale.shippingCost;
+                const actualProfit = estimatedProfit; 
                 profitsData.push({
                   itemName: sale.itemName,
                   purchaseDate: purchase.purchaseDate,
@@ -74,15 +72,12 @@ const ReviewProfits: React.FC = () => {
     }
   }, [user]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFilters({ ...filters, [name]: value });
+    setFilters({ ...filters, dateRange: { ...filters.dateRange, [name]: value }, [name]: value });
   };
 
   const handleSubmit = () => {
-    // Logic to handle filtering the profits
     console.log(filters);
   };
 
@@ -130,17 +125,13 @@ const ReviewProfits: React.FC = () => {
           <label className="label">
             <span className="label-text">Sale Platform</span>
           </label>
-          <select
+          <input
+            type="text"
             name="salePlatform"
             value={filters.salePlatform}
             onChange={handleChange}
-            className="select select-bordered w-full"
-          >
-            <option value="">All</option>
-            <option value="eBay">eBay</option>
-            <option value="Amazon">Amazon</option>
-            <option value="Custom">Custom</option>
-          </select>
+            className="input input-bordered w-full"
+          />
         </div>
         <button
           type="button"
@@ -151,7 +142,7 @@ const ReviewProfits: React.FC = () => {
         </button>
       </form>
       <div>
-        <h3 className="text-lg text-greyText font-bold">Profit Summary</h3>
+        <h3>Profit Summary</h3>
         <div>Total Revenue: {/* Calculate and display total revenue */}</div>
         <div>Total Costs: {/* Calculate and display total costs */}</div>
         <div>Net Profit: {/* Calculate and display net profit */}</div>
@@ -161,38 +152,40 @@ const ReviewProfits: React.FC = () => {
       </div>
       <div>
         <h3>Detailed Table</h3>
-        <table className="table w-full">
-          <thead>
-            <tr>
-              <th>Item Name</th>
-              <th>Purchase Date</th>
-              <th>Sale Date</th>
-              <th>Quantity</th>
-              <th>Purchase Price</th>
-              <th>Sale Price</th>
-              <th>Platform Fees</th>
-              <th>Shipping Cost</th>
-              <th>Estimated Profit</th>
-              <th>Actual Profit</th>
-            </tr>
-          </thead>
-          <tbody>
-            {profits.map((profit, index) => (
-              <tr key={index}>
-                <td>{profit.itemName}</td>
-                <td>{profit.purchaseDate}</td>
-                <td>{profit.saleDate}</td>
-                <td>{profit.quantity}</td>
-                <td>{profit.purchasePrice}</td>
-                <td>{profit.salePrice}</td>
-                <td>{profit.platformFees}</td>
-                <td>{profit.shippingCost}</td>
-                <td>{profit.estimatedProfit}</td>
-                <td>{profit.actualProfit}</td>
+        <div className="overflow-x-auto">
+          <table className="table w-full">
+            <thead>
+              <tr>
+                <th>Item Name</th>
+                <th>Purchase Date</th>
+                <th>Sale Date</th>
+                <th>Quantity</th>
+                <th>Purchase Price</th>
+                <th>Sale Price</th>
+                <th>Platform Fees</th>
+                <th>Shipping Cost</th>
+                <th>Estimated Profit</th>
+                <th>Actual Profit</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {profits.map((profit, index) => (
+                <tr key={index}>
+                  <td>{profit.itemName}</td>
+                  <td>{profit.purchaseDate}</td>
+                  <td>{profit.saleDate}</td>
+                  <td>{profit.quantity}</td>
+                  <td>{profit.purchasePrice}</td>
+                  <td>{profit.salePrice}</td>
+                  <td>{profit.platformFees}</td>
+                  <td>{profit.shippingCost}</td>
+                  <td>{profit.estimatedProfit.toFixed(2)}</td>
+                  <td>{profit.actualProfit.toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
       <button
         type="button"

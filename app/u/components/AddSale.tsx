@@ -10,6 +10,7 @@ interface Purchase {
   purchaseDate: string;
   quantity: number;
   purchasePrice: number;
+  soldQuantity?: number;
   websiteName?: string;
 }
 
@@ -36,6 +37,7 @@ const AddSale: React.FC = () => {
 
   const [purchases, setPurchases] = useState<Purchase[]>([]);
   const [selectedPurchase, setSelectedPurchase] = useState<string>('');
+  const [selectedPurchaseData, setSelectedPurchaseData] = useState<Purchase | null>(null);
   const [user] = useAuthState(auth);
 
   useEffect(() => {
@@ -58,13 +60,16 @@ const AddSale: React.FC = () => {
     if (['listingPrice', 'quantitySold', 'platformFees', 'shippingCost'].includes(name) && parseFloat(value) < 0) {
       return;
     }
-  
-    setSale({ ...sale, [name]: parseFloat(value) });
+
+    setSale({ ...sale, [name]: value });
   };
 
   const handlePurchaseSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const purchaseId = e.target.value;
     setSelectedPurchase(purchaseId);
+
+    const selectedData = purchases.find(purchase => purchase.id === purchaseId);
+    setSelectedPurchaseData(selectedData || null);
   };
 
   const handleSubmit = async () => {
@@ -78,9 +83,8 @@ const AddSale: React.FC = () => {
       return;
     }
 
-    const selectedPurchaseData = purchases.find(purchase => purchase.id === selectedPurchase);
     if (!selectedPurchaseData) {
-      console.error("Selected purchase not found");
+      console.error("Selected purchase data not found");
       return;
     }
 
@@ -91,8 +95,9 @@ const AddSale: React.FC = () => {
 
     // Update the remaining quantity in the selected purchase
     const updatedQuantity = selectedPurchaseData.quantity - sale.quantitySold;
+    const updatedSoldQuantity = (selectedPurchaseData.soldQuantity || 0) + sale.quantitySold;
     const selectedPurchaseRef = ref(database, `purchases/${user.uid}/${selectedPurchaseData.id}`);
-    await set(selectedPurchaseRef, { ...selectedPurchaseData, quantity: updatedQuantity });
+    await set(selectedPurchaseRef, { ...selectedPurchaseData, quantity: updatedQuantity, soldQuantity: updatedSoldQuantity });
 
     setSale({
       itemName: '',
@@ -104,10 +109,12 @@ const AddSale: React.FC = () => {
       shippingCost: 0
     });
     setSelectedPurchase('');
+    setSelectedPurchaseData(null);
   };
 
-  const totalSaleRevenue = sale.quantitySold * sale.listingPrice;
-  const estimatedProfit = totalSaleRevenue - (totalSaleRevenue * (sale.platformFees / 100)) - sale.shippingCost;
+  const totalSaleRevenue = sale.quantitySold * parseFloat(sale.listingPrice.toString());
+  const totalPurchaseCost = sale.quantitySold * (selectedPurchaseData?.purchasePrice || 0);
+  const estimatedProfit = totalSaleRevenue - totalPurchaseCost - (totalSaleRevenue * (parseFloat(sale.platformFees.toString()) / 100)) - parseFloat(sale.shippingCost.toString());
 
   return (
     <div>
@@ -133,11 +140,7 @@ const AddSale: React.FC = () => {
           <label className="label">
             <span className="label-text">Sale Platform</span>
           </label>
-          <select name="salePlatform" value={sale.salePlatform} onChange={handleChange} className="select select-bordered w-full">
-            <option value="eBay">eBay</option>
-            <option value="Amazon">Amazon</option>
-            <option value="Custom">Custom</option>
-          </select>
+          <input type="text" name="salePlatform" value={sale.salePlatform} onChange={handleChange} className="input input-bordered w-full" />
         </div>
         <div className="mb-4">
           <label className="label">
@@ -149,7 +152,7 @@ const AddSale: React.FC = () => {
           <label className="label">
             <span className="label-text">Quantity Sold</span>
           </label>
-          <input type="number" name="quantitySold" value={sale.quantitySold} onChange={handleChange} className="input input-bordered w-full" />
+          <input type="number" name="quantitySold" value={sale.quantitySold} onChange={handleChange} className="input input-bordered w-full" max={selectedPurchaseData ? selectedPurchaseData.quantity : 0} />
         </div>
         <div className="mb-4">
           <label className="label">
@@ -163,19 +166,11 @@ const AddSale: React.FC = () => {
           </label>
           <input type="number" name="shippingCost" value={sale.shippingCost} onChange={handleChange} className="input input-bordered w-full" />
         </div>
-        <div className="mb-4">
-          <label className="label">
-            <span className="label-text">Total Sale Revenue</span>
-          </label>
-          <input type="text" value={totalSaleRevenue} readOnly className="input input-bordered w-full" />
-        </div>
-        <div className="mb-4">
-          <label className="label">
-            <span className="label-text">Estimated Profit</span>
-          </label>
-          <input type="text" value={estimatedProfit} readOnly className="input input-bordered w-full" />
-        </div>
         <button type="button" onClick={handleSubmit} disabled={!selectedPurchase} className={`btn ${!selectedPurchase ? 'btn-disabled' : 'btn-primary'} bg-white border-black hover:bg-textGradStart hover:border-black w-1/2 mx-auto transition duration-200`}>Add Sale</button>
+        <div className="mt-4">
+          <h2>Total Sale Revenue: {isNaN(totalSaleRevenue) ? '0.00' : totalSaleRevenue.toFixed(2)}</h2>
+          <h2>Estimated Profit: {isNaN(estimatedProfit) ? '0.00' : estimatedProfit.toFixed(2)}</h2>
+        </div>
       </form>
     </div>
   );

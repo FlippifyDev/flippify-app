@@ -16,7 +16,7 @@ const EstimateProfits: React.FC = () => {
       const totalPlatformFees = (totalSaleRevenue * (platformFees / 100));
       const totalShippingCost = estimate.quantity * shippingCost;
       const calculatedProfit = totalSaleRevenue - totalPlatformFees - totalShippingCost - totalPurchaseCost;
-      setEstimatedProfit(calculatedProfit);
+      setEstimatedProfit(parseFloat(calculatedProfit.toFixed(2)));
     }
   }, [estimate, listingPrice, platformFees, shippingCost]);
 
@@ -76,7 +76,7 @@ const EstimateProfits: React.FC = () => {
         </div>
         <button type="button" onClick={handleSubmit} className="btn btn-primary bg-white border-black hover:bg-textGradStart hover:border-black w-full md:w-1/2 transition duration-200 mx-auto">Calculate Estimated Profit</button>
         <div className="mt-4">
-          <h2>Estimated Profit: {estimatedProfit}</h2>
+          <h2>Estimated Profit: {estimatedProfit.toFixed(2)}</h2>
         </div>
       </form>
     </div>

@@ -1,4 +1,3 @@
-// pages/AddPurchase.tsx
 import React, { useState } from 'react';
 import { database, ref, set, push } from '../../api/firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -8,8 +7,8 @@ import { useEstimate } from '../../components/EstimateContext';
 interface Purchase {
   itemName: string;
   purchaseDate: string;
-  quantity: number;
-  purchasePrice: number;
+  quantity: number | string;
+  purchasePrice: number | string;
   websiteName?: string;
 }
 
@@ -17,8 +16,8 @@ const AddPurchase: React.FC = () => {
   const [purchase, setPurchase] = useState<Purchase>({
     itemName: '',
     purchaseDate: '',
-    quantity: 1,
-    purchasePrice: 0,
+    quantity: '1',
+    purchasePrice: '0',
     websiteName: ''
   });
 
@@ -32,13 +31,13 @@ const AddPurchase: React.FC = () => {
       return;
     }
 
-    const updatedPurchase = { ...purchase, [name]: parseFloat(value) || value };
+    const updatedPurchase = { ...purchase, [name]: value };
     setPurchase(updatedPurchase);
 
     // Update the context
     setEstimate({
-      quantity: updatedPurchase.quantity,
-      purchasePrice: updatedPurchase.purchasePrice,
+      quantity: parseFloat(updatedPurchase.quantity.toString()) || 0,
+      purchasePrice: parseFloat(updatedPurchase.purchasePrice.toString()) || 0,
       websiteName: updatedPurchase.websiteName,
     });
   };
@@ -49,16 +48,22 @@ const AddPurchase: React.FC = () => {
       return;
     }
 
+    const parsedPurchase = {
+      ...purchase,
+      quantity: parseFloat(purchase.quantity.toString()) || 0,
+      purchasePrice: parseFloat(purchase.purchasePrice.toString()) || 0,
+    };
+
     const userPurchasesRef = ref(database, `purchases/${user.uid}`);
     const newPurchaseRef = push(userPurchasesRef);
 
-    await set(newPurchaseRef, purchase);
+    await set(newPurchaseRef, parsedPurchase);
 
     setPurchase({
       itemName: '',
       purchaseDate: '',
-      quantity: 1,
-      purchasePrice: 0,
+      quantity: '1',
+      purchasePrice: '0',
       websiteName: ''
     });
   };
@@ -82,13 +87,13 @@ const AddPurchase: React.FC = () => {
           <label className="label">
             <span className="label-text">Quantity</span>
           </label>
-          <input type="number" name="quantity" value={purchase.quantity} onChange={handleChange} className="input input-bordered w-full" />
+          <input type="text" name="quantity" value={purchase.quantity} onChange={handleChange} className="input input-bordered w-full" />
         </div>
         <div className="mb-4">
           <label className="label">
             <span className="label-text">Purchase Price</span>
           </label>
-          <input type="number" name="purchasePrice" value={purchase.purchasePrice} onChange={handleChange} className="input input-bordered w-full" />
+          <input type="text" name="purchasePrice" value={purchase.purchasePrice} onChange={handleChange} className="input input-bordered w-full" />
         </div>
         <div className="mb-4">
           <label className="label">
@@ -101,8 +106,8 @@ const AddPurchase: React.FC = () => {
           <button type="button" onClick={() => setPurchase({
             itemName: '',
             purchaseDate: '',
-            quantity: 1,
-            purchasePrice: 0,
+            quantity: '1',
+            purchasePrice: '0',
             websiteName: ''
           })} className="btn btn-primary bg-white border-black hover:bg-textGradStart mr-4 hover:border-black transition duration-200">Clear All</button>
         </div>

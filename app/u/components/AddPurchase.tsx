@@ -1,8 +1,9 @@
 // pages/AddPurchase.tsx
-
-import React, { useState, useEffect } from 'react';
-import { database, ref, push, get, child, set } from '../../api/firebaseConfig'; // Adjust the path as necessary
-import { useSession } from 'next-auth/react';
+import React, { useState } from 'react';
+import { database, ref, get, set, push } from '../../api/firebaseConfig';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../../api/firebaseConfig';
+import { useEstimate } from '../../components/EstimateContext';
 
 interface Purchase {
   itemName: string;
@@ -16,50 +17,41 @@ const AddPurchase: React.FC = () => {
   const [purchase, setPurchase] = useState<Purchase>({
     itemName: '',
     purchaseDate: '',
-    quantity: 0,
+    quantity: 1,
     purchasePrice: 0,
     websiteName: ''
   });
 
-  const { data: session } = useSession();
+  const { setEstimate } = useEstimate();
+  const [user, loading, error] = useAuthState(auth);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    // Ensure quantity and purchasePrice are not negative
     if ((name === 'quantity' || name === 'purchasePrice') && parseFloat(value) < 0) {
-      return; // Do not update state if input is negative
+      return;
     }
 
-    setPurchase({ ...purchase, [name]: value });
+    const updatedPurchase = { ...purchase, [name]: parseFloat(value) };
+    setPurchase(updatedPurchase);
+    setEstimate({ quantity: updatedPurchase.quantity, purchasePrice: updatedPurchase.purchasePrice, websiteName: updatedPurchase.websiteName });
   };
 
   const handleSubmit = async () => {
-    if (!session?.user?.name) {
+    if (!user) {
       console.error("User is not logged in");
       return;
     }
 
-    const username = session.user.name; // Get the username from the session
-    const userPurchasesRef = ref(database, `purchases/${username}`);
+    const userPurchasesRef = ref(database, `purchases/${user.uid}`);
+    const newPurchaseRef = push(userPurchasesRef);
 
-    // Fetch existing purchases to determine the next increment number
-    const snapshot = await get(userPurchasesRef);
-    const purchases = snapshot.val();
-    const incrementNumber = purchases ? Object.keys(purchases).length + 1 : 1;
+    await set(newPurchaseRef, purchase);
 
-    // Create a unique key for the new purchase
-    const purchaseKey = `${username}-${incrementNumber}`;
-
-    // Save the purchase to the database with the unique key
-    const newPurchaseRef = child(userPurchasesRef, purchaseKey);
-    await set(newPurchaseRef, { ...purchase, username });
-
-    // Clear form after submission
     setPurchase({
       itemName: '',
       purchaseDate: '',
-      quantity: 0,
+      quantity: 1,
       purchasePrice: 0,
       websiteName: ''
     });
@@ -103,7 +95,7 @@ const AddPurchase: React.FC = () => {
           <button type="button" onClick={() => setPurchase({
             itemName: '',
             purchaseDate: '',
-            quantity: 0,
+            quantity: 1,
             purchasePrice: 0,
             websiteName: ''
           })} className="btn btn-primary bg-white border-black hover:bg-textGradStart mr-4 hover:border-black transition duration-200">Clear All</button>

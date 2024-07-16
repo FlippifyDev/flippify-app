@@ -1,9 +1,27 @@
-import React, { useState } from "react";
+// pages/ReviewProfits.tsx
+import React, { useState, useEffect } from "react";
+import { database, ref, get } from '../../api/firebaseConfig';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../../api/firebaseConfig';
 
 interface Filters {
   dateRange: { start: string; end: string };
   itemName: string;
   salePlatform: string;
+}
+
+// Define the types for profits
+interface Profit {
+  itemName: string;
+  purchaseDate: string;
+  saleDate: string;
+  quantity: number;
+  purchasePrice: number;
+  salePrice: number;
+  platformFees: number;
+  shippingCost: number;
+  estimatedProfit: number;
+  actualProfit: number;
 }
 
 const ReviewProfits: React.FC = () => {
@@ -12,6 +30,49 @@ const ReviewProfits: React.FC = () => {
     itemName: "",
     salePlatform: "",
   });
+
+  const [user, loading, error] = useAuthState(auth);
+  const [profits, setProfits] = useState<Profit[]>([]);
+
+  useEffect(() => {
+    if (user) {
+      const userPurchasesRef = ref(database, `purchases/${user.uid}`);
+      const userSalesRef = ref(database, `sales/${user.uid}`);
+  
+      get(userPurchasesRef).then((snapshot) => {
+        const purchases = snapshot.val() || {};
+        get(userSalesRef).then((snapshot) => {
+          const sales = snapshot.val() || {};
+          const profitsData: Profit[] = []; // Define profitsData as an array of Profit
+          // Example transformation
+          for (const purchaseKey in purchases) {
+            const purchase = purchases[purchaseKey];
+            for (const saleKey in sales) {
+              const sale = sales[saleKey];
+              if (sale.itemName === purchase.itemName) {
+                const totalSaleRevenue = sale.quantitySold * sale.listingPrice;
+                const estimatedProfit = totalSaleRevenue - (totalSaleRevenue * (sale.platformFees / 100)) - sale.shippingCost;
+                const actualProfit = estimatedProfit; // This could be calculated differently
+                profitsData.push({
+                  itemName: sale.itemName,
+                  purchaseDate: purchase.purchaseDate,
+                  saleDate: sale.saleDate,
+                  quantity: sale.quantitySold,
+                  purchasePrice: purchase.purchasePrice,
+                  salePrice: sale.listingPrice,
+                  platformFees: sale.platformFees,
+                  shippingCost: sale.shippingCost,
+                  estimatedProfit: estimatedProfit,
+                  actualProfit: actualProfit
+                });
+              }
+            }
+          }
+          setProfits(profitsData);
+        });
+      });
+    }
+  }, [user]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -90,7 +151,7 @@ const ReviewProfits: React.FC = () => {
         </button>
       </form>
       <div>
-        <h3>Profit Summary</h3>
+        <h3 className="text-lg text-greyText font-bold">Profit Summary</h3>
         <div>Total Revenue: {/* Calculate and display total revenue */}</div>
         <div>Total Costs: {/* Calculate and display total costs */}</div>
         <div>Net Profit: {/* Calculate and display net profit */}</div>
@@ -115,7 +176,22 @@ const ReviewProfits: React.FC = () => {
               <th>Actual Profit</th>
             </tr>
           </thead>
-          <tbody>{/* Map through filtered data and display rows */}</tbody>
+          <tbody>
+            {profits.map((profit, index) => (
+              <tr key={index}>
+                <td>{profit.itemName}</td>
+                <td>{profit.purchaseDate}</td>
+                <td>{profit.saleDate}</td>
+                <td>{profit.quantity}</td>
+                <td>{profit.purchasePrice}</td>
+                <td>{profit.salePrice}</td>
+                <td>{profit.platformFees}</td>
+                <td>{profit.shippingCost}</td>
+                <td>{profit.estimatedProfit}</td>
+                <td>{profit.actualProfit}</td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
       <button

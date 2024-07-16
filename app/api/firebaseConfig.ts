@@ -1,5 +1,7 @@
+// firebaseConfig.ts
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, push, get, child, set } from 'firebase/database'; // Import specific database functions
+import { getDatabase, ref, get, set, push } from 'firebase/database';
+import { getAuth, signInAnonymously } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDYmi2-ehzKrTF7R3CkS9dO7lMTTcFq7wQ",
@@ -18,4 +20,14 @@ const app = initializeApp(firebaseConfig);
 // Get a reference to the database service
 const database = getDatabase(app);
 
-export { database, ref, push, get, child, set }; // Export database and database functions
+// Initialize Firebase Auth
+const auth = getAuth(app);
+signInAnonymously(auth)
+  .then(() => {
+    console.log('Signed in anonymously');
+  })
+  .catch((error) => {
+    console.error('Error signing in anonymously', error);
+  });
+
+export { database, auth, ref, get, set, push };

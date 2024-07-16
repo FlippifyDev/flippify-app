@@ -1,4 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { database, ref, get, set, push } from '../../api/firebaseConfig';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../../api/firebaseConfig';
+
+interface Purchase {
+  id?: string;
+  itemName: string;
+  purchaseDate: string;
+  quantity: number;
+  purchasePrice: number;
+  websiteName?: string;
+}
 
 interface Sale {
   itemName: string;
@@ -17,25 +29,80 @@ const AddSale: React.FC = () => {
     salePlatform: '',
     listingPrice: 0,
     quantitySold: 0,
-    platformFees: 12.5, // default eBay fee
+    platformFees: 12.5,
     shippingCost: 0
   });
+
+  const [purchases, setPurchases] = useState<Purchase[]>([]);
+  const [selectedPurchase, setSelectedPurchase] = useState<string>('');
+  const [user, loading, error] = useAuthState(auth);
+
+  useEffect(() => {
+    if (user) {
+      const userPurchasesRef = ref(database, `purchases/${user.uid}`);
+      get(userPurchasesRef).then((snapshot) => {
+        const purchasesData = snapshot.val() || {};
+        const purchasesList = Object.keys(purchasesData).map((key) => ({
+          ...purchasesData[key],
+          id: key
+        }));
+        setPurchases(purchasesList);
+      });
+    }
+  }, [user]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
   
-    // Ensure numeric fields are not negative
     if (['listingPrice', 'quantitySold', 'platformFees', 'shippingCost'].includes(name) && parseFloat(value) < 0) {
-      return; // Do not update state if input is negative
+      return;
     }
   
-    setSale({ ...sale, [name]: value });
+    setSale({ ...sale, [name]: parseFloat(value) });
   };
-  
 
-  const handleSubmit = () => {
-    // Logic to handle adding the sale
-    console.log(sale);
+  const handlePurchaseSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const purchaseId = e.target.value;
+    setSelectedPurchase(purchaseId);
+  };
+
+  const handleSubmit = async () => {
+    if (!user) {
+      console.error("User is not logged in");
+      return;
+    }
+
+    if (!selectedPurchase) {
+      console.error("No purchase selected");
+      return;
+    }
+
+    const selectedPurchaseData = purchases.find(purchase => purchase.id === selectedPurchase);
+    if (!selectedPurchaseData) {
+      console.error("Selected purchase not found");
+      return;
+    }
+
+    const userSalesRef = ref(database, `sales/${user.uid}`);
+    const newSaleRef = push(userSalesRef);
+
+    await set(newSaleRef, { ...sale, itemName: selectedPurchaseData.itemName });
+
+    // Update the remaining quantity in the selected purchase
+    const updatedQuantity = selectedPurchaseData.quantity - sale.quantitySold;
+    const selectedPurchaseRef = ref(database, `purchases/${user.uid}/${selectedPurchaseData.id}`);
+    await set(selectedPurchaseRef, { ...selectedPurchaseData, quantity: updatedQuantity });
+
+    setSale({
+      itemName: '',
+      saleDate: '',
+      salePlatform: '',
+      listingPrice: 0,
+      quantitySold: 0,
+      platformFees: 12.5,
+      shippingCost: 0
+    });
+    setSelectedPurchase('');
   };
 
   const totalSaleRevenue = sale.quantitySold * sale.listingPrice;
@@ -46,9 +113,14 @@ const AddSale: React.FC = () => {
       <form className="form-control">
         <div className="mb-4">
           <label className="label">
-            <span className="label-text">Item Name</span>
+            <span className="label-text">Select Purchase <span className="text-red-500">*</span></span>
           </label>
-          <input type="text" name="itemName" value={sale.itemName} onChange={handleChange} className="input input-bordered w-full" />
+          <select name="selectedPurchase" value={selectedPurchase} onChange={handlePurchaseSelect} className="select select-bordered w-full">
+            <option value="">Select a purchase</option>
+            {purchases.map((purchase) => (
+              <option key={purchase.id} value={purchase.id}>{purchase.itemName}</option>
+            ))}
+          </select>
         </div>
         <div className="mb-4">
           <label className="label">
@@ -102,7 +174,7 @@ const AddSale: React.FC = () => {
           </label>
           <input type="text" value={estimatedProfit} readOnly className="input input-bordered w-full" />
         </div>
-        <button type="button" onClick={handleSubmit} className="btn btn-primary bg-white border-black hover:bg-textGradStart hover:border-black w-1/2 mx-auto transition duration-200">Add Sale</button>
+        <button type="button" onClick={handleSubmit} disabled={!selectedPurchase} className={`btn ${!selectedPurchase ? 'btn-disabled' : 'btn-primary'} bg-white border-black hover:bg-textGradStart hover:border-black w-1/2 mx-auto transition duration-200`}>Add Sale</button>
       </form>
     </div>
   );

@@ -1,13 +1,37 @@
 import ProductsList from "../components/ProductList";
 import LandingLayout from '../components/LandingLayout';
 import { Metadata } from 'next';
-import Head from 'next/head';
 
 
 export const metadata: Metadata = {
   title: 'Exclusive Flipping Products - Flippify Deals',
   description: 'Explore Flippify’s product offerings, including Advanced Lego retirement deals, Discounted Electronics, Sneakers and other upcoming releases. Our platform tracks soon-to-retire Lego sets across multiple websites along with many other categories like electronics and sneakers, ensuring you never miss a valuable deal. Stay updated for more exclusive products and offers.',
-  robots: "index,follow"
+  openGraph: {
+    title: 'Exclusive Flipping Products - Flippify Deals',
+    description: 'Explore Flippify’s product offerings, including Advanced Lego retirement deals, Discounted Electronics, Sneakers and other upcoming releases. Our platform tracks soon-to-retire Lego sets across multiple websites along with many other categories like electronics and sneakers, ensuring you never miss a valuable deal. Stay updated for more exclusive products and offers.',
+    url: 'https://flippify.co.uk/l/products',
+    images: [
+      {
+        url: "https://i.imgur.com/iofmtlb.png", // This must change eventually
+        width: 1918,
+        height: 1078,
+        alt: "Products Page Image"
+      }
+    ]
+  },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 }
 
 

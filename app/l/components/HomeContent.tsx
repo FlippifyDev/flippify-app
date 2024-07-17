@@ -15,7 +15,7 @@ const HomeContent = ({ className = '' }) => {
         <div className="w-11/12 md:w-4/5 lg:w-3/5 xl:w-2/5">
           <p className={`${lato.className} text-5xl from-textGradStart to-textGradEnd to-60% bg-gradient-to-tr bg-clip-text text-transparent text-center`}>
             Reselling
-            <a href="#" className={`${inter.className} text-white text-5xl font-bold text-center`}> made easy with our bots and tools.</a>
+            <a href="#" className={`${inter.className} text-white text-5xl font-bold text-center`}> streamlined with cutting-edge bots & dedicated tools.</a>
           </p>
         </div>
         <p className='w-11/12 sm:w-full mb-8 pb-1 pt-2 text-greyText text-lg text-center'>

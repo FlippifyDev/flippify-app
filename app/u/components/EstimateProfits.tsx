@@ -68,9 +68,8 @@ const EstimateProfits: React.FC = () => {
           </label>
           <input type="number" name="shippingCost" value={shippingCost} onChange={handleChange} className="input input-bordered w-full" />
         </div>
-        <div className="mt-4">
-          <h2 className="divider font-bold text-white text-lg">Estimated Profit</h2>
-          <h2 className="flex justify-center text-lg font-bold">{estimatedProfit.toFixed(2)}</h2>
+        <div>
+          <h2 className="divider font-bold text-white text-lg">Estimated Profit: {estimatedProfit.toFixed(2)}</h2>
         </div>
       </form>
     </div>

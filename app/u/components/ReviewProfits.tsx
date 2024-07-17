@@ -1,10 +1,9 @@
-// pages/ReviewProfits.tsx
 import React, { useState, useEffect } from "react";
 import { database, ref, get } from '../../api/firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../api/firebaseConfig';
 import { saveAs } from 'file-saver';
-import * as XLSX from 'xlsx';
+import * as Papa from 'papaparse';
 
 interface Filters {
   dateRange: { start: string; end: string };
@@ -22,7 +21,7 @@ interface Profit {
   platformFees: number;
   shippingCost: number;
   estimatedProfit: number;
-  salePlatform: string; // Added salePlatform to Profit interface
+  salePlatform: string;
 }
 
 const ReviewProfits: React.FC = () => {
@@ -64,7 +63,7 @@ const ReviewProfits: React.FC = () => {
                   platformFees: sale.platformFees,
                   shippingCost: sale.shippingCost,
                   estimatedProfit: estimatedProfit,
-                  salePlatform: sale.salePlatform // Ensure salePlatform is included
+                  salePlatform: sale.salePlatform
                 });
               }
             }
@@ -103,12 +102,9 @@ const ReviewProfits: React.FC = () => {
   };
 
   const handleExport = () => {
-    const worksheet = XLSX.utils.json_to_sheet(filteredProfits);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Profits');
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
-    saveAs(data, 'profits.xlsx');
+    const csv = Papa.unparse(filteredProfits);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    saveAs(blob, 'profits.csv');
   };
 
   const totalRevenue = filteredProfits.reduce((sum, profit) => sum + (profit.salePrice * profit.quantity), 0);

@@ -48,7 +48,7 @@ const ServerPriceList = () => {
             monthly: "price_1PcuH1JJRepiHZ8d4HTovHWm",
             yearly: "price_1PcuHmJJRepiHZ8duS8nBti1",
           }}
-          whatsIncludedComponent={<ServerPlansWhatsIncluded whatsIncludedText={["eBay Price Comparison", "HotUKDeals Price Tracking", "Alerts based on eBay profit potential", "UK Sites Only", "Frequent electronics deal alerts"]}/>}
+          whatsIncludedComponent={<ServerPlansWhatsIncluded whatsIncludedText={["eBay Price Comparison", "HotUKDeals Price Tracking", "Alerts based on eBay profit potential", "Currently UK Sites Only", "Frequent electronics deal alerts"]}/>}
         />
       </div>
     </div>

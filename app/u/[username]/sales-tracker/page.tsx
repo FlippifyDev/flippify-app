@@ -3,6 +3,7 @@ import React from 'react';
 import UserLayout from '../../components/UserLayout';
 import SalesTracker from '../../components/SalesTracker';
 import { EstimateProvider } from '../../../components/EstimateContext';
+import "../../../../styles/sales-and-profits-tabs.css"
 
 const ManageServerPage = () => {
   return (

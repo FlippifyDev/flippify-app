@@ -22,22 +22,7 @@ w-full md:w-auto lg:w-full
 }
 
 
-.tab {
-    padding: 0.5rem 1rem;
-    border: 1px solid transparent;
-    color: #000;
-}
-  
-.tab-active {
-    background-color: #F1F1F1;
-    border: 1.5px solid #A9A9A9;
-    color: #000;
-    border-radius: 9999px;
-}
 
-.tabs .tab:not(.tab-active):hover {
-    background-color: #FFFFFF;
-}
 
 .menu .active {
     background-color: #e0f7fa; /* Adjust the color as needed */

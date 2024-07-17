@@ -12,20 +12,16 @@ const inter = Inter({ subsets: ["latin"] });
 interface ProductCardProps {
   title: string;
   description: string;
-  websiteDescription: string;
   image: string;
-  websites: string[];
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
   title,
   description,
-  websiteDescription,
   image,
-  websites,
 }) => {
   return (
-    <div className="border card card-compact p-2 m-5 bg-base-100 w-80 sm:w-96 shadow-xl h-[36rem]">
+    <div className="border card card-compact m-4 mx-10 p-2 bg-base-100 w-80 sm:w-96 shadow-xl h-[36rem] mt-10">
       <figure className="h-72 overflow-y-auto">
         <div className="relative w-full h-full">
           <Image

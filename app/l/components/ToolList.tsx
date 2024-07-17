@@ -23,7 +23,7 @@ const ToolList: React.FC = () => {
         </div>
         <div className="flex justify-center max-w-2xl">
           <p className="mx-4 sm:mx-2 text-white text-md sm:text-lg text-center">
-            Uncover a handpicked collection of tools designed to simplify tasks and improve workflow efficiency, ensuring you stay ahead in today's competitive market.
+            Uncover a handpicked collection of tools designed to simplify tasks and improve workflow efficiency, ensuring you stay ahead in today&apos;s competitive market.
           </p>
         </div>
       </div>

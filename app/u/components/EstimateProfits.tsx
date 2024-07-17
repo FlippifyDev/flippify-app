@@ -1,4 +1,3 @@
-// pages/EstimateProfits.tsx
 import React, { useState, useEffect } from 'react';
 import { useEstimate } from '../../components/EstimateContext';
 

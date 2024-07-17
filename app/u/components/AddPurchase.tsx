@@ -7,18 +7,20 @@ import { useEstimate } from '../../components/EstimateContext';
 interface Purchase {
   itemName: string;
   purchaseDate: string;
-  quantity: number | string;
-  purchasePrice: number | string;
+  quantity: number;
+  purchasePrice: number;
   websiteName?: string;
+  availability: number;
 }
 
 const AddPurchase: React.FC = () => {
   const [purchase, setPurchase] = useState<Purchase>({
     itemName: '',
     purchaseDate: '',
-    quantity: '1',
-    purchasePrice: '0',
-    websiteName: ''
+    quantity: 1,
+    purchasePrice: 0,
+    websiteName: '',
+    availability: 1
   });
 
   const { setEstimate } = useEstimate();
@@ -31,13 +33,16 @@ const AddPurchase: React.FC = () => {
       return;
     }
 
-    const updatedPurchase = { ...purchase, [name]: value };
+    const updatedPurchase = { ...purchase, [name]: name === 'quantity' || name === 'purchasePrice' ? parseFloat(value) : value };
+    if (name === 'quantity') {
+      updatedPurchase.availability = parseFloat(value);
+    }
     setPurchase(updatedPurchase);
 
     // Update the context
     setEstimate({
-      quantity: parseFloat(updatedPurchase.quantity.toString()) || 0,
-      purchasePrice: parseFloat(updatedPurchase.purchasePrice.toString()) || 0,
+      quantity: updatedPurchase.quantity,
+      purchasePrice: updatedPurchase.purchasePrice / updatedPurchase.quantity,
       websiteName: updatedPurchase.websiteName,
     });
   };
@@ -48,23 +53,18 @@ const AddPurchase: React.FC = () => {
       return;
     }
 
-    const parsedPurchase = {
-      ...purchase,
-      quantity: parseFloat(purchase.quantity.toString()) || 0,
-      purchasePrice: parseFloat(purchase.purchasePrice.toString()) || 0,
-    };
-
     const userPurchasesRef = ref(database, `purchases/${user.uid}`);
     const newPurchaseRef = push(userPurchasesRef);
 
-    await set(newPurchaseRef, parsedPurchase);
+    await set(newPurchaseRef, purchase);
 
     setPurchase({
       itemName: '',
       purchaseDate: '',
-      quantity: '1',
-      purchasePrice: '0',
-      websiteName: ''
+      quantity: 1,
+      purchasePrice: 0,
+      websiteName: '',
+      availability: 1
     });
   };
 
@@ -87,13 +87,13 @@ const AddPurchase: React.FC = () => {
           <label className="label">
             <span className="label-text">Quantity</span>
           </label>
-          <input type="text" name="quantity" value={purchase.quantity} onChange={handleChange} className="input input-bordered w-full" />
+          <input type="number" name="quantity" value={purchase.quantity} onChange={handleChange} className="input input-bordered w-full" />
         </div>
         <div className="mb-4">
           <label className="label">
             <span className="label-text">Total Purchase Price</span>
           </label>
-          <input type="text" name="purchasePrice" value={purchase.purchasePrice} onChange={handleChange} className="input input-bordered w-full" />
+          <input type="number" name="purchasePrice" value={purchase.purchasePrice} onChange={handleChange} className="input input-bordered w-full" />
         </div>
         <div className="mb-4">
           <label className="label">
@@ -106,9 +106,10 @@ const AddPurchase: React.FC = () => {
           <button type="button" onClick={() => setPurchase({
             itemName: '',
             purchaseDate: '',
-            quantity: '1',
-            purchasePrice: '0',
-            websiteName: ''
+            quantity: 1,
+            purchasePrice: 0,
+            websiteName: '',
+            availability: 1
           })} className="btn btn-primary bg-white border-black hover:bg-textGradStart mr-4 hover:border-black transition duration-200">Clear All</button>
         </div>
       </form>

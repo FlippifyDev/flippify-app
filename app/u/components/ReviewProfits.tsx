@@ -1,7 +1,10 @@
+// pages/ReviewProfits.tsx
 import React, { useState, useEffect } from "react";
 import { database, ref, get } from '../../api/firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../api/firebaseConfig';
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
 
 interface Filters {
   dateRange: { start: string; end: string };
@@ -19,6 +22,7 @@ interface Profit {
   platformFees: number;
   shippingCost: number;
   estimatedProfit: number;
+  salePlatform: string; // Added salePlatform to Profit interface
 }
 
 const ReviewProfits: React.FC = () => {
@@ -30,6 +34,7 @@ const ReviewProfits: React.FC = () => {
 
   const [user] = useAuthState(auth);
   const [profits, setProfits] = useState<Profit[]>([]);
+  const [filteredProfits, setFilteredProfits] = useState<Profit[]>([]);
 
   useEffect(() => {
     if (user) {
@@ -47,23 +52,25 @@ const ReviewProfits: React.FC = () => {
               const sale = sales[saleKey];
               if (sale.itemName === purchase.itemName) {
                 const totalSaleRevenue = sale.quantitySold * sale.listingPrice;
-                const totalPurchaseCost = sale.quantitySold * purchase.purchasePrice;
+                const totalPurchaseCost = sale.quantitySold * (purchase.purchasePrice / purchase.quantity);
                 const estimatedProfit = totalSaleRevenue - totalPurchaseCost - (totalSaleRevenue * (sale.platformFees / 100)) - sale.shippingCost;
                 profitsData.push({
                   itemName: sale.itemName,
                   purchaseDate: purchase.purchaseDate,
                   saleDate: sale.saleDate,
                   quantity: sale.quantitySold,
-                  purchasePrice: purchase.purchasePrice,
+                  purchasePrice: purchase.purchasePrice / purchase.quantity,
                   salePrice: sale.listingPrice,
                   platformFees: sale.platformFees,
                   shippingCost: sale.shippingCost,
                   estimatedProfit: estimatedProfit,
+                  salePlatform: sale.salePlatform // Ensure salePlatform is included
                 });
               }
             }
           }
           setProfits(profitsData);
+          setFilteredProfits(profitsData);
         });
       });
     }
@@ -75,17 +82,55 @@ const ReviewProfits: React.FC = () => {
   };
 
   const handleSubmit = () => {
-    console.log(filters);
+    const filtered = profits.filter((profit) => {
+      const startDate = filters.dateRange.start ? new Date(filters.dateRange.start) : null;
+      const endDate = filters.dateRange.end ? new Date(filters.dateRange.end) : null;
+      const profitSaleDate = new Date(profit.saleDate);
+
+      return (
+        (!startDate || profitSaleDate >= startDate) &&
+        (!endDate || profitSaleDate <= endDate) &&
+        (filters.itemName === '' || profit.itemName.toLowerCase().includes(filters.itemName.toLowerCase())) &&
+        (filters.salePlatform === '' || profit.salePlatform.toLowerCase().includes(filters.salePlatform.toLowerCase()))
+      );
+    });
+    setFilteredProfits(filtered);
   };
+
+  const handleClearFilters = () => {
+    setFilters({ dateRange: { start: "", end: "" }, itemName: "", salePlatform: "" });
+    setFilteredProfits(profits);
+  };
+
+  const handleExport = () => {
+    const worksheet = XLSX.utils.json_to_sheet(filteredProfits);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Profits');
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(data, 'profits.xlsx');
+  };
+
+  const totalRevenue = filteredProfits.reduce((sum, profit) => sum + (profit.salePrice * profit.quantity), 0);
+  const totalPurchaseCost = filteredProfits.reduce((sum, profit) => sum + (profit.purchasePrice * profit.quantity), 0);
+  const totalFees = filteredProfits.reduce((sum, profit) => sum + ((profit.salePrice * profit.quantity * (profit.platformFees / 100)) + profit.shippingCost), 0);
+  const totalCosts = totalPurchaseCost + totalFees;
+  const netProfit = totalRevenue - totalCosts;
+  const totalSales = filteredProfits.reduce((sum, profit) => sum + profit.quantity, 0);
+
+  const totalRevenueNumber = Number(totalRevenue) || 0;
+  const totalCostsNumber = Number(totalCosts) || 0;
+  const netProfitNumber = Number(netProfit) || 0;
+  const totalSalesNumber = Number(totalSales) || 0;
 
   return (
     <div>
       <h2 className="divider font-bold text-white text-xl">Summary</h2>
       <div className="grid grid-cols-2 pt-2 pb-4">
-        <div>Total Revenue: {/* Calculate and display total revenue */}</div>
-        <div>Total Costs: {/* Calculate and display total costs */}</div>
-        <div>Net Profit: {/* Calculate and display net profit */}</div>
-        <div>No. Sales: {/* Calculate and display number of sales */}</div>
+        <div>Total Revenue: {totalRevenueNumber.toFixed(2)}</div>
+        <div>Total Costs: {totalCostsNumber.toFixed(2)}</div>
+        <div>Net Profit: {netProfitNumber.toFixed(2)}</div>
+        <div>No. Sales: {totalSalesNumber}</div>
       </div>
       <h2 className="divider font-bold text-white text-xl pt-8">History Search Filter</h2>
       <form className="form-control">
@@ -137,13 +182,22 @@ const ReviewProfits: React.FC = () => {
             className="input input-bordered w-full"
           />
         </div>
-        <button
-          type="button"
-          onClick={handleSubmit}
-          className="btn btn-primary bg-white border-black hover:bg-textGradStart hover:border-black w-1/2 mx-auto transition duration-200"
-        >
-          Apply Filters
-        </button>
+        <div className="grid grid-cols-2 gap-4">
+          <button
+            type="button"
+            onClick={handleSubmit}
+            className="btn btn-primary bg-white border-black hover:bg-textGradStart hover:border-black w-full md:w-2/3 mx-auto transition duration-200"
+          >
+            Apply
+          </button>
+          <button
+            type="button"
+            onClick={handleClearFilters}
+            className="btn btn-secondary bg-white border-black hover:bg-textGradStart hover:border-black w-full md:w-2/3 mx-auto transition duration-200"
+          >
+            Clear
+          </button>
+        </div>
       </form>
       <h2 className="divider pt-8 pb-2 font-bold text-white text-lg">History</h2>
       <div className="pb-4">
@@ -163,27 +217,41 @@ const ReviewProfits: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {profits.map((profit, index) => (
-                <tr key={index}>
-                  <td>{profit.itemName}</td>
-                  <td>{profit.purchaseDate}</td>
-                  <td>{profit.saleDate}</td>
-                  <td>{profit.quantity}</td>
-                  <td>{profit.purchasePrice}</td>
-                  <td>{profit.salePrice}</td>
-                  <td>{profit.platformFees}</td>
-                  <td>{profit.shippingCost}</td>
-                  <td>{profit.estimatedProfit.toFixed(2)}</td>
+              {filteredProfits.length > 0 ? (
+                filteredProfits.map((profit, index) => {
+                  const purchasePriceNumber = Number(profit.purchasePrice) || 0;
+                  const salePriceNumber = Number(profit.salePrice) || 0;
+                  const platformFeesNumber = Number(profit.platformFees) || 0;
+                  const shippingCostNumber = Number(profit.shippingCost) || 0;
+                  const estimatedProfitNumber = Number(profit.estimatedProfit) || 0;
+
+                  return (
+                    <tr key={index}>
+                      <td>{profit.itemName}</td>
+                      <td>{profit.purchaseDate}</td>
+                      <td>{profit.saleDate}</td>
+                      <td>{profit.quantity}</td>
+                      <td>{purchasePriceNumber.toFixed(2)}</td>
+                      <td>{salePriceNumber.toFixed(2)}</td>
+                      <td>{platformFeesNumber.toFixed(2)}</td>
+                      <td>{shippingCostNumber.toFixed(2)}</td>
+                      <td>{estimatedProfitNumber.toFixed(2)}</td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan={9} className="text-center">You have not logged anything yet.</td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
       </div>
       <button
         type="button"
-        style={{ display: "block", margin: "0 auto" }}
-        className="btn btn-primary bg-white border-black hover:bg-textGradStart hover:border-black w-1/2 mx-auto transition duration-200"
+        onClick={handleExport}
+        className="btn btn-primary bg-white border-black hover:bg-textGradStart hover:border-black w-1/3 mx-auto transition duration-200 flex justify-center"
       >
         Export Data
       </button>

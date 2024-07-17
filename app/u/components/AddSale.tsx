@@ -1,4 +1,3 @@
-// pages/AddSale.tsx
 import React, { useState, useEffect } from 'react';
 import { database, ref, get, set, push } from '../../api/firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -12,6 +11,7 @@ interface Purchase {
   purchasePrice: number;
   soldQuantity?: number;
   websiteName?: string;
+  availability: number;
 }
 
 interface Sale {
@@ -48,7 +48,7 @@ const AddSale: React.FC = () => {
         const purchasesList = Object.keys(purchasesData).map((key) => ({
           ...purchasesData[key],
           id: key
-        }));
+        })).filter(purchase => purchase.availability > 0);
         setPurchases(purchasesList);
       });
     }
@@ -56,7 +56,7 @@ const AddSale: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-  
+
     if (['listingPrice', 'quantitySold', 'platformFees', 'shippingCost'].includes(name) && parseFloat(value) < 0) {
       return;
     }
@@ -88,6 +88,11 @@ const AddSale: React.FC = () => {
       return;
     }
 
+    if (sale.quantitySold > selectedPurchaseData.availability) {
+      console.error("Quantity sold exceeds available stock");
+      return;
+    }
+
     const userSalesRef = ref(database, `sales/${user.uid}`);
     const newSaleRef = push(userSalesRef);
 
@@ -96,8 +101,9 @@ const AddSale: React.FC = () => {
     // Update the remaining quantity in the selected purchase
     const updatedQuantity = selectedPurchaseData.quantity - sale.quantitySold;
     const updatedSoldQuantity = (selectedPurchaseData.soldQuantity || 0) + sale.quantitySold;
+    const updatedAvailability = selectedPurchaseData.availability - sale.quantitySold;
     const selectedPurchaseRef = ref(database, `purchases/${user.uid}/${selectedPurchaseData.id}`);
-    await set(selectedPurchaseRef, { ...selectedPurchaseData, quantity: updatedQuantity, soldQuantity: updatedSoldQuantity });
+    await set(selectedPurchaseRef, { ...selectedPurchaseData, quantity: updatedQuantity, soldQuantity: updatedSoldQuantity, availability: updatedAvailability });
 
     setSale({
       itemName: '',
@@ -152,7 +158,7 @@ const AddSale: React.FC = () => {
           <label className="label">
             <span className="label-text">Quantity Sold</span>
           </label>
-          <input type="number" name="quantitySold" value={sale.quantitySold} onChange={handleChange} className="input input-bordered w-full" max={selectedPurchaseData ? selectedPurchaseData.quantity : 0} />
+          <input type="number" name="quantitySold" value={sale.quantitySold} onChange={handleChange} className="input input-bordered w-full" min={1} max={selectedPurchaseData ? selectedPurchaseData.availability : 0} />
         </div>
         <div className="mb-4">
           <label className="label">

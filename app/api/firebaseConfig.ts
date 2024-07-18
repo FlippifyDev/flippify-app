@@ -1,6 +1,5 @@
-// firebaseConfig.ts
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, get, set, push } from 'firebase/database';
+import { getDatabase, ref, get, set, push, child, query, orderByChild, equalTo } from 'firebase/database';
 import { getAuth, signInAnonymously } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -16,18 +15,11 @@ const firebaseConfig = {
 
 // Initialize Firebase app
 const app = initializeApp(firebaseConfig);
-
-// Get a reference to the database service
 const database = getDatabase(app);
-
-// Initialize Firebase Auth
 const auth = getAuth(app);
-signInAnonymously(auth)
-  .then(() => {
-    console.log('Signed in anonymously');
-  })
-  .catch((error) => {
-    console.error('Error signing in anonymously', error);
-  });
 
-export { database, auth, ref, get, set, push };
+signInAnonymously(auth).catch((error) => {
+  console.error('Error signing in anonymously', error);
+});
+
+export { database, auth, ref, get, set, push, child, query, orderByChild, equalTo };

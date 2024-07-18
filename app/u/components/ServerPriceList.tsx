@@ -13,7 +13,7 @@ const ServerPriceList = () => {
       <div className="flex flex-col items-center space-y-5 text-center">
         <div className="flex justify-center">
           <p
-            className={`${lato.className} text-5xl text-houseBlue py-1`}
+            className={`${lato.className} text-5xl text-gradient bg-gradient-to-tr from-blue-500 to-purple-500 bg-clip-text text-transparent py-1`}
           >
             Server Integration
             <a

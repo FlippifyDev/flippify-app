@@ -44,7 +44,7 @@ const PriceCard: React.FC<PriceCardProps> = ({
 
   return (
     <div className="max-w-md sm:mx-4 mt-8">
-      <div className="h-full card bg-white hover:shadow-planCardShadow transition duration-200 opacity-90 border border-gray-500 flex flex-col items-center justify-center pt-6 pb-6 ">
+      <div className="h-full card bg-white hover:shadow-planCardShadow transition duration-200 opacity-90 border-2 border-gray-500 flex flex-col items-center justify-center pt-6 pb-6 ">
         <div className="w-full px-8 sm:px-6">
           <div className="flex items-center justify-center pb-2">
             <h2
@@ -67,7 +67,7 @@ const PriceCard: React.FC<PriceCardProps> = ({
             <span className="label-text text-lightModeText">GBP</span>
           </div>
           <div className="flex flex-col items-center">
-            <hr className="w-full" />
+            <hr className="w-full bg-gray-800" />
             {prices.length > 0 && (
               <PriceStat
                 prices={convertedPrices}
@@ -76,7 +76,7 @@ const PriceCard: React.FC<PriceCardProps> = ({
                 currencySymbol={currencySymbol}
               />
             )}
-            <hr className="w-full" />
+            <hr className="w-full bg-gray-800" />
           </div>
           {whatsIncludedComponent}
           <div className="flex justify-end mt-2">

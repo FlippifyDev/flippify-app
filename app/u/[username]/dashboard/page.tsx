@@ -3,6 +3,7 @@ import UserLayout from "../../components/UserLayout";
 import { Metadata } from "next";
 import SubscriptionWrapper from "../../components/SubscriptionWrapper";
 import WaitlistForm from "../../components/WaitlistForm"; 
+import WaitlistStatus from "../../components/WaitlistStatus";
 
 export const metadata: Metadata = {
   title: "Manage Your Reselling Efficiently - Flippify Dashboard",
@@ -31,7 +32,11 @@ const DashboardPage = () => {
         </div>
         </SubscriptionWrapper>
 
-        <SubscriptionWrapper requiredSubscriptions={['!whitelisted']}>
+        <SubscriptionWrapper requiredSubscriptions={['waiting']}>
+          <WaitlistStatus />
+        </SubscriptionWrapper>
+
+        <SubscriptionWrapper requiredSubscriptions={['!whitelisted', '!waiting']}>
           <WaitlistForm />
         </SubscriptionWrapper>
       </div>

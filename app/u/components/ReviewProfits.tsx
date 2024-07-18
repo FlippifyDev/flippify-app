@@ -16,7 +16,7 @@ interface Profit {
   purchaseDate: string;
   saleDate: string;
   quantity: number;
-  purchasePrice: number;
+  purchasePricePerUnit: number;
   salePrice: number;
   platformFees: number;
   shippingCost: number;
@@ -58,7 +58,7 @@ const ReviewProfits: React.FC = () => {
                   purchaseDate: purchase.purchaseDate,
                   saleDate: sale.saleDate,
                   quantity: sale.quantitySold,
-                  purchasePrice: purchase.purchasePrice / purchase.quantity,
+                  purchasePricePerUnit: purchase.purchasePrice / purchase.quantity,
                   salePrice: sale.listingPrice,
                   platformFees: sale.platformFees,
                   shippingCost: sale.shippingCost,
@@ -108,7 +108,7 @@ const ReviewProfits: React.FC = () => {
   };
 
   const totalRevenue = filteredProfits.reduce((sum, profit) => sum + (profit.salePrice * profit.quantity), 0);
-  const totalPurchaseCost = filteredProfits.reduce((sum, profit) => sum + (profit.purchasePrice * profit.quantity), 0);
+  const totalPurchaseCost = filteredProfits.reduce((sum, profit) => sum + (profit.purchasePricePerUnit * profit.quantity), 0);
   const totalFees = filteredProfits.reduce((sum, profit) => sum + ((profit.salePrice * profit.quantity * (profit.platformFees / 100)) + profit.shippingCost), 0);
   const totalCosts = totalPurchaseCost + totalFees;
   const netProfit = totalRevenue - totalCosts;
@@ -215,7 +215,7 @@ const ReviewProfits: React.FC = () => {
             <tbody>
               {filteredProfits.length > 0 ? (
                 filteredProfits.map((profit, index) => {
-                  const purchasePriceNumber = Number(profit.purchasePrice) || 0;
+                  const purchasePriceNumber = Number(profit.purchasePricePerUnit) || 0;
                   const salePriceNumber = Number(profit.salePrice) || 0;
                   const platformFeesNumber = Number(profit.platformFees) || 0;
                   const shippingCostNumber = Number(profit.shippingCost) || 0;

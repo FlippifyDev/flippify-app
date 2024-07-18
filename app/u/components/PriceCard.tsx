@@ -1,13 +1,12 @@
 "use client";
 
-
-
-
 import React, { useState } from "react";
 import PriceStat from "./PriceStat";
 import SubscribeNow from "./SubscribeNow";
-import { IoMdCheckboxOutline } from "react-icons/io";
-import { Lato, Inter } from "next/font/google";
+import SubscriptionWrapper from "./SubscriptionWrapper";
+import { Lato } from "next/font/google";
+import JoinWaitlistButton from "./JoinWaitlistButton";
+
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 
 interface PriceCardProps {
@@ -15,7 +14,7 @@ interface PriceCardProps {
   prices: number[];
   description: string;
   priceIds: { monthly: string; yearly: string };
-  whatsIncludedComponent: any
+  whatsIncludedComponent: any;
 }
 
 const PriceCard: React.FC<PriceCardProps> = ({
@@ -23,11 +22,10 @@ const PriceCard: React.FC<PriceCardProps> = ({
   prices,
   description,
   priceIds,
-  whatsIncludedComponent
+  whatsIncludedComponent,
 }) => {
   const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
   const [currency, setCurrency] = useState<"USD" | "GBP">("USD");
-
 
   const handlePlanSelect = (index: number) => {
     setSelectedPlan(index);
@@ -83,7 +81,17 @@ const PriceCard: React.FC<PriceCardProps> = ({
           {whatsIncludedComponent}
           <div className="flex justify-end mt-2">
             {prices.length > 0 && selectedPlan !== null && (
-              <SubscribeNow priceId={selectedPriceId} />
+              <div>
+                <SubscriptionWrapper requiredSubscriptions={["whitelisted"]}>
+                  <SubscribeNow priceId={selectedPriceId} />
+                </SubscriptionWrapper>
+                <SubscriptionWrapper requiredSubscriptions={["!whitelisted"]}>
+                  <JoinWaitlistButton
+                    text="Join Waitlist"
+                    redirect="dashboard"
+                  />
+                </SubscriptionWrapper>
+              </div>
             )}
           </div>
         </div>

@@ -5,7 +5,8 @@ import { useSession } from 'next-auth/react';
 import SideBarButton from './SideBarButton';
 import { MdManageAccounts } from "react-icons/md";
 import { AiOutlineStock } from "react-icons/ai";
-
+import { FaUserPlus, FaSearch } from "react-icons/fa";
+import SubscriptionWrapper from './SubscriptionWrapper';
 
 export interface Subscription {
     name: string;
@@ -18,30 +19,23 @@ export interface CustomUser {
     subscriptions?: Subscription[];
 }
 
-
 const UserSidebarButtons = () => {
     const { data: session } = useSession();
-    
+
     if (!session || !session.user || !('subscriptions' in session.user)) {
         return null; // Handle case where session or subscriptions are not available
     }
-    
+
     const { subscriptions } = session.user as CustomUser;
-    
+
     if (!subscriptions) {
         return null;
     }
 
-    // Check if any subscription name includes "Server"
-    const hasServerSubscription = subscriptions.some(subscription =>
-        subscription.name.toLowerCase().includes('server')
-    );
-
     return (
         <div>
             <ul>
-                {/* Render a single button if any subscription includes "Server" */}
-                {hasServerSubscription && (
+                <SubscriptionWrapper requiredSubscriptions={['server']}>
                     <li>
                         <SideBarButton
                             text="Manage Servers"
@@ -49,19 +43,40 @@ const UserSidebarButtons = () => {
                             symbol={<MdManageAccounts className="text-md" />}
                         />
                     </li>
-                )}
+                </SubscriptionWrapper>
+                
+                <SubscriptionWrapper requiredSubscriptions={['standard']}>
+                    <li>
+                        <SideBarButton 
+                            text="Sales & Profits"
+                            redirect='sales-tracker'
+                            symbol={<AiOutlineStock className="text-md" />}
+                        />
+                    </li>
+                </SubscriptionWrapper>
 
-                <li>
-                    <SideBarButton 
-                        text="Sales & Profits"
-                        redirect='sales-tracker'
-                        symbol={<AiOutlineStock className="text-md" />}
-                    />
-                </li>
+                <SubscriptionWrapper requiredSubscriptions={['whitelisted', '!standard']}>
+                    <li>
+                        <SideBarButton 
+                            text="View Plans"
+                            redirect='plans'
+                            symbol={<FaSearch className="text-md" />}
+                        />
+                    </li>
+                </SubscriptionWrapper>
+
+                <SubscriptionWrapper requiredSubscriptions={['!whitelisted']}>
+                    <li>
+                        <SideBarButton 
+                            text="Join Waitlist"
+                            redirect='dashboard'
+                            symbol={<FaUserPlus className="text-md" />}
+                        />
+                    </li>
+                </SubscriptionWrapper>
             </ul>
         </div>
     )
 }
 
-export default UserSidebarButtons
-
+export default UserSidebarButtons;

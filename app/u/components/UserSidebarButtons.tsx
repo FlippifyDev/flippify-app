@@ -36,43 +36,35 @@ const UserSidebarButtons = () => {
         <div>
             <ul>
                 <SubscriptionWrapper requiredSubscriptions={['server']}>
-                    <li>
-                        <SideBarButton
-                            text="Manage Servers"
-                            redirect='manage-servers'
-                            symbol={<MdManageAccounts className="text-md" />}
-                        />
-                    </li>
+                    <SideBarButton
+                        text="Manage Servers"
+                        redirect='manage-servers'
+                        symbol={<MdManageAccounts className="text-md" />}
+                    />
                 </SubscriptionWrapper>
                 
                 <SubscriptionWrapper requiredSubscriptions={['standard']}>
-                    <li>
-                        <SideBarButton 
-                            text="Sales & Profits"
-                            redirect='sales-tracker'
-                            symbol={<AiOutlineStock className="text-md" />}
-                        />
-                    </li>
+                    <SideBarButton 
+                        text="Sales & Profits"
+                        redirect='sales-tracker'
+                        symbol={<AiOutlineStock className="text-md" />}
+                    />
                 </SubscriptionWrapper>
 
                 <SubscriptionWrapper requiredSubscriptions={['whitelisted', '!standard']}>
-                    <li>
-                        <SideBarButton 
-                            text="View Plans"
-                            redirect='plans'
-                            symbol={<FaSearch className="text-md" />}
-                        />
-                    </li>
+                    <SideBarButton 
+                        text="View Plans"
+                        redirect='plans'
+                        symbol={<FaSearch className="text-md" />}
+                    />
                 </SubscriptionWrapper>
 
                 <SubscriptionWrapper requiredSubscriptions={['!whitelisted']}>
-                    <li>
-                        <SideBarButton 
-                            text="Join Waitlist"
-                            redirect='dashboard'
-                            symbol={<FaUserPlus className="text-md" />}
-                        />
-                    </li>
+                    <SideBarButton 
+                        text="Join Waitlist"
+                        redirect='dashboard'
+                        symbol={<FaUserPlus className="text-md" />}
+                    />
                 </SubscriptionWrapper>
             </ul>
         </div>

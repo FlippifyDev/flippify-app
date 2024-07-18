@@ -18,7 +18,7 @@ const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
 const Sidebar = () => {
   return (
-    <div className="drawer drawer-mobile xl:drawer-open ">
+    <div className="drawer drawer-mobile xl:drawer-open bg-white">
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content flex flex-col">
         {/* Toggle button for smaller screens */}
@@ -30,7 +30,7 @@ const Sidebar = () => {
         </label>
       </div>
       <div className="drawer-side">
-        <ul className="menu bg-white border-r-2 border-greyStroke text-base-content min-h-full w-80 p-4 flex flex-col justify-between">
+        <ul className="menu bg-white active:bg-white border-r-2 border-greyStroke text-base-content min-h-full w-80 p-4 flex flex-col justify-between">
           {/* Logo */}
           <div className="flex flex-col">
             <div className="flex justify-center mb-8 mt-4 select-none">
@@ -41,29 +41,19 @@ const Sidebar = () => {
             <div>
               <a className="text-lightModeText text-lg font-bold select-none">Home</a>
             </div>
-            <ul>
-              <li>
+            <div>
                 <SideBarButton text="Dashboard" redirect="dashboard" symbol={<FaHouse className="text-lg" />} />
-              </li>
-              <li>
                 <SideBarButton text="Plans" redirect="plans" symbol={<FaSearch className="text-lg" />} />
-              </li>
-              <li>
                 <SideBarButton text="Server Plans" redirect="server-plans" symbol={<MdGroups className="text-2xl" />} />
-              </li>
-              <li>
                 <BillingPortalButton />
-              </li>
-            <li>
-              <Link
-                href="https://discord.gg/gNPYfe7YFm"
-                className="text-lightModeText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md"
-              >
-                <span className="col-span-2 text-lg"><FaDiscord /></span>
-                <span className="col-span-10 text-base">Discord</span>
-              </Link>
-              </li>
-            </ul>
+                <Link
+                  href="https://discord.gg/gNPYfe7YFm"
+                  className="hover:bg-gray-100 active:bg-gray-300 text-lightModeText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md"
+                >
+                  <span className="col-span-2 text-lg"><FaDiscord /></span>
+                  <span className="col-span-10 text-base">Discord</span>
+                </Link>
+            </div>
           </div>
 
           
@@ -74,13 +64,9 @@ const Sidebar = () => {
           <UserSideBarButtons />
 
           {/* Settings and Other */}
-          <div className="mt-auto flex flex-col">
-            <li className="mt-auto">
+          <div className="mt-10 flex flex-col">
               <SideBarButton text="Legal" redirect="legal" symbol={<BsClipboard2Fill className="text-lg" />} />
-            </li>
-            <li className="mt-auto">
               <SignOutButton />
-            </li>
           </div>
         </ul>
       </div>

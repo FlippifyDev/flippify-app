@@ -121,61 +121,61 @@ const ReviewProfits: React.FC = () => {
 
   return (
     <div>
-      <h2 className="divider font-bold text-white text-xl">Summary</h2>
-      <div className="grid grid-cols-2 pt-2 pb-4">
+      <h2 className="divider font-bold text-lightModeText text-xl">Summary</h2>
+      <div className="grid grid-cols-2 pt-2 pb-4 text-lightModeText">
         <div>Total Revenue: {totalRevenueNumber.toFixed(2)}</div>
         <div>Total Costs: {totalCostsNumber.toFixed(2)}</div>
         <div>Net Profit: {netProfitNumber.toFixed(2)}</div>
         <div>No. Sales: {totalSalesNumber}</div>
       </div>
-      <h2 className="divider font-bold text-white text-xl pt-8">History Search Filter</h2>
+      <h2 className="divider font-bold lightModeText text-xl pt-8 text-lightModeText">History Search Filter</h2>
       <form className="form-control">
         <div className="mb-4">
           <label className="label">
-            <span className="label-text">Start Date</span>
+            <span className="label-text text-lightModeText">Start Date</span>
           </label>
           <input
             type="date"
             name="start"
             value={filters.dateRange.start}
             onChange={handleChange}
-            className="input input-bordered w-full"
+            className="input input-bordered w-full bg-white"
           />
         </div>
         <div className="mb-4">
           <label className="label">
-            <span className="label-text">End Date</span>
+            <span className="label-text text-lightModeText">End Date</span>
           </label>
           <input
             type="date"
             name="end"
             value={filters.dateRange.end}
             onChange={handleChange}
-            className="input input-bordered w-full"
+            className="input input-bordered w-full bg-white"
           />
         </div>
         <div className="mb-4">
           <label className="label">
-            <span className="label-text">Item Name</span>
+            <span className="label-text text-lightModeText">Item Name</span>
           </label>
           <input
             type="text"
             name="itemName"
             value={filters.itemName}
             onChange={handleChange}
-            className="input input-bordered w-full"
+            className="input input-bordered w-full bg-white"
           />
         </div>
         <div className="mb-4">
           <label className="label">
-            <span className="label-text">Sale Platform</span>
+            <span className="label-text text-lightModeText">Sale Platform</span>
           </label>
           <input
             type="text"
             name="salePlatform"
             value={filters.salePlatform}
             onChange={handleChange}
-            className="input input-bordered w-full"
+            className="input input-bordered w-full bg-white"
           />
         </div>
         <div className="grid grid-cols-2 gap-4">
@@ -195,12 +195,12 @@ const ReviewProfits: React.FC = () => {
           </button>
         </div>
       </form>
-      <h2 className="divider pt-8 pb-2 font-bold text-white text-lg">History</h2>
+      <h2 className="divider pt-8 pb-2 font-bold text-lightModeText text-lg">History</h2>
       <div className="pb-4">
         <div className="overflow-x-auto">
           <table className="table w-full">
             <thead>
-              <tr>
+              <tr className="text-lightModeText">
                 <th>Item Name</th>
                 <th>Purchase Date</th>
                 <th>Sale Date</th>

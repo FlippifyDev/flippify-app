@@ -51,14 +51,14 @@ interface Props {
       };
 
     return (
-        <div className="form-control w-full max-w-xs mt-2">
+        <div className="form-control w-full max-w-xs mt-2 text-lightModeText">
             <div className="label">
-                <span className="label-text">Webhook URL</span>
+                <span className="label-text text-lightModeText">Webhook URL</span>
                 <Link 
                     href="https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks" 
-                    className="text-sm text-blue-600 hover:underline"
+                    className="text-sm text-houseBlue hover:underline "
                     target="_blank"
-                    rel="noopener noreferrer" // Opens link in new tab
+                    rel="noopener noreferrer"
                     >
                     Webhook?
                 </Link>
@@ -66,15 +66,15 @@ interface Props {
             <input
                 type="text"
                 placeholder="Enter webhook url"
-                className="input input-bordered w-full max-w-xs"
+                className="input input-bordered w-full max-w-xs bg-lightGreyBackground"
                 value={webhookUrl}
                 onChange={(e) => setWebhookUrl(e.target.value)}
                 style={{ fontSize: '14px'}}
             />
             <div className="label">
-                <span className="label-text">Note: Entering a webhook will replace the previous one.</span>
+                <span className="label-text text-lightModeText">Note: Entering a webhook will replace the previous one.</span>
             </div>
-            <button className="btn btn-active mt-2 w-1/2" onClick={handleFormSubmit}>Submit</button>
+            <button className="btn mt-2 w-1/2 text-white border-none bg-houseBlue hover:bg-blue-500" onClick={handleFormSubmit}>Submit</button>
         </div>
     )
 }

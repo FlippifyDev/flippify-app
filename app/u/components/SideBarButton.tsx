@@ -33,17 +33,18 @@ const SideBarButton: React.FC<SideBarButtonProps> = ({ text, redirect, symbol })
   };
 
   return (
-    <button     
-      className="text-lightModeText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transition duration-200"
+    <button
+      className="w-full bg-white hover:bg-gray-100 text-lightModeText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md active:bg-gray-300"
       onClick={redirectUser}
-    >
+      >
       <span className={`col-span-2 text-lg ${isActive ? 'text-houseBlue' : ''}`}>{symbol}</span>
-      <span className="col-span-10 text-base">{text}</span>
+      <span className="col-span-10 text-base text-left">{text}</span>
     </button>
   );
 };
 
 export default SideBarButton;
+
 
 
 

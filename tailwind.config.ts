@@ -27,7 +27,7 @@ const config: Config = {
       },
       colors: {
         primary: '#5865F2',
-        white: '#FFFFFF',
+        white: '#ffffff',
         lightGreyBackground: '#F1F1F1',
         lightGreyHighlight: '#cccccc',
         greyText: '#dedede',
@@ -45,11 +45,13 @@ const config: Config = {
         discordBlue: '#5865F2',
         headingDarkText: '#1E1845',
       },
+      variants: {
+        extend: {
+          backgroundColor: ['active'],
+        },
+      },
     },
-  },
-  daisyui: {
-    themes: ['dark'],
-  },
+  }
 };
 
 export default config;

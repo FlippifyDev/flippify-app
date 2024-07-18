@@ -41,23 +41,23 @@ const SelectSubscription = () => {
 
     return (
         <div className=''>
-            <label className="form-control w-full max-w-xs">
+            <label className="form-control bg-lightGreyBackground w-full max-w-xs">
             <div className="label">
-                <span className="label-text" style={{ fontSize: '18px', fontFamily: 'Arial, sans-serif', fontWeight: 'normal' }}>
+                <span className="label-text text-lightModeText" style={{ fontSize: '18px', fontFamily: 'Arial, sans-serif', fontWeight: 'normal' }}>
                 Select Server Subscription
                 </span>
             </div>
             <select
-                className="select select-bordered"
+                className="select select-bordered bg-lightGreyBackground"
                 style={{ fontSize: '16px', fontFamily: 'Arial, sans-serif', fontWeight: 'normal' }}
                 onChange={handleSubscriptionChange}
                 value={selectedSubscription || ''}
             >
-                <option disabled value="">
+                <option className='text-lightModeText' disabled value="">
                 Select subscription
                 </option>
                 {serverSubscriptions.map((sub, index) => (
-                <option key={index} value={sub.name} style={{ fontSize: '14px', fontFamily: 'Arial, sans-serif', fontWeight: 'normal' }}>
+                <option className='text-lightModeText' key={index} value={sub.name} style={{ fontSize: '14px', fontFamily: 'Arial, sans-serif', fontWeight: 'normal' }}>
                     {sub.name}
                 </option>
                 ))}

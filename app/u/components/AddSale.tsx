@@ -127,9 +127,9 @@ const AddSale: React.FC = () => {
       <form className="form-control">
         <div className="mb-4">
           <label className="label">
-            <span className="label-text">Select Purchase <span className="text-red-500">*</span></span>
+            <span className="label-text text-lightModeText">Select Purchase <span className="text-red-500">*</span></span>
           </label>
-          <select name="selectedPurchase" value={selectedPurchase} onChange={handlePurchaseSelect} className="select select-bordered w-full">
+          <select name="selectedPurchase" value={selectedPurchase} onChange={handlePurchaseSelect} className="select select-bordered w-full bg-white">
             <option value="">Select a purchase</option>
             {purchases.map((purchase) => (
               <option key={purchase.id} value={purchase.id}>{purchase.itemName}</option>
@@ -138,43 +138,43 @@ const AddSale: React.FC = () => {
         </div>
         <div className="mb-4">
           <label className="label">
-            <span className="label-text">Sale Date</span>
+            <span className="label-text text-lightModeText">Sale Date</span>
           </label>
-          <input type="date" name="saleDate" value={sale.saleDate} onChange={handleChange} className="input input-bordered w-full" />
+          <input type="date" name="saleDate" value={sale.saleDate} onChange={handleChange} className="input input-bordered w-full bg-white" />
         </div>
         <div className="mb-4">
           <label className="label">
-            <span className="label-text">Sale Platform</span>
+            <span className="label-text text-lightModeText">Sale Platform</span>
           </label>
-          <input type="text" name="salePlatform" value={sale.salePlatform} onChange={handleChange} className="input input-bordered w-full" />
+          <input type="text" name="salePlatform" value={sale.salePlatform} onChange={handleChange} className="input input-bordered w-full bg-white" />
         </div>
         <div className="mb-4">
           <label className="label">
-            <span className="label-text">Listing Price per Unit</span>
+            <span className="label-text text-lightModeText">Listing Price per Unit</span>
           </label>
-          <input type="number" name="listingPrice" value={sale.listingPrice} onChange={handleChange} className="input input-bordered w-full" />
+          <input type="text" name="listingPrice" value={sale.listingPrice} onChange={handleChange} className="input input-bordered w-full bg-white" />
         </div>
         <div className="mb-4">
           <label className="label">
-            <span className="label-text">Quantity Sold</span>
+            <span className="label-text text-lightModeText">Quantity Sold</span>
           </label>
-          <input type="number" name="quantitySold" value={sale.quantitySold} onChange={handleChange} className="input input-bordered w-full" min={1} max={selectedPurchaseData ? selectedPurchaseData.availability : 0} />
+          <input type="text" name="quantitySold" value={sale.quantitySold} onChange={handleChange} className="input input-bordered w-full bg-white" min={1} max={selectedPurchaseData ? selectedPurchaseData.availability : 0} />
         </div>
         <div className="mb-4">
           <label className="label">
-            <span className="label-text">Platform Fees (%)</span>
+            <span className="label-text text-lightModeText">Platform Fees (%)</span>
           </label>
-          <input type="number" name="platformFees" value={sale.platformFees} onChange={handleChange} className="input input-bordered w-full" />
+          <input type="text" name="platformFees" value={sale.platformFees} onChange={handleChange} className="input input-bordered w-full bg-white" />
         </div>
         <div className="mb-4">
           <label className="label">
-            <span className="label-text">Shipping Cost</span>
+            <span className="label-text text-lightModeText">Shipping Cost</span>
           </label>
-          <input type="number" name="shippingCost" value={sale.shippingCost} onChange={handleChange} className="input input-bordered w-full" />
+          <input type="text" name="shippingCost" value={sale.shippingCost} onChange={handleChange} className="input input-bordered w-full bg-white" />
         </div>
-        <button type="button" onClick={handleSubmit} disabled={!selectedPurchase} className={`btn ${!selectedPurchase ? 'btn-disabled' : 'btn-primary'} bg-white border-black hover:bg-textGradStart hover:border-black w-1/2 mx-auto transition duration-200`}>Add Sale</button>
+        <button type="button" onClick={handleSubmit} disabled={!selectedPurchase} className={`btn ${!selectedPurchase ? 'btn-disabled' : 'btn-primary'} bg-white border-black hover:bg-green-300 hover:border-black w-1/2 mx-auto transition duration-200`}>Add Sale</button>
         <div className="mt-4">
-          <h2 className="divider font-bold text-white text-lg">Profit Made</h2>
+          <h2 className="divider font-bold text-lightModeText text-lg">Profit Made</h2>
           <h2 className="flex justify-center text-lg font-bold">{isNaN(estimatedProfit) ? '0.00' : estimatedProfit.toFixed(2)}</h2>
         </div>
       </form>

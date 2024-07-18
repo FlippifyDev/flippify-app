@@ -14,7 +14,7 @@ const PhoneMockup = () => {
         <div className="display">
           <figure>
             <Image
-              src="https://i.imgur.com/rTbjT41.png"
+              src="https://i.imgur.com/hcPwA5X.png"
               alt="Phone Mockup"
               loading="lazy"
               width={800}

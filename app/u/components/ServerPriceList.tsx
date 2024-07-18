@@ -19,7 +19,7 @@ const ServerPriceList = () => {
             <a
               className={`${inter.className} mb-8 text-white text-5xl font-bold`}
             >
-              {/* This is the space between pricing and made easy */} made easy
+              {/* This is the space between pricing and made easy */} Made Easy.
             </a>
           </p>
         </div>
@@ -31,7 +31,7 @@ const ServerPriceList = () => {
       </div>
       <div className="mt-4 flex flex-wrap justify-center">
         <PriceCard
-          title="Lego Retirement Deals"
+          title="Retiring Sets Deals"
           description="Enhance your reselling efficiency with our cutting-edge bot, scanning diverse websites to identify Lego sets nearing retirement and ensuring you never miss a profitable sale."
           prices={[149.99, 199.99]}
           priceIds={{
@@ -41,7 +41,7 @@ const ServerPriceList = () => {
           whatsIncludedComponent={<ServerPlansWhatsIncluded whatsIncludedText={["eBay Price Comparison", "Keepa Link Included", "Retirement Date Included", "Currently UK Sites Only", "Continual Website Additions"]}/>}
         />
         <PriceCard
-          title="HotUKDeals"
+          title="Deal Watch UK"
           description="Effortlessly discover profitable reselling opportunities with our advanced webscraper, which scans hotukdeals.co.uk and compares prices with sold items on eBay to maximize your profits."
           prices={[69.99, 99.99]}
           priceIds={{

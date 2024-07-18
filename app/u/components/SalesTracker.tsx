@@ -31,7 +31,7 @@ const SalesTracker = () => {
         <div role="tablist" className="flex rounded-t-2xl">
           <a
             role="tab"
-            className={`px-4 py-2 rounded-t-xl transition-colors duration-200 ${
+            className={`px-4 py-2 rounded-t-xl transition-colors duration-200 select-none ${
               activeComponent === "AddPurchase"
                 ? "bg-base-100 bg-opacity-90 text-white"
                 : "bg-base-100 bg-opacity-70 text-gray-400 hover:bg-gray-700 hover:text-white"
@@ -42,7 +42,7 @@ const SalesTracker = () => {
           </a>
           <a
             role="tab"
-            className={`px-4 py-2 rounded-t-xl transition-colors duration-200 ${
+            className={`px-4 py-2 rounded-t-xl transition-colors duration-200 select-none ${
               activeComponent === "AddSale"
                 ? "bg-base-100 bg-opacity-90 text-white"
                 : "bg-base-100 bg-opacity-70 text-gray-400 hover:bg-gray-700 hover:text-white"
@@ -53,7 +53,7 @@ const SalesTracker = () => {
           </a>
           <a
             role="tab"
-            className={`px-4 py-2 rounded-t-xl transition-colors duration-200 ${
+            className={`px-4 py-2 rounded-t-xl transition-colors duration-200 select-none ${
               activeComponent === "ReviewProfits"
                 ? "bg-base-100 bg-opacity-90 text-white"
                 : "bg-base-100 bg-opacity-70 text-gray-400 hover:bg-gray-700 hover:text-white"

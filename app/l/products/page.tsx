@@ -1,6 +1,6 @@
-import ProductsList from "../components/ProductList";
 import LandingLayout from '../components/LandingLayout';
 import { Metadata } from 'next';
+import ProductContent from "../components/ProductContent";
 
 
 export const metadata: Metadata = {
@@ -39,7 +39,7 @@ export default function Products() {
   return (
     <div>
       <LandingLayout>
-        <ProductsList />
+        <ProductContent />
       </LandingLayout>
       </div>
   );

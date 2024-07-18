@@ -1,7 +1,7 @@
-import HomePage from './l/home/page'
+import HomePage from './l/home/page';
 import Loading from './components/Loading';
 import { Suspense } from 'react';
-import { Metadata } from 'next'
+import { Metadata } from 'next';
 
 
 export const metadata: Metadata = {

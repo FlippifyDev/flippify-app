@@ -13,18 +13,18 @@ const ServerPriceList = () => {
       <div className="flex flex-col items-center space-y-5 text-center">
         <div className="flex justify-center">
           <p
-            className={`${lato.className} text-5xl from-textGradStart to-textGradEnd to-60% bg-gradient-to-tr bg-clip-text text-transparent py-1`}
+            className={`${lato.className} text-5xl text-houseBlue py-1`}
           >
             Server Integration
             <a
-              className={`${inter.className} mb-8 text-white text-5xl font-bold`}
+              className={`${inter.className} mb-8 text-lightModeText text-5xl font-bold`}
             >
               {/* This is the space between pricing and made easy */} Made Easy.
             </a>
           </p>
         </div>
         <div className="flex justify-center max-w-2xl">
-          <p className="mx-4 sm:mx-2 text-white text-lg text-center">
+          <p className="mx-4 sm:mx-2 text-lightModeText text-lg text-center">
             Looking to integrate a bot into your server? <br />Discover powerful features designed to elevate your Discord community&apos;s interaction.
           </p>
         </div>

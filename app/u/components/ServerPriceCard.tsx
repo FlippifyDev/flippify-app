@@ -4,7 +4,9 @@ import React, { useState } from "react";
 import PriceStat from "./PriceStat";
 import SubscribeNow from "./SubscribeNow";
 import { IoMdCheckboxOutline } from "react-icons/io";
-import { Lato, Inter } from "next/font/google";
+import SubscriptionWrapper from "./SubscriptionWrapper";
+import JoinWaitlistButton from "./JoinWaitlistButton";
+import { Lato } from "next/font/google";
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 
 interface PriceCardProps {
@@ -104,7 +106,17 @@ const PriceCard: React.FC<PriceCardProps> = ({
 
           <div className="flex justify-end mt-2">
             {prices.length > 0 && selectedPlan !== null && (
-              <SubscribeNow priceId={selectedPriceId} />
+              <div>
+                <SubscriptionWrapper requiredSubscriptions={["whitelisted"]}>
+                  <SubscribeNow priceId={selectedPriceId} />
+                </SubscriptionWrapper>
+                <SubscriptionWrapper requiredSubscriptions={["!whitelisted"]}>
+                  <JoinWaitlistButton
+                    text="Join Waitlist"
+                    redirect="dashboard"
+                  />
+                </SubscriptionWrapper>
+              </div>
             )}
           </div>
         </div>

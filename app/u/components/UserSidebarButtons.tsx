@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import SideBarButton from './SideBarButton';
 import { MdManageAccounts } from "react-icons/md";
 import { AiOutlineStock } from "react-icons/ai";
-import { FaUserPlus } from "react-icons/fa";
+import { FaUserPlus, FaSearch } from "react-icons/fa";
 import SubscriptionWrapper from './SubscriptionWrapper';
 
 export interface Subscription {
@@ -35,7 +35,7 @@ const UserSidebarButtons = () => {
     return (
         <div>
             <ul>
-                <SubscriptionWrapper requiredSubscription="server">
+                <SubscriptionWrapper requiredSubscriptions={['server']}>
                     <li>
                         <SideBarButton
                             text="Manage Servers"
@@ -45,7 +45,7 @@ const UserSidebarButtons = () => {
                     </li>
                 </SubscriptionWrapper>
                 
-                <SubscriptionWrapper requiredSubscription="waitlistaccepted">
+                <SubscriptionWrapper requiredSubscriptions={['standard']}>
                     <li>
                         <SideBarButton 
                             text="Sales & Profits"
@@ -55,11 +55,21 @@ const UserSidebarButtons = () => {
                     </li>
                 </SubscriptionWrapper>
 
-                <SubscriptionWrapper requiredSubscription="!waitlistaccepted">
+                <SubscriptionWrapper requiredSubscriptions={['whitelisted', '!standard']}>
+                    <li>
+                        <SideBarButton 
+                            text="View Plans"
+                            redirect='plans'
+                            symbol={<FaSearch className="text-md" />}
+                        />
+                    </li>
+                </SubscriptionWrapper>
+
+                <SubscriptionWrapper requiredSubscriptions={['!whitelisted']}>
                     <li>
                         <SideBarButton 
                             text="Join Waitlist"
-                            redirect='join-waitlist'
+                            redirect='dashboard'
                             symbol={<FaUserPlus className="text-md" />}
                         />
                     </li>

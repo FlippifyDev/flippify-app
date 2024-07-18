@@ -1,7 +1,10 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  plugins: [require("@tailwindcss/typography"), require('daisyui')],
+  plugins: [
+    require("@tailwindcss/typography"), 
+    require("daisyui")
+  ],
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -19,15 +22,19 @@ const config: Config = {
         '98': '0.98',
         '99': '0.99',
       },
+      boxShadow: {
+        'planCardShadow': '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)',      
+      },
       colors: {
         primary: '#5865F2',
         white: '#FFFFFF',
         lightGreyBackground: '#F1F1F1',
-        lightGreyHighlight: '#3f4b59',
+        lightGreyHighlight: '#cccccc',
         greyText: '#dedede',
         greyStroke: '#A9A9A9',
         darkGreyText: '#222222',
-        houseBlue: '#4C8BFA',
+        houseBlue: '#1a73e8',
+        lightModeText: '#3b4045',
         userPageBlueBg: '#1b2a49',
         userPageLightBlueBg: '#3e78b2',
         paymentPlanText: '#8678FF',
@@ -41,8 +48,8 @@ const config: Config = {
     },
   },
   daisyui: {
-    themes: ['light', 'dark'],
-  }
-
+    themes: ['dark'],
+  },
 };
+
 export default config;

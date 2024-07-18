@@ -52,7 +52,7 @@ const SubscribeNow: React.FC<SubscribeNowProps> = ({ priceId }) => {
   };
 
   return (
-    <button className="btn btn-primary bg-discordBlue text-white" onClick={handleBuyButtonClick} disabled={!checkoutUrl}>
+    <button className="btn btn-primary bg-houseBlue text-white" onClick={handleBuyButtonClick} disabled={!checkoutUrl}>
       {checkoutUrl ? 'Subscribe Now' : 'Loading...'}
     </button>
   );

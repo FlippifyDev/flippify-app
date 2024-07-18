@@ -5,7 +5,8 @@ import { useSession } from 'next-auth/react';
 import SideBarButton from './SideBarButton';
 import { MdManageAccounts } from "react-icons/md";
 import { AiOutlineStock } from "react-icons/ai";
-
+import { FaUserPlus } from "react-icons/fa";
+import SubscriptionWrapper from './SubscriptionWrapper';
 
 export interface Subscription {
     name: string;
@@ -18,30 +19,23 @@ export interface CustomUser {
     subscriptions?: Subscription[];
 }
 
-
 const UserSidebarButtons = () => {
     const { data: session } = useSession();
-    
+
     if (!session || !session.user || !('subscriptions' in session.user)) {
         return null; // Handle case where session or subscriptions are not available
     }
-    
+
     const { subscriptions } = session.user as CustomUser;
-    
+
     if (!subscriptions) {
         return null;
     }
 
-    // Check if any subscription name includes "Server"
-    const hasServerSubscription = subscriptions.some(subscription =>
-        subscription.name.toLowerCase().includes('server')
-    );
-
     return (
         <div>
             <ul>
-                {/* Render a single button if any subscription includes "Server" */}
-                {hasServerSubscription && (
+                <SubscriptionWrapper requiredSubscription="server">
                     <li>
                         <SideBarButton
                             text="Manage Servers"
@@ -49,19 +43,30 @@ const UserSidebarButtons = () => {
                             symbol={<MdManageAccounts className="text-md" />}
                         />
                     </li>
-                )}
+                </SubscriptionWrapper>
+                
+                <SubscriptionWrapper requiredSubscription="waitlistaccepted">
+                    <li>
+                        <SideBarButton 
+                            text="Sales & Profits"
+                            redirect='sales-tracker'
+                            symbol={<AiOutlineStock className="text-md" />}
+                        />
+                    </li>
+                </SubscriptionWrapper>
 
-                <li>
-                    <SideBarButton 
-                        text="Sales & Profits"
-                        redirect='sales-tracker'
-                        symbol={<AiOutlineStock className="text-md" />}
-                    />
-                </li>
+                <SubscriptionWrapper requiredSubscription="!waitlistaccepted">
+                    <li>
+                        <SideBarButton 
+                            text="Join Waitlist"
+                            redirect='join-waitlist'
+                            symbol={<FaUserPlus className="text-md" />}
+                        />
+                    </li>
+                </SubscriptionWrapper>
             </ul>
         </div>
     )
 }
 
-export default UserSidebarButtons
-
+export default UserSidebarButtons;

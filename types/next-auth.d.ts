@@ -1,10 +1,15 @@
 import NextAuth, { DefaultSession, DefaultJWT } from 'next-auth';
 
 
-// Define the structure of your user object
+import { User as NextAuthUser } from 'next-auth';
+import { ISubscription, IWaitListed } from '../userModel'; // Adjust import based on your file structure
+
 interface CustomUser extends NextAuthUser {
+  name: string;
   discordId?: string;
   customerId?: string;
+  image: string;
+  subscriptions: ISubscription[];
   waitlisted?: {
     position: number;
     referral_code: string | null;

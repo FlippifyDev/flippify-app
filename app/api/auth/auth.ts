@@ -43,10 +43,6 @@ const authOptions: AuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      if (!session.user) {
-        session.user = {};
-      }
-
       const { id, name, email, waitlisted  } = token as { id: string; name: string; email: string; waitlisted?: IWaitListed };
       
       // Retrieve user from database

@@ -11,7 +11,7 @@ const WaitlistStatus: React.FC<WaitlistStatusProps> = ({ position, referralCode,
   return (
     <div className="bg-white py-8 px-6 rounded-3xl shadow-lg border border-gray-300 max-w-md mx-auto">
       <p className="text-4xl font-bold text-center text-gray-900 mb-6">
-        You're on the Waitlist!
+        You&apos;re on the Waitlist!
       </p>
       <div className="grid grid-cols-1 gap-6">
         <div className="flex items-center p-4 bg-gray-100 rounded-lg shadow-md border border-gray-200">

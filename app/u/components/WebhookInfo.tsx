@@ -22,7 +22,7 @@ interface Props {
   const WebhookInfo = ({ subscription_name }: Props) => {
     const [webhookUrl, setWebhookUrl] = useState<string>(''); // State to track user's name input
     const { data: session } = useSession();
-
+    console.log(session)
 
     const handleFormSubmit = async () => {
         if (!session || !session.user) {

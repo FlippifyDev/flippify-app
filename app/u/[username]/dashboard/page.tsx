@@ -1,9 +1,10 @@
-import React from "react";
-import UserLayout from "../../components/UserLayout";
-import { Metadata } from "next";
 import SubscriptionWrapper from "../../components/SubscriptionWrapper";
-import WaitlistForm from "../../components/WaitlistForm"; 
-import WaitlistStatus from "../../components/WaitlistStatus";
+import UserLayout from "../../components/UserLayout";
+import WaitListedContent from "../../components/WaitListedContent";
+
+import React from "react";
+import { Metadata } from "next";
+
 
 export const metadata: Metadata = {
   title: "Manage Your Reselling Efficiently - Flippify Dashboard",
@@ -12,33 +13,29 @@ export const metadata: Metadata = {
 };
 
 const DashboardPage = () => {
+
   return (
     <UserLayout>
-      <div>
+      <div className="p-4">
         <SubscriptionWrapper requiredSubscriptions={['whitelisted']}>
-        <div>
-          <div className="text-2xl text-white font-bold flex justify-center">
-            Dashboard
+          <div className="mb-6">
+            <div className="text-2xl text-white font-bold text-center">
+              Dashboard
+            </div>
+            <div className="text-greyText text-center mt-2">
+              Coming Soon...
+            </div>
+            <div className="mt-4">
+              Have Analytics Section: Visual Charts: Monthly Revenue and Profit
+              Chart: Bar graph Top Platforms by Revenue: Pie chart Profit Trends
+              Over Time: Line graph Custom Reports: Option to generate custom
+              reports based on selected criteria
+            </div>
           </div>
-          <div className="text-greyText flex justify-center">
-            Coming Soon...
-          </div>
-          <div>
-            Have Analytics Section: Visual Charts: Monthly Revenue and Profit
-            Chart: Bar graph Top Platforms by Revenue: Pie chart Profit Trends
-            Over Time: Line graph Custom Reports: Option to generate custom
-            reports based on selected criteria
-          </div>
-        </div>
         </SubscriptionWrapper>
 
-        <SubscriptionWrapper requiredSubscriptions={['waiting']}>
-          <WaitlistStatus />
-        </SubscriptionWrapper>
+      <WaitListedContent />
 
-        <SubscriptionWrapper requiredSubscriptions={['!whitelisted', '!waiting']}>
-          <WaitlistForm />
-        </SubscriptionWrapper>
       </div>
     </UserLayout>
   );

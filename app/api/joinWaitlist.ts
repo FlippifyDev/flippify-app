@@ -1,12 +1,6 @@
 "use server"
 
-import { User, IUser } from './userModel';
-import mongoose, { Types } from 'mongoose';
-import { exit } from 'process';
-import mongooseLong from 'mongoose-long';
-
-mongooseLong(mongoose);
-const Long = Types.Long;
+import { User, IWaitListed } from './userModel';
 
 interface CustomUser {
   discordId: string;
@@ -15,88 +9,57 @@ interface CustomUser {
   customerId?: string;
 }
 
-export const joinWaitlist = async (user: CustomUser, referralCode: string | null = null): Promise<string> => {
+export const joinWaitlist = async (user: CustomUser, referralCode: string | null = null): Promise<string | null> => {
   try {
-    const discordId = Long.fromString(user.discordId);
-    const username = user.name
-    const customerId = user.customerId
-    const customerEmail = user.email
+    const customerId = user.customerId;
 
-    // Stripe customer ID will always be generated on sign in. So existing user will always exist
-    let existingUser = await User.findOne({ stripe_customer_id: customerId }) as IUser;
+    if (!customerId) {
+      return "No customer ID provided.";
+    }
 
-    // Generate a referral code for the new user
     const generatedReferralCode = Math.random().toString(36).substring(2, 15);
-    
-    if (existingUser) {
-      // Generate a referral code for the new user
-      const generatedReferralCode = Math.random().toString(36).substring(2, 15);
+    const position = await User.countDocuments({ 'waitlisted.position': { $exists: true } }) + 1;
 
-      if (existingUser.position) {
-        return "not new user";
-      }
+    const waitlistedDict: IWaitListed = {
+      referral_code: generatedReferralCode,
+      referred_by: referralCode || null,
+      position: position,
+      referral_count: 0,
+    };
 
-      // Update existing user
-      existingUser.referral_code = generatedReferralCode;
-      existingUser.referred_by = referralCode;
-      existingUser.position = await User.countDocuments({ position: { $exists: true } }).exec() + 1;
-      existingUser.referral_count = 0;
+    const updatedUser = await User.findOneAndUpdate(
+      { stripe_customer_id: customerId },
+      { $set: { waitlisted: waitlistedDict } },
+      { new: true, upsert: false }
+    );
 
-      await existingUser.save();
-    } else {
-      // Calculate the new user's position in the queue
-      const userCount = await User.countDocuments({ position: { $exists: true } });
-      const position = userCount + 1;
-
-      // Create a new user with the necessary details
-      await User.create({
-        stripe_customer_id: customerId,
-        discord_id: discordId, // Provide proper discord_id or handle this field properly
-        username: username, // Provide proper username or handle this field properly
-        email: customerEmail, // Provide proper email or handle this field properly
-        subscriptions: [],
-        referral_code: generatedReferralCode,
-        referred_by: referralCode,
-        position,
-        referral_count: 0,
-      });
+    if (!updatedUser) {
+      return "User not found or already waitlisted.";
     }
 
-    // If a referral code was used, update the referring user's referral count and position
     if (referralCode) {
-      const referringUser = await User.findOne({ referralCode }).exec();
+      const referringUser = await User.findOne({ 'waitlisted.referral_code': referralCode }).exec();
+      if (referringUser && referringUser.waitlisted) {
+        const waitlisted = referringUser.waitlisted;
+        waitlisted.referral_count += 1;
+        if (!waitlisted.position) {
+          return "Referring user's waitlist position is not set.";
+        }
+        waitlisted.position = Math.max(1, waitlisted.position - 1);
 
-      if (referringUser) {
-        referringUser.referral_count += 1;
-        referringUser.position = Math.max(1, referringUser.position - 1); // Move the referring user up the queue
-        await referringUser.save();
+        await referringUser.updateOne({
+          $set: {
+            'waitlisted.referral_count': waitlisted.referral_count,
+            'waitlisted.position': waitlisted.position,
+          }
+        });
+      } else {
+        return "Invalid referral code.";
       }
     }
-    return "new user"
+
+    return null; // Indicating success
   } catch (error) {
-    console.error('Error in joinWaitlist:', error);
+    return "An unexpected error occurred.";
   }
-  return "fail"
 };
-
-
-/*
- else {
-      // Calculate the new user's position in the queue
-      const userCount = await User.countDocuments({ position: { $exists: true } });
-      const position = userCount + 1;
-
-      // Create a new user with the necessary details
-      await User.create({
-        discord_id: discordId,
-        username,
-        email: '',
-        stripe_customer_id: '',
-        subscriptions: [],
-        referralCode: generatedReferralCode,
-        referredBy: referralCode,
-        position,
-        referralCount: 0,
-      });
-    }
-*/

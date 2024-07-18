@@ -85,6 +85,7 @@ const authOptions: AuthOptions = {
         return session;
       }
 
+      (session.user as { discordId?: string }).discordId = id;
       (session.user as { customerId?: string }).customerId = stripeCustomer.id;
       (session.user as { subscriptions?: ISubscription[] }).subscriptions = user.subscriptions;
     

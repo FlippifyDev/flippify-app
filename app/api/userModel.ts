@@ -1,3 +1,5 @@
+"use server"
+
 import mongoose, { Document, Model, Schema, Types } from 'mongoose';
 import mongooseLong from 'mongoose-long';
 
@@ -17,10 +19,10 @@ interface IUser extends Document {
   email: string;
   stripe_customer_id: string;
   subscriptions: ISubscription[];
-  referralCode: string;
-  referredBy: string | null;
+  referral_code: string;
+  referred_by: string | null;
   position: number;
-  referralCount: number;
+  referral_count: number;
 }
 
 const subscriptionSchema = new Schema<ISubscription>({
@@ -36,10 +38,10 @@ const userSchema = new Schema<IUser>({
   email: String,
   stripe_customer_id: String,
   subscriptions: [subscriptionSchema],
-  referralCode: String,
-  referredBy: { type: String, default: null },
-  position: Number,
-  referralCount: { type: Number, default: 0 },
+  referral_code: { type: String, default: null },
+  referred_by: { type: String, default: null },
+  position: { type: Number, default: null },
+  referral_count: { type: Number, default: 0 },
 });
 
 const User: Model<IUser> = mongoose.models.users || mongoose.model<IUser>('users', userSchema);

@@ -2,18 +2,30 @@
 
 import React, { useState } from "react";
 import UserLayout from "./UserLayout";
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '../../api/firebaseConfig';
+import { useSession } from 'next-auth/react';
+
 import { joinWaitlist } from '../../api/joinWaitlist';
+
+
+interface CustomUser {
+  discordId: string;
+  name: string;
+  email: string;
+  customerId?: string;
+}
 
 const WaitlistForm: React.FC = () => {
   const [referralCode, setReferralCode] = useState<string>('');
-  const [user] = useAuthState(auth);
+  const { data: session } = useSession();
 
   const handleJoinWaitlist = async () => {
-    if (user) {
-      await joinWaitlist(user.uid, user.displayName || '', referralCode || null);
-      console.log("User joined the waitlist.");
+
+    if (session?.user) {
+      const user = session?.user as CustomUser
+      if (user?.customerId) {
+        await joinWaitlist(user, referralCode);
+        console.log("User joined the waitlist.");
+      }
     } else {
       console.log("User not authenticated.");
     }

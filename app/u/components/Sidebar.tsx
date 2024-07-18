@@ -18,7 +18,7 @@ const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
 const Sidebar = () => {
   return (
-    <div className="drawer drawer-mobile xl:drawer-open bg-white">
+    <div className="drawer drawer-mobile xl:drawer-open">
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content flex flex-col">
         {/* Toggle button for smaller screens */}
@@ -38,36 +38,40 @@ const Sidebar = () => {
             </div>
 
             {/* Main Menu Section */}
-            <div>
-              <a className="text-lightModeText text-lg font-bold select-none">Home</a>
-            </div>
-            <div>
-                <SideBarButton text="Dashboard" redirect="dashboard" symbol={<FaHouse className="text-lg" />} />
-                <SideBarButton text="Plans" redirect="plans" symbol={<FaSearch className="text-lg" />} />
-                <SideBarButton text="Server Plans" redirect="server-plans" symbol={<MdGroups className="text-2xl" />} />
-                <BillingPortalButton />
-                <Link
-                  href="https://discord.gg/gNPYfe7YFm"
-                  className="hover:bg-gray-100 active:bg-gray-300 text-lightModeText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md"
-                >
-                  <span className="col-span-2 text-lg"><FaDiscord /></span>
-                  <span className="col-span-10 text-base">Discord</span>
-                </Link>
-            </div>
+            <section>
+              <div>
+                <a className="text-lightModeText text-lg font-bold select-none">Home</a>
+              </div>
+              <div>
+                  <SideBarButton text="Dashboard" redirect="dashboard" symbol={<FaHouse className="text-lg" />} />
+                  <SideBarButton text="Plans" redirect="plans" symbol={<FaSearch className="text-lg" />} />
+                  <SideBarButton text="Server Plans" redirect="server-plans" symbol={<MdGroups className="text-2xl" />} />
+                  <BillingPortalButton />
+                  <Link
+                    href="https://discord.gg/gNPYfe7YFm"
+                    className="hover:bg-gray-100 active:bg-gray-300 text-lightModeText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md"
+                  >
+                    <span className="col-span-2 text-lg"><FaDiscord /></span>
+                    <span className="col-span-10 text-base">Discord</span>
+                  </Link>
+              </div>
+            </section>
           </div>
 
           
           {/* Display Tools */}
-          <div className='mt-4'>
-            <a className="text-lightModeText text-lg font-bold select-none">Tools</a>
-          </div>
-          <UserSideBarButtons />
+          <section>
+            <div>
+              <a className="text-lightModeText text-lg font-bold select-none">Tools</a>
+            </div>
+            <UserSideBarButtons />
+          </section>
 
           {/* Settings and Other */}
-          <div className="mt-10 flex flex-col">
+          <section className="mt-10 flex flex-col">
               <SideBarButton text="Legal" redirect="legal" symbol={<BsClipboard2Fill className="text-lg" />} />
               <SignOutButton />
-          </div>
+          </section>
         </ul>
       </div>
     </div>

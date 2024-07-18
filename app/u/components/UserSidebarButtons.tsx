@@ -34,39 +34,37 @@ const UserSidebarButtons = () => {
 
     return (
         <div>
-            <ul>
-                <SubscriptionWrapper requiredSubscriptions={['server']}>
-                    <SideBarButton
-                        text="Manage Servers"
-                        redirect='manage-servers'
-                        symbol={<MdManageAccounts className="text-md" />}
-                    />
-                </SubscriptionWrapper>
-                
-                <SubscriptionWrapper requiredSubscriptions={['standard']}>
-                    <SideBarButton 
-                        text="Sales & Profits"
-                        redirect='sales-tracker'
-                        symbol={<AiOutlineStock className="text-md" />}
-                    />
-                </SubscriptionWrapper>
+            <SubscriptionWrapper requiredSubscriptions={['server']}>
+                <SideBarButton
+                    text="Manage Servers"
+                    redirect='manage-servers'
+                    symbol={<MdManageAccounts className="text-md" />}
+                />
+            </SubscriptionWrapper>
+            
+            <SubscriptionWrapper requiredSubscriptions={['standard']}>
+                <SideBarButton 
+                    text="Sales & Profits"
+                    redirect='sales-tracker'
+                    symbol={<AiOutlineStock className="text-md" />}
+                />
+            </SubscriptionWrapper>
 
-                <SubscriptionWrapper requiredSubscriptions={['whitelisted', '!standard']}>
-                    <SideBarButton 
-                        text="View Plans"
-                        redirect='plans'
-                        symbol={<FaSearch className="text-md" />}
-                    />
-                </SubscriptionWrapper>
+            <SubscriptionWrapper requiredSubscriptions={['whitelisted', '!standard']}>
+                <SideBarButton 
+                    text="View Plans"
+                    redirect='plans'
+                    symbol={<FaSearch className="text-md" />}
+                />
+            </SubscriptionWrapper>
 
-                <SubscriptionWrapper requiredSubscriptions={['!whitelisted']}>
-                    <SideBarButton 
-                        text="Join Waitlist"
-                        redirect='dashboard'
-                        symbol={<FaUserPlus className="text-md" />}
-                    />
-                </SubscriptionWrapper>
-            </ul>
+            <SubscriptionWrapper requiredSubscriptions={['!whitelisted']}>
+                <SideBarButton 
+                    text="Join Waitlist"
+                    redirect='dashboard'
+                    symbol={<FaUserPlus className="text-md" />}
+                />
+            </SubscriptionWrapper>
         </div>
     )
 }

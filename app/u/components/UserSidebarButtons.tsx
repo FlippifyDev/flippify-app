@@ -36,11 +36,11 @@ const UserSidebarButtons = () => {
     return (
         <div>
             {/* Member Buttons */}
-
-            <SubscriptionWrapper requiredSubscriptions={['']}>
+            
+            <SubscriptionWrapper requiredSubscriptions={['standard', 'server']}>
                 <DisabledSideBarButton 
                     text="Reseller News"
-                    redirect='sales-tracker'
+                    redirect='reseller-news'
                     symbol={<FaRegNewspaper className="text-md" />}
                     tooltip="Coming Soon"
                 />
@@ -63,11 +63,20 @@ const UserSidebarButtons = () => {
             </SubscriptionWrapper>
 
             {/* Disabled Buttons */}
+
+            <SubscriptionWrapper requiredSubscriptions={['!standard', '!server']}>
+                <DisabledSideBarButton 
+                    text="Reseller News"
+                    redirect='reseller-news'
+                    symbol={<FaRegNewspaper className="text-md" />}
+                    tooltip="Coming Soon"
+                />
+            </SubscriptionWrapper>
             
             <SubscriptionWrapper requiredSubscriptions={['!standard', '!server']}>
                 <DisabledSideBarButton 
                     text="Manage Servers"
-                    redirect='sales-tracker'
+                    redirect='manage-servers'
                     symbol={<MdManageAccounts className="text-md" />}
                 />
             </SubscriptionWrapper>

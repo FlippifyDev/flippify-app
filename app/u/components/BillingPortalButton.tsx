@@ -47,7 +47,7 @@ const BillingPortalButton = () => {
 
   return (
     <button
-      className="hover:bg-gray-100 active:bg-gray-300 w-full text-lightModeText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md "
+      className="hover:bg-gray-100 active:bg-gray-300 w-full text-lightModeText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transition duration-200"
       onClick={handleBillingPortalButtonClick}
     >
       <span className="col-span-2 text-lg"><TbReportMoney /></span>

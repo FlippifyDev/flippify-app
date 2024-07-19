@@ -34,7 +34,7 @@ const SideBarButton: React.FC<SideBarButtonProps> = ({ text, redirect, symbol })
 
   return (
     <button
-      className="w-full bg-white hover:bg-gray-100 text-lightModeText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md active:bg-gray-300"
+      className="w-full bg-white hover:bg-gray-100 text-lightModeText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md active:bg-gray-300 transition duration-200"
       onClick={redirectUser}
       >
       <span className={`col-span-2 text-lg ${isActive ? 'text-houseBlue' : ''}`}>{symbol}</span>

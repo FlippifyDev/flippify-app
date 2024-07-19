@@ -1,6 +1,7 @@
 "use server"
 
-import { User, IWaitListed } from './userModel';
+import { User } from './userModel';
+import { Types } from 'mongoose';
 
 interface CustomUser {
   discordId: string;
@@ -9,57 +10,37 @@ interface CustomUser {
   customerId?: string;
 }
 
-export const joinWaitlist = async (user: CustomUser, referralCode: string | null = null): Promise<string | null> => {
+const Long = Types.Long;
+
+const joinWaitlist = async (user: any, referralCode: string) => {
   try {
-    const customerId = user.customerId;
-
-    if (!customerId) {
-      return "No customer ID provided.";
-    }
-
-    const generatedReferralCode = Math.random().toString(36).substring(2, 15);
-    const position = await User.countDocuments({ 'waitlisted.position': { $exists: true } }) + 1;
-
-    const waitlistedDict: IWaitListed = {
-      referral_code: generatedReferralCode,
-      referred_by: referralCode || null,
-      position: position,
-      referral_count: 0,
-    };
+    const waitlistPosition = await User.countDocuments({ 'waitlisted.position': { $ne: null } }) + 1;
+    const referralCount = 0;
 
     const updatedUser = await User.findOneAndUpdate(
-      { stripe_customer_id: customerId },
-      { $set: { waitlisted: waitlistedDict } },
-      { new: true, upsert: false }
+      { discord_id: Long.fromString(user.discordId) },
+      {
+        $set: {
+          waitlisted: {
+            referral_code: generateReferralCode(),
+            referred_by: referralCode || null,
+            position: waitlistPosition,
+            referral_count: referralCount,
+          },
+        },
+      },
+      { new: true }
     );
 
-    if (!updatedUser) {
-      return "User not found or already waitlisted.";
-    }
-
-    if (referralCode) {
-      const referringUser = await User.findOne({ 'waitlisted.referral_code': referralCode }).exec();
-      if (referringUser && referringUser.waitlisted) {
-        const waitlisted = referringUser.waitlisted;
-        waitlisted.referral_count += 1;
-        if (!waitlisted.position) {
-          return "Referring user's waitlist position is not set.";
-        }
-        waitlisted.position = Math.max(1, waitlisted.position - 1);
-
-        await referringUser.updateOne({
-          $set: {
-            'waitlisted.referral_count': waitlisted.referral_count,
-            'waitlisted.position': waitlisted.position,
-          }
-        });
-      } else {
-        return "Invalid referral code.";
-      }
-    }
-
-    return null; // Indicating success
+    return updatedUser ? null : 'Failed to join the waitlist';
   } catch (error) {
-    return "An unexpected error occurred.";
+    console.error('Error joining waitlist:', error);
+    return 'Failed to join the waitlist';
   }
 };
+
+const generateReferralCode = () => {
+  return Math.random().toString(36).substring(2, 10);
+};
+
+export { joinWaitlist };

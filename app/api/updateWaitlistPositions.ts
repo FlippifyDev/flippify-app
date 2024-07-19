@@ -23,7 +23,7 @@ const updateWaitlistPositions = async (referralCode: string): Promise<string | n
     let newPosition = currentPosition
     if (currentPosition !== 1) {
       // Move the user currently in the position ahead of the referring user back a position
-      newPosition += 1
+      newPosition -= 1
       await User.findOneAndUpdate(
         { 'waitlisted.position': newPosition },
         {

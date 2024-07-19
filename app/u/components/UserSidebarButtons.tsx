@@ -5,8 +5,8 @@ import { useSession } from 'next-auth/react';
 import SideBarButton from './SideBarButton';
 import { MdManageAccounts } from "react-icons/md";
 import { AiOutlineStock } from "react-icons/ai";
-import { FaUserPlus, FaSearch } from "react-icons/fa";
 import SubscriptionWrapper from './SubscriptionWrapper';
+import DisabledSideBarButton from './DisabledSideBarButton';
 
 export interface Subscription {
     name: string;
@@ -50,19 +50,19 @@ const UserSidebarButtons = () => {
                 />
             </SubscriptionWrapper>
 
-            <SubscriptionWrapper requiredSubscriptions={['whitelisted', '!standard']}>
-                <SideBarButton 
-                    text="View Plans"
-                    redirect='plans'
-                    symbol={<FaSearch className="text-md" />}
+            <SubscriptionWrapper requiredSubscriptions={['!standard']}>
+                <DisabledSideBarButton 
+                    text="Sales & Profits"
+                    redirect='sales-tracker'
+                    symbol={<AiOutlineStock className="text-md" />}
                 />
             </SubscriptionWrapper>
 
-            <SubscriptionWrapper requiredSubscriptions={['!whitelisted']}>
-                <SideBarButton 
-                    text="Join Waitlist"
-                    redirect='dashboard'
-                    symbol={<FaUserPlus className="text-md" />}
+            <SubscriptionWrapper requiredSubscriptions={['!standard']}>
+                <DisabledSideBarButton 
+                    text="Sales & Profits"
+                    redirect='sales-tracker'
+                    symbol={<AiOutlineStock className="text-md" />}
                 />
             </SubscriptionWrapper>
         </div>

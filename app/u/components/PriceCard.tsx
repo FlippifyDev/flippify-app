@@ -15,6 +15,7 @@ interface PriceCardProps {
   description: string;
   priceIds: { monthly: string; yearly: string };
   whatsIncludedComponent: any;
+  labelText: string;
 }
 
 const PriceCard: React.FC<PriceCardProps> = ({
@@ -23,6 +24,7 @@ const PriceCard: React.FC<PriceCardProps> = ({
   description,
   priceIds,
   whatsIncludedComponent,
+  labelText,
 }) => {
   const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
   const [currency, setCurrency] = useState<"USD" | "GBP">("USD");
@@ -79,6 +81,8 @@ const PriceCard: React.FC<PriceCardProps> = ({
             <hr className="w-full bg-gray-800" />
           </div>
           {whatsIncludedComponent}
+          <div className="grid grid-cols-2 items-end">  
+          <div className="badge bg-houseBlue text-white">{labelText}</div>
           <div className="flex justify-end mt-2">
             {prices.length > 0 && selectedPlan !== null && (
               <div>
@@ -93,6 +97,7 @@ const PriceCard: React.FC<PriceCardProps> = ({
                 </SubscriptionWrapper>
               </div>
             )}
+          </div>
           </div>
         </div>
       </div>

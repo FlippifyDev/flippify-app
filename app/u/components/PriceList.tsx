@@ -40,6 +40,7 @@ const PriceList = () => {
             yearly: "price_1Pcu1rJJRepiHZ8d4zAXLEpL",
           }}
           whatsIncludedComponent={<PlansWhatsIncluded />}
+          labelText="All-in-one"
         />
       </div>
     </div>

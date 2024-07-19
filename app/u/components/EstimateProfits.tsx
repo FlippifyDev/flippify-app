@@ -42,31 +42,31 @@ const EstimateProfits: React.FC = () => {
           <label className="label">
             <span className="label-text text-lightModeText">Quantity</span>
           </label>
-          <input type="string" name="quantity" value={estimate.quantity} onChange={handleChange} className="input input-bordered w-full bg-white" />
+          <input type="number" name="quantity" value={estimate.quantity} onChange={handleChange} className="input input-bordered w-full bg-white" />
         </div>
         <div className="mb-4">
           <label className="label">
             <span className="label-text text-lightModeText">Purchase Price (per unit)</span>
           </label>
-          <input type="string" name="purchasePrice" value={estimate.purchasePrice} onChange={handleChange} className="input input-bordered w-full bg-white" />
+          <input type="number" name="purchasePrice" value={estimate.purchasePrice} onChange={handleChange} className="input input-bordered w-full bg-white" />
         </div>
         <div className="mb-4">
           <label className="label">
             <span className="label-text text-lightModeText">Listing Price (per unit)</span>
           </label>
-          <input type="string" name="listingPrice" value={listingPrice} onChange={handleChange} className="input input-bordered w-full bg-white" />
+          <input type="number" name="listingPrice" value={listingPrice} onChange={handleChange} className="input input-bordered w-full bg-white" />
         </div>
         <div className="mb-4">
           <label className="label">
             <span className="label-text text-lightModeText">Platform Fees (%)</span>
           </label>
-          <input type="string" name="platformFees" value={platformFees} onChange={handleChange} className="input input-bordered w-full bg-white" />
+          <input type="number" name="platformFees" value={platformFees} onChange={handleChange} className="input input-bordered w-full bg-white" />
         </div>
         <div className="mb-4">
           <label className="label">
             <span className="label-text text-lightModeText">Shipping Cost (per unit)</span>
           </label>
-          <input type="string" name="shippingCost" value={shippingCost} onChange={handleChange} className="input input-bordered w-full bg-white" />
+          <input type="number" name="shippingCost" value={shippingCost} onChange={handleChange} className="input input-bordered w-full bg-white" />
         </div>
         <div>
           <h2 className="divider font-bold text-lightModeText text-lg">Estimated Profit: {estimatedProfit.toFixed(2)}</h2>

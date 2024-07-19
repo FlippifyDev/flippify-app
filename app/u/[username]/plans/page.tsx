@@ -12,6 +12,6 @@ export default function PlansPage() {
   return (
     <UserLayout>
       <PriceList />
-  </UserLayout>
+    </UserLayout>
   );
 }

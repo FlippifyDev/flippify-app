@@ -17,7 +17,9 @@ const DashboardPage = () => {
   return (
     <UserLayout>
       <div className="p-4">
-        <SubscriptionWrapper requiredSubscriptions={['whitelisted']}>
+
+        {/* FOR PEOPLE WITH SUBSCRIPTIONS */}
+        <SubscriptionWrapper requiredSubscriptions={['standard', 'server']}>
           <div className="mb-6">
             <div className="text-2xl text-white font-bold text-center">
               Dashboard
@@ -34,8 +36,17 @@ const DashboardPage = () => {
           </div>
         </SubscriptionWrapper>
 
-      <WaitListedContent />
+        {/* FOR PEOPLE WHO ARE NOT WHITELISTED */}
+        <SubscriptionWrapper requiredSubscriptions={['!whitelisted']}>
+          <WaitListedContent />
+        </SubscriptionWrapper>
 
+        {/* FOR PEOPLE WITHOUT SUBSCRIPTIONS BUT ARE WHITELISTED*/}
+        <SubscriptionWrapper requiredSubscriptions={['whitelisted', '!standard', '!server']}>
+          <div>
+            Test
+          </div>
+        </SubscriptionWrapper>
       </div>
     </UserLayout>
   );

@@ -58,7 +58,7 @@ const Sidebar = () => {
             </section>
 
             {/* Tools Section */}
-            <section className="mt-12">
+            <section className="mt-6 md:mt-10">
               <div>
                 <a className="text-lightModeText text-lg font-bold select-none">Tools</a>
               </div>

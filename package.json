@@ -25,6 +25,7 @@
     "react-icons": "^5.2.1",
     "smooth-scroll": "^16.1.3",
     "stripe": "^16.1.0",
+    "tippy.js": "^6.3.7",
     "uuid": "^10.0.0",
     "xlsx": "^0.18.5"
   },

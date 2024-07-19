@@ -56,7 +56,7 @@ interface Props {
                 <span className="label-text text-lightModeText">Webhook URL</span>
                 <Link 
                     href="https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks" 
-                    className="text-sm text-houseBlue hover:underline "
+                    className="text-sm text-houseBlue hover:underline"
                     target="_blank"
                     rel="noopener noreferrer"
                     >
@@ -66,7 +66,7 @@ interface Props {
             <input
                 type="text"
                 placeholder="Enter webhook url"
-                className="input input-bordered w-full max-w-xs bg-lightGreyBackground"
+                className="input input-bordered w-full max-w-xs bg-white"
                 value={webhookUrl}
                 onChange={(e) => setWebhookUrl(e.target.value)}
                 style={{ fontSize: '14px'}}

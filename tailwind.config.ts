@@ -44,6 +44,8 @@ const config: Config = {
         darkTextGradEnd: '#493DAD',
         discordBlue: '#5865F2',
         headingDarkText: '#1E1845',
+        greenLabel: '#1f493d',
+        orangeLabel: '#ff4d04',
       },
       variants: {
         extend: {

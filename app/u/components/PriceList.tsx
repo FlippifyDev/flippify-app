@@ -41,6 +41,7 @@ const PriceList = () => {
           }}
           whatsIncludedComponent={<PlansWhatsIncluded />}
           labelText="All-in-one"
+          badgeColor="blueLabel"
         />
       </div>
     </div>

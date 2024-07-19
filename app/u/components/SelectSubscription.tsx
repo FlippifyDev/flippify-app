@@ -48,7 +48,7 @@ const SelectSubscription = () => {
                 </span>
             </div>
             <select
-                className="select select-bordered bg-lightGreyBackground"
+                className="select select-bordered bg-white"
                 style={{ fontSize: '16px', fontFamily: 'Arial, sans-serif', fontWeight: 'normal' }}
                 onChange={handleSubscriptionChange}
                 value={selectedSubscription || ''}

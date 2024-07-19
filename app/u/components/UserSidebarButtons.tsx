@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import SideBarButton from './SideBarButton';
 import { MdManageAccounts } from "react-icons/md";
 import { AiOutlineStock } from "react-icons/ai";
+import { FaRegNewspaper } from "react-icons/fa6";
 import SubscriptionWrapper from './SubscriptionWrapper';
 import DisabledSideBarButton from './DisabledSideBarButton';
 
@@ -34,6 +35,17 @@ const UserSidebarButtons = () => {
 
     return (
         <div>
+            {/* Member Buttons */}
+
+            <SubscriptionWrapper requiredSubscriptions={['']}>
+                <DisabledSideBarButton 
+                    text="Reseller News"
+                    redirect='sales-tracker'
+                    symbol={<FaRegNewspaper className="text-md" />}
+                    tooltip="Coming Soon"
+                />
+            </SubscriptionWrapper>
+            
             <SubscriptionWrapper requiredSubscriptions={['server']}>
                 <SideBarButton
                     text="Manage Servers"
@@ -50,7 +62,17 @@ const UserSidebarButtons = () => {
                 />
             </SubscriptionWrapper>
 
-            <SubscriptionWrapper requiredSubscriptions={['!standard']}>
+            {/* Disabled Buttons */}
+            
+            <SubscriptionWrapper requiredSubscriptions={['!standard', '!server']}>
+                <DisabledSideBarButton 
+                    text="Manage Servers"
+                    redirect='sales-tracker'
+                    symbol={<MdManageAccounts className="text-md" />}
+                />
+            </SubscriptionWrapper>
+
+            <SubscriptionWrapper requiredSubscriptions={['!standard', '!server']}>
                 <DisabledSideBarButton 
                     text="Sales & Profits"
                     redirect='sales-tracker'
@@ -58,13 +80,6 @@ const UserSidebarButtons = () => {
                 />
             </SubscriptionWrapper>
 
-            <SubscriptionWrapper requiredSubscriptions={['!standard']}>
-                <DisabledSideBarButton 
-                    text="Sales & Profits"
-                    redirect='sales-tracker'
-                    symbol={<AiOutlineStock className="text-md" />}
-                />
-            </SubscriptionWrapper>
         </div>
     )
 }

@@ -39,6 +39,8 @@ const ServerPriceList = () => {
             yearly: "price_1Pcu3kJJRepiHZ8dIYtT80Wl",
           }}
           whatsIncludedComponent={<ServerPlansWhatsIncluded whatsIncludedText={["eBay Price Comparison", "Keepa Link Included", "Retirement Date Included", "Currently UK Sites Only", "Continual Website Additions"]}/>}
+          labelText="Long-Term"
+          badgeColor="orangeLabel"
         />
         <PriceCard
           title="Deal Watch UK"
@@ -49,6 +51,8 @@ const ServerPriceList = () => {
             yearly: "price_1PcuHmJJRepiHZ8duS8nBti1",
           }}
           whatsIncludedComponent={<ServerPlansWhatsIncluded whatsIncludedText={["eBay Price Comparison", "HotUKDeals Price Tracking", "Alerts based on eBay profit potential", "Currently UK Sites Only", "Frequent electronics deal alerts"]}/>}
+          labelText="Random Deals"
+          badgeColor="greenLabel"
         />
       </div>
     </div>

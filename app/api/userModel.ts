@@ -1,5 +1,3 @@
-"use server"
-
 import mongoose, { Document, Model, Schema, Types } from 'mongoose';
 import mongooseLong from 'mongoose-long';
 

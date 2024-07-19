@@ -13,9 +13,12 @@ interface ISubscription {
 }
 
 interface IWaitListed {
-  referral_code: string | null;
-  referred_by: string | null;
   position: number | null;
+}
+
+interface IReferral {
+  referral_code: string;
+  referred_by: string | null;
   referral_count: number;
 }
 
@@ -25,15 +28,20 @@ interface IUser extends Document {
   email: string;
   stripe_customer_id: string;
   subscriptions: ISubscription[];
+  referral?: IReferral;
   waitlisted?: IWaitListed;
 }
 
 const waitListedSchema = new Schema<IWaitListed>({
+  position: { type: Number, default: null },
+});
+
+const referralSchema = new Schema<IReferral>({
   referral_code: { type: String, default: null },
   referred_by: { type: String, default: null },
-  position: { type: Number, default: null },
   referral_count: { type: Number, default: 0 },
 });
+
 
 const subscriptionSchema = new Schema<ISubscription>({
   name: { type: String, required: true },
@@ -48,10 +56,11 @@ const UserSchema = new Schema<IUser>({
   email: { type: String, required: true },
   stripe_customer_id: { type: String, required: true },
   subscriptions: [subscriptionSchema],
+  referral: { type: referralSchema },
   waitlisted: { type: waitListedSchema },
 });
 
 const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
 
 export { User };
-export type { IUser, IWaitListed, ISubscription };
+export type { IUser, IWaitListed, ISubscription, IReferral };

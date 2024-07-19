@@ -95,7 +95,7 @@ const PriceCard: React.FC<PriceCardProps> = ({
           </div>
           {whatsIncludedComponent}
           <div className="grid grid-cols-2 items-end">
-            <div className={`${badgeClassName} flex items-center justify-center h-auto min-h-[2rem] text-center`}>
+            <div className={`${badgeClassName} border-none font-semibold text-xs flex items-center justify-center h-auto min-h-[2rem] text-center`}>
               {labelText}
             </div>
             <div className="flex justify-end mt-2">

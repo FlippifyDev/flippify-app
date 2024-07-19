@@ -1,16 +1,9 @@
 'use client';
 
 import React, { useState } from "react";
-import UserLayout from "./UserLayout";
 import { useSession } from 'next-auth/react';
 import { joinWaitlist } from '../../api/joinWaitlist';
 
-interface CustomUser {
-  discordId: string;
-  name: string;
-  email: string;
-  customerId?: string;
-}
 
 const WaitlistForm: React.FC = () => {
   const [referralCode, setReferralCode] = useState<string>('');
@@ -25,10 +18,9 @@ const WaitlistForm: React.FC = () => {
     setSuccess(null);
 
     if (session?.user) {
-      const user = session.user as CustomUser;
-      if (user.customerId) {
+      if (session.user.customerId) {
         try {
-          const result = await joinWaitlist(user, referralCode);
+          const result = await joinWaitlist(session, referralCode);
           if (result === null) {
             setSuccess("Successfully joined the waitlist!");
           } else {

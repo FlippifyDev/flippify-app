@@ -1,10 +1,10 @@
 import { AuthOptions } from 'next-auth';
 import DiscordProvider from 'next-auth/providers/discord';
-import mongoose, { Document, Model } from 'mongoose';
+import mongoose from 'mongoose';
 import { Types } from 'mongoose';
 
 import retrieveStripeCustomer from '../stripe-handlers/retrieve-customer';
-import { User, ISubscription, IWaitListed } from '../userModel';
+import { User, ISubscription, IWaitListed, IReferral } from '../userModel';
 
 // Import and apply mongoose-long plugin
 const mongooseLong = require('mongoose-long')(mongoose);
@@ -12,6 +12,9 @@ const Long = Types.Long;
 
 mongoose.connect(process.env.MONGO_URL as string);
 
+const generateReferralCode = () => {
+  return Math.random().toString(36).substring(2, 10);
+};
 
 const authOptions: AuthOptions = {
   providers: [
@@ -32,6 +35,10 @@ const authOptions: AuthOptions = {
       if (token.id) {
         const userFromDb = await User.findOne({ discord_id: Long.fromString(token.id as string) });
         if (userFromDb) {
+          // Attach referral data if available
+          if (userFromDb.referral) {
+            token.referral = userFromDb.referral;
+          }
           // Attach waitlisted data if available
           if (userFromDb.waitlisted) {
             token.waitlisted = userFromDb.waitlisted;
@@ -42,8 +49,14 @@ const authOptions: AuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      const { id, name, email, waitlisted  } = token as { id: string; name: string; email: string; waitlisted?: IWaitListed };
-      
+      const { id, name, email, referral, waitlisted } = token as {
+        id: string;
+        name: string;
+        email: string;
+        referral?: IReferral;
+        waitlisted?: IWaitListed;
+      };
+
       // Retrieve user from database
       const user = await User.findOne({ discord_id: Long.fromString(id) });
       if (!user) {
@@ -51,22 +64,20 @@ const authOptions: AuthOptions = {
         return session;
       }
 
-	    // Retrieve the Stripe customer
+      // Retrieve the Stripe customer
       const stripeCustomer = await retrieveStripeCustomer(id, name, email);
       if (!stripeCustomer) {
         console.error(`Stripe customer not found for id ${id}`);
         return session;
       }
 
-      if (user.waitlisted) {
-        (user.waitlisted as { waitlisted?: IWaitListed }).waitlisted = user.waitlisted;
-      }
-
+      // Attach additional data to session
       (session.user as { discordId?: string }).discordId = id;
       (session.user as { customerId?: string }).customerId = stripeCustomer.id;
       (session.user as { subscriptions?: ISubscription[] }).subscriptions = user.subscriptions;
-      (session.user as { waitlisted?: IWaitListed }).waitlisted = waitlisted;
-    
+      (session.user as { referral?: IReferral }).referral = user.referral || referral;
+      (session.user as { waitlisted?: IWaitListed }).waitlisted = user.waitlisted || waitlisted;
+
       return session;
     },
     async signIn({ profile }: any) {
@@ -87,10 +98,16 @@ const authOptions: AuthOptions = {
           try {
             const discordId = Long.fromString(id);
             const customer_id = stripeCustomer.id;
-            const subscriptions: ISubscription[] = []; // Initialize subscriptions only for new user
+            const subscriptions: ISubscription[] = [];
+            const referral: IReferral = {
+              referral_code: generateReferralCode(),
+              referred_by: null,
+              referral_count: 0,
+            };
+
             await User.findOneAndUpdate(
               { discord_id: discordId },
-              { username: username, email, stripe_customer_id: customer_id, subscriptions },
+              { username: username, email, stripe_customer_id: customer_id, subscriptions, referral },
               { upsert: true }
             );
 

@@ -1,46 +1,49 @@
 "use server"
 
 import { User } from './userModel';
+import { updateWaitlistPositions } from './updateWaitlistPositions';
 import { Types } from 'mongoose';
-
-interface CustomUser {
-  discordId: string;
-  name: string;
-  email: string;
-  customerId?: string;
-}
 
 const Long = Types.Long;
 
-const joinWaitlist = async (user: any, referralCode: string) => {
+const joinWaitlist = async (session: any, referralCode: string): Promise<string | null> => {
   try {
-    const waitlistPosition = await User.countDocuments({ 'waitlisted.position': { $ne: null } }) + 1;
-    const referralCount = 0;
+    if (typeof session.user.discordId !== 'string') {
+      throw new Error('Invalid discordId: must be a string');
+    }
 
+    // Calculate the new waitlist position
+    const newWaitlistPosition = await User.countDocuments({ 'waitlisted.position': { $ne: null } }) + 1;
+
+    // Update the user's waitlist position and referral details
     const updatedUser = await User.findOneAndUpdate(
-      { discord_id: Long.fromString(user.discordId) },
+      { discord_id: Long.fromString(session.user.discordId) },
       {
         $set: {
-          waitlisted: {
-            referral_code: generateReferralCode(),
-            referred_by: referralCode || null,
-            position: waitlistPosition,
-            referral_count: referralCount,
-          },
+          'referral.referred_by': referralCode || null,
+          'waitlisted.position': newWaitlistPosition,
         },
       },
       { new: true }
     );
 
-    return updatedUser ? null : 'Failed to join the waitlist';
+    if (!updatedUser) {
+      return 'Failed to join the waitlist';
+    }
+
+    // Update the positions of users already on the waitlist if a referral code is provided
+    if (referralCode !== '') {
+      const updateResult = await updateWaitlistPositions(referralCode);
+      if (updateResult !== null) {
+        return updateResult;
+      }
+    }
+
+    return null;
   } catch (error) {
     console.error('Error joining waitlist:', error);
     return 'Failed to join the waitlist';
   }
-};
-
-const generateReferralCode = () => {
-  return Math.random().toString(36).substring(2, 10);
 };
 
 export { joinWaitlist };

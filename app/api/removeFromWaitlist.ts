@@ -1,4 +1,3 @@
-// removeFromWaitlist.ts
 import { User } from './userModel';
 import { Types } from 'mongoose';
 

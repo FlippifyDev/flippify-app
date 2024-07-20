@@ -16,8 +16,21 @@ const updateWaitlistPositions = async (referralCode: string): Promise<string | n
     const currentPosition = referringUser.waitlisted?.position;
     const currentReferralCount = referringUser.referral?.referral_count;
 
-    if (!currentPosition || currentReferralCount === undefined) {
+    if (currentReferralCount === undefined) {
       return `User not found for code: ${referralCode}`;
+    }
+
+    if (!currentPosition) {
+      // The user has been whitelisted, only update the referral count
+      await User.findOneAndUpdate(
+        { 'referral.referral_code': referralCode },
+        {
+          $set: {
+            'referral.referral_count': currentReferralCount + 1,
+          },
+        }
+      );
+      return null;
     }
     
     let newPosition = currentPosition

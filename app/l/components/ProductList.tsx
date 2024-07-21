@@ -32,11 +32,13 @@ const ProductList: React.FC = () => {
         <ProductCard
           title="Retiring Set Deals"
           description="Track soon-to-be-retired LEGO sets across various websites. Stay informed about valuable collector items before they disappear from shelves."
+          disclaimer="Prices and availability may change or contain errors. Verify details on the respective websites and eBay before purchasing."
           image="https://i.imgur.com/CZDWzJo.png"
         />
         <ProductCard
           title="Deal Watch UK"
           description="Discover high-demand products from hotukdeals that can be resold for profit on eBay. Our tool identifies the hottest deals and trends, helping you capitalize on profitable opportunities."
+          disclaimer="We strive for accurate, up-to-date prices, but some deals may be outdated or incorrect. Verify prices and availability on hotukdeals and eBay before purchasing."
           image="https://i.imgur.com/5MQt2Gd.png"
         />
       </div>

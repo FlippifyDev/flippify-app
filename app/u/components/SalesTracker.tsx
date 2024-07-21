@@ -63,7 +63,7 @@ const SalesTracker = () => {
             Review Profits
           </a>
         </div>
-        <div className="bg-white bg-opacity-90 p-4 rounded-b-xl">
+        <div className="bg-white bg-opacity-90 p-4 rounded-b-xl h-full">
           {activeComponent === "AddPurchase" && <AddPurchase />}
           {activeComponent === "AddSale" && <AddSale />}
           {activeComponent === "ReviewProfits" && <ReviewProfits />}
@@ -79,7 +79,7 @@ const SalesTracker = () => {
               Calculate Profits
             </a>
           </div>
-          <div className="bg-white bg-opacity-90 p-4 rounded-b-xl col-span-1">
+          <div className="bg-white bg-opacity-90 p-4 rounded-b-xl col-span-1 h-full">
             <EstimateProfits />
           </div>
         </div>

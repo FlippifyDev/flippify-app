@@ -1,7 +1,9 @@
 import PriceList from "../components/PriceList";
 import LandingLayout from '../components/LandingLayout';
-import { Metadata } from 'next';
+import Loading from "@/app/components/Loading";
 
+import { Metadata } from 'next';
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: 'Affordable Pricing Plans for Resellers - Flippify',
@@ -38,10 +40,10 @@ export const metadata: Metadata = {
 
 export default function Pricing() {
   return (
-    <div>
+    <Suspense fallback={<Loading />}>
       <LandingLayout>
         <PriceList />
       </LandingLayout>
-    </div>
+    </Suspense>
   );
 }

@@ -1,6 +1,9 @@
 import LandingLayout from '../components/LandingLayout';
-import { Metadata } from 'next';
 import ProductContent from "../components/ProductContent";
+import Loading from '@/app/components/Loading';
+
+import { Suspense } from 'react';
+import { Metadata } from 'next';
 
 
 export const metadata: Metadata = {
@@ -37,10 +40,10 @@ export const metadata: Metadata = {
 
 export default function Products() {
   return (
-    <div>
+    <Suspense fallback={<Loading />}>
       <LandingLayout>
         <ProductContent />
       </LandingLayout>
-      </div>
+    </Suspense>
   );
 }

@@ -1,8 +1,11 @@
 // Local Imports
 import Legal from '@/app/components/Legal';
 import LandingLayout from '../components/LandingLayout';
+import Loading from '@/app/components/Loading';
+
 import { Metadata } from 'next';
-import Head from 'next/head';
+import { Suspense } from 'react';
+
 
 
 export const metadata: Metadata = {
@@ -14,10 +17,10 @@ export const metadata: Metadata = {
 
 export default function LegalPage() {
   return (
-    <div>
-    <LandingLayout>
-      <Legal />
-    </LandingLayout>
-    </div>
+    <Suspense fallback={<Loading />}>
+      <LandingLayout>
+        <Legal />
+      </LandingLayout>
+    </Suspense>
   );
 }

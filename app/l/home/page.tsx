@@ -1,5 +1,8 @@
 import LandingLayout from '../components/LandingLayout';
 import HomeContentWrapper from '../components/HomeContentWrapper';
+import Loading from '@/app/components/Loading';
+
+import { Suspense } from 'react';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -35,8 +38,10 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <LandingLayout>
-      <HomeContentWrapper />
-    </LandingLayout>
+    <Suspense fallback={<Loading />}>
+      <LandingLayout>
+        <HomeContentWrapper />
+      </LandingLayout>
+    </Suspense>
   );
 }

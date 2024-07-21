@@ -69,7 +69,7 @@ const AddPurchase: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto text-lightModeText">
+    <div className="container mx-auto text-lightModeText font-semibold">
       <form className="form-control">
         <div className="mb-4">
           <label className="label">
@@ -87,13 +87,13 @@ const AddPurchase: React.FC = () => {
           <label className="label">
             <span className="label-text text-lightModeText">Quantity</span>
           </label>
-          <input type="text" name="quantity" value={purchase.quantity} onChange={handleChange} className="input input-bordered w-full bg-white" />
+          <input type="number" name="quantity" value={purchase.quantity} onChange={handleChange} className="input input-bordered w-full bg-white" />
         </div>
         <div className="mb-4">
           <label className="label">
             <span className="label-text text-lightModeText">Total Purchase Price</span>
           </label>
-          <input type="text" name="purchasePrice" value={purchase.purchasePrice} onChange={handleChange} className="input input-bordered w-full bg-white" />
+          <input type="number" name="purchasePrice" value={purchase.purchasePrice} onChange={handleChange} className="input input-bordered w-full bg-white" />
         </div>
         <div className="mb-4">
           <label className="label">
@@ -101,8 +101,8 @@ const AddPurchase: React.FC = () => {
           </label>
           <input type="text" name="websiteName" value={purchase.websiteName} onChange={handleChange} className="input input-bordered w-full bg-white" />
         </div>
-        <div className="grid grid-cols-2 gap-8">
-          <button type="button" onClick={handleSubmit} className="btn btn-primary bg-white border-black hover:bg-textGradStart ml-4 hover:border-black transition duration-200">Add Purchase</button>
+        <div className="flex flex-wrap justify-center gap-4">
+          <button type="button" onClick={handleSubmit} className="btn btn-primary w-36 sm:w-42 md:w-48 bg-white border-black hover:bg-textGradStart hover:border-black transition duration-200">Add Purchase</button>
           <button type="button" onClick={() => setPurchase({
             itemName: '',
             purchaseDate: '',
@@ -110,7 +110,7 @@ const AddPurchase: React.FC = () => {
             purchasePrice: 0,
             websiteName: '',
             availability: 1
-          })} className="btn btn-primary bg-white border-black hover:bg-textGradStart mr-4 hover:border-black transition duration-200">Clear All</button>
+          })} className="btn btn-primary w-36 sm:w-42 md:w-48 bg-white border-black hover:bg-textGradStart hover:border-black transition duration-200">Clear All</button>
         </div>
       </form>
     </div>

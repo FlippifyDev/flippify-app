@@ -9,30 +9,30 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <Suspense fallback={<Loading />}>
-    <div
-      className="min-h-screen bg-cover bg-center bg-fixed overflow-x-hidden"
-      style={{ backgroundImage: `url('${base64SVG}')` }}
-    >
-      <div className="flex flex-col min-h-screen">
+      <div
+        className="min-h-screen bg-cover bg-center bg-fixed overflow-x-hidden"
+        style={{ backgroundImage: `url('${base64SVG}')` }}
+      >
+        <div className="flex flex-col min-h-screen">
 
-        <div className='fixed top-0 left-0 h-screen z-10'>
-          <Sidebar />
-        </div>
-
-
-        <div className="flex flex-col xl:ml-80 w-full">
-          <div className="fixed top-0 right-0 z-40">
-            <Navbar />
+          <div className='fixed top-0 left-0 h-screen z-10'>
+            <Sidebar />
           </div>
 
-          <div className="scroll-smooth mt-16 p-4 xl:mr-80 flex justify-center">
-            {children}
-          </div>
 
+          <div className="flex flex-col xl:ml-80 w-full">
+            <div className="fixed top-0 right-0 z-40">
+              <Navbar />
+            </div>
+
+            <div className="scroll-smooth mt-16 p-4 xl:mr-80 flex justify-center">
+              {children}
+            </div>
+
+          </div>
         </div>
       </div>
-    </div>
-  </Suspense>
+    </Suspense>
   );
 };
 

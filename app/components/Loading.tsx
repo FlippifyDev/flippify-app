@@ -1,8 +1,8 @@
 "use client"
-
-import React, { useEffect, useState } from "react";
 import jokes from "./loading_messages";
 import GradientBackground from "../l/components/GradientBackground";
+
+import React, { useEffect, useState } from "react";
 
 const Loading = () => {
   const [randomJoke, setRandomJoke] = useState("");

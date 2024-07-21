@@ -58,7 +58,7 @@ const PriceCard: React.FC<PriceCardProps> = ({
   const badgeClassName = `badge text-white ${badgeColorClasses[badgeColor]}`;
 
   return (
-    <div className="max-w-md sm:mx-4 mt-8">
+    <div className="w-80 sm:w-96 sm:mx-4 mt-8">
       <div className="h-full card bg-white hover:shadow-planCardShadow transition duration-200 opacity-90 border-2 border-gray-500 flex flex-col items-center justify-center pt-6 pb-6 ">
         <div className="w-full px-8 sm:px-6">
           <div className="flex items-center justify-center pb-2">

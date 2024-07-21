@@ -31,6 +31,7 @@ const ToolList: React.FC = () => {
         <ProductCard
           title="Inventory Tracking"
           description="One of the most important aspects of reselling is keeping a consistent inventory of purchased and sold products. This allows for effective analytics, informed purchasing decisions, and streamlined operations."
+          disclaimer={null}
           image="https://i.imgur.com/e2YWlQo.png"
         />
       </div>

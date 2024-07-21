@@ -37,7 +37,7 @@ const EstimateProfits: React.FC = () => {
 
   return (
     <div>
-      <form className="form-control">
+      <form className="form-control h-full">
         <div className="mb-4">
           <label className="label">
             <span className="label-text text-lightModeText">Quantity</span>

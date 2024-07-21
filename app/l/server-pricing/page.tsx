@@ -1,5 +1,8 @@
 import ServerPriceList from "../components/ServerPriceList";
 import LandingLayout from '../components/LandingLayout';
+import Loading from '@/app/components/Loading';
+
+import { Suspense } from 'react';
 import { Metadata } from 'next';
 
 
@@ -38,10 +41,10 @@ export const metadata: Metadata = {
 
 export default function ServerPricing() {
   return (
-    <div>
+    <Suspense fallback={<Loading />}>
       <LandingLayout>
         <ServerPriceList />
       </LandingLayout>
-    </div>
+    </Suspense>
   );
 }

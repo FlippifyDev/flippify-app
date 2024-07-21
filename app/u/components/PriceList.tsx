@@ -12,13 +12,13 @@ const PriceList = () => {
   return (
     <div className="flex flex-col justify-center xl:w-11/12 h-full mb-5">
       <div className="flex flex-col items-center space-y-5 text-center">
-        <div className="flex justify-center">
+        <div className="flex flex-wrap justify-center items-center text-4xl sm:text-5xl">
           <p
-            className={`${lato.className} text-5xl text-gradient bg-gradient-to-tr from-blue-500 to-purple-500 bg-clip-text text-transparent py-1`}
+            className={`${lato.className} text-gradient bg-gradient-to-tr from-blue-500 to-purple-500 bg-clip-text text-transparent py-1`}
           >
             Pricing
             <a
-              className={`${inter.className} mb-8 text-lightModeText text-5xl font-bold`}
+              className={`${inter.className} mb-8 text-lightModeText font-bold`}
             >
               {/* This is the space between pricing and made easy */} made easy
             </a>
@@ -33,7 +33,7 @@ const PriceList = () => {
       <div className="mt-4 flex flex-wrap justify-center">
         <PriceCard
           title="Early Access Sale"
-          description="Gain access to our all-in-one service providing all tools, bots and insights needed to accelerate your profits."
+          description="Unlock unlimited access to our comprehensive suite of tools, bots, and insights designed to supercharge your profitability. Our all-in-one subscription provides everything you need to optimize performance and drive growth."
           prices={[44.99, 59.99]}
           priceIds={{
             monthly: "price_1PctCCJJRepiHZ8d6M7w0P7g",

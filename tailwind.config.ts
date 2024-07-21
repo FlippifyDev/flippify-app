@@ -16,6 +16,18 @@ const config: Config = {
         'texture-pattern': 'url(https://i.imgur.com/VvU51ts.png)',
         'custom-gradient': 'linear-gradient(to bottom right, #4C8BFA 30%, #FFFFFF 100%)',
       },
+      width: {
+        '86': '21.50rem',
+        '87': '21.75rem',
+        '88': '22.00rem',
+        '89': '22.25rem',
+        '90': '22.50rem',
+        '91': '22.75rem',
+        '92': '23rem',
+        '93': '23.25rem',
+        '94': '23.5rem', 
+        '95': '23.75rem',
+      },
       opacity: {
         '96': '0.96',
         '97': '0.97',

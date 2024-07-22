@@ -142,15 +142,20 @@ const ReviewProfits: React.FC = () => {
     (sum, profit) => sum + profit.purchasePricePerUnit * profit.quantity,
     0
   );
-  const totalFees = filteredProfits.reduce(
+  const totalShippingCost = filteredProfits.reduce(
+    (sum, profit) => sum + profit.shippingCost,
+    0
+  );
+  const totalCosts = totalPurchaseCost + totalShippingCost;
+  const netProfit = filteredProfits.reduce(
     (sum, profit) =>
       sum +
-      (profit.salePrice * profit.quantity * (profit.platformFees / 100) +
+      (profit.salePrice * profit.quantity -
+        profit.purchasePricePerUnit * profit.quantity -
+        profit.salePrice * profit.quantity * (profit.platformFees / 100) -
         profit.shippingCost),
     0
   );
-  const totalCosts = totalPurchaseCost + totalFees;
-  const netProfit = totalRevenue - totalCosts;
   const totalSales = filteredProfits.reduce(
     (sum, profit) => sum + profit.quantity,
     0
@@ -183,7 +188,8 @@ const ReviewProfits: React.FC = () => {
                   name="start"
                   value={filters.dateRange.start}
                   onChange={handleChange}
-                  className="input input-bordered w-full bg-white"
+                  className="input input-bordered w-full bg-white text-gray-700 dark:text-gray-300"
+                  style={{ colorScheme: 'dark' }}
                 />
               </div>
               <div className="mb-4">
@@ -197,7 +203,8 @@ const ReviewProfits: React.FC = () => {
                   name="end"
                   value={filters.dateRange.end}
                   onChange={handleChange}
-                  className="input input-bordered w-full bg-white"
+                  className="input input-bordered w-full bg-white text-gray-700 dark:text-gray-300"
+                  style={{ colorScheme: 'dark' }}
                 />
               </div>
               <div className="mb-4">
@@ -257,7 +264,7 @@ const ReviewProfits: React.FC = () => {
             <div className="flex flex-wrap justify-center mt-8 gap-4 sm:px-2 md:gap-8 text-xs sm:text-sm text-lightModeText font-semibold">
               <div className="stats shadow-md bg-white w-56 flex-shrink-0 overflow-x-auto p-4 hover:shadow-lg">
                 <div className="stat">
-                  <div className="stat-title text-gray-500">Total Revenue</div>
+                  <div className="stat-title text-houseBlue">Total Revenue</div>
                   <div className="stat-value text-2xl lg:text-3xl text-black">
                     £{totalRevenue.toFixed(2)}
                   </div>
@@ -265,7 +272,7 @@ const ReviewProfits: React.FC = () => {
               </div>
               <div className="stats shadow-md bg-white w-56 flex-shrink-0 overflow-x-auto p-4 hover:shadow-lg">
                 <div className="stat">
-                  <div className="stat-title text-gray-500">Total Costs</div>
+                  <div className="stat-title text-houseBlue">Total Costs</div>
                   <div className="stat-value text-2xl lg:text-3xl text-black">
                     £{totalCostsNumber.toFixed(2)}
                   </div>
@@ -273,7 +280,7 @@ const ReviewProfits: React.FC = () => {
               </div>
               <div className="stats shadow-md bg-white w-56 flex-shrink-0 overflow-x-auto p-4 hover:shadow-lg">
                 <div className="stat">
-                  <div className="stat-title text-gray-500">Net Profit</div>
+                  <div className="stat-title text-houseBlue">Net Profit</div>
                   <div className="stat-value text-2xl lg:text-3xl text-black">
                     £{netProfitNumber.toFixed(2)}
                   </div>
@@ -281,7 +288,7 @@ const ReviewProfits: React.FC = () => {
               </div>
               <div className="stats shadow-md bg-white w-56 flex-shrink-0 overflow-x-auto p-4 hover:shadow-lg">
                 <div className="stat">
-                  <div className="stat-title text-gray-500">No. Sales</div>
+                  <div className="stat-title text-houseBlue">No. Sales</div>
                   <div className="stat-value text-2xl lg:text-3xl text-black">
                     {totalSalesNumber.toFixed(0)}
                   </div>

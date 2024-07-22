@@ -15,7 +15,7 @@ interface UserSidebarButtonsProps {
 const UserSidebarButtons: React.FC<UserSidebarButtonsProps> = ({ showAlert }) => {
   return (
     <div>
-      <SubscriptionWrapper requiredSubscriptions={['standard', 'server']}>
+      <SubscriptionWrapper requiredSubscriptions={['']}>
         <DisabledSideBarButton
           text="Reseller News"
           redirect="reseller-news"

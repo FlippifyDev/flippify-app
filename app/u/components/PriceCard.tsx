@@ -66,7 +66,7 @@ const PriceCard: React.FC<PriceCardProps> = ({
           </div>
           <div className="p-6 text-center">
             <h2
-              className={`${lato.className} text-3xl text-houseBlue font-bold mb-2 sm:h-[3rem]`}
+              className={`${lato.className} text-3xl text-houseBlue font-bold mb-2 mt-2 sm:h-[3rem]`}
             >
               {title}
             </h2>

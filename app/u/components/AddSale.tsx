@@ -61,15 +61,15 @@ const AddSale: React.FC = () => {
       return;
     }
 
-    setSale({ ...sale, [name]: value });
+    setSale({ ...sale, [name]: name === 'quantitySold' ? Math.min(parseFloat(value), selectedPurchaseData?.availability ?? 0) : value });
   };
 
   const handlePurchaseSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const purchaseId = e.target.value;
     setSelectedPurchase(purchaseId);
 
-    const selectedData = purchases.find(purchase => purchase.id === purchaseId);
-    setSelectedPurchaseData(selectedData || null);
+    const selectedData = purchases.find(purchase => purchase.id === purchaseId) || null;
+    setSelectedPurchaseData(selectedData);
   };
 
   const handleSubmit = async () => {
@@ -88,7 +88,7 @@ const AddSale: React.FC = () => {
       return;
     }
 
-    if (sale.quantitySold > selectedPurchaseData.availability) {
+    if (sale.quantitySold > (selectedPurchaseData.availability ?? 0)) {
       console.error("Quantity sold exceeds available stock");
       return;
     }
@@ -98,12 +98,11 @@ const AddSale: React.FC = () => {
 
     await set(newSaleRef, { ...sale, itemName: selectedPurchaseData.itemName });
 
-    // Update the remaining quantity in the selected purchase
-    const updatedQuantity = selectedPurchaseData.quantity - sale.quantitySold;
-    const updatedSoldQuantity = (selectedPurchaseData.soldQuantity || 0) + sale.quantitySold;
-    const updatedAvailability = selectedPurchaseData.availability - sale.quantitySold;
+    // Update the remaining availability in the selected purchase
+    const updatedAvailability = (selectedPurchaseData.availability ?? 0) - sale.quantitySold;
+    const updatedSoldQuantity = (selectedPurchaseData.soldQuantity ?? 0) + sale.quantitySold;
     const selectedPurchaseRef = ref(database, `purchases/${user.uid}/${selectedPurchaseData.id}`);
-    await set(selectedPurchaseRef, { ...selectedPurchaseData, quantity: updatedQuantity, soldQuantity: updatedSoldQuantity, availability: updatedAvailability });
+    await set(selectedPurchaseRef, { ...selectedPurchaseData, soldQuantity: updatedSoldQuantity, availability: updatedAvailability });
 
     setSale({
       itemName: '',
@@ -119,8 +118,8 @@ const AddSale: React.FC = () => {
   };
 
   const totalSaleRevenue = sale.quantitySold * parseFloat(sale.listingPrice.toString());
-  const totalPurchaseCost = sale.quantitySold * (selectedPurchaseData?.purchasePrice || 0);
-  const estimatedProfit = totalSaleRevenue - totalPurchaseCost - (totalSaleRevenue * (parseFloat(sale.platformFees.toString()) / 100)) - parseFloat(sale.shippingCost.toString());
+  const totalPurchaseCost = sale.quantitySold * ((selectedPurchaseData?.purchasePrice ?? 0) / (selectedPurchaseData?.quantity ?? 1));
+  const estimatedProfit = totalSaleRevenue - totalPurchaseCost - (totalSaleRevenue * ((parseFloat(sale.platformFees.toString()) / 100))) - parseFloat(sale.shippingCost.toString());
 
   return (
     <div>
@@ -141,13 +140,13 @@ const AddSale: React.FC = () => {
             <label className="label">
               <span className="label-text text-lightModeText">Sale Date</span>
             </label>
-            <input type="date" name="saleDate" value={sale.saleDate} onChange={handleChange} className="input input-bordered w-full bg-white" />
+            <input type="date" name="saleDate" value={sale.saleDate} onChange={handleChange} className="input input-bordered w-full bg-white text-gray-700 dark:text-gray-300" style={{ colorScheme: 'dark' }} />
           </div>
           <div className="mb-4">
             <label className="label">
               <span className="label-text text-lightModeText">Sale Platform</span>
             </label>
-            <input type="text" name="salePlatform" value={sale.salePlatform} onChange={handleChange} className="input input-bordered w-full bg-white" />
+            <input type="text" name="salePlatform" value={sale.salePlatform} onChange={handleChange} className="input input-bordered w-full bg-white text-gray-700 dark:text-gray-300" style={{ colorScheme: 'dark' }} />
           </div>
           <div className="mb-4">
             <label className="label">
@@ -159,7 +158,7 @@ const AddSale: React.FC = () => {
             <label className="label">
               <span className="label-text text-lightModeText">Quantity Sold</span>
             </label>
-            <input type="number" name="quantitySold" value={sale.quantitySold} onChange={handleChange} className="input input-bordered w-full bg-white" min={1} max={selectedPurchaseData ? selectedPurchaseData.availability : 0} />
+            <input type="number" name="quantitySold" value={sale.quantitySold} onChange={handleChange} className="input input-bordered w-full bg-white" min={1} max={selectedPurchaseData?.availability ?? 0} />
           </div>
           <div className="mb-4">
             <label className="label">

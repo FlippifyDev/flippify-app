@@ -1,96 +1,75 @@
 'use client';
 
 import React from 'react';
-import { useSession } from 'next-auth/react';
 import SideBarButton from './SideBarButton';
-import { MdManageAccounts } from "react-icons/md";
-import { AiOutlineStock } from "react-icons/ai";
-import { FaRegNewspaper } from "react-icons/fa6";
+import { MdManageAccounts } from 'react-icons/md';
+import { AiOutlineStock } from 'react-icons/ai';
+import { FaRegNewspaper } from 'react-icons/fa6';
 import SubscriptionWrapper from './SubscriptionWrapper';
 import DisabledSideBarButton from './DisabledSideBarButton';
 
-export interface Subscription {
-    name: string;
+interface UserSidebarButtonsProps {
+  showAlert: () => void;
 }
 
-export interface CustomUser {
-    name?: string | null | undefined;
-    email?: string | null | undefined;
-    image?: string | null | undefined;
-    subscriptions?: Subscription[];
-}
+const UserSidebarButtons: React.FC<UserSidebarButtonsProps> = ({ showAlert }) => {
+  return (
+    <div>
+      <SubscriptionWrapper requiredSubscriptions={['standard', 'server']}>
+        <DisabledSideBarButton
+          text="Reseller News"
+          redirect="reseller-news"
+          symbol={<FaRegNewspaper className="text-md" />}
+          tooltip="Coming Soon"
+          showAlert={showAlert}
+        />
+      </SubscriptionWrapper>
 
-const UserSidebarButtons = () => {
-    const { data: session } = useSession();
+      <SubscriptionWrapper requiredSubscriptions={['server']}>
+        <SideBarButton
+          text="Manage Servers"
+          redirect="manage-servers"
+          symbol={<MdManageAccounts className="text-md" />}
+        />
+      </SubscriptionWrapper>
 
-    if (!session || !session.user || !('subscriptions' in session.user)) {
-        return null; // Handle case where session or subscriptions are not available
-    }
+      <SubscriptionWrapper requiredSubscriptions={['standard']}>
+        <SideBarButton
+          text="Sales & Profits"
+          redirect="sales-tracker"
+          symbol={<AiOutlineStock className="text-md" />}
+        />
+      </SubscriptionWrapper>
 
-    const { subscriptions } = session.user as CustomUser;
+      <SubscriptionWrapper requiredSubscriptions={['!standard', '!server']}>
+        <DisabledSideBarButton
+          text="Reseller News"
+          redirect="reseller-news"
+          symbol={<FaRegNewspaper className="text-md" />}
+          tooltip="Coming Soon"
+          showAlert={showAlert}
+        />
+      </SubscriptionWrapper>
 
-    if (!subscriptions) {
-        return null;
-    }
+      <SubscriptionWrapper requiredSubscriptions={['!standard', '!server']}>
+        <DisabledSideBarButton
+          text="Manage Servers"
+          redirect="manage-servers"
+          symbol={<MdManageAccounts className="text-md" />}
+          showAlert={showAlert}
+        />
+      </SubscriptionWrapper>
 
-    return (
-        <div>
-            {/* Member Buttons */}
-            
-            <SubscriptionWrapper requiredSubscriptions={['standard', 'server']}>
-                <DisabledSideBarButton 
-                    text="Reseller News"
-                    redirect='reseller-news'
-                    symbol={<FaRegNewspaper className="text-md" />}
-                    tooltip="Coming Soon"
-                />
-            </SubscriptionWrapper>
-            
-            <SubscriptionWrapper requiredSubscriptions={['server']}>
-                <SideBarButton
-                    text="Manage Servers"
-                    redirect='manage-servers'
-                    symbol={<MdManageAccounts className="text-md" />}
-                />
-            </SubscriptionWrapper>
-            
-            <SubscriptionWrapper requiredSubscriptions={['standard']}>
-                <SideBarButton 
-                    text="Sales & Profits"
-                    redirect='sales-tracker'
-                    symbol={<AiOutlineStock className="text-md" />}
-                />
-            </SubscriptionWrapper>
-
-            {/* Disabled Buttons */}
-
-            <SubscriptionWrapper requiredSubscriptions={['!standard', '!server']}>
-                <DisabledSideBarButton 
-                    text="Reseller News"
-                    redirect='reseller-news'
-                    symbol={<FaRegNewspaper className="text-md" />}
-                    tooltip="Coming Soon"
-                />
-            </SubscriptionWrapper>
-            
-            <SubscriptionWrapper requiredSubscriptions={['!standard', '!server']}>
-                <DisabledSideBarButton 
-                    text="Manage Servers"
-                    redirect='manage-servers'
-                    symbol={<MdManageAccounts className="text-md" />}
-                />
-            </SubscriptionWrapper>
-
-            <SubscriptionWrapper requiredSubscriptions={['!standard', '!server']}>
-                <DisabledSideBarButton 
-                    text="Sales & Profits"
-                    redirect='sales-tracker'
-                    symbol={<AiOutlineStock className="text-md" />}
-                />
-            </SubscriptionWrapper>
-
-        </div>
-    )
-}
+      <SubscriptionWrapper requiredSubscriptions={['!standard', '!server']}>
+        <DisabledSideBarButton
+          text="Sales & Profits"
+          redirect="sales-tracker"
+          symbol={<AiOutlineStock className="text-md" />}
+          showAlert={showAlert}
+        />
+      </SubscriptionWrapper>
+    </div>
+  );
+};
 
 export default UserSidebarButtons;

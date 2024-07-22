@@ -97,7 +97,7 @@ const PriceCard: React.FC<PriceCardProps> = ({
           <div className="border-t border-gray-200">
             <div className="flex justify-between p-4">
               {prices.length > 0 && selectedPlan !== null && (
-                <div className="flex gap-2">
+                <div className="flex gap-2 w-full">
                   <SubscriptionWrapper requiredSubscriptions={["whitelisted"]}>
                     <SubscribeNow priceId={selectedPriceId} />
                   </SubscriptionWrapper>

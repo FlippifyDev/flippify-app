@@ -33,7 +33,7 @@ const JoinWaitlistButton: React.FC<SideBarButtonProps> = ({ text, redirect }) =>
 
   return (
     <button
-      className={"btn btn-primary bg-houseBlue text-white hover:bg-blue-600"}
+      className={"btn btn-primary bg-houseBlue text-white hover:bg-blue-600 w-3/4 md:w-2/3 mx-auto"}
       onClick={redirectUser}
     >
       <span>{text}</span>

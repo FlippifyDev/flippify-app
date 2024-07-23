@@ -9,6 +9,7 @@ import {
 import { FaPeopleGroup } from "react-icons/fa6";
 import GetEarlyAccess from "./GetEarlyAccess";
 
+
 const AboutFlippify = () => { 
   return (
     <div id="about" className="flex flex-col items-center justify-center flex-grow mt-16 pt-28 pb-8 px-2">

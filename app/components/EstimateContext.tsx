@@ -7,7 +7,7 @@ interface EstimateProviderProps {
   children: ReactNode;
 }
 
-interface Estimate {
+export interface Estimate {
   quantity: number;
   purchasePrice: number;
   websiteName?: string;
@@ -24,7 +24,7 @@ export const EstimateProvider: React.FC<EstimateProviderProps> = ({ children }) 
   const [estimate, setEstimate] = useState<Estimate>({
     quantity: 1,
     purchasePrice: 0,
-    websiteName: ''
+    websiteName: '',
   });
 
   return (

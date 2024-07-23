@@ -3,7 +3,8 @@ import type { Config } from "tailwindcss";
 const config: Config = {
   plugins: [
     require("@tailwindcss/typography"), 
-    require("daisyui")
+    require("daisyui"),
+    require("flowbite/plugin")
   ],
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",

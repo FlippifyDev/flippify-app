@@ -7,8 +7,6 @@ import { useRouter } from 'next/navigation';
 
 
 
-
-
 const SignInWithDiscord = () => {
     const { data: session } = useSession();
     const router = useRouter();

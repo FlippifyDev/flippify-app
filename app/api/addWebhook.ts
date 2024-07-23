@@ -8,22 +8,23 @@ mongoose.connect(process.env.MONGO_URL as string)
 interface ISubscriptionServers {
     stripe_customer_id: string;
     subscription_name: string;
-    webhook: string;
+    webhooks: {
+        [key: string]: string;
+    };
 }
 
 const SubscriptionServersSchema = new mongoose.Schema<ISubscriptionServers>({
     stripe_customer_id: { type: String, required: true },
     subscription_name: { type: String, required: true },
-    webhook: { type: String, required: true },
+    webhooks: { type: Map, of: String, required: true },
 });
 
-// Define the mongoose model
 const SubscriptionServers: mongoose.Model<ISubscriptionServers> = mongoose.models['subscription.servers'] ||
     mongoose.model<ISubscriptionServers>('subscription.servers', SubscriptionServersSchema);
 
-const addWebhook = async (stripe_customer_id: string, subscription_name: string, webhook: string) => {
+const addWebhook = async (stripe_customer_id: string, subscription_name: string, region: string, webhook: string) => {
     const filter: FilterQuery<ISubscriptionServers> = { subscription_name, stripe_customer_id };
-    const update: UpdateQuery<ISubscriptionServers> = { webhook };
+    const update: UpdateQuery<ISubscriptionServers> = { [`webhooks.${region}`]: webhook };
 
     try {
         // Use findOneAndUpdate with explicit types

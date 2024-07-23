@@ -1,9 +1,8 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSession } from 'next-auth/react';
 import { joinWaitlist } from '../../api/joinWaitlist';
-
 
 const WaitlistForm: React.FC = () => {
   const [referralCode, setReferralCode] = useState<string>('');
@@ -11,6 +10,13 @@ const WaitlistForm: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const { data: session } = useSession();
+
+  // Effect to reload page on success
+  useEffect(() => {
+    if (success) {
+      window.location.reload(); // Reload the page on success
+    }
+  }, [success]);
 
   const handleJoinWaitlist = async () => {
     setLoading(true);
@@ -41,7 +47,7 @@ const WaitlistForm: React.FC = () => {
 
   return (
     <div className="bg-white py-8 px-6 rounded-3xl shadow-md border-2 max-w-lg sm:max-w-sm mx-auto h-[36rem]">
-      <section className="mb-6">      
+      <section className="mb-6">
         <p className="text-5xl font-bold text-center text-gray-900 mb-4">
           Join our
           <span className="text-5xl text-gradient bg-gradient-to-tr from-blue-500 to-purple-500 bg-clip-text text-transparent">
@@ -52,7 +58,7 @@ const WaitlistForm: React.FC = () => {
           Gain a discounted early access to our All-In-One service specifically designed to take you from nothing to a full-time reseller.
         </p>
       </section>
-      <section >  
+      <section>
         {success && <p className="text-green-500 font-bold text-center mb-4">{success}</p>}
         {error && <p className="text-red-500 font-bold text-center mb-4">{error}</p>}
         <div className="flex justify-center mb-4">

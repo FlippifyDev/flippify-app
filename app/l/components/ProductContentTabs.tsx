@@ -1,22 +1,13 @@
-"use client";
-
 import ProductList from "./ProductList";
 import ToolList from "./ToolList";
 
-import { useState } from "react";
 
 const ProductTabs = () => {
-  const [activeTab, setActiveTab] = useState("bots");
-
-  const handleTabClick = (tabName: string) => {
-    setActiveTab(tabName);
-  };
-
   return (
     <div role="tablist" className="tabs tabs-bordered">
       <input
         type="radio"
-        name="bots"
+        name="product-tabs"
         role="tab"
         className="tab"
         aria-label="Bots"
@@ -27,10 +18,10 @@ const ProductTabs = () => {
 
       <input
         type="radio"
-        name="Tools"
+        name="product-tabs"
         role="tab"
         className="tab"
-        aria-label="Tab 2"
+        aria-label="Tools"
         defaultChecked
       />
       <div role="tabpanel" className="tab-content p-10">

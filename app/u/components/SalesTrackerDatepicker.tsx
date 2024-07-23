@@ -1,13 +1,13 @@
+import type { DatepickerOptions, DatepickerInterface } from 'flowbite';
 import React, { useEffect, useRef } from 'react';
 import { Datepicker } from 'flowbite';
-import type { DatepickerOptions, DatepickerInterface } from 'flowbite';
 
-interface DatepickerComponentProps {
+interface SalesTrackerDatepickerProps {
   value: string;
   onChange: (value: string) => void;
 }
 
-const DatepickerComponent: React.FC<DatepickerComponentProps> = ({ value, onChange }) => {
+const SalesTrackerDatepicker: React.FC<SalesTrackerDatepickerProps> = ({ value, onChange }) => {
   const datepickerRef = useRef<HTMLInputElement | null>(null);
   const datepickerInstance = useRef<DatepickerInterface | null>(null);
 
@@ -56,4 +56,4 @@ const DatepickerComponent: React.FC<DatepickerComponentProps> = ({ value, onChan
   );
 };
 
-export default DatepickerComponent;
+export default SalesTrackerDatepicker;

@@ -1,5 +1,5 @@
 // Local Imports
-import Legal from '@/app/components/Legal';
+import LegalContent from '@/app/components/LegalContent';
 import Layout from '../components/Layout';
 import Loading from '@/app/components/Loading';
 
@@ -15,11 +15,11 @@ export const metadata: Metadata = {
 }
 
 
-export default function LegalPage() {
+export default function Legal() {
   return (
     <Suspense fallback={<Loading />}>
       <Layout>
-        <Legal />
+        <LegalContent />
       </Layout>
     </Suspense>
   );

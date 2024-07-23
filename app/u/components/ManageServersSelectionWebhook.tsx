@@ -15,7 +15,7 @@ interface Props {
     region: string;
 }
 
-const WebhookInfo = ({ subscription_name, region }: Props) => {
+const ManageServersSelectionWebhook = ({ subscription_name, region }: Props) => {
     const [webhookUrl, setWebhookUrl] = useState<string>(''); // State to track user's webhook URL input
     const { data: session } = useSession();
 
@@ -74,4 +74,4 @@ const WebhookInfo = ({ subscription_name, region }: Props) => {
     );
 };
 
-export default WebhookInfo;
+export default ManageServersSelectionWebhook;

@@ -1,13 +1,13 @@
 import React from "react";
 import { FaRegClock, FaCodeBranch, FaUsers } from 'react-icons/fa';
 
-interface WaitlistStatusProps {
+interface WaitlistJoinStatusProps {
   position: number | null;
   referralCode: string | null;
   referralCount: number;
 }
 
-const WaitlistStatus: React.FC<WaitlistStatusProps> = ({ position, referralCode, referralCount }) => {
+const WaitlistJoinStatus: React.FC<WaitlistJoinStatusProps> = ({ position, referralCode, referralCount }) => {
   return (
     <div className="bg-white py-8 px-6 rounded-3xl shadow-lg border border-gray-300 max-w-md mx-auto">
       <p className="text-4xl font-bold text-center text-gray-900 mb-6">
@@ -40,4 +40,4 @@ const WaitlistStatus: React.FC<WaitlistStatusProps> = ({ position, referralCode,
   );
 };
 
-export default WaitlistStatus;
+export default WaitlistJoinStatus;

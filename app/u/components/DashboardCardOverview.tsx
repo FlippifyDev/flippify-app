@@ -1,4 +1,4 @@
-import DashboardOverviewContent from "./DashboardOverviewContent";
+import DashboardOverviewContent from "./DashboardCardOverviewContent";
 
 const DashboardOverviewCard = () => {
   return (

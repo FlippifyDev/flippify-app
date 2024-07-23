@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { database, ref, get } from "../../api/firebaseConfig";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../api/firebaseConfig";
+import { database, ref, get } from "../../api/firebaseConfig";
+
+import React, { useState, useEffect } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { saveAs } from "file-saver";
 import * as Papa from "papaparse";
 
@@ -24,7 +25,7 @@ interface Profit {
   salePlatform: string;
 }
 
-const ReviewProfits: React.FC = () => {
+const SalesTrackerReviewProfits: React.FC = () => {
   const [filters, setFilters] = useState<Filters>({
     dateRange: { start: "", end: "" },
     itemName: "",
@@ -368,4 +369,4 @@ const ReviewProfits: React.FC = () => {
   );
 };
 
-export default ReviewProfits;
+export default SalesTrackerReviewProfits;

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
 import { database, ref, get, set, push } from '../../api/firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../api/firebaseConfig';
+
+import React, { useState, useEffect } from 'react';
 
 interface Purchase {
   id?: string;
@@ -24,7 +25,7 @@ interface Sale {
   shippingCost: number;
 }
 
-const AddSale: React.FC = () => {
+const SalesTrackerTabAddSale: React.FC = () => {
   const [sale, setSale] = useState<Sale>({
     itemName: '',
     saleDate: '',
@@ -187,4 +188,4 @@ const AddSale: React.FC = () => {
   );
 };
 
-export default AddSale;
+export default SalesTrackerTabAddSale;

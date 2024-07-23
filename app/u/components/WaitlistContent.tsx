@@ -1,12 +1,12 @@
 "use client";
 
-import SubscriptionWrapper from "./SubscriptionWrapper";
-import WaitlistStatus from "./WaitlistStatus";
-import WaitlistForm from "./WaitlistForm";
+import LayoutSubscriptionWrapper from "./LayoutSubscriptionWrapper";
+import WaitlistJoinStatus from "./WaitlistJoinStatus";
+import WaitlistJoinForm from "./WaitlistJoinForm";
 
 import { useSession } from 'next-auth/react';
 
-const WaitListedContent: React.FC = () => {
+const WaitListContent: React.FC = () => {
   const { data: session, status } = useSession();
 
   // Determine if user is authenticated
@@ -19,18 +19,18 @@ const WaitListedContent: React.FC = () => {
       {isAuthenticated ? (
         waitlisted ? (
           <div className="mb-6">
-            <WaitlistStatus 
+            <WaitlistJoinStatus 
               position={waitlisted?.position || 0} 
               referralCode={referral ? referral.referral_code || "N/A" : "N/A"} 
               referralCount={referral ? referral.referral_count || 0 : 0} 
             />
           </div>
         ) : (
-          <SubscriptionWrapper requiredSubscriptions={['!whitelisted', '!waiting']}>
+          <LayoutSubscriptionWrapper requiredSubscriptions={['!whitelisted', '!waiting']}>
             <div className="flex items-center justify-center">
-              <WaitlistForm />
+              <WaitlistJoinForm />
             </div>
-          </SubscriptionWrapper>
+          </LayoutSubscriptionWrapper>
         )
       ) : (
         <div className="mb-6 text-center text-gray-700">
@@ -41,4 +41,4 @@ const WaitListedContent: React.FC = () => {
   );
 };
 
-export default WaitListedContent;
+export default WaitListContent;

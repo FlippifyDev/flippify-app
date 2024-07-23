@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import PrivacyPolicy from "./PrivacyPolicy";
 import TermsAndConditions from "./TermsAndConditions";
 
-const Legal = () => {
+const LegalContent = () => {
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(true);
 
   const togglePrivacyPolicy = () => {
@@ -42,4 +42,4 @@ const Legal = () => {
   );
 };
 
-export default Legal;
+export default LegalContent;

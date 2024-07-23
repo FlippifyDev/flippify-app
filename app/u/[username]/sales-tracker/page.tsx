@@ -1,18 +1,19 @@
 // pages/ManageServerPage.tsx
-import React from 'react';
-import UserLayout from '../../components/UserLayout';
-import SalesTracker from '../../components/SalesTracker';
+import UserLayout from '../../components/Layout';
+import SalesTrackerPage from '../../components/SalesTrackerPage';
 import { EstimateProvider } from '../../../components/EstimateContext';
 import "../../../../styles/sales-and-profits.css"
 
-const ManageServerPage = () => {
+import React from 'react';
+
+const SalesTracker = () => {
   return (
     <UserLayout>
       <EstimateProvider>
-        <SalesTracker />
+        <SalesTrackerPage />
       </EstimateProvider>
     </UserLayout>
   );
 };
 
-export default ManageServerPage;
+export default SalesTracker;

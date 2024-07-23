@@ -1,5 +1,5 @@
-import PriceCard from "./PriceCard";
-import PlansWhatsIncluded from "./PlansWhatsIncluded";
+import PlansCard from "./PlansCard";
+import PlansCardStandardWhatsIncluded from "./PlansCardStandardWhatsIncluded";
 
 
 import React from "react";
@@ -8,7 +8,7 @@ import { Lato, Inter } from "next/font/google";
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
 
-const PriceList = () => {
+const PlansPage = () => {
   return (
     <div className="flex flex-col justify-center xl:w-11/12 h-full mb-5">
       <div className="flex flex-col items-center space-y-5 text-center">
@@ -20,7 +20,7 @@ const PriceList = () => {
             <a
               className={`${inter.className} mb-8 text-lightModeText font-bold`}
             >
-              {/* This is the space between pricing and made easy */} made easy
+              {/* This is the space between pricing and made easy */} Made Easy
             </a>
           </p>
         </div>
@@ -31,7 +31,7 @@ const PriceList = () => {
         </div>
       </div>
       <div className="mt-4 flex flex-wrap justify-center">
-        <PriceCard
+        <PlansCard
           title="Early Access Sale"
           description="Unlock unlimited access to our comprehensive suite of tools, bots, and insights designed to supercharge your profitability. Our all-in-one subscription provides everything you need to optimize performance and drive growth."
           prices={[44.99, 59.99]}
@@ -39,7 +39,7 @@ const PriceList = () => {
             monthly: "price_1PctCCJJRepiHZ8d6M7w0P7g",
             yearly: "price_1Pcu1rJJRepiHZ8d4zAXLEpL",
           }}
-          whatsIncludedComponent={<PlansWhatsIncluded />}
+          whatsIncludedComponent={<PlansCardStandardWhatsIncluded />}
           labelText="All-in-one"
           badgeColor="blueLabel"
         />
@@ -48,4 +48,4 @@ const PriceList = () => {
   );
 };
 
-export default PriceList;
+export default PlansPage;

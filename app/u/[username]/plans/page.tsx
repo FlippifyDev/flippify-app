@@ -1,6 +1,7 @@
-import PriceList from "../../components/PriceList";
-import UserLayout from '../../components/UserLayout';
+import PlansPage from "../../components/PlansPage";
+import UserLayout from '../../components/Layout';
 import { Metadata } from 'next';
+
 
 export const metadata: Metadata = {
   title: 'Flexible Pricing Plans for Resellers - Flippify',
@@ -8,10 +9,10 @@ export const metadata: Metadata = {
 };
 
 
-export default function PlansPage() {
+export default function Plans() {
   return (
     <UserLayout>
-      <PriceList />
+      <PlansPage />
     </UserLayout>
   );
 }

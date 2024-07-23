@@ -1,13 +1,14 @@
+import PlansCard from "./PlansCard";
+import ServerPlansCardWhatsIncluded from "./ServerPlansCardWhatsIncluded";
+
 import React from "react";
-import PriceCard from "./PriceCard";
 import { Lato, Inter } from "next/font/google";
 
-import ServerPlansWhatsIncluded from "./ServerPlansWhatsIncluded";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
 
-const ServerPriceList = () => {
+const ServerPlansPage = () => {
   return (
     <div className="flex flex-col justify-center xl:w-11/12 h-full mb-5 mt-5">
       <div className="flex flex-col items-center space-y-5 text-center">
@@ -19,7 +20,7 @@ const ServerPriceList = () => {
             <a
               className={`${inter.className} mb-8 text-lightModeText text-4xl sm:text-5xl font-bold`}
             >
-              {/* This is the space between pricing and made easy */} Made Easy.
+              {/* This is the space between pricing and made easy */} Made Easy
             </a>
           </p>
         </div>
@@ -30,7 +31,7 @@ const ServerPriceList = () => {
         </div>
       </div>
       <div className="mt-4 flex flex-wrap justify-center">
-        <PriceCard
+        <PlansCard
           title="Retiring Sets Deals"
           description="Enhance your reselling efficiency with our cutting-edge bot, scanning diverse websites to identify Lego sets nearing retirement and ensuring you never miss a profitable sale."
           prices={[149.99, 199.99]}
@@ -38,11 +39,11 @@ const ServerPriceList = () => {
             monthly: "price_1PctChJJRepiHZ8dIREA1uKf",
             yearly: "price_1Pcu3kJJRepiHZ8dIYtT80Wl",
           }}
-          whatsIncludedComponent={<ServerPlansWhatsIncluded whatsIncludedText={["eBay Price Comparison", "Keepa Link Included", "Retirement Date Included", "Currently UK Sites Only", "Continual Website Additions"]}/>}
+          whatsIncludedComponent={<ServerPlansCardWhatsIncluded whatsIncludedText={["eBay Price Comparison", "Keepa Link Included", "Retirement Date Included", "Currently UK Sites Only", "Continual Website Additions"]}/>}
           labelText="Long-Term"
           badgeColor="orangeLabel"
         />
-        <PriceCard
+        <PlansCard
           title="Deal Watch UK"
           description="Effortlessly discover profitable reselling opportunities with our advanced webscraper, which scans hotukdeals.co.uk and compares prices with sold items on eBay to maximize your profits."
           prices={[69.99, 99.99]}
@@ -50,7 +51,7 @@ const ServerPriceList = () => {
             monthly: "price_1PcuH1JJRepiHZ8d4HTovHWm",
             yearly: "price_1PcuHmJJRepiHZ8duS8nBti1",
           }}
-          whatsIncludedComponent={<ServerPlansWhatsIncluded whatsIncludedText={["eBay Price Comparison", "HotUKDeals Price Tracking", "Alerts based on eBay profit potential", "Currently UK Sites Only", "Frequent electronics deal alerts"]}/>}
+          whatsIncludedComponent={<ServerPlansCardWhatsIncluded whatsIncludedText={["eBay Price Comparison", "HotUKDeals Price Tracking", "Alerts based on eBay profit potential", "Currently UK Sites Only", "Frequent electronics deal alerts"]}/>}
           labelText="Random Deals"
           badgeColor="greenLabel"
         />
@@ -59,4 +60,4 @@ const ServerPriceList = () => {
   );
 }
 
-export default ServerPriceList;
+export default ServerPlansPage;

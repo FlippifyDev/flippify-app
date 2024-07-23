@@ -1,9 +1,9 @@
 import React from 'react'
-import DashboardSubscriptionsCard from './DashboardSubscriptionsCard'
-import DashboardAnalyticsCard from './DashboardAnalyticsCard'
-import DashboardOverviewCard from './DashboardOverviewCard'
+import DashboardSubscriptionsCard from './DashboardCardSubscriptions'
+import DashboardAnalyticsCard from './DashboardCardAnalytics'
+import DashboardOverviewCard from './DashboardCardOverview'
 
-const DashboardContent = () => {
+const DashboardPage = () => {
   return (
     <div className='grid gap-4 grid-cols-12'>
         <div className='col-span-12 lg:col-span-4'>
@@ -19,4 +19,4 @@ const DashboardContent = () => {
   )
 }
 
-export default DashboardContent
+export default DashboardPage

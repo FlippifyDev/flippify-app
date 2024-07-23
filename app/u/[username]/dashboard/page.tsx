@@ -1,10 +1,10 @@
-import SubscriptionWrapper from "../../components/SubscriptionWrapper";
-import UserLayout from "../../components/UserLayout";
-import WaitListedContent from "../../components/WaitListedContent";
+import LayoutSubscriptionWrapper from "../../components/LayoutSubscriptionWrapper";
+import WaitlistContent from "../../components/WaitlistContent";
+import DashboardPage from "../../components/DashboardPage";
+import Layout from "../../components/Layout";
 
 import React from "react";
 import { Metadata } from "next";
-import DashboardContent from "../../components/DashboardContent";
 
 
 export const metadata: Metadata = {
@@ -13,30 +13,27 @@ export const metadata: Metadata = {
     "Experience the Flippify dashboard, designed for efficiency and effectiveness. Track your reselling activities, monitor deals, and maximize your profits with our user-friendly interface.",
 };
 
-const DashboardPage = () => {
-
+const Dashboard = () => {
   return (
-    <UserLayout>
+    <Layout>
       <div className="p-4">
-      <SubscriptionWrapper requiredSubscriptions={['standard']}>
-        <DashboardContent />
-      </SubscriptionWrapper>
+      <LayoutSubscriptionWrapper requiredSubscriptions={['standard']}>
+        <DashboardPage />
+      </LayoutSubscriptionWrapper>
 
 
         {/* FOR PEOPLE WHO ARE NOT WHITELISTED */}
-        <SubscriptionWrapper requiredSubscriptions={['!whitelisted']}>
-          <WaitListedContent />
-        </SubscriptionWrapper>
+        <LayoutSubscriptionWrapper requiredSubscriptions={['!whitelisted']}>
+          <WaitlistContent />
+        </LayoutSubscriptionWrapper>
 
         {/* FOR PEOPLE WITHOUT SUBSCRIPTIONS BUT ARE WHITELISTED*/}
-        <SubscriptionWrapper requiredSubscriptions={['whitelisted', '!standard', '!server']}>
-          <div>
-            Test
-          </div>
-        </SubscriptionWrapper>
+        <LayoutSubscriptionWrapper requiredSubscriptions={['whitelisted', '!standard', '!server']}>
+          <DashboardPage />
+        </LayoutSubscriptionWrapper>
       </div>
-    </UserLayout>
+    </Layout>
   );
 };
 
-export default DashboardPage;
+export default Dashboard;

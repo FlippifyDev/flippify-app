@@ -13,7 +13,7 @@ interface CustomUser {
   customerId?: string;
 }
 
-const BillingPortalButton = () => {
+const SidebarBillingPortalButton = () => {
   const { data: session } = useSession();
   const [billingUrl, setBillingUrl] = useState<string | null>(null);
   const customerIdRef = useRef<string | null>(null);
@@ -56,4 +56,4 @@ const BillingPortalButton = () => {
   );
 }
 
-export default BillingPortalButton;
+export default SidebarBillingPortalButton;

@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-import dynamic from 'next/dynamic';
 import { database, ref, set, push } from '../../api/firebaseConfig';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../api/firebaseConfig';
 import { useEstimate } from '../../components/EstimateContext';
+
+import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { format } from 'date-fns';
 
-const DatepickerComponent = dynamic(() => import('./DatePickerComponent'), {
+const SalesTrackerDatepicker = dynamic(() => import('./SalesTrackerDatepicker'), {
   ssr: false,
 });
 
@@ -19,7 +20,7 @@ interface Purchase {
   availability: number;
 }
 
-const AddPurchase: React.FC = () => {
+const SalesTrackerTabAddPurchase: React.FC = () => {
   const today = format(new Date(), 'dd/MM/yyyy');
 
   const [itemName, setItemName] = useState('');
@@ -112,7 +113,7 @@ const AddPurchase: React.FC = () => {
           <label className="label">
             <span className="label-text text-lightModeText">Purchase Date</span>
           </label>
-          <DatepickerComponent value={purchaseDate} onChange={handleDateChange} />
+          <SalesTrackerDatepicker value={purchaseDate} onChange={handleDateChange} />
         </div>
         <div className="mb-4">
           <label className="label">
@@ -182,4 +183,4 @@ const AddPurchase: React.FC = () => {
   );
 };
 
-export default AddPurchase;
+export default SalesTrackerTabAddPurchase;

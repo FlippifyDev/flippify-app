@@ -1,10 +1,10 @@
 "use client";
 
-import UserAvatar from "./UserAvatar";
+import NavbarProfileAvatar from "./NavbarProfileAvatar";
 import { useSession } from 'next-auth/react';
 import React from "react";
 
-const UserProfile = () => {
+const NavbarProfile = () => {
 	const { data: session } = useSession();
 
 	return (
@@ -14,9 +14,9 @@ const UserProfile = () => {
 					{session.user.name}
 				</div>
 			)}
-			<UserAvatar />
+			<NavbarProfileAvatar />
 		</div>
 	);
 };
 
-export default UserProfile;
+export default NavbarProfile;

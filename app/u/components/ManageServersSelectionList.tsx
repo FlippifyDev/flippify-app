@@ -1,9 +1,9 @@
 "use client";
-
-import React, { useState, useEffect } from 'react';
-import { useSession } from "next-auth/react";
-import WebhookInfo from './WebhookInfo';
+import ManageServersSelectionWebhook from './ManageServersSelectionWebhook';
 import fetchProductRegions from '@/app/api/fetchProductRegions';
+
+import React, { useState } from 'react';
+import { useSession } from "next-auth/react";
 
 export interface Subscription {
   name: string;
@@ -16,7 +16,7 @@ export interface CustomUser {
   subscriptions?: Subscription[];
 }
 
-const SelectSubscription = () => {
+const ManagerServersSelectionList = () => {
     const { data: session } = useSession();
     const [selectedSubscription, setSelectedSubscription] = useState<string | null>(null);
     const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
@@ -99,11 +99,11 @@ const SelectSubscription = () => {
 
             {selectedSubscription && selectedRegion && (
                 <div className='mt-4'>
-                    <WebhookInfo subscription_name={selectedSubscription} region={selectedRegion} />
+                    <ManageServersSelectionWebhook subscription_name={selectedSubscription} region={selectedRegion} />
                 </div>
             )}
         </div>
     );
 };
 
-export default SelectSubscription;
+export default ManagerServersSelectionList;

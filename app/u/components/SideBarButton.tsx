@@ -4,13 +4,13 @@ import React from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter, usePathname } from 'next/navigation';
 
-interface SideBarButtonProps {
+interface SidebarButtonProps {
   text: string;
   redirect: string;
   symbol: React.ReactNode;
 }
 
-const SideBarButton: React.FC<SideBarButtonProps> = ({ text, redirect, symbol }) => {
+const SidebarButton: React.FC<SidebarButtonProps> = ({ text, redirect, symbol }) => {
   const { data: session } = useSession();
   const router = useRouter();
   const pathname = usePathname();
@@ -43,17 +43,4 @@ const SideBarButton: React.FC<SideBarButtonProps> = ({ text, redirect, symbol })
   );
 };
 
-export default SideBarButton;
-
-
-
-
-/*
-<button
-    className={`text-lightModeText bg-white focus:outline-none appearance-none grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transition duration-200 transform
-      ${isActive ? 'bg-gray-300' : 'bg-white'} 
-      focus:outline-none appearance-none active:bg-gray-300 active:text-lightModeText active:shadow-none`
-    }
-      onClick={redirectUser}
-    >
- */
+export default SidebarButton;

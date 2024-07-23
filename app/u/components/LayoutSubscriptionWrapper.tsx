@@ -4,7 +4,7 @@ import React, { ReactNode, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
-interface SubscriptionWrapperProps {
+interface LayoutSubscriptionWrapperProps {
     requiredSubscriptions: string[];
     children: ReactNode;
     redirectPath?: string;
@@ -21,7 +21,7 @@ export interface CustomUser {
     subscriptions?: Subscription[] | null | undefined;
 }
 
-const SubscriptionWrapper: React.FC<SubscriptionWrapperProps> = ({ requiredSubscriptions, children, redirectPath }) => {
+const LayoutSubscriptionWrapper: React.FC<LayoutSubscriptionWrapperProps> = ({ requiredSubscriptions, children, redirectPath }) => {
     const { data: session } = useSession();
     const router = useRouter();
 
@@ -70,4 +70,4 @@ const SubscriptionWrapper: React.FC<SubscriptionWrapperProps> = ({ requiredSubsc
     return hasRequiredSubscriptions ? <>{children}</> : null;
 };
 
-export default SubscriptionWrapper;
+export default LayoutSubscriptionWrapper;

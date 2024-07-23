@@ -1,16 +1,14 @@
 "use client";
 
+import SalesTrackerTabCalcProfits from "./SalesTrackerTabCalcProfits";
+import SalesTrackerTabAddPurchase from "./SalesTrackerTabAddPurchase";
+import SalesTrackerReviewProfits from "./SalesTrackerReviewProfits";
+import SalesTrackerTabAddSale from "./SalesTrackerTabAddSale";
+
 import React, { useState } from "react";
-import { Lato, Inter } from "next/font/google";
-import AddPurchase from "./AddPurchase";
-import AddSale from "./AddSale";
-import ReviewProfits from "./ReviewProfits";
-import EstimateProfits from "./EstimateProfits";
 
-const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
-const inter = Inter({ subsets: ["latin"] });
 
-const SalesTracker = () => {
+const SalesTrackerPage = () => {
   const [activeComponent, setActiveComponent] = useState("AddPurchase");
 
   const toggleAddPurchase = () => {
@@ -64,9 +62,9 @@ const SalesTracker = () => {
           </a>
         </div>
         <div className="bg-white bg-opacity-90 p-4 rounded-b-xl h-full">
-          {activeComponent === "AddPurchase" && <AddPurchase />}
-          {activeComponent === "AddSale" && <AddSale />}
-          {activeComponent === "ReviewProfits" && <ReviewProfits />}
+          {activeComponent === "AddPurchase" && <SalesTrackerTabAddPurchase />}
+          {activeComponent === "AddSale" && <SalesTrackerTabAddSale />}
+          {activeComponent === "ReviewProfits" && <SalesTrackerReviewProfits />}
         </div>
       </div>
       {activeComponent === "AddPurchase" && (
@@ -80,7 +78,7 @@ const SalesTracker = () => {
             </a>
           </div>
           <div className="bg-white bg-opacity-90 p-4 rounded-b-xl col-span-1 h-full">
-            <EstimateProfits />
+            <SalesTrackerTabCalcProfits />
           </div>
         </div>
       )}
@@ -88,4 +86,4 @@ const SalesTracker = () => {
   );
 };
 
-export default SalesTracker;
+export default SalesTrackerPage;

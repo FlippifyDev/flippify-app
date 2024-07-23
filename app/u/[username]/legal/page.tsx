@@ -1,5 +1,6 @@
-import Legal from '@/app/components/Legal';
-import UserLegalLayout from '../../components/UserLegalLayout';
+import LegalContent from '@/app/components/LegalContent';
+import Layout from '../../components/Layout';
+
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -8,11 +9,10 @@ export const metadata: Metadata = {
 };
 
 
-
-export default function LegalPage() {
+export default function Legal() {
   return (
-    <UserLegalLayout>
-      <Legal />
-    </UserLegalLayout>
+    <Layout>
+      <LegalContent />
+    </Layout>
   );
 }

@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useEffect } from 'react';
 import { signOut, useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import { FaSignOutAlt } from "react-icons/fa";
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
 
-const SignOutButton = () => {
+const SidebarSignOutButton = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -30,5 +30,5 @@ const SignOutButton = () => {
   );
 };
 
-export default SignOutButton;
+export default SidebarSignOutButton;
     

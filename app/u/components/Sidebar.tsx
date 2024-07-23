@@ -1,20 +1,20 @@
 'use client';
 
-import React, { useState } from 'react';
-import SideBarButton from './SideBarButton';
-import SignOutButton from './SignOutButton';
-import BillingPortalButton from './BillingPortalButton';
-import UserSideBarButtons from './UserSidebarButtons';
+import SidebarSignOutButton from './SidebarSignOutButton';
+import SidebarBillingPortalButton from './SidebarBillingPortalButton';
+import SidebarToolButtons from './SidebarToolButtons';
+import SidebarButton from './SidebarButton';
 import Alert from './Alert';
 
+import React, { useState } from 'react';
 import { Lato } from 'next/font/google';
 import Link from 'next/link';
 
-import { IoMenu } from 'react-icons/io5';
-import { FaHouse } from 'react-icons/fa6';
 import { FaSearch, FaDiscord } from 'react-icons/fa';
 import { BsClipboard2Fill } from 'react-icons/bs';
 import { MdGroups } from 'react-icons/md';
+import { FaHouse } from 'react-icons/fa6';
+import { IoMenu } from 'react-icons/io5';
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
@@ -54,10 +54,10 @@ const Sidebar = () => {
                   <a className="text-lightModeText text-lg font-bold select-none">Home</a>
                 </div>
                 <div>
-                  <SideBarButton text="Dashboard" redirect="dashboard" symbol={<FaHouse className="text-lg" />} />
-                  <SideBarButton text="Plans" redirect="plans" symbol={<FaSearch className="text-lg" />} />
-                  <SideBarButton text="Server Plans" redirect="server-plans" symbol={<MdGroups className="text-2xl" />} />
-                  <BillingPortalButton />
+                  <SidebarButton text="Dashboard" redirect="dashboard" symbol={<FaHouse className="text-lg" />} />
+                  <SidebarButton text="Plans" redirect="plans" symbol={<FaSearch className="text-lg" />} />
+                  <SidebarButton text="Server Plans" redirect="server-plans" symbol={<MdGroups className="text-2xl" />} />
+                  <SidebarBillingPortalButton />
                   <Link
                     href="https://discord.gg/gNPYfe7YFm"
                     className="hover:bg-gray-100 active:bg-gray-300 text-lightModeText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transition duration-200"
@@ -72,13 +72,13 @@ const Sidebar = () => {
                 <div>
                   <a className="text-lightModeText text-lg font-bold select-none">Tools</a>
                 </div>
-                <UserSideBarButtons showAlert={showAlert} />
+                <SidebarToolButtons showAlert={showAlert} />
               </section>
             </div>
 
             <section className="mt-10 flex flex-col">
-              <SideBarButton text="Legal" redirect="legal" symbol={<BsClipboard2Fill className="text-lg" />} />
-              <SignOutButton />
+              <SidebarButton text="Legal" redirect="legal" symbol={<BsClipboard2Fill className="text-lg" />} />
+              <SidebarSignOutButton />
             </section>
           </ul>
         </div>

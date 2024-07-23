@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from "react";
-import { useSession } from 'next-auth/react';
 import { joinWaitlist } from '../../api/joinWaitlist';
 
-const WaitlistForm: React.FC = () => {
+import React, { useState, useEffect } from "react";
+import { useSession } from 'next-auth/react';
+
+const WaitlistJoinForm: React.FC = () => {
   const [referralCode, setReferralCode] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -90,4 +91,4 @@ const WaitlistForm: React.FC = () => {
   );
 };
 
-export default WaitlistForm;
+export default WaitlistJoinForm;

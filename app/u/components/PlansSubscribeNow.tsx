@@ -1,19 +1,19 @@
 "use client";
+import createCheckoutSession from '@/app/api/stripe-handlers/create-checkout-session';
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useSession } from 'next-auth/react';
-import createCheckoutSession from '@/app/api/stripe-handlers/create-checkout-session';
 
 interface CustomUser {
   name: string;
   customerId?: string;
 }
 
-interface SubscribeNowProps {
+interface PlansSubscribeNowProps {
   priceId: string;
 }
 
-const SubscribeNow: React.FC<SubscribeNowProps> = ({ priceId }) => {
+const PlansSubscribeNow: React.FC<PlansSubscribeNowProps> = ({ priceId }) => {
   const { data: session } = useSession();
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
   const customerIdRef = useRef<string | null>(null);
@@ -58,4 +58,4 @@ const SubscribeNow: React.FC<SubscribeNowProps> = ({ priceId }) => {
   );
 };
 
-export default SubscribeNow;
+export default PlansSubscribeNow;

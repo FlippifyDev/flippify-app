@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useEstimate, Estimate } from '../../components/EstimateContext';
+import { useEstimate } from '../../components/EstimateContext';
 
-const EstimateProfits: React.FC = () => {
+const SalesTrackerTabCalcProfits: React.FC = () => {
   const { estimate, setEstimate } = useEstimate();
   const [listingPrice, setListingPrice] = useState<number | ''>(0);
   const [platformFees, setPlatformFees] = useState<number | ''>(0);
@@ -116,4 +116,4 @@ const EstimateProfits: React.FC = () => {
   );
 };
 
-export default EstimateProfits;
+export default SalesTrackerTabCalcProfits;

@@ -2,7 +2,7 @@ import Navbar from "../../components/Navbar";
 import { Suspense } from "react";
 import Loading from "../../../components/Loading";
 
-export default function SettingsPage() {
+export default function Settings() {
     return (
     <Suspense fallback={<Loading />}>
         <div

@@ -1,5 +1,6 @@
-import ServerPriceList from "../../components/ServerPriceList";
-import UserLayout from '../../components/UserLayout';
+import ServerPlansPage from "../../components/ServerPlansPage";
+import UserLayout from '../../components/Layout';
+
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -8,10 +9,10 @@ export const metadata: Metadata = {
 };
 
 
-export default function PlansPage() {
+export default function ServerPlans() {
   return (
     <UserLayout>
-      <ServerPriceList />
+      <ServerPlansPage />
     </UserLayout>
   );
 }

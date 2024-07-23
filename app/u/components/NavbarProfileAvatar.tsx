@@ -1,8 +1,8 @@
-import React from 'react'
 import { useSession } from 'next-auth/react';
 import Image from "next/image";
+import React from 'react'
 
-const UserAvatar = () => {
+const NavbarProfileAvatar = () => {
     const { data: session } = useSession();
 
     // Default discord avatar
@@ -29,4 +29,4 @@ const UserAvatar = () => {
     )
 }
 
-export default UserAvatar
+export default NavbarProfileAvatar

@@ -12,7 +12,7 @@ const PriceList = () => {
   return (
     <div className="flex flex-col justify-center xl:w-11/12 h-full mb-5">
       <div className="flex flex-col items-center space-y-5 text-center">
-        <div className="flex flex-wrap justify-center items-center text-4xl sm:text-5xl">
+        <div className="flex flex-wrap justify-center items-center text-4xl sm:text-5xl w-4/5 sm:w-full">
           <p
             className={`${lato.className} text-gradient bg-gradient-to-tr from-blue-500 to-purple-500 bg-clip-text text-transparent py-1`}
           >
@@ -24,8 +24,8 @@ const PriceList = () => {
             </a>
           </p>
         </div>
-        <div className="flex justify-center max-w-2xl">
-          <p className="mx-4 sm:mx-2 text-lightModeText  text-lg text-center">
+        <div className="flex justify-center w-4/5 sm:w-full">
+          <p className="mx-4 sm:mx-2 text-lightModeText text-md sm:text-lg text-center">
             An all-in-one service meaning you get everything you need with just one plan
           </p>
         </div>

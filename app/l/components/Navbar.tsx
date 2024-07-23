@@ -2,8 +2,8 @@ import { useState, useEffect, MouseEvent } from 'react';
 import { Lato } from 'next/font/google';
 import { IoMenu } from "react-icons/io5";
 import Link from 'next/link';
-import SignInWithDiscord from './SignInWithDiscord';
-import SignInWithDiscordNavbar from './SignInWithDiscordNavbar'
+import NavbarSignInWithDiscord from './NavbarSignInWithDiscord';
+import NavbarSignInWithDiscordSideBar from './NavbarSignInWithDiscordSideBar'
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
@@ -75,7 +75,7 @@ const Navbar = () => {
               <a href="https://discord.gg/gNPYfe7YFm">Discord</a>
             </li>
             <li className="transition duration-100 active:scale-102 rounded-btn p-1 text-base">
-              <SignInWithDiscordNavbar />
+              <NavbarSignInWithDiscordSideBar />
             </li>
           </ul>
         </div>
@@ -104,7 +104,7 @@ const Navbar = () => {
       </ul>
 
       <div className="hidden md:flex items-center col-span-2 justify-end">
-        <SignInWithDiscord />
+        <NavbarSignInWithDiscord />
       </div>
     </div>
   );

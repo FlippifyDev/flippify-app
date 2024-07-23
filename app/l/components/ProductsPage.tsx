@@ -1,7 +1,7 @@
 "use client";
 
-import ProductList from "./ProductList";
-import ToolList from "./ToolList";
+import ProductList from "./ProductsTabBots";
+import ToolList from "./ProductsTabTools";
 
 import { useState, ChangeEvent } from "react";
 import React from "react";

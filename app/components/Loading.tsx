@@ -1,6 +1,6 @@
 "use client"
 import jokes from "./loading_messages";
-import GradientBackground from "../l/components/GradientBackground";
+import LayoutGradientBackground from "../l/components/LayoutGradientBackground";
 
 import React, { useEffect, useState } from "react";
 
@@ -13,7 +13,7 @@ const Loading = () => {
 
   return (
     <div>
-      <GradientBackground />
+      <LayoutGradientBackground />
       <div className="flex flex-col items-center justify-center min-h-screen">
         <div className="mt-4 text-white text-lg font-semibold z-30">
           {randomJoke}

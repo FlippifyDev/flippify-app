@@ -2,14 +2,14 @@
 
 import React from "react";
 
-interface PriceStatProps {
+interface PricingCardPriceStatProps {
   prices: number[];
   onPlanSelect: (index: number) => void;
   selectedPlan: number | null;
   currencySymbol: string;
 }
 
-const PriceStat: React.FC<PriceStatProps> = ({
+const PricingCardPriceStat: React.FC<PricingCardPriceStatProps> = ({
   prices,
   onPlanSelect,
   selectedPlan,
@@ -57,4 +57,4 @@ const PriceStat: React.FC<PriceStatProps> = ({
   );
 };
 
-export default PriceStat;
+export default PricingCardPriceStat;

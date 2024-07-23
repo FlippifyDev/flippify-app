@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 
 
-const GradientBackground = () => {
+const LayoutGradientBackground = () => {
   const controls = useAnimation();
 
   useEffect(() => {
@@ -57,4 +57,4 @@ const GradientBackground = () => {
   );
 };
 
-export default GradientBackground;
+export default LayoutGradientBackground;

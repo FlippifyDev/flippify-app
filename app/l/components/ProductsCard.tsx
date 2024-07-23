@@ -1,6 +1,6 @@
 "use client";
 
-import ViewPrices from "./ViewPrices";
+import ProductsCardViewPrices from "./ProductsCardViewPricesButton";
 
 import Image from "next/image";
 import { Lato, Inter } from "next/font/google";
@@ -9,14 +9,14 @@ import React, { useState } from "react";
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 
 
-interface ProductCardProps {
+interface ProductsCardProps {
   title: string;
   description: string;
   disclaimer: string | null;
   image: string;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({
+const ProductsCard: React.FC<ProductsCardProps> = ({
   title,
   description,
   disclaimer,
@@ -70,11 +70,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
         )}
         <hr className="w-full mb-1" />
         <div className="card-actions justify-end">
-          <ViewPrices />
+          <ProductsCardViewPrices />
         </div>
       </div>
     </div>
   );
 };
 
-export default ProductCard;
+export default ProductsCard;

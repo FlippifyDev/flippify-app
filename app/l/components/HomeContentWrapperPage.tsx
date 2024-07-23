@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import HomeContent from './HomeContent';
 
-const HomeContentWrapper = () => {
+const HomeContentWrapperPage = () => {
   useEffect(() => {
     const scrollToSection = localStorage.getItem('scrollTo');
     if (scrollToSection) {
@@ -21,4 +21,4 @@ const HomeContentWrapper = () => {
   return <HomeContent />;
 };
 
-export default HomeContentWrapper;
+export default HomeContentWrapperPage;

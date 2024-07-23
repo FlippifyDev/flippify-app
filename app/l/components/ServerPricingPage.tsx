@@ -1,13 +1,13 @@
 import React from "react";
-import PriceCard from "./PriceCard";
+import PriceCard from "./PricingCard";
 import { Lato, Inter } from "next/font/google";
 
-import ServerPlansWhatsIncluded from "./ServerPlansWhatsIncluded";
+import ServerPricingWhatsIncluded from "./ServerPricingWhatsIncluded";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
 
-const ServerPriceList = () => {
+const ServerPricingPage = () => {
   return (
     <div className="flex flex-col justify-center xl:w-11/12 h-full mb-5 mt-5">
       <div className="flex flex-col items-center space-y-3 text-center">
@@ -34,17 +34,17 @@ const ServerPriceList = () => {
           title="Retiring Sets Deals"
           description="Enhance your reselling efficiency with our cutting-edge bot, scanning diverse websites to identify Lego sets nearing retirement and ensuring you never miss a profitable sale."
           prices={[149.99, 199.99]}
-          whatsIncludedComponent={<ServerPlansWhatsIncluded whatsIncludedText={["eBay Price Comparison", "Keepa Link Included", "Retirement Date Included", "Currently UK Sites Only", "Continual Website Additions"]}/>}
+          whatsIncludedComponent={<ServerPricingWhatsIncluded whatsIncludedText={["eBay Price Comparison", "Keepa Link Included", "Retirement Date Included", "Currently UK Sites Only", "Continual Website Additions"]}/>}
         />
         <PriceCard
           title="Deal Watch UK"
           description="Effortlessly discover profitable reselling opportunities with our advanced webscraper, which scans hotukdeals.co.uk and compares prices with sold items on eBay to maximize your profits."
           prices={[69.99, 99.99]}
-          whatsIncludedComponent={<ServerPlansWhatsIncluded whatsIncludedText={["eBay Price Comparison", "HotUKDeals Price Tracking", "Alerts based on eBay profit potential", "UK Sites Only", "Frequent electronics deal alerts"]}/>}
+          whatsIncludedComponent={<ServerPricingWhatsIncluded whatsIncludedText={["eBay Price Comparison", "HotUKDeals Price Tracking", "Alerts based on eBay profit potential", "UK Sites Only", "Frequent electronics deal alerts"]}/>}
         />
       </div>
     </div>
   );
 }
 
-export default ServerPriceList;
+export default ServerPricingPage;

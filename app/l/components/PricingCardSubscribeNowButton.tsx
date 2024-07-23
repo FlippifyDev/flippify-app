@@ -6,8 +6,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 
-
-const SignInWithDiscord = () => {
+const PricingCardSubscribeNowButton = () => {
     const { data: session } = useSession();
     const router = useRouter();
 
@@ -28,8 +27,8 @@ const SignInWithDiscord = () => {
     };
     
     return (
-        <button className="btn bg-white text-black rounded-lg mr-1 hover:bg-textGradStart hover:border-white transition-color duration-300" onClick={handleSignIn}>Get Early Access</button>
+        <button className="btn btn-primary bg-discordBlue text-white" onClick={handleSignIn}>Subscribe Now</button>
     )
 }
 
-export default SignInWithDiscord
+export default PricingCardSubscribeNowButton

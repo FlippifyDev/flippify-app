@@ -1,5 +1,5 @@
-import LandingLayout from '../components/LandingLayout';
-import ProductContent from "../components/ProductContent";
+import Layout from '../components/Layout';
+import ProductContent from "../components/ProductsPage";
 import Loading from '@/app/components/Loading';
 
 import { Suspense } from 'react';
@@ -41,9 +41,9 @@ export const metadata: Metadata = {
 export default function Products() {
   return (
     <Suspense fallback={<Loading />}>
-      <LandingLayout>
+      <Layout>
         <ProductContent />
-      </LandingLayout>
+      </Layout>
     </Suspense>
   );
 }

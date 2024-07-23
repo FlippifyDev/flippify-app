@@ -1,4 +1,4 @@
-import ProductCard from "./ProductCard";
+import ProductCard from "./ProductsCard";
 import { Lato, Inter } from "next/font/google";
 import React from "react";
 
@@ -32,7 +32,7 @@ const ToolList: React.FC = () => {
           title="Inventory Tracking"
           description="One of the most important aspects of reselling is keeping a consistent inventory of purchased and sold products. This allows for effective analytics, informed purchasing decisions, and streamlined operations."
           disclaimer={null}
-          image="https://i.imgur.com/e2YWlQo.png"
+          image="https://i.imgur.com/mnJ56E1.jpeg"
         />
       </div>
     </div>

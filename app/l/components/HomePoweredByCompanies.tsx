@@ -1,7 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 
-const PoweredByCompanies = () => {
+const HomePoweredByCompanies = () => {
   return (
     <div className="avatar-group -space-x-5 rtl:space-x-reverse">
         <div className="avatar">
@@ -19,4 +19,4 @@ const PoweredByCompanies = () => {
   )
 }
 
-export default PoweredByCompanies
+export default HomePoweredByCompanies

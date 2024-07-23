@@ -3,11 +3,11 @@
 import React from "react";
 import Navbar from "./Navbar";
 import Loading from "../../components/Loading";
-import GradientBackground from "./GradientBackground";
-import WhiteSection from "./WhiteSection";
-import Footer from "../components/Footer";
+import LayoutGradientBackground from "./LayoutGradientBackground";
+import LayoutWhiteSection from "./LayoutWhiteSection";
+import LayoutFooter from "./LayoutFooter";
 
-const LandingLayout = ({ children }: { children: React.ReactNode }) => {
+const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="relative min-h-screen bg-white flex flex-col">
       <div className="fixed w-full z-50">
@@ -15,18 +15,18 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
       </div>
 
       <main className="relative flex-1 w-full overflow-hidden">
-        <WhiteSection />
-        <GradientBackground />
+        <LayoutWhiteSection />
+        <LayoutGradientBackground />
         <div className="relative flex justify-center z-10 mt-24 mb-24">
           {children}
         </div>
       </main>
 
       <footer className="relative h-full w-full flex justify-end">
-        <Footer />
+        <LayoutFooter />
       </footer>
     </div>
   );
 };
 
-export default LandingLayout;
+export default Layout;

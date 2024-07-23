@@ -49,8 +49,8 @@ const SelectSubscription = () => {
 
     return (
         <div className=''>
-            <label className="form-control bg-lightGreyBackground w-full max-w-xs">
-                <div className="label">
+            <label className="form-control w-full max-w-xs">
+                <div className="label bg-transparent">
                     <span className="label-text text-lightModeText" style={{ fontSize: '18px', fontFamily: 'Arial, sans-serif', fontWeight: 'normal' }}>
                         Select Server Subscription
                     </span>
@@ -73,8 +73,8 @@ const SelectSubscription = () => {
             </label>
 
             {selectedSubscription && (
-                <label className="form-control bg-lightGreyBackground w-full max-w-xs mt-4">
-                    <div className="label">
+                <label className="form-control w-full max-w-xs mt-4">
+                    <div className="label bg-transparent">
                         <span className="label-text text-lightModeText" style={{ fontSize: '18px', fontFamily: 'Arial, sans-serif', fontWeight: 'normal' }}>
                             Select Region
                         </span>

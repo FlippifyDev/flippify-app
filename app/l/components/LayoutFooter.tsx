@@ -3,12 +3,12 @@
 import React from "react";
 import Link from 'next/link';
 import { BsTwitterX } from "react-icons/bs";
-import { FaDiscord, FaInstagram, FaTiktok } from 'react-icons/fa6';
+import { FaDiscord } from 'react-icons/fa6';
 import { Lato } from 'next/font/google';
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
-const Footer = () => {
+const LayoutFooter = () => {
   return (
     <div className=" w-full select-none bg-black flex justify-center">
       <footer className="footer flex flex-col md:flex-row items-center md:items-end justify-between p-4">
@@ -30,4 +30,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+export default LayoutFooter;

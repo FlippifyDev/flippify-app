@@ -1,5 +1,5 @@
-import ServerPriceList from "../components/ServerPriceList";
-import LandingLayout from '../components/LandingLayout';
+import ServerPricingPage from "../components/ServerPricingPage";
+import Layout from '../components/Layout';
 import Loading from '@/app/components/Loading';
 
 import { Suspense } from 'react';
@@ -42,9 +42,9 @@ export const metadata: Metadata = {
 export default function ServerPricing() {
   return (
     <Suspense fallback={<Loading />}>
-      <LandingLayout>
-        <ServerPriceList />
-      </LandingLayout>
+      <Layout>
+        <ServerPricingPage />
+      </Layout>
     </Suspense>
   );
 }

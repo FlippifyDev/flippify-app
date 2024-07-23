@@ -1,5 +1,5 @@
-import PriceList from "../components/PriceList";
-import LandingLayout from '../components/LandingLayout';
+import PricingPage from "../components/PricingPage";
+import Layout from '../components/Layout';
 import Loading from "@/app/components/Loading";
 
 import { Metadata } from 'next';
@@ -41,9 +41,9 @@ export const metadata: Metadata = {
 export default function Pricing() {
   return (
     <Suspense fallback={<Loading />}>
-      <LandingLayout>
-        <PriceList />
-      </LandingLayout>
+      <Layout>
+        <PricingPage />
+      </Layout>
     </Suspense>
   );
 }

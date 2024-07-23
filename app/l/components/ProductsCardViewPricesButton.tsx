@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { CiShoppingTag } from "react-icons/ci";
 
-const ViewPrices = () => {
+const ProductsCardViewPrices = () => {
     return(
         <div className="card-actions">
             <Link href='/l/pricing'>
@@ -17,4 +17,4 @@ const ViewPrices = () => {
     )
 }
 
-export default ViewPrices;
+export default ProductsCardViewPrices;

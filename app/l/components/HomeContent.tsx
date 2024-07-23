@@ -1,9 +1,9 @@
 import { Lato, Inter } from 'next/font/google';
-import GetEarlyAccess from './GetEarlyAccess';
-import AboutFlippify from './AboutFlippify';
-import PhoneMockup from './PhoneMockup';
-import BrowserMockup from './BrowserMockup';
-import PoweredByCompanies from './PoweredByCompanies';
+import HomeGetEarlyAccess from './HomeGetEarlyAccess';
+import HomeAbout from './HomeAbout';
+import HomeMockupPhone from './HomeMockupPhone';
+import HomeMockupBrowser from './HomeMockupBrowser';
+import HomePoweredByCompanies from './HomePoweredByCompanies';
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 const inter = Inter({ subsets: ['latin'] });
@@ -23,12 +23,12 @@ const HomeContent = ({ className = '' }) => {
         </p>
         <div className="flex items-center mb-3 pb-2">
             <span className="inline-block mr-2 text-grayText opacity-90 text-md">Powered by</span>
-            <span><PoweredByCompanies /></span>
+            <span><HomePoweredByCompanies /></span>
         </div>
-        <GetEarlyAccess />
-        <AboutFlippify />
-        <PhoneMockup />
-        <BrowserMockup />
+        <HomeGetEarlyAccess />
+        <HomeAbout />
+        <HomeMockupPhone />
+        <HomeMockupBrowser />
       </div>
     </div>
   );

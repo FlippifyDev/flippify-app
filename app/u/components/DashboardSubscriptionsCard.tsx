@@ -40,7 +40,7 @@ const DashboardSubscriptionsCard = () => {
             {filteredSubscriptions.map((sub, index) => (
               <li key={index} className="w-full">
                 <button className="border group w-full bg-white hover:bg-gray-100 text-lightModeText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md active:bg-gray-300 transition duration-200">
-                  <span className="col-span-11 text-base text-left">
+                  <span className="col-span-11 text-sm text-left">
                     {sub.name}
                   </span>
                   <span className="col-span-1 text-base text-right hidden group-hover:flex">

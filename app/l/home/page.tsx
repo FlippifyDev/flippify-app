@@ -1,5 +1,5 @@
-import LandingLayout from '../components/LandingLayout';
-import HomeContentWrapper from '../components/HomeContentWrapper';
+import Layout from '../components/Layout';
+import HomeContentWrapperPage from '../components/HomeContentWrapperPage';
 import Loading from '@/app/components/Loading';
 
 import { Suspense } from 'react';
@@ -39,9 +39,9 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <Suspense fallback={<Loading />}>
-      <LandingLayout>
-        <HomeContentWrapper />
-      </LandingLayout>
+      <Layout>
+        <HomeContentWrapperPage />
+      </Layout>
     </Suspense>
   );
 }

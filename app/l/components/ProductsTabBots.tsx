@@ -1,4 +1,4 @@
-import ProductCard from "./ProductCard";
+import ProductsCard from "./ProductsCard";
 import { Lato, Inter } from "next/font/google";
 import React from "react";
 
@@ -29,13 +29,13 @@ const ProductList: React.FC = () => {
         </div>
       </div>
       <div className="flex flex-wrap justify-center">
-        <ProductCard
+        <ProductsCard
           title="Retiring Set Deals"
           description="Track soon-to-be-retired LEGO sets across various websites. Stay informed about valuable collector items before they disappear from shelves."
           disclaimer="Prices and availability may change or contain errors. Verify details on the respective websites and eBay before purchasing."
-          image="https://i.imgur.com/CZDWzJo.png"
+          image="https://i.imgur.com/qVBQ6q3.png"
         />
-        <ProductCard
+        <ProductsCard
           title="Deal Watch UK"
           description="Discover high-demand products from hotukdeals that can be resold for profit on eBay. Our tool identifies the hottest deals and trends, helping you capitalize on profitable opportunities."
           disclaimer="We strive for accurate, up-to-date prices, but some deals may be outdated or incorrect. Verify prices and availability on hotukdeals and eBay before purchasing."

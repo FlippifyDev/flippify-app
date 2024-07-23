@@ -1,6 +1,6 @@
 // Local Imports
 import Legal from '@/app/components/Legal';
-import LandingLayout from '../components/LandingLayout';
+import Layout from '../components/Layout';
 import Loading from '@/app/components/Loading';
 
 import { Metadata } from 'next';
@@ -18,9 +18,9 @@ export const metadata: Metadata = {
 export default function LegalPage() {
   return (
     <Suspense fallback={<Loading />}>
-      <LandingLayout>
+      <Layout>
         <Legal />
-      </LandingLayout>
+      </Layout>
     </Suspense>
   );
 }

@@ -1,23 +1,20 @@
 "use client";
-
-
-
+import PricingCardPriceStat from "./PricingCardPriceStat";
+import PricingCardSubscribeNowButton from "./PricingCardSubscribeNowButton";
 
 import React, { useState } from "react";
-import PriceStat from "./PriceStat";
-import SubscribeNow from "./SubscribeNow";
-import { IoMdCheckboxOutline } from "react-icons/io";
-import { Lato, Inter } from "next/font/google";
+import { Lato } from "next/font/google";
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 
-interface PriceCardProps {
+
+interface PricingCardProps {
   title: string;
   prices: number[];
   description: string;
   whatsIncludedComponent: any
 }
 
-const PriceCard: React.FC<PriceCardProps> = ({
+const PricingCard: React.FC<PricingCardProps> = ({
   title,
   prices,
   description,
@@ -66,7 +63,7 @@ const PriceCard: React.FC<PriceCardProps> = ({
           <div className="flex flex-col items-center">
             <hr className="w-full" />
             {prices.length > 0 && (
-              <PriceStat
+              <PricingCardPriceStat
                 prices={convertedPrices}
                 onPlanSelect={handlePlanSelect}
                 selectedPlan={selectedPlan}
@@ -78,7 +75,7 @@ const PriceCard: React.FC<PriceCardProps> = ({
           {whatsIncludedComponent}
           <div className="flex justify-end mt-2">
             {prices.length > 0 && selectedPlan !== null && (
-              <SubscribeNow />
+              <PricingCardSubscribeNowButton />
             )}
           </div>
         </div>
@@ -87,4 +84,4 @@ const PriceCard: React.FC<PriceCardProps> = ({
   );
 };
 
-export default PriceCard;
+export default PricingCard;

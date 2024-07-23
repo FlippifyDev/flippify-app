@@ -1,6 +1,6 @@
 import React from "react";
 
-const WhiteSection: React.FC = () => {
+const LayoutWhiteSection: React.FC = () => {
   return (
     <div className="absolute top-0 left-0 w-full z-10 pt-72 sm:pt-48 md:pt-36 lg:pt-24 xl:pt-0">
       <svg
@@ -24,4 +24,4 @@ const WhiteSection: React.FC = () => {
   );
 };
 
-export default WhiteSection;
+export default LayoutWhiteSection;

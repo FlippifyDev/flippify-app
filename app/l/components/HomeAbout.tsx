@@ -7,10 +7,10 @@ import {
   MdOutlineSportsMartialArts,
 } from "react-icons/md";
 import { FaPeopleGroup } from "react-icons/fa6";
-import GetEarlyAccess from "./GetEarlyAccess";
+import GetEarlyAccess from "./HomeGetEarlyAccess";
 
 
-const AboutFlippify = () => { 
+const HomeAbout = () => { 
   return (
     <div id="about" className="flex flex-col items-center justify-center flex-grow mt-16 pt-28 pb-8 px-2">
       <div className="bg-base-100 bg-opacity-98 p-8 mockup-shadow w-full max-w-4xl border-2 border-white text-center" style={{ borderRadius: '40px' }}>
@@ -55,7 +55,7 @@ const AboutFlippify = () => {
   )
 }
 
-export default AboutFlippify
+export default HomeAbout
 
 function FeatureCard({
     title,

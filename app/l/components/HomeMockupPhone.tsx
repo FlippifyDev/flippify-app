@@ -1,12 +1,12 @@
 import Image from "next/image";
 import { Lato, Inter } from 'next/font/google';
-import GetEarlyAccess from "./GetEarlyAccess";
+import HomeGetEarlyAccess from "./HomeGetEarlyAccess";
 
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 const inter = Inter({ subsets: ['latin'] });
 
-const PhoneMockup = () => {
+const HomeMockupPhone = () => {
   return (
     <div className="grid sm:grid-cols-1 md:grid-cols-2 pt-12 pb-8 md:pl-8">
       <div className="mockup-phone w-80 mockup-shadow">
@@ -14,7 +14,7 @@ const PhoneMockup = () => {
         <div className="display">
           <figure>
             <Image
-              src="https://i.imgur.com/hcPwA5X.png"
+              src="https://i.imgur.com/BPSkrVS.jpeg"
               alt="Phone Mockup"
               loading="lazy"
               width={800}
@@ -32,14 +32,14 @@ const PhoneMockup = () => {
           Real-time alerts ensuring you never miss a deal with notifications right to your phone using our extremely fast discord bots.
         </p>
         <div className="flex justify-center pt-6">
-          <GetEarlyAccess />
+          <HomeGetEarlyAccess />
         </div>
       </div>
     </div>
   );
 };
 
-export default PhoneMockup;
+export default HomeMockupPhone;
 
 
 /*

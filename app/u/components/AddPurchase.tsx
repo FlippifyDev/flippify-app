@@ -93,7 +93,7 @@ const AddPurchase: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto text-lightModeText font-semibold">
+    <div className="container mx-auto font-semibold">
       <form className="form-control">
         <div className="mb-4">
           <label className="label">

@@ -1,3 +1,5 @@
+"use client"
+
 import type { DatepickerOptions, DatepickerInterface } from 'flowbite';
 import React, { useEffect, useRef } from 'react';
 import { Datepicker } from 'flowbite';
@@ -19,7 +21,7 @@ const SalesTrackerDatepicker: React.FC<SalesTrackerDatepickerProps> = ({ value, 
       };
 
       datepickerInstance.current = new Datepicker(datepickerRef.current, options);
-
+  
       const handleDateChange = (event: any) => {
         onChange(event.target.value);
       };
@@ -47,7 +49,7 @@ const SalesTrackerDatepicker: React.FC<SalesTrackerDatepickerProps> = ({ value, 
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
+        className="bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
         placeholder="Select date"
         id="datepicker-format"
         data-date-format="dd/mm/yyyy"

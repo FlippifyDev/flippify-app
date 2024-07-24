@@ -1,44 +1,25 @@
 import { database, ref, get, set, push } from '../../api/firebaseConfig';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../api/firebaseConfig';
-
+import { ISale, IPurchase } from './SalesTrackerModels';
 import React, { useState, useEffect } from 'react';
-
-interface Purchase {
-  id?: string;
-  itemName: string;
-  purchaseDate: string;
-  quantity: number;
-  purchasePrice: number;
-  soldQuantity?: number;
-  websiteName?: string;
-  availability: number;
-}
-
-interface Sale {
-  itemName: string;
-  saleDate: string;
-  salePlatform: string;
-  listingPrice: number;
-  quantitySold: number;
-  platformFees: number;
-  shippingCost: number;
-}
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 const SalesTrackerTabAddSale: React.FC = () => {
-  const [sale, setSale] = useState<Sale>({
+  const [sale, setSale] = useState<ISale>({
     itemName: '',
     saleDate: '',
+    purchaseDate: '',
     salePlatform: '',
-    listingPrice: 0,
+    salePrice: 0,
     quantitySold: 0,
     platformFees: 12.5,
-    shippingCost: 0
+    shippingCost: 0,
+    purchasePricePerUnit: 0,
   });
 
-  const [purchases, setPurchases] = useState<Purchase[]>([]);
+  const [purchases, setPurchases] = useState<IPurchase[]>([]);
   const [selectedPurchase, setSelectedPurchase] = useState<string>('');
-  const [selectedPurchaseData, setSelectedPurchaseData] = useState<Purchase | null>(null);
+  const [selectedPurchaseData, setSelectedPurchaseData] = useState<IPurchase | null>(null);
   const [user] = useAuthState(auth);
 
   useEffect(() => {
@@ -57,12 +38,36 @@ const SalesTrackerTabAddSale: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-
-    if (['listingPrice', 'quantitySold', 'platformFees', 'shippingCost'].includes(name) && parseFloat(value) < 0) {
-      return;
+  
+    // Parse the value based on the input name
+    const parsedValue = (name === 'salePrice' || name === 'quantitySold' || name === 'platformFees' || name === 'shippingCost')
+      ? parseFloat(value)
+      : value;
+  
+    // Ensure parsedValue is a number and not a string before comparing
+    if (['salePrice', 'quantitySold', 'platformFees', 'shippingCost'].includes(name) && typeof parsedValue === 'number' && parsedValue < 0) {
+      return; // Prevent setting negative values
     }
-
-    setSale({ ...sale, [name]: name === 'quantitySold' ? Math.min(parseFloat(value), selectedPurchaseData?.availability ?? 0) : value });
+  
+    // Update state with validated values
+    setSale(prevSale => {
+      // Handle quantitySold separately for validation
+      if (name === 'quantitySold') {
+        // Ensure parsedValue is a number
+        const quantity = typeof parsedValue === 'number' ? parsedValue : 0;
+        // Ensure the quantity does not exceed availability
+        return {
+          ...prevSale,
+          [name]: Math.min(Math.max(quantity, 0), selectedPurchaseData?.availability ?? 0)
+        };
+      }
+  
+      // For other fields, simply update the state
+      return {
+        ...prevSale,
+        [name]: parsedValue
+      };
+    });
   };
 
   const handlePurchaseSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -71,6 +76,14 @@ const SalesTrackerTabAddSale: React.FC = () => {
 
     const selectedData = purchases.find(purchase => purchase.id === purchaseId) || null;
     setSelectedPurchaseData(selectedData);
+
+    if (selectedData) {
+      setSale(prevSale => ({
+        ...prevSale,
+        purchaseDate: selectedData.purchaseDate,
+        purchasePricePerUnit: selectedData.purchasePricePerUnit
+      }));
+    }
   };
 
   const handleSubmit = async () => {
@@ -97,30 +110,57 @@ const SalesTrackerTabAddSale: React.FC = () => {
     const userSalesRef = ref(database, `sales/${user.uid}`);
     const newSaleRef = push(userSalesRef);
 
-    await set(newSaleRef, { ...sale, itemName: selectedPurchaseData.itemName });
+    try {
+      // Add the sale entry with proper numeric types
+      await set(newSaleRef, {
+        ...sale,
+        salePrice: parseFloat(sale.salePrice.toString()),
+        quantitySold: parseFloat(sale.quantitySold.toString()),
+        platformFees: parseFloat(sale.platformFees.toString()),
+        shippingCost: parseFloat(sale.shippingCost.toString()),
+        itemName: selectedPurchaseData.itemName
+      });
+      console.log("Sale added successfully");
 
-    // Update the remaining availability in the selected purchase
-    const updatedAvailability = (selectedPurchaseData.availability ?? 0) - sale.quantitySold;
-    const updatedSoldQuantity = (selectedPurchaseData.soldQuantity ?? 0) + sale.quantitySold;
-    const selectedPurchaseRef = ref(database, `purchases/${user.uid}/${selectedPurchaseData.id}`);
-    await set(selectedPurchaseRef, { ...selectedPurchaseData, soldQuantity: updatedSoldQuantity, availability: updatedAvailability });
+      // Update the remaining availability and sold quantity in the selected purchase
+      const updatedAvailability = (selectedPurchaseData.availability ?? 0) - sale.quantitySold;
+      const updatedSoldQuantity = (selectedPurchaseData.soldQuantity ?? 0) + sale.quantitySold;
+      const selectedPurchaseRef = ref(database, `purchases/${user.uid}/${selectedPurchaseData.id}`);
 
-    setSale({
-      itemName: '',
-      saleDate: '',
-      salePlatform: '',
-      listingPrice: 0,
-      quantitySold: 0,
-      platformFees: 12.5,
-      shippingCost: 0
-    });
-    setSelectedPurchase('');
-    setSelectedPurchaseData(null);
+      if (updatedAvailability > 0) {
+        // Update the purchase if there's still availability left
+        await set(selectedPurchaseRef, {
+          ...selectedPurchaseData,
+          soldQuantity: updatedSoldQuantity,
+          availability: updatedAvailability
+        });
+      } else {
+        // Remove the purchase if the availability is zero or less
+        await set(selectedPurchaseRef, null);
+      }
+
+      // Reset form fields
+      setSale({
+        itemName: '',
+        saleDate: '',
+        purchaseDate: '',
+        salePlatform: '',
+        salePrice: 0,
+        quantitySold: 0,
+        platformFees: 12.5,
+        shippingCost: 0,
+        purchasePricePerUnit: 0
+      });
+      setSelectedPurchase('');
+      setSelectedPurchaseData(null);
+    } catch (error) {
+      console.error("Error adding sale:", error);
+    }
   };
 
-  const totalSaleRevenue = sale.quantitySold * parseFloat(sale.listingPrice.toString());
-  const totalPurchaseCost = sale.quantitySold * ((selectedPurchaseData?.purchasePrice ?? 0) / (selectedPurchaseData?.quantity ?? 1));
-  const estimatedProfit = totalSaleRevenue - totalPurchaseCost - (totalSaleRevenue * ((parseFloat(sale.platformFees.toString()) / 100))) - parseFloat(sale.shippingCost.toString());
+  const totalSaleRevenue = sale.quantitySold * sale.salePrice;
+  const totalPurchaseCost = sale.quantitySold * sale.purchasePricePerUnit;
+  const estimatedProfit = totalSaleRevenue - totalPurchaseCost - (totalSaleRevenue * (sale.platformFees / 100)) - sale.shippingCost;
 
   return (
     <div>
@@ -141,19 +181,19 @@ const SalesTrackerTabAddSale: React.FC = () => {
             <label className="label">
               <span className="label-text text-lightModeText">Sale Date</span>
             </label>
-            <input type="date" name="saleDate" value={sale.saleDate} onChange={handleChange} className="input input-bordered w-full bg-white text-gray-700 dark:text-gray-300" style={{ colorScheme: 'dark' }} />
+            <input type="date" name="saleDate" value={sale.saleDate} onChange={handleChange} className="input input-bordered w-full bg-white  placeholder-lightModeText-light" style={{ colorScheme: 'dark' }} />
           </div>
           <div className="mb-4">
             <label className="label">
               <span className="label-text text-lightModeText">Sale Platform</span>
             </label>
-            <input type="text" name="salePlatform" value={sale.salePlatform} onChange={handleChange} className="input input-bordered w-full bg-white text-gray-700 dark:text-gray-300" style={{ colorScheme: 'dark' }} />
+            <input type="text" name="salePlatform" placeholder="John Lewis, Amazon etc" value={sale.salePlatform} onChange={handleChange} className="input input-bordered w-full bg-white placeholder-lightModeText-light" style={{ colorScheme: 'dark' }} />
           </div>
           <div className="mb-4">
             <label className="label">
               <span className="label-text text-lightModeText">Listing Price per Unit</span>
             </label>
-            <input type="number" name="listingPrice" value={sale.listingPrice} onChange={handleChange} className="input input-bordered w-full bg-white" />
+            <input type="number" name="salePrice" value={sale.salePrice} onChange={handleChange} className="input input-bordered w-full bg-white" />
           </div>
           <div className="mb-4">
             <label className="label">

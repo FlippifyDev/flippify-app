@@ -9,11 +9,11 @@ const SalesTrackerTabCalcProfits: React.FC = () => {
   const [estimatedProfit, setEstimatedProfit] = useState(0);
 
   useEffect(() => {
-    if (estimate.quantity > 0 && estimate.purchasePrice > 0) {
-      const totalPurchaseCost = estimate.quantity * estimate.purchasePrice;
-      const totalSaleRevenue = (typeof listingPrice === 'number' ? listingPrice : 0) * estimate.quantity;
+    if (estimate.purchasedQuantity > 0 && estimate.purchasePricePerUnit > 0) {
+      const totalPurchaseCost = estimate.purchasedQuantity * estimate.purchasePricePerUnit;
+      const totalSaleRevenue = (typeof listingPrice === 'number' ? listingPrice : 0) * estimate.purchasedQuantity;
       const totalPlatformFees = (totalSaleRevenue * ((typeof platformFees === 'number' ? platformFees : 0) / 100));
-      const totalShippingCost = estimate.quantity * (typeof shippingCost === 'number' ? shippingCost : 0);
+      const totalShippingCost = estimate.purchasedQuantity * (typeof shippingCost === 'number' ? shippingCost : 0);
       const calculatedProfit = totalSaleRevenue - totalPlatformFees - totalShippingCost - totalPurchaseCost;
       setEstimatedProfit(parseFloat(calculatedProfit.toFixed(2)));
     }
@@ -49,7 +49,7 @@ const SalesTrackerTabCalcProfits: React.FC = () => {
           <input
             type="number"
             name="quantity"
-            value={estimate.quantity === 0 ? '' : estimate.quantity}
+            value={estimate.purchasedQuantity === 0 ? '' : estimate.purchasedQuantity}
             onChange={handleChange}
             className="input input-bordered w-full bg-white text-lightModeText placeholder-lightModeText-light"
             placeholder="Enter quantity"
@@ -63,7 +63,7 @@ const SalesTrackerTabCalcProfits: React.FC = () => {
           <input
             type="number"
             name="purchasePrice"
-            value={estimate.purchasePrice === 0 ? '' : estimate.purchasePrice}
+            value={estimate.purchasePricePerUnit === 0 ? '' : estimate.purchasePricePerUnit}
             onChange={handleChange}
             className="input input-bordered w-full bg-white text-lightModeText placeholder-lightModeText-light"
             placeholder="Enter purchase price"

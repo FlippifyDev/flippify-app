@@ -8,8 +8,8 @@ interface EstimateProviderProps {
 }
 
 export interface Estimate {
-  quantity: number;
-  purchasePrice: number;
+  purchasedQuantity: number;
+  purchasePricePerUnit: number;
   websiteName?: string;
 }
 
@@ -22,8 +22,8 @@ const EstimateContext = createContext<EstimateContextType | undefined>(undefined
 
 export const EstimateProvider: React.FC<EstimateProviderProps> = ({ children }) => {
   const [estimate, setEstimate] = useState<Estimate>({
-    quantity: 1,
-    purchasePrice: 0,
+    purchasedQuantity: 1,
+    purchasePricePerUnit: 0,
     websiteName: '',
   });
 

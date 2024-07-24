@@ -1,7 +1,6 @@
-import { auth } from "../../api/firebaseConfig";
-import { database, ref, get } from "../../api/firebaseConfig";
-
 import React, { useState, useEffect } from "react";
+import { auth, database, ref, get } from "../../api/firebaseConfig";
+import { ISale, IHistoryGrid } from "./SalesTrackerModels";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { saveAs } from "file-saver";
 import * as Papa from "papaparse";
@@ -9,19 +8,6 @@ import * as Papa from "papaparse";
 interface Filters {
   dateRange: { start: string; end: string };
   itemName: string;
-  salePlatform: string;
-}
-
-interface Profit {
-  itemName: string;
-  purchaseDate: string;
-  saleDate: string;
-  quantity: number;
-  purchasePricePerUnit: number;
-  salePrice: number;
-  platformFees: number;
-  shippingCost: number;
-  estimatedProfit: number;
   salePlatform: string;
 }
 
@@ -33,53 +19,60 @@ const SalesTrackerReviewProfits: React.FC = () => {
   });
 
   const [user] = useAuthState(auth);
-  const [profits, setProfits] = useState<Profit[]>([]);
-  const [filteredProfits, setFilteredProfits] = useState<Profit[]>([]);
+  const [sales, setSales] = useState<IHistoryGrid[]>([]);
+  const [filteredSales, setFilteredSales] = useState<IHistoryGrid[]>([]);
 
   useEffect(() => {
     if (user) {
-      const userPurchasesRef = ref(database, `purchases/${user.uid}`);
-      const userSalesRef = ref(database, `sales/${user.uid}`);
+      const fetchData = async () => {
+        try {
+          const salesRef = ref(database, `sales/${user.uid}`);
+          const salesSnapshot = await get(salesRef);
+          const salesData = salesSnapshot.val() || {};
 
-      get(userPurchasesRef).then((snapshot) => {
-        const purchases = snapshot.val() || {};
-        get(userSalesRef).then((snapshot) => {
-          const sales = snapshot.val() || {};
-          const profitsData: Profit[] = [];
-          for (const purchaseKey in purchases) {
-            const purchase = purchases[purchaseKey];
-            for (const saleKey in sales) {
-              const sale = sales[saleKey];
-              if (sale.itemName === purchase.itemName) {
-                const totalSaleRevenue = sale.quantitySold * sale.listingPrice;
-                const totalPurchaseCost =
-                  sale.quantitySold *
-                  (purchase.purchasePrice / purchase.quantity);
-                const estimatedProfit =
-                  totalSaleRevenue -
-                  totalPurchaseCost -
-                  totalSaleRevenue * (sale.platformFees / 100) -
-                  sale.shippingCost;
-                profitsData.push({
-                  itemName: sale.itemName,
-                  purchaseDate: purchase.purchaseDate,
-                  saleDate: sale.saleDate,
-                  quantity: sale.quantitySold,
-                  purchasePricePerUnit:
-                    purchase.purchasePrice / purchase.quantity,
-                  salePrice: sale.listingPrice,
-                  platformFees: sale.platformFees,
-                  shippingCost: sale.shippingCost,
-                  estimatedProfit: estimatedProfit,
-                  salePlatform: sale.salePlatform,
-                });
-              }
+          const salesArray: IHistoryGrid[] = [];
+
+          for (const saleKey in salesData) {
+            const sale: ISale = salesData[saleKey];
+
+            if (sale.itemName && sale.purchaseDate && sale.saleDate) {
+              const salePrice = sale.salePrice || 0;
+              const purchasePricePerUnit = sale.purchasePricePerUnit || 0;
+              const platformFees = sale.platformFees || 0;
+              const shippingCost = sale.shippingCost || 0;
+
+              const totalSaleRevenue = sale.quantitySold * salePrice;
+              const totalPurchaseCost =
+                sale.quantitySold * purchasePricePerUnit;
+              const estimatedProfit =
+                totalSaleRevenue -
+                totalPurchaseCost -
+                totalSaleRevenue * (platformFees / 100) -
+                shippingCost;
+
+              salesArray.push({
+                ...sale,
+                purchaseDate: sale.purchaseDate,
+                saleDate: sale.saleDate,
+                quantitySold: sale.quantitySold,
+                purchasePricePerUnit: purchasePricePerUnit,
+                salePrice: salePrice,
+                platformFees: platformFees,
+                shippingCost: shippingCost,
+                estimatedProfit: estimatedProfit,
+                salePlatform: sale.salePlatform,
+              });
             }
           }
-          setProfits(profitsData);
-          setFilteredProfits(profitsData);
-        });
-      });
+
+          setSales(salesArray);
+          setFilteredSales(salesArray);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+
+      fetchData();
     }
   }, [user]);
 
@@ -87,37 +80,44 @@ const SalesTrackerReviewProfits: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFilters({
-      ...filters,
-      dateRange: { ...filters.dateRange, [name]: value },
-      [name]: value,
-    });
+    if (name in filters.dateRange) {
+      setFilters({
+        ...filters,
+        dateRange: { ...filters.dateRange, [name]: value },
+      });
+    } else {
+      setFilters({
+        ...filters,
+        [name]: value,
+      });
+    }
   };
 
+
   const handleSubmit = () => {
-    const filtered = profits.filter((profit) => {
+    const filtered = sales.filter((sale) => {
       const startDate = filters.dateRange.start
         ? new Date(filters.dateRange.start)
         : null;
       const endDate = filters.dateRange.end
         ? new Date(filters.dateRange.end)
         : null;
-      const profitSaleDate = new Date(profit.saleDate);
+      const saleDate = new Date(sale.saleDate);
 
       return (
-        (!startDate || profitSaleDate >= startDate) &&
-        (!endDate || profitSaleDate <= endDate) &&
+        (!startDate || saleDate >= startDate) &&
+        (!endDate || saleDate <= endDate) &&
         (filters.itemName === "" ||
-          profit.itemName
+          sale.itemName
             .toLowerCase()
             .includes(filters.itemName.toLowerCase())) &&
         (filters.salePlatform === "" ||
-          profit.salePlatform
+          sale.salePlatform
             .toLowerCase()
             .includes(filters.salePlatform.toLowerCase()))
       );
     });
-    setFilteredProfits(filtered);
+    setFilteredSales(filtered);
   };
 
   const handleClearFilters = () => {
@@ -126,47 +126,39 @@ const SalesTrackerReviewProfits: React.FC = () => {
       itemName: "",
       salePlatform: "",
     });
-    setFilteredProfits(profits);
+    setFilteredSales(sales);
   };
 
   const handleExport = () => {
-    const csv = Papa.unparse(filteredProfits);
+    const csv = Papa.unparse(filteredSales);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    saveAs(blob, "profits.csv");
+    saveAs(blob, "sales.csv");
   };
 
-  const totalRevenue = filteredProfits.reduce(
-    (sum, profit) => sum + profit.salePrice * profit.quantity,
+  // Calculations
+  const totalSaleRevenue = filteredSales.reduce(
+    (sum, sale) => sum + sale.salePrice * sale.quantitySold,
     0
   );
-  const totalPurchaseCost = filteredProfits.reduce(
-    (sum, profit) => sum + profit.purchasePricePerUnit * profit.quantity,
+  const totalPurchaseCost = filteredSales.reduce(
+    (sum, sale) => sum + sale.purchasePricePerUnit * sale.quantitySold,
     0
   );
-  const totalShippingCost = filteredProfits.reduce(
-    (sum, profit) => sum + profit.shippingCost,
+  const totalShippingCost = filteredSales.reduce(
+    (sum, sale) => sum + sale.shippingCost,
     0
   );
-  const totalCosts = totalPurchaseCost + totalShippingCost;
-  const netProfit = filteredProfits.reduce(
-    (sum, profit) =>
-      sum +
-      (profit.salePrice * profit.quantity -
-        profit.purchasePricePerUnit * profit.quantity -
-        profit.salePrice * profit.quantity * (profit.platformFees / 100) -
-        profit.shippingCost),
+  const totalPlatformFees = filteredSales.reduce(
+    (sum, sale) => sum + (sale.salePrice * sale.quantitySold * (sale.platformFees / 100)),
     0
   );
-  const totalSales = filteredProfits.reduce(
-    (sum, profit) => sum + profit.quantity,
+  const totalCosts = totalPurchaseCost + totalShippingCost + totalPlatformFees;
+  const netProfit = totalSaleRevenue - totalCosts;
+  const totalSales = filteredSales.reduce(
+    (sum, sale) => sum + sale.quantitySold,
     0
   );
-
-  const totalRevenueNumber = Number(totalRevenue) || 0;
-  const totalCostsNumber = Number(totalCosts) || 0;
-  const netProfitNumber = Number(netProfit) || 0;
-  const totalSalesNumber = Number(totalSales) || 0;
-
+  
   return (
     <div className="flex flex-col gap-4 font-semibold">
       {/* First Row: Summary and History Search Filter */}
@@ -189,8 +181,8 @@ const SalesTrackerReviewProfits: React.FC = () => {
                   name="start"
                   value={filters.dateRange.start}
                   onChange={handleChange}
-                  className="input input-bordered w-full bg-white text-gray-700 dark:text-gray-300"
-                  style={{ colorScheme: 'dark' }}
+                  className="input input-bordered w-full bg-white"
+                  style={{ colorScheme: "dark" }}
                 />
               </div>
               <div className="mb-4">
@@ -204,8 +196,8 @@ const SalesTrackerReviewProfits: React.FC = () => {
                   name="end"
                   value={filters.dateRange.end}
                   onChange={handleChange}
-                  className="input input-bordered w-full bg-white text-gray-700 dark:text-gray-300"
-                  style={{ colorScheme: 'dark' }}
+                  className="input input-bordered w-full bg-white"
+                  style={{ colorScheme: "dark" }}
                 />
               </div>
               <div className="mb-4">
@@ -217,9 +209,10 @@ const SalesTrackerReviewProfits: React.FC = () => {
                 <input
                   type="text"
                   name="itemName"
+                  placeholder="Item Name"
                   value={filters.itemName}
                   onChange={handleChange}
-                  className="input input-bordered w-full bg-white"
+                  className="input input-bordered w-full bg-white placeholder-lightModeText-light"
                 />
               </div>
               <div className="mb-4">
@@ -231,9 +224,10 @@ const SalesTrackerReviewProfits: React.FC = () => {
                 <input
                   type="text"
                   name="salePlatform"
+                  placeholder="Platform"
                   value={filters.salePlatform}
                   onChange={handleChange}
-                  className="input input-bordered w-full bg-white"
+                  className="input input-bordered w-full bg-white placeholder-lightModeText-light"
                 />
               </div>
               <div className="flex flex-wrap justify-center gap-4">
@@ -267,7 +261,7 @@ const SalesTrackerReviewProfits: React.FC = () => {
                 <div className="stat">
                   <div className="stat-title text-houseBlue">Total Revenue</div>
                   <div className="stat-value text-2xl lg:text-3xl text-black">
-                    £{totalRevenue.toFixed(2)}
+                    £{totalSaleRevenue.toFixed(2)}
                   </div>
                 </div>
               </div>
@@ -275,7 +269,7 @@ const SalesTrackerReviewProfits: React.FC = () => {
                 <div className="stat">
                   <div className="stat-title text-houseBlue">Total Costs</div>
                   <div className="stat-value text-2xl lg:text-3xl text-black">
-                    £{totalCostsNumber.toFixed(2)}
+                    £{totalCosts.toFixed(2)}
                   </div>
                 </div>
               </div>
@@ -283,7 +277,7 @@ const SalesTrackerReviewProfits: React.FC = () => {
                 <div className="stat">
                   <div className="stat-title text-houseBlue">Net Profit</div>
                   <div className="stat-value text-2xl lg:text-3xl text-black">
-                    £{netProfitNumber.toFixed(2)}
+                    £{netProfit.toFixed(2)}
                   </div>
                 </div>
               </div>
@@ -291,7 +285,7 @@ const SalesTrackerReviewProfits: React.FC = () => {
                 <div className="stat">
                   <div className="stat-title text-houseBlue">No. Sales</div>
                   <div className="stat-value text-2xl lg:text-3xl text-black">
-                    {totalSalesNumber.toFixed(0)}
+                    {totalSales.toFixed(0)}
                   </div>
                 </div>
               </div>
@@ -314,43 +308,50 @@ const SalesTrackerReviewProfits: React.FC = () => {
                   <th>Purchase Date</th>
                   <th>Sale Date</th>
                   <th>Quantity</th>
+                  <th>Shipping & Other Fees</th>
+                  <th>% Platform Fees</th>
                   <th>Purchase Price</th>
                   <th>Sale Price</th>
-                  <th>Platform Fees</th>
-                  <th>Shipping & Other Fees</th>
+                  <th>Costs</th>
                   <th>Profit</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredProfits.length > 0 ? (
-                  filteredProfits.map((profit, index) => {
-                    const purchasePriceNumber =
-                      Number(profit.purchasePricePerUnit) || 0;
-                    const salePriceNumber = Number(profit.salePrice) || 0;
-                    const platformFeesNumber = Number(profit.platformFees) || 0;
-                    const shippingCostNumber = Number(profit.shippingCost) || 0;
-                    const estimatedProfitNumber =
-                      Number(profit.estimatedProfit) || 0;
+                {filteredSales.length > 0 ? (
+                  filteredSales.map((sale, index) => {
+                    const totalPurchaseCost =
+                      sale.purchasePricePerUnit * sale.quantitySold;
+                    const totalPlatformFees =
+                      sale.salePrice *
+                      sale.quantitySold *
+                      (sale.platformFees / 100);
+                    const totalShippingAndOtherFees = sale.shippingCost;
+                    const totalSaleRevenue = sale.salePrice * sale.quantitySold;
+
+                    const totalCosts =
+                      totalPurchaseCost +
+                      totalShippingAndOtherFees +
+                      totalPlatformFees;
+                    const profit = totalSaleRevenue - totalCosts;
 
                     return (
                       <tr key={index}>
-                        <td>{profit.itemName}</td>
-                        <td>{profit.purchaseDate}</td>
-                        <td>{profit.saleDate}</td>
-                        <td>{profit.quantity}</td>
-                        <td>{purchasePriceNumber.toFixed(2)}</td>
-                        <td>{salePriceNumber.toFixed(2)}</td>
-                        <td>{platformFeesNumber.toFixed(2)}</td>
-                        <td>{shippingCostNumber.toFixed(2)}</td>
-                        <td>{estimatedProfitNumber.toFixed(2)}</td>
+                        <td>{sale.itemName}</td>
+                        <td>{sale.purchaseDate}</td>
+                        <td>{sale.saleDate}</td>
+                        <td>{sale.quantitySold}</td>
+                        <td>{totalShippingAndOtherFees.toFixed(2)}</td>
+                        <td>{sale.platformFees.toFixed(2)}</td>
+                        <td>{totalPurchaseCost.toFixed(2)}</td>
+                        <td>{totalSaleRevenue.toFixed(2)}</td>
+                        <td>{totalCosts.toFixed(2)}</td>
+                        <td>{profit.toFixed(2)}</td>
                       </tr>
                     );
                   })
                 ) : (
                   <tr>
-                    <td colSpan={9} className="text-center">
-                      You have not logged anything yet.
-                    </td>
+                    <td colSpan={10} className="text-center">No sales data available</td>
                   </tr>
                 )}
               </tbody>

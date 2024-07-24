@@ -1,6 +1,9 @@
+"use client"
+
 import { database, ref, set, push } from '../../api/firebaseConfig';
 import { auth } from '../../api/firebaseConfig';
 import { useEstimate } from '../../components/EstimateContext';
+import { IPurchase } from './SalesTrackerModels';
 
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
@@ -11,22 +14,13 @@ const SalesTrackerDatepicker = dynamic(() => import('./SalesTrackerDatepicker'),
   ssr: false,
 });
 
-interface Purchase {
-  itemName: string;
-  purchaseDate: string;
-  quantity: number;
-  purchasePrice: number;
-  websiteName?: string;
-  availability: number;
-}
-
 const SalesTrackerTabAddPurchase: React.FC = () => {
   const today = format(new Date(), 'dd/MM/yyyy');
 
   const [itemName, setItemName] = useState('');
   const [purchaseDate, setPurchaseDate] = useState(today);
-  const [quantity, setQuantity] = useState<number | ''>(1);
-  const [purchasePrice, setPurchasePrice] = useState<number | ''>(0);
+  const [purchasedQuantity, setQuantity] = useState<number | ''>(1);
+  const [purchasePricePerUnit, setPurchasePrice] = useState<number | ''>(0);
   const [websiteName, setWebsiteName] = useState('');
   const [availability, setAvailability] = useState(1);
 
@@ -42,8 +36,8 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
       setAvailability(value === '' ? 1 : value);
       setEstimate({
         ...estimate,
-        quantity: value === '' ? 1 : value,
-        purchasePrice: purchasePrice ? purchasePrice / (value === '' ? 1 : value) : 0,
+        purchasedQuantity: value === '' ? 1 : value,
+        purchasePricePerUnit: purchasePricePerUnit ? purchasePricePerUnit / (value === '' ? 1 : value) : 0,
       });
     }
   };
@@ -54,7 +48,7 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
       setPurchasePrice(value);
       setEstimate({
         ...estimate,
-        purchasePrice: value === '' ? 0 : value / (quantity || 1),
+        purchasePricePerUnit: value === '' ? 0 : value,
       });
     }
   };
@@ -71,11 +65,11 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
       return;
     }
 
-    const newPurchase: Purchase = {
+    const newPurchase: IPurchase = {
       itemName,
       purchaseDate,
-      quantity: quantity === '' ? 1 : quantity,
-      purchasePrice: purchasePrice === '' ? 0 : purchasePrice,
+      purchasedQuantity: purchasedQuantity === '' ? 1 : purchasedQuantity,
+      purchasePricePerUnit: purchasePricePerUnit === '' ? 0 : purchasePricePerUnit,
       websiteName,
       availability,
     };
@@ -105,8 +99,8 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
             name="itemName"
             value={itemName}
             onChange={handleItemNameChange}
-            className="input input-bordered w-full bg-white text-lightModeText placeholder-lightModeText-light"
-            placeholder="Nike Dunks"
+            className="input input-bordered w-full bg-white placeholder-lightModeText-light"
+            placeholder="Item Name"
           />
         </div>
         <div className="mb-4">
@@ -122,23 +116,23 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
           <input
             type="number"
             name="quantity"
-            value={quantity === '' ? '' : quantity}
+            value={purchasedQuantity === '' ? '' : purchasedQuantity}
             onChange={handleQuantityChange}
-            className="input input-bordered w-full bg-white text-lightModeText placeholder-lightModeText-light"
+            className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="1"
             min="1"
           />
         </div>
         <div className="mb-4">
           <label className="label">
-            <span className="label-text text-lightModeText">Total Purchase Price</span>
+            <span className="label-text text-lightModeText">Purchase Price (per unit)</span>
           </label>
           <input
             type="number"
-            name="purchasePrice"
-            value={purchasePrice === '' ? '' : purchasePrice}
+            name="purchasePricePerUnit"
+            value={purchasePricePerUnit === '' ? '' : purchasePricePerUnit}
             onChange={handlePurchasePriceChange}
-            className="input input-bordered w-full bg-white text-lightModeText placeholder-lightModeText-light"
+            className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="0"
           />
         </div>
@@ -151,8 +145,8 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
             name="websiteName"
             value={websiteName}
             onChange={handleWebsiteNameChange}
-            className="input input-bordered w-full bg-white text-lightModeText placeholder-lightModeText-light"
-            placeholder="Nike"
+            className="input input-bordered w-full bg-white placeholder-lightModeText-light"
+            placeholder="John Lewis, Amazon etc"
           />
         </div>
         <div className="flex flex-wrap justify-center gap-4">

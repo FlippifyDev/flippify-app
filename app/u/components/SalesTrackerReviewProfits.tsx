@@ -224,7 +224,7 @@ const SalesTrackerReviewProfits: React.FC = () => {
                 <input
                   type="text"
                   name="salePlatform"
-                  placeholder="Platform"
+                  placeholder="John Lewis, Amazon etc"
                   value={filters.salePlatform}
                   onChange={handleChange}
                   className="input input-bordered w-full bg-white placeholder-lightModeText-light"

@@ -3,7 +3,7 @@
 import SidebarBillingPortalButton from './SidebarBillingPortalButton';
 import SidebarSignOutButton from './SidebarSignOutButton';
 import SidebarToolButtons from './SidebarToolButtons';
-import SidebarButton from '@/app/u/components/SidebarButton';
+import SidebarButton from './SidebarButton';
 import Alert from './Alert';
 
 import React, { useState } from 'react';

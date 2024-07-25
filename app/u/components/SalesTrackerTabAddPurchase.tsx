@@ -1,24 +1,18 @@
-"use client"
-
 import { database, ref, set, push } from '../../api/firebaseConfig';
-import { auth } from '../../api/firebaseConfig';
 import { useEstimate } from '../../components/EstimateContext';
+import { auth } from '../../api/firebaseConfig';
 import { IPurchase } from './SalesTrackerModels';
 
-import React, { useState } from 'react';
-import dynamic from 'next/dynamic';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import React, { useState } from 'react';
 import { format } from 'date-fns';
 
-const SalesTrackerDatepicker = dynamic(() => import('./SalesTrackerDatepicker'), {
-  ssr: false,
-});
-
 const SalesTrackerTabAddPurchase: React.FC = () => {
-  const today = format(new Date(), 'dd/MM/yyyy');
+  const today = new Date();
+  const formattedToday = format(today, 'yyyy-MM-dd'); // Format for HTML date input
 
   const [itemName, setItemName] = useState('');
-  const [purchaseDate, setPurchaseDate] = useState(today);
+  const [purchaseDate, setPurchaseDate] = useState<string>(formattedToday);
   const [purchasedQuantity, setQuantity] = useState<number | ''>(1);
   const [purchasePricePerUnit, setPurchasePrice] = useState<number | ''>(0);
   const [websiteName, setWebsiteName] = useState('');
@@ -55,8 +49,8 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
 
   const handleWebsiteNameChange = (e: React.ChangeEvent<HTMLInputElement>) => setWebsiteName(e.target.value);
 
-  const handleDateChange = (value: string) => {
-    setPurchaseDate(value);
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPurchaseDate(e.target.value);
   };
 
   const handleSubmit = async () => {
@@ -65,9 +59,10 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
       return;
     }
 
+    const parsedDate = purchaseDate ? new Date(purchaseDate) : today;
     const newPurchase: IPurchase = {
       itemName,
-      purchaseDate,
+      purchaseDate: format(parsedDate, 'dd/MM/yyyy'),
       purchasedQuantity: purchasedQuantity === '' ? 1 : purchasedQuantity,
       purchasePricePerUnit: purchasePricePerUnit === '' ? 0 : purchasePricePerUnit,
       websiteName,
@@ -80,7 +75,7 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
     await set(newPurchaseRef, newPurchase);
 
     setItemName('');
-    setPurchaseDate(today);
+    setPurchaseDate(formattedToday);
     setQuantity(1);
     setPurchasePrice(0);
     setWebsiteName('');
@@ -88,8 +83,8 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto font-semibold">
-      <form className="form-control">
+    <div className="container">
+      <form className="form-control mx-auto font-semibold">
         <div className="mb-4">
           <label className="label">
             <span className="label-text text-lightModeText">Item Name</span>
@@ -105,9 +100,15 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
         </div>
         <div className="mb-4">
           <label className="label">
-            <span className="label-text text-lightModeText">Purchase Date</span>
+            <span className="label-text text-lightModeText">Sale Date</span>
           </label>
-          <SalesTrackerDatepicker value={purchaseDate} onChange={handleDateChange} />
+          <input
+            type="date"
+            name="saleDate"
+            value={purchaseDate}
+            onChange={handleDateChange}
+            className="input input-bordered w-full bg-white placeholder-lightModeText-light"
+          />
         </div>
         <div className="mb-4">
           <label className="label">
@@ -161,7 +162,7 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
             type="button"
             onClick={() => {
               setItemName('');
-              setPurchaseDate(today);
+              setPurchaseDate(formattedToday);
               setQuantity(1);
               setPurchasePrice(0);
               setWebsiteName('');

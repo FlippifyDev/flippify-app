@@ -56,26 +56,36 @@ const DashboardOverviewCard: React.FC = () => {
     }
   }, [user]);
 
+  // Calculate ROI
+  const roi = (overviewData.totalCosts > 0)
+  ? ((overviewData.totalRevenue - overviewData.totalCosts) / overviewData.totalCosts * 100).toFixed(2)
+  : 'N/A';
+
   return (
-    <div className="w-full flex justify-between items-center gap-4 p-4">
-      <h2 className="text-2xl font-bold text-black">Your Dashboard</h2>
-      <div className="flex justify-center gap-4">
-        <div className="stats shadow-md bg-white w-full sm:w-56 lg:w-72 flex-shrink-0 overflow-x-auto p-4 hover:shadow-lg">
+    <div className="w-full flex flex-col items-center">
+      <div className="flex flex-wrap font-semibold justify-center gap-2">
+        <div className="stats shadow-md bg-white w-full sm:w-56 lg:w-56 flex-shrink-0 overflow-x-auto p-2">
           <div className="stat">
             <div className="stat-title text-houseBlue">Total Revenue</div>
             <div className="stat-value text-2xl text-black">£{overviewData.totalRevenue.toFixed(2)}</div>
           </div>
         </div>
-        <div className="stats shadow-md bg-white w-full sm:w-56 lg:w-72 flex-shrink-0 overflow-x-auto p-4 hover:shadow-lg">
+        <div className="stats shadow-md bg-white w-full sm:w-56 lg:w-56 flex-shrink-0 overflow-x-auto p-2">
           <div className="stat">
             <div className="stat-title text-houseBlue">Total Costs</div>
             <div className="stat-value text-2xl text-black">£{overviewData.totalCosts.toFixed(2)}</div>
           </div>
         </div>
-        <div className="stats shadow-md bg-white w-full sm:w-56 lg:w-72 flex-shrink-0 overflow-x-auto p-4 hover:shadow-lg">
+        <div className="stats shadow-md bg-white w-full sm:w-56 lg:w-56 flex-shrink-0 overflow-x-auto p-2">
           <div className="stat">
             <div className="stat-title text-houseBlue">No. Sales</div>
             <div className="stat-value text-2xl text-black">{overviewData.totalSales}</div>
+          </div>
+        </div>
+        <div className="stats shadow-md bg-white w-full sm:w-56 lg:w-56 flex-shrink-0 overflow-x-auto p-2">
+          <div className="stat">
+            <div className="stat-title text-houseBlue">ROI</div>
+            <div className="stat-value text-2xl text-black">{roi}%</div>
           </div>
         </div>
       </div>
@@ -84,3 +94,4 @@ const DashboardOverviewCard: React.FC = () => {
 };
 
 export default DashboardOverviewCard;
+//<h2 className="text-2xl font-bold text-black">Your Dashboard</h2>

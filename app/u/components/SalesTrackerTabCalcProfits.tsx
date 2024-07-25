@@ -40,8 +40,8 @@ const SalesTrackerTabCalcProfits: React.FC = () => {
   };
 
   return (
-    <div>
-      <form className="form-control h-full">
+    <div className="container">
+      <form className="form-control mx-auto font-semibold">
         <div className="mb-4">
           <label className="label">
             <span className="label-text text-lightModeText">Quantity</span>
@@ -51,7 +51,7 @@ const SalesTrackerTabCalcProfits: React.FC = () => {
             name="quantity"
             value={estimate.purchasedQuantity === 0 ? '' : estimate.purchasedQuantity}
             onChange={handleChange}
-            className="input input-bordered w-full bg-white text-lightModeText placeholder-lightModeText-light"
+            className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="Enter quantity"
             min="1"
           />
@@ -65,7 +65,7 @@ const SalesTrackerTabCalcProfits: React.FC = () => {
             name="purchasePrice"
             value={estimate.purchasePricePerUnit === 0 ? '' : estimate.purchasePricePerUnit}
             onChange={handleChange}
-            className="input input-bordered w-full bg-white text-lightModeText placeholder-lightModeText-light"
+            className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="Enter purchase price"
           />
         </div>
@@ -78,7 +78,7 @@ const SalesTrackerTabCalcProfits: React.FC = () => {
             name="listingPrice"
             value={listingPrice === 0 ? '' : listingPrice}
             onChange={handleChange}
-            className="input input-bordered w-full bg-white text-lightModeText placeholder-lightModeText-light"
+            className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="Enter listing price"
           />
         </div>
@@ -91,7 +91,7 @@ const SalesTrackerTabCalcProfits: React.FC = () => {
             name="platformFees"
             value={platformFees === 0 ? '' : platformFees}
             onChange={handleChange}
-            className="input input-bordered w-full bg-white text-lightModeText placeholder-lightModeText-light"
+            className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="Enter platform fees"
           />
         </div>
@@ -104,7 +104,7 @@ const SalesTrackerTabCalcProfits: React.FC = () => {
             name="shippingCost"
             value={shippingCost === 0 ? '' : shippingCost}
             onChange={handleChange}
-            className="input input-bordered w-full bg-white text-lightModeText placeholder-lightModeText-light"
+            className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="Enter shipping cost"
           />
         </div>

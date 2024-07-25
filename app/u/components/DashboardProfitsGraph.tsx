@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import ApexCharts from 'apexcharts';
 import { auth, database, ref, get } from "../../api/firebaseConfig";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -27,7 +27,7 @@ const DashboardProfitsGraph: React.FC = () => {
   const [previousNetProfit, setPreviousNetProfit] = useState(0);
   const [selectedRange, setSelectedRange] = useState('30');
 
-  const fetchSalesData = async (rangeInDays: number) => {
+  const fetchSalesData = useCallback(async (rangeInDays: number) => {
     if (!user) return;
 
     try {
@@ -46,7 +46,7 @@ const DashboardProfitsGraph: React.FC = () => {
         allCategories = eachDayOfInterval({ start: rangeStartDate, end: today }).map(date => format(date, 'dd MMM'));
       }
 
-      const seriesData = Array(allCategories.length).fill(0);
+      let seriesData = Array(allCategories.length).fill(0);
 
       let totalNetProfit = 0;
       let totalPreviousNetProfit = 0;
@@ -90,17 +90,17 @@ const DashboardProfitsGraph: React.FC = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     fetchSalesData(parseInt(selectedRange));
-  }, [user, selectedRange]);
+  }, [user, selectedRange, fetchSalesData]);
 
   useEffect(() => {
     const options = {
       chart: {
         type: 'area',
-        height: 350,
+        height: 300,
         toolbar: {
           show: false
         }
@@ -171,7 +171,7 @@ const DashboardProfitsGraph: React.FC = () => {
   }[selectedRange] || 'period';
 
   return (
-    <div className="w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
+    <div className="w-full bg-white rounded-lg shadow-md dark:bg-gray-800 p-4 md:p-6">
       <div className="flex justify-between">
         <div>
           <h5 className="leading-none text-3xl font-bold text-gray-900 dark:text-white pb-2">
@@ -187,11 +187,11 @@ const DashboardProfitsGraph: React.FC = () => {
         </div>
       </div>
       <div id="area-chart"></div>
-      <div className="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
+      <div className="grid grid-cols-1 items-center border-gray-200 border-t  dark:border-gray-700 justify-between">
         <div className="flex justify-between items-center pt-5">
-          <div className="dropdown dropdown-hover">
-            <div tabIndex={0} role="button" className="btn m-1">Last {selectedRange} days</div>
-            <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+          <div className="dropdown dropdown-hover bg-white">
+            <div tabIndex={0} role="button" className="btn m-1 text-lightModeText bg-white hover:bg-gray-100">Last {selectedRange} days</div>
+            <ul tabIndex={0} className="dropdown-content menu bg-white rounded-box z-[1] w-52 p-2 shadow text-lightModeText">
               <li><a onClick={() => handleRangeChange('7')}>Last 7 days</a></li>
               <li><a onClick={() => handleRangeChange('30')}>Last 30 days</a></li>
               <li><a onClick={() => handleRangeChange('90')}>Last 90 days</a></li>

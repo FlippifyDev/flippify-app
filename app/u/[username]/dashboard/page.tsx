@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 const Dashboard = () => {
   return (
     <Layout>
-      <div className="p-4">
+      <div className="w-full h-full">
       <LayoutSubscriptionWrapper requiredSubscriptions={['standard']}>
         <DashboardPage />
       </LayoutSubscriptionWrapper>

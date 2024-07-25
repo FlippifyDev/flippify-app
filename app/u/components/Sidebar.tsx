@@ -12,6 +12,7 @@ import Link from 'next/link';
 
 import { FaSearch, FaDiscord } from 'react-icons/fa';
 import { BsClipboard2Fill } from 'react-icons/bs';
+import { MdFeedback } from "react-icons/md";
 import { MdGroups } from 'react-icons/md';
 import { FaHouse } from 'react-icons/fa6';
 import { IoMenu } from 'react-icons/io5';
@@ -77,6 +78,13 @@ const Sidebar = () => {
             </div>
 
             <section className="mt-10 flex flex-col">
+              <Link
+                href="https://discord.com/channels/1236428617962229830/1236439119123447892"
+                className="hover:bg-gray-100 active:bg-gray-300 text-lightModeText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transition duration-200"
+              >
+                <span className="col-span-2 text-lg"><MdFeedback /></span>
+                <span className="col-span-10 text-base">Feedback</span>
+              </Link>
               <SidebarButton text="Legal" redirect="legal" symbol={<BsClipboard2Fill className="text-lg" />} />
               <SidebarSignOutButton />
             </section>

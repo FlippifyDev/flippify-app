@@ -1,3 +1,4 @@
+/*
 "use client"
 
 import type { DatepickerOptions, DatepickerInterface } from 'flowbite';
@@ -14,24 +15,24 @@ const SalesTrackerDatepicker: React.FC<SalesTrackerDatepickerProps> = ({ value, 
   const datepickerInstance = useRef<DatepickerInterface | null>(null);
 
   useEffect(() => {
-    if (datepickerRef.current) {
+    const ref = datepickerRef.current;
+    console.log(ref)
+    if (ref) {
       const options: DatepickerOptions = {
         autohide: true,
-        format: 'dd/mm/yyyy', // Ensure format is consistent
+        format: 'dd/mm/yyyy',
       };
 
-      datepickerInstance.current = new Datepicker(datepickerRef.current, options);
+      datepickerInstance.current = new Datepicker(ref, options);
   
       const handleDateChange = (event: any) => {
         onChange(event.target.value);
       };
 
-      datepickerRef.current.addEventListener('change', handleDateChange);
+      ref.addEventListener('change', handleDateChange);
 
       return () => {
-        if (datepickerRef.current) {
-          datepickerRef.current.removeEventListener('change', handleDateChange);
-        }
+        ref.removeEventListener('change', handleDateChange);
         datepickerInstance.current?.destroy();
       };
     }
@@ -59,3 +60,4 @@ const SalesTrackerDatepicker: React.FC<SalesTrackerDatepickerProps> = ({ value, 
 };
 
 export default SalesTrackerDatepicker;
+*/

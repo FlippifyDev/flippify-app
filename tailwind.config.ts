@@ -4,7 +4,9 @@ const config: Config = {
   plugins: [
     require("@tailwindcss/typography"), 
     require("daisyui"),
-    require("flowbite/plugin")
+    require('flowbite/plugin')({
+      charts: true,
+    }),
   ],
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",

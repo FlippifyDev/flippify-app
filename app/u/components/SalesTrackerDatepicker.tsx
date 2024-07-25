@@ -17,7 +17,7 @@ const SalesTrackerDatepicker: React.FC<SalesTrackerDatepickerProps> = ({ value, 
     if (datepickerRef.current) {
       const options: DatepickerOptions = {
         autohide: true,
-        format: 'dd/MM/yyyy', // Ensure format is consistent
+        format: 'dd/mm/yyyy', // Ensure format is consistent
       };
 
       datepickerInstance.current = new Datepicker(datepickerRef.current, options);
@@ -49,7 +49,7 @@ const SalesTrackerDatepicker: React.FC<SalesTrackerDatepickerProps> = ({ value, 
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
+        className="input-bordered bg-white rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
         placeholder="Select date"
         id="datepicker-format"
         data-date-format="dd/mm/yyyy"

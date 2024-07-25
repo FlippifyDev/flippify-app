@@ -2,7 +2,7 @@ import React from 'react';
 
 const DashboardCustomerFeedbackCard: React.FC = () => {
   return (
-    <div className="card bg-white shadow-md rounded-lg p-4">
+    <div className="card bg-white shadow-md rounded-lg p-4 h-full">
       <h2 className="card-title text-lightModeText text-xl font-semibold">
         Customer Feedback
       </h2>

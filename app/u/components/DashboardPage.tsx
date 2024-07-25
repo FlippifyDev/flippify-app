@@ -1,35 +1,28 @@
 import React from 'react';
 import DashboardOverviewCard from './DashboardOverviewCard';
-import DashboardSalesTrendsCard from './DashboardProfitsGraph';
 import DashboardRecentSalesCard from './DashboardRecentSalesCard';
+import DashboardProfitsGraph from './DashboardProfitsGraph';
 import DashboardCustomerFeedbackCard from './DashboardCustomerFeedbackCard';
 
-const DashboardPage: React.FC = () => {
+const Dashboard = () => {
   return (
-    <div className="grid gap-4 grid-cols-12">
-      {/* Key Metrics Section */}
-      <div className="col-span-12">
+    <div className="container mx-auto p-4">
+      <div className="mb-4">
         <DashboardOverviewCard />
       </div>
-
-      <div className="col-span-12 lg:col-span-8 flex flex-col">
-        {/* Recent Sales Activity Section */}
-        <div className="flex-1">
+      <div className="flex mb-4">
+        <div className="w-2/3 pr-2">
           <DashboardRecentSalesCard />
         </div>
-
-        {/* Customer Feedback Section */}
-        <div className="mt-4">
+        <div className="w-1/3 pl-2">
           <DashboardCustomerFeedbackCard />
         </div>
       </div>
-
-      {/* Sales Trends Section */}
-      <div className="col-span-12 lg:col-span-4">
-        <DashboardSalesTrendsCard />
+      <div className="w-full mt-4">
+        <DashboardProfitsGraph />
       </div>
     </div>
   );
 };
 
-export default DashboardPage;
+export default Dashboard;

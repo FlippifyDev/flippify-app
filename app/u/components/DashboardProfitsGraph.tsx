@@ -5,7 +5,7 @@ import ApexCharts from 'apexcharts';
 import { auth, database, ref, get } from "../../api/firebaseConfig";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { ISale } from "./SalesTrackerModels";
-import { format, subDays, eachDayOfInterval, startOfToday } from 'date-fns';
+import { format, subDays, eachDayOfInterval, eachMonthOfInterval, startOfToday } from 'date-fns';
 
 interface ChartData {
   name: string;
@@ -36,15 +36,17 @@ const DashboardProfitsGraph: React.FC = () => {
       const salesData = salesSnapshot.val() || {};
 
       const today = startOfToday();
-      const rangeStartDate = subDays(today, rangeInDays);
+      const rangeStartDate = subDays(today, rangeInDays - 1);
       const previousRangeStartDate = subDays(rangeStartDate, rangeInDays);
 
-      const categories = eachDayOfInterval({
-        start: rangeStartDate,
-        end: today
-      }).map(date => format(date, 'dd'));
+      let allCategories;
+      if (rangeInDays > 90) {
+        allCategories = eachMonthOfInterval({ start: rangeStartDate, end: today }).map(date => format(date, 'MMM yyyy'));
+      } else {
+        allCategories = eachDayOfInterval({ start: rangeStartDate, end: today }).map(date => format(date, 'dd MMM'));
+      }
 
-      const seriesData = Array(categories.length).fill(0);
+      const seriesData = Array(allCategories.length).fill(0);
 
       let totalNetProfit = 0;
       let totalPreviousNetProfit = 0;
@@ -53,7 +55,7 @@ const DashboardProfitsGraph: React.FC = () => {
         const sale: ISale = salesData[saleKey];
         const saleDate = new Date(sale.saleDate);
         if (sale.saleDate && sale.salePrice) {
-          const formattedSaleDate = format(saleDate, 'dd');
+          const formattedSaleDate = rangeInDays > 90 ? format(saleDate, 'MMM yyyy') : format(saleDate, 'dd MMM');
 
           const purchasePricePerUnit = sale.purchasePricePerUnit || 0;
           const platformFees = sale.platformFees || 0;
@@ -66,7 +68,7 @@ const DashboardProfitsGraph: React.FC = () => {
             totalSaleRevenue * (platformFees / 100) -
             shippingCost;
 
-          const index = categories.indexOf(formattedSaleDate);
+          const index = allCategories.indexOf(formattedSaleDate);
           if (index !== -1) {
             seriesData[index] += estimatedProfit;
           }
@@ -80,7 +82,7 @@ const DashboardProfitsGraph: React.FC = () => {
       }
 
       setSalesData({
-        categories,
+        categories: allCategories,
         series: [{ name: 'Profits', data: seriesData }],
       });
       setNetProfit(totalNetProfit);
@@ -108,7 +110,16 @@ const DashboardProfitsGraph: React.FC = () => {
         categories: salesData.categories,
         labels: {
           show: true,
-          formatter: (val: string) => `${val}`,
+          formatter: (val: string, index: number) => {
+            if (selectedRange === '30') {
+              return index % 3 === 0 ? val : '';
+            } else if (selectedRange === '90') {
+              return index % 10 === 0 ? val : '';
+            } else if (selectedRange === '365') {
+              return val;
+            }
+            return val;
+          },
           cssClass: 'text-xs text-gray-500'
         }
       },
@@ -127,9 +138,12 @@ const DashboardProfitsGraph: React.FC = () => {
       },
       tooltip: {
         enabled: true,
-        x: { show: true },
+        x: {
+          show: true,
+          formatter: (val: string) => `Date: ${val}`
+        },
         y: {
-          formatter: (val: number) => `£${val.toFixed(2)}`,
+          formatter: (val: number) => `Sales Profit: £${val.toFixed(2)}`,
         },
       },
     };
@@ -140,7 +154,7 @@ const DashboardProfitsGraph: React.FC = () => {
     return () => {
       chart.destroy();
     };
-  }, [salesData]);
+  }, [salesData, selectedRange]);
 
   const percentageChange = previousNetProfit === 0 ? netProfit * 100 : ((netProfit - previousNetProfit) / Math.abs(previousNetProfit)) * 100;
 
@@ -157,7 +171,7 @@ const DashboardProfitsGraph: React.FC = () => {
   }[selectedRange] || 'period';
 
   return (
-    <div className="max-w-sm w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
+    <div className="w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
       <div className="flex justify-between">
         <div>
           <h5 className="leading-none text-3xl font-bold text-gray-900 dark:text-white pb-2">

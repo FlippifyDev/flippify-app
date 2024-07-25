@@ -29,7 +29,8 @@ const DashboardRecentSalesCard: React.FC = () => {
               const shippingCost = sale.shippingCost || 0;
 
               const totalSaleRevenue = sale.quantitySold * salePrice;
-              const totalPurchaseCost = sale.quantitySold * purchasePricePerUnit;
+              const totalPurchaseCost =
+                sale.quantitySold * purchasePricePerUnit;
               const estimatedProfit =
                 totalSaleRevenue -
                 totalPurchaseCost -
@@ -50,6 +51,8 @@ const DashboardRecentSalesCard: React.FC = () => {
               });
             }
           }
+
+          salesArray.sort((a, b) => new Date(b.saleDate).getTime() - new Date(a.saleDate).getTime());
 
           setSales(salesArray);
         } catch (error) {

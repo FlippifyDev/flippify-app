@@ -49,4 +49,22 @@ export const pageMetadata = {
     url: 'https://flippify.co.uk/settings',
     image: 'https://i.imgur.com/settings.png',
   },
+  pricing: {
+    title: 'Affordable Pricing Plans for Resellers - Flippify',
+    description: 'Discover Flippify’s pricing plans designed to suit all your reselling needs. From monitoring soon-to-retire Lego sets to exclusive deals, our affordable plans help you maximize profits and stay ahead in the flipping game.',
+    url: 'https://flippify.co.uk/l/pricing',
+    image: 'https://i.imgur.com/D1UhTq3.png',
+  },
+  products: {
+    title: 'Exclusive Flipping Products - Flippify Deals',
+    description: 'Explore Flippify’s product offerings, including Advanced Lego retirement deals, Discounted Electronics, Sneakers and other upcoming releases. Our platform tracks soon-to-retire Lego sets across multiple websites along with many other categories like electronics and sneakers, ensuring you never miss a valuable deal. Stay updated for more exclusive products and offers.',
+    url: 'https://flippify.co.uk/l/products',
+    image: 'https://i.imgur.com/iofmtlb.png',
+  },
+  serverPricing: {
+    title: 'Affordable Pricing Plans for Server Resellers - Flippify',
+    description: 'Discover Flippify’s pricing plans designed to suit all your servers reselling needs. From monitoring soon-to-retire Lego sets to exclusive deals, our affordable plans help you maximize profits and stay ahead in the flipping game.',
+    url: 'https://flippify.co.uk/l/server-pricing',
+    image: 'https://i.imgur.com/u1wNw7N.png',
+  },
 };

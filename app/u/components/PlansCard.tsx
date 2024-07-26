@@ -62,7 +62,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
 
   return (
     <div className="w-88 sm:w-full sm:max-w-md mx-12 mt-8">
-      <div className="card bg-white border border-gray-300 rounded-lg h-full shadow-lg overflow-hidden hover:shadow-2xl">
+      <div className="card bg-white border border-gray-300 rounded-lg h-full shadow-lg overflow-hidden hover:shadow-2xl transition duration-200">
         <div className="relative">
           <div className={`absolute top-2 left-2 ${badgeClassName} rounded-full px-4 py-1 text-xs font-semibold`}>
             {labelText}

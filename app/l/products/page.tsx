@@ -1,49 +1,49 @@
+"use client";
+
+import React, { useEffect } from 'react';
 import Layout from '../components/Layout';
 import ProductContent from "../components/ProductsPage";
 import Loading from '@/app/components/Loading';
-
 import { Suspense } from 'react';
-import { Metadata } from 'next';
+import { generateMetadata } from '@/app/components/metadata';
+import { pageMetadata } from '@/app/components/metadataConfig';
+import Head from 'next/head';
 
-
-export const metadata: Metadata = {
-  title: 'Exclusive Flipping Products - Flippify Deals',
-  description: 'Explore Flippify’s product offerings, including Advanced Lego retirement deals, Discounted Electronics, Sneakers and other upcoming releases. Our platform tracks soon-to-retire Lego sets across multiple websites along with many other categories like electronics and sneakers, ensuring you never miss a valuable deal. Stay updated for more exclusive products and offers.',
-  openGraph: {
-    title: 'Exclusive Flipping Products - Flippify Deals',
-    description: 'Explore Flippify’s product offerings, including Advanced Lego retirement deals, Discounted Electronics, Sneakers and other upcoming releases. Our platform tracks soon-to-retire Lego sets across multiple websites along with many other categories like electronics and sneakers, ensuring you never miss a valuable deal. Stay updated for more exclusive products and offers.',
-    url: 'https://flippify.co.uk/l/products',
-    images: [
-      {
-        url: "https://i.imgur.com/iofmtlb.png", // This must change eventually
-        width: 1918,
-        height: 1078,
-        alt: "Products Page Image"
-      }
-    ]
-  },
-  robots: {
-    index: true,
-    follow: true,
-    nocache: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      noimageindex: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-}
-
+const metadata = generateMetadata(pageMetadata.products);
 
 export default function Products() {
+  useEffect(() => {
+    // Set the theme to dark mode for this page
+    document.documentElement.setAttribute('data-theme', 'dark');
+    // Cleanup function to reset theme when the component unmounts
+    return () => {
+      document.documentElement.removeAttribute('data-theme');
+    };
+  }, []);
+
   return (
-    <Suspense fallback={<Loading />}>
-      <Layout>
-        <ProductContent />
-      </Layout>
-    </Suspense>
+    <>
+      <Head>
+        <title>{metadata.title}</title>
+        <meta name="description" content={metadata.description} />
+        <meta property="og:title" content={metadata.openGraph.title} />
+        <meta property="og:description" content={metadata.openGraph.description} />
+        <meta property="og:url" content={metadata.openGraph.url} />
+        <meta property="og:image" content={metadata.openGraph.images[0].url} />
+        {typeof metadata.robots === 'string' ? (
+          <meta name="robots" content={metadata.robots} />
+        ) : (
+          <>
+            <meta name="robots" content="index, follow" />
+            <meta name="googlebot" content="index, follow, noimageindex, max-video-preview:-1, max-image-preview:large, max-snippet:-1" />
+          </>
+        )}
+      </Head>
+      <Suspense fallback={<Loading />}>
+        <Layout>
+          <ProductContent />
+        </Layout>
+      </Suspense>
+    </>
   );
 }

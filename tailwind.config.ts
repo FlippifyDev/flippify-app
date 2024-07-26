@@ -2,7 +2,7 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
   plugins: [
-    require("@tailwindcss/typography"), 
+    require("@tailwindcss/typography"),
     require("daisyui"),
     require('flowbite/plugin')({
       charts: true,
@@ -68,12 +68,10 @@ const config: Config = {
         greenLabel: '#1f493d',
         orangeLabel: '#ff4d04',
       },
-      variants: {
-        extend: {
-          backgroundColor: ['active'],
-        },
-      },
     },
+  },
+  daisyui: {
+    themes: ["light", "dark"],
   },
 };
 

@@ -17,6 +17,10 @@ interface SalesData {
   series: ChartData[];
 }
 
+interface TooltipFormatterOpts {
+  dataPointIndex: number;
+}
+
 const DashboardProfitsGraph: React.FC = () => {
   const [user] = useAuthState(auth);
   const [salesData, setSalesData] = useState<SalesData>({
@@ -39,11 +43,11 @@ const DashboardProfitsGraph: React.FC = () => {
       const rangeStartDate = subDays(today, rangeInDays - 1);
       const previousRangeStartDate = subDays(rangeStartDate, rangeInDays);
 
-      let allCategories;
+      let allCategories: string[];
       if (rangeInDays > 90) {
-        allCategories = eachMonthOfInterval({ start: rangeStartDate, end: today }).map(date => format(date, 'MMM yyyy'));
+        allCategories = eachMonthOfInterval({ start: rangeStartDate, end: today }).map(date => format(date, 'yyyy-MM'));
       } else {
-        allCategories = eachDayOfInterval({ start: rangeStartDate, end: today }).map(date => format(date, 'dd MMM'));
+        allCategories = eachDayOfInterval({ start: rangeStartDate, end: today }).map(date => format(date, 'yyyy-MM-dd'));
       }
 
       let seriesData = Array(allCategories.length).fill(0);
@@ -53,9 +57,9 @@ const DashboardProfitsGraph: React.FC = () => {
 
       for (const saleKey in salesData) {
         const sale: ISale = salesData[saleKey];
-        const saleDate = new Date(sale.saleDate);
-        if (sale.saleDate && sale.salePrice) {
-          const formattedSaleDate = rangeInDays > 90 ? format(saleDate, 'MMM yyyy') : format(saleDate, 'dd MMM');
+        const saleDate = sale.saleDate;
+        if (saleDate && sale.salePrice) {
+          const formattedSaleDate = rangeInDays > 90 ? format(new Date(saleDate), 'yyyy-MM') : format(new Date(saleDate), 'yyyy-MM-dd');
 
           const purchasePricePerUnit = sale.purchasePricePerUnit || 0;
           const platformFees = sale.platformFees || 0;
@@ -73,9 +77,10 @@ const DashboardProfitsGraph: React.FC = () => {
             seriesData[index] += estimatedProfit;
           }
 
-          if (saleDate >= rangeStartDate && saleDate <= today) {
+          const saleDateObj = new Date(saleDate);
+          if (saleDateObj >= rangeStartDate && saleDateObj <= today) {
             totalNetProfit += estimatedProfit;
-          } else if (saleDate < rangeStartDate && saleDate >= previousRangeStartDate) {
+          } else if (saleDateObj < rangeStartDate && saleDateObj >= previousRangeStartDate) {
             totalPreviousNetProfit += estimatedProfit;
           }
         }
@@ -111,16 +116,34 @@ const DashboardProfitsGraph: React.FC = () => {
         labels: {
           show: true,
           formatter: (val: string, index: number) => {
-            if (selectedRange === '30') {
-              return index % 3 === 0 ? val : '';
-            } else if (selectedRange === '90') {
-              return index % 10 === 0 ? val : '';
-            } else if (selectedRange === '365') {
-              return val;
+            console.log('Date value:', val);  // Debugging log
+            const date = new Date(val);
+            if (isNaN(date.getTime())) {
+              console.error('Invalid date:', val);
+              return '';
             }
-            return val;
+            if (selectedRange === '30') {
+              return format(date, 'd');
+            } else if (selectedRange === '90') {
+              return '';
+            } else if (selectedRange === '365') {
+              return format(date, 'MMM');
+            }
+            return format(date, 'd MMM');
           },
           cssClass: 'text-xs text-gray-500'
+        },
+        tooltip: {
+          enabled: selectedRange === '90',
+          formatter: (val: string, opts: TooltipFormatterOpts) => {
+            const date = new Date(salesData.categories[opts.dataPointIndex]);
+            console.log('Tooltip date value:', date);  // Debugging log
+            if (isNaN(date.getTime())) {
+              console.error('Invalid tooltip date:', salesData.categories[opts.dataPointIndex]);
+              return '';
+            }
+            return format(date, 'MMM');
+          }
         }
       },
       yaxis: {
@@ -140,10 +163,17 @@ const DashboardProfitsGraph: React.FC = () => {
         enabled: true,
         x: {
           show: true,
-          formatter: (val: string) => `Date: ${val}`
+          formatter: (val: string, opts: TooltipFormatterOpts) => {
+            const date = new Date(salesData.categories[opts.dataPointIndex]);
+            if (isNaN(date.getTime())) {
+              console.error('Invalid tooltip date:', salesData.categories[opts.dataPointIndex]);
+              return '';
+            }
+            return format(date, 'd MMMM yyyy');
+          }
         },
         y: {
-          formatter: (val: number) => `Sales Profit: £${val.toFixed(2)}`,
+          formatter: (val: number) => `£${val.toFixed(2)}`,
         },
       },
     };
@@ -166,7 +196,7 @@ const DashboardProfitsGraph: React.FC = () => {
   const timePeriodText = {
     '7': 'week',
     '30': 'month',
-    '90': '3 months',
+    '90': 'past 3 months',
     '365': 'year'
   }[selectedRange] || 'period';
 

@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, get, set, push, child, query, orderByChild, equalTo } from 'firebase/database';
+import { getDatabase, ref, get, set, push, child, query, orderByChild, equalTo, increment } from 'firebase/database';
 import { getAuth, signInAnonymously } from 'firebase/auth';
 
 // Firebase configuration
@@ -33,10 +33,7 @@ signInAnonymously(auth)
     // Sign in successful
   })
   .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    console.error(errorCode);
-    console.error(errorMessage);
+    console.error("Firebase auth error:", error.code, error.message);
   });
 
-export { database, auth, ref, get, set, push, child, query, orderByChild, equalTo };
+export { database, auth, ref, get, set, push, child, query, orderByChild, equalTo, increment };

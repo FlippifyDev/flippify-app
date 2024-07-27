@@ -3,6 +3,7 @@ interface ISale {
     saleDate: string;
     purchaseDate: string;
     salePlatform: string;
+    purchasePlatform: string;
     salePrice: number;
     quantitySold: number;
     platformFees: number;
@@ -21,6 +22,8 @@ interface IHistoryGrid {
     shippingCost: number;
     estimatedProfit: number;
     salePlatform: string;
+    purchasePlatform: string;
+    totalCosts: number;
 }
 
 
@@ -31,7 +34,7 @@ interface IPurchase {
     purchasedQuantity: number;
     purchasePricePerUnit: number;
     soldQuantity?: number;
-    websiteName?: string;
+    websiteName: string;
     availability: number;
 }
 

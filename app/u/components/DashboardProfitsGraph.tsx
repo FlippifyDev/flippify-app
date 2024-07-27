@@ -5,7 +5,7 @@ import ApexCharts from 'apexcharts';
 import { auth, database, ref, get } from "../../api/firebaseConfig";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { ISale } from "./SalesTrackerModels";
-import { format, subDays, eachDayOfInterval, eachMonthOfInterval, startOfToday } from 'date-fns';
+import { format, subDays, eachDayOfInterval, eachMonthOfInterval, endOfDay } from 'date-fns';
 
 interface ChartData {
   name: string;
@@ -38,11 +38,13 @@ const DashboardProfitsGraph: React.FC = () => {
       const salesRef = ref(database, `sales/${user.uid}`);
       const salesSnapshot = await get(salesRef);
       const salesData = salesSnapshot.val() || {};
-
-      const today = startOfToday();
+      
+      // 
+      const today = endOfDay(new Date());
       const rangeStartDate = subDays(today, rangeInDays - 1);
       const previousRangeStartDate = subDays(rangeStartDate, rangeInDays);
-
+      
+      // Prepare categories
       let allCategories: string[];
       if (rangeInDays > 90) {
         allCategories = eachMonthOfInterval({ start: rangeStartDate, end: today }).map(date => format(date, 'yyyy-MM'));
@@ -77,6 +79,7 @@ const DashboardProfitsGraph: React.FC = () => {
             seriesData[index] += estimatedProfit;
           }
 
+          // Include current day’s sales in net profit calculation
           const saleDateObj = new Date(saleDate);
           if (saleDateObj >= rangeStartDate && saleDateObj <= today) {
             totalNetProfit += estimatedProfit;
@@ -116,10 +119,8 @@ const DashboardProfitsGraph: React.FC = () => {
         labels: {
           show: true,
           formatter: (val: string, index: number) => {
-            console.log('Date value:', val);  // Debugging log
             const date = new Date(val);
             if (isNaN(date.getTime())) {
-              console.error('Invalid date:', val);
               return '';
             }
             if (selectedRange === '30') {
@@ -137,7 +138,6 @@ const DashboardProfitsGraph: React.FC = () => {
           enabled: selectedRange === '90',
           formatter: (val: string, opts: TooltipFormatterOpts) => {
             const date = new Date(salesData.categories[opts.dataPointIndex]);
-            console.log('Tooltip date value:', date);  // Debugging log
             if (isNaN(date.getTime())) {
               console.error('Invalid tooltip date:', salesData.categories[opts.dataPointIndex]);
               return '';
@@ -166,7 +166,6 @@ const DashboardProfitsGraph: React.FC = () => {
           formatter: (val: string, opts: TooltipFormatterOpts) => {
             const date = new Date(salesData.categories[opts.dataPointIndex]);
             if (isNaN(date.getTime())) {
-              console.error('Invalid tooltip date:', salesData.categories[opts.dataPointIndex]);
               return '';
             }
             return format(date, 'd MMMM yyyy');
@@ -230,7 +229,7 @@ const DashboardProfitsGraph: React.FC = () => {
           </div>
           <a
             href="#"
-            className="uppercase text-sm font-semibold inline-flex items-center rounded-lg text-houseBlue hover:text-blue-700 dark:hover:text-blue-500 hover:bg-gray-100 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 px-3 py-2"
+            className="uppercase select-none text-sm font-semibold inline-flex items-center text-houseBlue hover:text-blue-700 dark:hover:text-blue-500 hover:bg-gray-100 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 rounded-lg  px-3 py-2"
           >
             Sales Report
             <svg className="w-2.5 h-2.5 ms-1.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">

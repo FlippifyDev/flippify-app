@@ -1,15 +1,21 @@
 import { database, ref, get, set, push } from '../../api/firebaseConfig';
-import { auth } from '../../api/firebaseConfig';
 import { ISale, IPurchase } from './SalesTrackerModels';
+import { auth } from '../../api/firebaseConfig';
+
 import React, { useState, useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { format } from 'date-fns';
 
 const SalesTrackerTabAddSale: React.FC = () => {
+  const today = new Date();
+  const formattedToday = format(today, 'yyyy-MM-dd');
+
   const [sale, setSale] = useState<ISale>({
     itemName: '',
-    saleDate: '',
+    saleDate: formattedToday,
     purchaseDate: '',
     salePlatform: '',
+    purchasePlatform: '',
     salePrice: 0,
     quantitySold: 0,
     platformFees: 12.5,
@@ -38,31 +44,23 @@ const SalesTrackerTabAddSale: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-  
-    // Parse the value based on the input name
     const parsedValue = (name === 'salePrice' || name === 'quantitySold' || name === 'platformFees' || name === 'shippingCost')
       ? parseFloat(value)
       : value;
-  
-    // Ensure parsedValue is a number and not a string before comparing
+
     if (['salePrice', 'quantitySold', 'platformFees', 'shippingCost'].includes(name) && typeof parsedValue === 'number' && parsedValue < 0) {
-      return; // Prevent setting negative values
+      return;
     }
-  
-    // Update state with validated values
+
     setSale(prevSale => {
-      // Handle quantitySold separately for validation
       if (name === 'quantitySold') {
-        // Ensure parsedValue is a number
         const quantity = typeof parsedValue === 'number' ? parsedValue : 0;
-        // Ensure the quantity does not exceed availability
         return {
           ...prevSale,
           [name]: Math.min(Math.max(quantity, 0), selectedPurchaseData?.availability ?? 0)
         };
       }
-  
-      // For other fields, simply update the state
+
       return {
         ...prevSale,
         [name]: parsedValue
@@ -81,7 +79,8 @@ const SalesTrackerTabAddSale: React.FC = () => {
       setSale(prevSale => ({
         ...prevSale,
         purchaseDate: selectedData.purchaseDate,
-        purchasePricePerUnit: selectedData.purchasePricePerUnit
+        purchasePricePerUnit: selectedData.purchasePricePerUnit,
+        purchasePlatform: selectedData.websiteName
       }));
     }
   };
@@ -111,40 +110,36 @@ const SalesTrackerTabAddSale: React.FC = () => {
     const newSaleRef = push(userSalesRef);
 
     try {
-      // Add the sale entry with proper numeric types
       await set(newSaleRef, {
         ...sale,
         salePrice: parseFloat(sale.salePrice.toString()),
         quantitySold: parseFloat(sale.quantitySold.toString()),
         platformFees: parseFloat(sale.platformFees.toString()),
         shippingCost: parseFloat(sale.shippingCost.toString()),
-        itemName: selectedPurchaseData.itemName
+        itemName: selectedPurchaseData.itemName,
+        purchasePlatform: selectedPurchaseData.websiteName // Include purchasePlatform in the sale entry
       });
-      console.log("Sale added successfully");
 
-      // Update the remaining availability and sold quantity in the selected purchase
       const updatedAvailability = (selectedPurchaseData.availability ?? 0) - sale.quantitySold;
       const updatedSoldQuantity = (selectedPurchaseData.soldQuantity ?? 0) + sale.quantitySold;
       const selectedPurchaseRef = ref(database, `purchases/${user.uid}/${selectedPurchaseData.id}`);
 
       if (updatedAvailability > 0) {
-        // Update the purchase if there's still availability left
         await set(selectedPurchaseRef, {
           ...selectedPurchaseData,
           soldQuantity: updatedSoldQuantity,
           availability: updatedAvailability
         });
       } else {
-        // Remove the purchase if the availability is zero or less
         await set(selectedPurchaseRef, null);
       }
 
-      // Reset form fields
       setSale({
         itemName: '',
-        saleDate: '',
+        saleDate: formattedToday,
         purchaseDate: '',
         salePlatform: '',
+        purchasePlatform: '',
         salePrice: 0,
         quantitySold: 0,
         platformFees: 12.5,
@@ -181,7 +176,13 @@ const SalesTrackerTabAddSale: React.FC = () => {
             <label className="label">
               <span className="label-text text-lightModeText">Sale Date</span>
             </label>
-            <input type="date" name="saleDate" value={sale.saleDate} onChange={handleChange} className="input input-bordered w-full bg-white  placeholder-lightModeText-light" style={{ colorScheme: 'dark' }} />
+            <input
+              type="date"
+              name="saleDate"
+              value={sale.saleDate}
+              onChange={handleChange}
+              className="input input-bordered w-full bg-white placeholder-lightModeText-light"
+            />
           </div>
           <div className="mb-4">
             <label className="label">
@@ -203,8 +204,7 @@ const SalesTrackerTabAddSale: React.FC = () => {
           </div>
           <div className="mb-4">
             <label className="label">
-              <span className="label-text text-lightModeText">Platform Fees (%)</span>
-            </label>
+              <span className="label-text text-lightModeText">Platform Fees (%)</span></label>
             <input type="number" name="platformFees" value={sale.platformFees} onChange={handleChange} className="input input-bordered w-full bg-white" />
           </div>
           <div className="mb-4">

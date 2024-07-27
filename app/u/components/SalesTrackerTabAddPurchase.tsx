@@ -1,53 +1,55 @@
 import { database, ref, set, push } from '../../api/firebaseConfig';
-import { useEstimate } from '../../components/EstimateContext';
-import { auth } from '../../api/firebaseConfig';
 import { IPurchase } from './SalesTrackerModels';
-
+import { auth } from '../../api/firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import React, { useState } from 'react';
 import { format } from 'date-fns';
+import { parse } from 'path';
 
 const SalesTrackerTabAddPurchase: React.FC = () => {
   const today = new Date();
-  const formattedToday = format(today, 'yyyy-MM-dd'); // Format for HTML date input
+  const formattedToday = format(today, 'yyyy-MM-dd');
 
   const [itemName, setItemName] = useState('');
   const [purchaseDate, setPurchaseDate] = useState<string>(formattedToday);
   const [purchasedQuantity, setQuantity] = useState<number | ''>(1);
   const [purchasePricePerUnit, setPurchasePrice] = useState<number | ''>(0);
   const [websiteName, setWebsiteName] = useState('');
-  const [availability, setAvailability] = useState(1);
+  const [availability, setAvailability] = useState<number>(1);
 
-  const { estimate, setEstimate } = useEstimate();
   const [user] = useAuthState(auth);
 
-  const handleItemNameChange = (e: React.ChangeEvent<HTMLInputElement>) => setItemName(e.target.value);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+  
+    // Convert the value to a number if it's supposed to be numeric
+    const parsedValue = (name === 'purchasedQuantity' || name === 'purchasePricePerUnit')
+      ? parseFloat(value)
+      : value;
+  
+    if (['purchasedQuantity', 'purchasePricePerUnit'].includes(name) && typeof parsedValue === 'number' && parsedValue < 0) {
+      return;
+    }
 
-  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value === '' ? '' : parseFloat(e.target.value);
-    if (value === '' || value >= 1) {
-      setQuantity(value);
-      setAvailability(value === '' ? 1 : value);
-      setEstimate({
-        ...estimate,
-        purchasedQuantity: value === '' ? 1 : value,
-        purchasePricePerUnit: purchasePricePerUnit ? purchasePricePerUnit / (value === '' ? 1 : value) : 0,
-      });
+    // Validate numeric fields
+    if (['purchasedQuantity', 'purchasePricePerUnit'].includes(name)) {
+      if (value === '' || (typeof parsedValue === 'number' && !isNaN(parsedValue) && parsedValue >= 0)) {
+        if (name === 'purchasedQuantity') {
+          setQuantity(parsedValue as number | "");
+          setAvailability(parsedValue === '' ? 1 : parsedValue as number);
+        } else if (name === 'purchasePricePerUnit') {
+          setPurchasePrice(parsedValue as number | "");
+        }
+      }
+    } else {
+      // Handle non-numeric fields
+      if (name === 'itemName') {
+        setItemName(value);
+      } else if (name === 'websiteName') {
+        setWebsiteName(value);
+      }
     }
   };
-
-  const handlePurchasePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value === '' ? '' : parseFloat(e.target.value);
-    if (value === '' || value >= 0) {
-      setPurchasePrice(value);
-      setEstimate({
-        ...estimate,
-        purchasePricePerUnit: value === '' ? 0 : value,
-      });
-    }
-  };
-
-  const handleWebsiteNameChange = (e: React.ChangeEvent<HTMLInputElement>) => setWebsiteName(e.target.value);
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPurchaseDate(e.target.value);
@@ -66,7 +68,7 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
       purchasedQuantity: purchasedQuantity === '' ? 1 : purchasedQuantity,
       purchasePricePerUnit: purchasePricePerUnit === '' ? 0 : purchasePricePerUnit,
       websiteName,
-      availability,
+      availability: availability,
     };
 
     const userPurchasesRef = ref(database, `purchases/${user.uid}`);
@@ -74,6 +76,7 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
 
     await set(newPurchaseRef, newPurchase);
 
+    // Reset form
     setItemName('');
     setPurchaseDate(formattedToday);
     setQuantity(1);
@@ -93,7 +96,7 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
             type="text"
             name="itemName"
             value={itemName}
-            onChange={handleItemNameChange}
+            onChange={handleChange}
             className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="Item Name"
           />
@@ -104,7 +107,7 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
           </label>
           <input
             type="date"
-            name="saleDate"
+            name="purchaseDate"
             value={purchaseDate}
             onChange={handleDateChange}
             className="input input-bordered w-full bg-white placeholder-lightModeText-light"
@@ -116,12 +119,13 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
           </label>
           <input
             type="number"
-            name="quantity"
+            name="purchasedQuantity"
             value={purchasedQuantity === '' ? '' : purchasedQuantity}
-            onChange={handleQuantityChange}
+            onChange={handleChange}
             className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="1"
             min="1"
+            step="1"
           />
         </div>
         <div className="mb-4">
@@ -132,9 +136,11 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
             type="number"
             name="purchasePricePerUnit"
             value={purchasePricePerUnit === '' ? '' : purchasePricePerUnit}
-            onChange={handlePurchasePriceChange}
+            onChange={handleChange}
             className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="0"
+            min="0"
+            step="0.01"
           />
         </div>
         <div className="mb-4">
@@ -145,7 +151,7 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
             type="text"
             name="websiteName"
             value={websiteName}
-            onChange={handleWebsiteNameChange}
+            onChange={handleChange}
             className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="John Lewis, Amazon etc"
           />

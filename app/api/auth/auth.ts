@@ -2,11 +2,9 @@ import { AuthOptions } from 'next-auth';
 import DiscordProvider from 'next-auth/providers/discord';
 import mongoose from 'mongoose';
 import { Types } from 'mongoose';
-
 import retrieveStripeCustomer from '../stripe-handlers/retrieve-customer';
 import { User, ISubscription, IWaitListed, IReferral } from '../userModel';
 
-// Import and apply mongoose-long plugin
 const mongooseLong = require('mongoose-long')(mongoose);
 const Long = Types.Long;
 
@@ -35,48 +33,42 @@ const authOptions: AuthOptions = {
       if (token.id) {
         const userFromDb = await User.findOne({ discord_id: Long.fromString(token.id as string) });
         if (userFromDb) {
-          // Attach referral data if available
-          if (userFromDb.referral) {
-            token.referral = userFromDb.referral;
-          }
-          // Attach waitlisted data if available
-          if (userFromDb.waitlisted) {
-            token.waitlisted = userFromDb.waitlisted;
-          }
+          token.referral = userFromDb.referral;
+          token.waitlisted = userFromDb.waitlisted ? { position: userFromDb.waitlisted.position ?? -1 } : undefined;
+          token.username = userFromDb.username; // Add username to token
         }
       }
 
       return token;
     },
     async session({ session, token }) {
-      const { id, name, email, referral, waitlisted } = token as {
+      const { id, name, email, referral, waitlisted, username } = token as {
         id: string;
         name: string;
         email: string;
         referral?: IReferral;
         waitlisted?: IWaitListed;
+        username?: string;
       };
 
-      // Retrieve user from database
       const user = await User.findOne({ discord_id: Long.fromString(id) });
       if (!user) {
         console.error(`User not found in database for id ${id}`);
         return session;
       }
 
-      // Retrieve the Stripe customer
       const stripeCustomer = await retrieveStripeCustomer(id, name, email);
       if (!stripeCustomer) {
         console.error(`Stripe customer not found for id ${id}`);
         return session;
       }
 
-      // Attach additional data to session
-      (session.user as { discordId?: string }).discordId = id;
-      (session.user as { customerId?: string }).customerId = stripeCustomer.id;
-      (session.user as { subscriptions?: ISubscription[] }).subscriptions = user.subscriptions;
-      (session.user as { referral?: IReferral }).referral = user.referral || referral;
-      (session.user as { waitlisted?: IWaitListed }).waitlisted = user.waitlisted || waitlisted;
+      session.user.discordId = id;
+      session.user.customerId = stripeCustomer.id;
+      session.user.subscriptions = user.subscriptions;
+      session.user.referral = user.referral || referral;
+      session.user.waitlisted = user.waitlisted ? { position: user.waitlisted.position ?? -1 } : waitlisted;
+      session.user.username = username || user.username; // Add username to session
 
       return session;
     },
@@ -84,7 +76,6 @@ const authOptions: AuthOptions = {
       try {
         const { id, username, email } = profile as { id: string; username: string; email: string };
 
-        // Check if the user already exists
         const existingUser = await User.findOne({ discord_id: Long.fromString(id) });
 
         if (!existingUser) {
@@ -94,27 +85,20 @@ const authOptions: AuthOptions = {
             return false;
           }
 
-          // Create the stripe customer
-          try {
-            const discordId = Long.fromString(id);
-            const customer_id = stripeCustomer.id;
-            const subscriptions: ISubscription[] = [];
-            const referral: IReferral = {
-              referral_code: generateReferralCode(),
-              referred_by: null,
-              referral_count: 0,
-            };
+          const discordId = Long.fromString(id);
+          const customer_id = stripeCustomer.id;
+          const subscriptions: ISubscription[] = [];
+          const referral: IReferral = {
+            referral_code: generateReferralCode(),
+            referred_by: null,
+            referral_count: 0,
+          };
 
-            await User.findOneAndUpdate(
-              { discord_id: discordId },
-              { username: username, email, stripe_customer_id: customer_id, subscriptions, referral },
-              { upsert: true }
-            );
-
-          } catch (error) {
-            console.error('Error updating user:', error);
-            return false;
-          }
+          await User.findOneAndUpdate(
+            { discord_id: discordId },
+            { username, email, stripe_customer_id: customer_id, subscriptions, referral },
+            { upsert: true }
+          );
         }
 
         return true;

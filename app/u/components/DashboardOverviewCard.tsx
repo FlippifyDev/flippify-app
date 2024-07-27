@@ -1,9 +1,11 @@
-"use client";
-
 import React, { useState, useEffect } from 'react';
-import { auth, database, ref, get } from "../../api/firebaseConfig";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { IHistoryGrid, ISale } from "./SalesTrackerModels";
+import { auth, database, ref, get } from '../../api/firebaseConfig';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { IHistoryGrid, ISale } from './SalesTrackerModels';
+
+const sanitizePath = (path: string): string => {
+  return path.replace(/[.#$[\]]/g, '_');
+};
 
 const DashboardOverviewCard: React.FC = () => {
   const [user] = useAuthState(auth);
@@ -17,7 +19,8 @@ const DashboardOverviewCard: React.FC = () => {
     if (user) {
       const fetchData = async () => {
         try {
-          const salesRef = ref(database, `sales/${user.uid}`);
+          const sanitizedUserId = sanitizePath(user.uid);
+          const salesRef = ref(database, `sales/${sanitizedUserId}`);
           const salesSnapshot = await get(salesRef);
           const salesData = salesSnapshot.val() || {};
 
@@ -48,7 +51,7 @@ const DashboardOverviewCard: React.FC = () => {
             totalSales
           });
         } catch (error) {
-          console.error("Error fetching data:", error);
+          console.error('Error fetching data:', error);
         }
       };
 
@@ -56,10 +59,9 @@ const DashboardOverviewCard: React.FC = () => {
     }
   }, [user]);
 
-  // Calculate ROI
-  const roi = (overviewData.totalCosts > 0)
-  ? ((overviewData.totalRevenue - overviewData.totalCosts) / overviewData.totalCosts * 100).toFixed(2)
-  : 'N/A';
+  const roi = overviewData.totalCosts > 0
+    ? ((overviewData.totalRevenue - overviewData.totalCosts) / overviewData.totalCosts * 100).toFixed(2)
+    : 'N/A';
 
   return (
     <div className="w-full flex flex-col items-center">
@@ -94,4 +96,3 @@ const DashboardOverviewCard: React.FC = () => {
 };
 
 export default DashboardOverviewCard;
-//<h2 className="text-2xl font-bold text-black">Your Dashboard</h2>

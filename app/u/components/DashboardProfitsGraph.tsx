@@ -1,10 +1,8 @@
-"use client";
-
 import React, { useEffect, useState, useCallback } from 'react';
 import ApexCharts from 'apexcharts';
-import { auth, database, ref, get } from "../../api/firebaseConfig";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { ISale } from "./SalesTrackerModels";
+import { auth, database, ref, get } from '../../api/firebaseConfig';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { ISale } from './SalesTrackerModels';
 import { format, subDays, eachDayOfInterval, eachMonthOfInterval, startOfToday } from 'date-fns';
 
 interface ChartData {
@@ -21,6 +19,10 @@ interface TooltipFormatterOpts {
   dataPointIndex: number;
 }
 
+const sanitizePath = (path: string): string => {
+  return path.replace(/[.#$[\]]/g, '_');
+};
+
 const DashboardProfitsGraph: React.FC = () => {
   const [user] = useAuthState(auth);
   const [salesData, setSalesData] = useState<SalesData>({
@@ -35,7 +37,8 @@ const DashboardProfitsGraph: React.FC = () => {
     if (!user) return;
 
     try {
-      const salesRef = ref(database, `sales/${user.uid}`);
+      const sanitizedUserId = sanitizePath(user.uid);
+      const salesRef = ref(database, `sales/${sanitizedUserId}`);
       const salesSnapshot = await get(salesRef);
       const salesData = salesSnapshot.val() || {};
 
@@ -93,7 +96,7 @@ const DashboardProfitsGraph: React.FC = () => {
       setNetProfit(totalNetProfit);
       setPreviousNetProfit(totalPreviousNetProfit);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error);
     }
   }, [user]);
 
@@ -116,10 +119,8 @@ const DashboardProfitsGraph: React.FC = () => {
         labels: {
           show: true,
           formatter: (val: string, index: number) => {
-            console.log('Date value:', val);  // Debugging log
             const date = new Date(val);
             if (isNaN(date.getTime())) {
-              console.error('Invalid date:', val);
               return '';
             }
             if (selectedRange === '30') {
@@ -127,7 +128,7 @@ const DashboardProfitsGraph: React.FC = () => {
             } else if (selectedRange === '90') {
               return '';
             } else if (selectedRange === '365') {
-              return format(date, 'MMM');
+              return '';
             }
             return format(date, 'd');
           },
@@ -137,9 +138,7 @@ const DashboardProfitsGraph: React.FC = () => {
           enabled: selectedRange === '90',
           formatter: (val: string, opts: TooltipFormatterOpts) => {
             const date = new Date(salesData.categories[opts.dataPointIndex]);
-            console.log('Tooltip date value:', date);  // Debugging log
             if (isNaN(date.getTime())) {
-              console.error('Invalid tooltip date:', salesData.categories[opts.dataPointIndex]);
               return '';
             }
             return format(date, 'MMM');
@@ -166,7 +165,6 @@ const DashboardProfitsGraph: React.FC = () => {
           formatter: (val: string, opts: TooltipFormatterOpts) => {
             const date = new Date(salesData.categories[opts.dataPointIndex]);
             if (isNaN(date.getTime())) {
-              console.error('Invalid tooltip date:', salesData.categories[opts.dataPointIndex]);
               return '';
             }
             return format(date, 'd MMMM yyyy');
@@ -178,7 +176,7 @@ const DashboardProfitsGraph: React.FC = () => {
       },
     };
 
-    const chart = new ApexCharts(document.querySelector("#area-chart"), options);
+    const chart = new ApexCharts(document.querySelector('#area-chart'), options);
     chart.render();
 
     return () => {
@@ -217,7 +215,7 @@ const DashboardProfitsGraph: React.FC = () => {
         </div>
       </div>
       <div id="area-chart"></div>
-      <div className="grid grid-cols-1 items-center border-gray-200 border-t  dark:border-gray-700 justify-between">
+      <div className="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
         <div className="flex justify-between items-center pt-5">
           <div className="dropdown dropdown-hover bg-white">
             <div tabIndex={0} role="button" className="btn m-1 text-lightModeText bg-white hover:bg-gray-100">Last {selectedRange} days</div>

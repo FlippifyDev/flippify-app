@@ -1,15 +1,17 @@
-import { database, ref, set, push } from '../../api/firebaseConfig';
-import { useEstimate } from '../../components/EstimateContext';
-import { auth } from '../../api/firebaseConfig';
-import { IPurchase } from './SalesTrackerModels';
-
-import { useAuthState } from 'react-firebase-hooks/auth';
 import React, { useState } from 'react';
+import { useEstimate } from '../../components/EstimateContext';
+import { auth, database, ref, set, push } from '../../api/firebaseConfig';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { IPurchase } from './SalesTrackerModels';
 import { format } from 'date-fns';
+
+const sanitizePath = (path: string): string => {
+  return path.replace(/[.#$[\]]/g, '_');
+};
 
 const SalesTrackerTabAddPurchase: React.FC = () => {
   const today = new Date();
-  const formattedToday = format(today, 'yyyy-MM-dd'); // Format for HTML date input
+  const formattedToday = format(today, 'yyyy-MM-dd');
 
   const [itemName, setItemName] = useState('');
   const [purchaseDate, setPurchaseDate] = useState<string>(formattedToday);
@@ -69,7 +71,8 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
       availability,
     };
 
-    const userPurchasesRef = ref(database, `purchases/${user.uid}`);
+    const sanitizedUserId = sanitizePath(user.uid);
+    const userPurchasesRef = ref(database, `purchases/${sanitizedUserId}`);
     const newPurchaseRef = push(userPurchasesRef);
 
     await set(newPurchaseRef, newPurchase);

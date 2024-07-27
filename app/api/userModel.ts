@@ -1,4 +1,3 @@
-// userModel.ts
 import mongoose, { Document, Model, Schema, Types } from 'mongoose';
 import mongooseLong from 'mongoose-long';
 
@@ -13,7 +12,7 @@ interface ISubscription {
 }
 
 interface IWaitListed {
-  position: number | null;
+  position: number; // Ensure position is strictly a number
 }
 
 interface IReferral {
@@ -33,7 +32,7 @@ interface IUser extends Document {
 }
 
 const waitListedSchema = new Schema<IWaitListed>({
-  position: { type: Number, default: null },
+  position: { type: Number, required: true, default: -1 }, // Ensure position is always a number
 });
 
 const referralSchema = new Schema<IReferral>({
@@ -41,7 +40,6 @@ const referralSchema = new Schema<IReferral>({
   referred_by: { type: String, default: null },
   referral_count: { type: Number, default: 0 },
 });
-
 
 const subscriptionSchema = new Schema<ISubscription>({
   name: { type: String, required: true },

@@ -1,9 +1,11 @@
-"use client";
-
 import React, { useState, useEffect } from 'react';
-import { auth, database, ref, get } from "../../api/firebaseConfig";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { IHistoryGrid, ISale } from "./SalesTrackerModels";
+import { auth, database, ref, get } from '../../api/firebaseConfig';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { IHistoryGrid, ISale } from './SalesTrackerModels';
+
+const sanitizePath = (path: string): string => {
+  return path.replace(/[.#$[\]]/g, '_');
+};
 
 const DashboardRecentSalesCard: React.FC = () => {
   const [user] = useAuthState(auth);
@@ -13,7 +15,8 @@ const DashboardRecentSalesCard: React.FC = () => {
     if (user) {
       const fetchData = async () => {
         try {
-          const salesRef = ref(database, `sales/${user.uid}`);
+          const sanitizedUserId = sanitizePath(user.uid);
+          const salesRef = ref(database, `sales/${sanitizedUserId}`);
           const salesSnapshot = await get(salesRef);
           const salesData = salesSnapshot.val() || {};
 
@@ -56,7 +59,7 @@ const DashboardRecentSalesCard: React.FC = () => {
 
           setSales(salesArray);
         } catch (error) {
-          console.error("Error fetching data:", error);
+          console.error('Error fetching data:', error);
         }
       };
 

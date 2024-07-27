@@ -5,7 +5,7 @@ import { ISubscription, IWaitListed } from '../userModel'; // Adjust import base
 
 interface SessionUser extends NextAuthUser {
   name: string;
-  email: string
+  email: string;
   image: string;
   discordId?: string;
   customerId?: string;
@@ -14,10 +14,11 @@ interface SessionUser extends NextAuthUser {
     referral_code: string | null;
     referred_by: string | null;
     referral_count: number;
-  }
+  };
   waitlisted?: {
     position: number;
   };
+  username: string; // Add username property
 }
 
 declare module 'next-auth' {
@@ -28,5 +29,6 @@ declare module 'next-auth' {
 
   interface JWT extends DefaultJWT {
     accessToken?: string;
+    username?: string; // Add username property
   }
 }

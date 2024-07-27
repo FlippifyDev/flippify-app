@@ -1,8 +1,11 @@
-import { database, ref, get, set, push } from '../../api/firebaseConfig';
-import { auth } from '../../api/firebaseConfig';
-import { ISale, IPurchase } from './SalesTrackerModels';
 import React, { useState, useEffect } from 'react';
+import { auth, database, ref, get, set, push } from '../../api/firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { ISale, IPurchase } from './SalesTrackerModels';
+
+const sanitizePath = (path: string): string => {
+  return path.replace(/[.#$[\]]/g, '_');
+};
 
 const SalesTrackerTabAddSale: React.FC = () => {
   const [sale, setSale] = useState<ISale>({
@@ -24,7 +27,8 @@ const SalesTrackerTabAddSale: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      const userPurchasesRef = ref(database, `purchases/${user.uid}`);
+      const sanitizedUserId = sanitizePath(user.uid);
+      const userPurchasesRef = ref(database, `purchases/${sanitizedUserId}`);
       get(userPurchasesRef).then((snapshot) => {
         const purchasesData = snapshot.val() || {};
         const purchasesList = Object.keys(purchasesData).map((key) => ({
@@ -39,30 +43,23 @@ const SalesTrackerTabAddSale: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
   
-    // Parse the value based on the input name
     const parsedValue = (name === 'salePrice' || name === 'quantitySold' || name === 'platformFees' || name === 'shippingCost')
       ? parseFloat(value)
       : value;
   
-    // Ensure parsedValue is a number and not a string before comparing
     if (['salePrice', 'quantitySold', 'platformFees', 'shippingCost'].includes(name) && typeof parsedValue === 'number' && parsedValue < 0) {
-      return; // Prevent setting negative values
+      return;
     }
   
-    // Update state with validated values
     setSale(prevSale => {
-      // Handle quantitySold separately for validation
       if (name === 'quantitySold') {
-        // Ensure parsedValue is a number
         const quantity = typeof parsedValue === 'number' ? parsedValue : 0;
-        // Ensure the quantity does not exceed availability
         return {
           ...prevSale,
           [name]: Math.min(Math.max(quantity, 0), selectedPurchaseData?.availability ?? 0)
         };
       }
   
-      // For other fields, simply update the state
       return {
         ...prevSale,
         [name]: parsedValue
@@ -107,11 +104,11 @@ const SalesTrackerTabAddSale: React.FC = () => {
       return;
     }
 
-    const userSalesRef = ref(database, `sales/${user.uid}`);
+    const sanitizedUserId = sanitizePath(user.uid);
+    const userSalesRef = ref(database, `sales/${sanitizedUserId}`);
     const newSaleRef = push(userSalesRef);
 
     try {
-      // Add the sale entry with proper numeric types
       await set(newSaleRef, {
         ...sale,
         salePrice: parseFloat(sale.salePrice.toString()),
@@ -122,24 +119,20 @@ const SalesTrackerTabAddSale: React.FC = () => {
       });
       console.log("Sale added successfully");
 
-      // Update the remaining availability and sold quantity in the selected purchase
       const updatedAvailability = (selectedPurchaseData.availability ?? 0) - sale.quantitySold;
       const updatedSoldQuantity = (selectedPurchaseData.soldQuantity ?? 0) + sale.quantitySold;
-      const selectedPurchaseRef = ref(database, `purchases/${user.uid}/${selectedPurchaseData.id}`);
+      const selectedPurchaseRef = ref(database, `purchases/${sanitizedUserId}/${selectedPurchaseData.id}`);
 
       if (updatedAvailability > 0) {
-        // Update the purchase if there's still availability left
         await set(selectedPurchaseRef, {
           ...selectedPurchaseData,
           soldQuantity: updatedSoldQuantity,
           availability: updatedAvailability
         });
       } else {
-        // Remove the purchase if the availability is zero or less
         await set(selectedPurchaseRef, null);
       }
 
-      // Reset form fields
       setSale({
         itemName: '',
         saleDate: '',

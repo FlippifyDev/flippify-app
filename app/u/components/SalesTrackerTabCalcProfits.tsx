@@ -79,7 +79,7 @@ const SalesTrackerTabCalcProfits: React.FC = () => {
             onChange={(e) => handleInputChange(e.target.name, e.target.value)}
             className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="Enter purchase price"
-            step="0.01" // Allow decimal places
+            step="0.01"
           />
         </div>
         <div className="mb-4">

@@ -11,6 +11,10 @@ interface Filters {
   salePlatform: string;
 }
 
+const sanitizePath = (path: string): string => {
+  return path.replace(/[.#$[\]]/g, '_');
+};
+
 const SalesTrackerReviewProfits: React.FC = () => {
   const [filters, setFilters] = useState<Filters>({
     dateRange: { start: "", end: "" },
@@ -26,7 +30,8 @@ const SalesTrackerReviewProfits: React.FC = () => {
     if (user) {
       const fetchData = async () => {
         try {
-          const salesRef = ref(database, `sales/${user.uid}`);
+          const sanitizedUserId = sanitizePath(user.uid);
+          const salesRef = ref(database, `sales/${sanitizedUserId}`);
           const salesSnapshot = await get(salesRef);
           const salesData = salesSnapshot.val() || {};
 
@@ -92,7 +97,6 @@ const SalesTrackerReviewProfits: React.FC = () => {
       });
     }
   };
-
 
   const handleSubmit = () => {
     const filtered = sales.filter((sale) => {

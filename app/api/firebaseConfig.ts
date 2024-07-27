@@ -22,7 +22,6 @@ if (!firebaseConfig.apiKey) {
 // Initialize Firebase app
 const app = initializeApp(firebaseConfig);
 
-
 // Initialize Firebase Database
 const database = getDatabase(app);
 

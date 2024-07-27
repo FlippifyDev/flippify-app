@@ -1,7 +1,4 @@
 import { User } from './userModel';
-import { Types } from 'mongoose';
-
-const Long = Types.Long;
 
 const removeFromWaitlist = async (userId: string) => {
   try {

@@ -18,34 +18,35 @@ const SalesTrackerTabCalcProfits: React.FC = () => {
   }, [estimate, listingPrice, platformFees, shippingCost]);
 
   const handleInputChange = (name: string, value: string) => {
-    if (value === '' || (/^\d*\.?\d*$/.test(value) && (name !== 'purchasedQuantity' || Number.isInteger(parseFloat(value))))) {
-      switch (name) {
-        case 'listingPrice':
-          setListingPrice(value);
-          break;
-        case 'platformFees':
-          setPlatformFees(value);
-          break;
-        case 'shippingCost':
-          setShippingCost(value);
-          break;
-        case 'purchasedQuantity':
-          setEstimate({ ...estimate, purchasedQuantity: value === '' ? 0 : parseInt(value, 10) });
-          break;
-        case 'purchasePricePerUnit':
-          setEstimate({ ...estimate, purchasePricePerUnit: value === '' ? 0 : parseFloat(value) });
-          break;
-        default:
-          break;
+    if (name === 'purchasedQuantity') {
+      if (/^\d*$/.test(value)) {
+        setEstimate({ ...estimate, purchasedQuantity: value === '' ? 0 : parseInt(value, 10) });
+      }
+    } else if (name === 'purchasePricePerUnit' || name === 'listingPrice' || name === 'platformFees' || name === 'shippingCost') {
+      if (/^\d*\.?\d*$/.test(value)) {
+        switch (name) {
+          case 'purchasePricePerUnit':
+            setEstimate({ ...estimate, purchasePricePerUnit: value === '' ? 0 : parseFloat(value) });
+            break;
+          case 'listingPrice':
+            setListingPrice(value);
+            break;
+          case 'platformFees':
+            setPlatformFees(value);
+            break;
+          case 'shippingCost':
+            setShippingCost(value);
+            break;
+          default:
+            break;
+        }
       }
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, fieldName: string) => {
-    if (fieldName === 'purchasedQuantity') {
-      if (['e', 'E', '+', '-', '.'].includes(e.key)) {
-        e.preventDefault();
-      }
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (['e', 'E', '+', '-'].includes(e.key)) {
+      e.preventDefault();
     }
   };
 
@@ -61,7 +62,7 @@ const SalesTrackerTabCalcProfits: React.FC = () => {
             name="purchasedQuantity"
             value={estimate.purchasedQuantity === 0 ? '' : estimate.purchasedQuantity}
             onChange={(e) => handleInputChange(e.target.name, e.target.value)}
-            onKeyDown={(e) => handleKeyDown(e, 'purchasedQuantity')}
+            onKeyDown={handleKeyDown}
             className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="Enter quantity"
             min="1"
@@ -72,12 +73,13 @@ const SalesTrackerTabCalcProfits: React.FC = () => {
             <span className="label-text text-lightModeText">Purchase Price (per unit)</span>
           </label>
           <input
-            type="text"
+            type="number"
             name="purchasePricePerUnit"
             value={estimate.purchasePricePerUnit === 0 ? '' : estimate.purchasePricePerUnit}
             onChange={(e) => handleInputChange(e.target.name, e.target.value)}
             className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="Enter purchase price"
+            step="0.01" // Allow decimal places
           />
         </div>
         <div className="mb-4">

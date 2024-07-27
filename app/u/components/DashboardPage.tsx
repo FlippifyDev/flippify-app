@@ -6,7 +6,7 @@ import DashboardProfitsGraph from './DashboardProfitsGraph';
 
 const Dashboard = () => {
   return (
-    <div className="w-full h-full">
+    <div className="flex flex-col w-full h-full">
       <div className="w-full">
         <DashboardOverviewCard />
       </div>

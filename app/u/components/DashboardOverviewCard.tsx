@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { auth, database, ref, get } from '../../api/firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { IHistoryGrid, ISale } from './SalesTrackerModels';
+import { ISale } from './SalesTrackerModels';
 
 const sanitizePath = (path: string): string => {
   return path.replace(/[.#$[\]]/g, '_');
@@ -64,27 +64,27 @@ const DashboardOverviewCard: React.FC = () => {
     : 'N/A';
 
   return (
-    <div className="w-full flex flex-col items-center h-full">
-      <div className="grid grid-cols-2 lg:grid-cols-4 font-semibold justify-center gap-2 w-full h-full">
-        <div className="stats shadow-md bg-white w-full flex-shrink-0 overflow-x-auto p-2">
+    <div className="w-full flex flex-col items-center">
+      <div className="grid grid-cols-2 lg:grid-cols-4 font-semibold justify-center gap-2 w-full">
+        <div className="stats shadow-md bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2">
           <div className="stat">
             <div className="stat-title text-sm sm:text-base text-houseBlue">Total Revenue</div>
             <div className="stat-value text-xl sm:text-2xl text-black">£{overviewData.totalRevenue.toFixed(2)}</div>
           </div>
         </div>
-        <div className="stats shadow-md bg-white w-full flex-shrink-0 overflow-x-auto p-2">
+        <div className="stats shadow-md bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2">
           <div className="stat">
             <div className="stat-title text-sm sm:text-base text-houseBlue">Total Costs</div>
             <div className="stat-value text-xl sm:text-2xl text-black">£{overviewData.totalCosts.toFixed(2)}</div>
           </div>
         </div>
-        <div className="stats shadow-md bg-white w-full flex-shrink-0 overflow-x-auto p-2">
+        <div className="stats shadow-md bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2">
           <div className="stat">
             <div className="stat-title text-sm sm:text-base text-houseBlue">No. Sales</div>
             <div className="stat-value text-xl sm:text-2xl text-black">{overviewData.totalSales}</div>
           </div>
         </div>
-        <div className="stats shadow-md bg-white w-full flex-shrink-0 overflow-x-auto p-2">
+        <div className="stats shadow-md bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2">
           <div className="stat">
             <div className="stat-title text-sm sm:text-base text-houseBlue">ROI</div>
             <div className="stat-value text-xl sm:text-2xl text-black">{roi}%</div>

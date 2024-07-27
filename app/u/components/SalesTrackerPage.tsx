@@ -24,15 +24,15 @@ const SalesTrackerPage = () => {
   };
 
   return (
-    <div className="bg-lightGreyBackground grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1 w-full rounded-2xl p-1mx-2 mt-2">
+    <div className="grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1 w-full rounded-2xl p-1 mx-2 mt-2">
       <div className={`col-span-${activeComponent === "AddPurchase" ? "1" : "2"}`}>
         <div role="tablist" className="bg-lightGreyBackground flex rounded-t-2xl">
           <a
             role="tab"
-            className={`bg-white px-4 py-2 rounded-t-xl transition-colors duration-200 select-none ${
+            className={`font-semibold px-4 py-2 rounded-t-xl transition-colors duration-200 select-none ${
               activeComponent === "AddPurchase"
-                ? "bg-base-100 bg-opacity-90 text-lightModeText"
-                : "bg-base-100 bg-opacity-70 text-lightModeText hover:bg-gray-100"
+                ? "bg-gray-300 text-black border-b-2 border-gray-500"
+                : "bg-white text-gray-700 hover:bg-gray-100"
             }`}
             onClick={toggleAddPurchase}
           >
@@ -40,10 +40,10 @@ const SalesTrackerPage = () => {
           </a>
           <a
             role="tab"
-            className={`bg-white px-4 py-2 rounded-t-xl transition-colors duration-200 select-none ${
+            className={`px-4 py-2 font-semibold rounded-t-xl transition-colors duration-200 select-none ${
               activeComponent === "AddSale"
-                ? "bg-base-100 bg-opacity-90 text-lightModeText"
-                : "bg-base-100 bg-opacity-70 text-lightModeText hover:bg-gray-100"
+                ? "bg-gray-300 text-black border-b-2 border-gray-500"
+                : "bg-white text-gray-700 hover:bg-gray-100"
             }`}
             onClick={toggleAddSale}
           >
@@ -51,10 +51,10 @@ const SalesTrackerPage = () => {
           </a>
           <a
             role="tab"
-            className={`bg-white px-4 py-2 rounded-t-xl transition-colors duration-200 select-none ${
+            className={`font-semibold px-4 py-2 rounded-t-xl transition-colors duration-200 select-none ${
               activeComponent === "ReviewProfits"
-                ? "bg-base-100 bg-opacity-90 text-lightModeText"
-                : "bg-base-100 bg-opacity-70 text-lightModeText hover:bg-gray-100"
+                ? "bg-gray-300 text-black border-b-2 border-gray-500"
+                : "bg-white text-gray-700 hover:bg-gray-100"
             }`}
             onClick={toggleReviewProfits}
           >
@@ -69,10 +69,10 @@ const SalesTrackerPage = () => {
       </div>
       {activeComponent === "AddPurchase" && (
         <div>
-          <div role="tablist" className="flex bg-lightGreyBackground rounded-t-2xl pt-2 md:pt-0">
+          <div role="tablist" className="flex bg-lightGreyBackground rounded-t-2xl pt-1 md:pt-0">
             <a
               role="tab"
-              className="text-lightModeText bg-white px-4 py-2 rounded-t-xl transition-colors duration-200 select-none"
+              className="text-black font-semibold bg-gray-300 border-b-2 border-gray-500 px-4 py-2 rounded-t-xl transition-colors duration-200 select-none"
             >
               Calculate Profits
             </a>

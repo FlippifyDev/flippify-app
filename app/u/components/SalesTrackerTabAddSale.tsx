@@ -1,18 +1,24 @@
+
 import React, { useState, useEffect } from 'react';
 import { auth, database, ref, get, set, push } from '../../api/firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { ISale, IPurchase } from './SalesTrackerModels';
+import { format } from 'date-fns';
 
 const sanitizePath = (path: string): string => {
   return path.replace(/[.#$[\]]/g, '_');
 };
 
 const SalesTrackerTabAddSale: React.FC = () => {
+  const today = new Date();
+  const formattedToday = format(today, 'yyyy-MM-dd');
+
   const [sale, setSale] = useState<ISale>({
     itemName: '',
-    saleDate: '',
+    saleDate: formattedToday,
     purchaseDate: '',
     salePlatform: '',
+    purchasePlatform: '',
     salePrice: 0,
     quantitySold: 0,
     platformFees: 12.5,
@@ -42,15 +48,14 @@ const SalesTrackerTabAddSale: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-  
     const parsedValue = (name === 'salePrice' || name === 'quantitySold' || name === 'platformFees' || name === 'shippingCost')
       ? parseFloat(value)
       : value;
-  
+
     if (['salePrice', 'quantitySold', 'platformFees', 'shippingCost'].includes(name) && typeof parsedValue === 'number' && parsedValue < 0) {
       return;
     }
-  
+
     setSale(prevSale => {
       if (name === 'quantitySold') {
         const quantity = typeof parsedValue === 'number' ? parsedValue : 0;
@@ -59,7 +64,7 @@ const SalesTrackerTabAddSale: React.FC = () => {
           [name]: Math.min(Math.max(quantity, 0), selectedPurchaseData?.availability ?? 0)
         };
       }
-  
+
       return {
         ...prevSale,
         [name]: parsedValue
@@ -78,7 +83,8 @@ const SalesTrackerTabAddSale: React.FC = () => {
       setSale(prevSale => ({
         ...prevSale,
         purchaseDate: selectedData.purchaseDate,
-        purchasePricePerUnit: selectedData.purchasePricePerUnit
+        purchasePricePerUnit: selectedData.purchasePricePerUnit,
+        purchasePlatform: selectedData.websiteName
       }));
     }
   };
@@ -115,9 +121,9 @@ const SalesTrackerTabAddSale: React.FC = () => {
         quantitySold: parseFloat(sale.quantitySold.toString()),
         platformFees: parseFloat(sale.platformFees.toString()),
         shippingCost: parseFloat(sale.shippingCost.toString()),
-        itemName: selectedPurchaseData.itemName
+        itemName: selectedPurchaseData.itemName,
+        purchasePlatform: selectedPurchaseData.websiteName // Include purchasePlatform in the sale entry
       });
-      console.log("Sale added successfully");
 
       const updatedAvailability = (selectedPurchaseData.availability ?? 0) - sale.quantitySold;
       const updatedSoldQuantity = (selectedPurchaseData.soldQuantity ?? 0) + sale.quantitySold;
@@ -135,9 +141,10 @@ const SalesTrackerTabAddSale: React.FC = () => {
 
       setSale({
         itemName: '',
-        saleDate: '',
+        saleDate: formattedToday,
         purchaseDate: '',
         salePlatform: '',
+        purchasePlatform: '',
         salePrice: 0,
         quantitySold: 0,
         platformFees: 12.5,
@@ -174,7 +181,13 @@ const SalesTrackerTabAddSale: React.FC = () => {
             <label className="label">
               <span className="label-text text-lightModeText">Sale Date</span>
             </label>
-            <input type="date" name="saleDate" value={sale.saleDate} onChange={handleChange} className="input input-bordered w-full bg-white  placeholder-lightModeText-light" style={{ colorScheme: 'dark' }} />
+            <input
+              type="date"
+              name="saleDate"
+              value={sale.saleDate}
+              onChange={handleChange}
+              className="input input-bordered w-full bg-white placeholder-lightModeText-light"
+            />
           </div>
           <div className="mb-4">
             <label className="label">
@@ -196,8 +209,7 @@ const SalesTrackerTabAddSale: React.FC = () => {
           </div>
           <div className="mb-4">
             <label className="label">
-              <span className="label-text text-lightModeText">Platform Fees (%)</span>
-            </label>
+              <span className="label-text text-lightModeText">Platform Fees (%)</span></label>
             <input type="number" name="platformFees" value={sale.platformFees} onChange={handleChange} className="input input-bordered w-full bg-white" />
           </div>
           <div className="mb-4">

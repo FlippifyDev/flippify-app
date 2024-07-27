@@ -43,15 +43,15 @@ const Sidebar = () => {
             <IoMenu />
           </label>
         </div>
-        <div className="drawer-side">
-          <ul className="menu bg-white active:bg-white border-r-2 border-greyStroke text-base-content min-h-full w-80 p-4 flex flex-col justify-between">
+        <div className="drawer-side shadow-lg">
+          <ul className="menu bg-white text-base-content min-h-full w-80 p-4 flex flex-col justify-between border-r border-gray-200">
             <div className="flex flex-col">
               <div className="flex justify-center mb-8 mt-4 select-none">
                 <a className={`${lato.className} text-lightModeText text-4xl`}>flippify</a>
               </div>
 
               <section>
-                <div>
+                <div className="mb-4">
                   <a className="text-lightModeText text-lg font-bold select-none">Home</a>
                 </div>
                 <div>
@@ -70,7 +70,7 @@ const Sidebar = () => {
               </section>
 
               <section className="mt-6 md:mt-10">
-                <div>
+                <div className="mb-4">
                   <a className="text-lightModeText text-lg font-bold select-none">Tools</a>
                 </div>
                 <SidebarToolButtons showAlert={showAlert} />

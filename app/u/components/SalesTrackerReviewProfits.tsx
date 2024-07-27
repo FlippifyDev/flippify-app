@@ -3,6 +3,7 @@ import { auth, database, ref, get } from "../../api/firebaseConfig";
 import { ISale, IHistoryGrid } from "./SalesTrackerModels";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { saveAs } from "file-saver";
+import { format } from 'date-fns';
 import * as Papa from "papaparse";
 
 interface Filters {
@@ -16,8 +17,11 @@ const sanitizePath = (path: string): string => {
 };
 
 const SalesTrackerReviewProfits: React.FC = () => {
+  const today = new Date();
+  const formattedToday = format(today, 'yyyy-MM-dd');
+
   const [filters, setFilters] = useState<Filters>({
-    dateRange: { start: "", end: "" },
+    dateRange: { start: "", end: formattedToday },
     itemName: "",
     salePlatform: "",
   });
@@ -66,6 +70,7 @@ const SalesTrackerReviewProfits: React.FC = () => {
                 shippingCost: shippingCost,
                 estimatedProfit: estimatedProfit,
                 salePlatform: sale.salePlatform,
+                totalCosts: totalPurchaseCost
               });
             }
           }
@@ -308,9 +313,9 @@ const SalesTrackerReviewProfits: React.FC = () => {
             <table className="table w-full">
               <thead>
                 <tr className="text-lightModeText">
-                  <th>Item Name</th>
-                  <th>Purchase Date</th>
                   <th>Sale Date</th>
+                  <th>Purchase Date</th>
+                  <th>Item Name</th>
                   <th>Quantity</th>
                   <th>Shipping & Other Fees</th>
                   <th>% Platform Fees</th>
@@ -340,9 +345,9 @@ const SalesTrackerReviewProfits: React.FC = () => {
 
                     return (
                       <tr key={index}>
-                        <td>{sale.itemName}</td>
-                        <td>{sale.purchaseDate}</td>
                         <td>{sale.saleDate}</td>
+                        <td>{sale.purchaseDate}</td>
+                        <td>{sale.itemName}</td>
                         <td>{sale.quantitySold}</td>
                         <td>{totalShippingAndOtherFees.toFixed(2)}</td>
                         <td>{sale.platformFees.toFixed(2)}</td>

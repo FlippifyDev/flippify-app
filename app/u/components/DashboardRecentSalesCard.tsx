@@ -32,13 +32,10 @@ const DashboardRecentSalesCard: React.FC = () => {
               const shippingCost = sale.shippingCost || 0;
 
               const totalSaleRevenue = sale.quantitySold * salePrice;
-              const totalPurchaseCost =
-                sale.quantitySold * purchasePricePerUnit;
-              const estimatedProfit =
-                totalSaleRevenue -
-                totalPurchaseCost -
-                totalSaleRevenue * (platformFees / 100) -
-                shippingCost;
+              const totalPurchaseCost = sale.quantitySold * purchasePricePerUnit;
+              const totalCosts = totalSaleRevenue * (platformFees / 100) + shippingCost;
+
+              const estimatedProfit = totalSaleRevenue - totalPurchaseCost - totalCosts;
 
               salesArray.push({
                 ...sale,
@@ -47,10 +44,10 @@ const DashboardRecentSalesCard: React.FC = () => {
                 quantitySold: sale.quantitySold,
                 purchasePricePerUnit: purchasePricePerUnit,
                 salePrice: salePrice,
-                platformFees: platformFees,
-                shippingCost: shippingCost,
+                totalCosts: totalCosts,
                 estimatedProfit: estimatedProfit,
                 salePlatform: sale.salePlatform,
+                purchasePlatform: sale.purchasePlatform,
               });
             }
           }
@@ -78,7 +75,10 @@ const DashboardRecentSalesCard: React.FC = () => {
             <tr className="text-lightModeText">
               <th>Date</th>
               <th>Product Name</th>
+              <th>Purchase Platform</th>
               <th>Sale Price</th>
+              <th>Quantity Sold</th>
+              <th>Total Costs</th>
               <th>Profit</th>
             </tr>
           </thead>
@@ -88,13 +88,16 @@ const DashboardRecentSalesCard: React.FC = () => {
                 <tr key={index}>
                   <td>{sale.saleDate}</td>
                   <td>{sale.itemName}</td>
+                  <td>{sale.purchasePlatform}</td>
                   <td>£{sale.salePrice.toFixed(2)}</td>
+                  <td>{sale.quantitySold}</td>
+                  <td>£{sale.totalCosts.toFixed(2)}</td>
                   <td>£{sale.estimatedProfit.toFixed(2)}</td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={4} className="text-center">Log sales with the Sales & Profits tool.</td>
+                <td colSpan={7} className="text-center">Log sales with the Sales & Profits tool.</td>
               </tr>
             )}
           </tbody>

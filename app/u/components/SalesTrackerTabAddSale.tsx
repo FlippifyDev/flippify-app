@@ -214,7 +214,7 @@ const SalesTrackerTabAddSale: React.FC = () => {
             <input type="number" name="shippingCost" value={sale.shippingCost} onChange={handleChange} className="input input-bordered w-full bg-white" />
           </div>
           <div className='flex justify-center'>
-            <button type="button" onClick={handleSubmit} disabled={!selectedPurchase} className={`btn ${!selectedPurchase ? 'btn-disabled' : 'btn-primary'} bg-white border-black hover:bg-green-300 hover:border-black w-36 sm:w-42 md:w-48 mx-auto transition duration-200`}>Add Sale</button>
+            <button type="button" onClick={handleSubmit} disabled={!selectedPurchase} className={`btn ${!selectedPurchase ? 'btn-disabled' : 'btn-primary'} bg-white text-black border-black hover:bg-green-300 hover:border-black w-36 sm:w-42 md:w-48 mx-auto transition duration-200`}>Add Sale</button>
           </div>
         </section>
         <section className='col-span-1 row-span-1'>

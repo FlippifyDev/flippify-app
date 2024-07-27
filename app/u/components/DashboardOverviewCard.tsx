@@ -63,7 +63,7 @@ const DashboardOverviewCard: React.FC = () => {
 
   return (
     <div className="w-full flex flex-col items-center">
-      <div className="flex flex-wrap font-semibold justify-center gap-2">
+      <div className="grid grid-cols-2 lg:grid-cols-4 font-semibold justify-center gap-2">
         <div className="stats shadow-md bg-white w-full sm:w-56 lg:w-56 flex-shrink-0 overflow-x-auto p-2">
           <div className="stat">
             <div className="stat-title text-houseBlue">Total Revenue</div>

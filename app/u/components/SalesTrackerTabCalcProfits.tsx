@@ -3,39 +3,49 @@ import { useEstimate } from '../../components/EstimateContext';
 
 const SalesTrackerTabCalcProfits: React.FC = () => {
   const { estimate, setEstimate } = useEstimate();
-  const [listingPrice, setListingPrice] = useState<number | ''>(0);
-  const [platformFees, setPlatformFees] = useState<number | ''>(0);
-  const [shippingCost, setShippingCost] = useState<number | ''>(0);
+  const [listingPrice, setListingPrice] = useState<number | string>(0);
+  const [platformFees, setPlatformFees] = useState<number | string>(0);
+  const [shippingCost, setShippingCost] = useState<number | string>(0);
   const [estimatedProfit, setEstimatedProfit] = useState(0);
 
   useEffect(() => {
-    if (estimate.purchasedQuantity > 0 && estimate.purchasePricePerUnit > 0) {
-      const totalPurchaseCost = estimate.purchasedQuantity * estimate.purchasePricePerUnit;
-      const totalSaleRevenue = (typeof listingPrice === 'number' ? listingPrice : 0) * estimate.purchasedQuantity;
-      const totalPlatformFees = (totalSaleRevenue * ((typeof platformFees === 'number' ? platformFees : 0) / 100));
-      const totalShippingCost = estimate.purchasedQuantity * (typeof shippingCost === 'number' ? shippingCost : 0);
-      const calculatedProfit = totalSaleRevenue - totalPlatformFees - totalShippingCost - totalPurchaseCost;
-      setEstimatedProfit(parseFloat(calculatedProfit.toFixed(2)));
-    }
+    const totalPurchaseCost = estimate.purchasedQuantity * estimate.purchasePricePerUnit;
+    const totalSaleRevenue = parseFloat(listingPrice as string) * estimate.purchasedQuantity;
+    const totalPlatformFees = totalSaleRevenue * (parseFloat(platformFees as string) / 100);
+    const totalShippingCost = estimate.purchasedQuantity * parseFloat(shippingCost as string);
+    const calculatedProfit = totalSaleRevenue - totalPlatformFees - totalShippingCost - totalPurchaseCost;
+    setEstimatedProfit(parseFloat(calculatedProfit.toFixed(2)));
   }, [estimate, listingPrice, platformFees, shippingCost]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    const parsedValue = parseFloat(value);
+  const handleInputChange = (name: string, value: string) => {
+    if (value === '' || (/^\d*\.?\d*$/.test(value) && (name !== 'purchasedQuantity' || Number.isInteger(parseFloat(value))))) {
+      switch (name) {
+        case 'listingPrice':
+          setListingPrice(value);
+          break;
+        case 'platformFees':
+          setPlatformFees(value);
+          break;
+        case 'shippingCost':
+          setShippingCost(value);
+          break;
+        case 'purchasedQuantity':
+          setEstimate({ ...estimate, purchasedQuantity: value === '' ? 0 : parseInt(value, 10) });
+          break;
+        case 'purchasePricePerUnit':
+          setEstimate({ ...estimate, purchasePricePerUnit: value === '' ? 0 : parseFloat(value) });
+          break;
+        default:
+          break;
+      }
+    }
+  };
 
-    if (parsedValue < 0) return;
-
-    if (name === 'listingPrice') {
-      setListingPrice(value === '' ? '' : parsedValue);
-    } else if (name === 'platformFees') {
-      setPlatformFees(value === '' ? '' : parsedValue);
-    } else if (name === 'shippingCost') {
-      setShippingCost(value === '' ? '' : parsedValue);
-    } else {
-      setEstimate({
-        ...estimate,
-        [name]: value === '' ? 0 : parsedValue,
-      });
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, fieldName: string) => {
+    if (fieldName === 'purchasedQuantity') {
+      if (['e', 'E', '+', '-', '.'].includes(e.key)) {
+        e.preventDefault();
+      }
     }
   };
 
@@ -48,9 +58,10 @@ const SalesTrackerTabCalcProfits: React.FC = () => {
           </label>
           <input
             type="number"
-            name="quantity"
+            name="purchasedQuantity"
             value={estimate.purchasedQuantity === 0 ? '' : estimate.purchasedQuantity}
-            onChange={handleChange}
+            onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+            onKeyDown={(e) => handleKeyDown(e, 'purchasedQuantity')}
             className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="Enter quantity"
             min="1"
@@ -61,10 +72,10 @@ const SalesTrackerTabCalcProfits: React.FC = () => {
             <span className="label-text text-lightModeText">Purchase Price (per unit)</span>
           </label>
           <input
-            type="number"
-            name="purchasePrice"
+            type="text"
+            name="purchasePricePerUnit"
             value={estimate.purchasePricePerUnit === 0 ? '' : estimate.purchasePricePerUnit}
-            onChange={handleChange}
+            onChange={(e) => handleInputChange(e.target.name, e.target.value)}
             className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="Enter purchase price"
           />
@@ -74,10 +85,10 @@ const SalesTrackerTabCalcProfits: React.FC = () => {
             <span className="label-text text-lightModeText">Listing Price (per unit)</span>
           </label>
           <input
-            type="number"
+            type="text"
             name="listingPrice"
             value={listingPrice === 0 ? '' : listingPrice}
-            onChange={handleChange}
+            onChange={(e) => handleInputChange(e.target.name, e.target.value)}
             className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="Enter listing price"
           />
@@ -87,10 +98,10 @@ const SalesTrackerTabCalcProfits: React.FC = () => {
             <span className="label-text text-lightModeText">Platform Fees (%)</span>
           </label>
           <input
-            type="number"
+            type="text"
             name="platformFees"
             value={platformFees === 0 ? '' : platformFees}
-            onChange={handleChange}
+            onChange={(e) => handleInputChange(e.target.name, e.target.value)}
             className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="Enter platform fees"
           />
@@ -100,10 +111,10 @@ const SalesTrackerTabCalcProfits: React.FC = () => {
             <span className="label-text text-lightModeText">Shipping Cost (per unit)</span>
           </label>
           <input
-            type="number"
+            type="text"
             name="shippingCost"
             value={shippingCost === 0 ? '' : shippingCost}
-            onChange={handleChange}
+            onChange={(e) => handleInputChange(e.target.name, e.target.value)}
             className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="Enter shipping cost"
           />

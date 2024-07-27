@@ -123,13 +123,13 @@ const DashboardProfitsGraph: React.FC = () => {
               return '';
             }
             if (selectedRange === '30') {
-              return format(date, 'd');
+              return '';
             } else if (selectedRange === '90') {
               return '';
             } else if (selectedRange === '365') {
               return format(date, 'MMM');
             }
-            return format(date, 'd MMM');
+            return format(date, 'd');
           },
           cssClass: 'text-xs text-gray-500'
         },

@@ -100,7 +100,7 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
         </div>
         <div className="mb-4">
           <label className="label">
-            <span className="label-text text-lightModeText">Sale Date</span>
+            <span className="label-text text-lightModeText">Purchase Date</span>
           </label>
           <input
             type="date"
@@ -154,7 +154,7 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
           <button
             type="button"
             onClick={handleSubmit}
-            className="btn btn-primary w-36 sm:w-42 md:w-48 bg-white border-black hover:bg-textGradStart hover:border-black transition duration-200"
+            className="btn btn-primary w-36 sm:w-42 md:w-48 bg-white text-black border-black hover:bg-textGradStart hover:border-black transition duration-200"
           >
             Add Purchase
           </button>
@@ -168,7 +168,7 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
               setWebsiteName('');
               setAvailability(1);
             }}
-            className="btn btn-primary w-36 sm:w-42 md:w-48 bg-white border-black hover:bg-textGradStart hover:border-black transition duration-200"
+            className="btn btn-primary text-black w-36 sm:w-42 md:w-48 bg-white border-black hover:bg-textGradStart hover:border-black transition duration-200"
           >
             Clear All
           </button>

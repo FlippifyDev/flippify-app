@@ -234,14 +234,14 @@ const SalesTrackerReviewProfits: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleSubmit}
-                  className="btn btn-primary bg-white border-black hover:bg-textGradStart hover:border-black w-36 sm:w-42 md:w-48 transition duration-200"
+                  className="btn btn-primary text-black bg-white border-black hover:bg-textGradStart hover:border-black w-36 sm:w-42 md:w-48 transition duration-200"
                 >
                   Apply
                 </button>
                 <button
                   type="button"
                   onClick={handleClearFilters}
-                  className="btn btn-secondary bg-white border-black hover:bg-textGradStart hover:border-black w-36 sm:w-42 md:w-48 transition duration-200"
+                  className="btn btn-secondary bg-white text-black border-black hover:bg-textGradStart hover:border-black w-36 sm:w-42 md:w-48 transition duration-200"
                 >
                   Clear
                 </button>
@@ -361,7 +361,7 @@ const SalesTrackerReviewProfits: React.FC = () => {
         <button
           type="button"
           onClick={handleExport}
-          className="btn btn-primary bg-white border-black hover:bg-textGradStart hover:border-black w-full md:w-1/3 mx-auto transition duration-200 flex justify-center"
+          className="btn btn-primary text-black bg-white border-black hover:bg-textGradStart hover:border-black w-full md:w-1/3 mx-auto transition duration-200 flex justify-center"
         >
           Export Data
         </button>

@@ -52,6 +52,10 @@ const Dashboard = () => {
             <DashboardPage />
           </LayoutSubscriptionWrapper>
 
+          <LayoutSubscriptionWrapper requiredSubscriptions={["standard", "server"]}>
+            <DashboardPage />
+          </LayoutSubscriptionWrapper>
+
           {/* FOR PEOPLE WHO ARE NOT WHITELISTED */}
           <LayoutSubscriptionWrapper requiredSubscriptions={["!whitelisted"]}>
             <WaitlistContent />

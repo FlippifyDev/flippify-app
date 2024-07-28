@@ -1,15 +1,20 @@
-
 import React, { useState, useEffect } from 'react';
-import { auth, database, ref, get, set, push } from '../../api/firebaseConfig';
-import { useAuthState } from 'react-firebase-hooks/auth';
+import { database, ref, get, set, push } from '../../api/firebaseConfig';
 import { ISale, IPurchase } from './SalesTrackerModels';
 import { format } from 'date-fns';
+
+interface SalesTrackerTabAddSaleProps {
+  userData: {
+    uid: string;
+    customerId: string;
+  };
+}
 
 const sanitizePath = (path: string): string => {
   return path.replace(/[.#$[\]]/g, '_');
 };
 
-const SalesTrackerTabAddSale: React.FC = () => {
+const SalesTrackerTabAddSale: React.FC<SalesTrackerTabAddSaleProps> = ({ userData }) => {
   const today = new Date();
   const formattedToday = format(today, 'yyyy-MM-dd');
 
@@ -29,12 +34,11 @@ const SalesTrackerTabAddSale: React.FC = () => {
   const [purchases, setPurchases] = useState<IPurchase[]>([]);
   const [selectedPurchase, setSelectedPurchase] = useState<string>('');
   const [selectedPurchaseData, setSelectedPurchaseData] = useState<IPurchase | null>(null);
-  const [user] = useAuthState(auth);
 
   useEffect(() => {
-    if (user) {
-      const sanitizedUserId = sanitizePath(user.uid);
-      const userPurchasesRef = ref(database, `purchases/${sanitizedUserId}`);
+    if (userData) {
+      const sanitizedCustomerId = sanitizePath(userData.customerId);
+      const userPurchasesRef = ref(database, `purchases/${sanitizedCustomerId}`);
       get(userPurchasesRef).then((snapshot) => {
         const purchasesData = snapshot.val() || {};
         const purchasesList = Object.keys(purchasesData).map((key) => ({
@@ -44,7 +48,7 @@ const SalesTrackerTabAddSale: React.FC = () => {
         setPurchases(purchasesList);
       });
     }
-  }, [user]);
+  }, [userData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -90,8 +94,8 @@ const SalesTrackerTabAddSale: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    if (!user) {
-      console.error("User is not logged in");
+    if (!userData) {
+      console.error("User data is not available");
       return;
     }
 
@@ -110,24 +114,25 @@ const SalesTrackerTabAddSale: React.FC = () => {
       return;
     }
 
-    const sanitizedUserId = sanitizePath(user.uid);
-    const userSalesRef = ref(database, `sales/${sanitizedUserId}`);
+    const sanitizedCustomerId = sanitizePath(userData.customerId);
+    const userSalesRef = ref(database, `sales/${sanitizedCustomerId}`);
     const newSaleRef = push(userSalesRef);
 
     try {
       await set(newSaleRef, {
         ...sale,
         salePrice: parseFloat(sale.salePrice.toString()),
+        saleDate: format(sale.saleDate, 'dd/MM/yyyy'),
         quantitySold: parseFloat(sale.quantitySold.toString()),
         platformFees: parseFloat(sale.platformFees.toString()),
         shippingCost: parseFloat(sale.shippingCost.toString()),
         itemName: selectedPurchaseData.itemName,
-        purchasePlatform: selectedPurchaseData.websiteName // Include purchasePlatform in the sale entry
+        purchasePlatform: selectedPurchaseData.websiteName
       });
 
       const updatedAvailability = (selectedPurchaseData.availability ?? 0) - sale.quantitySold;
       const updatedSoldQuantity = (selectedPurchaseData.soldQuantity ?? 0) + sale.quantitySold;
-      const selectedPurchaseRef = ref(database, `purchases/${sanitizedUserId}/${selectedPurchaseData.id}`);
+      const selectedPurchaseRef = ref(database, `purchases/${sanitizedCustomerId}/${selectedPurchaseData.id}`);
 
       if (updatedAvailability > 0) {
         await set(selectedPurchaseRef, {

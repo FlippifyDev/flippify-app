@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import ApexCharts from 'apexcharts';
-import { auth, database, ref, get } from "../../api/firebaseConfig";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { database, ref, get } from "../../api/firebaseConfig";
 import { ISale } from "./SalesTrackerModels";
-import { format, subDays, eachDayOfInterval, eachMonthOfInterval, endOfDay } from 'date-fns';
+import { format, subDays, eachDayOfInterval, eachMonthOfInterval, endOfDay, parse } from 'date-fns';
 
 interface ChartData {
   name: string;
@@ -19,12 +18,13 @@ interface TooltipFormatterOpts {
   dataPointIndex: number;
 }
 
-const sanitizePath = (path: string): string => {
-  return path.replace(/[.#$[\]]/g, '_');
-};
 
-const DashboardProfitsGraph: React.FC = () => {
-  const [user] = useAuthState(auth);
+
+interface DashboardProfitsGraphProps {
+  customerId: string;
+}
+
+const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerId }) => {
   const [salesData, setSalesData] = useState<SalesData>({
     categories: [],
     series: []
@@ -34,20 +34,17 @@ const DashboardProfitsGraph: React.FC = () => {
   const [selectedRange, setSelectedRange] = useState('30');
 
   const fetchSalesData = useCallback(async (rangeInDays: number) => {
-    if (!user) return;
+    if (!customerId) return;
 
     try {
-      const sanitizedUserId = sanitizePath(user.uid);
-      const salesRef = ref(database, `sales/${sanitizedUserId}`);
+      const salesRef = ref(database, `sales/${customerId}`);
       const salesSnapshot = await get(salesRef);
       const salesData = salesSnapshot.val() || {};
-      
-      // 
+
       const today = endOfDay(new Date());
       const rangeStartDate = subDays(today, rangeInDays - 1);
       const previousRangeStartDate = subDays(rangeStartDate, rangeInDays);
-      
-      // Prepare categories
+
       let allCategories: string[];
       if (rangeInDays > 90) {
         allCategories = eachMonthOfInterval({ start: rangeStartDate, end: today }).map(date => format(date, 'yyyy-MM'));
@@ -63,8 +60,15 @@ const DashboardProfitsGraph: React.FC = () => {
       for (const saleKey in salesData) {
         const sale: ISale = salesData[saleKey];
         const saleDate = sale.saleDate;
+
         if (saleDate && sale.salePrice) {
-          const formattedSaleDate = rangeInDays > 90 ? format(new Date(saleDate), 'yyyy-MM') : format(new Date(saleDate), 'yyyy-MM-dd');
+          const parsedSaleDate = parse(saleDate, 'dd/MM/yyyy', new Date());
+          if (isNaN(parsedSaleDate.getTime())) {
+            console.error(`Invalid date: ${saleDate}`);
+            continue; // Skip this sale if the date is invalid
+          }
+
+          const formattedSaleDate = rangeInDays > 90 ? format(parsedSaleDate, 'yyyy-MM') : format(parsedSaleDate, 'yyyy-MM-dd');
 
           const purchasePricePerUnit = sale.purchasePricePerUnit || 0;
           const platformFees = sale.platformFees || 0;
@@ -83,10 +87,9 @@ const DashboardProfitsGraph: React.FC = () => {
           }
 
           // Include current day’s sales in net profit calculation
-          const saleDateObj = new Date(saleDate);
-          if (saleDateObj >= rangeStartDate && saleDateObj <= today) {
+          if (parsedSaleDate >= rangeStartDate && parsedSaleDate <= today) {
             totalNetProfit += estimatedProfit;
-          } else if (saleDateObj < rangeStartDate && saleDateObj >= previousRangeStartDate) {
+          } else if (parsedSaleDate < rangeStartDate && parsedSaleDate >= previousRangeStartDate) {
             totalPreviousNetProfit += estimatedProfit;
           }
         }
@@ -101,11 +104,11 @@ const DashboardProfitsGraph: React.FC = () => {
     } catch (error) {
       console.error('Error fetching data:', error);
     }
-  }, [user]);
+  }, [customerId]);
 
   useEffect(() => {
     fetchSalesData(parseInt(selectedRange));
-  }, [user, selectedRange, fetchSalesData]);
+  }, [customerId, selectedRange, fetchSalesData]);
 
   useEffect(() => {
     const options = {
@@ -222,22 +225,16 @@ const DashboardProfitsGraph: React.FC = () => {
         <div className="flex justify-between items-center pt-5">
           <div className="dropdown dropdown-hover bg-white">
             <div tabIndex={0} role="button" className="btn m-1 text-lightModeText bg-white hover:bg-gray-100">Last {selectedRange} days</div>
-            <ul tabIndex={0} className="dropdown-content menu bg-white rounded-box z-[1] w-52 p-2 shadow text-lightModeText">
-              <li><a onClick={() => handleRangeChange('7')}>Last 7 days</a></li>
-              <li><a onClick={() => handleRangeChange('30')}>Last 30 days</a></li>
-              <li><a onClick={() => handleRangeChange('90')}>Last 90 days</a></li>
-              <li><a onClick={() => handleRangeChange('365')}>Last year</a></li>
+            <ul tabIndex={0} className="dropdown-content menu bg-white rounded-box z-[1] w-52 p-2 shadow">
+              {['7', '30', '90', '365'].map(range => (
+                <li key={range}>
+                  <a onClick={() => handleRangeChange(range)}>
+                    Last {range} days
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
-          <a
-            href="#"
-            className="uppercase select-none text-sm font-semibold inline-flex items-center text-houseBlue hover:text-blue-700 dark:hover:text-blue-500 hover:bg-gray-100 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 rounded-lg  px-3 py-2"
-          >
-            Sales Report
-            <svg className="w-2.5 h-2.5 ms-1.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4"/>
-            </svg>
-          </a>
         </div>
       </div>
     </div>

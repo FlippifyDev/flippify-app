@@ -12,11 +12,18 @@ interface Filters {
   salePlatform: string;
 }
 
+interface SalesTrackerReviewProfitsProps {
+  userData: {
+    uid: string;
+    customerId: string;
+  };
+}
+
 const sanitizePath = (path: string): string => {
   return path.replace(/[.#$[\]]/g, '_');
 };
 
-const SalesTrackerReviewProfits: React.FC = () => {
+const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ userData }) => {
   const today = new Date();
   const formattedToday = format(today, 'yyyy-MM-dd');
 
@@ -26,16 +33,15 @@ const SalesTrackerReviewProfits: React.FC = () => {
     salePlatform: "",
   });
 
-  const [user] = useAuthState(auth);
   const [sales, setSales] = useState<IHistoryGrid[]>([]);
   const [filteredSales, setFilteredSales] = useState<IHistoryGrid[]>([]);
 
   useEffect(() => {
-    if (user) {
+    if (userData) {
       const fetchData = async () => {
         try {
-          const sanitizedUserId = sanitizePath(user.uid);
-          const salesRef = ref(database, `sales/${sanitizedUserId}`);
+          const sanitizedCustomerId = sanitizePath(userData.customerId);
+          const salesRef = ref(database, `sales/${sanitizedCustomerId}`);
           const salesSnapshot = await get(salesRef);
           const salesData = salesSnapshot.val() || {};
 
@@ -84,7 +90,7 @@ const SalesTrackerReviewProfits: React.FC = () => {
 
       fetchData();
     }
-  }, [user]);
+  }, [userData]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -167,7 +173,7 @@ const SalesTrackerReviewProfits: React.FC = () => {
     (sum, sale) => sum + sale.quantitySold,
     0
   );
-  
+
   return (
     <div className="flex flex-col gap-4 font-semibold">
       {/* First Row: Summary and History Search Filter */}

@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
-import { useEstimate } from '../../components/EstimateContext';
 import { auth, database, ref, set, push } from '../../api/firebaseConfig';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { IPurchase } from './SalesTrackerModels';
 import { format } from 'date-fns';
+
+interface SalesTrackerTabAddPurchaseProps {
+  userData: {
+    uid: string;
+    customerId: string;
+  };
+}
 
 const sanitizePath = (path: string): string => {
   return path.replace(/[.#$[\]]/g, '_');
 };
 
-const SalesTrackerTabAddPurchase: React.FC = () => {
+const SalesTrackerTabAddPurchase: React.FC<SalesTrackerTabAddPurchaseProps> = ({ userData }) => {
   const today = new Date();
   const formattedToday = format(today, 'yyyy-MM-dd');
 
@@ -20,21 +25,16 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
   const [websiteName, setWebsiteName] = useState('');
   const [availability, setAvailability] = useState<number>(1);
 
-  const [user] = useAuthState(auth);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-  
-    // Convert the value to a number if it's supposed to be numeric
     const parsedValue = (name === 'purchasedQuantity' || name === 'purchasePricePerUnit')
       ? parseFloat(value)
       : value;
-  
+
     if (['purchasedQuantity', 'purchasePricePerUnit'].includes(name) && typeof parsedValue === 'number' && parsedValue < 0) {
       return;
     }
 
-    // Validate numeric fields
     if (['purchasedQuantity', 'purchasePricePerUnit'].includes(name)) {
       if (value === '' || (typeof parsedValue === 'number' && !isNaN(parsedValue) && parsedValue >= 0)) {
         if (name === 'purchasedQuantity') {
@@ -45,7 +45,6 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
         }
       }
     } else {
-      // Handle non-numeric fields
       if (name === 'itemName') {
         setItemName(value);
       } else if (name === 'websiteName') {
@@ -59,8 +58,8 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    if (!user) {
-      console.error("User is not logged in");
+    if (!userData) {
+      console.error("User data is not available");
       return;
     }
 
@@ -74,13 +73,12 @@ const SalesTrackerTabAddPurchase: React.FC = () => {
       availability: availability,
     };
 
-    const sanitizedUserId = sanitizePath(user.uid);
-    const userPurchasesRef = ref(database, `purchases/${sanitizedUserId}`);
+    const sanitizedCustomerId = sanitizePath(userData.customerId);
+    const userPurchasesRef = ref(database, `purchases/${sanitizedCustomerId}`);
     const newPurchaseRef = push(userPurchasesRef);
 
     await set(newPurchaseRef, newPurchase);
 
-    // Reset form
     setItemName('');
     setPurchaseDate(formattedToday);
     setQuantity(1);

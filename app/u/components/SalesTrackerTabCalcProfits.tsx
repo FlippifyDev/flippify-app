@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useEstimate } from '../../components/EstimateContext';
 
-const SalesTrackerTabCalcProfits: React.FC = () => {
+interface SalesTrackerTabCalcProfitsProps {
+  userData: {
+    uid: string;
+    customerId: string;
+  };
+}
+
+const SalesTrackerTabCalcProfits: React.FC<SalesTrackerTabCalcProfitsProps> = ({ userData }) => {
   const { estimate, setEstimate } = useEstimate();
+  
   const [listingPrice, setListingPrice] = useState<number | string>(0);
   const [platformFees, setPlatformFees] = useState<number | string>(0);
   const [shippingCost, setShippingCost] = useState<number | string>(0);

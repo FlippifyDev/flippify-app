@@ -5,16 +5,6 @@ import fetchProductRegions from '@/app/api/fetchProductRegions';
 import React, { useState } from 'react';
 import { useSession } from "next-auth/react";
 
-export interface Subscription {
-  name: string;
-}
-
-export interface CustomUser {
-  name?: string | null | undefined;
-  email?: string | null | undefined;
-  image?: string | null | undefined;
-  subscriptions?: Subscription[];
-}
 
 const ManagerServersSelectionList = () => {
     const { data: session } = useSession();
@@ -26,7 +16,7 @@ const ManagerServersSelectionList = () => {
         return null;
     }
 
-    const { subscriptions } = session.user as CustomUser;
+    const { subscriptions } = session.user;
 
     if (!subscriptions) {
         return null;

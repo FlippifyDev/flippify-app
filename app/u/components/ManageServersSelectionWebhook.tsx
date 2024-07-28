@@ -1,14 +1,10 @@
 "use client";
 
-import addWebhook from '@/app/api/addWebhook';
+import addWebhook from '@/app/api/auth-mongodb/addWebhook';
 import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import Link from 'next/link';
 
-interface CustomUser {
-    name: string;
-    customerId?: string;
-}
 
 interface Props {
     subscription_name: string;
@@ -23,7 +19,7 @@ const ManageServersSelectionWebhook = ({ subscription_name, region }: Props) => 
         if (!session || !session.user) {
             return; // Handle case where session or subscriptions are not available
         }
-        const user = session.user as CustomUser;
+        const user = session.user;
         if (!user.customerId) {
             return;
         }
@@ -46,7 +42,7 @@ const ManageServersSelectionWebhook = ({ subscription_name, region }: Props) => 
     };
 
     return (
-        <div className="form-control w-full max-w-xs mt-2 text-lightModeText">
+        <div className="form-control w-full mt-2 text-lightModeText">
             <div className="label">
                 <span className="label-text text-lightModeText">Webhook URL</span>
                 <Link 
@@ -61,7 +57,7 @@ const ManageServersSelectionWebhook = ({ subscription_name, region }: Props) => 
             <input
                 type="text"
                 placeholder="Enter webhook url"
-                className="input input-bordered w-full max-w-xs bg-white"
+                className="input input-bordered w-full bg-white"
                 value={webhookUrl}
                 onChange={(e) => setWebhookUrl(e.target.value)}
                 style={{ fontSize: '14px' }}

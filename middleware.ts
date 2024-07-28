@@ -1,7 +1,7 @@
 // middleware.ts
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { linkTracker } from './app/api/linkTracker'; // Adjust import based on your actual setup
+import { linkTracker } from './app/api/auth-firebase/linkTracker'; // Adjust import based on your actual setup
 
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();

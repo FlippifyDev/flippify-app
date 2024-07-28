@@ -1,6 +1,6 @@
 'use client';
 
-import { joinWaitlist } from '../../api/joinWaitlist';
+import { joinWaitlist } from '../../api/auth-mongodb/joinWaitlist';
 
 import React, { useState, useEffect } from "react";
 import { useSession } from 'next-auth/react';

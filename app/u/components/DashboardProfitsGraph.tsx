@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import ApexCharts from 'apexcharts';
-import { database, ref, get } from "../../api/firebaseConfig";
+import { database, ref, get } from "../../api/auth-firebase/firebaseConfig";
 import { ISale } from "./SalesTrackerModels";
 import { format, subDays, eachDayOfInterval, eachMonthOfInterval, endOfDay, parse } from 'date-fns';
 

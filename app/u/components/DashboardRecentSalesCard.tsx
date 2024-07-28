@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { auth, database, ref, get } from '../../api/firebaseConfig';
+import { auth, database, ref, get } from '../../api/auth-firebase/firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { IHistoryGrid, ISale } from './SalesTrackerModels';
 import { parse, format } from 'date-fns';

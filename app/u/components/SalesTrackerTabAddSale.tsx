@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { database, ref, get, set, push } from '../../api/firebaseConfig';
+import { database, ref, get, set, push } from '../../api/auth-firebase/firebaseConfig';
 import { ISale, IPurchase } from './SalesTrackerModels';
 import { format } from 'date-fns';
 

@@ -1,6 +1,6 @@
 "use client";
 import ManageServersSelectionWebhook from './ManageServersSelectionWebhook';
-import fetchProductRegions from '@/app/api/fetchProductRegions';
+import fetchProductRegions from '@/app/api/auth-mongodb/fetchProductRegions';
 
 import React, { useState } from 'react';
 import { useSession } from "next-auth/react";
@@ -38,10 +38,10 @@ const ManagerServersSelectionList = () => {
     };
 
     return (
-        <div className=''>
-            <label className="form-control w-full max-w-xs">
+        <div className='w-full max-w-xs'>
+            <label className="form-control">
                 <div className="label bg-transparent">
-                    <span className="label-text text-lightModeText" style={{ fontSize: '18px', fontFamily: 'Arial, sans-serif', fontWeight: 'normal' }}>
+                    <span className="label-text text-lightModeText font-semibold" style={{ fontSize: '16px', fontFamily: 'Arial, sans-serif' }}>
                         Select Server Subscription
                     </span>
                 </div>
@@ -63,9 +63,9 @@ const ManagerServersSelectionList = () => {
             </label>
 
             {selectedSubscription && (
-                <label className="form-control w-full max-w-xs mt-4">
+                <label className="form-control mt-4">
                     <div className="label bg-transparent">
-                        <span className="label-text text-lightModeText" style={{ fontSize: '18px', fontFamily: 'Arial, sans-serif', fontWeight: 'normal' }}>
+                        <span className="label-text text-lightModeText font-semibold" style={{ fontSize: '16px', fontFamily: 'Arial, sans-serif' }}>
                             Select Region
                         </span>
                     </div>

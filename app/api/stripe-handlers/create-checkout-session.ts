@@ -13,7 +13,7 @@ const createCheckoutSession = async (username: string, customerId: string, price
     const stripe = new Stripe(stripeAPIKey);
 
     try {
-        const successUrl = `${root}/u/${username}/plans`;
+        const successUrl = `${root}/u/${username}/dashboard`;
         const cancelUrl = `${root}/u/${username}/plans`;
 
         const checkoutSession = await stripe.checkout.sessions.create({

@@ -44,7 +44,11 @@ const Dashboard = () => {
       </Head>
       <Layout>
         <div className="w-full h-full">
-          <LayoutSubscriptionWrapper requiredSubscriptions={["standard"]}>
+          <LayoutSubscriptionWrapper requiredSubscriptions={["standard", "!server"]}>
+            <DashboardPage />
+          </LayoutSubscriptionWrapper>
+
+          <LayoutSubscriptionWrapper requiredSubscriptions={["!standard", "server"]}>
             <DashboardPage />
           </LayoutSubscriptionWrapper>
 

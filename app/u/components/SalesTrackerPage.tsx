@@ -6,7 +6,7 @@ import SalesTrackerReviewProfits from "./SalesTrackerReviewProfits";
 import SalesTrackerTabAddSale from "./SalesTrackerTabAddSale";
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { handleUser } from '../../api/firebaseConfig';  // Ensure this import is correct
+import { handleUser } from '../../api/auth-firebase/firebaseConfig';  // Ensure this import is correct
 
 const SalesTrackerPage: React.FC = () => {
   const [activeComponent, setActiveComponent] = useState("AddPurchase");

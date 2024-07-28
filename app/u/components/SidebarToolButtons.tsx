@@ -45,16 +45,6 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({ showAlert }) =>
 
       <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', '!server']}>
         <SidebarButtonDisabled
-          text="Reseller News"
-          redirect="reseller-news"
-          symbol={<FaRegNewspaper className="text-md" />}
-          tooltip="Coming Soon"
-          showAlert={showAlert}
-        />
-      </LayoutSubscriptionWrapper>
-
-      <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', '!server']}>
-        <SidebarButtonDisabled
           text="Manage Servers"
           redirect="manage-servers"
           symbol={<MdManageAccounts className="text-md" />}

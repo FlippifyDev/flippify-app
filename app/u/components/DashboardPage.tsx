@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { handleUser } from '../../api/firebaseConfig'; 
+import { handleUser } from '../../api/auth-firebase/firebaseConfig'; 
 import DashboardOverviewCard from './DashboardOverviewCard';
 import DashboardRecentSalesCard from './DashboardRecentSalesCard';
 import DashboardProfitsGraph from './DashboardProfitsGraph';
+import LayoutSubscriptionWrapper from "./LayoutSubscriptionWrapper";
 
 const DashboardPage: React.FC = () => {
   const [userData, setUserData] = useState<{ uid: string; customerId: string } | null>(null);
@@ -33,47 +34,32 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className="flex flex-col w-full h-full">
-      <div className="w-full">
-        <DashboardOverviewCard customerId={userData.customerId} />
-      </div>
-      <div className="w-full mt-2 mb-2">
-      <DashboardProfitsGraph customerId={userData.customerId} />
-      </div>
-      <div className="w-full">
-        <DashboardRecentSalesCard customerId={userData.customerId} />
-      </div>
+      {/* This displays the users server content */}
+      <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', 'server']}> 
+        <div className="text-center">
+          The dashboard for your server subscription is under development...
+        </div>
+      </LayoutSubscriptionWrapper>
+      
+      {/* This displays the users selling content */}
+      <LayoutSubscriptionWrapper requiredSubscriptions={['standard', '!server']}> 
+        <div className="w-full">
+          <DashboardOverviewCard customerId={userData.customerId} />
+        </div>
+        <div className="w-full mt-2 mb-2">
+        <DashboardProfitsGraph customerId={userData.customerId} />
+        </div>
+        <div className="w-full">
+          <DashboardRecentSalesCard customerId={userData.customerId} />
+        </div>
+      </LayoutSubscriptionWrapper>
+
+
     </div>
+
   );
 };
 
 export default DashboardPage;
 
 
-
-/*
-
-import React from 'react';
-import DashboardOverviewCard from './DashboardOverviewCard';
-import DashboardRecentSalesCard from './DashboardRecentSalesCard';
-import DashboardProfitsGraph from './DashboardProfitsGraph';
-
-
-const Dashboard = () => {
-  return (
-    <div className="flex flex-col w-full h-full">
-    <div className="w-full">
-    <DashboardOverviewCard />
-    </div>
-    <div className="w-full mt-2 mb-2">
-    <DashboardProfitsGraph />
-    </div>
-    <div className="w-full">
-    <DashboardRecentSalesCard />
-    </div>
-    </div>
-  );
-};
-
-export default Dashboard;
-
-*/

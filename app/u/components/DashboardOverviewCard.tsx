@@ -1,4 +1,4 @@
-import { database, ref, get } from '../../api/firebaseConfig';
+import { database, ref, get } from '../../api/auth-firebase/firebaseConfig';
 import { ISale } from './SalesTrackerModels';
 import React, { useState, useEffect } from 'react';
 

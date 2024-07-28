@@ -14,13 +14,6 @@ export interface Subscription {
     name: string;
 }
 
-export interface CustomUser {
-    name?: string | null | undefined;
-    email?: string | null | undefined;
-    image?: string | null | undefined;
-    subscriptions?: Subscription[] | null | undefined;
-}
-
 const LayoutSubscriptionWrapper: React.FC<LayoutSubscriptionWrapperProps> = ({ requiredSubscriptions, children, redirectPath }) => {
     const { data: session } = useSession();
     const router = useRouter();
@@ -31,43 +24,36 @@ const LayoutSubscriptionWrapper: React.FC<LayoutSubscriptionWrapperProps> = ({ r
             return;
         }
 
-        const user = session.user as CustomUser;
+        const user = session.user;
 
         if (!user.subscriptions) {
             if (redirectPath) router.push(redirectPath);
             return;
         }
 
-        const hasRequiredSubscriptions = requiredSubscriptions.every(sub => {
-            const isNegation = sub.startsWith('!');
-            const subscriptionToCheck = isNegation ? sub.slice(1) : sub;
-            const hasSubscription = user.subscriptions!.some(subscription =>
-                subscription.name.toLowerCase().includes(subscriptionToCheck.toLowerCase())
-            );
-            return isNegation ? !hasSubscription : hasSubscription;
-        });
+        const hasRequiredSubscriptions = checkSubscriptions(user.subscriptions, requiredSubscriptions);
 
         if (!hasRequiredSubscriptions && redirectPath) {
             router.push(redirectPath);
         }
     }, [session, requiredSubscriptions, redirectPath, router]);
 
-    if (!session || !session.user) return null;
+    if (!session || !session.user || !session.user.subscriptions) return null;
 
-    const user = session.user as CustomUser;
+    const hasRequiredSubscriptions = checkSubscriptions(session.user.subscriptions, requiredSubscriptions);
 
-    if (!user.subscriptions) return null;
+    return hasRequiredSubscriptions ? <>{children}</> : null;
+};
 
-    const hasRequiredSubscriptions = requiredSubscriptions.every(sub => {
+const checkSubscriptions = (userSubscriptions: Subscription[], requiredSubscriptions: string[]) => {
+    return requiredSubscriptions.every(sub => {
         const isNegation = sub.startsWith('!');
-        const subscriptionToCheck = isNegation ? sub.slice(1) : sub;
-        const hasSubscription = user.subscriptions!.some(subscription =>
-            subscription.name.toLowerCase().includes(subscriptionToCheck.toLowerCase())
+        const subscriptionToCheck = isNegation ? sub.slice(1).toLowerCase() : sub.toLowerCase();
+        const hasSubscription = userSubscriptions.some(subscription =>
+            subscription.name.toLowerCase().includes(subscriptionToCheck)
         );
         return isNegation ? !hasSubscription : hasSubscription;
     });
-
-    return hasRequiredSubscriptions ? <>{children}</> : null;
 };
 
 export default LayoutSubscriptionWrapper;

@@ -3,7 +3,7 @@ import DiscordProvider from 'next-auth/providers/discord';
 import mongoose from 'mongoose';
 import { Types } from 'mongoose';
 import retrieveStripeCustomer from '../stripe-handlers/retrieve-customer';
-import { User, ISubscription, IWaitListed, IReferral } from '../userModel';
+import { User, ISubscription, IWaitListed, IReferral } from '../auth-mongodb/userModel';
 
 const mongooseLong = require('mongoose-long')(mongoose);
 const Long = Types.Long;

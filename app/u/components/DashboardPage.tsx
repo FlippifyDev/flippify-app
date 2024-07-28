@@ -54,7 +54,18 @@ const DashboardPage: React.FC = () => {
         </div>
       </LayoutSubscriptionWrapper>
 
-
+      {/* For now if the person has both a server and standard subscription then display the user sales dashboard */}
+      <LayoutSubscriptionWrapper requiredSubscriptions={['standard', 'server']}> 
+        <div className="w-full">
+          <DashboardOverviewCard customerId={userData.customerId} />
+        </div>
+        <div className="w-full mt-2 mb-2">
+        <DashboardProfitsGraph customerId={userData.customerId} />
+        </div>
+        <div className="w-full">
+          <DashboardRecentSalesCard customerId={userData.customerId} />
+        </div>
+      </LayoutSubscriptionWrapper>
     </div>
 
   );

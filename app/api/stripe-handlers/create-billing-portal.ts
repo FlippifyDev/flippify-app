@@ -2,7 +2,7 @@ import Stripe from 'stripe';
 
 
 const createBillingPortalUrl = async ( username: string, customerId: string) => {
-    const stripeAPIKey = process.env.STRIPE_SECRET_KEY as string;
+    const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
     const root = "https://flippify.co.uk"
     const local = "http://localhost:3000"
 

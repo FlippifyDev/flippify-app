@@ -2,7 +2,7 @@ import Stripe from 'stripe';
 
 
 const retrieveStripeCustomer = async (discordId: string, username: string, email: string) => {
-    const stripeAPIKey = process.env.STRIPE_SECRET_KEY as string;
+    const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
 
     if (!stripeAPIKey) {
         throw new Error('Stripe api key not found');

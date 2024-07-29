@@ -29,7 +29,7 @@ const DashboardNoSubscription: React.FC<DashboardNoSubscriptionProps> = ({ usern
                 No Active Subscriptions
                 </h2>
                 <p className="text-gray-600 mb-6">
-                You currently don't have any subscriptions. Explore our plans and
+                You currently don&apos;t have any subscriptions. Explore our plans and
                 choose the one that fits your needs.
                 </p>
                 <div className="mb-6">

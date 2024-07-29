@@ -1,25 +1,46 @@
-"use client";
-
 import React from 'react';
 import Layout from '../../components/Layout';
 import DashboardPage from '../../components/DashboardPage';
 import LayoutSubscriptionWrapper from '../../components/LayoutSubscriptionWrapper';
 import WaitlistContent from '../../components/WaitlistContent';
-import Head from 'next/head';
+import MetadataHead from '@/app/components/MetadataHead';
 import ThemeSetter from '@/app/components/ThemeSetter';
+
+export const metadata = {
+  title: 'Manage Your Reselling Efficiently - Flippify Dashboard',
+  description: 'Experience the Flippify dashboard, designed for efficiency and effectiveness. Track your reselling activities, monitor deals, and maximize your profits with our user-friendly interface.',
+  openGraph: {
+    title: 'Manage Your Reselling Efficiently - Flippify Dashboard',
+    description: 'Experience the Flippify dashboard, designed for efficiency and effectiveness. Track your reselling activities, monitor deals, and maximize your profits with our user-friendly interface.',
+    url: 'https://flippify.co.uk/dashboard',
+    images: [
+      {
+        url: 'https://i.imgur.com/dashboard.png',
+        width: 1908,
+        height: 1076,
+        alt: 'Dashboard Page Image'
+      }
+    ]
+  },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+};
 
 export default function Dashboard() {
   return (
     <>
-      <Head>
-        <title>Manage Your Reselling Efficiently - Flippify Dashboard</title>
-        <meta name="description" content="Experience the Flippify dashboard, designed for efficiency and effectiveness. Track your reselling activities, monitor deals, and maximize your profits with our user-friendly interface." />
-        <meta property="og:title" content="Manage Your Reselling Efficiently - Flippify Dashboard" />
-        <meta property="og:description" content="Experience the Flippify dashboard, designed for efficiency and effectiveness. Track your reselling activities, monitor deals, and maximize your profits with our user-friendly interface." />
-        <meta property="og:url" content="https://flippify.co.uk/dashboard" />
-        <meta property="og:image" content="https://i.imgur.com/dashboard.png" />
-        <meta name="robots" content="index, follow" />
-      </Head>
+      <MetadataHead {...metadata} />
       <ThemeSetter theme="light" />
       <Layout>
         <div className="w-full h-full">

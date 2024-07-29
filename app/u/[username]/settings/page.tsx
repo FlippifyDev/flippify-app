@@ -1,46 +1,48 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import Navbar from "../../components/Navbar";
 import { Suspense } from "react";
 import Loading from "../../../components/Loading";
-import Head from "next/head";
-import { generateMetadata } from "@/app/components/metadata";
-import { pageMetadata } from "@/app/components/metadataConfig";
+import MetadataHead from "@/app/components/MetadataHead";
+import ThemeSetter from "@/app/components/ThemeSetter";
 
-const metadata = generateMetadata(pageMetadata.settings);
+export const metadata = {
+  title: 'Settings - Flippify',
+  description: 'Manage your Flippify settings and preferences. Customize your experience and optimize your reselling activities.',
+  openGraph: {
+    title: 'Settings - Flippify',
+    description: 'Manage your Flippify settings and preferences. Customize your experience and optimize your reselling activities.',
+    url: 'https://flippify.co.uk/settings',
+    images: [
+      {
+        url: "https://i.imgur.com/2dItFcN.png",
+        width: 1908,
+        height: 1076,
+        alt: "Settings Page Image"
+      }
+    ]
+  },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+};
 
 const Settings = () => {
-  useEffect(() => {
-    // Set the theme to light mode for this page
-    document.documentElement.setAttribute("data-theme", "light");
-    // Cleanup function to reset theme when the component unmounts
-    return () => {
-      document.documentElement.removeAttribute("data-theme");
-    };
-  }, []);
-
   return (
     <>
-      <Head>
-        <title>{metadata.title}</title>
-        <meta name="description" content={metadata.description} />
-        <meta property="og:title" content={metadata.openGraph.title} />
-        <meta property="og:description" content={metadata.openGraph.description} />
-        <meta property="og:url" content={metadata.openGraph.url} />
-        <meta property="og:image" content={metadata.openGraph.images[0].url} />
-        {typeof metadata.robots === "string" ? (
-          <meta name="robots" content={metadata.robots} />
-        ) : (
-          <>
-            <meta name="robots" content="index, follow" />
-            <meta
-              name="googlebot"
-              content="index, follow, noimageindex, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
-            />
-          </>
-        )}
-      </Head>
+      <MetadataHead {...metadata} />
+      <ThemeSetter theme="light" />
       <Suspense fallback={<Loading />}>
         <div
           className="min-h-screen bg-cover bg-center bg-fixed overflow-x-hidden"

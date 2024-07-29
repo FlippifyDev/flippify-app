@@ -61,7 +61,7 @@ const nextConfig = {
   },
   env: {
     MONGO_URL: process.env.MONGO_URL,
-    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    LIVE_STRIPE_SECRET_KEY: process.env.LIVE_STRIPE_SECRET_KEY,
   }
 };
 

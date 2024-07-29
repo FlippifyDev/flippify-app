@@ -1,26 +1,34 @@
-"use client";
-
-import React, { useEffect } from "react";
+import React from 'react';
 import LayoutSubscriptionWrapper from "../../components/LayoutSubscriptionWrapper";
 import WaitlistContent from "../../components/WaitlistContent";
 import DashboardPage from "../../components/DashboardPage";
 import Layout from "../../components/Layout";
-import { generateMetadata } from "@/app/components/metadata";
-import { pageMetadata } from "@/app/components/metadataConfig";
-import Head from "next/head";
+import Loading from '@/app/components/Loading';
+import { Suspense } from 'react';
+import Head from 'next/head';
+import ThemeSetter from '@/app/components/ThemeSetter';
 
-const metadata = generateMetadata(pageMetadata.dashboard);
+// Metadata for the Dashboard Page
+const metadata = {
+  title: "Manage Your Reselling Efficiently - Flippify Dashboard",
+  description: "Experience the Flippify dashboard, designed for efficiency and effectiveness. Track your reselling activities, monitor deals, and maximize your profits with our user-friendly interface.",
+  openGraph: {
+    title: "Manage Your Reselling Efficiently - Flippify Dashboard",
+    description: "Experience the Flippify dashboard, designed for efficiency and effectiveness. Track your reselling activities, monitor deals, and maximize your profits with our user-friendly interface.",
+    url: 'https://flippify.co.uk/dashboard',
+    images: [
+      {
+        url: 'https://i.imgur.com/dashboard.png',
+        width: 1908,
+        height: 1076,
+        alt: 'Dashboard Page Image'
+      }
+    ]
+  },
+  robots: "index,follow"
+};
 
-const Dashboard = () => {
-  useEffect(() => {
-    // Set the theme to light mode for this page
-    document.documentElement.setAttribute("data-theme", "light");
-    // Cleanup function to reset theme when the component unmounts
-    return () => {
-      document.documentElement.removeAttribute("data-theme");
-    };
-  }, []);
-
+export default function Dashboard() {
   return (
     <>
       <Head>
@@ -30,45 +38,24 @@ const Dashboard = () => {
         <meta property="og:description" content={metadata.openGraph.description} />
         <meta property="og:url" content={metadata.openGraph.url} />
         <meta property="og:image" content={metadata.openGraph.images[0].url} />
-        {typeof metadata.robots === "string" ? (
-          <meta name="robots" content={metadata.robots} />
-        ) : (
-          <>
-            <meta name="robots" content="index, follow" />
-            <meta
-              name="googlebot"
-              content="index, follow, noimageindex, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
-            />
-          </>
-        )}
+        <meta name="robots" content="index, follow" />
       </Head>
-      <Layout>
-        <div className="w-full h-full">
-          <LayoutSubscriptionWrapper requiredSubscriptions={["standard", "!server"]}>
-            <DashboardPage />
-          </LayoutSubscriptionWrapper>
-
-          <LayoutSubscriptionWrapper requiredSubscriptions={["!standard", "server"]}>
-            <DashboardPage />
-          </LayoutSubscriptionWrapper>
-
-          <LayoutSubscriptionWrapper requiredSubscriptions={["standard", "server"]}>
-            <DashboardPage />
-          </LayoutSubscriptionWrapper>
-
-          {/* FOR PEOPLE WHO ARE NOT WHITELISTED */}
-          <LayoutSubscriptionWrapper requiredSubscriptions={["!whitelisted"]}>
-            <WaitlistContent />
-          </LayoutSubscriptionWrapper>
-
-          {/* FOR PEOPLE WITHOUT SUBSCRIPTIONS BUT ARE WHITELISTED */}
-          <LayoutSubscriptionWrapper requiredSubscriptions={["whitelisted", "!standard", "!server"]}>
-            <DashboardPage />
-          </LayoutSubscriptionWrapper>
-        </div>
-      </Layout>
+      <ThemeSetter theme="light" />
+      <Suspense fallback={<Loading />}>
+        <Layout>
+          <div className="w-full h-full">
+            <LayoutSubscriptionWrapper requiredSubscriptions={['standard']}>
+              <DashboardPage />
+            </LayoutSubscriptionWrapper>
+            <LayoutSubscriptionWrapper requiredSubscriptions={['!whitelisted']}>
+              <WaitlistContent />
+            </LayoutSubscriptionWrapper>
+            <LayoutSubscriptionWrapper requiredSubscriptions={['whitelisted', '!standard', '!server']}>
+              <DashboardPage />
+            </LayoutSubscriptionWrapper>
+          </div>
+        </Layout>
+      </Suspense>
     </>
   );
-};
-
-export default Dashboard;
+}

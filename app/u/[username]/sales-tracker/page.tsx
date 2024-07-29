@@ -5,22 +5,30 @@ import UserLayout from "../../components/Layout";
 import SalesTrackerPage from "../../components/SalesTrackerPage";
 import { EstimateProvider } from "../../../components/EstimateContext";
 import "../../../../styles/sales-and-profits.css";
-import { generateMetadata } from "@/app/components/metadata";
-import { pageMetadata } from "@/app/components/metadataConfig";
 import Head from "next/head";
+import ThemeSetter from "@/app/components/ThemeSetter";
 
-const metadata = generateMetadata(pageMetadata.salesTracker);
+// Metadata for the Sales Tracker Page
+const metadata = {
+  title: 'Track Your Sales and Profits - Flippify',
+  description: 'Keep track of your sales and profits with Flippify’s comprehensive sales tracker. Monitor your performance and maximize your reselling success.',
+  openGraph: {
+    title: 'Track Your Sales and Profits - Flippify',
+    description: 'Keep track of your sales and profits with Flippify’s comprehensive sales tracker. Monitor your performance and maximize your reselling success.',
+    url: 'https://flippify.co.uk/sales-tracker',
+    images: [
+      {
+        url: 'https://i.imgur.com/sales-tracker.png',
+        width: 1908,
+        height: 1076,
+        alt: 'Sales Tracker Page Image'
+      }
+    ]
+  },
+  robots: "index,follow"
+};
 
 const SalesTracker = () => {
-  useEffect(() => {
-    // Set the theme to light mode for this page
-    document.documentElement.setAttribute("data-theme", "light");
-    // Cleanup function to reset theme when the component unmounts
-    return () => {
-      document.documentElement.removeAttribute("data-theme");
-    };
-  }, []);
-
   return (
     <>
       <Head>
@@ -30,18 +38,10 @@ const SalesTracker = () => {
         <meta property="og:description" content={metadata.openGraph.description} />
         <meta property="og:url" content={metadata.openGraph.url} />
         <meta property="og:image" content={metadata.openGraph.images[0].url} />
-        {typeof metadata.robots === "string" ? (
-          <meta name="robots" content={metadata.robots} />
-        ) : (
-          <>
-            <meta name="robots" content="index, follow" />
-            <meta
-              name="googlebot"
-              content="index, follow, noimageindex, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
-            />
-          </>
-        )}
+        <meta name="robots" content="index, follow" />
+        <meta name="googlebot" content="index, follow, noimageindex, max-video-preview:-1, max-image-preview:large, max-snippet:-1" />
       </Head>
+      <ThemeSetter theme="light" />
       <UserLayout>
         <EstimateProvider>
           <SalesTrackerPage />

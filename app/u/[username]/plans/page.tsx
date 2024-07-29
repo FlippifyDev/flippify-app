@@ -1,24 +1,32 @@
-"use client";
-
-import React, { useEffect } from "react";
+import React from 'react';
 import PlansPage from "../../components/PlansPage";
-import UserLayout from "../../components/Layout";
-import { generateMetadata } from "@/app/components/metadata";
-import { pageMetadata } from "@/app/components/metadataConfig";
-import Head from "next/head";
+import Layout from '../../components/Layout';
+import Loading from '@/app/components/Loading';
+import { Suspense } from 'react';
+import Head from 'next/head';
+import ThemeSetter from '@/app/components/ThemeSetter';
 
-const metadata = generateMetadata(pageMetadata.plans);
+// Metadata for the Plans Page
+const metadata = {
+  title: 'Flexible Pricing Plans for Resellers - Flippify',
+  description: 'Discover the best pricing plans tailored to your reselling needs. From monitoring soon-to-retire Lego sets to exclusive deals on all other categories of products like electronics and sneakers, Flippify’s affordable plans help you boost your flipping profits.',
+  openGraph: {
+    title: 'Flexible Pricing Plans for Resellers - Flippify',
+    description: 'Discover the best pricing plans tailored to your reselling needs. From monitoring soon-to-retire Lego sets to exclusive deals on all other categories of products like electronics and sneakers, Flippify’s affordable plans help you boost your flipping profits.',
+    url: 'https://flippify.co.uk/plans',
+    images: [
+      {
+        url: 'https://i.imgur.com/plans.png',
+        width: 1908,
+        height: 1076,
+        alt: 'Plans Page Image'
+      }
+    ]
+  },
+  robots: "index,follow"
+};
 
 const Plans = () => {
-  useEffect(() => {
-    // Set the theme to light mode for this page
-    document.documentElement.setAttribute("data-theme", "light");
-    // Cleanup function to reset theme when the component unmounts
-    return () => {
-      document.documentElement.removeAttribute("data-theme");
-    };
-  }, []);
-
   return (
     <>
       <Head>
@@ -28,21 +36,14 @@ const Plans = () => {
         <meta property="og:description" content={metadata.openGraph.description} />
         <meta property="og:url" content={metadata.openGraph.url} />
         <meta property="og:image" content={metadata.openGraph.images[0].url} />
-        {typeof metadata.robots === "string" ? (
-          <meta name="robots" content={metadata.robots} />
-        ) : (
-          <>
-            <meta name="robots" content="index, follow" />
-            <meta
-              name="googlebot"
-              content="index, follow, noimageindex, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
-            />
-          </>
-        )}
+        <meta name="robots" content="index, follow" />
       </Head>
-      <UserLayout>
-        <PlansPage />
-      </UserLayout>
+      <ThemeSetter theme="light" />
+      <Suspense fallback={<Loading />}>
+        <Layout>
+          <PlansPage />
+        </Layout>
+      </Suspense>
     </>
   );
 };

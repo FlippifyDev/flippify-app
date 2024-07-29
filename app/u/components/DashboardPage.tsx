@@ -7,6 +7,8 @@ import DashboardOverviewCard from './DashboardOverviewCard';
 import DashboardRecentSalesCard from './DashboardRecentSalesCard';
 import DashboardProfitsGraph from './DashboardProfitsGraph';
 import LayoutSubscriptionWrapper from "./LayoutSubscriptionWrapper";
+import DashboardNoSubscription from "./DashboardNoSubscription";
+import DashboardServerSubscription from "./DashboardServerSubscription";
 
 const DashboardPage: React.FC = () => {
   const [userData, setUserData] = useState<{ uid: string; customerId: string } | null>(null);
@@ -34,10 +36,15 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className="flex flex-col w-full h-full">
+      {/* This displays the users content when they have no subscription */}
+      <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', '!server']}> 
+        <DashboardNoSubscription username={session.user.username}/>
+      </LayoutSubscriptionWrapper>
+
       {/* This displays the users server content */}
       <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', 'server']}> 
-        <div className="text-center">
-          The dashboard for your server subscription is under development...
+        <div className="flex justify-center">
+          <DashboardServerSubscription />
         </div>
       </LayoutSubscriptionWrapper>
       

@@ -51,7 +51,7 @@ const ServerPlansPage = () => {
             monthly: "price_1PcuH1JJRepiHZ8d4HTovHWm",
             yearly: "price_1PcuHmJJRepiHZ8duS8nBti1",
           }}
-          whatsIncludedComponent={<ServerPlansCardWhatsIncluded whatsIncludedText={["eBay Price Comparison", "HotUKDeals Price Tracking", "Alerts based on eBay profit potential", "Currently UK Sites Only", "Frequent electronics deal alerts"]}/>}
+          whatsIncludedComponent={<ServerPlansCardWhatsIncluded whatsIncludedText={["eBay Price Comparison", "HotUKDeals Price Tracking", "Alerts Based On eBay Profit Potential", "Currently UK Sites Only", "Frequent Electronics Deal Alerts"]}/>}
           labelText="Random Deals"
           badgeColor="greenLabel"
         />

@@ -3,11 +3,14 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { linkTracker } from './app/api/auth-firebase/linkTracker'; // Adjust import based on your actual setup
 
+// Define the paths you want to track
+const TRACKED_PATHS = new Set(['/reselling', '/monitors', '/join', '/sign-up', '/plans']);
+
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
 
-  // Check if the URL is the specific path we want to track and redirect
-  if (url.pathname === '/reselling') {
+  // Check if the URL path is in the set of paths to track
+  if (TRACKED_PATHS.has(url.pathname)) {
     // Track the access
     await linkTracker(url.pathname);
 
@@ -20,6 +23,7 @@ export async function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
+// Configure the matcher to cover all the tracked paths
 export const config = {
-  matcher: '/reselling',
+  matcher: ['/', '/reselling', '/monitors', '/join', '/sign-up', '/plans'],
 };

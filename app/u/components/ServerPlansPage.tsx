@@ -36,8 +36,8 @@ const ServerPlansPage = () => {
           description="Enhance your reselling efficiency with our cutting-edge bot, scanning diverse websites to identify Lego sets nearing retirement and ensuring you never miss a profitable sale."
           prices={[149.99, 199.99]}
           priceIds={{
-            monthly: "price_1PctChJJRepiHZ8dIREA1uKf",
-            yearly: "price_1Pcu3kJJRepiHZ8dIYtT80Wl",
+            monthly: "price_1PfJ7pJJRepiHZ8d7gs78YEp",
+            yearly: "price_1PfJ7pJJRepiHZ8dAkwkWqHy",
           }}
           whatsIncludedComponent={<ServerPlansCardWhatsIncluded whatsIncludedText={["eBay Price Comparison", "Keepa Link Included", "Retirement Date Included", "Currently UK Sites Only", "Continual Website Additions"]}/>}
           labelText="Long-Term"
@@ -48,8 +48,8 @@ const ServerPlansPage = () => {
           description="Effortlessly discover profitable reselling opportunities with our advanced webscraper, which scans hotukdeals.co.uk and compares prices with sold items on eBay to maximize your profits."
           prices={[69.99, 99.99]}
           priceIds={{
-            monthly: "price_1PcuH1JJRepiHZ8d4HTovHWm",
-            yearly: "price_1PcuHmJJRepiHZ8duS8nBti1",
+            monthly: "price_1PfJ9bJJRepiHZ8dk689bT3H",
+            yearly: "price_1PfJ9bJJRepiHZ8dTK0EGZ8k",
           }}
           whatsIncludedComponent={<ServerPlansCardWhatsIncluded whatsIncludedText={["eBay Price Comparison", "HotUKDeals Price Tracking", "Alerts Based On eBay Profit Potential", "Currently UK Sites Only", "Frequent Electronics Deal Alerts"]}/>}
           labelText="Random Deals"

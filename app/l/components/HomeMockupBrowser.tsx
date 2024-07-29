@@ -28,7 +28,7 @@ const HomeMockupBrowser = () => {
         <div className="bg-gray-950 flex justify-center px-4 py-1">
           <figure>
             <Image
-              src="https://i.imgur.com/rwcnpUa.png"
+              src="https://i.imgur.com/Qf7iBQx.png"
               alt="Browser Mockup"
               width={960}
               height={540}

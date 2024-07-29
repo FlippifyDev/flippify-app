@@ -2,7 +2,7 @@ import React from "react";
 
 const LayoutWhiteSection: React.FC = () => {
   return (
-    <div className="absolute top-0 left-0 w-full z-10 pt-72 sm:pt-48 md:pt-36 lg:pt-24 xl:pt-0">
+    <div className="absolute top-0 left-0 w-full z-10 pt-96 sm:pt-48 md:pt-36 lg:pt-24 xl:pt-0">
       <svg
         id="visual"
         viewBox="0 0 900 10000"

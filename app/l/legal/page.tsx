@@ -1,46 +1,26 @@
 "use client";
 
-import React, { useEffect } from 'react';
-import LegalContent from '@/app/components/LegalContent';
+import React from 'react';
 import Layout from '../components/Layout';
+import LegalContent from '../../components/LegalContent';
 import Loading from '@/app/components/Loading';
 import { Suspense } from 'react';
 import Head from 'next/head';
 import ThemeSetter from '../../components/ThemeSetter';
 
-// Metadata for the Legal Page
-const metadata = {
-  title: 'Flippify Legal Info - Privacy & Terms',
-  description: 'Access detailed legal information on Flippify, including our Privacy Policy and Terms and Conditions. Stay informed about our data practices, your rights, and our commitment to a fair trading platform.',
-  openGraph: {
-    title: 'Flippify Legal Info - Privacy & Terms',
-    description: 'Access detailed legal information on Flippify, including our Privacy Policy and Terms and Conditions. Stay informed about our data practices, your rights, and our commitment to a fair trading platform.',
-    url: 'https://flippify.co.uk/legal',
-    images: [
-      {
-        url: 'https://i.imgur.com/legal.png',
-        width: 1908,
-        height: 1076,
-        alt: 'Legal Page Image'
-      }
-    ]
-  },
-  robots: "index,follow"
-};
-
-export default function Legal() {
+export default function LegalPage() {
   return (
     <>
       <Head>
-        <title>{metadata.title}</title>
-        <meta name="description" content={metadata.description} />
-        <meta property="og:title" content={metadata.openGraph.title} />
-        <meta property="og:description" content={metadata.openGraph.description} />
-        <meta property="og:url" content={metadata.openGraph.url} />
-        <meta property="og:image" content={metadata.openGraph.images[0].url} />
+        <title>Flippify Legal Info - Privacy & Terms</title>
+        <meta name="description" content="Access detailed legal information on Flippify, including our Privacy Policy and Terms and Conditions. Stay informed about our data practices, your rights, and our commitment to a fair trading platform." />
+        <meta property="og:title" content="Flippify Legal Info - Privacy & Terms" />
+        <meta property="og:description" content="Access detailed legal information on Flippify, including our Privacy Policy and Terms and Conditions. Stay informed about our data practices, your rights, and our commitment to a fair trading platform." />
+        <meta property="og:url" content="https://flippify.co.uk/legal" />
+        <meta property="og:image" content="https://i.imgur.com/legal.png" />
         <meta name="robots" content="index, follow" />
       </Head>
-      <ThemeSetter theme="light" />
+      <ThemeSetter theme="dark" />
       <Suspense fallback={<Loading />}>
         <Layout>
           <LegalContent />

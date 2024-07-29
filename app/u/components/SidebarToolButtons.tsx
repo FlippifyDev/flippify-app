@@ -17,15 +17,15 @@ interface SidebarToolButtonsProps {
 const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({ showAlert }) => {
   return (
     <div>
-      <LayoutSubscriptionWrapper requiredSubscriptions={['']}>
-        <SidebarButtonDisabled
-          text="Reseller News"
-          redirect="reseller-news"
-          symbol={<FaRegNewspaper className="text-md" />}
-          tooltip="Coming Soon"
-          showAlert={showAlert}
-        />
-      </LayoutSubscriptionWrapper>
+
+      <SidebarButtonDisabled
+        text="Reseller News"
+        redirect="reseller-news"
+        symbol={<FaRegNewspaper className="text-md" />}
+        tooltip="Coming Soon"
+        showAlert={showAlert}
+      />
+ 
 
       <LayoutSubscriptionWrapper requiredSubscriptions={['server']}>
         <SidebarButton

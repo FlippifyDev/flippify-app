@@ -87,6 +87,12 @@ const SalesTrackerTabAddPurchase: React.FC<SalesTrackerTabAddPurchaseProps> = ({
     setAvailability(1);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!parseFloat(e.key) && e.key !== 'Backspace') {
+      e.preventDefault();
+    }
+  };
+
   return (
     <div className="container">
       <form className="form-control mx-auto font-semibold">
@@ -124,6 +130,7 @@ const SalesTrackerTabAddPurchase: React.FC<SalesTrackerTabAddPurchaseProps> = ({
             name="purchasedQuantity"
             value={purchasedQuantity === '' ? '' : purchasedQuantity}
             onChange={handleChange}
+            onKeyDown={handleKeyDown}
             className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="1"
             min="1"
@@ -139,6 +146,7 @@ const SalesTrackerTabAddPurchase: React.FC<SalesTrackerTabAddPurchaseProps> = ({
             name="purchasePricePerUnit"
             value={purchasePricePerUnit === '' ? '' : purchasePricePerUnit}
             onChange={handleChange}
+            onKeyDown={handleKeyDown}
             className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="0"
             min="0"

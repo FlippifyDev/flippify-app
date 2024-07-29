@@ -58,22 +58,22 @@ const PlansCard: React.FC<PlansCardProps> = ({
   const selectedPriceId =
     selectedPlan === 0 ? priceIds.monthly : priceIds.yearly;
 
-  const badgeClassName = `badge text-white ${badgeColorClasses[badgeColor]}`;
+  const badgeClassName = `text-white ${badgeColorClasses[badgeColor]}`;
 
   return (
-    <div className="w-88 sm:w-full sm:max-w-md mx-12 mt-8">
-      <div className="card bg-white border border-gray-300 rounded-lg h-full shadow-lg overflow-hidden hover:shadow-2xl transition duration-200">
+    <div className="w-88 sm:w-full sm:max-w-sm mx-12 mt-8">
+      <div className="card bg-white border border-gray-300 rounded-lg h-full shadow-lg overflow-hidden hover:shadow-2xl transition duration-300">
         <div className="relative">
-          <div className={`absolute top-2 left-2 ${badgeClassName} rounded-full px-4 py-1 text-xs font-semibold`}>
+          <div className={`absolute top-1 left-1 ${badgeClassName} rounded-full px-4 py-1 text-xs font-semibold`}>
             {labelText}
           </div>
           <div className="p-6 text-center">
             <h2
-              className={`${lato.className} text-3xl text-houseBlue font-bold mb-2 mt-2 sm:h-[3rem]`}
+              className={`${lato.className} text-3xl text-houseBlue font-bold mb-2 mt-4 sm:h-[3rem]`}
             >
               {title}
             </h2>
-            <p className="text-lightModeText text-sm mb-4 sm:h-[5rem]">
+            <p className="text-lightModeText text-sm mb-8 sm:h-[5rem]">
               {description}
             </p>
             <div className="flex items-center justify-center gap-2 mb-4">

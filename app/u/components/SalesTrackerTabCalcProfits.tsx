@@ -53,7 +53,7 @@ const SalesTrackerTabCalcProfits: React.FC<SalesTrackerTabCalcProfitsProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (['e', 'E', '+', '-'].includes(e.key)) {
+    if (!parseFloat(e.key) && e.key !== 'Backspace') {
       e.preventDefault();
     }
   };
@@ -85,6 +85,7 @@ const SalesTrackerTabCalcProfits: React.FC<SalesTrackerTabCalcProfitsProps> = ({
             name="purchasePricePerUnit"
             value={estimate.purchasePricePerUnit === 0 ? '' : estimate.purchasePricePerUnit}
             onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+            onKeyDown={handleKeyDown}
             className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="Enter purchase price"
             step="0.01"
@@ -99,6 +100,7 @@ const SalesTrackerTabCalcProfits: React.FC<SalesTrackerTabCalcProfitsProps> = ({
             name="listingPrice"
             value={listingPrice === 0 ? '' : listingPrice}
             onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+            onKeyDown={handleKeyDown}
             className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="Enter listing price"
           />
@@ -112,6 +114,7 @@ const SalesTrackerTabCalcProfits: React.FC<SalesTrackerTabCalcProfitsProps> = ({
             name="platformFees"
             value={platformFees === 0 ? '' : platformFees}
             onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+            onKeyDown={handleKeyDown}
             className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="Enter platform fees"
           />
@@ -125,6 +128,7 @@ const SalesTrackerTabCalcProfits: React.FC<SalesTrackerTabCalcProfitsProps> = ({
             name="shippingCost"
             value={shippingCost === 0 ? '' : shippingCost}
             onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+            onKeyDown={handleKeyDown}
             className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="Enter shipping cost"
           />

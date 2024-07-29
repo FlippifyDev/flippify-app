@@ -15,7 +15,7 @@ const HomeGetEarlyAccess = () => {
         if (session) {
             // Redirect to the username-specific URL
             {session.user?.name ? (
-                router.push(`/u/${session.user.name}/plans`)
+                router.push(`/u/${session.user.name}/dashboard`)
             ) : (
                 router.push(`/u/loading`)
             )

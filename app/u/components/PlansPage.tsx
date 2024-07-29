@@ -36,8 +36,8 @@ const PlansPage = () => {
           description="Unlock unlimited access to our comprehensive suite of tools, bots, and insights designed to supercharge your profitability. Our all-in-one subscription provides everything you need to optimize performance and drive growth."
           prices={[44.99, 59.99]}
           priceIds={{
-            monthly: "price_1PctCCJJRepiHZ8d6M7w0P7g",
-            yearly: "price_1Pcu1rJJRepiHZ8d4zAXLEpL",
+            monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
+            yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
           }}
           whatsIncludedComponent={<PlansCardStandardWhatsIncluded />}
           labelText="All-in-one"

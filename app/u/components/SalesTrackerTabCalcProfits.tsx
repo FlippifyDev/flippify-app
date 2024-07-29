@@ -53,7 +53,7 @@ const SalesTrackerTabCalcProfits: React.FC<SalesTrackerTabCalcProfitsProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!parseFloat(e.key) && e.key !== 'Backspace') {
+    if (!parseFloat(e.key) && e.key !== 'Backspace' && e.key !== '.') {
       e.preventDefault();
     }
   };

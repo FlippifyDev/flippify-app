@@ -1,13 +1,10 @@
 "use client";
 
-import LayoutSubscriptionWrapper from "./LayoutSubscriptionWrapper";
-import WaitlistJoinButton from "./WaitlistJoinButton";
-import PlansSubscribeNow from "./PlansSubscribeNow";
-import PriceStat from "./PlansCardPriceStat";
-
 import React, { useState } from "react";
 import { Lato } from "next/font/google";
-
+import LayoutSubscriptionWrapper from "./LayoutSubscriptionWrapper";
+import WaitlistJoinButton from "./WaitlistJoinButton";
+import ServerPlansCardPriceStat from "./ServerPlansCardPriceStat";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 
@@ -21,7 +18,7 @@ const badgeColorClasses: Record<BadgeColor, string> = {
 
 interface PlansCardProps {
   title: string;
-  prices: number[];
+  price: number;
   description: string;
   priceIds: { monthly: string; yearly: string };
   whatsIncludedComponent: any;
@@ -29,10 +26,9 @@ interface PlansCardProps {
   badgeColor: BadgeColor;
 }
 
-
-const PlansCard: React.FC<PlansCardProps> = ({
+const ServerPlansCard: React.FC<PlansCardProps> = ({
   title,
-  prices,
+  price,
   description,
   priceIds,
   whatsIncludedComponent,
@@ -50,12 +46,8 @@ const PlansCard: React.FC<PlansCardProps> = ({
     setCurrency((prevCurrency) => (prevCurrency === "GBP" ? "USD" : "GBP"));
   };
 
-  const convertedPrices =
-    currency === "GBP" ? prices.map((price) => price / 1.28) : prices;
+  const convertedPrice = currency === "GBP" ? price / 1.28 : price;
   const currencySymbol = currency === "GBP" ? "£" : "$";
-
-  const selectedPriceId =
-    selectedPlan === 0 ? priceIds.monthly : priceIds.yearly;
 
   const badgeClassName = `text-white ${badgeColorClasses[badgeColor]}`;
 
@@ -86,9 +78,9 @@ const PlansCard: React.FC<PlansCardProps> = ({
               />
               <span className="text-lightModeText text-xs">GBP</span>
             </div>
-            {prices.length > 0 && (
-              <PriceStat
-                prices={convertedPrices}
+            {price && (
+              <ServerPlansCardPriceStat
+                price={convertedPrice}
                 onPlanSelect={handlePlanSelect}
                 selectedPlan={selectedPlan}
                 currencySymbol={currencySymbol}
@@ -98,10 +90,15 @@ const PlansCard: React.FC<PlansCardProps> = ({
           </div>
           <div className="border-t border-gray-200">
             <div className="flex justify-between p-4">
-              {prices.length > 0 && selectedPlan !== null && (
+              {selectedPlan !== null && (
                 <div className="flex gap-2 w-full">
                   <LayoutSubscriptionWrapper requiredSubscriptions={["whitelisted"]}>
-                    <PlansSubscribeNow priceId={selectedPriceId} />
+                    <a
+                      href="https://discord.com/channels/1236428617962229830/1236436288442466394"
+                      className="btn border-0 bg-houseBlue hover:bg-green-400 text-white w-2/3 mx-auto"
+                    >
+                      Contact Us
+                    </a>
                   </LayoutSubscriptionWrapper>
                   <LayoutSubscriptionWrapper requiredSubscriptions={["!whitelisted"]}>
                     <WaitlistJoinButton
@@ -119,4 +116,4 @@ const PlansCard: React.FC<PlansCardProps> = ({
   );
 };
 
-export default PlansCard;
+export default ServerPlansCard;

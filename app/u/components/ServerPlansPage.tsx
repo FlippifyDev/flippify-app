@@ -1,9 +1,9 @@
-import PlansCard from "./PlansCard";
-import ServerPlansCardWhatsIncluded from "./ServerPlansCardWhatsIncluded";
+"use client";
 
 import React from "react";
 import { Lato, Inter } from "next/font/google";
-
+import ServerPlansCard from "./ServerPlansCard";
+import ServerPlansCardWhatsIncluded from "./ServerPlansCardWhatsIncluded";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
@@ -31,10 +31,10 @@ const ServerPlansPage = () => {
         </div>
       </div>
       <div className="mt-4 flex flex-wrap justify-center">
-        <PlansCard
+        <ServerPlansCard
           title="Retiring Sets Deals"
           description="Enhance your reselling efficiency with our cutting-edge bot, scanning diverse websites to identify Lego sets nearing retirement and ensuring you never miss a profitable sale."
-          prices={[149.99, 199.99]}
+          price={149.99}
           priceIds={{
             monthly: "price_1PfJ7pJJRepiHZ8d7gs78YEp",
             yearly: "price_1PfJ7pJJRepiHZ8dAkwkWqHy",
@@ -43,10 +43,10 @@ const ServerPlansPage = () => {
           labelText="Long-Term"
           badgeColor="orangeLabel"
         />
-        <PlansCard
+        <ServerPlansCard
           title="Deal Watch UK"
           description="Effortlessly discover profitable reselling opportunities with our advanced webscraper, which scans hotukdeals.co.uk and compares prices with sold items on eBay to maximize your profits."
-          prices={[69.99, 99.99]}
+          price={69.99}
           priceIds={{
             monthly: "price_1PfJ9bJJRepiHZ8dk689bT3H",
             yearly: "price_1PfJ9bJJRepiHZ8dTK0EGZ8k",

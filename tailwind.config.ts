@@ -52,6 +52,7 @@ const config: Config = {
         lightGreyBackground: '#F1F1F1',
         lightGreyHighlight: '#cccccc',
         greyText: '#dedede',
+        slightlyDarkerGreyText: '#9A9A9A',
         greyStroke: '#A9A9A9',
         darkGreyText: '#222222',
         houseBlue: '#1a73e8',

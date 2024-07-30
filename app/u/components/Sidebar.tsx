@@ -62,6 +62,7 @@ const Sidebar = () => {
                   <Link
                     href="https://discord.gg/gNPYfe7YFm"
                     className="hover:bg-gray-100 active:bg-gray-300 text-lightModeText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transition duration-200"
+                    target="_blank"
                   >
                     <span className="col-span-2 text-lg"><FaDiscord /></span>
                     <span className="col-span-10 text-base">Discord</span>
@@ -81,6 +82,7 @@ const Sidebar = () => {
               <Link
                 href="https://discord.com/channels/1236428617962229830/1236439119123447892"
                 className="hover:bg-gray-100 active:bg-gray-300 text-lightModeText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transition duration-200"
+                target="_blank"
               >
                 <span className="col-span-2 text-lg"><MdFeedback /></span>
                 <span className="col-span-10 text-base">Feedback</span>

@@ -17,8 +17,8 @@ const HomeMockupPhone = () => {
               src="https://i.imgur.com/BPSkrVS.jpeg"
               alt="Phone Mockup"
               loading="lazy"
-              width={800}
-              height={500}
+              width={308}
+              height={667}
             />
           </figure>
         </div>

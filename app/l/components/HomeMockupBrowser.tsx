@@ -30,8 +30,8 @@ const HomeMockupBrowser = () => {
             <Image
               src="https://i.imgur.com/Qf7iBQx.png"
               alt="Browser Mockup"
-              width={960}
-              height={540}
+              width={2448}
+              height={1336}
               loading="lazy"
               className="rounded-lg mb-2"
             />

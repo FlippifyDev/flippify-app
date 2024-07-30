@@ -7,15 +7,15 @@ import MetadataHead from '../../components/MetadataHead';
 import ThemeSetter from '../../components/ThemeSetter';
 
 export const metadata = {
-  title: 'Flippify Legal Info - Privacy & Terms',
-  description: 'Access detailed legal information on Flippify, including our Privacy Policy and Terms and Conditions. Stay informed about our data practices, your rights, and our commitment to a fair trading platform.',
+  title: 'Flippify - Privacy and Terms & Conditions',
+  description: 'Access detailed legal information on Flippify, including our Privacy Policy and Terms and Conditions. Stay informed about our data practices, your rights, and our commitment to a fair trading platform. We want a safe environment for all our users.',
   openGraph: {
-    title: 'Flippify Legal Info - Privacy & Terms',
-    description: 'Access detailed legal information on Flippify, including our Privacy Policy and Terms and Conditions. Stay informed about our data practices, your rights, and our commitment to a fair trading platform.',
+    title: 'Flippify - Privacy and Terms & Conditions',
+    description: 'Access detailed legal information on Flippify, including our Privacy Policy and Terms and Conditions. Stay informed about our data practices, your rights, and our commitment to a fair trading platform. We want a safe environment for all our users.',
     url: 'https://flippify.co.uk/legal',
     images: [
       {
-        url: 'https://i.imgur.com/legal.png',
+        url: 'https://i.imgur.com/m4TzKj9.png',
         width: 1908,
         height: 1076,
         alt: 'Legal Page Image'

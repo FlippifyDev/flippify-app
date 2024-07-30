@@ -7,11 +7,11 @@ import MetadataHead from '../../components/MetadataHead';
 import ThemeSetter from '../../components/ThemeSetter';
 
 export const metadata = {
-  title: 'Transform Your Reselling Game - Flippify Home',
-  description: 'Welcome to Flippify, your ultimate reselling platform for flipping, buying, and selling unique items. Boost your profits with our fast deal bots, covering everything from Lego to sneakers. Learn how Flippify makes reselling easy and lucrative.',
+  title: 'Flippify - Deal Finding Bots and Tools for Resellers',
+  description: 'The Ultimate platform for resellers to accelerate their profits. Earn more using our top of the range deal finding bots and tools to automate every step of the way, making you more money and finding more deals, quicker.',
   openGraph: {
-    title: 'Transform Your Reselling Game - Flippify Home',
-    description: 'Welcome to Flippify, your ultimate reselling platform for flipping, buying, and selling unique items. Boost your profits with our fast deal bots, covering everything from Lego to sneakers. Learn how Flippify makes reselling easy and lucrative.',
+    title: 'Flippify - Deal Finding Bots and Tools for Resellers',
+    description: 'The Ultimate platform for resellers to accelerate their profits. Earn more using our top of the range deal finding bots and tools to automate every step of the way, making you more money and finding more deals, quicker.',
     url: 'https://flippify.co.uk/l/home',
     images: [
       {

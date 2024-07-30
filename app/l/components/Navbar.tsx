@@ -72,7 +72,11 @@ const Navbar = () => {
               <a href="#about" onClick={(e) => handleSmoothScroll(e, 'about')}>About</a>
             </li>
             <li className="transition duration-100 active:scale-102 rounded-btn p-1 text-base">
-              <a href="https://discord.gg/gNPYfe7YFm">Discord</a>
+              <Link 
+                href="https://discord.gg/gNPYfe7YFm" 
+                target="_blank">
+                  Discord
+              </Link>
             </li>
             <li className="transition duration-100 active:scale-102 rounded-btn p-1 text-base">
               <NavbarSignInWithDiscordSideBar />
@@ -99,7 +103,7 @@ const Navbar = () => {
           <a href="#about" onClick={(e) => handleSmoothScroll(e, 'about')}>About</a>
         </li>
         <li className="transition duration-100 hover:scale-105 rounded-btn p-1">
-          <a href="https://discord.gg/gNPYfe7YFm">Discord</a>
+          <Link href="https://discord.gg/gNPYfe7YFm" target="_blank">Discord</Link>
         </li>
       </ul>
 

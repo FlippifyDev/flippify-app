@@ -30,7 +30,7 @@ const SidebarBillingPortalButton = () => {
             setBillingUrl(url);
           } catch (error) {
             console.error('Failed to create billing portal:', error);
-            setBillingUrl('http://localhost:3000/u/failed-to-create-billing-portal');
+            setBillingUrl('http://flippify.co.uk/u/failed-to-create-billing-portal');
           }
         }
       }

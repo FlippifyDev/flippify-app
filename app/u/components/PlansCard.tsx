@@ -3,11 +3,10 @@
 import LayoutSubscriptionWrapper from "./LayoutSubscriptionWrapper";
 import WaitlistJoinButton from "./WaitlistJoinButton";
 import PlansSubscribeNow from "./PlansSubscribeNow";
-import PriceStat from "./PlansCardPriceStat";
-
+import PlansCardPriceStat from "./PlansCardPriceStat";
+import ManageMembershipsButton from "./PlansManageMembershipButton";
 import React, { useState } from "react";
 import { Lato } from "next/font/google";
-
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 
@@ -28,7 +27,6 @@ interface PlansCardProps {
   labelText: string;
   badgeColor: BadgeColor;
 }
-
 
 const PlansCard: React.FC<PlansCardProps> = ({
   title,
@@ -87,7 +85,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
               <span className="text-lightModeText text-xs">GBP</span>
             </div>
             {prices.length > 0 && (
-              <PriceStat
+              <PlansCardPriceStat
                 prices={convertedPrices}
                 onPlanSelect={handlePlanSelect}
                 selectedPlan={selectedPlan}
@@ -100,10 +98,13 @@ const PlansCard: React.FC<PlansCardProps> = ({
             <div className="flex justify-between p-4">
               {prices.length > 0 && selectedPlan !== null && (
                 <div className="flex gap-2 w-full">
-                  <LayoutSubscriptionWrapper requiredSubscriptions={["whitelisted"]}>
+                  <LayoutSubscriptionWrapper requiredSubscriptions={["whitelisted", "!standard"]}>
                     <PlansSubscribeNow priceId={selectedPriceId} />
                   </LayoutSubscriptionWrapper>
-                  <LayoutSubscriptionWrapper requiredSubscriptions={["!whitelisted"]}>
+                  <LayoutSubscriptionWrapper requiredSubscriptions={["standard"]}>
+                    <ManageMembershipsButton />
+                  </LayoutSubscriptionWrapper>
+                  <LayoutSubscriptionWrapper requiredSubscriptions={["!whitelisted", "!standard"]}>
                     <WaitlistJoinButton
                       text="Join Waitlist"
                       redirect="dashboard"

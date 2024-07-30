@@ -207,7 +207,7 @@ const SalesTrackerTabAddSale: React.FC<SalesTrackerTabAddSaleProps> = ({
     sale.shippingCost;
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!parseFloat(e.key) && e.key !== "Backspace" && e.key !== '.') {
+    if (!parseFloat(e.key) && e.key !== "Backspace" && e.key !== '.' && e.key !== '0') {
       e.preventDefault();
     }
   };

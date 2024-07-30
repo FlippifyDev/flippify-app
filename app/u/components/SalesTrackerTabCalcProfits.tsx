@@ -53,7 +53,7 @@ const SalesTrackerTabCalcProfits: React.FC<SalesTrackerTabCalcProfitsProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!parseFloat(e.key) && e.key !== 'Backspace' && e.key !== '.') {
+    if (!parseFloat(e.key) && e.key !== 'Backspace' && e.key !== '.' && e.key !== '0') {
       e.preventDefault();
     }
   };
@@ -96,7 +96,7 @@ const SalesTrackerTabCalcProfits: React.FC<SalesTrackerTabCalcProfitsProps> = ({
             <span className="label-text text-lightModeText">Listing Price (per unit)</span>
           </label>
           <input
-            type="text"
+            type="number"
             name="listingPrice"
             value={listingPrice === 0 ? '' : listingPrice}
             onChange={(e) => handleInputChange(e.target.name, e.target.value)}
@@ -110,7 +110,7 @@ const SalesTrackerTabCalcProfits: React.FC<SalesTrackerTabCalcProfitsProps> = ({
             <span className="label-text text-lightModeText">Platform Fees (%)</span>
           </label>
           <input
-            type="text"
+            type="number"
             name="platformFees"
             value={platformFees === 0 ? '' : platformFees}
             onChange={(e) => handleInputChange(e.target.name, e.target.value)}
@@ -124,7 +124,7 @@ const SalesTrackerTabCalcProfits: React.FC<SalesTrackerTabCalcProfitsProps> = ({
             <span className="label-text text-lightModeText">Shipping Cost (per unit)</span>
           </label>
           <input
-            type="text"
+            type="number"
             name="shippingCost"
             value={shippingCost === 0 ? '' : shippingCost}
             onChange={(e) => handleInputChange(e.target.name, e.target.value)}

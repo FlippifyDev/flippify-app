@@ -30,7 +30,7 @@ const Navbar = () => {
       const element = document.getElementById(id);
       if (element) {
         window.scrollTo({
-          top: element.offsetTop - 50, // Adjust offset as needed
+          top: element.offsetTop - 50,
           behavior: 'smooth'
         });
       }
@@ -56,29 +56,29 @@ const Navbar = () => {
         <div className="drawer-side opacity-98">
           <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
           <ul className="menu bg-base-200 text-base-content min-h-full w-full pt-12">
-            <li className="transition duration-100 active:scale-102 rounded-btn p-1 text-base">
+            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-base">
               <Link href="/l/home">Home</Link>
             </li>
-            <li className="transition duration-100 active:scale-102 rounded-btn p-1 text-base">
+            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-base">
               <Link href="/l/products">Products</Link>
             </li>
-            <li className="transition duration-100 active:scale-102 rounded-btn p-1 text-base">
+            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-base">
               <Link href="/l/pricing">Pricing</Link>
             </li>
-            <li className="transition duration-100 active:scale-102 rounded-btn p-1 text-base">
+            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-base">
               <Link href="/l/server-pricing">Server Pricing</Link>
             </li>
-            <li className="transition duration-100 active:scale-102 rounded-btn p-1 text-base">
+            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-base">
               <a href="#about" onClick={(e) => handleSmoothScroll(e, 'about')}>About</a>
             </li>
-            <li className="transition duration-100 active:scale-102 rounded-btn p-1 text-base">
+            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-base">
               <Link 
                 href="https://discord.gg/gNPYfe7YFm" 
                 target="_blank">
                   Discord
               </Link>
             </li>
-            <li className="transition duration-100 active:scale-102 rounded-btn p-1 text-base">
+            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-base">
               <NavbarSignInWithDiscordSideBar />
             </li>
           </ul>

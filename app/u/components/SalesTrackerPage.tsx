@@ -6,7 +6,7 @@ import SalesTrackerReviewProfits from "./SalesTrackerReviewProfits";
 import SalesTrackerTabAddSale from "./SalesTrackerTabAddSale";
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { handleUser } from '../../api/auth-firebase/firebaseConfig';  // Ensure this import is correct
+import { handleUser } from '../../api/auth-firebase/firebaseConfig';  
 
 const SalesTrackerPage: React.FC = () => {
   const [activeComponent, setActiveComponent] = useState("AddPurchase");
@@ -37,7 +37,7 @@ const SalesTrackerPage: React.FC = () => {
   }
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-screen mt-5">
       <div className="grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1 gap-4">
         <div className={`col-span-${activeComponent === "AddPurchase" ? "1" : "2"} flex flex-col`}>
           <div role="tablist" className="bg-lightGreyBackground flex rounded-t-2xl">

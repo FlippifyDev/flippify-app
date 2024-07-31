@@ -2,7 +2,6 @@
 
 import React from "react";
 import Navbar from "./Navbar";
-import Loading from "../../components/Loading";
 import LayoutGradientBackground from "./LayoutGradientBackground";
 import LayoutWhiteSection from "./LayoutWhiteSection";
 import LayoutFooter from "./LayoutFooter";

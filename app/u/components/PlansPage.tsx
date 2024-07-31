@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 const PlansPage = () => {
   return (
-    <div className="flex flex-col justify-center xl:w-11/12 h-full mb-5">
+    <div className="flex flex-col justify-center xl:w-11/12 h-full mb-5 mt-5">
       <div className="flex flex-col items-center space-y-5 text-center">
         <div className="flex flex-wrap justify-center items-center text-4xl sm:text-5xl w-4/5 sm:w-full">
           <p

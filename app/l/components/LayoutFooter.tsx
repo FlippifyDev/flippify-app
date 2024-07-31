@@ -10,7 +10,7 @@ const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
 const LayoutFooter = () => {
   return (
-    <div className=" w-full select-none bg-black flex justify-center">
+    <div className="w-full select-none bg-black flex justify-center">
       <footer className="footer flex flex-col md:flex-row items-center md:items-end justify-between p-4">
         <aside className="flex items-center">
           <a href="#" className={`${lato.className} text-white text-2xl font-bold`}>f</a>

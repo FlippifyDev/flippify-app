@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import SidebarBillingPortalButton from './SidebarBillingPortalButton';
 import SidebarSignOutButton from './SidebarSignOutButton';
@@ -7,17 +7,13 @@ import SidebarButton from './SidebarButton';
 import Alert from './Alert';
 
 import React, { useState } from 'react';
-import { Lato } from 'next/font/google';
 import Link from 'next/link';
-
 import { FaSearch, FaDiscord } from 'react-icons/fa';
 import { BsClipboard2Fill } from 'react-icons/bs';
 import { MdFeedback } from "react-icons/md";
 import { MdGroups } from 'react-icons/md';
 import { FaHouse } from 'react-icons/fa6';
 import { IoMenu } from 'react-icons/io5';
-
-const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
 const Sidebar = () => {
   const [alertVisible, setAlertVisible] = useState(false);
@@ -35,23 +31,11 @@ const Sidebar = () => {
       <Alert message="Flippify Membership Required." visible={alertVisible} onClose={hideAlert} />
       <div className="drawer drawer-mobile xl:drawer-open">
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content flex flex-col">
-          <label
-            htmlFor="my-drawer"
-            className="z-50 btn btn-ghost text-lightModeText text-2xl bg-transparent border-transparent drawer-button xl:hidden hover:bg-transparent hover:border-transparent hover:scale-125"
-          >
-            <IoMenu />
-          </label>
-        </div>
         <div className="drawer-side shadow-lg">
-          <ul className="menu bg-white text-base-content min-h-full w-80 p-4 flex flex-col justify-between border-r border-gray-200">
+          <ul className="menu bg-white text-base-content min-h-full w-80 p-4 flex flex-col justify-between border-r border-gray-200 mt-16 overflow-y-auto">
             <div className="flex flex-col">
-              <div className="flex justify-center mb-8 mt-4 select-none">
-                <a className={`${lato.className} text-lightModeText text-4xl`}>flippify</a>
-              </div>
-
               <section>
-                <div className="mb-4">
+                <div className="mb-2">
                   <a className="text-lightModeText text-lg font-bold select-none">Home</a>
                 </div>
                 <div>
@@ -71,7 +55,7 @@ const Sidebar = () => {
               </section>
 
               <section className="mt-6 md:mt-10">
-                <div className="mb-4">
+                <div className="mb-2">
                   <a className="text-lightModeText text-lg font-bold select-none">Tools</a>
                 </div>
                 <SidebarToolButtons showAlert={showAlert} />

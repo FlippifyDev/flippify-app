@@ -18,13 +18,15 @@ const HomeContent = ({ className = '' }) => {
             <a href="#" className={`${inter.className} text-white text-5xl font-bold text-center`}> with cutting-edge bots and tools</a>
           </p>
         </div>
-        <p className='w-11/12 sm:w-full mt-3 mb-3 pb-1 pt-2 text-greyText text-lg text-center'>
+        <p className='w-11/12 sm:w-full mt-3 mb-8 pb-1 pt-2 text-greyText text-lg text-center'>
           Providing An All-In-One Service Focused On Accelerating Your Reselling Profits.
         </p>
+        {/*
         <div className="flex items-center mb-3 pb-2">
-            <span className="inline-block mr-2 text-grayText opacity-90 text-md">Powered by</span>
+            <span className="inline-block mr-2 text-grayText opacity-90 text-md">Connected with</span>
             <span><HomePoweredByCompanies /></span>
         </div>
+        */}
         <HomeGetEarlyAccess />
         <HomeAbout />
         <HomeMockupPhone />

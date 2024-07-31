@@ -23,7 +23,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <Navbar />
             </div>
 
-            <div className="scroll-smooth mt-16 p-4 xl:mr-80 flex justify-center">
+            <div className="scroll-smooth mt-16 pt-5 px-2 xl:mr-80 flex justify-center">
               {children}
             </div>
           </div>

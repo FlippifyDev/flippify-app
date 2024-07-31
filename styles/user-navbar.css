@@ -1,0 +1,33 @@
+/* Add these styles to your global CSS */
+.navbar {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+.drawer-content {
+    margin-top: 60px; /* Adjust according to the navbar height */
+}
+
+.drawer-side {
+    padding-top: 60px; /* Same height as the navbar */
+    overflow-y: auto;
+}
+
+.menu {
+    margin-top: 16px; /* Additional margin if necessary */
+}
+
+/* Hide scrollbar for all webkit browsers */
+.drawer-side::-webkit-scrollbar {
+    width: 0;
+    background: transparent; /* Make scrollbar transparent */
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.drawer-side {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}

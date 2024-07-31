@@ -11,7 +11,7 @@ const HomeContentWrapperPage = () => {
       const element = document.getElementById(scrollToSection);
       if (element) {
         window.scrollTo({
-          top: element.offsetTop - 50, // Adjust offset as needed
+          top: element.offsetTop - 50,
           behavior: 'smooth'
         });
       }

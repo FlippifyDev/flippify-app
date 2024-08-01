@@ -1,6 +1,7 @@
 import { database, ref, get } from '../../api/auth-firebase/firebaseConfig';
 import { ISale } from './SalesTrackerModels';
 import React, { useState, useEffect } from 'react';
+import '@/styles/overview-cards.css';
 
 
 interface DashboardOverviewCardProps {
@@ -67,25 +68,25 @@ const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ customerI
         <div className="stats shadow-md bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2">
           <div className="stat">
             <div className="stat-title text-sm sm:text-base text-houseBlue">Total Revenue</div>
-            <div className="stat-value text-xl sm:text-2xl text-black">£{overviewData.totalRevenue.toFixed(2)}</div>
+            <div className="stat-value font-bold text-xl sm:text-2xl text-black">£{overviewData.totalRevenue.toFixed(2)}</div>
           </div>
         </div>
         <div className="stats shadow-md bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2">
           <div className="stat">
             <div className="stat-title text-sm sm:text-base text-houseBlue">Total Costs</div>
-            <div className="stat-value text-xl sm:text-2xl text-black">£{overviewData.totalCosts.toFixed(2)}</div>
+            <div className="stat-value font-bold text-xl sm:text-2xl text-black">£{overviewData.totalCosts.toFixed(2)}</div>
           </div>
         </div>
         <div className="stats shadow-md bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2">
           <div className="stat">
             <div className="stat-title text-sm sm:text-base text-houseBlue">No. Sales</div>
-            <div className="stat-value text-xl sm:text-2xl text-black">{overviewData.totalSales}</div>
+            <div className="stat-value font-bold text-xl sm:text-2xl text-black">{overviewData.totalSales}</div>
           </div>
         </div>
         <div className="stats shadow-md bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2">
           <div className="stat">
             <div className="stat-title text-sm sm:text-base text-houseBlue">ROI</div>
-            <div className="stat-value text-xl sm:text-2xl text-black">{roi}%</div>
+            <div className="stat-value font-bold text-xl sm:text-2xl text-black">{roi}%</div>
           </div>
         </div>
       </div>

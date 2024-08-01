@@ -68,7 +68,7 @@ const authOptions: AuthOptions = {
       session.user.subscriptions = user.subscriptions;
       session.user.referral = user.referral || referral;
       session.user.waitlisted = user.waitlisted ? { position: user.waitlisted.position ?? -1 } : waitlisted;
-      session.user.username = username || user.username; // Add username to session
+      session.user.username = username || user.username;
 
       return session;
     },
@@ -92,6 +92,8 @@ const authOptions: AuthOptions = {
             referral_code: generateReferralCode(),
             referred_by: null,
             referral_count: 0,
+            valid_referral_count: 0,
+            rewards_claimed: 0,
           };
 
           await User.findOneAndUpdate(

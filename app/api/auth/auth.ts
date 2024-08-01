@@ -41,7 +41,7 @@ const authOptions: AuthOptions = {
             rewards_claimed: userFromDb.referral?.rewards_claimed || 0, // Ensure rewards_claimed is included
           };
           token.waitlisted = userFromDb.waitlisted ? { position: userFromDb.waitlisted.position ?? -1 } : undefined;
-          token.username = userFromDb.username; // Add username to token
+          token.username = userFromDb.username;
         }
       }
 
@@ -80,7 +80,7 @@ const authOptions: AuthOptions = {
         rewards_claimed: user.referral?.rewards_claimed || 0, // Ensure rewards_claimed is included
       };
       session.user.waitlisted = user.waitlisted ? { position: user.waitlisted.position ?? -1 } : waitlisted;
-      session.user.username = username || user.username; // Add username to session
+      session.user.username = username || user.username;
 
       return session;
     },
@@ -104,8 +104,9 @@ const authOptions: AuthOptions = {
             referral_code: generateReferralCode(),
             referred_by: null,
             referral_count: 0,
-            valid_referral_count: 0, // Ensure valid_referral_count is initialized
-            rewards_claimed: 0 // Ensure rewards_claimed is initialized
+            valid_referral_count: 0,
+            valid_referrals: [],
+            rewards_claimed: 0,
           };
 
           await User.findOneAndUpdate(

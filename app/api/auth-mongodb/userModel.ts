@@ -19,8 +19,9 @@ interface IReferral {
   referral_code: string;
   referred_by: string | null;
   referral_count: number;
-  valid_referral_count: number;  // Added this property
-  rewards_claimed: number;  // Added this property
+  valid_referral_count: number;
+  valid_referrals: string[];
+  rewards_claimed: number;
 }
 
 interface IUser extends Document {
@@ -41,8 +42,9 @@ const referralSchema = new Schema<IReferral>({
   referral_code: { type: String, default: null },
   referred_by: { type: String, default: null },
   referral_count: { type: Number, default: 0 },
-  valid_referral_count: { type: Number, default: 0 },  // Added this line
-  rewards_claimed: { type: Number, default: 0 },  // Added this line
+  valid_referral_count: { type: Number, default: 0 },
+  valid_referrals: { type: [String], default: [] },
+  rewards_claimed: { type: Number, default: 0 },
 });
 
 const subscriptionSchema = new Schema<ISubscription>({

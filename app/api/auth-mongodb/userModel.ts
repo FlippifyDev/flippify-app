@@ -12,7 +12,7 @@ interface ISubscription {
 }
 
 interface IWaitListed {
-  position: number; // Ensure position is strictly a number
+  position: number;
 }
 
 interface IReferral {
@@ -20,6 +20,7 @@ interface IReferral {
   referred_by: string | null;
   referral_count: number;
   valid_referral_count: number;
+  valid_referrals: string[];
   rewards_claimed: number;
 }
 
@@ -34,7 +35,7 @@ interface IUser extends Document {
 }
 
 const waitListedSchema = new Schema<IWaitListed>({
-  position: { type: Number, required: true, default: -1 }, // Ensure position is always a number
+  position: { type: Number, required: true, default: -1 },
 });
 
 const referralSchema = new Schema<IReferral>({
@@ -42,6 +43,7 @@ const referralSchema = new Schema<IReferral>({
   referred_by: { type: String, default: null },
   referral_count: { type: Number, default: 0 },
   valid_referral_count: { type: Number, default: 0 },
+  valid_referrals: { type: [String], default: [] },
   rewards_claimed: { type: Number, default: 0 },
 });
 

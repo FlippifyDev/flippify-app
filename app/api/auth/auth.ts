@@ -35,7 +35,7 @@ const authOptions: AuthOptions = {
         if (userFromDb) {
           token.referral = userFromDb.referral;
           token.waitlisted = userFromDb.waitlisted ? { position: userFromDb.waitlisted.position ?? -1 } : undefined;
-          token.username = userFromDb.username; // Add username to token
+          token.username = userFromDb.username;
         }
       }
 
@@ -93,6 +93,7 @@ const authOptions: AuthOptions = {
             referred_by: null,
             referral_count: 0,
             valid_referral_count: 0,
+            valid_referrals: [],
             rewards_claimed: 0,
           };
 

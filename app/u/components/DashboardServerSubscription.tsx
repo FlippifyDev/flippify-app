@@ -9,7 +9,6 @@ const DashboardServerSubscription = () => {
         <br />
         <strong className='text-xl'>Important</strong>
         <p>If you cannot see the Manage Servers tab contact support on Discord as soon as possible.</p>
-
     </div>
   )
 }

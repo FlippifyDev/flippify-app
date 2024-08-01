@@ -33,7 +33,13 @@ const authOptions: AuthOptions = {
       if (token.id) {
         const userFromDb = await User.findOne({ discord_id: Long.fromString(token.id as string) });
         if (userFromDb) {
-          token.referral = userFromDb.referral;
+          token.referral = {
+            referral_code: userFromDb.referral?.referral_code || null,
+            referred_by: userFromDb.referral?.referred_by || null,
+            referral_count: userFromDb.referral?.referral_count || 0,
+            valid_referral_count: userFromDb.referral?.valid_referral_count || 0, // Ensure valid_referral_count is included
+            rewards_claimed: userFromDb.referral?.rewards_claimed || 0, // Ensure rewards_claimed is included
+          };
           token.waitlisted = userFromDb.waitlisted ? { position: userFromDb.waitlisted.position ?? -1 } : undefined;
           token.username = userFromDb.username; // Add username to token
         }
@@ -66,7 +72,13 @@ const authOptions: AuthOptions = {
       session.user.discordId = id;
       session.user.customerId = stripeCustomer.id;
       session.user.subscriptions = user.subscriptions;
-      session.user.referral = user.referral || referral;
+      session.user.referral = {
+        referral_code: user.referral?.referral_code || null,
+        referred_by: user.referral?.referred_by || null,
+        referral_count: user.referral?.referral_count || 0,
+        valid_referral_count: user.referral?.valid_referral_count || 0, // Ensure valid_referral_count is included
+        rewards_claimed: user.referral?.rewards_claimed || 0, // Ensure rewards_claimed is included
+      };
       session.user.waitlisted = user.waitlisted ? { position: user.waitlisted.position ?? -1 } : waitlisted;
       session.user.username = username || user.username; // Add username to session
 
@@ -92,6 +104,8 @@ const authOptions: AuthOptions = {
             referral_code: generateReferralCode(),
             referred_by: null,
             referral_count: 0,
+            valid_referral_count: 0, // Ensure valid_referral_count is initialized
+            rewards_claimed: 0 // Ensure rewards_claimed is initialized
           };
 
           await User.findOneAndUpdate(

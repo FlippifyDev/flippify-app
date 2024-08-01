@@ -76,8 +76,9 @@ const authOptions: AuthOptions = {
         referral_code: user.referral?.referral_code || null,
         referred_by: user.referral?.referred_by || null,
         referral_count: user.referral?.referral_count || 0,
-        valid_referral_count: user.referral?.valid_referral_count || 0, // Ensure valid_referral_count is included
-        rewards_claimed: user.referral?.rewards_claimed || 0, // Ensure rewards_claimed is included
+        valid_referrals: user.referral?.valid_referrals || [],
+        valid_referral_count: user.referral?.valid_referral_count || 0, 
+        rewards_claimed: user.referral?.rewards_claimed || 0, 
       };
       session.user.waitlisted = user.waitlisted ? { position: user.waitlisted.position ?? -1 } : waitlisted;
       session.user.username = username || user.username;

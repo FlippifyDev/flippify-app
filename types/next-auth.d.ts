@@ -1,7 +1,7 @@
 import NextAuth, { DefaultSession, DefaultJWT } from 'next-auth';
 
 import { User as NextAuthUser } from 'next-auth';
-import { ISubscription, IWaitListed } from '../userModel'; // Adjust import based on your file structure
+import { ISubscription, IWaitListed } from '../userModel';
 
 interface SessionUser extends NextAuthUser {
   name: string;
@@ -14,11 +14,14 @@ interface SessionUser extends NextAuthUser {
     referral_code: string | null;
     referred_by: string | null;
     referral_count: number;
+    valid_referrals: string[];
+    valid_referral_count: number;
+    rewards_claimed: number;
   };
   waitlisted?: {
     position: number;
   };
-  username: string; // Add username property
+  username: string;
 }
 
 declare module 'next-auth' {
@@ -29,6 +32,6 @@ declare module 'next-auth' {
 
   interface JWT extends DefaultJWT {
     accessToken?: string;
-    username?: string; // Add username property
+    username?: string;
   }
 }

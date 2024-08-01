@@ -37,8 +37,8 @@ const authOptions: AuthOptions = {
             referral_code: userFromDb.referral?.referral_code || null,
             referred_by: userFromDb.referral?.referred_by || null,
             referral_count: userFromDb.referral?.referral_count || 0,
-            valid_referral_count: userFromDb.referral?.valid_referral_count || 0, // Ensure valid_referral_count is included
-            rewards_claimed: userFromDb.referral?.rewards_claimed || 0, // Ensure rewards_claimed is included
+            valid_referral_count: userFromDb.referral?.valid_referral_count || 0,
+            rewards_claimed: userFromDb.referral?.rewards_claimed || 0, 
           };
           token.waitlisted = userFromDb.waitlisted ? { position: userFromDb.waitlisted.position ?? -1 } : undefined;
           token.username = userFromDb.username;
@@ -48,7 +48,7 @@ const authOptions: AuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      const { id, name, email, referral, waitlisted, username } = token as {
+      const { id, name, email, waitlisted, username } = token as {
         id: string;
         name: string;
         email: string;
@@ -88,6 +88,12 @@ const authOptions: AuthOptions = {
     async signIn({ profile }: any) {
       try {
         const { id, username, email } = profile as { id: string; username: string; email: string };
+
+        // Deny sign-in if email is not present
+        if (!email) {
+          console.error(`Sign-in attempt without email for user ${username}`);
+          return false;
+        }
 
         const existingUser = await User.findOne({ discord_id: Long.fromString(id) });
 

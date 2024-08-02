@@ -7,7 +7,7 @@ interface ServerPlansCardWhatsIncludedProps {
 
 const ServerPlansCardWhatsIncluded: React.FC<ServerPlansCardWhatsIncludedProps> = ({ whatsIncludedText }) => {
   return (
-    <div className="flex flex-col items-start text-paymentPlanText pt-6 pb-6 pl-2">
+    <div className="flex flex-col items-start text-white pt-6 pb-6 pl-2">
       <h2 className="mb-4 font-bold text-lg">What&apos;s included:</h2>
       {whatsIncludedText.map((text, index) => (
         <div key={index} className="grid grid-cols-12 mb-2 items-center">

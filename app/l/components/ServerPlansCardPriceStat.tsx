@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 
 interface PlansCardPriceStatProps {
@@ -9,7 +11,7 @@ interface PlansCardPriceStatProps {
 
 const ServerPlansCardPriceStat: React.FC<PlansCardPriceStatProps> = ({ price, onPlanSelect, selectedPlan, currencySymbol }) => {
   return (
-    <div className="stats stats-vertical bg-darkModeBackground sm:stats-horizontal shadow w-full md:w-auto lg:w-full mt-2 mb-2">
+    <div className="stats stats-vertical bg-base-100 sm:stats-horizontal shadow w-full md:w-auto lg:w-full mt-2 mb-2">
       <div
         className={`stat flex flex-col items-center justify-center hover:cursor-pointer hover:bg-lightGreyHighlight hover:bg-opacity-50 transition-colors duration-200 ${
           selectedPlan === 0
@@ -18,11 +20,13 @@ const ServerPlansCardPriceStat: React.FC<PlansCardPriceStatProps> = ({ price, on
         }`}
         onClick={() => onPlanSelect(0)}
       >
-        <div className="stat-title text-paymentPlanText lg:text-sm">Starting From...</div>
-        <div className="stat-value text-paymentPlanText text-2xl sm:text-2xl md:text-3xl lg:text-2xl">
+        <div className="stat-title lg:text-sm text-slightlyDarkerGreyText">Starting From...</div>
+        <div className="stat-value grid grid-cols-2">
+          <div className="font-extrabold text-paymentPlanText text-2xl sm:text-2xl md:text-3xl lg:text-2xl">
           {currencySymbol}
           {price.toFixed(2)}
-          <span className="text-sm text-houseBlue"> /month</span>
+          <span className="text-sm"> /month</span>
+          </div>
         </div>
       </div>
     </div>

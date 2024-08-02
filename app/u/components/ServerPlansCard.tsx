@@ -2,8 +2,6 @@
 
 import React, { useState } from "react";
 import { Lato } from "next/font/google";
-import LayoutSubscriptionWrapper from "./LayoutSubscriptionWrapper";
-import WaitlistJoinButton from "./WaitlistJoinButton";
 import ServerPlansCardPriceStat from "./ServerPlansCardPriceStat";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
@@ -92,20 +90,12 @@ const ServerPlansCard: React.FC<PlansCardProps> = ({
             <div className="flex justify-between p-4">
               {selectedPlan !== null && (
                 <div className="flex gap-2 w-full">
-                  <LayoutSubscriptionWrapper requiredSubscriptions={["whitelisted"]}>
                     <a
                       href="https://discord.com/channels/1236428617962229830/1236436288442466394"
                       className="btn border-0 bg-houseBlue hover:bg-green-400 text-white w-2/3 mx-auto"
                     >
                       Contact Us
                     </a>
-                  </LayoutSubscriptionWrapper>
-                  <LayoutSubscriptionWrapper requiredSubscriptions={["!whitelisted"]}>
-                    <WaitlistJoinButton
-                      text="Join Waitlist"
-                      redirect="dashboard"
-                    />
-                  </LayoutSubscriptionWrapper>
                 </div>
               )}
             </div>

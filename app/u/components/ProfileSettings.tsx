@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { database, ref, set } from '../../api/auth-firebase/firebaseConfig';
+import Stripe from 'stripe';
 
 const ProfileSettings = () => {
   const { data: session } = useSession();
@@ -23,6 +24,22 @@ const ProfileSettings = () => {
     setIsChanged(e.target.value !== originalEmail);
   };
 
+  const updateEmailInStripe = async (customerId: string, newEmail: string) => {
+    const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
+    const stripe = new Stripe(stripeAPIKey, {
+      apiVersion: '2024-06-20',  // Use the correct API version
+    });
+
+    try {
+      await stripe.customers.update(customerId, {
+        email: newEmail,
+      });
+    } catch (error) {
+      console.error('Error updating email in Stripe:', error);
+      throw error;
+    }
+  };
+
   const handleSaveChanges = async () => {
     if (!session || !session.user || !session.user.customerId) {
       setFeedback('You must be logged in to update your settings.');
@@ -30,8 +47,13 @@ const ProfileSettings = () => {
     }
 
     try {
+      // Update email in Stripe
+      await updateEmailInStripe(session.user.customerId, email);
+
+      // Update email in MongoDB
       const userRef = ref(database, `users/${session.user.customerId}`);
       await set(userRef, { email });
+
       setFeedback('Email updated successfully.');
       setOriginalEmail(email);
       setIsChanged(false);

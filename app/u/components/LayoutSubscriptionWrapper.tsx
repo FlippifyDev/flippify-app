@@ -5,7 +5,8 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 interface LayoutSubscriptionWrapperProps {
-    requiredSubscriptions: string[];
+    requiredSubscriptions?: string[];
+    anySubscriptions?: string[];
     children: ReactNode;
     redirectPath?: string;
 }
@@ -14,7 +15,12 @@ export interface Subscription {
     name: string;
 }
 
-const LayoutSubscriptionWrapper: React.FC<LayoutSubscriptionWrapperProps> = ({ requiredSubscriptions, children, redirectPath }) => {
+const LayoutSubscriptionWrapper: React.FC<LayoutSubscriptionWrapperProps> = ({
+    requiredSubscriptions = [],
+    anySubscriptions = [],
+    children,
+    redirectPath,
+}) => {
     const { data: session } = useSession();
     const router = useRouter();
 
@@ -32,17 +38,19 @@ const LayoutSubscriptionWrapper: React.FC<LayoutSubscriptionWrapperProps> = ({ r
         }
 
         const hasRequiredSubscriptions = checkSubscriptions(user.subscriptions, requiredSubscriptions);
+        const hasAnySubscriptions = anySubscriptions.length === 0 || checkAnySubscriptions(user.subscriptions, anySubscriptions);
 
-        if (!hasRequiredSubscriptions && redirectPath) {
+        if ((!hasRequiredSubscriptions || !hasAnySubscriptions) && redirectPath) {
             router.push(redirectPath);
         }
-    }, [session, requiredSubscriptions, redirectPath, router]);
+    }, [session, requiredSubscriptions, anySubscriptions, redirectPath, router]);
 
     if (!session || !session.user || !session.user.subscriptions) return null;
 
     const hasRequiredSubscriptions = checkSubscriptions(session.user.subscriptions, requiredSubscriptions);
+    const hasAnySubscriptions = anySubscriptions.length === 0 || checkAnySubscriptions(session.user.subscriptions, anySubscriptions);
 
-    return hasRequiredSubscriptions ? <>{children}</> : null;
+    return hasRequiredSubscriptions && hasAnySubscriptions ? <>{children}</> : null;
 };
 
 const checkSubscriptions = (userSubscriptions: Subscription[], requiredSubscriptions: string[]) => {
@@ -53,6 +61,15 @@ const checkSubscriptions = (userSubscriptions: Subscription[], requiredSubscript
             subscription.name.toLowerCase().includes(subscriptionToCheck)
         );
         return isNegation ? !hasSubscription : hasSubscription;
+    });
+};
+
+const checkAnySubscriptions = (userSubscriptions: Subscription[], anySubscriptions: string[]) => {
+    return anySubscriptions.some(sub => {
+        const subscriptionToCheck = sub.toLowerCase();
+        return userSubscriptions.some(subscription =>
+            subscription.name.toLowerCase().includes(subscriptionToCheck)
+        );
     });
 };
 

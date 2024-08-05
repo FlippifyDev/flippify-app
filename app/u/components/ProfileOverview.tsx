@@ -1,17 +1,65 @@
 'use client';
 
-import React from 'react';
-import { useSession } from 'next-auth/react';
-import Image from 'next/image';
-import SidebarBillingPortalButton from './SidebarBillingPortalButton';
+import React, { useState, useEffect, useCallback } from "react";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import ProfileBillingPortalButton from "./ProfileBillingPortalButton";
+import ProfileSupportButton from "./ProfileSupportButton";
+import LayoutSubscriptionWrapper from "./LayoutSubscriptionWrapper";
+import { database, ref, get } from "../../api/auth-firebase/firebaseConfig";
+import { handleUser } from "../../api/auth-firebase/firebaseConfig";
 
 const ProfileOverview = () => {
   const { data: session } = useSession();
+  const [totalProfit, setTotalProfit] = useState(0);
+
+  const calculateTotalProfit = useCallback(async (customerId: string) => {
+    if (!customerId) return;
+
+    try {
+      // Authenticate the user
+      const { customerId: cleanedCustomerId } = await handleUser(customerId);
+
+      const salesRef = ref(database, `sales/${cleanedCustomerId}`);
+      const salesSnapshot = await get(salesRef);
+      const salesData = salesSnapshot.val() || {};
+
+      let totalProfit = 0;
+
+      for (const saleKey in salesData) {
+        const sale = salesData[saleKey];
+        const purchasePricePerUnit = sale.purchasePricePerUnit || 0;
+        const platformFees = sale.platformFees || 0;
+        const shippingCost = sale.shippingCost || 0;
+        const totalSaleRevenue = sale.quantitySold * sale.salePrice;
+        const totalPurchaseCost = sale.quantitySold * purchasePricePerUnit;
+        const estimatedProfit =
+          totalSaleRevenue -
+          totalPurchaseCost -
+          totalSaleRevenue * (platformFees / 100) -
+          shippingCost;
+
+        totalProfit += estimatedProfit;
+      }
+
+      setTotalProfit(totalProfit);
+    } catch (error) {
+      console.error('Error calculating total profit:', error);
+      setTotalProfit(0); // Ensure totalProfit is set to 0 in case of error
+    }
+  }, []);
+
+  useEffect(() => {
+    if (session && session.user && session.user.customerId) {
+      calculateTotalProfit(session.user.customerId);
+    }
+  }, [session, calculateTotalProfit]);
 
   // Default avatar
-  let avatar = "https://i.pinimg.com/originals/40/a4/59/40a4592d0e7f4dc067ec0cdc24e038b9.png";
+  let avatar =
+    "https://i.pinimg.com/originals/40/a4/59/40a4592d0e7f4dc067ec0cdc24e038b9.png";
   let username = "User";
-  let customerId = "N/A";
+  let email = "N/A";
 
   if (session) {
     if (session.user?.image) {
@@ -20,8 +68,8 @@ const ProfileOverview = () => {
     if (session.user?.name) {
       username = session.user.name;
     }
-    if (session.user?.customerId) {
-      customerId = session.user.customerId;
+    if (session.user?.email) {
+      email = session.user.email;
     }
   }
 
@@ -36,36 +84,50 @@ const ProfileOverview = () => {
           className="rounded-full"
         />
         <div className="ml-4">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{username}</h2>
-          <p className="text-gray-500 dark:text-gray-400">Customer ID: {customerId}</p>
-          <div className="mt-2">
-            <SidebarBillingPortalButton />
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            {username}
+          </h2>
+          <p className="text-gray-500 dark:text-gray-400">
+            {email}
+          </p>
+          <div>
+            <ProfileBillingPortalButton />
+            <ProfileSupportButton />
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full md:w-auto mt-4 md:mt-0">
-        <div className="stats shadow-md bg-white p-4 rounded-lg">
-          <div className="stat">
-            <div className="stat-title text-sm sm:text-base text-houseBlue">Subscription Status</div>
-            <div className="stat-value font-bold text-xl sm:text-2xl text-black">Active</div>
+      <div className="flex flex-col md:flex-row gap-4 w-full font-semibold md:w-auto mt-4 md:mt-0 md:ml-auto">
+        <LayoutSubscriptionWrapper anySubscriptions={['standard', 'server']}>
+          <div className="stats shadow-md bg-white p-4 rounded-lg">
+            <div className="stat">
+              <div className="stat-title text-sm sm:text-base text-houseBlue">
+                Subscription Status
+              </div>
+              <div className="stat-value font-bold text-xl sm:text-2xl text-black">
+                Active
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="stats shadow-md bg-white p-4 rounded-lg">
-          <div className="stat">
-            <div className="stat-title text-sm sm:text-base text-houseBlue">Total Profit Made</div>
-            <div className="stat-value font-bold text-xl sm:text-2xl text-black">£0.00</div>
+        </LayoutSubscriptionWrapper>
+        <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', '!server']}>
+          <div className="stats shadow-md bg-white p-4 rounded-lg">
+            <div className="stat">
+              <div className="stat-title text-sm sm:text-base text-houseBlue">
+                Subscription Status
+              </div>
+              <div className="stat-value font-bold text-xl sm:text-2xl text-black">
+                Not Active
+              </div>
+            </div>
           </div>
-        </div>
+        </LayoutSubscriptionWrapper>
         <div className="stats shadow-md bg-white p-4 rounded-lg">
           <div className="stat">
-            <div className="stat-title text-sm sm:text-base text-houseBlue">Need Support?</div>
+            <div className="stat-title text-sm sm:text-base text-houseBlue">
+              Total Profit Made
+            </div>
             <div className="stat-value font-bold text-xl sm:text-2xl text-black">
-              <a
-                href="https://discord.com/channels/1236428617962229830/1236436288442466394"
-                className="btn border-0 bg-houseBlue hover:bg-green-400 text-white w-full"
-              >
-                Press the Button
-              </a>
+              £{totalProfit.toFixed(2)}
             </div>
           </div>
         </div>

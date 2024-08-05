@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import { useSession } from 'next-auth/react';
@@ -27,12 +27,12 @@ const ProfileReferralData: React.FC = () => {
 
   return (
     <div className="card bg-white shadow-md rounded-lg p-4 h-full flex flex-col">
-      <div className="flex justify-between items-center mb-2">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-2">
         <h2 className="card-title text-black text-xl font-semibold">Referral Program</h2>
         <ReferralTracker referrals={referralCount} />
       </div>
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+        <div className="flex flex-col sm:flex-row items-center mb-4 sm:mb-0">
           <p className="text-lg font-semibold text-gray-900 dark:text-white mr-2">Your code:</p>
           <button
             className="flex items-center px-2 py-1 bg-gray-100 border rounded-lg hover:bg-gray-200 transition duration-200"
@@ -42,18 +42,18 @@ const ProfileReferralData: React.FC = () => {
             <FaClipboard className="text-gray-900 dark:text-white" />
           </button>
         </div>
-        <p className="text-sm font-normal text-gray-500 dark:text-gray-400">
+        <p className="text-sm font-normal text-gray-500 dark:text-gray-400 px-2 text-center sm:text-left">
           Users must subscribe to count as a valid referral.
         </p>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 mx-16">
-        <div className="stats shadow-md bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2 text-center">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+        <div className="stats shadow-md bg-white w-full p-2 text-center">
           <div className="stat">
             <div className="stat-title text-sm sm:text-base text-houseBlue">Lifetime Referrals</div>
             <div className="stat-value font-bold text-xl sm:text-2xl text-black">{referralCount}</div>
           </div>
         </div>
-        <div className="stats shadow-md bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2 text-center">
+        <div className="stats shadow-md bg-white w-full p-2 text-center">
           <div className="stat">
             <div className="stat-title text-sm sm:text-base text-houseBlue">Total Rewards Claimed</div>
             <div className="stat-value font-bold text-xl sm:text-2xl text-black">{totalRewardsClaimed}</div>

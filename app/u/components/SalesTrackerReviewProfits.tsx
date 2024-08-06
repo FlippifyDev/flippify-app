@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { auth, database, ref, get } from "../../api/auth-firebase/firebaseConfig";
-import { ISale, IHistoryGrid } from "./SalesTrackerModels";
+import { IHistoryGrid, ISale } from "./SalesTrackerModels";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { saveAs } from "file-saver";
 import { format } from 'date-fns';
 import * as Papa from "papaparse";
+import { useSession } from 'next-auth/react';
+
+const sanitizePath = (path: string): string => {
+  return path.replace(/[.#$[\]]/g, '_');
+};
+
+const currencyConversionRates = {
+  GBP: 1,
+  USD: 1.28,
+  EUR: 1.16,
+};
 
 interface Filters {
   dateRange: { start: string; end: string };
@@ -19,10 +30,6 @@ interface SalesTrackerReviewProfitsProps {
   };
 }
 
-const sanitizePath = (path: string): string => {
-  return path.replace(/[.#$[\]]/g, '_');
-};
-
 const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ userData }) => {
   const today = new Date();
   const formattedToday = format(today, 'yyyy-MM-dd');
@@ -35,6 +42,14 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
 
   const [sales, setSales] = useState<IHistoryGrid[]>([]);
   const [filteredSales, setFilteredSales] = useState<IHistoryGrid[]>([]);
+  const { data: session } = useSession();
+  const [currency, setCurrency] = useState<"GBP" | "USD" | "EUR">("GBP");
+
+  useEffect(() => {
+    if (session && session.user && session.user.currency) {
+      setCurrency(session.user.currency as "GBP" | "USD" | "EUR");
+    }
+  }, [session]);
 
   useEffect(() => {
     if (userData) {
@@ -151,20 +166,23 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
   };
 
   // Calculations
+  const conversionRate = currencyConversionRates[currency];
+  const currencySymbol = currency === "GBP" ? "£" : currency === "USD" ? "$" : "€";
+
   const totalSaleRevenue = filteredSales.reduce(
-    (sum, sale) => sum + sale.salePrice * sale.quantitySold,
+    (sum, sale) => sum + sale.salePrice * sale.quantitySold * conversionRate,
     0
   );
   const totalPurchaseCost = filteredSales.reduce(
-    (sum, sale) => sum + sale.purchasePricePerUnit * sale.quantitySold,
+    (sum, sale) => sum + sale.purchasePricePerUnit * sale.quantitySold * conversionRate,
     0
   );
   const totalShippingCost = filteredSales.reduce(
-    (sum, sale) => sum + sale.shippingCost,
+    (sum, sale) => sum + sale.shippingCost * conversionRate,
     0
   );
   const totalPlatformFees = filteredSales.reduce(
-    (sum, sale) => sum + (sale.salePrice * sale.quantitySold * (sale.platformFees / 100)),
+    (sum, sale) => sum + (sale.salePrice * sale.quantitySold * (sale.platformFees / 100)) * conversionRate,
     0
   );
   const totalCosts = totalPurchaseCost + totalShippingCost + totalPlatformFees;
@@ -276,7 +294,7 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
                 <div className="stat">
                   <div className="stat-title text-houseBlue">Total Revenue</div>
                   <div className="stat-value text-2xl lg:text-3xl text-black">
-                    £{totalSaleRevenue.toFixed(2)}
+                    {currencySymbol}{totalSaleRevenue.toFixed(2)}
                   </div>
                 </div>
               </div>
@@ -284,7 +302,7 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
                 <div className="stat">
                   <div className="stat-title text-houseBlue">Total Costs</div>
                   <div className="stat-value text-2xl lg:text-3xl text-black">
-                    £{totalCosts.toFixed(2)}
+                    {currencySymbol}{totalCosts.toFixed(2)}
                   </div>
                 </div>
               </div>
@@ -292,7 +310,7 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
                 <div className="stat">
                   <div className="stat-title text-houseBlue">Net Profit</div>
                   <div className="stat-value text-2xl lg:text-3xl text-black">
-                    £{netProfit.toFixed(2)}
+                    {currencySymbol}{netProfit.toFixed(2)}
                   </div>
                 </div>
               </div>
@@ -335,13 +353,13 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
                 {filteredSales.length > 0 ? (
                   filteredSales.map((sale, index) => {
                     const totalPurchaseCost =
-                      sale.purchasePricePerUnit * sale.quantitySold;
+                      sale.purchasePricePerUnit * sale.quantitySold * conversionRate;
                     const totalPlatformFees =
                       sale.salePrice *
                       sale.quantitySold *
-                      (sale.platformFees / 100);
-                    const totalShippingAndOtherFees = sale.shippingCost;
-                    const totalSaleRevenue = sale.salePrice * sale.quantitySold;
+                      (sale.platformFees / 100) * conversionRate;
+                    const totalShippingAndOtherFees = sale.shippingCost * conversionRate;
+                    const totalSaleRevenue = sale.salePrice * sale.quantitySold * conversionRate;
 
                     const totalCosts =
                       totalPurchaseCost +
@@ -355,12 +373,12 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
                         <td>{sale.purchaseDate}</td>
                         <td>{sale.itemName}</td>
                         <td>{sale.quantitySold}</td>
-                        <td>{totalShippingAndOtherFees.toFixed(2)}</td>
+                        <td>{currencySymbol}{totalShippingAndOtherFees.toFixed(2)}</td>
                         <td>{sale.platformFees.toFixed(2)}</td>
-                        <td>{totalPurchaseCost.toFixed(2)}</td>
-                        <td>{totalSaleRevenue.toFixed(2)}</td>
-                        <td>{totalCosts.toFixed(2)}</td>
-                        <td>{profit.toFixed(2)}</td>
+                        <td>{currencySymbol}{totalPurchaseCost.toFixed(2)}</td>
+                        <td>{currencySymbol}{totalSaleRevenue.toFixed(2)}</td>
+                        <td>{currencySymbol}{totalCosts.toFixed(2)}</td>
+                        <td>{currencySymbol}{profit.toFixed(2)}</td>
                       </tr>
                     );
                   })

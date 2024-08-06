@@ -8,6 +8,12 @@ interface SalesTrackerTabCalcProfitsProps {
   };
 }
 
+const currencyConversionRates = {
+  GBP: 1,
+  USD: 1.28,
+  EUR: 1.16,
+};
+
 const SalesTrackerTabCalcProfits: React.FC<SalesTrackerTabCalcProfitsProps> = ({ userData }) => {
   const { estimate, setEstimate } = useEstimate();
   
@@ -15,6 +21,7 @@ const SalesTrackerTabCalcProfits: React.FC<SalesTrackerTabCalcProfitsProps> = ({
   const [platformFees, setPlatformFees] = useState<number | string>(0);
   const [shippingCost, setShippingCost] = useState<number | string>(0);
   const [estimatedProfit, setEstimatedProfit] = useState(0);
+  const [currency, setCurrency] = useState<"GBP" | "USD" | "EUR">("GBP");
 
   useEffect(() => {
     const totalPurchaseCost = estimate.purchasedQuantity * estimate.purchasePricePerUnit;
@@ -132,6 +139,21 @@ const SalesTrackerTabCalcProfits: React.FC<SalesTrackerTabCalcProfitsProps> = ({
             className="input input-bordered w-full bg-white placeholder-lightModeText-light"
             placeholder="Enter shipping cost"
           />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2" htmlFor="currency">
+            Currency
+          </label>
+          <select
+            id="currency"
+            value={currency}
+            onChange={(e) => setCurrency(e.target.value as "GBP" | "USD" | "EUR")}
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+          >
+            <option value="GBP">GBP (£)</option>
+            <option value="USD">USD ($)</option>
+            <option value="EUR">EUR (€)</option>
+          </select>
         </div>
         <div>
           <h2 className="divider font-bold text-lightModeText text-lg">Estimated Profit: {estimatedProfit.toFixed(2)}</h2>

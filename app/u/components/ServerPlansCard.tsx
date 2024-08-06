@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Lato } from "next/font/google";
 import ServerPlansCardPriceStat from "./ServerPlansCardPriceStat";
+import { useSession } from "next-auth/react";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 
@@ -24,6 +25,12 @@ interface PlansCardProps {
   badgeColor: BadgeColor;
 }
 
+const currencyConversionRates = {
+  GBP: 1,
+  USD: 1.28,
+  EUR: 1.16,
+};
+
 const ServerPlansCard: React.FC<PlansCardProps> = ({
   title,
   price,
@@ -33,19 +40,26 @@ const ServerPlansCard: React.FC<PlansCardProps> = ({
   labelText,
   badgeColor,
 }) => {
+  const { data: session } = useSession();
   const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
-  const [currency, setCurrency] = useState<"USD" | "GBP">("USD");
+  const [currency, setCurrency] = useState<"GBP" | "USD" | "EUR">("GBP");
+
+  useEffect(() => {
+    if (session && session.user && session.user.currency) {
+      setCurrency(session.user.currency as 'GBP' | 'USD' | 'EUR');
+    }
+  }, [session]);
 
   const handlePlanSelect = (index: number) => {
     setSelectedPlan(index);
   };
 
-  const handleCurrencyToggle = () => {
-    setCurrency((prevCurrency) => (prevCurrency === "GBP" ? "USD" : "GBP"));
+  const handleCurrencyToggle = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCurrency(e.target.value as 'GBP' | 'USD' | 'EUR');
   };
 
-  const convertedPrice = currency === "GBP" ? price / 1.28 : price;
-  const currencySymbol = currency === "GBP" ? "£" : "$";
+  const convertedPrice = Number((price * currencyConversionRates[currency]).toFixed(2));
+  const currencySymbol = currency === "GBP" ? "£" : currency === "USD" ? "$" : "€";
 
   const badgeClassName = `text-white ${badgeColorClasses[badgeColor]}`;
 
@@ -66,15 +80,19 @@ const ServerPlansCard: React.FC<PlansCardProps> = ({
               {description}
             </p>
             <div className="flex items-center justify-center gap-2 mb-4">
-              <span className="text-lightModeText text-xs">USD</span>
-              <input
-                type="checkbox"
-                className="toggle toggle-bordered"
+              <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2" htmlFor="currency">
+                Currency
+              </label>
+              <select
+                id="currency"
+                value={currency}
                 onChange={handleCurrencyToggle}
-                checked={currency === "GBP"}
-                aria-label="Currency toggle"
-              />
-              <span className="text-lightModeText text-xs">GBP</span>
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+              >
+                <option value="GBP">GBP (£)</option>
+                <option value="USD">USD ($)</option>
+                <option value="EUR">EUR (€)</option>
+              </select>
             </div>
             {price && (
               <ServerPlansCardPriceStat
@@ -90,12 +108,12 @@ const ServerPlansCard: React.FC<PlansCardProps> = ({
             <div className="flex justify-between p-4">
               {selectedPlan !== null && (
                 <div className="flex gap-2 w-full">
-                    <a
-                      href="https://discord.com/channels/1236428617962229830/1236436288442466394"
-                      className="btn border-0 bg-houseBlue hover:bg-green-400 text-white w-2/3 mx-auto"
-                    >
-                      Contact Us
-                    </a>
+                  <a
+                    href="https://discord.com/channels/1236428617962229830/1236436288442466394"
+                    className="btn border-0 bg-houseBlue hover:bg-green-400 text-white w-2/3 mx-auto"
+                  >
+                    Contact Us
+                  </a>
                 </div>
               )}
             </div>

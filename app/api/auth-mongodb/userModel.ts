@@ -32,6 +32,7 @@ interface IUser extends Document {
   subscriptions: ISubscription[];
   referral?: IReferral;
   waitlisted?: IWaitListed;
+  currency?: 'GBP' | 'USD' | 'EUR'; // Add this line
 }
 
 const waitListedSchema = new Schema<IWaitListed>({
@@ -62,6 +63,7 @@ const UserSchema = new Schema<IUser>({
   subscriptions: [subscriptionSchema],
   referral: { type: referralSchema },
   waitlisted: { type: waitListedSchema },
+  currency: { type: String, enum: ['GBP', 'USD', 'EUR'], default: 'GBP' }, // Add this line
 });
 
 const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);

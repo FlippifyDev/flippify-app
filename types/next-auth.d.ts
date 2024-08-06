@@ -1,5 +1,4 @@
 import NextAuth, { DefaultSession, DefaultJWT } from 'next-auth';
-
 import { User as NextAuthUser } from 'next-auth';
 import { ISubscription, IWaitListed } from '../userModel';
 
@@ -22,6 +21,7 @@ interface SessionUser extends NextAuthUser {
     position: number;
   };
   username: string;
+  currency?: 'GBP' | 'USD' | 'EUR';
 }
 
 declare module 'next-auth' {
@@ -33,5 +33,6 @@ declare module 'next-auth' {
   interface JWT extends DefaultJWT {
     accessToken?: string;
     username?: string;
+    currency?: 'GBP' | 'USD' | 'EUR';
   }
 }

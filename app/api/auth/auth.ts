@@ -42,19 +42,21 @@ const authOptions: AuthOptions = {
           };
           token.waitlisted = userFromDb.waitlisted ? { position: userFromDb.waitlisted.position ?? -1 } : undefined;
           token.username = userFromDb.username;
+          token.currency = userFromDb.currency || 'GBP';  // Add currency to the token
         }
       }
 
       return token;
     },
     async session({ session, token }) {
-      const { id, name, email, waitlisted, username } = token as {
+      const { id, name, email, waitlisted, username, currency } = token as {
         id: string;
         name: string;
         email: string;
         referral?: IReferral;
         waitlisted?: IWaitListed;
         username?: string;
+        currency?: 'GBP' | 'USD' | 'EUR';
       };
 
       const user = await User.findOne({ discord_id: Long.fromString(id) });
@@ -82,6 +84,7 @@ const authOptions: AuthOptions = {
       };
       session.user.waitlisted = user.waitlisted ? { position: user.waitlisted.position ?? -1 } : waitlisted;
       session.user.username = username || user.username;
+      session.user.currency = currency || user.currency || 'GBP';  // Add currency to the session
 
       return session;
     },
@@ -118,7 +121,7 @@ const authOptions: AuthOptions = {
 
           await User.findOneAndUpdate(
             { discord_id: discordId },
-            { username, email, stripe_customer_id: customer_id, subscriptions, referral },
+            { username, email, stripe_customer_id: customer_id, subscriptions, referral, currency: 'GBP' },
             { upsert: true }
           );
         }

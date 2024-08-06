@@ -1,12 +1,13 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import LayoutSubscriptionWrapper from "./LayoutSubscriptionWrapper";
 import WaitlistJoinButton from "./WaitlistJoinButton";
 import PlansSubscribeNow from "./PlansSubscribeNow";
 import PlansCardPriceStat from "./PlansCardPriceStat";
 import ManageMembershipsButton from "./PlansManageMembershipButton";
-import React, { useState } from "react";
 import { Lato } from "next/font/google";
+import { useSession } from "next-auth/react";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 
@@ -28,6 +29,12 @@ interface PlansCardProps {
   badgeColor: BadgeColor;
 }
 
+const currencyConversionRates = {
+  GBP: 1,
+  USD: 1.28,
+  EUR: 1.16,
+};
+
 const PlansCard: React.FC<PlansCardProps> = ({
   title,
   prices,
@@ -37,20 +44,26 @@ const PlansCard: React.FC<PlansCardProps> = ({
   labelText,
   badgeColor,
 }) => {
+  const { data: session } = useSession();
   const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
-  const [currency, setCurrency] = useState<"USD" | "GBP">("USD");
+  const [currency, setCurrency] = useState<'GBP' | 'USD' | 'EUR'>('GBP');
+
+  useEffect(() => {
+    if (session && session.user && session.user.currency) {
+      setCurrency(session.user.currency as 'GBP' | 'USD' | 'EUR');
+    }
+  }, [session]);
 
   const handlePlanSelect = (index: number) => {
     setSelectedPlan(index);
   };
 
-  const handleCurrencyToggle = () => {
-    setCurrency((prevCurrency) => (prevCurrency === "GBP" ? "USD" : "GBP"));
+  const handleCurrencyToggle = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCurrency(e.target.value as 'GBP' | 'USD' | 'EUR');
   };
 
-  const convertedPrices =
-    currency === "GBP" ? prices.map((price) => price / 1.28) : prices;
-  const currencySymbol = currency === "GBP" ? "£" : "$";
+  const convertedPrices = prices.map(price => Number((price * currencyConversionRates[currency]).toFixed(2)));
+  const currencySymbol = currency === 'GBP' ? '£' : currency === 'USD' ? '$' : '€';
 
   const selectedPriceId =
     selectedPlan === 0 ? priceIds.monthly : priceIds.yearly;
@@ -74,15 +87,19 @@ const PlansCard: React.FC<PlansCardProps> = ({
               {description}
             </p>
             <div className="flex items-center justify-center gap-2 mb-4">
-              <span className="text-lightModeText text-xs">USD</span>
-              <input
-                type="checkbox"
-                className="toggle toggle-bordered"
+              <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2" htmlFor="currency">
+                Currency
+              </label>
+              <select
+                id="currency"
+                value={currency}
                 onChange={handleCurrencyToggle}
-                checked={currency === "GBP"}
-                aria-label="Currency toggle"
-              />
-              <span className="text-lightModeText text-xs">GBP</span>
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+              >
+                <option value="GBP">GBP (£)</option>
+                <option value="USD">USD ($)</option>
+                <option value="EUR">EUR (€)</option>
+              </select>
             </div>
             {prices.length > 0 && (
               <PlansCardPriceStat

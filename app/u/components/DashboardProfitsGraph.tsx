@@ -3,6 +3,13 @@ import ApexCharts from 'apexcharts';
 import { database, ref, get } from "../../api/auth-firebase/firebaseConfig";
 import { ISale } from "./SalesTrackerModels";
 import { format, subDays, eachDayOfInterval, eachMonthOfInterval, endOfDay, parse } from 'date-fns';
+import { useSession } from 'next-auth/react';
+
+const currencyConversionRates = {
+  GBP: 1,
+  USD: 1.28,
+  EUR: 1.16,
+};
 
 interface ChartData {
   name: string;
@@ -18,13 +25,12 @@ interface TooltipFormatterOpts {
   dataPointIndex: number;
 }
 
-
-
 interface DashboardProfitsGraphProps {
   customerId: string;
 }
 
 const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerId }) => {
+  const { data: session } = useSession();
   const [salesData, setSalesData] = useState<SalesData>({
     categories: [],
     series: []
@@ -32,6 +38,7 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
   const [netProfit, setNetProfit] = useState(0);
   const [previousNetProfit, setPreviousNetProfit] = useState(0);
   const [selectedRange, setSelectedRange] = useState('30');
+  const [currency, setCurrency] = useState<'GBP' | 'USD' | 'EUR'>('GBP');
 
   const fetchSalesData = useCallback(async (rangeInDays: number) => {
     if (!customerId) return;
@@ -107,6 +114,12 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
   }, [customerId]);
 
   useEffect(() => {
+    if (session && session.user && session.user.currency) {
+      setCurrency(session.user.currency as 'GBP' | 'USD' | 'EUR');
+    }
+  }, [session]);
+
+  useEffect(() => {
     fetchSalesData(parseInt(selectedRange));
   }, [customerId, selectedRange, fetchSalesData]);
 
@@ -154,7 +167,12 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
       yaxis: {
         labels: {
           show: true,
-          formatter: (val: number) => `£${val}`,
+          formatter: (val: number) => {
+            const conversionRate = currencyConversionRates[currency];
+            const convertedValue = val * conversionRate;
+            const currencySymbol = currency === 'GBP' ? '£' : currency === 'USD' ? '$' : '€';
+            return `${currencySymbol}${convertedValue.toFixed(2)}`;
+          },
           cssClass: 'text-xs text-gray-500'
         }
       },
@@ -177,7 +195,12 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
           }
         },
         y: {
-          formatter: (val: number) => `£${val.toFixed(2)}`,
+          formatter: (val: number) => {
+            const conversionRate = currencyConversionRates[currency];
+            const convertedValue = val * conversionRate;
+            const currencySymbol = currency === 'GBP' ? '£' : currency === 'USD' ? '$' : '€';
+            return `${currencySymbol}${convertedValue.toFixed(2)}`;
+          },
         },
       },
     };
@@ -188,7 +211,7 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
     return () => {
       chart.destroy();
     };
-  }, [salesData, selectedRange]);
+  }, [salesData, selectedRange, currency]);
 
   const percentageChange = previousNetProfit === 0 ? netProfit * 100 : ((netProfit - previousNetProfit) / Math.abs(previousNetProfit)) * 100;
 
@@ -209,7 +232,7 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
       <div className="flex justify-between">
         <div>
           <h5 className="leading-none text-3xl font-bold text-gray-900 dark:text-white pb-2">
-            £{netProfit.toFixed(2)}
+            {currency === 'GBP' ? '£' : currency === 'USD' ? '$' : '€'}{(netProfit * currencyConversionRates[currency]).toFixed(2)}
           </h5>
           <p className="text-base font-normal text-gray-500 dark:text-gray-400">Profits this {timePeriodText}</p>
         </div>

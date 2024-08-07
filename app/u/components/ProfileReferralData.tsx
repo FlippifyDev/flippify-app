@@ -17,7 +17,7 @@ const ProfileReferralData: React.FC = () => {
   };
 
   const handleClaimRewards = () => {
-    window.location.href = "https://discord.com/channels/1236428617962229830/1236436288442466394";
+    window.open("https://discord.com/channels/1236428617962229830/1236436288442466394", '_blank');
   };
 
   const requiredReferrals = 5;

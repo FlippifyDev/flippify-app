@@ -41,7 +41,7 @@ const ProfileBillingPortalButton = () => {
 
   const handleBillingPortalButtonClick = () => {
     if (billingUrl) {
-      window.location.href = billingUrl;
+      window.open(billingUrl, '_blank');
     }
   };
 

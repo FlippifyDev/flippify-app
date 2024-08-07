@@ -6,7 +6,7 @@ import { BiSupport } from "react-icons/bi";
 
 const ProfileSupportButton = () => {
   const handleSupportButtonClick = () => {
-    window.location.href = "https://discord.com/channels/1236428617962229830/1236436288442466394";
+    window.open("https://discord.com/channels/1236428617962229830/1236436288442466394", '_blank');
   };
 
   return (

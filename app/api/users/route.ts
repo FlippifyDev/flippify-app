@@ -31,21 +31,32 @@ export async function PATCH(req: NextRequest) {
   await dbConnect();
 
   try {
-    const { _id, email } = await req.json();
+    // Parse the request body to get _id, email, and subscriptions
+    const { _id, email, subscriptions } = await req.json();
 
-    if (!_id || !email) {
-      return NextResponse.json({ error: 'Discord ID and email are required' }, { status: 400 });
+    // Validate the required fields
+    if (!_id || !email || !subscriptions) {
+      return NextResponse.json({ error: 'User ID, email, and subscriptions are required' }, { status: 400 });
     }
 
-    const result = await User.updateOne({ _id }, { $set: { email } });
+    // Update the user's email and subscriptions
+    const result = await User.updateOne(
+      { _id },
+      {
+        $set: {
+          email,
+          subscriptions, // Update subscriptions with the new roles array
+        },
+      }
+    );
 
     if (result.modifiedCount === 0) {
-      return NextResponse.json({ error: 'No user found or email unchanged' }, { status: 404 });
+      return NextResponse.json({ error: 'No user found or no changes detected' }, { status: 404 });
     }
 
-    return NextResponse.json({ message: 'Email updated successfully' });
+    return NextResponse.json({ message: 'User updated successfully' });
   } catch (error) {
     console.error('Error updating user:', error);
-    return NextResponse.json({ error: 'Failed to update email' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });
   }
 }

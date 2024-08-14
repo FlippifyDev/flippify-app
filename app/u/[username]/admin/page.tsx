@@ -3,12 +3,16 @@ import { useEffect, useState } from 'react';
 import { IUser } from 'app/api/auth-mongodb/userModel';
 import Card from 'app/u/components/PlansCardAdmin';
 
+
+
 interface IUser {
   username: string;
   email: string;
   stripe_customer_id: string;
   discord_id: number; // Use number type for discord_id if it's a long integer
   _id:string;
+  referral:Referral;
+  subscriptions:Role[];
 }
 
 export default function Admin() {
@@ -44,6 +48,8 @@ export default function Admin() {
             stripeCustomerId={user.stripe_customer_id}
             discord_id={user.discord_id.toString()}
             _id={user._id}
+            referral={user.referral}
+            subscriptions={user.subscriptions}
             // Pass additional fields as needed
           />
         ))

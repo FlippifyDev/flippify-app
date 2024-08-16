@@ -20,7 +20,7 @@
     "file-saver": "^2.0.5",
     "firebase": "^10.12.4",
     "flowbite": "^2.4.1",
-    "framer-motion": "^11.3.8",
+    "framer-motion": "^11.3.24",
     "mongoose": "^8.4.4",
     "mongoose-long": "^0.8.0",
     "next": "^14.2.4",

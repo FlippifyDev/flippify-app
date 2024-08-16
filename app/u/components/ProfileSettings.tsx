@@ -121,7 +121,7 @@ const ProfileSettings = () => {
         </select>
       </div>
       {feedback && (
-        <p className="mt-2 mb-4 text-center text-sm font-semibold text-gray-900 dark:text-white">
+        <p className="mb-4 text-center text-sm font-semibold text-gray-900 dark:text-white">
           {feedback}
         </p>
       )}

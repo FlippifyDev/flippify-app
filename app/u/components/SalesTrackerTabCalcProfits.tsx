@@ -140,21 +140,6 @@ const SalesTrackerTabCalcProfits: React.FC<SalesTrackerTabCalcProfitsProps> = ({
             placeholder="Enter shipping cost"
           />
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2" htmlFor="currency">
-            Currency
-          </label>
-          <select
-            id="currency"
-            value={currency}
-            onChange={(e) => setCurrency(e.target.value as "GBP" | "USD" | "EUR")}
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
-          >
-            <option value="GBP">GBP (£)</option>
-            <option value="USD">USD ($)</option>
-            <option value="EUR">EUR (€)</option>
-          </select>
-        </div>
         <div>
           <h2 className="divider font-bold text-lightModeText text-lg">Estimated Profit: {estimatedProfit.toFixed(2)}</h2>
         </div>

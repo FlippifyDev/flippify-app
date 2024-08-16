@@ -23,17 +23,34 @@ const database = getDatabase(app);
 // Initialize Firebase Auth
 const auth = getAuth(app);
 
+// Function to handle user authentication and return cleaned customer ID
 export const handleUser = async (customerId: string) => {
   try {
-    const auth = getAuth();  // Initialize the Firebase Auth
     const userCredential = await signInAnonymously(auth);
     const user = userCredential.user;
-    const cleanedcustomerId = customerId.replace("cus_", ""); // Apply the replace method correctly
-    return { uid: user.uid, customerId: cleanedcustomerId };
+    const cleanedCustomerId = customerId.replace("cus_", ""); // Clean the customer ID
+    return { uid: user.uid, customerId: cleanedCustomerId };
   } catch (error) {
     console.error('Firebase auth error:', error);
     throw error;
   }
 };
+
+// Function to update user data in Firebase
+export const updateUserInFirebase = async (
+  customerId: string, 
+  email: string, 
+  currency: string, 
+  emailKey: string = 'preferredEmail'
+) => {
+  try {
+    const userRef = ref(database, `users/${customerId}`);
+    await set(userRef, { [emailKey]: email, currency });
+  } catch (error) {
+    console.error('Error updating Firebase user:', error);
+    throw error;
+  }
+};
+
 
 export { database, auth, ref, get, set, push, child, query, orderByChild, equalTo, increment };

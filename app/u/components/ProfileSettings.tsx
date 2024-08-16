@@ -2,68 +2,78 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { database, ref, set } from '../../api/auth-firebase/firebaseConfig';
-import Stripe from 'stripe';
+import { ref, get } from 'firebase/database'; 
+import { updateUserInFirebase } from '../../api/auth-firebase/firebaseConfig';
+import { database } from '../../api/auth-firebase/firebaseConfig'; 
 
 type CurrencyType = 'GBP' | 'USD' | 'EUR';
 
 const ProfileSettings = () => {
   const { data: session } = useSession();
-  const [email, setEmail] = useState(session?.user?.email || '');
-  const [originalEmail, setOriginalEmail] = useState(session?.user?.email || '');
-  const [currency, setCurrency] = useState<CurrencyType>(session?.user?.currency || 'GBP');
+  const [email, setEmail] = useState('');
+  const [originalEmail, setOriginalEmail] = useState('');
+  const [currency, setCurrency] = useState<CurrencyType>('GBP');
   const [feedback, setFeedback] = useState('');
   const [isChanged, setIsChanged] = useState(false);
 
   useEffect(() => {
-    if (session && session.user) {
-      setEmail(session.user.email);
-      setOriginalEmail(session.user.email);
-      setCurrency(session.user.currency || 'GBP');
-    }
+    const loadUserData = async () => {
+      if (session && session.user) {
+        const customerId = session.user.customerId as string;
+        const userRef = ref(database, `users/${customerId}`);
+
+        try {
+          const snapshot = await get(userRef);
+          const userData = snapshot.val();
+
+          if (userData?.preferredEmail) {
+            setEmail(userData.preferredEmail);
+            setOriginalEmail(userData.preferredEmail);
+          } else {
+            setEmail(session.user.email || '');
+            setOriginalEmail(session.user.email || '');
+          }
+
+          setCurrency(userData?.currency || session.user.currency || 'GBP');
+        } catch (error) {
+          console.error('Error loading user data from Firebase:', error);
+          setEmail(session.user.email || '');
+          setOriginalEmail(session.user.email || '');
+          setCurrency(session.user.currency || 'GBP');
+        }
+      }
+    };
+
+    loadUserData();
   }, [session]);
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-    setIsChanged(e.target.value !== originalEmail || e.target.value !== currency);
+    setIsChanged(e.target.value !== originalEmail || currency !== session?.user?.currency);
   };
 
   const handleCurrencyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newCurrency = e.target.value as CurrencyType;
     setCurrency(newCurrency);
-    setIsChanged(newCurrency !== currency);
-  };
-
-  const updateEmailInStripe = async (customerId: string, newEmail: string) => {
-    const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
-    const stripe = new Stripe(stripeAPIKey, {
-      apiVersion: '2024-06-20',
-    });
-
-    try {
-      await stripe.customers.update(customerId, {
-        email: newEmail,
-      });
-    } catch (error) {
-      console.error('Error updating email in Stripe:', error);
-      throw error;
-    }
+    setIsChanged(newCurrency !== session?.user?.currency || email !== originalEmail);
   };
 
   const handleSaveChanges = async () => {
-    if (!session || !session.user || !session.user.customerId) {
+    if (!session || !session.user) {
       setFeedback('You must be logged in to update your settings.');
       return;
     }
-
+  
+    const customerId = session.user.customerId as string;
+  
+    if (!customerId) {
+      throw new Error('Customer ID is missing');
+    }
+  
     try {
-      // Update email in Stripe
-      await updateEmailInStripe(session.user.customerId, email);
-
-      // Update email and currency in Firebase
-      const userRef = ref(database, `users/${session.user.customerId}`);
-      await set(userRef, { email, currency });
-
+      // Only update the preferred email and currency in Firebase
+      await updateUserInFirebase(customerId, email, currency, 'preferredEmail');
+  
       setFeedback('Settings updated successfully.');
       setOriginalEmail(email);
       setIsChanged(false);
@@ -81,7 +91,7 @@ const ProfileSettings = () => {
       </p>
       <div className="mb-4">
         <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2" htmlFor="email">
-          Email
+          Contact Email
         </label>
         <input
           type="email"

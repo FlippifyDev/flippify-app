@@ -2,6 +2,8 @@ import NextAuth, { DefaultSession, DefaultJWT } from 'next-auth';
 import { User as NextAuthUser } from 'next-auth';
 import { ISubscription, IWaitListed } from '../userModel';
 
+type CurrencyType = 'GBP' | 'USD' | 'EUR';
+
 interface SessionUser extends NextAuthUser {
   name: string;
   email: string;

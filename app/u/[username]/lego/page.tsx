@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from 'react';
-import { ILegoProduct } from 'app/api/products/productModel'; // Ensure the correct path to the ILegoProduct interface
-import Card from 'app/u/components/PlansCardAdmin';
+import { ILegoProduct } from 'app/api/legoM/productModel'; // Ensure the correct path to the ILegoProduct interface
+import Card from 'app/u/components/PlansCardLego';
 
 export default function lego() {
   const [legoProducts, setLegoProducts] = useState<ILegoProduct[]>([]);
@@ -31,11 +31,11 @@ export default function lego() {
         legoProducts.map((product) => (
           <Card
             key={product._id}
-            productName={product.productName}
+            productName={product['product-name']}
             price={product.price}
             region={product.region}
             sku={product.sku}
-            retirementDate={product.retirementDate}
+            retirementDate={product['retirement-date']}
             image={product.image}
             link={product.link}
             // Pass additional fields as needed

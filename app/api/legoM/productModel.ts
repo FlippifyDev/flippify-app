@@ -9,12 +9,14 @@ interface ILegoProduct extends Document {
     website: string;
     sku: string;
     link: string;
-    productName: string; // Changed 'product-name' to 'productName' for better TS naming conventions
+    productName: string;
+    'product-name':string; // Changed 'product-name' to 'productName' for better TS naming conventions
     region: string;
     timestamp: Date;
     image: string;
     price: number;
-    retirementDate: string; // Consider using Date if you're converting the string to a Date object
+    retirementDate: string;
+    'retirements-date':string; // Consider using Date if you're converting the string to a Date object
     rrp: number;
     stockAvailable: boolean;
     type: string;
@@ -38,5 +40,5 @@ const ProductSchema = new Schema<ILegoProduct>({
 
 
 
-export const LegoProduct = mongoose.model<ILegoProduct>('LegoProduct', ProductSchema, 'scraper.retiring-sets-deals');
-
+export const LegoProduct = mongoose.models.LegoProduct || mongoose.model<ILegoProduct>('LegoProduct', ProductSchema, 'scraper.retiring-sets-deals');
+export type { ILegoProduct };

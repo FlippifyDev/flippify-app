@@ -58,10 +58,6 @@ const PlansCard: React.FC<PlansCardProps> = ({
     setSelectedPlan(index);
   };
 
-  const handleCurrencyToggle = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCurrency(e.target.value as 'GBP' | 'USD' | 'EUR');
-  };
-
   const convertedPrices = prices.map(price => Number((price * currencyConversionRates[currency]).toFixed(2)));
   const currencySymbol = currency === 'GBP' ? '£' : currency === 'USD' ? '$' : '€';
 
@@ -86,21 +82,6 @@ const PlansCard: React.FC<PlansCardProps> = ({
             <p className="text-lightModeText text-sm mb-8 sm:h-[5rem]">
               {description}
             </p>
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2" htmlFor="currency">
-                Currency
-              </label>
-              <select
-                id="currency"
-                value={currency}
-                onChange={handleCurrencyToggle}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
-              >
-                <option value="GBP">GBP (£)</option>
-                <option value="USD">USD ($)</option>
-                <option value="EUR">EUR (€)</option>
-              </select>
-            </div>
             {prices.length > 0 && (
               <PlansCardPriceStat
                 prices={convertedPrices}

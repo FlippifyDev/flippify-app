@@ -1,12 +1,15 @@
-'use client';
+"use client";
 
 import React from 'react';
 import { useSession } from 'next-auth/react';
-import ReferralTracker from './ProfileReferralTracker'; // Adjust the import path as necessary
+import ReferralTracker from './ProfileReferralTracker';
 import { FaClipboard } from 'react-icons/fa';
 
 const ProfileReferralData: React.FC = () => {
   const { data: session } = useSession();
+  console.log(session)
+  
+  // Access referral information from session
   const referralCode = session?.user?.referral?.referral_code || "None";
   const referralCount = session?.user?.referral?.valid_referral_count || 0;
   const totalRewardsClaimed = session?.user?.referral?.rewards_claimed || 0;
@@ -20,7 +23,7 @@ const ProfileReferralData: React.FC = () => {
     window.open("https://discord.com/channels/1236428617962229830/1236436288442466394", '_blank');
   };
 
-  const requiredReferrals = 5;
+  const requiredReferrals = 2;  // Updated from 5 to 2
   const totalEligibleRewards = Math.floor(referralCount / requiredReferrals);
   const remainingRewards = totalEligibleRewards - totalRewardsClaimed;
   const remainingReferrals = requiredReferrals - (referralCount % requiredReferrals);

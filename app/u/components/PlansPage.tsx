@@ -34,7 +34,7 @@ const PlansPage = () => {
         <PlansCard
           title="Early Access Sale"
           description="Unlock unlimited access to our comprehensive suite of tools, bots, and insights designed to supercharge your profitability. Our all-in-one subscription provides everything you need to optimize performance and drive growth."
-          prices={[44.99, 59.99]}
+          prices={[34.99, 49.99]}
           priceIds={{
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",

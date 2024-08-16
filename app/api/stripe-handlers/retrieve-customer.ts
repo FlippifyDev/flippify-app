@@ -1,40 +1,50 @@
 import Stripe from 'stripe';
 
+const retrieveStripeCustomer = async (customerId: string | null, discordId: string, username: string, email: string) => {
+  const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
 
-const retrieveStripeCustomer = async (discordId: string, username: string, email: string) => {
-    const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
+  if (!stripeAPIKey) {
+    throw new Error('Stripe API key not found');
+  }
 
-    if (!stripeAPIKey) {
-        throw new Error('Stripe api key not found');
+  const stripe = new Stripe(stripeAPIKey);
+
+  try {
+    let customer;
+
+    if (customerId) {
+      customer = await stripe.customers.retrieve(customerId);
+
+      // Ensure the customer exists before trying to use it
+      if (customer && !customer.deleted) {
+        return customer;
+      }
     }
-    
-    const stripe = new Stripe(stripeAPIKey);
 
-    try {
-        // Check if customer with the provided email already exists
-        let customer = await stripe.customers.list({
-            email: email,
-            limit: 1,
-        });
+    // If customerId was not provided or customer was not found, check by email
+    const customers = await stripe.customers.list({
+      email: email,
+      limit: 1,
+    });
 
-        if (customer.data.length > 0) {
-            // Customer already exists, return the existing customer
-            return customer.data[0];
-        } else {
-            // Create a new customer since one doesn't exist with the provided email
-            const customer = await stripe.customers.create({
-                email: email,
-                metadata: {
-                    discord_id: discordId,
-                    discord_username: username,
-                },
-            });
-            return customer;
-        }
-    } catch (error) {
-        console.error('Error retrieving customer:', error);
-        throw error;
+    if (customers.data.length > 0) {
+      customer = customers.data[0];
+      return customer;
+    } else {
+      // Create a new customer since one doesn't exist with the provided email
+      customer = await stripe.customers.create({
+        email: email,
+        metadata: {
+          discord_id: discordId,
+          discord_username: username,
+        },
+      });
+      return customer;
     }
+  } catch (error) {
+    console.error('Error retrieving customer:', error);
+    throw error;
+  }
 };
 
-export default retrieveStripeCustomer
+export default retrieveStripeCustomer;

@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { ref, get } from 'firebase/database'; 
+import { ref, get } from 'firebase/database';
 import { updateUserInFirebase } from '../../api/auth-firebase/firebaseConfig';
-import { database } from '../../api/auth-firebase/firebaseConfig'; 
+import { database } from '../../api/auth-firebase/firebaseConfig';
 
 type CurrencyType = 'GBP' | 'USD' | 'EUR';
 
@@ -13,6 +13,7 @@ const ProfileSettings = () => {
   const [email, setEmail] = useState('');
   const [originalEmail, setOriginalEmail] = useState('');
   const [currency, setCurrency] = useState<CurrencyType>('GBP');
+  const [originalCurrency, setOriginalCurrency] = useState<CurrencyType>('GBP');
   const [feedback, setFeedback] = useState('');
   const [isChanged, setIsChanged] = useState(false);
 
@@ -34,12 +35,15 @@ const ProfileSettings = () => {
             setOriginalEmail(session.user.email || '');
           }
 
-          setCurrency(userData?.currency || session.user.currency || 'GBP');
+          const userCurrency = userData?.currency || session.user.currency || 'GBP';
+          setCurrency(userCurrency);
+          setOriginalCurrency(userCurrency);
         } catch (error) {
           console.error('Error loading user data from Firebase:', error);
           setEmail(session.user.email || '');
           setOriginalEmail(session.user.email || '');
           setCurrency(session.user.currency || 'GBP');
+          setOriginalCurrency(session.user.currency || 'GBP');
         }
       }
     };
@@ -49,13 +53,13 @@ const ProfileSettings = () => {
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-    setIsChanged(e.target.value !== originalEmail || currency !== session?.user?.currency);
+    setIsChanged(e.target.value !== originalEmail || currency !== originalCurrency);
   };
 
   const handleCurrencyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newCurrency = e.target.value as CurrencyType;
     setCurrency(newCurrency);
-    setIsChanged(newCurrency !== session?.user?.currency || email !== originalEmail);
+    setIsChanged(newCurrency !== originalCurrency || email !== originalEmail);
   };
 
   const handleSaveChanges = async () => {
@@ -63,19 +67,19 @@ const ProfileSettings = () => {
       setFeedback('You must be logged in to update your settings.');
       return;
     }
-  
+
     const customerId = session.user.customerId as string;
-  
+
     if (!customerId) {
       throw new Error('Customer ID is missing');
     }
-  
+
     try {
       // Only update the preferred email and currency in Firebase
       await updateUserInFirebase(customerId, email, currency, 'preferredEmail');
-  
       setFeedback('Settings updated successfully.');
       setOriginalEmail(email);
+      setOriginalCurrency(currency);
       setIsChanged(false);
     } catch (error) {
       console.error('Error updating settings:', error);
@@ -117,7 +121,9 @@ const ProfileSettings = () => {
         </select>
       </div>
       {feedback && (
-        <p className="mt-4 text-center text-sm font-semibold text-gray-900 dark:text-white">{feedback}</p>
+        <p className="mt-2 mb-4 text-center text-sm font-semibold text-gray-900 dark:text-white">
+          {feedback}
+        </p>
       )}
       <button
         type="button"

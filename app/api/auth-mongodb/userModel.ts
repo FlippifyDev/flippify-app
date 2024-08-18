@@ -31,7 +31,7 @@ interface IUser extends Document {
   stripe_customer_id: string;
   subscriptions: ISubscription[];
   referral?: IReferral;
-  waitlisted?: IWaitListed;
+  onboarding?: boolean; // New field to track onboarding status
   currency?: 'GBP' | 'USD' | 'EUR';
 }
 
@@ -62,7 +62,7 @@ const UserSchema = new Schema<IUser>({
   stripe_customer_id: { type: String, required: true },
   subscriptions: [subscriptionSchema],
   referral: { type: referralSchema },
-  waitlisted: { type: waitListedSchema },
+  onboarding: { type: Boolean, default: false }, // New field in the schema
   currency: { type: String, enum: ['GBP', 'USD', 'EUR'], default: 'GBP' },
 });
 

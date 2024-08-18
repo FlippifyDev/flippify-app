@@ -1,6 +1,6 @@
 import NextAuth, { DefaultSession, DefaultJWT } from 'next-auth';
 import { User as NextAuthUser } from 'next-auth';
-import { ISubscription, IWaitListed } from '../userModel';
+import { ISubscription } from '../userModel';
 
 type CurrencyType = 'GBP' | 'USD' | 'EUR';
 
@@ -19,9 +19,7 @@ interface SessionUser extends NextAuthUser {
     valid_referral_count: number;
     rewards_claimed: number;
   };
-  waitlisted?: {
-    position: number;
-  };
+  onboarding?: boolean;  // New property to track onboarding status
   username: string;
   currency?: 'GBP' | 'USD' | 'EUR';
 }

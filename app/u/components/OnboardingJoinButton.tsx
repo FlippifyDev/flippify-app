@@ -9,7 +9,7 @@ interface SideBarButtonProps {
   redirect: string;
 }
 
-const WaitlistJoinButton: React.FC<SideBarButtonProps> = ({ text, redirect }) => {
+const GetAccessButton: React.FC<SideBarButtonProps> = ({ text, redirect }) => {
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -37,4 +37,4 @@ const WaitlistJoinButton: React.FC<SideBarButtonProps> = ({ text, redirect }) =>
   );
 };
 
-export default WaitlistJoinButton;
+export default GetAccessButton;

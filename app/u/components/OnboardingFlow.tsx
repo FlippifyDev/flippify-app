@@ -24,14 +24,8 @@ const OnboardingFlow: React.FC = () => {
           const snapshot = await get(userRef);
           const userData = snapshot.val();
 
-          if (userData?.preferredEmail) {
-            setEmail(userData.preferredEmail);
-          } else {
-            setEmail(session.user.email || '');
-          }
-
-          const userCurrency = userData?.currency || session.user.currency || 'GBP';
-          setCurrency(userCurrency);
+          setEmail(userData?.preferredEmail || session.user.email || '');
+          setCurrency(userData?.currency || session.user.currency || 'GBP');
         } catch (error) {
           console.error('Error loading user data from Firebase:', error);
           setEmail(session.user.email || '');
@@ -51,20 +45,13 @@ const OnboardingFlow: React.FC = () => {
     if (session?.user) {
       const customerId = session.user.customerId as string;
       await updateUserInFirebase(customerId, email, currency, 'preferredEmail');
-      
-      // Complete onboarding
       await completeOnboarding(session.user.id);
 
       // Refresh the session to reflect the updated roles
       const result = await signIn('credentials', { redirect: false });
 
-      if (result?.ok) {
-        // Only reload the page on the client side
-        if (typeof window !== 'undefined') {
-          window.location.reload();
-        }
-      } else {
-        console.error('Error refreshing session:', result?.error);
+      if (result?.ok && typeof window !== 'undefined') {
+        window.location.reload();
       }
     }
   };

@@ -6,7 +6,7 @@ const Long = Types.Long;
 
 interface ISubscription {
   name: string;
-  role_id: typeof Long;
+  role_id: InstanceType<typeof Long>; // Use InstanceType to avoid the TypeScript error
   override: boolean;
   server_subscription: boolean;
 }
@@ -15,26 +15,19 @@ interface IReferral {
   referral_code: string;
   referred_by: string | null;
   referral_count: number;
-  valid_referrals: string[]; // Added
-  valid_referral_count: number; // Added
-  rewards_claimed: number; // Added
+  valid_referrals: string[];
+  valid_referral_count: number;
+  rewards_claimed: number;
 }
 
-
 interface IUser extends Document {
-  discord_id: typeof Long;
+  discord_id: InstanceType<typeof Long>; // Adjust discord_id similarly
   username: string;
   email: string;
   stripe_customer_id: string;
   subscriptions: ISubscription[];
   referral?: IReferral;
 }
-
-const referralSchema = new Schema<IReferral>({
-  referral_code: { type: String, default: null },
-  referred_by: { type: String, default: null },
-  referral_count: { type: Number, default: 0 },
-});
 
 const subscriptionSchema = new Schema<ISubscription>({
   name: { type: String, required: true },
@@ -49,7 +42,16 @@ const UserSchema = new Schema<IUser>({
   email: { type: String, required: true },
   stripe_customer_id: { type: String, required: true },
   subscriptions: [subscriptionSchema],
-  referral: { type: referralSchema },
+  referral: {
+    type: new Schema<IReferral>({
+      referral_code: { type: String, default: null },
+      referred_by: { type: String, default: null },
+      referral_count: { type: Number, default: 0 },
+      valid_referrals: { type: [String], default: [] },
+      valid_referral_count: { type: Number, default: 0 },
+      rewards_claimed: { type: Number, default: 0 },
+    }),
+  },
 });
 
 const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);

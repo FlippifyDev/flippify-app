@@ -96,10 +96,10 @@ const PlansCard: React.FC<PlansCardProps> = ({
             <div className="flex justify-between p-4">
               {prices.length > 0 && selectedPlan !== null && (
                 <div className="flex gap-2 w-full">
-                  <LayoutSubscriptionWrapper requiredSubscriptions={["onboarding"]}>
+                  <LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
                     <OnboardingJoinButton text="Get Access" redirect="dashboard"/>
                   </LayoutSubscriptionWrapper>
-                  <LayoutSubscriptionWrapper requiredSubscriptions={["!onboarding", "!standard"]}>
+                  <LayoutSubscriptionWrapper requiredSubscriptions={["accessGranted", "!standard"]}>
                     <PlansSubscribeNow priceId={selectedPriceId} />
                   </LayoutSubscriptionWrapper>
                   <LayoutSubscriptionWrapper requiredSubscriptions={["standard"]}>

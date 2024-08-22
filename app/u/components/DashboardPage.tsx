@@ -36,17 +36,17 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className="flex flex-col w-full h-full">
-      {/* Display onboarding flow when they are onboarding */}
-      <LayoutSubscriptionWrapper requiredSubscriptions={['onboarding']}> 
+      {/* If They Do NOT Have Access */}
+      <LayoutSubscriptionWrapper requiredSubscriptions={['!accessGranted']}> 
         <OnboardingFlow />
       </LayoutSubscriptionWrapper>
 
-      {/* This displays the users content when they have no subscription but have got access */}
-      <LayoutSubscriptionWrapper requiredSubscriptions={['!onboarding', '!standard', '!server', 'accessGranted']}> 
+      {/* If They Have Access but NO Subscription */}
+      <LayoutSubscriptionWrapper requiredSubscriptions={['accessGranted', '!standard', '!server']}> 
         <DashboardNoSubscription username={session.user.username}/>
       </LayoutSubscriptionWrapper>
 
-      {/* If they have any subscription, display the user dashboard */}
+      {/* If They Have Subscription */}
       <LayoutSubscriptionWrapper anySubscriptions={['standard', 'server']}> 
         <div className="w-full">
           <DashboardOverviewCard customerId={userData.customerId} />

@@ -51,13 +51,21 @@ const OnboardingFlow: React.FC = () => {
     if (session?.user) {
       const customerId = session.user.customerId as string;
       await updateUserInFirebase(customerId, email, currency, 'preferredEmail');
+      
+      // Complete onboarding
       await completeOnboarding(session.user.id);
 
       // Refresh the session to reflect the updated roles
-      await signIn('credentials', { redirect: false });
+      const result = await signIn('credentials', { redirect: false });
 
-      // Reload the page to update the UI
-      window.location.reload();
+      if (result?.ok) {
+        // Only reload the page on the client side
+        if (typeof window !== 'undefined') {
+          window.location.reload();
+        }
+      } else {
+        console.error('Error refreshing session:', result?.error);
+      }
     }
   };
 

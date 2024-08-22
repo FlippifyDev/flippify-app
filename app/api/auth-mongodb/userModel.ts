@@ -6,7 +6,7 @@ const Long = Types.Long;
 
 interface ISubscription {
   name: string;
-  role_id: InstanceType<typeof Long>; // Use InstanceType to avoid the TypeScript error
+  role_id: typeof Long; // Using typeof Long directly for type safety
   override: boolean;
   server_subscription: boolean;
 }
@@ -21,7 +21,8 @@ interface IReferral {
 }
 
 interface IUser extends Document {
-  discord_id: InstanceType<typeof Long>; // Adjust discord_id similarly
+  _id: Types.ObjectId; // Explicitly specify that _id is an ObjectId
+  discord_id: typeof Long; // Correctly type discord_id
   username: string;
   email: string;
   stripe_customer_id: string;
@@ -36,25 +37,25 @@ const subscriptionSchema = new Schema<ISubscription>({
   server_subscription: { type: Boolean, default: false },
 });
 
-const UserSchema = new Schema<IUser>({
+const referralSchema = new Schema<IReferral>({
+  referral_code: { type: String, required: true },
+  referred_by: { type: String, default: null },
+  referral_count: { type: Number, default: 0 },
+  valid_referrals: { type: [String], default: [] },
+  valid_referral_count: { type: Number, default: 0 },
+  rewards_claimed: { type: Number, default: 0 },
+});
+
+const userSchema = new Schema<IUser>({
   discord_id: { type: Long, required: true },
   username: { type: String, required: true },
   email: { type: String, required: true },
   stripe_customer_id: { type: String, required: true },
   subscriptions: [subscriptionSchema],
-  referral: {
-    type: new Schema<IReferral>({
-      referral_code: { type: String, default: null },
-      referred_by: { type: String, default: null },
-      referral_count: { type: Number, default: 0 },
-      valid_referrals: { type: [String], default: [] },
-      valid_referral_count: { type: Number, default: 0 },
-      rewards_claimed: { type: Number, default: 0 },
-    }),
-  },
+  referral: referralSchema,
 });
 
-const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
+const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', userSchema);
 
 export { User };
 export type { IUser, ISubscription, IReferral };

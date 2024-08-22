@@ -11,18 +11,15 @@ interface ISubscription {
   server_subscription: boolean;
 }
 
-interface IWaitListed {
-  position: number;
-}
-
 interface IReferral {
   referral_code: string;
   referred_by: string | null;
   referral_count: number;
-  valid_referral_count: number;
-  valid_referrals: string[];
-  rewards_claimed: number;
+  valid_referrals: string[]; // Added
+  valid_referral_count: number; // Added
+  rewards_claimed: number; // Added
 }
+
 
 interface IUser extends Document {
   discord_id: typeof Long;
@@ -31,21 +28,12 @@ interface IUser extends Document {
   stripe_customer_id: string;
   subscriptions: ISubscription[];
   referral?: IReferral;
-  onboarding?: boolean; // New field to track onboarding status
-  currency?: 'GBP' | 'USD' | 'EUR';
 }
-
-const waitListedSchema = new Schema<IWaitListed>({
-  position: { type: Number, required: true, default: -1 },
-});
 
 const referralSchema = new Schema<IReferral>({
   referral_code: { type: String, default: null },
   referred_by: { type: String, default: null },
   referral_count: { type: Number, default: 0 },
-  valid_referral_count: { type: Number, default: 0 },
-  valid_referrals: { type: [String], default: [] },
-  rewards_claimed: { type: Number, default: 0 },
 });
 
 const subscriptionSchema = new Schema<ISubscription>({
@@ -62,11 +50,9 @@ const UserSchema = new Schema<IUser>({
   stripe_customer_id: { type: String, required: true },
   subscriptions: [subscriptionSchema],
   referral: { type: referralSchema },
-  onboarding: { type: Boolean, default: false }, // New field in the schema
-  currency: { type: String, enum: ['GBP', 'USD', 'EUR'], default: 'GBP' },
 });
 
 const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
 
 export { User };
-export type { IUser, IWaitListed, ISubscription, IReferral };
+export type { IUser, ISubscription, IReferral };

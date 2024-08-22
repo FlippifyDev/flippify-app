@@ -19,9 +19,9 @@ interface SessionUser extends NextAuthUser {
     valid_referral_count: number;
     rewards_claimed: number;
   };
-  onboarding?: boolean;  // New property to track onboarding status
+  accessGranted?: boolean;  // New property to track access status
   username: string;
-  currency?: 'GBP' | 'USD' | 'EUR';
+  currency?: CurrencyType;
 }
 
 declare module 'next-auth' {
@@ -33,6 +33,6 @@ declare module 'next-auth' {
   interface JWT extends DefaultJWT {
     accessToken?: string;
     username?: string;
-    currency?: 'GBP' | 'USD' | 'EUR';
+    currency?: CurrencyType;
   }
 }

@@ -1,27 +1,28 @@
 "use server";
 
 import { User } from './userModel';
+import { Types } from 'mongoose';
+
+const Long = Types.Long;
 
 const completeOnboarding = async (userId: string): Promise<void> => {
   try {
-    // Find the user by ID
+    // Ensure the user exists
     const user = await User.findById(userId);
 
-    // Ensure the user exists and has the onboarding role
-    if (!user || !user.subscriptions.some(sub => sub.name === 'onboarding')) {
-      console.error('User not found or not onboarding.');
+    if (!user) {
+      console.error('User not found.');
       return;
     }
 
-    // Remove the onboarding role and add the accessGranted role
+    // Add the 'accessGranted' role if it doesn't exist
     await User.findByIdAndUpdate(userId, {
-      $pull: { subscriptions: { name: 'onboarding' } },
-      $push: { subscriptions: { name: 'accessGranted', override: true } }
+      $addToSet: { subscriptions: { name: 'accessGranted', role_id: Long.fromString('0'), override: true, server_subscription: false } }
     });
 
-    console.log(`Successfully completed onboarding for user ${userId}`);
+    console.log(`Successfully granted access for user ${userId}`);
   } catch (error) {
-    console.error('Error completing onboarding:', error);
+    console.error('Error granting access:', error);
   }
 };
 

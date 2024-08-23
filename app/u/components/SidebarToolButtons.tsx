@@ -8,6 +8,7 @@ import React from 'react';
 import { MdManageAccounts } from 'react-icons/md';
 import { AiOutlineStock } from 'react-icons/ai';
 import { FaRegNewspaper } from 'react-icons/fa6';
+import { GiPointySword } from "react-icons/gi";
 
 
 interface SidebarToolButtonsProps {
@@ -40,6 +41,14 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({ showAlert }) =>
           text="Sales & Profits"
           redirect="sales-tracker"
           symbol={<AiOutlineStock className="text-md" />}
+        />
+      </LayoutSubscriptionWrapper>
+
+      <LayoutSubscriptionWrapper requiredSubscriptions={['admin']}>
+        <SidebarButton
+          text="🍆🍑 whore 🍆🍑"
+          redirect="admin"
+          symbol={<GiPointySword className="text-md" />}
         />
       </LayoutSubscriptionWrapper>
 

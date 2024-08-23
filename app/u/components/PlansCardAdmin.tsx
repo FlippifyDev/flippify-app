@@ -84,7 +84,7 @@ const PlansCardAdmin: React.FC<CardProps> = ({ username, email, stripeCustomerId
 
       // Define all possible roles
   const allRoles: Role[] = [
-    { name: 'whitelisted' },
+    { name: 'accessGranted' },
     { name: 'Flippify Standard User' },
     { name: 'Deal Watch UK - Server' },
     { name: 'Retiring Sets Deals - Server' },

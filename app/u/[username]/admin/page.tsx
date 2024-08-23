@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { IUser } from 'app/api/auth-mongodb/userModel';
 import Card from 'app/u/components/PlansCardAdmin';
+import Layout from '../../components/Layout';
 
 // Since Role and Referral are based on ISubscription and IReferral respectively:
 type Role = IUser['subscriptions'][0];
@@ -30,6 +31,7 @@ export default function Admin() {
   }, []);
 
   return (
+    <Layout>
     <div style={styles.grid}>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {users.length > 0 ? (
@@ -42,9 +44,11 @@ export default function Admin() {
             discord_id={parseInt(user.discord_id.toString(), 10)} // Convert to number
             _id={user._id.toString()} // Ensure this is a string
             referral={user.referral!}
+            
             subscriptions={user.subscriptions.map((sub) => ({
               ...sub,
-              role_id: sub.role_id.toString(), // Convert role_id to string for compatibility
+              role_id: sub.role_id ? sub.role_id.toString() : '', // Fallback to an empty string if role_id is undefined
+              
             }))}
           />
         ))
@@ -52,6 +56,7 @@ export default function Admin() {
         <p>No users found.</p>
       )}
     </div>
+     </Layout>
   );
 }
 

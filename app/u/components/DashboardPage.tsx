@@ -1,13 +1,11 @@
-'use client';
+"use client"
 
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { handleUser } from '../../api/auth-firebase/firebaseConfig'; 
-import DashboardOverviewCard from './DashboardOverviewCard';
-import DashboardRecentSalesCard from './DashboardRecentSalesCard';
-import DashboardProfitsGraph from './DashboardProfitsGraph';
 import LayoutSubscriptionWrapper from "./LayoutSubscriptionWrapper";
 import DashboardNoSubscription from "./DashboardNoSubscription";
+import DashboardShowcase from "./DashboardShowcase";
 import OnboardingFlow from "./OnboardingFlow";
 
 const DashboardPage: React.FC = () => {
@@ -44,20 +42,14 @@ const DashboardPage: React.FC = () => {
       </LayoutSubscriptionWrapper>
 
       {/* If They Have Access but NO Subscription */}
-      <LayoutSubscriptionWrapper requiredSubscriptions={['accessGranted', '!standard', '!server']}> 
-        <DashboardNoSubscription username={session.user.username}/>
-      </LayoutSubscriptionWrapper>
-
-      {/* If They Have Subscription */}
-      <LayoutSubscriptionWrapper anySubscriptions={['standard', 'server']}> 
-        <div className="w-full">
-          <DashboardOverviewCard customerId={userData.customerId} />
-        </div>
-        <div className="w-full mt-2 mb-2">
-        <DashboardProfitsGraph customerId={userData.customerId} />
-        </div>
-        <div className="w-full">
-          <DashboardRecentSalesCard customerId={userData.customerId} />
+      <LayoutSubscriptionWrapper requiredSubscriptions={['accessGranted', '!standard', '!server']}>
+        <div className="flex flex-col lg:flex-row gap-4 pt-6 p-4 bg-white dark:bg-black border border-gray-300 dark:border-gray-700 rounded-lg shadow-md">
+          <div className="lg:w-1/3">
+            <DashboardNoSubscription username={session.user.username} />
+          </div>
+          <div className="lg:w-2/3">
+            <DashboardShowcase />
+          </div>
         </div>
       </LayoutSubscriptionWrapper>
     </div>

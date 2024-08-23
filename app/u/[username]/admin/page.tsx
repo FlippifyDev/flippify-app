@@ -1,19 +1,12 @@
-"use client";
+'use client';
+
 import { useEffect, useState } from 'react';
 import { IUser } from 'app/api/auth-mongodb/userModel';
 import Card from 'app/u/components/PlansCardAdmin';
 
-
-
-interface IUser {
-  username: string;
-  email: string;
-  stripe_customer_id: string;
-  discord_id: number; // Use number type for discord_id if it's a long integer
-  _id:string;
-  referral:Referral;
-  subscriptions:Role[];
-}
+// Since Role and Referral are based on ISubscription and IReferral respectively:
+type Role = IUser['subscriptions'][0];
+type Referral = IUser['referral'];
 
 export default function Admin() {
   const [users, setUsers] = useState<IUser[]>([]);
@@ -46,11 +39,13 @@ export default function Admin() {
             username={user.username}
             email={user.email}
             stripeCustomerId={user.stripe_customer_id}
-            discord_id={user.discord_id.toString()}
-            _id={user._id}
-            referral={user.referral}
-            subscriptions={user.subscriptions}
-            // Pass additional fields as needed
+            discord_id={parseInt(user.discord_id.toString(), 10)} // Convert to number
+            _id={user._id.toString()} // Ensure this is a string
+            referral={user.referral!}
+            subscriptions={user.subscriptions.map((sub) => ({
+              ...sub,
+              role_id: sub.role_id.toString(), // Convert role_id to string for compatibility
+            }))}
           />
         ))
       ) : (

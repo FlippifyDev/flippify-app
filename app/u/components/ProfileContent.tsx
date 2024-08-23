@@ -2,6 +2,7 @@ import React from 'react';
 import ProfileOverview from './ProfileOverview';
 import ProfileReferralData from './ProfileReferralData';
 import ProfileSettings from './ProfileSettings';
+import ProfileEbayConnect from './ProfileEbayConnect';
 
 const ProfileContent = () => {
   return (
@@ -16,6 +17,9 @@ const ProfileContent = () => {
         <div className="w-full lg:w-1/2">
           <ProfileSettings />
         </div>
+      </div>
+      <div className="w-full mb-4">
+        <ProfileEbayConnect />
       </div>
     </div>
   );

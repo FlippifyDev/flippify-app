@@ -1,9 +1,13 @@
+// components/DashboardProfitsGraph.tsx
+import dynamic from 'next/dynamic';
 import React, { useEffect, useState, useCallback } from 'react';
-import ApexCharts from 'apexcharts';
-import { database, ref, get } from "../../api/auth-firebase/firebaseConfig";
-import { ISale } from "./SalesTrackerModels";
-import { format, subDays, eachDayOfInterval, eachMonthOfInterval, endOfDay, parse } from 'date-fns';
 import { useSession } from 'next-auth/react';
+import { ISale } from "./SalesTrackerModels";
+import { database, ref, get } from "../../api/auth-firebase/firebaseConfig";
+import { format, subDays, eachDayOfInterval, eachMonthOfInterval, endOfDay, parse } from 'date-fns';
+
+// Dynamically import Chart component with no SSR
+const Chart = dynamic(() => import('./DashboardProfitsChart'), { ssr: false });
 
 const currencyConversionRates = {
   GBP: 1,
@@ -21,10 +25,6 @@ interface SalesData {
   series: ChartData[];
 }
 
-interface TooltipFormatterOpts {
-  dataPointIndex: number;
-}
-
 interface DashboardProfitsGraphProps {
   customerId: string;
 }
@@ -33,7 +33,7 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
   const { data: session } = useSession();
   const [salesData, setSalesData] = useState<SalesData>({
     categories: [],
-    series: []
+    series: [],
   });
   const [netProfit, setNetProfit] = useState(0);
   const [previousNetProfit, setPreviousNetProfit] = useState(0);
@@ -72,7 +72,7 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
           const parsedSaleDate = parse(saleDate, 'dd/MM/yyyy', new Date());
           if (isNaN(parsedSaleDate.getTime())) {
             console.error(`Invalid date: ${saleDate}`);
-            continue; // Skip this sale if the date is invalid
+            continue;
           }
 
           const formattedSaleDate = rangeInDays > 90 ? format(parsedSaleDate, 'yyyy-MM') : format(parsedSaleDate, 'yyyy-MM-dd');
@@ -93,7 +93,6 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
             seriesData[index] += estimatedProfit;
           }
 
-          // Include current day’s sales in net profit calculation
           if (parsedSaleDate >= rangeStartDate && parsedSaleDate <= today) {
             totalNetProfit += estimatedProfit;
           } else if (parsedSaleDate < rangeStartDate && parsedSaleDate >= previousRangeStartDate) {
@@ -123,96 +122,6 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
     fetchSalesData(parseInt(selectedRange));
   }, [customerId, selectedRange, fetchSalesData]);
 
-  useEffect(() => {
-    const options = {
-      chart: {
-        type: 'area',
-        height: 300,
-        toolbar: {
-          show: false
-        }
-      },
-      series: salesData.series,
-      xaxis: {
-        categories: salesData.categories,
-        labels: {
-          show: true,
-          formatter: (val: string, index: number) => {
-            const date = new Date(val);
-            if (isNaN(date.getTime())) {
-              return '';
-            }
-            if (selectedRange === '30') {
-              return '';
-            } else if (selectedRange === '90') {
-              return '';
-            } else if (selectedRange === '365') {
-              return '';
-            }
-            return format(date, 'd');
-          },
-          cssClass: 'text-xs text-gray-500'
-        },
-        tooltip: {
-          enabled: selectedRange === '90',
-          formatter: (val: string, opts: TooltipFormatterOpts) => {
-            const date = new Date(salesData.categories[opts.dataPointIndex]);
-            if (isNaN(date.getTime())) {
-              return '';
-            }
-            return format(date, 'MMM');
-          }
-        }
-      },
-      yaxis: {
-        labels: {
-          show: true,
-          formatter: (val: number) => {
-            const conversionRate = currencyConversionRates[currency];
-            const convertedValue = val * conversionRate;
-            const currencySymbol = currency === 'GBP' ? '£' : currency === 'USD' ? '$' : '€';
-            return `${currencySymbol}${convertedValue.toFixed(2)}`;
-          },
-          cssClass: 'text-xs text-gray-500'
-        }
-      },
-      stroke: {
-        curve: 'smooth',
-      },
-      dataLabels: {
-        enabled: false
-      },
-      tooltip: {
-        enabled: true,
-        x: {
-          show: true,
-          formatter: (val: string, opts: TooltipFormatterOpts) => {
-            const date = new Date(salesData.categories[opts.dataPointIndex]);
-            if (isNaN(date.getTime())) {
-              return '';
-            }
-            return format(date, 'd MMMM yyyy');
-          }
-        },
-        y: {
-          formatter: (val: number) => {
-            const conversionRate = currencyConversionRates[currency];
-            const convertedValue = val * conversionRate;
-            const currencySymbol = currency === 'GBP' ? '£' : currency === 'USD' ? '$' : '€';
-            return `${currencySymbol}${convertedValue.toFixed(2)}`;
-          },
-        },
-      },
-    };
-
-    const chart = new ApexCharts(document.querySelector('#area-chart'), options);
-    chart.render();
-
-    return () => {
-      chart.destroy();
-    };
-  }, [salesData, selectedRange, currency]);
-
   const percentageChange = previousNetProfit === 0 ? netProfit * 100 : ((netProfit - previousNetProfit) / Math.abs(previousNetProfit)) * 100;
 
   const handleRangeChange = (range: string) => {
@@ -231,10 +140,12 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
     <div className="w-full bg-white rounded-lg shadow-md dark:bg-gray-800 p-4 md:p-6">
       <div className="flex justify-between">
         <div>
-          <h5 className="leading-none text-3xl font-bold text-gray-900 dark:text-white pb-2">
-            {currency === 'GBP' ? '£' : currency === 'USD' ? '$' : '€'}{(netProfit * currencyConversionRates[currency]).toFixed(2)}
+          <h5 className="leading-none text-3xl font-bold text-gray-900 dark:text-white">
+            {currency === 'GBP' ? '£' : currency === 'USD' ? '$' : '€'}{netProfit.toFixed(2)}
           </h5>
-          <p className="text-base font-normal text-gray-500 dark:text-gray-400">Profits this {timePeriodText}</p>
+          <span className="inline-flex items-center text-md mt-2 font-normal text-gray-500 dark:text-gray-400">
+            Net profit this {timePeriodText}
+          </span>
         </div>
         <div className={`flex items-center px-2.5 py-0.5 text-base font-semibold ${percentageChange >= 0 ? 'text-green-500' : 'text-red-500'} text-center`}>
           {percentageChange >= 1000 ? `${(percentageChange / 1000).toFixed(2)}k` : percentageChange.toFixed(2)}%
@@ -243,23 +154,26 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
           </svg>
         </div>
       </div>
-      <div id="area-chart"></div>
-      <div className="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
-        <div className="flex justify-between items-center pt-5">
-          <div className="dropdown dropdown-hover bg-white">
-            <div tabIndex={0} role="button" className="btn m-1 text-lightModeText bg-white hover:bg-gray-100">Last {selectedRange} days</div>
-            <ul tabIndex={0} className="dropdown-content menu bg-white rounded-box z-[1] w-52 p-2 shadow">
-              {['7', '30', '90', '365'].map(range => (
-                <li key={range}>
-                  <a onClick={() => handleRangeChange(range)}>
-                    Last {range} days
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+      {/* Chart component */}
+      <Chart salesData={salesData} selectedRange={selectedRange} currency={currency} currencyConversionRates={currencyConversionRates} />
+
+      {/* Dropdown for selecting date range */}
+      <div className="dropdown dropdown-hover bg-white">
+        <div tabIndex={0} role="button" className="btn m-1 text-lightModeText bg-white hover:bg-gray-100">
+          Last {selectedRange} days
         </div>
+        <ul tabIndex={0} className="dropdown-content menu bg-white rounded-box z-[1] w-52 p-2 shadow">
+          {['7', '30', '90', '365'].map(range => (
+            <li key={range}>
+              <a onClick={() => handleRangeChange(range)}>
+                Last {range} days
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
+
+      
     </div>
   );
 };

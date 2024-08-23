@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -8,7 +8,7 @@ import DashboardRecentSalesCard from './DashboardRecentSalesCard';
 import DashboardProfitsGraph from './DashboardProfitsGraph';
 import LayoutSubscriptionWrapper from "./LayoutSubscriptionWrapper";
 import DashboardNoSubscription from "./DashboardNoSubscription";
-import DashboardServerSubscription from "./DashboardServerSubscription";
+import OnboardingFlow from "./OnboardingFlow";
 
 const DashboardPage: React.FC = () => {
   const [userData, setUserData] = useState<{ uid: string; customerId: string } | null>(null);
@@ -36,33 +36,18 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className="flex flex-col w-full h-full">
-      {/* This displays the users content when they have no subscription */}
-      <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', '!server']}> 
+      {/* If They Do NOT Have Access */}
+      <LayoutSubscriptionWrapper requiredSubscriptions={['!accessGranted']}> 
+        <OnboardingFlow />
+      </LayoutSubscriptionWrapper>
+
+      {/* If They Have Access but NO Subscription */}
+      <LayoutSubscriptionWrapper requiredSubscriptions={['accessGranted', '!standard', '!server']}> 
         <DashboardNoSubscription username={session.user.username}/>
       </LayoutSubscriptionWrapper>
 
-      {/* This displays the users server content */}
-      <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', 'server']}> 
-        <div className="flex justify-center">
-          <DashboardServerSubscription />
-        </div>
-      </LayoutSubscriptionWrapper>
-      
-      {/* This displays the users selling content */}
-      <LayoutSubscriptionWrapper requiredSubscriptions={['standard', '!server']}> 
-        <div className="w-full">
-          <DashboardOverviewCard customerId={userData.customerId} />
-        </div>
-        <div className="w-full mt-2 mb-2">
-        <DashboardProfitsGraph customerId={userData.customerId} />
-        </div>
-        <div className="w-full">
-          <DashboardRecentSalesCard customerId={userData.customerId} />
-        </div>
-      </LayoutSubscriptionWrapper>
-
-      {/* For now if the person has both a server and standard subscription then display the user sales dashboard */}
-      <LayoutSubscriptionWrapper requiredSubscriptions={['standard', 'server']}> 
+      {/* If They Have Subscription */}
+      <LayoutSubscriptionWrapper anySubscriptions={['standard', 'server']}> 
         <div className="w-full">
           <DashboardOverviewCard customerId={userData.customerId} />
         </div>
@@ -74,10 +59,7 @@ const DashboardPage: React.FC = () => {
         </div>
       </LayoutSubscriptionWrapper>
     </div>
-
   );
 };
 
 export default DashboardPage;
-
-

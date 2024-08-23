@@ -1,6 +1,6 @@
 import NextAuth, { DefaultSession, DefaultJWT } from 'next-auth';
 import { User as NextAuthUser } from 'next-auth';
-import { ISubscription, IWaitListed } from '../userModel';
+import { ISubscription } from '../userModel';
 
 type CurrencyType = 'GBP' | 'USD' | 'EUR';
 
@@ -8,7 +8,7 @@ interface SessionUser extends NextAuthUser {
   name: string;
   email: string;
   image: string;
-  discordId?: string;
+  discordId: string;
   customerId?: string;
   subscriptions: ISubscription[];
   referral?: {
@@ -19,11 +19,9 @@ interface SessionUser extends NextAuthUser {
     valid_referral_count: number;
     rewards_claimed: number;
   };
-  waitlisted?: {
-    position: number;
-  };
+  accessGranted?: boolean;  // New property to track access status
   username: string;
-  currency?: 'GBP' | 'USD' | 'EUR';
+  currency?: CurrencyType;
 }
 
 declare module 'next-auth' {
@@ -35,6 +33,10 @@ declare module 'next-auth' {
   interface JWT extends DefaultJWT {
     accessToken?: string;
     username?: string;
-    currency?: 'GBP' | 'USD' | 'EUR';
+    currency?: CurrencyType;
+  }
+
+  interface NextApiRequest {
+    session: Session;
   }
 }

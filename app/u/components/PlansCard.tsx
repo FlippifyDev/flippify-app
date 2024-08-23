@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import LayoutSubscriptionWrapper from "./LayoutSubscriptionWrapper";
-import WaitlistJoinButton from "./WaitlistJoinButton";
 import PlansSubscribeNow from "./PlansSubscribeNow";
 import PlansCardPriceStat from "./PlansCardPriceStat";
 import ManageMembershipsButton from "./PlansManageMembershipButton";
+import OnboardingJoinButton from "./OnboardingJoinButton";
 import { Lato } from "next/font/google";
 import { useSession } from "next-auth/react";
 
@@ -96,17 +96,14 @@ const PlansCard: React.FC<PlansCardProps> = ({
             <div className="flex justify-between p-4">
               {prices.length > 0 && selectedPlan !== null && (
                 <div className="flex gap-2 w-full">
-                  <LayoutSubscriptionWrapper requiredSubscriptions={["whitelisted", "!standard"]}>
+                  <LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
+                    <OnboardingJoinButton text="Get Access" redirect="dashboard"/>
+                  </LayoutSubscriptionWrapper>
+                  <LayoutSubscriptionWrapper requiredSubscriptions={["accessGranted", "!standard"]}>
                     <PlansSubscribeNow priceId={selectedPriceId} />
                   </LayoutSubscriptionWrapper>
                   <LayoutSubscriptionWrapper requiredSubscriptions={["standard"]}>
                     <ManageMembershipsButton />
-                  </LayoutSubscriptionWrapper>
-                  <LayoutSubscriptionWrapper requiredSubscriptions={["!whitelisted", "!standard"]}>
-                    <WaitlistJoinButton
-                      text="Join Waitlist"
-                      redirect="dashboard"
-                    />
                   </LayoutSubscriptionWrapper>
                 </div>
               )}

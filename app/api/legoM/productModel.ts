@@ -20,6 +20,7 @@ interface ILegoProduct extends Document {
     rrp: number;
     stockAvailable: boolean;
     type: string;
+    
   }
 
 const ProductSchema = new Schema<ILegoProduct>({

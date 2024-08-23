@@ -10,6 +10,7 @@ interface ILegoProduct {
   retirementDate: string;
   image: string;
   link: string;
+  website:string;
 }
 
 const LegoCard: React.FC<ILegoProduct> = ({

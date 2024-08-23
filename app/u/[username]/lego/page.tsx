@@ -28,19 +28,22 @@ export default function lego() {
     <div style={styles.grid}>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {legoProducts.length > 0 ? (
-        legoProducts.map((product) => (
-          <Card
-            key={product._id}
-            productName={product['product-name']}
-            price={product.price}
-            region={product.region}
-            sku={product.sku}
-            retirementDate={product['retirement-date']}
-            image={product.image}
-            link={product.link}
-            // Pass additional fields as needed
-          />
-        ))
+        legoProducts
+          .filter((product) => product.website !== "eBay") // Filter out products where the website is "eBay"
+          .map((product) => (
+            <Card
+              key={product._id}
+              productName={product['product-name']}
+              price={product.price}
+              region={product.region}
+              sku={product.sku}
+              retirementDate={product['retirement-date']}
+              image={product.image}
+              link={product.link}
+              website={product.website}
+              // Pass additional fields as needed
+            />
+          ))
       ) : (
         <p>No Lego products found.</p>
       )}

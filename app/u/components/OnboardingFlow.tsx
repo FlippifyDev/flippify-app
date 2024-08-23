@@ -49,7 +49,7 @@ const OnboardingFlow: React.FC = () => {
     if (session?.user) {
       const customerId = session.user.customerId as string;
       await updateUserInFirebase(customerId, email, currency, 'preferredEmail');
-      await completeOnboarding(session.user.id);
+      await completeOnboarding(session.user.discordId);
 
       // Refresh the session to reflect the updated roles
       const result = await signIn('credentials', { redirect: false });

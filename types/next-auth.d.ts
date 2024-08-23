@@ -8,7 +8,7 @@ interface SessionUser extends NextAuthUser {
   name: string;
   email: string;
   image: string;
-  discordId?: string;
+  discordId: string;
   customerId?: string;
   subscriptions: ISubscription[];
   referral?: {
@@ -34,5 +34,9 @@ declare module 'next-auth' {
     accessToken?: string;
     username?: string;
     currency?: CurrencyType;
+  }
+
+  interface NextApiRequest {
+    session: Session;
   }
 }

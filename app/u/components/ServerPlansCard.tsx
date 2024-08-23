@@ -110,7 +110,7 @@ const ServerPlansCard: React.FC<PlansCardProps> = ({
                 <div className="flex gap-2 w-full">
                   <a
                     href="https://discord.com/channels/1236428617962229830/1236436288442466394"
-                    className="btn border-0 bg-houseBlue hover:bg-green-400 text-white w-2/3 mx-auto"
+                    className="btn border-0 bg-houseBlue hover:bg-houseHoverBlue text-white w-2/3 mx-auto"
                   >
                     Contact Us
                   </a>

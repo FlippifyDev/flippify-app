@@ -52,7 +52,7 @@ const PlansSubscribeNow: React.FC<PlansSubscribeNowProps> = ({ priceId }) => {
   };
 
   return (
-    <button className="btn border-0 bg-houseBlue hover:bg-green-400 text-white w-2/3 mx-auto" onClick={handleBuyButtonClick} disabled={!checkoutUrl}>
+    <button className="btn border-0 bg-houseBlue hover:bg-houseHoverBlue text-white w-2/3 mx-auto" onClick={handleBuyButtonClick} disabled={!checkoutUrl}>
       {checkoutUrl ? 'Subscribe Now' : 'Loading...'}
     </button>
   );

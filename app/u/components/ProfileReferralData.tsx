@@ -76,7 +76,7 @@ const ProfileReferralData: React.FC = () => {
           className={`mt-2 inline-block text-white py-2 px-4 rounded-md w-48 transition duration-200 ${
             remainingRewards <= 0
               ? "bg-gray-300 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-green-400"
+              : "bg-blue-600 hover:bg-houseHoverBlue"
           }`}
         >
           {remainingRewards <= 0

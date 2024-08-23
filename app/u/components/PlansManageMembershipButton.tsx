@@ -44,7 +44,7 @@ const ManageMembershipsButton = () => {
 
   return (
     <button
-      className="btn border-0 bg-houseBlue hover:bg-green-400 text-white w-2/3 mx-auto"
+      className="btn border-0 bg-houseBlue hover:bg-houseHoverBlue text-white w-2/3 mx-auto"
       onClick={handleBillingPortalButtonClick}
       disabled={!billingUrl}
     >

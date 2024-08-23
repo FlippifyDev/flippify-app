@@ -130,7 +130,7 @@ const ProfileSettings = () => {
         onClick={handleSaveChanges}
         disabled={!isChanged}
         className={`mt-auto inline-block text-white py-2 px-4 rounded-md transition duration-200 ${
-          isChanged ? 'bg-blue-600 hover:bg-green-400' : 'bg-gray-300 cursor-not-allowed'
+          isChanged ? 'bg-blue-600 hover:bg-houseHoverBlue' : 'bg-gray-300 cursor-not-allowed'
         }`}
       >
         Save Changes

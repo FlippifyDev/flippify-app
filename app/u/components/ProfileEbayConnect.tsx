@@ -15,11 +15,6 @@ const ProfileEbayConnect = () => {
 
     const scopeParam = SCOPES.join(' ');
 
-    console.log("OAuth2 Details:");
-    console.log("CLIENT_ID:", CLIENT_ID);
-    console.log("REDIRECT_URI:", REDIRECT_URI);
-    console.log("SCOPES:", scopeParam);
-
     if (!CLIENT_ID || !REDIRECT_URI) {
       console.error('Missing environment variables:', {
         CLIENT_ID,
@@ -30,16 +25,22 @@ const ProfileEbayConnect = () => {
 
     const ebayAuthUrl = `https://auth.sandbox.ebay.com/oauth2/authorize?client_id=${encodeURIComponent(CLIENT_ID)}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=${encodeURIComponent(scopeParam)}`;
 
-    console.log("eBay OAuth URL:", ebayAuthUrl);
-
     // Redirect to eBay for authentication
     window.location.href = ebayAuthUrl;
   };
 
   return (
-    <div>
-      <h2>Connect your eBay Account</h2>
-      <button onClick={handleConnect}>Connect with eBay</button>
+    <div className="card bg-white shadow-md rounded-lg p-6 mt-4 h-full flex flex-col justify-center items-center">
+      <h2 className="text-xl font-semibold text-gray-900 mb-4">Connect your eBay Account</h2>
+      <p className="text-sm text-gray-600 mb-6 text-center">
+        Connect your eBay account to sync inventory, track sales, and automate your reselling business.
+      </p>
+      <button 
+        onClick={handleConnect}
+        className="btn bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-houseHoverBlue transition w-1/4"
+      >
+        Connect with eBay
+      </button>
     </div>
   );
 };

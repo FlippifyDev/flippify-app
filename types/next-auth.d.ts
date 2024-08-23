@@ -8,7 +8,7 @@ interface SessionUser extends NextAuthUser {
   name: string;
   email: string;
   image: string;
-  discordId?: string;
+  discordId: string;
   customerId?: string;
   subscriptions: ISubscription[];
   referral?: {

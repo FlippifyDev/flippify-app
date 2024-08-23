@@ -16,8 +16,16 @@ const completeOnboarding = async (userId: string): Promise<void> => {
 
     // Add the 'accessGranted' role if it doesn't exist
     await User.findByIdAndUpdate(user._id, {
-      $addToSet: { subscriptions: { name: 'accessGranted', role_id: Long.fromString('0'), override: true, server_subscription: false } }
-    });
+      $addToSet: 
+      { 
+        subscriptions: { 
+          name: 'accessGranted',
+          override: true, 
+          server_subscription: false 
+        } 
+      }
+    }
+  );
 
     console.log(`Successfully granted access for user ${userId}`);
   } catch (error) {

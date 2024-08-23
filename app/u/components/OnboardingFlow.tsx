@@ -61,12 +61,12 @@ const OnboardingFlow: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
+    <div className="flex items-start justify-center h-screen py-10">
       <div className="bg-white py-8 px-6 rounded-3xl shadow-md border-2 max-w-lg w-full">
         {step === 1 && (
           <section className="text-center">
             <h2 className="text-5xl font-bold mb-4">Welcome to</h2>
-            <h2 className="text-5xl font-bold mb-4 text-gradient bg-gradient-to-tr from-blue-500 to-purple-500 bg-clip-text text-transparent">
+            <h2 className="pb-1 text-5xl font-bold mb-4 text-gradient bg-gradient-to-tr from-blue-500 to-purple-500 bg-clip-text text-transparent">
               Flippify
             </h2>
             <p className="text-lg text-gray-700 mb-8">

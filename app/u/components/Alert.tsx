@@ -40,7 +40,7 @@ const Alert: React.FC<AlertProps> = ({ message, visible, onClose }) => {
 
   return (
     <div
-      className={`fixed top-0 left-1/2 transform -translate-x-1/2 mt-4 bg-white border border-gray-300 p-2 rounded-md shadow-lg z-50 ${
+      className={`fixed top-16 left-1/2 transform -translate-x-1/2 mt-4 bg-white border border-gray-300 p-2 rounded-md shadow-lg z-50 ${
         isAnimating && visible ? 'animate-slide-in' : 'animate-slide-out'
       }`}
       style={{ transition: 'opacity 0.5s, transform 0.5s' }}

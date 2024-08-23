@@ -6,20 +6,26 @@ import { getSession } from 'next-auth/react';
 import { getEnvVar } from '@/app/api/ebay/getEnvVar';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  console.log("eBay OAuth Callback Handler Invoked");
+  
   // Extract the authorization code from the query string
   const { code } = req.query;
-
-  // Ensure the code is present
+  
   if (!code || Array.isArray(code)) {
+    console.error("Authorization code is missing or invalid:", code);
     return res.status(400).json({ error: 'Authorization code is missing or invalid.' });
   }
 
-  // Retrieve environment variables
+  console.log("Authorization Code:", code);
+
   const CLIENT_ID = getEnvVar('EBAY_CLIENT_ID');
   const CLIENT_SECRET = getEnvVar('EBAY_CLIENT_SECRET');
   const REDIRECT_URI = getEnvVar('EBAY_REDIRECT_URI');
 
-  // Prepare the Basic Auth header
+  console.log("Using Environment Variables:");
+  console.log("CLIENT_ID:", CLIENT_ID);
+  console.log("REDIRECT_URI:", REDIRECT_URI);
+
   const basicAuth = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64');
 
   try {
@@ -35,21 +41,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const tokenData = await tokenResponse.json();
 
-    // Handle any errors from the token exchange
     if (tokenData.error) {
+      console.error("Error during token exchange:", tokenData.error_description);
       return res.status(400).json({ error: tokenData.error_description });
     }
 
-    // Get the user session (assuming you use NextAuth for authentication)
+    console.log("Token Data:", tokenData);
+
     const session = await getSession({ req });
 
     if (!session || !session.user?.discordId) {
+      console.error("User session not found or Discord ID missing.");
       return res.status(401).json({ error: 'User not authenticated or Discord ID not found' });
     }
 
     const discordId = session.user.discordId;
 
-    // Store the access token and other details in MongoDB
+    console.log("Discord ID:", discordId);
+
     const client = await MongoClient.connect(getEnvVar('MONGODB_URI'));
     const db = client.db('your-db-name');
     const collection = db.collection('users');
@@ -66,6 +75,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
 
     client.close();
+
+    console.log("User eBay tokens stored successfully.");
 
     // Redirect to a profile or dashboard page after successful connection
     res.redirect('/profile?ebayConnected=true');

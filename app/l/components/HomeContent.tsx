@@ -3,7 +3,6 @@ import HomeGetEarlyAccess from './HomeGetEarlyAccess';
 import HomeAbout from './HomeAbout';
 import HomeMockupPhone from './HomeMockupPhone';
 import HomeMockupBrowser from './HomeMockupBrowser';
-import HomePoweredByCompanies from './HomePoweredByCompanies';
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 const inter = Inter({ subsets: ['latin'] });

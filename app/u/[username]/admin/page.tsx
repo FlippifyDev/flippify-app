@@ -44,8 +44,8 @@ export default function Admin() {
             referral={user.referral!}
             subscriptions={user.subscriptions.map((sub) => ({
               ...sub,
-              role_id: sub.role_id.toString(), // Convert role_id to string for compatibility
-            }))}
+              role_id: sub.role_id ? sub.role_id.toString() : '', // Fallback to an empty string if role_id is undefined
+            }))}            
           />
         ))
       ) : (

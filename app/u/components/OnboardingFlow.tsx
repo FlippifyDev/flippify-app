@@ -1,18 +1,22 @@
-'use client';
-
-import dynamic from 'next/dynamic';
 import React, { useState, useEffect } from 'react';
 import { useSession, signIn } from 'next-auth/react';
 import { ref, get } from 'firebase/database';
 import { updateUserInFirebase } from '@/app/api/auth-firebase/firebaseConfig';
 import { database } from '@/app/api/auth-firebase/firebaseConfig';
 import { completeOnboarding } from '@/app/api/auth-mongodb/completeOnboarding';
+import { validateReferralCode } from '@/app/lib/validateReferral'; // Adjust the path as needed
+import { Lato } from 'next/font/google';
+
+const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
 const OnboardingFlow: React.FC = () => {
   const [step, setStep] = useState(1);
   const [referralCode, setReferralCode] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [currency, setCurrency] = useState<'GBP' | 'USD' | 'EUR'>('GBP');
+  const [showReferralMessage, setShowReferralMessage] = useState<boolean>(false);
+  const [referralError, setReferralError] = useState<string | null>(null);
+  const [validReferralCode, setValidReferralCode] = useState<string | null>(null); // State to store the validated referral code
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -35,39 +39,57 @@ const OnboardingFlow: React.FC = () => {
       }
     };
 
-    // Run this only on the client
     if (typeof window !== 'undefined') {
       loadUserData();
     }
   }, [session]);
 
-  const handleNextStep = () => {
-    setStep((prev) => prev + 1);
+  const handleNextStep = async () => {
+    setReferralError(null);
+
+    if (referralCode) {
+      const isValid = await validateReferralCode(referralCode);
+      if (!isValid) {
+        setReferralError('Invalid referral code. Please try again.');
+        return;
+      } else {
+        setValidReferralCode(referralCode);  // Store the valid referral code
+      }
+    }
+
+    if (!referralCode && !showReferralMessage) {
+      setShowReferralMessage(true);
+    } else {
+      setStep((prev) => prev + 1);
+    }
   };
 
   const handleCompleteOnboarding = async () => {
     if (session?.user) {
       const customerId = session.user.customerId as string;
+  
+      // Update the user in Firebase with preferred email and currency
       await updateUserInFirebase(customerId, email, currency, 'preferredEmail');
-      await completeOnboarding(session.user.discordId);
-
-      // Refresh the session to reflect the updated roles
-      const result = await signIn('credentials', { redirect: false });
-
-      if (result?.ok && typeof window !== 'undefined') {
-        window.location.reload(); // Ensure this only runs on the client
+  
+      // Complete the onboarding with the referral code
+      await completeOnboarding(session.user.discordId, validReferralCode);
+  
+      // Refresh the page to reflect any role updates
+      if (typeof window !== 'undefined') {
+        window.location.reload(); // Reloads the page to ensure roles are updated in the session
       }
     }
   };
+  
 
   return (
-    <div className="flex items-start justify-center h-screen py-10">
+    <div className="flex items-center justify-center pt-40">
       <div className="bg-white py-8 px-6 rounded-3xl shadow-md border-2 max-w-lg w-full">
         {step === 1 && (
           <section className="text-center">
-            <h2 className="text-5xl font-bold mb-4">Welcome to</h2>
-            <h2 className="pb-1 text-5xl font-bold mb-4 text-gradient bg-gradient-to-tr from-blue-500 to-purple-500 bg-clip-text text-transparent">
-              Flippify
+            <h2 className="text-5xl font-bold mb-2">Welcome to</h2>
+            <h2 className={`${lato.className} pb-1 text-5xl font-bold mb-4 text-gradient bg-gradient-to-tr from-blue-500 to-purple-500 bg-clip-text text-transparent`}>
+              flippify
             </h2>
             <p className="text-lg text-gray-700 mb-8">
               Join now and take the first step to becoming a full-time reseller.
@@ -82,17 +104,34 @@ const OnboardingFlow: React.FC = () => {
                 aria-label="Referral Code"
                 aria-required="false"
               />
+              {referralError && (
+                <p className="text-red-500 text-sm mt-2">
+                  {referralError}
+                </p>
+              )}
+              {showReferralMessage && !referralError && (
+                <p className="text-red-500 text-sm mt-2">
+                  Enter a referral code to get 25% off your first month.
+                </p>
+              )}
             </div>
             <button
               className="btn btn-primary bg-houseBlue text-white hover:bg-blue-600 w-full"
               onClick={handleNextStep}
             >
-              Next
+              {showReferralMessage && !referralError ? "Click again to continue" : "Next"}
             </button>
           </section>
         )}
         {step === 2 && (
           <section className="text-center">
+            <h2 className="text-5xl font-bold mb-2">Welcome to</h2>
+            <h2 className={`${lato.className} pb-1 text-5xl font-bold mb-4 text-gradient bg-gradient-to-tr from-blue-500 to-purple-500 bg-clip-text text-transparent`}>
+              flippify
+            </h2>
+            <p className="text-lg text-gray-700 mb-8">
+              Join now and take the first step to becoming a full-time reseller.
+            </p>
             <div className="mb-6">
               <input
                 type="email"
@@ -129,5 +168,4 @@ const OnboardingFlow: React.FC = () => {
   );
 };
 
-// Wrap the component with dynamic to disable SSR
-export default dynamic(() => Promise.resolve(OnboardingFlow), { ssr: false });
+export default OnboardingFlow;

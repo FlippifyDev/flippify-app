@@ -58,7 +58,7 @@ const checkSubscriptions = (userSubscriptions: Subscription[], requiredSubscript
         const isNegation = sub.startsWith('!');
         const subscriptionToCheck = isNegation ? sub.slice(1).toLowerCase() : sub.toLowerCase();
         const hasSubscription = userSubscriptions.some(subscription =>
-            subscription.name.toLowerCase().includes(subscriptionToCheck)
+            typeof subscription.name === 'string' && subscription.name.toLowerCase().includes(subscriptionToCheck)
         );
         return isNegation ? !hasSubscription : hasSubscription;
     });
@@ -68,9 +68,10 @@ const checkAnySubscriptions = (userSubscriptions: Subscription[], anySubscriptio
     return anySubscriptions.some(sub => {
         const subscriptionToCheck = sub.toLowerCase();
         return userSubscriptions.some(subscription =>
-            subscription.name.toLowerCase().includes(subscriptionToCheck)
+            typeof subscription.name === 'string' && subscription.name.toLowerCase().includes(subscriptionToCheck)
         );
     });
 };
+
 
 export default LayoutSubscriptionWrapper;

@@ -38,7 +38,9 @@ const DashboardPage: React.FC = () => {
     <div className="flex flex-col w-full h-full">
       {/* If They Do NOT Have Access */}
       <LayoutSubscriptionWrapper requiredSubscriptions={['!accessGranted']}> 
-        <OnboardingFlow />
+        <div className="h-full">
+          <OnboardingFlow />
+        </div>
       </LayoutSubscriptionWrapper>
 
       {/* If They Have Access but NO Subscription */}

@@ -1,7 +1,10 @@
 import React from "react";
 import { BentoGrid, BentoGridItem } from "../../../components/ui/bento-grid";
 import Image from 'next/image';
-import { IconClipboardCopy, IconFileBroken, IconSignature, IconTableColumn } from "@tabler/icons-react";
+import { FaPeopleGroup, FaMapLocationDot } from "react-icons/fa6";
+import { FaRobot } from "react-icons/fa";
+import { MdAutoAwesome } from "react-icons/md";
+
 
 const DashboardShowcase: React.FC = () => {
   return (
@@ -27,16 +30,16 @@ const items = [
     header: (
       <div className="w-full h-[150px] flex items-center justify-center">
         <Image
-          src="https://i.imgur.com/tHCVfp2.png"
+          src="https://i.imgur.com/wVF5XTQ.png"
           alt="AI Automation"
           width={530}
           height={145}
-          className="object-contain rounded-lg"
+          className="object-contain rounded-lg shadow-lg"
         />
       </div>
     ),
     className: "md:col-span-2",
-    icon: <IconClipboardCopy className="h-4 w-4 text-houseBlue" />,
+    icon: <MdAutoAwesome className="h-4 w-4 text-houseBlue" />,
   },
   {
     title: "Advanced Tracking",
@@ -48,12 +51,12 @@ const items = [
           alt="Advanced Tracking"
           width={230}
           height={145}
-          className="object-contain rounded-lg"
+          className="object-contain rounded-lg shadow-lg"
         />
       </div>
     ),
     className: "md:col-span-1",
-    icon: <IconFileBroken className="h-4 w-4 text-houseBlue" />,
+    icon: <FaMapLocationDot className="h-4 w-4 text-houseBlue" />,
   },
   {
     title: "Expert Community Support",
@@ -65,12 +68,12 @@ const items = [
           alt="Expert Community Support"
           width={230}
           height={145}
-          className="object-contain rounded-lg"
+          className="object-contain rounded-lg shadow-lg"
         />
       </div>
     ),
     className: "md:col-span-1",
-    icon: <IconSignature className="h-4 w-4 text-houseBlue" />,
+    icon: <FaPeopleGroup className="h-4 w-4 text-houseBlue" />,
   },
   {
     title: "Smart Deal-Finding Bots",
@@ -78,16 +81,16 @@ const items = [
     header: (
       <div className="w-full h-[150px] flex items-center justify-center">
         <Image
-          src="https://i.imgur.com/ufjNvIw.png"
+          src="https://i.imgur.com/tGRyyc9.png"
           alt="Smart Deal-Finding Bots"
           width={530}
           height={145}
-          className="object-contain rounded-lg"
+          className="object-contain rounded-lg shadow-lg"
         />
       </div>
     ),
     className: "md:col-span-2",
-    icon: <IconTableColumn className="h-4 w-4 text-houseBlue" />,
+    icon: <FaRobot className="h-4 w-4 text-houseBlue" />,
   },
 ];
 

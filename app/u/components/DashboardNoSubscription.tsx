@@ -14,11 +14,11 @@ const DashboardNoSubscription: React.FC<DashboardNoSubscriptionProps> = ({ usern
     <div className="flex justify-center items-center">
       <div className="w-full h-auto">
         <div className="text-center p-6">
-          <h2 className={`${lato.className} text-3xl text-houseBlue font-bold mb-2`}>
-            No Active Subscriptions
+          <h2 className={`${lato.className} text-4xl text-houseBlue font-bold mb-2`}>
+            Unlock Automated Profits
           </h2>
           <p className="text-gray-600 mb-4">
-            You currently don&apos;t have any subscriptions. Explore our plans and choose the one that fits your needs.
+          You&apos;re Just One Step Away from Automated Success. Choose Your Plan Now!
           </p>
           <hr className="hr-price-stat mb-4" />
           <div className="mb-6">

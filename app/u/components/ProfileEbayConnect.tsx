@@ -4,29 +4,7 @@ import React from 'react';
 
 const ProfileEbayConnect = () => {
   const handleConnect = () => {
-    const CLIENT_ID = process.env.NEXT_PUBLIC_EBAY_CLIENT_ID;
-    const REDIRECT_URI = process.env.NEXT_PUBLIC_EBAY_REDIRECT_URI;
-
-    const SCOPES = [
-      'https://api.sandbox.ebay.com/oauth/api_scope',
-      'https://api.sandbox.ebay.com/oauth/api_scope/sell.inventory',
-      // Add other scopes here as needed
-    ];
-
-    const scopeParam = SCOPES.join(' ');
-
-    if (!CLIENT_ID || !REDIRECT_URI) {
-      console.error('Missing environment variables:', {
-        CLIENT_ID,
-        REDIRECT_URI
-      });
-      return;
-    }
-
-    const ebayAuthUrl = `https://auth.sandbox.ebay.com/oauth2/authorize?client_id=${encodeURIComponent(CLIENT_ID)}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=${encodeURIComponent(scopeParam)}`;
-
-    // Redirect to eBay for authentication
-    window.location.href = ebayAuthUrl;
+    // The eBay connection logic would go here, but the button is disabled for now.
   };
 
   return (
@@ -35,12 +13,18 @@ const ProfileEbayConnect = () => {
       <p className="text-sm text-gray-600 mb-6 text-center">
         Connect your eBay account to sync inventory, track sales, and automate your reselling business.
       </p>
-      <button 
-        onClick={handleConnect}
-        className="btn bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-houseHoverBlue transition w-1/4"
-      >
-        Connect with eBay
-      </button>
+      <div className="relative group w-1/4">
+        <button 
+          onClick={handleConnect}
+          disabled={true} // Disables the button
+          className="btn btn-disabled bg-white text-black border-black hover:bg-houseHoverBlue hover:border-black w-full py-3 px-6 rounded-lg transition duration-300"
+        >
+          Connect with eBay
+        </button>
+        <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 p-2 bg-gray-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
+          Coming Soon
+        </div>
+      </div>
     </div>
   );
 };

@@ -35,14 +35,14 @@ export const BentoGridItem = ({
   return (
     <div
       className={cn(
-        "row-span-1 rounded-xl group/bento hover:shadow-xl transition duration-200 shadow-input dark:shadow-none p-3 dark:bg-black dark:border-white/[0.2] bg-white border border-transparent flex flex-col justify-between space-y-1", // Reduced padding and spacing
+        "row-span-1 rounded-xl group hover:shadow-xl transition duration-300 shadow-input dark:shadow-none p-3 dark:bg-black dark:border-white/[0.2] bg-white border border-transparent flex flex-col justify-between space-y-1 transform transition-transform", // Added transition for transform
         className
       )}
     >
       <div className="flex-1 flex items-center justify-center"> {/* Adjusted flex behavior */}
         {header}
       </div>
-      <div className="flex-shrink-0"> {/* Further reduced padding above text */}
+      <div className="flex-shrink-0 group-hover:-translate-y-2 transition-transform duration-300"> {/* Added vertical shift on hover */}
         {icon && <div className="mb-1">{icon}</div>} {/* Reduced bottom margin for the icon */}
         <div className="font-sans font-bold text-neutral-600 dark:text-neutral-200">
           {title}
@@ -54,8 +54,3 @@ export const BentoGridItem = ({
     </div>
   );
 };
-
-
-
-
-

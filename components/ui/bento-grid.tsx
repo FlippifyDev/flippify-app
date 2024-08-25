@@ -39,10 +39,10 @@ export const BentoGridItem = ({
         className
       )}
     >
-      <div className="w-full h-[130px] flex items-center justify-center mb-10 pt-12"> {/* Adjusted height */}
+      <div className="w-full h-[130px] flex items-center justify-center lg:mb-10 lg:pt-12"> {/* If theres a scaling issue just play around with this */}
         {header}
       </div>
-      <div className="group-hover/bento:translate-x-2 transition duration-200 pb-2">
+      <div className="group-hover/bento:translate-x-2 transition duration-200 pb-4">
         {icon}
         <div className="font-sans font-bold text-neutral-600 dark:text-neutral-200 mb-2 mt-2">
           {title}

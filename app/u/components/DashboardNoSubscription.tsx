@@ -22,7 +22,7 @@ const DashboardNoSubscription: React.FC<DashboardNoSubscriptionProps> = ({ usern
           </p>
           <hr className="hr-price-stat mb-4" />
           <div className="mb-6">
-            <h3 className="text-xl font-bold text-gray-700 mb-4">Why Subscribe?</h3>
+            <h3 className="text-xl font-bold text-gray-700 mb-4">Why Choose Us?</h3>
             <ul className="text-gray-600 text-left space-y-4">
               <li>
                 <IoMdCheckboxOutline className="col-span-1 inline-block mr-3 text-houseBlue" /> Advanced Reselling Tools

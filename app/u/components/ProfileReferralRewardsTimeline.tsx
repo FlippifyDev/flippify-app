@@ -1,12 +1,26 @@
 import React from 'react';
 
-const ReferralRewardsTimeline = () => {
+interface ReferralRewardsTimelineProps {
+  availableRewards: number;
+  referralCount: number;
+  totalRewardsClaimed: number;
+  onRewardSelect: (tier: number, reward: string) => void;
+}
+
+const ReferralRewardsTimeline: React.FC<ReferralRewardsTimelineProps> = ({
+  availableRewards,
+  referralCount,
+  totalRewardsClaimed,
+  onRewardSelect
+}) => {
   const rewards = [
     { id: 1, leftOption: "£5 Cash Reward", rightOption: "25% Off Next Month" },
     { id: 2, leftOption: "£10 Cash Reward", rightOption: "50% Off Next Month" },
     { id: 3, leftOption: "£15 Cash Reward", rightOption: "One Free Month" },
     { id: 4, leftOption: "£15 Cash Reward", rightOption: "One Free Month (Ongoing)" },
   ];
+
+  const currentTier = totalRewardsClaimed + 1;
 
   return (
     <div className="relative w-full max-w-lg mx-auto">
@@ -15,7 +29,15 @@ const ReferralRewardsTimeline = () => {
           <li key={reward.id} className="flex items-center mb-4">
             {/* Left Option */}
             <div className="flex-1">
-              <button className="btn btn-outline w-full">{reward.leftOption}</button>
+              <button
+                onClick={() => onRewardSelect(reward.id, reward.leftOption)}
+                className={`btn w-full ${
+                  reward.id <= referralCount && reward.id <= currentTier ? 'btn-primary' : 'btn-disabled'
+                }`}
+                disabled={reward.id > currentTier}
+              >
+                {reward.leftOption}
+              </button>
             </div>
 
             {/* Timeline Icon */}
@@ -24,7 +46,7 @@ const ReferralRewardsTimeline = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
                 fill="currentColor"
-                className={`text-${index < 2 ? 'blue' : 'gray'}-500 h-5 w-5`}
+                className={`text-${reward.id <= currentTier ? 'blue' : 'gray'}-500 h-5 w-5`}
               >
                 <path
                   fillRule="evenodd"
@@ -33,13 +55,21 @@ const ReferralRewardsTimeline = () => {
                 />
               </svg>
               {index < rewards.length - 1 && (
-                <div className={`w-px h-8 bg-${index < 2 ? 'blue' : 'gray'}-500`}></div>
+                <div className={`w-px h-8 bg-${reward.id <= currentTier ? 'blue' : 'gray'}-500`}></div>
               )}
             </div>
 
             {/* Right Option */}
             <div className="flex-1">
-              <button className="btn btn-outline w-full">{reward.rightOption}</button>
+              <button
+                onClick={() => onRewardSelect(reward.id, reward.rightOption)}
+                className={`btn w-full ${
+                  reward.id <= referralCount && reward.id <= currentTier ? 'btn-primary' : 'btn-disabled'
+                }`}
+                disabled={reward.id > currentTier}
+              >
+                {reward.rightOption}
+              </button>
             </div>
           </li>
         ))}

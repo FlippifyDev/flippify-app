@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { FaClipboard } from 'react-icons/fa';
 import ReferralRewardsModal from './ProfileReferralRewardsModal';
-import ReferralRewardsTimeline from './ProfileReferralRewardsTimeline';
 
 const ProfileReferralData: React.FC = () => {
   const { data: session } = useSession();
@@ -73,7 +72,9 @@ const ProfileReferralData: React.FC = () => {
       </div>
       {isModalOpen && (
         <ReferralRewardsModal
-          rewardsAvailable={remainingRewards}
+          availableRewards={remainingRewards}
+          referralCount={referralCount}
+          totalRewardsClaimed={totalRewardsClaimed}
           onClose={handleModalClose}
           onSubmit={(selectedRewards) => {
             // Handle receipt generation or reward submission here

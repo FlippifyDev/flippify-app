@@ -25,18 +25,23 @@ const ReferralRewardsTimeline: React.FC<ReferralRewardsTimelineProps> = ({
       <ul className="timeline timeline-vertical">
         {rewards.map((reward, index) => {
           const isDisabled = availableRewards < reward.id;
+          const isSelectedLeft = selectedRewards[reward.id] === reward.leftOption;
+          const isSelectedRight = selectedRewards[reward.id] === reward.rightOption;
+
           return (
             <li key={reward.id} className="flex items-center mb-4">
               {/* Left Option */}
               <div className="flex-1">
                 <button
-                  className={`w-full p-4 rounded-lg transition-all ${
-                    selectedRewards[reward.id] === reward.leftOption
-                      ? 'border-houseBlue bg-white shadow-lg'
-                      : `bg-white ${
-                          isDisabled ? 'text-gray-400 border-gray-300' : 'shadow-lg hover:shadow-lg hover:border-houseBlue'
-                        }`
-                  } ${isDisabled ? 'text-gray-400 border-gray-300 shadow-none' : ''}`}
+                  className={`w-full p-4 px-2 rounded-lg transition-all duration-200 border bg-white ${
+                    isSelectedLeft
+                      ? 'shadow-lg border-houseBlue'
+                      : 'shadow-md border-transparent hover:shadow-lg'
+                  } ${
+                    isDisabled
+                      ? 'text-gray-400 border-gray-300 cursor-not-allowed'
+                      : 'hover:border-houseHoverBlue'
+                  }`}
                   onClick={() => handleRewardSelection(reward.id, reward.leftOption)}
                   disabled={isDisabled}
                 >
@@ -66,13 +71,15 @@ const ReferralRewardsTimeline: React.FC<ReferralRewardsTimelineProps> = ({
               {/* Right Option */}
               <div className="flex-1">
                 <button
-                  className={`w-full p-4 rounded-lg transition-all ${
-                    selectedRewards[reward.id] === reward.rightOption
-                      ? 'border-houseBlue bg-white shadow-lg'
-                      : `bg-white ${
-                          isDisabled ? 'text-gray-400 border-gray-300' : 'shadow-lg hover:shadow-lg hover:border-houseBlue'
-                        }`
-                  } ${isDisabled ? 'text-gray-400 border-gray-300 shadow-none' : ''}`}
+                  className={`w-full p-4 px-2 rounded-lg transition-all duration-200 border bg-white ${
+                    isSelectedRight
+                      ? 'shadow-lg border-houseBlue'
+                      : 'shadow-md border-transparent hover:shadow-lg'
+                  } ${
+                    isDisabled
+                      ? 'text-gray-400 border-gray-300 cursor-not-allowed'
+                      : 'hover:border-houseHoverBlue'
+                  }`}
                   onClick={() => handleRewardSelection(reward.id, reward.rightOption)}
                   disabled={isDisabled}
                 >

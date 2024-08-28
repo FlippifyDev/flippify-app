@@ -6,15 +6,14 @@ import * as Papa from "papaparse";
 import { useSession } from 'next-auth/react';
 import { saveAs } from 'file-saver';
 
-
 const sanitizePath = (path: string): string => {
   return path.replace(/[.#$[\]]/g, '_');
 };
 
-const currencyConversionRates = {
-  GBP: 1,
-  USD: 1.28,
-  EUR: 1.16,
+const currencySymbols: Record<'GBP' | 'USD' | 'EUR', string> = {
+  GBP: '£',
+  USD: '$',
+  EUR: '€',
 };
 
 interface Filters {
@@ -44,12 +43,28 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
   const [sales, setSales] = useState<IHistoryGrid[]>([]);
   const [filteredSales, setFilteredSales] = useState<IHistoryGrid[]>([]);
   const { data: session } = useSession();
-  const [currency, setCurrency] = useState<"GBP" | "USD" | "EUR">("GBP");
+  const [currency, setCurrency] = useState<'GBP' | 'USD' | 'EUR'>('GBP');
 
   useEffect(() => {
-    if (session && session.user && session.user.currency) {
-      setCurrency(session.user.currency as "GBP" | "USD" | "EUR");
-    }
+    const loadUserCurrency = async () => {
+      if (session && session.user) {
+        const customerId = session.user.customerId as string;
+        const userRef = ref(database, `users/${customerId}`);
+
+        try {
+          const snapshot = await get(userRef);
+          const userData = snapshot.val();
+          const userCurrency = userData?.currency || 'GBP';
+          setCurrency(userCurrency as 'GBP' | 'USD' | 'EUR');
+          console.log('Currency fetched from Firebase:', userCurrency);
+        } catch (error) {
+          console.error('Error fetching user currency from Firebase:', error);
+          console.log('Defaulting to GBP');
+        }
+      }
+    };
+
+    loadUserCurrency();
   }, [session]);
 
   useEffect(() => {
@@ -67,32 +82,18 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
             const sale: ISale = salesData[saleKey];
 
             if (sale.itemName && sale.purchaseDate && sale.saleDate) {
-              const salePrice = sale.salePrice || 0;
-              const purchasePricePerUnit = sale.purchasePricePerUnit || 0;
-              const platformFees = sale.platformFees || 0;
-              const shippingCost = sale.shippingCost || 0;
-
-              const totalSaleRevenue = sale.quantitySold * salePrice;
-              const totalPurchaseCost =
-                sale.quantitySold * purchasePricePerUnit;
-              const estimatedProfit =
-                totalSaleRevenue -
-                totalPurchaseCost -
-                totalSaleRevenue * (platformFees / 100) -
-                shippingCost;
-
               salesArray.push({
                 ...sale,
                 purchaseDate: sale.purchaseDate,
                 saleDate: sale.saleDate,
                 quantitySold: sale.quantitySold,
-                purchasePricePerUnit: purchasePricePerUnit,
-                salePrice: salePrice,
-                platformFees: platformFees,
-                shippingCost: shippingCost,
-                estimatedProfit: estimatedProfit,
+                purchasePricePerUnit: sale.purchasePricePerUnit || 0,
+                salePrice: sale.salePrice || 0,
+                platformFees: sale.platformFees || 0,
+                shippingCost: sale.shippingCost || 0,
+                estimatedProfit: 0, // Keeping as 0 since we are not converting
                 salePlatform: sale.salePlatform,
-                totalCosts: totalPurchaseCost
+                totalCosts: 0, // Keeping as 0 since we are not converting
               });
             }
           }
@@ -166,32 +167,9 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
     saveAs(blob, "sales.csv");
   };
 
-  // Calculations
-  const conversionRate = currencyConversionRates[currency];
-  const currencySymbol = currency === "GBP" ? "£" : currency === "USD" ? "$" : "€";
+  const currencySymbol = currencySymbols[currency]; // Just update symbol
 
-  const totalSaleRevenue = filteredSales.reduce(
-    (sum, sale) => sum + sale.salePrice * sale.quantitySold * conversionRate,
-    0
-  );
-  const totalPurchaseCost = filteredSales.reduce(
-    (sum, sale) => sum + sale.purchasePricePerUnit * sale.quantitySold * conversionRate,
-    0
-  );
-  const totalShippingCost = filteredSales.reduce(
-    (sum, sale) => sum + sale.shippingCost * conversionRate,
-    0
-  );
-  const totalPlatformFees = filteredSales.reduce(
-    (sum, sale) => sum + (sale.salePrice * sale.quantitySold * (sale.platformFees / 100)) * conversionRate,
-    0
-  );
-  const totalCosts = totalPurchaseCost + totalShippingCost + totalPlatformFees;
-  const netProfit = totalSaleRevenue - totalCosts;
-  const totalSales = filteredSales.reduce(
-    (sum, sale) => sum + sale.quantitySold,
-    0
-  );
+  console.log("Currency Symbol:", currencySymbol); // For debugging
 
   return (
     <div className="flex flex-col gap-4 font-semibold">
@@ -293,7 +271,7 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
                 <div className="stat">
                   <div className="stat-title text-houseBlue">Total Revenue</div>
                   <div className="stat-value text-2xl lg:text-3xl text-black">
-                    {currencySymbol}{totalSaleRevenue.toFixed(2)}
+                    {currencySymbol}{sales.reduce((sum, sale) => sum + sale.salePrice * sale.quantitySold, 0).toFixed(2)}
                   </div>
                 </div>
               </div>
@@ -301,7 +279,7 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
                 <div className="stat">
                   <div className="stat-title text-houseBlue">Total Costs</div>
                   <div className="stat-value text-2xl lg:text-3xl text-black">
-                    {currencySymbol}{totalCosts.toFixed(2)}
+                    {currencySymbol}{sales.reduce((sum, sale) => sum + sale.purchasePricePerUnit * sale.quantitySold + sale.shippingCost + (sale.salePrice * sale.quantitySold * (sale.platformFees / 100)), 0).toFixed(2)}
                   </div>
                 </div>
               </div>
@@ -309,7 +287,7 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
                 <div className="stat">
                   <div className="stat-title text-houseBlue">Net Profit</div>
                   <div className="stat-value text-2xl lg:text-3xl text-black">
-                    {currencySymbol}{netProfit.toFixed(2)}
+                    {currencySymbol}{sales.reduce((sum, sale) => sum + (sale.salePrice * sale.quantitySold) - (sale.purchasePricePerUnit * sale.quantitySold + sale.shippingCost + (sale.salePrice * sale.quantitySold * (sale.platformFees / 100))), 0).toFixed(2)}
                   </div>
                 </div>
               </div>
@@ -317,7 +295,7 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
                 <div className="stat">
                   <div className="stat-title text-houseBlue">No. Sales</div>
                   <div className="stat-value text-2xl lg:text-3xl text-black">
-                    {totalSales.toFixed(0)}
+                    {sales.reduce((sum, sale) => sum + sale.quantitySold, 0)}
                   </div>
                 </div>
               </div>
@@ -352,13 +330,13 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
                 {filteredSales.length > 0 ? (
                   filteredSales.map((sale, index) => {
                     const totalPurchaseCost =
-                      sale.purchasePricePerUnit * sale.quantitySold * conversionRate;
+                      sale.purchasePricePerUnit * sale.quantitySold;
                     const totalPlatformFees =
                       sale.salePrice *
                       sale.quantitySold *
-                      (sale.platformFees / 100) * conversionRate;
-                    const totalShippingAndOtherFees = sale.shippingCost * conversionRate;
-                    const totalSaleRevenue = sale.salePrice * sale.quantitySold * conversionRate;
+                      (sale.platformFees / 100);
+                    const totalShippingAndOtherFees = sale.shippingCost;
+                    const totalSaleRevenue = sale.salePrice * sale.quantitySold;
 
                     const totalCosts =
                       totalPurchaseCost +

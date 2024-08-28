@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { FaClipboard } from 'react-icons/fa';
 import ReferralRewardsTimeline from './ProfileReferralRewardsTimeline';
@@ -10,19 +10,27 @@ const ProfileReferralData: React.FC = () => {
   const [isTimelineOpen, setIsTimelineOpen] = useState(false);
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const [selectedRewards, setSelectedRewards] = useState<{ [key: number]: string }>({});
+  const [canGenerateReceipt, setCanGenerateReceipt] = useState(false);
 
   const referralCode = session?.user?.referral?.referral_code || 'None';
   const referralCount = session?.user?.referral?.valid_referrals.length || 0;
   const totalRewardsClaimed = session?.user?.referral?.rewards_claimed || 0;
   const availableRewards = referralCount - totalRewardsClaimed;
 
+  useEffect(() => {
+    const allSelected = Object.keys(selectedRewards).length === availableRewards;
+    setCanGenerateReceipt(allSelected);
+  }, [selectedRewards, availableRewards]);
+
   const handleRewardSelection = (tier: number, reward: string) => {
     setSelectedRewards((prev) => ({ ...prev, [tier]: reward }));
   };
 
   const handleGenerateReceipt = () => {
-    setIsTimelineOpen(false);
-    setIsReceiptOpen(true);
+    if (canGenerateReceipt) {
+      setIsTimelineOpen(false);
+      setIsReceiptOpen(true);
+    }
   };
 
   const copyReceipt = () => {
@@ -109,17 +117,21 @@ const ProfileReferralData: React.FC = () => {
               availableRewards={availableRewards}
               selectedRewards={selectedRewards}
               handleRewardSelection={handleRewardSelection}
+              totalRewardsClaimed={totalRewardsClaimed} // Pass the total rewards claimed
             />
             <div className="flex justify-between mt-6">
               <button
-                className="btn bg-white border border-gray-400 text-black mr-3 px-4 py-2 rounded-lg"
+                className="btn border border-gray-300 text-black mr-3 px-4 py-2 rounded-lg bg-white hover:bg-gray-100"
                 onClick={() => setIsTimelineOpen(false)}
               >
                 Cancel
               </button>
               <button
-                className="btn bg-houseBlue text-white hover:bg-houseHoverBlue px-4 py-2 rounded-lg"
+                className={`btn ${
+                  canGenerateReceipt ? 'bg-houseBlue hover:bg-houseHoverBlue' : 'bg-gray-300 cursor-not-allowed'
+                } text-white px-4 py-2 rounded-lg`}
                 onClick={handleGenerateReceipt}
+                disabled={!canGenerateReceipt}
               >
                 Generate Receipt
               </button>
@@ -149,7 +161,7 @@ const ProfileReferralData: React.FC = () => {
             </div>
             <div className="flex justify-between mt-6">
               <button
-                className="btn bg-white border border-gray-400 text-black mr-3 px-4 py-2 rounded-lg"
+                className="btn border border-gray-300 text-black mr-3 px-4 py-2 rounded-lg bg-white hover:bg-gray-100"
                 onClick={() => {
                   setIsReceiptOpen(false);
                   setIsTimelineOpen(true);
@@ -158,7 +170,7 @@ const ProfileReferralData: React.FC = () => {
                 Back
               </button>
               <button
-                className="btn bg-houseBlue text-white hover:bg-houseHoverBlue px-4 py-2 rounded-lg"
+                className="btn bg-houseBlue hover:bg-houseHoverBlue text-white px-4 py-2 rounded-lg"
                 onClick={copyReceipt}
               >
                 Copy Receipt & Claim

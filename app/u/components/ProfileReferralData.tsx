@@ -3,23 +3,49 @@
 import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { FaClipboard } from 'react-icons/fa';
-import ReferralRewardsModal from './ProfileReferralRewardsModal';
+import ReferralRewardsTimeline from './ProfileReferralRewardsTimeline';
 
 const ProfileReferralData: React.FC = () => {
   const { data: session } = useSession();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTimelineOpen, setIsTimelineOpen] = useState(false);
+  const [isReceiptOpen, setIsReceiptOpen] = useState(false);
+  const [selectedRewards, setSelectedRewards] = useState<{ [key: number]: string }>({});
 
   const referralCode = session?.user?.referral?.referral_code || 'None';
   const referralCount = session?.user?.referral?.valid_referrals.length || 0;
   const totalRewardsClaimed = session?.user?.referral?.rewards_claimed || 0;
-  const remainingRewards = referralCount - totalRewardsClaimed;
+  const availableRewards = referralCount - totalRewardsClaimed;
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(referralCode);
-    alert('Referral code copied to clipboard!');
+  const handleRewardSelection = (tier: number, reward: string) => {
+    setSelectedRewards((prev) => ({ ...prev, [tier]: reward }));
   };
 
-  const handleModalClose = () => setIsModalOpen(false);
+  const handleGenerateReceipt = () => {
+    setIsTimelineOpen(false);
+    setIsReceiptOpen(true);
+  };
+
+  const copyReceipt = () => {
+    const receiptText = `
+      Hey Flippify Team,
+
+      I would like to claim my rewards. Here is my receipt:
+
+      Lifetime Referrals: ${referralCount}
+      Total Rewards Claimed: ${totalRewardsClaimed}
+      Selected Rewards: ${Object.entries(selectedRewards)
+        .map(([tier, reward]) => `Tier ${tier}: ${reward}`)
+        .join('\n')}
+
+      Thank you!
+    `;
+    navigator.clipboard.writeText(receiptText);
+    alert('Receipt copied to clipboard!');
+    window.open(
+      'https://discord.com/channels/1236428617962229830/1236436288442466394',
+      '_blank'
+    );
+  };
 
   return (
     <div className="card bg-white shadow-md rounded-lg p-4 h-full flex flex-col">
@@ -31,7 +57,10 @@ const ProfileReferralData: React.FC = () => {
           <p className="text-lg font-semibold text-gray-900 mr-2">Your code:</p>
           <button
             className="flex items-center px-2 py-1 bg-gray-100 border rounded-lg hover:bg-gray-200 transition duration-200"
-            onClick={copyToClipboard}
+            onClick={() => {
+              navigator.clipboard.writeText(referralCode);
+              alert('Referral code copied to clipboard!');
+            }}
           >
             <span className="mr-2">{referralCode}</span>
             <FaClipboard className="text-gray-900" />
@@ -57,30 +86,86 @@ const ProfileReferralData: React.FC = () => {
       </div>
       <div className="mt-4 text-center">
         <h3 className="text-lg font-semibold text-gray-900">
-          {remainingRewards > 0 ? 'You have rewards to claim!' : 'No rewards available at the moment.'}
+          {availableRewards > 0 ? 'You have rewards to claim!' : 'No rewards available at the moment.'}
         </h3>
         <button
           type="button"
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => setIsTimelineOpen(true)}
           className={`mt-2 inline-block text-white py-2 px-4 rounded-md w-48 transition duration-200 ${
-            remainingRewards <= 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-houseHoverBlue'
+            availableRewards <= 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-houseBlue hover:bg-houseHoverBlue'
           }`}
-          disabled={remainingRewards <= 0}
+          disabled={availableRewards <= 0}
         >
           Claim Rewards
         </button>
       </div>
-      {isModalOpen && (
-        <ReferralRewardsModal
-          availableRewards={remainingRewards}
-          referralCount={referralCount}
-          totalRewardsClaimed={totalRewardsClaimed}
-          onClose={handleModalClose}
-          onSubmit={(selectedRewards) => {
-            // Handle receipt generation or reward submission here
-            console.log(selectedRewards);
-          }}
-        />
+
+      {/* Timeline Modal */}
+      {isTimelineOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl">
+            <h2 className="text-xl font-semibold mb-6 text-center">Select Your Rewards</h2>
+            <ReferralRewardsTimeline
+              availableRewards={availableRewards}
+              selectedRewards={selectedRewards}
+              handleRewardSelection={handleRewardSelection}
+            />
+            <div className="flex justify-between mt-6">
+              <button
+                className="btn bg-white border border-gray-400 text-black mr-3 px-4 py-2 rounded-lg"
+                onClick={() => setIsTimelineOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn bg-houseBlue text-white hover:bg-houseHoverBlue px-4 py-2 rounded-lg"
+                onClick={handleGenerateReceipt}
+              >
+                Generate Receipt
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Receipt Modal */}
+      {isReceiptOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl">
+            <h3 className="text-lg font-semibold mb-4">Your Rewards Receipt</h3>
+            <div className="mb-4 p-4 bg-gray-100 rounded-lg">
+              <p>Hey Flippify Team,</p>
+              <p>I would like to claim my rewards. Here is my receipt:</p>
+              <p><strong>Lifetime Referrals:</strong> {referralCount}</p>
+              <p><strong>Total Rewards Claimed:</strong> {totalRewardsClaimed}</p>
+              <p><strong>Selected Rewards:</strong></p>
+              <ul className="list-disc ml-4">
+                {Object.entries(selectedRewards).map(([tier, reward]) => (
+                  <li key={tier}>
+                    Tier {tier}: {reward}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="flex justify-between mt-6">
+              <button
+                className="btn bg-white border border-gray-400 text-black mr-3 px-4 py-2 rounded-lg"
+                onClick={() => {
+                  setIsReceiptOpen(false);
+                  setIsTimelineOpen(true);
+                }}
+              >
+                Back
+              </button>
+              <button
+                className="btn bg-houseBlue text-white hover:bg-houseHoverBlue px-4 py-2 rounded-lg"
+                onClick={copyReceipt}
+              >
+                Copy Receipt & Claim
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 
@@ -28,7 +28,7 @@ const PlansCardPriceStat: React.FC<PlansCardPriceStatProps> = ({ prices, onPlanS
         <div className="stat-desc text-lightModeText text-center">
           <del>
             {currencySymbol}
-            {(prices[1]).toFixed(2)}
+            {prices[1].toFixed(2)}
           </del>
         </div>
       </div>

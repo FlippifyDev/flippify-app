@@ -5,10 +5,10 @@ import { IHistoryGrid, ISale } from './SalesTrackerModels';
 import { parse, format } from 'date-fns';
 import { useSession } from 'next-auth/react';
 
-const currencyConversionRates = {
-  GBP: 1,
-  USD: 1.28,
-  EUR: 1.16,
+const currencySymbols: Record<string, string> = {
+  GBP: '£',
+  USD: '$',
+  EUR: '€',
 };
 
 interface DashboardRecentSalesCardProps {
@@ -19,11 +19,25 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ cus
   const [user] = useAuthState(auth);
   const { data: session } = useSession();
   const [sales, setSales] = useState<IHistoryGrid[]>([]);
-  const [currency, setCurrency] = useState<"GBP" | "USD" | "EUR">("GBP");
+  const [currencySymbol, setCurrencySymbol] = useState('£');
 
   useEffect(() => {
-    if (session && session.user && session.user.currency) {
-      setCurrency(session.user.currency as "GBP" | "USD" | "EUR");
+    const loadUserCurrency = async () => {
+      if (session && session.user) {
+        const userRef = ref(database, `users/${session.user.customerId}`);
+        try {
+          const snapshot = await get(userRef);
+          const userData = snapshot.val();
+          const userCurrency = userData?.currency || 'GBP';
+          setCurrencySymbol(currencySymbols[userCurrency] || '£');
+        } catch (error) {
+          console.error('Error loading user currency from Firebase:', error);
+        }
+      }
+    };
+
+    if (session && session.user && session.user.customerId) {
+      loadUserCurrency();
     }
   }, [session]);
 
@@ -81,9 +95,7 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ cus
 
       fetchData();
     }
-  }, [user]);
-
-  const currencySymbol = currency === "GBP" ? "£" : currency === "USD" ? "$" : "€";
+  }, [user, customerId]);
 
   return (
     <div className="card bg-white shadow-md rounded-lg p-4 h-full flex flex-col">
@@ -110,10 +122,10 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ cus
                   <td>{sale.saleDate}</td>
                   <td>{sale.itemName}</td>
                   <td>{sale.purchasePlatform}</td>
-                  <td>{currencySymbol}{(sale.salePrice * currencyConversionRates[currency]).toFixed(2)}</td>
+                  <td>{currencySymbol}{sale.salePrice.toFixed(2)}</td>
                   <td>{sale.quantitySold}</td>
-                  <td>{currencySymbol}{(sale.totalCosts * currencyConversionRates[currency]).toFixed(2)}</td>
-                  <td>{currencySymbol}{(sale.estimatedProfit * currencyConversionRates[currency]).toFixed(2)}</td>
+                  <td>{currencySymbol}{sale.totalCosts.toFixed(2)}</td>
+                  <td>{currencySymbol}{sale.estimatedProfit.toFixed(2)}</td>
                 </tr>
               ))
             ) : (

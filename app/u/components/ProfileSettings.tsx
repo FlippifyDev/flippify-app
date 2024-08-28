@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
@@ -81,6 +81,9 @@ const ProfileSettings = () => {
       setOriginalEmail(email);
       setOriginalCurrency(currency);
       setIsChanged(false);
+
+      // Refresh the page after successful save
+      window.location.reload();
     } catch (error) {
       console.error('Error updating settings:', error);
       setFeedback('Failed to update settings.');

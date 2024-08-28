@@ -4,10 +4,11 @@ import { ISale } from './SalesTrackerModels';
 import '@/styles/overview-cards.css';
 import { useSession } from 'next-auth/react';
 
-const currencyConversionRates = {
-  GBP: 1,
-  USD: 1.28,
-  EUR: 1.16,
+// Currency symbols mapping
+const currencySymbols: Record<string, string> = {
+  GBP: '£',
+  USD: '$',
+  EUR: '€',
 };
 
 interface DashboardOverviewCardProps {
@@ -21,11 +22,26 @@ const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ customerI
     totalCosts: 0,
     totalSales: 0
   });
-  const [currency, setCurrency] = useState<'GBP' | 'USD' | 'EUR'>('GBP');
+  const [currencySymbol, setCurrencySymbol] = useState('£');
 
   useEffect(() => {
-    if (session && session.user && session.user.currency) {
-      setCurrency(session.user.currency as 'GBP' | 'USD' | 'EUR');
+    const loadUserCurrency = async () => {
+      if (session && session.user) {
+        const userRef = ref(database, `users/${session.user.customerId}`);
+
+        try {
+          const snapshot = await get(userRef);
+          const userData = snapshot.val();
+          const userCurrency = userData?.currency || 'GBP';
+          setCurrencySymbol(currencySymbols[userCurrency] || '£');
+        } catch (error) {
+          console.error('Error loading user currency from Firebase:', error);
+        }
+      }
+    };
+
+    if (session && session.user && session.user.customerId) {
+      loadUserCurrency();
     }
   }, [session]);
 
@@ -76,28 +92,31 @@ const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ customerI
     ? ((overviewData.totalRevenue - overviewData.totalCosts) / overviewData.totalCosts * 100).toFixed(2)
     : 'N/A';
 
-  const currencySymbol = currency === 'GBP' ? '£' : currency === 'USD' ? '$' : '€';
-  const conversionRate = currencyConversionRates[currency];
-
   return (
     <div className="w-full flex flex-col items-center">
       <div className="grid grid-cols-2 lg:grid-cols-4 font-semibold justify-center gap-2 w-full">
         <div className="stats shadow-md bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2">
           <div className="stat">
             <div className="stat-title text-sm sm:text-base text-houseBlue">Total Revenue</div>
-            <div className="stat-value font-bold text-xl sm:text-2xl text-black">{currencySymbol}{(overviewData.totalRevenue * conversionRate).toFixed(2)}</div>
+            <div className="stat-value font-bold text-xl sm:text-2xl text-black">
+              {currencySymbol}{overviewData.totalRevenue.toFixed(2)}
+            </div>
           </div>
         </div>
         <div className="stats shadow-md bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2">
           <div className="stat">
             <div className="stat-title text-sm sm:text-base text-houseBlue">Total Costs</div>
-            <div className="stat-value font-bold text-xl sm:text-2xl text-black">{currencySymbol}{(overviewData.totalCosts * conversionRate).toFixed(2)}</div>
+            <div className="stat-value font-bold text-xl sm:text-2xl text-black">
+              {currencySymbol}{overviewData.totalCosts.toFixed(2)}
+            </div>
           </div>
         </div>
         <div className="stats shadow-md bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2">
           <div className="stat">
             <div className="stat-title text-sm sm:text-base text-houseBlue">No. Sales</div>
-            <div className="stat-value font-bold text-xl sm:text-2xl text-black">{overviewData.totalSales}</div>
+            <div className="stat-value font-bold text-xl sm:text-2xl text-black">
+              {overviewData.totalSales}
+            </div>
           </div>
         </div>
         <div className="stats shadow-md bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2">

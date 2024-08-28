@@ -1,6 +1,7 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from "react";
+import { database, ref, get } from "../../api/auth-firebase/firebaseConfig";
 import LayoutSubscriptionWrapper from "./LayoutSubscriptionWrapper";
 import PlansSubscribeNow from "./PlansSubscribeNow";
 import PlansCardPriceStat from "./PlansCardPriceStat";
@@ -29,10 +30,16 @@ interface PlansCardProps {
   badgeColor: BadgeColor;
 }
 
-const currencyConversionRates = {
+const currencyConversionRates: Record<'GBP' | 'USD' | 'EUR', number> = {
   GBP: 1,
   USD: 1.28,
   EUR: 1.16,
+};
+
+const currencySymbols: Record<'GBP' | 'USD' | 'EUR', string> = {
+  GBP: '£',
+  USD: '$',
+  EUR: '€',
 };
 
 const PlansCard: React.FC<PlansCardProps> = ({
@@ -47,10 +54,30 @@ const PlansCard: React.FC<PlansCardProps> = ({
   const { data: session } = useSession();
   const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
   const [currency, setCurrency] = useState<'GBP' | 'USD' | 'EUR'>('GBP');
+  const [currencySymbol, setCurrencySymbol] = useState('£');
 
   useEffect(() => {
-    if (session && session.user && session.user.currency) {
-      setCurrency(session.user.currency as 'GBP' | 'USD' | 'EUR');
+    const loadUserCurrency = async () => {
+      if (session && session.user) {
+        const userRef = ref(database, `users/${session.user.customerId}`);
+
+        try {
+          const snapshot = await get(userRef);
+          const userData = snapshot.val();
+          const userCurrency = (userData?.currency || 'GBP') as keyof typeof currencySymbols;
+          console.log("User's preferred currency from Firebase:", userCurrency);
+          setCurrency(userCurrency);
+          setCurrencySymbol(currencySymbols[userCurrency]);
+        } catch (error) {
+          console.error('Error loading user currency from Firebase:', error);
+        }
+      } else {
+        console.log("No session or user data found.");
+      }
+    };
+
+    if (session && session.user && session.user.customerId) {
+      loadUserCurrency();
     }
   }, [session]);
 
@@ -58,11 +85,13 @@ const PlansCard: React.FC<PlansCardProps> = ({
     setSelectedPlan(index);
   };
 
-  const convertedPrices = prices.map(price => Number((price * currencyConversionRates[currency]).toFixed(2)));
-  const currencySymbol = currency === 'GBP' ? '£' : currency === 'USD' ? '$' : '€';
+  const convertedPrices = prices.map(price => {
+    const convertedPrice = Number((price * currencyConversionRates[currency]).toFixed(2));
+    console.log(`Converted price for currency ${currency}:`, convertedPrice);
+    return convertedPrice;
+  });
 
-  const selectedPriceId =
-    selectedPlan === 0 ? priceIds.monthly : priceIds.yearly;
+  const selectedPriceId = selectedPlan === 0 ? priceIds.monthly : priceIds.yearly;
 
   const badgeClassName = `text-white ${badgeColorClasses[badgeColor]}`;
 

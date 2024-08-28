@@ -1,15 +1,13 @@
-// components/DashboardProfitsChart.tsx
 import React, { useEffect } from 'react';
 import ApexCharts from 'apexcharts';
 
 interface DashboardProfitsChartProps {
   salesData: { categories: string[]; series: { name: string; data: number[] }[] };
   selectedRange: string;
-  currency: 'GBP' | 'USD' | 'EUR';
-  currencyConversionRates: Record<'GBP' | 'USD' | 'EUR', number>;
+  currencySymbol: string;
 }
 
-const DashboardProfitsChart: React.FC<DashboardProfitsChartProps> = ({ salesData, selectedRange, currency, currencyConversionRates }) => {
+const DashboardProfitsChart: React.FC<DashboardProfitsChartProps> = ({ salesData, selectedRange, currencySymbol }) => {
   useEffect(() => {
     const options = {
       chart: {
@@ -48,10 +46,7 @@ const DashboardProfitsChart: React.FC<DashboardProfitsChartProps> = ({ salesData
         labels: {
           show: true,
           formatter: (val: number) => {
-            const conversionRate = currencyConversionRates[currency];
-            const convertedValue = val * conversionRate;
-            const currencySymbol = currency === 'GBP' ? '£' : currency === 'USD' ? '$' : '€';
-            return `${currencySymbol}${convertedValue.toFixed(2)}`;
+            return `${currencySymbol}${val.toFixed(2)}`;
           },
           cssClass: 'text-xs text-gray-500',
         },
@@ -66,21 +61,9 @@ const DashboardProfitsChart: React.FC<DashboardProfitsChartProps> = ({ salesData
         enabled: true,
         x: {
           show: true,
-          formatter: (val: string, opts: { dataPointIndex: number }) => {
-            const date = new Date(salesData.categories[opts.dataPointIndex]);
-            if (isNaN(date.getTime())) {
-              return '';
-            }
-            return ''; // Your formatting logic here
-          },
         },
         y: {
-          formatter: (val: number) => {
-            const conversionRate = currencyConversionRates[currency];
-            const convertedValue = val * conversionRate;
-            const currencySymbol = currency === 'GBP' ? '£' : currency === 'USD' ? '$' : '€';
-            return `${currencySymbol}${convertedValue.toFixed(2)}`;
-          },
+          formatter: (val: number) => `${currencySymbol}${val.toFixed(2)}`,
         },
       },
     };
@@ -91,7 +74,7 @@ const DashboardProfitsChart: React.FC<DashboardProfitsChartProps> = ({ salesData
     return () => {
       chart.destroy();
     };
-  }, [salesData, selectedRange, currency]);
+  }, [salesData, selectedRange, currencySymbol]);
 
   return <div id="area-chart"></div>;
 };

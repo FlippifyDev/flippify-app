@@ -1,6 +1,6 @@
-"use client";
-import createCheckoutSession from '@/app/api/stripe-handlers/create-checkout-session';
+'use client';
 
+import createCheckoutSession from '@/app/api/stripe-handlers/create-checkout-session';
 import React, { useEffect, useState, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 
@@ -47,12 +47,16 @@ const PlansSubscribeNow: React.FC<PlansSubscribeNowProps> = ({ priceId }) => {
 
   const handleBuyButtonClick = () => {
     if (checkoutUrl) {
-      window.location.href = checkoutUrl;
+      window.open(checkoutUrl, '_blank', 'noopener,noreferrer');
     }
   };
 
   return (
-    <button className="btn border-0 bg-houseBlue hover:bg-houseHoverBlue text-white w-2/3 mx-auto" onClick={handleBuyButtonClick} disabled={!checkoutUrl}>
+    <button 
+      className="btn border-0 bg-houseBlue hover:bg-houseHoverBlue text-white w-2/3 mx-auto" 
+      onClick={handleBuyButtonClick} 
+      disabled={!checkoutUrl}
+    >
       {checkoutUrl ? 'Subscribe Now' : 'Loading...'}
     </button>
   );

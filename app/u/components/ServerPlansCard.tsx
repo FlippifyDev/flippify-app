@@ -1,9 +1,10 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from "react";
 import { Lato } from "next/font/google";
 import ServerPlansCardPriceStat from "./ServerPlansCardPriceStat";
 import { useSession } from "next-auth/react";
+import { database, ref, get } from "../../api/auth-firebase/firebaseConfig";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 
@@ -25,10 +26,16 @@ interface PlansCardProps {
   badgeColor: BadgeColor;
 }
 
-const currencyConversionRates = {
+const currencyConversionRates: Record<'GBP' | 'USD' | 'EUR', number> = {
   GBP: 1,
   USD: 1.28,
   EUR: 1.16,
+};
+
+const currencySymbols: Record<'GBP' | 'USD' | 'EUR', string> = {
+  GBP: '£',
+  USD: '$',
+  EUR: '€',
 };
 
 const ServerPlansCard: React.FC<PlansCardProps> = ({
@@ -43,10 +50,26 @@ const ServerPlansCard: React.FC<PlansCardProps> = ({
   const { data: session } = useSession();
   const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
   const [currency, setCurrency] = useState<"GBP" | "USD" | "EUR">("GBP");
+  const [currencySymbol, setCurrencySymbol] = useState<string>('£');
 
   useEffect(() => {
-    if (session && session.user && session.user.currency) {
-      setCurrency(session.user.currency as 'GBP' | 'USD' | 'EUR');
+    const loadUserCurrency = async () => {
+      if (session && session.user) {
+        const userRef = ref(database, `users/${session.user.customerId}`);
+        try {
+          const snapshot = await get(userRef);
+          const userData = snapshot.val();
+          const userCurrency = (userData?.currency || 'GBP') as 'GBP' | 'USD' | 'EUR';
+          setCurrency(userCurrency);
+          setCurrencySymbol(currencySymbols[userCurrency]);
+        } catch (error) {
+          console.error('Error loading user currency from Firebase:', error);
+        }
+      }
+    };
+
+    if (session && session.user && session.user.customerId) {
+      loadUserCurrency();
     }
   }, [session]);
 
@@ -54,13 +77,7 @@ const ServerPlansCard: React.FC<PlansCardProps> = ({
     setSelectedPlan(index);
   };
 
-  const handleCurrencyToggle = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCurrency(e.target.value as 'GBP' | 'USD' | 'EUR');
-  };
-
   const convertedPrice = Number((price * currencyConversionRates[currency]).toFixed(2));
-  const currencySymbol = currency === "GBP" ? "£" : currency === "USD" ? "$" : "€";
-
   const badgeClassName = `text-white ${badgeColorClasses[badgeColor]}`;
 
   return (
@@ -79,21 +96,6 @@ const ServerPlansCard: React.FC<PlansCardProps> = ({
             <p className="text-lightModeText text-sm mb-8 sm:h-[5rem]">
               {description}
             </p>
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2" htmlFor="currency">
-                Currency
-              </label>
-              <select
-                id="currency"
-                value={currency}
-                onChange={handleCurrencyToggle}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
-              >
-                <option value="GBP">GBP (£)</option>
-                <option value="USD">USD ($)</option>
-                <option value="EUR">EUR (€)</option>
-              </select>
-            </div>
             {price && (
               <ServerPlansCardPriceStat
                 price={convertedPrice}
@@ -111,6 +113,8 @@ const ServerPlansCard: React.FC<PlansCardProps> = ({
                   <a
                     href="https://discord.com/channels/1236428617962229830/1236436288442466394"
                     className="btn border-0 bg-houseBlue hover:bg-houseHoverBlue text-white w-2/3 mx-auto"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     Contact Us
                   </a>

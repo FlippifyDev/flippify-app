@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // Local Imports
 import createBillingPortalUrl from '@/app/api/stripe-handlers/create-billing-portal';
@@ -38,7 +38,7 @@ const ManageMembershipsButton = () => {
 
   const handleBillingPortalButtonClick = () => {
     if (billingUrl) {
-      window.location.href = billingUrl;
+      window.open(billingUrl, '_blank', 'noopener,noreferrer');
     }
   };
 

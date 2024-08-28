@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { auth, database, ref, get } from "../../api/auth-firebase/firebaseConfig";
+import { database, ref, get } from "../../api/auth-firebase/firebaseConfig";
 import { IHistoryGrid, ISale } from "./SalesTrackerModels";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { saveAs } from "file-saver";
-import { format } from 'date-fns';
+import { format, subMonths } from 'date-fns';
 import * as Papa from "papaparse";
 import { useSession } from 'next-auth/react';
+import { saveAs } from 'file-saver';
+
 
 const sanitizePath = (path: string): string => {
   return path.replace(/[.#$[\]]/g, '_');
@@ -33,9 +33,10 @@ interface SalesTrackerReviewProfitsProps {
 const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ userData }) => {
   const today = new Date();
   const formattedToday = format(today, 'yyyy-MM-dd');
+  const formattedOneMonthAgo = format(subMonths(today, 1), 'yyyy-MM-dd');
 
   const [filters, setFilters] = useState<Filters>({
-    dateRange: { start: "", end: formattedToday },
+    dateRange: { start: formattedOneMonthAgo, end: formattedToday },
     itemName: "",
     salePlatform: "",
   });
@@ -152,7 +153,7 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
 
   const handleClearFilters = () => {
     setFilters({
-      dateRange: { start: "", end: "" },
+      dateRange: { start: formattedOneMonthAgo, end: formattedToday },
       itemName: "",
       salePlatform: "",
     });
@@ -214,8 +215,7 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
                   name="start"
                   value={filters.dateRange.start}
                   onChange={handleChange}
-                  className="input input-bordered w-full bg-white"
-                  style={{ colorScheme: "dark" }}
+                  className="input input-bordered w-full bg-white placeholder-lightModeText-light"
                 />
               </div>
               <div className="mb-4">
@@ -229,8 +229,7 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
                   name="end"
                   value={filters.dateRange.end}
                   onChange={handleChange}
-                  className="input input-bordered w-full bg-white"
-                  style={{ colorScheme: "dark" }}
+                  className="input input-bordered w-full bg-white placeholder-lightModeText-light"
                 />
               </div>
               <div className="mb-4">

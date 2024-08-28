@@ -1,4 +1,3 @@
-// components/DashboardProfitsGraph.tsx
 import dynamic from 'next/dynamic';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
@@ -9,10 +8,10 @@ import { format, subDays, eachDayOfInterval, eachMonthOfInterval, endOfDay, pars
 // Dynamically import Chart component with no SSR
 const Chart = dynamic(() => import('./DashboardProfitsChart'), { ssr: false });
 
-const currencyConversionRates = {
-  GBP: 1,
-  USD: 1.28,
-  EUR: 1.16,
+const currencySymbols: Record<string, string> = {
+  GBP: '£',
+  USD: '$',
+  EUR: '€',
 };
 
 interface ChartData {
@@ -38,7 +37,7 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
   const [netProfit, setNetProfit] = useState(0);
   const [previousNetProfit, setPreviousNetProfit] = useState(0);
   const [selectedRange, setSelectedRange] = useState('30');
-  const [currency, setCurrency] = useState<'GBP' | 'USD' | 'EUR'>('GBP');
+  const [currencySymbol, setCurrencySymbol] = useState('£');
 
   const fetchSalesData = useCallback(async (rangeInDays: number) => {
     if (!customerId) return;
@@ -59,7 +58,7 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
         allCategories = eachDayOfInterval({ start: rangeStartDate, end: today }).map(date => format(date, 'yyyy-MM-dd'));
       }
 
-      let seriesData = Array(allCategories.length).fill(0);
+      let seriesData: number[] = Array(allCategories.length).fill(0);
 
       let totalNetProfit = 0;
       let totalPreviousNetProfit = 0;
@@ -113,8 +112,22 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
   }, [customerId]);
 
   useEffect(() => {
-    if (session && session.user && session.user.currency) {
-      setCurrency(session.user.currency as 'GBP' | 'USD' | 'EUR');
+    const loadUserCurrency = async () => {
+      if (session && session.user) {
+        const userRef = ref(database, `users/${session.user.customerId}`);
+        try {
+          const snapshot = await get(userRef);
+          const userData = snapshot.val();
+          const userCurrency = userData?.currency || 'GBP';
+          setCurrencySymbol(currencySymbols[userCurrency] || '£');
+        } catch (error) {
+          console.error('Error loading user currency from Firebase:', error);
+        }
+      }
+    };
+
+    if (session && session.user && session.user.customerId) {
+      loadUserCurrency();
     }
   }, [session]);
 
@@ -141,7 +154,7 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
       <div className="flex justify-between">
         <div>
           <h5 className="leading-none text-3xl font-bold text-gray-900 dark:text-white">
-            {currency === 'GBP' ? '£' : currency === 'USD' ? '$' : '€'}{netProfit.toFixed(2)}
+            {currencySymbol}{netProfit.toFixed(2)}
           </h5>
           <span className="inline-flex items-center text-md mt-2 font-normal text-gray-500 dark:text-gray-400">
             Net profit this {timePeriodText}
@@ -155,7 +168,7 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
         </div>
       </div>
       {/* Chart component */}
-      <Chart salesData={salesData} selectedRange={selectedRange} currency={currency} currencyConversionRates={currencyConversionRates} />
+      <Chart salesData={salesData} selectedRange={selectedRange} currencySymbol={currencySymbol} />
 
       {/* Dropdown for selecting date range */}
       <div className="dropdown dropdown-hover bg-white">
@@ -173,7 +186,6 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
         </ul>
       </div>
 
-      
     </div>
   );
 };

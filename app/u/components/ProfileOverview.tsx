@@ -9,9 +9,16 @@ import LayoutSubscriptionWrapper from "./LayoutSubscriptionWrapper";
 import { database, ref, get } from "../../api/auth-firebase/firebaseConfig";
 import { handleUser } from "../../api/auth-firebase/firebaseConfig";
 
+const currencySymbols: Record<string, string> = {
+  GBP: '£',
+  USD: '$',
+  EUR: '€',
+};
+
 const ProfileOverview = () => {
   const { data: session } = useSession();
   const [totalProfit, setTotalProfit] = useState(0);
+  const [currencySymbol, setCurrencySymbol] = useState('£');
 
   const calculateTotalProfit = useCallback(async (customerId: string) => {
     if (!customerId) return;
@@ -50,7 +57,24 @@ const ProfileOverview = () => {
   }, []);
 
   useEffect(() => {
+    const loadUserCurrency = async () => {
+      if (session && session.user) {
+        const customerId = session.user.customerId as string;
+        const userRef = ref(database, `users/${customerId}`);
+
+        try {
+          const snapshot = await get(userRef);
+          const userData = snapshot.val();
+          const userCurrency = userData?.currency || 'GBP';
+          setCurrencySymbol(currencySymbols[userCurrency] || '£');
+        } catch (error) {
+          console.error('Error loading user currency from Firebase:', error);
+        }
+      }
+    };
+
     if (session && session.user && session.user.customerId) {
+      loadUserCurrency();
       calculateTotalProfit(session.user.customerId);
     }
   }, [session, calculateTotalProfit]);
@@ -127,7 +151,7 @@ const ProfileOverview = () => {
               Total Profit Made
             </div>
             <div className="stat-value font-bold text-xl sm:text-2xl text-black">
-              £{totalProfit.toFixed(2)}
+              {currencySymbol}{totalProfit.toFixed(2)}
             </div>
           </div>
         </div>

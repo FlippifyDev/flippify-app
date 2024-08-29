@@ -14,7 +14,7 @@ const PlansPage = () => {
       <div className="flex flex-col items-center space-y-5 text-center">
         <div className="flex flex-wrap justify-center items-center text-4xl sm:text-5xl w-4/5 sm:w-full">
           <p
-            className={`${lato.className} text-gradient bg-gradient-to-tr from-blue-500 to-purple-500 bg-clip-text text-transparent py-1`}
+            className={`${lato.className} text-gradient bg-gradient-to-tr from-houseBlue to-houseHoverBlue bg-clip-text text-transparent py-1`}
           >
             Pricing
             <a

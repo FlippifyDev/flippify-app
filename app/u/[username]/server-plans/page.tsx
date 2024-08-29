@@ -1,7 +1,6 @@
 import React from 'react';
 import UserLayout from '../../components/Layout';
-import ServerPlansPageContent from '../../components/ServerPlansPage';
-import MetadataHead from '@/app/components/MetadataHead';
+import ServerPlansPageContent from '../../components/ServerPlansPage';3
 import ThemeSetter from '@/app/components/ThemeSetter';
 
 export const metadata = {

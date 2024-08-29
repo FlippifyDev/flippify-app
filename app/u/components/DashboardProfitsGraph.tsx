@@ -38,6 +38,7 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
   const [previousNetProfit, setPreviousNetProfit] = useState(0);
   const [selectedRange, setSelectedRange] = useState('30');
   const [currencySymbol, setCurrencySymbol] = useState('£');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const fetchSalesData = useCallback(async (rangeInDays: number) => {
     if (!customerId) return;
@@ -140,6 +141,15 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
   const handleRangeChange = (range: string) => {
     setSelectedRange(range);
     fetchSalesData(parseInt(range));
+    setDropdownOpen(false); // Close the dropdown after selecting
+  };
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen); // Toggle dropdown open/close
+  };
+
+  const closeDropdown = () => {
+    setDropdownOpen(false); // Close the dropdown
   };
 
   const timePeriodText = {
@@ -171,21 +181,32 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
       <Chart salesData={salesData} selectedRange={selectedRange} currencySymbol={currencySymbol} />
 
       {/* Dropdown for selecting date range */}
-      <div className="dropdown dropdown-hover bg-white">
-        <div tabIndex={0} role="button" className="btn m-1 text-lightModeText bg-white hover:bg-gray-100">
+      <div className="relative">
+        <div
+          className="btn m-1 text-lightModeText bg-white hover:bg-gray-100 transition duration-200 rounded-lg"
+          onClick={toggleDropdown} // Toggle dropdown on click
+          onMouseEnter={closeDropdown} // Ensure hover doesn't affect the click
+        >
           Last {selectedRange} days
         </div>
-        <ul tabIndex={0} className="dropdown-content menu bg-white rounded-box z-[1] w-52 p-2 shadow">
-          {['7', '30', '90', '365'].map(range => (
-            <li key={range}>
-              <a onClick={() => handleRangeChange(range)}>
-                Last {range} days
-              </a>
-            </li>
-          ))}
-        </ul>
+        {dropdownOpen && (
+          <ul
+            className="absolute left-0 bg-white border-gray-100 z-[1] w-52 p-2 shadow transition duration-200 rounded-lg"
+            style={{ marginTop: '-4px' }} // Negative margin to remove the gap
+          >
+            {['7', '30', '90', '365'].map(range => (
+              <li key={range}>
+                <a
+                  onClick={() => handleRangeChange(range)}
+                  className="block px-4 py-2 hover:bg-gray-200 transition duration-200 rounded-lg"
+                >
+                  Last {range} days
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
-
     </div>
   );
 };

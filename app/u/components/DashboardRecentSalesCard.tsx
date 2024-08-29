@@ -62,9 +62,10 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ cus
 
               const totalSaleRevenue = sale.quantitySold * salePrice;
               const totalPurchaseCost = sale.quantitySold * purchasePricePerUnit;
-              const totalCosts = totalSaleRevenue * (platformFees / 100) + shippingCost;
+              const totalPlatformFees = totalSaleRevenue * (platformFees / 100);
 
-              const estimatedProfit = totalSaleRevenue - totalPurchaseCost - totalCosts;
+              const totalCosts = totalPurchaseCost + totalPlatformFees + shippingCost;
+              const estimatedProfit = totalSaleRevenue - totalCosts;
 
               // Parse the sale date
               const parsedSaleDate = parse(sale.saleDate, 'dd/MM/yyyy', new Date());

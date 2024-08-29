@@ -59,6 +59,9 @@ const ProfileReferralData: React.FC = () => {
     <div className="card bg-white shadow-md rounded-lg p-4 h-full flex flex-col">
       <div className="flex justify-between items-center mb-2">
         <h2 className="card-title text-black text-xl font-semibold">Referral Program</h2>
+        <p className="text-sm text-gray-500 px-2 text-center sm:text-left">
+          Users must subscribe to count as a valid referral.
+        </p>
       </div>
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center mb-4 sm:mb-0">
@@ -74,9 +77,6 @@ const ProfileReferralData: React.FC = () => {
             <FaClipboard className="text-gray-900" />
           </button>
         </div>
-        <p className="text-sm text-gray-500 px-2 text-center sm:text-left">
-          Users must subscribe to count as a valid referral.
-        </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
         <div className="stats shadow-md bg-white p-2 text-center">

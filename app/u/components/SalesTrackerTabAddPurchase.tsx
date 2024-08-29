@@ -170,7 +170,7 @@ const SalesTrackerTabAddPurchase: React.FC<SalesTrackerTabAddPurchaseProps> = ({
           <button
             type="button"
             onClick={handleSubmit}
-            className="btn btn-primary w-36 sm:w-42 md:w-48 bg-white text-black border-black hover:bg-textGradStart hover:border-black transition duration-200"
+            className="btn btn-primary w-36 sm:w-42 md:w-48 bg-houseBlue text-white border-black hover:bg-houseHoverBlue hover:border-black transition duration-200"
           >
             Add Purchase
           </button>
@@ -184,7 +184,7 @@ const SalesTrackerTabAddPurchase: React.FC<SalesTrackerTabAddPurchaseProps> = ({
               setWebsiteName('');
               setAvailability(1);
             }}
-            className="btn btn-primary text-black w-36 sm:w-42 md:w-48 bg-white border-black hover:bg-textGradStart hover:border-black transition duration-200"
+            className="btn btn-primary text-black w-36 sm:w-42 md:w-48 bg-white border-black hover:bg-gray-100 hover:border-black transition duration-200"
           >
             Clear All
           </button>

@@ -65,7 +65,7 @@ const ManageServersSelectionWebhook = ({ subscription_name, region }: Props) => 
             <div className="label">
                 <span className="label-text text-lightModeText">Note: Entering a webhook will replace the previous one.</span>
             </div>
-            <button className="btn mt-2 w-1/2 text-white border-none bg-houseBlue hover:bg-blue-500" onClick={handleFormSubmit}>Submit</button>
+            <button className="btn mt-2 w-1/2 text-white bg-houseBlue hover:bg-houseHoverBlue" onClick={handleFormSubmit}>Submit</button>
         </div>
     );
 };

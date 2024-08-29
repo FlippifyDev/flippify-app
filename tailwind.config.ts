@@ -59,7 +59,7 @@ const config: Config = {
         greyStroke: '#A9A9A9',
         darkGreyText: '#222222',
         houseBlue: '#1a73e8',
-        houseHoverBlue: '#58d6e5',
+        houseHoverBlue: '#1A9EEA',
         lightModeText: '#3b4045',
         userPageBlueBg: '#1b2a49',
         userPageLightBlueBg: '#3e78b2',

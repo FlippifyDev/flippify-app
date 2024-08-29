@@ -33,7 +33,7 @@ const PricingPage = () => {
         <PricingCard
           title="Early Access"
           description="Gain access to our all-in-one service providing all tools, bots and insights needed to accelerate your profits."
-          prices={[44.99, 59.99]}
+          prices={[34.99, 49.99]}
           whatsIncludedComponent={<PricingCardStandardWhatsIncluded />}
         />
       </div>

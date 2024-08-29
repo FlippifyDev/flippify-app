@@ -6,23 +6,21 @@ import React, { useState } from "react";
 import { Lato } from "next/font/google";
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 
-
 interface PricingCardProps {
   title: string;
   prices: number[];
   description: string;
-  whatsIncludedComponent: any
+  whatsIncludedComponent: any;
 }
 
 const PricingCard: React.FC<PricingCardProps> = ({
   title,
   prices,
   description,
-  whatsIncludedComponent
+  whatsIncludedComponent,
 }) => {
   const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
-  const [currency, setCurrency] = useState<"USD" | "GBP">("USD");
-
+  const [currency, setCurrency] = useState<"GBP" | "USD">("GBP"); // Default to GBP
 
   const handlePlanSelect = (index: number) => {
     setSelectedPlan(index);
@@ -33,7 +31,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
   };
 
   const convertedPrices =
-    currency === "GBP" ? prices.map((price) => price / 1.28) : prices;
+    currency === "USD" ? prices.map((price) => price * 1.28) : prices;
   const currencySymbol = currency === "GBP" ? "£" : "$";
 
   return (
@@ -50,15 +48,23 @@ const PricingCard: React.FC<PricingCardProps> = ({
           <p className="text-white text-sm lg:text-base mb-4 flex justify-center text-center">
             {description}
           </p>
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <span className="label-text text-white">USD</span>
+          <div
+            className="flex items-center justify-center gap-2 mb-4"
+            style={{ userSelect: "none" }} // Prevent text selection
+          >
+            <span className="label-text text-white">GBP</span>
             <input
               type="checkbox"
               className="toggle theme-controller text-white"
               onChange={handleCurrencyToggle}
-              checked={currency === "GBP"}
+              checked={currency === "USD"}
+              style={{ 
+                userSelect: "none", // Prevent text selection on toggle
+                outline: "none", // Remove focus outline
+                WebkitTapHighlightColor: "transparent", // Remove tap highlight on mobile
+              }}
             />
-            <span className="label-text text-white">GBP</span>
+            <span className="label-text text-white">USD</span>
           </div>
           <div className="flex flex-col items-center">
             <hr className="w-full" />

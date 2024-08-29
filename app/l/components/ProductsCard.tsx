@@ -48,7 +48,7 @@ const ProductsCard: React.FC<ProductsCardProps> = ({
           {title}
         </h2>
         <hr className="w-full" />
-        <p className="flex items-center">{description}</p>
+        <p className="flex items-center text-white">{description}</p>
         {disclaimer && (
           <div>
             <a
@@ -57,7 +57,7 @@ const ProductsCard: React.FC<ProductsCardProps> = ({
                 e.preventDefault();
                 handleToggleDisclaimer();
               }}
-              className="hover:underline"
+              className="hover:underline text-white"
             >
               {showDisclaimer ? "Hide disclaimer" : "Show disclaimer"}
             </a>

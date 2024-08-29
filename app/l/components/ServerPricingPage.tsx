@@ -34,7 +34,7 @@ const ServerPricingPage = () => {
         <ServerPlansCard
           title="Retiring Sets Deals"
           description="Enhance your reselling efficiency with our cutting-edge bot, scanning diverse websites to identify Lego sets nearing retirement and ensuring you never miss a profitable sale."
-          price={149.99}
+          price={119.99}
           priceIds={{
             monthly: "price_1PfJ7pJJRepiHZ8d7gs78YEp",
             yearly: "price_1PfJ7pJJRepiHZ8dAkwkWqHy",

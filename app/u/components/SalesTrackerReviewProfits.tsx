@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { database, ref, get } from "../../api/auth-firebase/firebaseConfig";
 import { IHistoryGrid, ISale } from "./SalesTrackerModels";
-import { format, subMonths } from 'date-fns';
+import { format, subMonths, parse } from 'date-fns';
 import * as Papa from "papaparse";
 import { useSession } from 'next-auth/react';
 import { saveAs } from 'file-saver';
@@ -57,6 +57,7 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
           const userCurrency = userData?.currency || 'GBP';
           setCurrency(userCurrency as 'GBP' | 'USD' | 'EUR');
         } catch (error) {
+          console.error("Error loading user currency:", error);
         }
       }
     };
@@ -79,6 +80,13 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
             const sale: ISale = salesData[saleKey];
 
             if (sale.itemName && sale.purchaseDate && sale.saleDate) {
+              const totalPurchaseCost = sale.purchasePricePerUnit * sale.quantitySold;
+              const totalPlatformFees = sale.salePrice * sale.quantitySold * (sale.platformFees / 100);
+              const totalShippingAndOtherFees = sale.shippingCost;
+              const totalCosts = totalPurchaseCost + totalShippingAndOtherFees + totalPlatformFees;
+              const totalSaleRevenue = sale.salePrice * sale.quantitySold;
+              const profit = totalSaleRevenue - totalCosts;
+
               salesArray.push({
                 ...sale,
                 purchaseDate: sale.purchaseDate,
@@ -88,9 +96,9 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
                 salePrice: sale.salePrice || 0,
                 platformFees: sale.platformFees || 0,
                 shippingCost: sale.shippingCost || 0,
-                estimatedProfit: 0, // Keeping as 0 since we are not converting
+                estimatedProfit: profit,
                 salePlatform: sale.salePlatform,
-                totalCosts: 0, // Keeping as 0 since we are not converting
+                totalCosts: totalCosts,
               });
             }
           }
@@ -98,6 +106,7 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
           setSales(salesArray);
           setFilteredSales(salesArray);
         } catch (error) {
+          console.error("Error fetching sales data:", error);
         }
       };
 
@@ -158,10 +167,24 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
   };
 
   const handleExport = () => {
-    const csv = Papa.unparse(filteredSales);
+    const formattedSales = filteredSales.map(sale => {
+      // Correctly parsing the dates
+      const parsedSaleDate = parse(sale.saleDate, 'dd/MM/yyyy', new Date());
+      const parsedPurchaseDate = parse(sale.purchaseDate, 'dd/MM/yyyy', new Date());
+  
+      return {
+        ...sale,
+        // Format the parsed date
+        saleDate: isNaN(parsedSaleDate.getTime()) ? sale.saleDate : format(parsedSaleDate, 'yyyy-MM-dd'),
+        purchaseDate: isNaN(parsedPurchaseDate.getTime()) ? sale.purchaseDate : format(parsedPurchaseDate, 'yyyy-MM-dd'),
+      };
+    });
+  
+    const csv = Papa.unparse(formattedSales);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     saveAs(blob, "sales.csv");
   };
+  
 
   const currencySymbol = currencySymbols[currency]; // Just update symbol
 

@@ -333,7 +333,7 @@ const SalesTrackerTabAddSale: React.FC<SalesTrackerTabAddSaleProps> = ({
               disabled={!selectedPurchase}
               className={`btn ${
                 !selectedPurchase ? "btn-disabled" : "btn-primary"
-              } bg-white text-black border-black hover:bg-houseHoverBlue hover:border-black w-36 sm:w-42 md:w-48 mx-auto transition duration-200`}
+              } bg-houseBlue text-white border-black hover:bg-houseHoverBlue hover:border-black w-36 sm:w-42 md:w-48 mx-auto transition duration-200`}
             >
               Add Sale
             </button>

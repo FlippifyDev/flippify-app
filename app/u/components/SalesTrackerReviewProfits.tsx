@@ -56,10 +56,7 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
           const userData = snapshot.val();
           const userCurrency = userData?.currency || 'GBP';
           setCurrency(userCurrency as 'GBP' | 'USD' | 'EUR');
-          console.log('Currency fetched from Firebase:', userCurrency);
         } catch (error) {
-          console.error('Error fetching user currency from Firebase:', error);
-          console.log('Defaulting to GBP');
         }
       }
     };
@@ -101,7 +98,6 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
           setSales(salesArray);
           setFilteredSales(salesArray);
         } catch (error) {
-          console.error("Error fetching data:", error);
         }
       };
 
@@ -168,8 +164,6 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
   };
 
   const currencySymbol = currencySymbols[currency]; // Just update symbol
-
-  console.log("Currency Symbol:", currencySymbol); // For debugging
 
   return (
     <div className="flex flex-col gap-4 font-semibold">
@@ -244,14 +238,14 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
                 <button
                   type="button"
                   onClick={handleSubmit}
-                  className="btn btn-primary text-black bg-white border-black hover:bg-textGradStart hover:border-black w-36 sm:w-42 md:w-48 transition duration-200"
+                  className="btn btn-primary text-white bg-houseBlue border-black hover:bg-houseHoverBlue hover:border-black w-36 sm:w-42 md:w-48 transition duration-200"
                 >
                   Apply
                 </button>
                 <button
                   type="button"
                   onClick={handleClearFilters}
-                  className="btn btn-secondary bg-white text-black border-black hover:bg-textGradStart hover:border-black w-36 sm:w-42 md:w-48 transition duration-200"
+                  className="btn btn-secondary bg-white text-black border-black hover:bg-gray-100 hover:border-black w-36 sm:w-42 md:w-48 transition duration-200"
                 >
                   Clear
                 </button>
@@ -371,7 +365,7 @@ const SalesTrackerReviewProfits: React.FC<SalesTrackerReviewProfitsProps> = ({ u
         <button
           type="button"
           onClick={handleExport}
-          className="btn btn-primary text-black bg-white border-black hover:bg-textGradStart hover:border-black w-full md:w-1/3 mx-auto transition duration-200 flex justify-center"
+          className="btn text-white bg-houseBlue hover:bg-houseHoverBlue w-full md:w-1/3 mx-auto transition duration-200 flex justify-center"
         >
           Export Data
         </button>

@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
-import { database, ref, get } from "../../api/auth-firebase/firebaseConfig";
 import LayoutSubscriptionWrapper from "./LayoutSubscriptionWrapper";
 import PlansSubscribeNow from "./PlansSubscribeNow";
 import PlansCardPriceStat from "./PlansCardPriceStat";
@@ -9,6 +8,7 @@ import ManageMembershipsButton from "./PlansManageMembershipButton";
 import OnboardingJoinButton from "./OnboardingJoinButton";
 import { Lato } from "next/font/google";
 import { useSession } from "next-auth/react";
+import { database, ref, get } from "../../api/auth-firebase/firebaseConfig";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 
@@ -65,14 +65,11 @@ const PlansCard: React.FC<PlansCardProps> = ({
           const snapshot = await get(userRef);
           const userData = snapshot.val();
           const userCurrency = (userData?.currency || 'GBP') as keyof typeof currencySymbols;
-          console.log("User's preferred currency from Firebase:", userCurrency);
           setCurrency(userCurrency);
           setCurrencySymbol(currencySymbols[userCurrency]);
         } catch (error) {
           console.error('Error loading user currency from Firebase:', error);
         }
-      } else {
-        console.log("No session or user data found.");
       }
     };
 
@@ -85,11 +82,9 @@ const PlansCard: React.FC<PlansCardProps> = ({
     setSelectedPlan(index);
   };
 
-  const convertedPrices = prices.map(price => {
-    const convertedPrice = Number((price * currencyConversionRates[currency]).toFixed(2));
-    console.log(`Converted price for currency ${currency}:`, convertedPrice);
-    return convertedPrice;
-  });
+  const convertedPrices = prices.map(price =>
+    Number((price * currencyConversionRates[currency]).toFixed(2))
+  );
 
   const selectedPriceId = selectedPlan === 0 ? priceIds.monthly : priceIds.yearly;
 

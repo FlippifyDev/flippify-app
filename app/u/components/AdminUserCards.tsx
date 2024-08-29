@@ -95,11 +95,6 @@ const PlansCardAdmin: React.FC<CardProps> = ({ username, email, stripeCustomerId
     
 
     <div className="card bg-base-100 w-96 shadow-xl">
-    <figure>
-      <img
-        src={ avatarUrl }
-        alt="Shoes" />
-    </figure>
     <div className="card-body">
       <h2 className="card-title">{ username }</h2>
       <p> {email }</p>
@@ -146,7 +141,7 @@ const PlansCardAdmin: React.FC<CardProps> = ({ username, email, stripeCustomerId
             value={newEmail}
             onChange={handleEmailChange}
           />
-          <button className="btn btn-primary mt-2" onClick={handleUpdate}>Update</button>
+          <button className="btn bg-houseBlue text-white hover:bg-houseHoverBlue mt-2" onClick={handleUpdate}>Update</button>
           {success && <p className="text-green-500 mt-2">{success}</p>}
           {error && <p className="text-red-500 mt-2">{error}</p>}
         </div>

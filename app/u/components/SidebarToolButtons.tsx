@@ -46,7 +46,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({ showAlert }) =>
 
       <LayoutSubscriptionWrapper requiredSubscriptions={['admin']}>
         <SidebarButton
-          text="🍆🍑 whore 🍆🍑"
+          text="🍆🍑 alphas only 🍆🍑"
           redirect="admin"
           symbol={<GiPointySword className="text-md" />}
         />

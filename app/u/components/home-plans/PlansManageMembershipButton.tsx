@@ -5,12 +5,13 @@ import createBillingPortalUrl from '@/app/api/stripe-handlers/create-billing-por
 import React, { useEffect, useState, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 
-interface CustomUser {
-  name: string;
-  customerId?: string;
+
+interface Props {
+  specialPlan?: boolean
 }
 
-const ManageMembershipsButton = () => {
+
+const ManageMembershipsButton: React.FC<Props> = ({ specialPlan }) => {
   const { data: session } = useSession();
   const [billingUrl, setBillingUrl] = useState<string | null>(null);
   const customerIdRef = useRef<string | null>(null);
@@ -18,7 +19,7 @@ const ManageMembershipsButton = () => {
   useEffect(() => {
     const fetchBillingUrl = async () => {
       if (session?.user) {
-        const user = session.user as CustomUser;
+        const user = session.user;
         customerIdRef.current = user.customerId || null;
 
         if (customerIdRef.current) {
@@ -42,14 +43,18 @@ const ManageMembershipsButton = () => {
     }
   };
 
+  const btnClass = specialPlan !== true ? 'btn border-0 bg-gray-200 hover:bg-gray-300 text-gray-500 w-2/3 mx-auto rounded-md': 'btn border-0 bg-white hover:bg-gray-200 text-black w-2/3 mx-auto rounded-sm'
+
   return (
-    <button
-      className="btn border-0 bg-houseBlue hover:bg-houseHoverBlue text-white w-2/3 mx-auto"
-      onClick={handleBillingPortalButtonClick}
-      disabled={!billingUrl}
-    >
-      Manage Memberships
-    </button>
+    <div className="relative group w-full flex flex-col justify-end">
+      <button
+        className={btnClass}
+        onClick={handleBillingPortalButtonClick}
+        disabled={!billingUrl}
+      >
+        View Membership
+      </button>
+    </div>
   );
 }
 

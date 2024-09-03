@@ -9,23 +9,18 @@ interface CardProps {
 }
 
 const ElectronicsCard: React.FC<CardProps> = ({ product }) => {
-  let estimatedProfit;
-  let price;
-
-  if (product.price !== null) {
-    estimatedProfit = product.rrp - product.price
-    price = "£" + product.price.toString() 
-  } else {
-    estimatedProfit = 0
-    price = "Not Found"
-  }
+  // Use the estimatedProfit directly from the product data
+  const estimatedProfit = (product.estimatedProfit ?? 0) * 0.97; // Default to 0 if not available
+  const price = product.price !== undefined ? `£${product.price.toFixed(2)}` : "Not Found";
+  const ebayMeanPrice = product.ebayMeanPrice !== undefined ? `£${product.ebayMeanPrice.toFixed(2)}` : "Not Found";
+  const ebayMaxPrice = product.ebayMaxPrice !== undefined ? `£${product.ebayMaxPrice.toFixed(2)}` : "Not Found";
 
   const profitClass = estimatedProfit > 0 ? 'text-green-500 font-semibold' : 'text-red-500 font-semibold';
   const stockAvailable = product["stock-available"] ? "In Stock" : "Out of Stock";
   const stockClass = stockAvailable === "In Stock" ? 'mt-2 p-2 text-sm text-green-500 font-semibold' : 'p-2 text-sm text-red-500 font-semibold';
 
   return (
-    <div className="grid grid-rows-10 bg-white shadow-lg rounded-lg overflow-hidden w-86 p-2 h-[28rem]">
+    <div className="grid grid-rows-10 bg-white shadow-lg rounded-lg overflow-hidden w-86 p-2 h-[32rem]">
       {/* Title Section */}
       <div className='row-span-3 grid grid-cols-12 p-2 gap-2'>
         <div className='col-span-8'>
@@ -62,12 +57,19 @@ const ElectronicsCard: React.FC<CardProps> = ({ product }) => {
                   <td>£{product.rrp}</td>
                 </tr>
                 <tr>
+                  <td>eBay Mean Price</td>
+                  <td>{ebayMeanPrice}</td>
+                </tr>
+                <tr>
+                  <td>eBay Max Price</td>
+                  <td>{ebayMaxPrice}</td>
+                </tr>
+                <tr>
                   <td>Estimated Profit</td>
                   <td className={profitClass}>£{estimatedProfit.toFixed(2)}</td>
                 </tr>
               </tbody>
             </table>
-
           </div>
         </div>
                 
@@ -75,7 +77,7 @@ const ElectronicsCard: React.FC<CardProps> = ({ product }) => {
         <div className='flex flex-row px-1 sm:px-2'>
           <div className='w-7/12 sm:w-1/2'>
             <Link 
-              href={`https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(product['product-name'])}&_sacat=0&rt=nc&LH_Sold=1&LH_Complete=1`}
+              href={`https://www.ebay.co.uk/sch/i.html?_nkw=${encodeURIComponent(product['product-name'])}&_sacat=0&rt=nc&LH_Sold=1&LH_Complete=1`}
               target='_blank'
               className="flex justify-start text-blue-600 hover:text-blue-800 font-semibold text-sm px-3 py-2.5 text-center items-center"
               >

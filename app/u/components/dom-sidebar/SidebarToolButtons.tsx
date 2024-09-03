@@ -51,7 +51,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({ showAlert }) =>
         />
       </LayoutSubscriptionWrapper>
 
-      <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', '!server']}>
+      <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', '!server', '!admin']}>
         <DisabledSideBarButton
           text="Manage Servers"
           redirect="manage-servers"
@@ -60,7 +60,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({ showAlert }) =>
         />
       </LayoutSubscriptionWrapper>
 
-      <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', '!server']}>
+      <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', '!server', '!admin']}>
         <DisabledSideBarButton
           text="Sales & Profits"
           redirect="sales-tracker"

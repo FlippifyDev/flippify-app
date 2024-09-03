@@ -4,25 +4,24 @@ import createCheckoutSession from '@/app/api/stripe-handlers/create-checkout-ses
 import React, { useEffect, useState, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 
-interface CustomUser {
-  name: string;
-  customerId?: string;
-}
 
 interface PlansSubscribeNowProps {
   priceId: string;
+  specialPlan?: boolean;
+  unavailable?: string;
 }
 
-const PlansSubscribeNow: React.FC<PlansSubscribeNowProps> = ({ priceId }) => {
+const PlansSubscribeNow: React.FC<PlansSubscribeNowProps> = ({ priceId, specialPlan, unavailable }) => {
   const { data: session } = useSession();
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
   const customerIdRef = useRef<string | null>(null);
   const usernameRef = useRef<string | null>(null);
+  const isAvailable = unavailable !== "unavailable";
 
   useEffect(() => {
     const fetchCheckoutUrl = async () => {
       if (session?.user) {
-        const user = session.user as CustomUser;
+        const user = session.user;
         customerIdRef.current = user.customerId || null;
         usernameRef.current = user.name;
 
@@ -46,19 +45,29 @@ const PlansSubscribeNow: React.FC<PlansSubscribeNowProps> = ({ priceId }) => {
   }, [session, priceId]);
 
   const handleBuyButtonClick = () => {
-    if (checkoutUrl) {
+    if (checkoutUrl && isAvailable) {
       window.open(checkoutUrl, '_blank', 'noopener,noreferrer');
     }
   };
 
+  const btnClassColours = specialPlan !== true ? 'btn border-0 bg-gray-200 hover:bg-gray-300 text-gray-500 w-2/3 mx-auto rounded-md': 'btn border-0 bg-white hover:bg-gray-200 text-black w-2/3 mx-auto rounded-sm';
+  const btnClass = isAvailable ? btnClassColours : `${btnClassColours} cursor-not-allowed`;
+
   return (
-    <button 
-      className="btn border-0 bg-houseBlue hover:bg-houseHoverBlue text-white w-2/3 mx-auto" 
-      onClick={handleBuyButtonClick} 
-      disabled={!checkoutUrl}
-    >
-      {checkoutUrl ? 'Subscribe Now' : 'Loading...'}
-    </button>
+    <div className="relative group w-full flex flex-col justify-end">
+      <button 
+        className={btnClass} 
+        onClick={handleBuyButtonClick} 
+        disabled={!checkoutUrl || !isAvailable}
+      >
+        {checkoutUrl && isAvailable ? 'Get Started' : 'Coming Soon'}
+      </button>
+      {!isAvailable && (
+        <div className="absolute bottom-12 mb-2 left-1/2 transform -translate-x-1/2 p-2 bg-gray-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
+          Coming Soon
+        </div>
+      )}
+    </div>
   );
 };
 

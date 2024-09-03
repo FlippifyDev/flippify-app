@@ -1,7 +1,8 @@
 import { Model } from 'mongoose';
 
-import { RetiringSet, IRetiringSet } from './retiringSetsModel';
-import { Electronics, IElectronics } from './electronicsModel';
+import { RetiringSet } from './retiringSetsModel';
+import { Electronics } from './electronicsModel';
+import { Ebay } from './ebayModel';
 
 
 
@@ -12,6 +13,7 @@ export type ModelRegistry = {
   
 // Create a model registry with the correct types
 export const modelRegistry: ModelRegistry = {
+    Ebay,
     RetiringSet,
     Electronics,
 };

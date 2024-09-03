@@ -79,7 +79,7 @@ const RetiringSetsCard: React.FC<CardProps> = ({ product }) => {
         <div className='flex flex-row px-1 sm:px-2'>
           <div className='w-7/12 sm:w-1/2'>
             <Link 
-              href={`https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(product['product-name'])}&_sacat=0&rt=nc&LH_Sold=1&LH_Complete=1`}
+              href={`https://www.ebay.co.uk/sch/i.html?_nkw=${encodeURIComponent(product['product-name'])}&_sacat=0&rt=nc&LH_Sold=1&LH_Complete=1`}
               target='_blank'
               className="flex justify-start text-blue-600 hover:text-blue-800 font-semibold text-sm px-3 py-2.5 text-center items-center"
               >

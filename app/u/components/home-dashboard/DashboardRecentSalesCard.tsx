@@ -1,6 +1,7 @@
+"use client";
+
 import { IHistoryGrid, ISale } from '../tool-sales-tracker/SalesTrackerModels';
 import { auth, database, ref, get } from '../../../api/auth-firebase/firebaseConfig';
-
 import { useAuthState } from 'react-firebase-hooks/auth';
 import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
@@ -17,6 +18,7 @@ interface DashboardRecentSalesCardProps {
 }
 
 const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ customerId }) => {
+  const maxPreviousSales = 5;
   const [user] = useAuthState(auth);
   const { data: session } = useSession();
   const [sales, setSales] = useState<IHistoryGrid[]>([]);
@@ -68,7 +70,6 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ cus
               const totalCosts = totalPurchaseCost + totalPlatformFees + shippingCost;
               const estimatedProfit = totalSaleRevenue - totalCosts;
 
-              // Parse the sale date
               const parsedSaleDate = parse(sale.saleDate, 'dd/MM/yyyy', new Date());
               const parsedPurchaseDate = parse(sale.purchaseDate, 'dd/MM/yyyy', new Date());
 
@@ -87,9 +88,12 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ cus
             }
           }
 
-          salesArray.sort((a, b) => new Date(b.saleDate).getTime() - new Date(a.saleDate).getTime());
+          // Sort the sales by date in descending order and take the last 5 entries
+          const recentSales = salesArray
+            .sort((a, b) => new Date(b.saleDate).getTime() - new Date(a.saleDate).getTime())
+            .slice(0, maxPreviousSales);
 
-          setSales(salesArray);
+          setSales(recentSales);
         } catch (error) {
           console.error('Error fetching data:', error);
         }
@@ -100,7 +104,7 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ cus
   }, [user, customerId]);
 
   return (
-    <div className="card bg-white shadow-md rounded-lg p-4 h-full flex flex-col">
+    <div className="card bg-white shadow-sm rounded-lg p-4 h-full flex flex-col border">
       <h2 className="card-title text-lightModeText text-xl font-semibold">
         Recent Sales Activity
       </h2>
@@ -108,26 +112,26 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ cus
         <table className="table w-full">
           <thead>
             <tr className="text-lightModeText">
-              <th>Date</th>
-              <th>Product Name</th>
-              <th>Purchase Platform</th>
-              <th>Sale Price</th>
-              <th>Quantity Sold</th>
-              <th>Total Costs</th>
-              <th>Profit</th>
+              <th colSpan={2}>Date</th>
+              <th colSpan={4}>Product Name</th>
+              <th colSpan={2}>Purchase Platform</th>
+              <th colSpan={1}>Sale Price</th>
+              <th colSpan={1}>Quantity Sold</th>
+              <th colSpan={1}>Total Costs</th>
+              <th colSpan={1}>Profit</th>
             </tr>
           </thead>
           <tbody>
             {sales.length > 0 ? (
               sales.map((sale, index) => (
                 <tr key={index}>
-                  <td>{sale.saleDate}</td>
-                  <td>{sale.itemName}</td>
-                  <td>{sale.purchasePlatform}</td>
-                  <td>{currencySymbol}{sale.salePrice.toFixed(2)}</td>
-                  <td>{sale.quantitySold}</td>
-                  <td>{currencySymbol}{sale.totalCosts.toFixed(2)}</td>
-                  <td>{currencySymbol}{sale.estimatedProfit.toFixed(2)}</td>
+                  <td colSpan={2}>{sale.saleDate}</td>
+                  <td colSpan={4}>{sale.itemName}</td>
+                  <td colSpan={2}>{sale.purchasePlatform}</td>
+                  <td colSpan={1}>{currencySymbol}{sale.salePrice.toFixed(2)}</td>
+                  <td colSpan={1}>{sale.quantitySold}</td>
+                  <td colSpan={1}>{currencySymbol}{sale.totalCosts.toFixed(2)}</td>
+                  <td colSpan={1}>{currencySymbol}{sale.estimatedProfit.toFixed(2)}</td>
                 </tr>
               ))
             ) : (

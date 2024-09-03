@@ -33,7 +33,7 @@ const Sidebar = () => {
       <div className="drawer drawer-mobile xl:drawer-open">
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
         <div className="drawer-side shadow-lg">
-          <ul className="menu bg-white text-base-content h-full w-80 px-4 flex flex-col justify-between border-r border-gray-200">
+          <ul className="menu bg-white text-base-content min-h-full w-80 px-4 flex flex-col justify-between border-r border-gray-200">
             <div className="flex flex-col">
               <section>
                 <div className="mb-2">

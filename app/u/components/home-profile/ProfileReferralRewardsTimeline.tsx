@@ -23,9 +23,6 @@ const ReferralRewardsTimeline: React.FC<ReferralRewardsTimelineProps> = ({
     { id: 1, leftOption: "£5 Cash Reward", rightOption: "25% Off Next Month" },
     { id: 2, leftOption: "£10 Cash Reward", rightOption: "50% Off Next Month" },
     { id: 3, leftOption: "£15 Cash Reward", rightOption: "One Free Month" },
-    { id: 4, leftOption: "£15 Cash Reward", rightOption: "One Free Month" },
-    { id: 5, leftOption: "£15 Cash Reward", rightOption: "One Free Month" },
-    // Add more rewards as needed
   ];
 
   const totalPages = Math.ceil(rewards.length / rewardsPerPage);

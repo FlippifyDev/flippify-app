@@ -1,4 +1,4 @@
-import mongoose, { Document, Model, Schema, Types } from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 
 
 interface IElectronics extends Document {
@@ -15,6 +15,9 @@ interface IElectronics extends Document {
     timestamp: Date;
     device: string;
     'provider-product': boolean;
+    estimatedProfit?: number;
+    ebayMeanPrice?: number;
+    ebayMaxPrice?: number;
 }
 
 const electronicsSchema = new Schema<IElectronics>({
@@ -30,7 +33,7 @@ const electronicsSchema = new Schema<IElectronics>({
     type: { type: String, required: true },
     timestamp: { type: Date, required: true },
     device: { type: String, required: true },
-    'provider-product': { type: Boolean, required: true },
+    'provider-product': { type: Boolean, required: true }
 });
 
 

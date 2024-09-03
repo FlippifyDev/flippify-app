@@ -161,7 +161,7 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
   }[selectedRange] || 'period';
 
   return (
-    <div className="w-full bg-white rounded-lg shadow-md dark:bg-gray-800 p-4 md:p-6">
+    <div className="w-full bg-white rounded-lg shadow-sm dark:bg-gray-800 p-4 md:p-6 border">
       <div className="flex justify-between">
         <div>
           <h5 className="leading-none text-3xl font-bold text-gray-900 dark:text-white">

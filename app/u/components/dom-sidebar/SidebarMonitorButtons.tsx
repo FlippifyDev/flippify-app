@@ -1,12 +1,13 @@
 'use client';
 
-import SidebarButtonDisabled from './SidebarButtonDisabled';
+import DisabledSideBarButton from './SidebarButtonDisabled';
 import LayoutSubscriptionWrapper from '../layout/LayoutSubscriptionWrapper';
 import SidebarButton from './SidebarButton';
 
 import React from 'react';
 import { PiLegoFill } from "react-icons/pi";
 import { FaLaptop } from "react-icons/fa";
+import { FaParachuteBox } from "react-icons/fa6";
 
 
 interface SidebaMonitorButtonsProps {
@@ -26,7 +27,7 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({ showAlert 
       </LayoutSubscriptionWrapper>
 
       <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', '!electronics', '!admin']}>
-        <SidebarButtonDisabled
+        <DisabledSideBarButton
           text="Electronics"
           redirect="monitor-electronics"
           symbol={<FaLaptop className="text-md" />}
@@ -44,13 +45,15 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({ showAlert 
       </LayoutSubscriptionWrapper>
 
       <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', '!retiring sets', '!admin']}>
-        <SidebarButtonDisabled
+        <DisabledSideBarButton
           text="Retiring Sets"
           redirect="monitor-retiring-sets"
           symbol={<PiLegoFill className="text-md" />}
           showAlert={showAlert}
         />
       </LayoutSubscriptionWrapper>
+
+      <DisabledSideBarButton text="Deal Watch" redirect='deal-watch' symbol={<FaParachuteBox className="text-lg" />} tooltip="Coming Soon"/>
     </div>
   );
 };

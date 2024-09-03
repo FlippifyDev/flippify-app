@@ -19,7 +19,6 @@ interface PricingCardProps {
     title: string;
     price: number;
     description: string;
-    priceIds: { monthly: string; yearly: string };
     whatsIncludedComponent: any;
     labelText: string;
     badgeColor: BadgeColor;
@@ -29,7 +28,6 @@ const ServerPricingCard: React.FC<PricingCardProps> = ({
     title,
     price,
     description,
-    priceIds,
     whatsIncludedComponent,
     labelText,
     badgeColor,
@@ -41,12 +39,6 @@ const ServerPricingCard: React.FC<PricingCardProps> = ({
     setSelectedPlan(index);
   };
 
-  const handleCurrencyToggle = () => {
-    setCurrency((prevCurrency) => (prevCurrency === "GBP" ? "USD" : "GBP"));
-  };
-
-  const convertedPrice = currency === "USD" ? price * 1.28 : price;
-  const currencySymbol = currency === "GBP" ? "£" : "$";
 
   const badgeClassName = `text-white ${badgeColorClasses[badgeColor]}`;
 
@@ -67,32 +59,15 @@ const ServerPricingCard: React.FC<PricingCardProps> = ({
           <p className="text-white text-sm lg:text-base mb-4 flex justify-center text-center">
             {description}
           </p>
-          <div
-            className="flex items-center justify-center gap-2 mb-4"
-            style={{ userSelect: "none" }} // Prevent text selection
-          >
-            <span className="label-text text-white">GBP</span>
-            <input
-              type="checkbox"
-              className="toggle theme-controller text-white"
-              onChange={handleCurrencyToggle}
-              checked={currency === "USD"}
-              style={{ 
-                userSelect: "none", // Prevent text selection on toggle
-                outline: "none", // Remove focus outline
-                WebkitTapHighlightColor: "transparent", // Remove tap highlight on mobile
-              }}
-            />
-            <span className="label-text text-white">USD</span>
-          </div>
+
           <div className="flex flex-col items-center">
             <hr className="w-full" />
             {price && (
               <ServerPricingPriceStat
-                price={convertedPrice}
+                price={price}
                 onPlanSelect={handlePlanSelect}
                 selectedPlan={selectedPlan}
-                currencySymbol={currencySymbol}
+                currencySymbol="£"
               />
             )}
             <hr className="w-full" />

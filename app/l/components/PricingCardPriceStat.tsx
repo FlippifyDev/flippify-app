@@ -20,7 +20,7 @@ const PricingCardPriceStat: React.FC<PricingCardPriceStatProps> = ({
       <div
         className={`stat col-span-1 flex flex-col items-center justify-center hover:cursor-pointer hover:bg-lightGreyHighlight hover:bg-opacity-50 transition-colors duration-200 ${
           selectedPlan === 0
-            ? "bg-lightGreyHighlight bg-opacity-50"
+            ? "bg-lightGreyHighlight bg-opacity-30"
             : "bg-lightGreyHighlight bg-opacity-0"
         }`}
         onClick={() => onPlanSelect(0)}
@@ -41,7 +41,7 @@ const PricingCardPriceStat: React.FC<PricingCardPriceStatProps> = ({
       <div
         className={`stat col-span-1 flex flex-col items-center justify-center hover:cursor-pointer hover:bg-lightGreyHighlight hover:bg-opacity-50 transition-colors duration-200 ${
           selectedPlan === 1
-            ? "bg-lightGreyHighlight bg-opacity-50"
+            ? "bg-lightGreyHighlight bg-opacity-30"
             : "bg-lightGreyHighlight bg-opacity-0"
         }`}
         onClick={() => onPlanSelect(1)}

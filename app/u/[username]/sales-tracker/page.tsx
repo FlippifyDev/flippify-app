@@ -1,6 +1,6 @@
 import React from "react";
-import UserLayout from "../../components/Layout";
-import SalesTrackerPageContent from "../../components/SalesTrackerPage";
+import Layout from "../../components/layout/Layout";
+import SalesTrackerPageContent from "../../components/tool-sales-tracker/SalesTrackerPage";
 import { EstimateProvider } from "../../../components/EstimateContext";
 import "../../../../styles/sales-and-profits.css";
 import ThemeSetter from "@/app/components/ThemeSetter";
@@ -14,11 +14,11 @@ export default function SalesTracker() {
   return (
     <>
       <ThemeSetter theme="light" />
-      <UserLayout>
+      <Layout anySubscriptions={['standard', 'admin']}>
         <EstimateProvider>
           <SalesTrackerPageContent />
         </EstimateProvider>
-      </UserLayout>
+      </Layout>
     </>
   );
 }

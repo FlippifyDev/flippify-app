@@ -1,6 +1,6 @@
 import React from 'react';
-import Layout from '../../components/Layout';
-import DashboardPage from '../../components/DashboardPage';
+import Layout from '../../components/layout/Layout';
+import DashboardPage from '../../components/home-dashboard/DashboardPage';
 import ThemeSetter from '@/app/components/ThemeSetter';
 
 export const metadata = {
@@ -12,7 +12,7 @@ export default function Dashboard() {
   return (
     <>
       <ThemeSetter theme="light" />
-      <Layout>
+      <Layout requiredSubscriptions={['']}>
         <div className="w-full h-full">
           <DashboardPage />
         </div>

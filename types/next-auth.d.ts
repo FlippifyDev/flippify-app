@@ -14,9 +14,8 @@ interface SessionUser extends NextAuthUser {
   referral?: {
     referral_code: string | null;
     referred_by: string | null;
-    referral_count: number;
     valid_referrals: string[];
-    valid_referral_count: number;
+    referral_count: number;
     rewards_claimed: number;
   };
   accessGranted?: boolean;  // New property to track access status

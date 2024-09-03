@@ -29,10 +29,16 @@ const ToolList: React.FC = () => {
       </div>
       <div className="flex flex-wrap justify-center ">
         <ProductCard
-          title="Inventory Tracking"
-          description="One of the most important aspects of reselling is keeping a consistent inventory of purchased and sold products. This allows for effective analytics, informed purchasing decisions, and streamlined operations."
+          title="Smart Deal Finder"
+          description="Discover unbeatable prices with our Smart Deal Finder! Effortlessly search through a vast database of thousands of products across multiple websites. Our tool provides real-time updates and detailed comparisons to help you find the best deals available."
           disclaimer={null}
-          image="https://i.imgur.com/mnJ56E1.jpeg"
+          image="https://i.imgur.com/LOvfMmz.png"
+        />
+        <ProductCard
+          title="Inventory Tracking"
+          description="One of the most important aspects of reselling is keeping a consistent inventory of purchased and sold products. This allows for effective analytics, informed purchasing decisions, and streamlined operations. Soon to be automated with eBay."
+          disclaimer={null}
+          image="https://i.imgur.com/OnuXuDl.png"
         />
       </div>
     </div>

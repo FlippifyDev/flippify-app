@@ -1,12 +1,9 @@
-import { AuthOptions } from 'next-auth';
 import DiscordProvider from 'next-auth/providers/discord';
+import { AuthOptions } from 'next-auth';
 import mongoose from 'mongoose';
-import { Types } from 'mongoose';
+
 import retrieveStripeCustomer from '../stripe-handlers/retrieve-customer';
 import { User, ISubscription, IReferral } from '../auth-mongodb/userModel';
-
-const mongooseLong = require('mongoose-long')(mongoose);
-const Long = Types.Long;
 
 mongoose.connect(process.env.MONGO_URL as string);
 
@@ -31,7 +28,7 @@ const authOptions: AuthOptions = {
       }
 
       if (token.id) {
-        const userFromDb = await User.findOne({ discord_id: Long.fromString(token.id as string) });
+        const userFromDb = await User.findOne({ discord_id: token.id });
         if (userFromDb) {
           token.subscriptions = userFromDb.subscriptions;
           token.accessGranted = userFromDb.subscriptions.some(sub => sub.name === 'accessGranted');
@@ -52,7 +49,7 @@ const authOptions: AuthOptions = {
         referral?: IReferral;
       };
 
-      const user = await User.findOne({ discord_id: Long.fromString(id) });
+      const user = await User.findOne({ discord_id: id });
       if (!user) {
         console.error(`User not found in database for id ${id}`);
         return session;
@@ -77,7 +74,7 @@ const authOptions: AuthOptions = {
       try {
         const { id, username, email } = profile as { id: string; username: string; email: string };
 
-        const existingUser = await User.findOne({ discord_id: Long.fromString(id) });
+        const existingUser = await User.findOne({ discord_id: id });
 
         if (!existingUser) {
           const stripeCustomer = await retrieveStripeCustomer(null, id, username, email);
@@ -86,16 +83,15 @@ const authOptions: AuthOptions = {
             return false;
           }
 
-          const discordId = Long.fromString(id);
+          const discordId = id;
           const customer_id = stripeCustomer.id;
           const subscriptions: ISubscription[] = [];
           const referral: IReferral = {
             referral_code: generateReferralCode(),
             referred_by: null,
             referral_count: 0,
-            valid_referrals: [],    // Added this field
-            valid_referral_count: 0, // Added this field
-            rewards_claimed: 0,      // Added this field
+            valid_referrals: [],    
+            rewards_claimed: 0,
           };
 
           await User.findOneAndUpdate(

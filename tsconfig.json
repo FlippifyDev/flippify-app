@@ -25,6 +25,6 @@
       }
     ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "types/bcryptjs.d.ts", "app/u/[username]/admin/page.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "types/bcryptjs.d.ts", "app/u/[username]/asldf0987asDa230fDs/page.tsx"],
   "exclude": ["node_modules"]
 }

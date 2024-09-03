@@ -7,7 +7,7 @@ import { useState, ChangeEvent } from "react";
 import React from "react";
 
 const ProductContent = () => {
-  const [activeTab, setActiveTab] = useState("bots");
+  const [activeTab, setActiveTab] = useState("monitors");
 
   const handleTabChange = (event: ChangeEvent<HTMLInputElement>) => {
     setActiveTab(event.target.value);
@@ -15,18 +15,18 @@ const ProductContent = () => {
   return (
     <div className='w-full flex flex-col items-center'>
       <div role="tablist" className="tabs tabs-bordered w-auto flex justify-center mb-4">
-        <label className={`tab ${activeTab === 'bots' ? 'tab-active text-white text-lg' : 'text-white text-lg'}`}>
+        <label className={`tab ${activeTab === 'monitors' ? 'tab-active text-white text-lg' : 'text-white text-lg'} w-28 flex items-center justify-center`}>
           <input
             type="radio"
             name="tabs"
-            value="bots"
-            checked={activeTab === 'bots'}
+            value="monitors"
+            checked={activeTab === 'monitors'}
             onChange={handleTabChange}
             className="hidden"
           />
-          Bots
+          Monitors
         </label>
-        <label className={`tab ${activeTab === 'tools' ? 'tab-active text-white text-lg' : 'text-white text-lg'}`}>
+        <label className={`tab ${activeTab === 'tools' ? 'tab-active text-white text-lg' : 'text-white text-lg'} w-28 flex items-center justify-center`}>
           <input
             type="radio"
             name="tabs"
@@ -38,8 +38,9 @@ const ProductContent = () => {
           Tools
         </label>
       </div>
+
       <div className='w-full flex justify-center'>
-        {activeTab === 'bots' && <ProductList />}
+        {activeTab === 'monitors' && <ProductList />}
         {activeTab === 'tools' && <ToolList />}
       </div>
     </div>

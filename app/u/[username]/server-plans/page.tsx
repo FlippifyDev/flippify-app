@@ -1,6 +1,6 @@
 import React from 'react';
-import UserLayout from '../../components/Layout';
-import ServerPlansPageContent from '../../components/ServerPlansPage';3
+import Layout from '../../components/layout/Layout';
+import ServerPlansPageContent from '../../components/home-server-plans/ServerPlansPage';
 import ThemeSetter from '@/app/components/ThemeSetter';
 
 export const metadata = {
@@ -12,9 +12,9 @@ export default function ServerPlans() {
   return (
     <>
       <ThemeSetter theme="light" />
-      <UserLayout>
+      <Layout requiredSubscriptions={['']}>
         <ServerPlansPageContent />
-      </UserLayout>
+      </Layout>
     </>
   );
 }

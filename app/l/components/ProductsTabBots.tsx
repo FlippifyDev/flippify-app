@@ -14,7 +14,7 @@ const ProductList: React.FC = () => {
             <p
                 className={`${lato.className} text-5xl from-textGradStart to-textGradEnd to-60% bg-gradient-to-tr bg-clip-text text-transparent py-1`}
             >
-                Bots
+                Monitors
                 <a
                 className={`${inter.className} mb-8 text-white text-5xl font-bold`}
                 >
@@ -33,7 +33,7 @@ const ProductList: React.FC = () => {
           title="Retiring Set Deals"
           description="Track soon-to-be-retired LEGO sets across various websites. Stay informed about valuable collector items before they disappear from shelves."
           disclaimer="Prices and availability may change or contain errors. Verify details on the respective websites and eBay before purchasing."
-          image="https://i.imgur.com/qVBQ6q3.png"
+          image="https://i.imgur.com/xSay8Kn.png"
         />
         <ProductsCard
           title="Deal Watch UK"

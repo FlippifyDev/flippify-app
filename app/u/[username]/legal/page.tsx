@@ -1,6 +1,6 @@
 import React from 'react';
 import LegalContent from '@/app/components/LegalContent';
-import Layout from '../../components/Layout';
+import Layout from '../../components/layout/Layout';
 import Loading from '@/app/components/Loading';
 import { Suspense } from 'react';
 import ThemeSetter from '@/app/components/ThemeSetter';
@@ -15,7 +15,7 @@ export default function Legal() {
     <>
       <ThemeSetter theme="light" />
       <Suspense fallback={<Loading />}>
-        <Layout>
+        <Layout requiredSubscriptions={['']}>
           <LegalContent />
         </Layout>
       </Suspense>

@@ -1,0 +1,92 @@
+"use client";
+
+import DisabledSideBarButton from './SidebarButtonDisabled';
+import SidebarMonitorButtons from './SidebarMonitorButtons';
+import SidebarSignOutButton from './SidebarSignOutButton';
+import SidebarToolButtons from './SidebarToolButtons';
+import SidebarButton from './SidebarButton';
+import Alert from '../../../components/Alert';
+
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { FaSearch, FaDiscord } from 'react-icons/fa';
+import { BsClipboard2Fill } from 'react-icons/bs';
+import { MdFeedback } from "react-icons/md";
+import { MdGroups } from 'react-icons/md';
+import { FaHouse } from 'react-icons/fa6';
+import { FaBook } from "react-icons/fa";
+
+const Sidebar = () => {
+  const [alertVisible, setAlertVisible] = useState(false);
+
+  const showAlert = () => {
+    setAlertVisible(true);
+  };
+
+  const hideAlert = () => {
+    setAlertVisible(false);
+  };
+
+  return (
+    <div>
+      <Alert message="Flippify Membership Required." visible={alertVisible} onClose={hideAlert} />
+      <div className="drawer drawer-mobile xl:drawer-open">
+        <input id="my-drawer" type="checkbox" className="drawer-toggle" />
+        <div className="drawer-side shadow-lg">
+          <ul className="menu bg-white text-base-content h-full w-80 px-4 flex flex-col justify-between border-r border-gray-200">
+            <div className="flex flex-col">
+              <section>
+                <div className="mb-2">
+                  <a className="text-lightModeText text-lg font-bold select-none">Home</a>
+                </div>
+                <div>
+                  <SidebarButton text="Dashboard" redirect="dashboard" symbol={<FaHouse className="text-lg" />} />
+                  <SidebarButton text="Plans" redirect="plans" symbol={<FaSearch className="text-lg" />} />
+                  <SidebarButton text="Server Plans" redirect="server-plans" symbol={<MdGroups className="text-2xl" />} />
+                  <DisabledSideBarButton text="Courses" redirect='courses' symbol={<FaBook className="text-lg" />} tooltip="Coming Soon"/>
+                  <Link
+                    href="https://discord.gg/gNPYfe7YFm"
+                    className="hover:bg-gray-100 active:bg-gray-300 text-lightModeText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transition duration-200"
+                    target="_blank"
+                  >
+                    <span className="col-span-2 text-lg"><FaDiscord /></span>
+                    <span className="col-span-10 text-base">Discord</span>
+                  </Link>
+                </div>
+              </section>
+
+              <section className="mt-6 md:mt-10">
+                <div className="mb-2">
+                  <a className="text-lightModeText text-lg font-bold select-none">Monitors</a>
+                </div>
+                <SidebarMonitorButtons showAlert={showAlert} />
+              </section>
+
+              <section className="mt-6 md:mt-10">
+                <div className="mb-2">
+                  <a className="text-lightModeText text-lg font-bold select-none">Tools</a>
+                </div>
+                <SidebarToolButtons showAlert={showAlert} />
+              </section>
+            </div>
+
+            <section className="mt-10 flex flex-col">
+              <Link
+                href="https://discord.com/channels/1236428617962229830/1236439119123447892"
+                className="hover:bg-gray-100 active:bg-gray-300 text-lightModeText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transition duration-200"
+                target="_blank"
+              >
+                <span className="col-span-2 text-lg"><MdFeedback /></span>
+                <span className="col-span-10 text-base">Feedback</span>
+              </Link>
+              <SidebarButton text="Legal" redirect="legal" symbol={<BsClipboard2Fill className="text-lg" />} />
+              <SidebarSignOutButton />
+            </section>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Sidebar;

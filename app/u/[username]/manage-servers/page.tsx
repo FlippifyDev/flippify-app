@@ -1,6 +1,6 @@
 import React from 'react';
-import UserLayout from '../../components/Layout';
-import ManageServersPage from '../../components/ManageServersPage';
+import Layout from '../../components/layout/Layout';
+import ManageServersPage from '../../components/tool-manage-servers/ManageServersPage';
 import ThemeSetter from '@/app/components/ThemeSetter';
 
 export const metadata = {
@@ -12,9 +12,9 @@ export default function ManageServers() {
   return (
     <>
       <ThemeSetter theme="light" />
-      <UserLayout>
+      <Layout anySubscriptions={['server', 'admin']}>
         <ManageServersPage />
-      </UserLayout>
+      </Layout>
     </>
   );
 }

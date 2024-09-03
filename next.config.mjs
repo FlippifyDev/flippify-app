@@ -56,6 +56,66 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'images.ctfassets.net',
         port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'media.4rgos.it',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'johnlewis.scene7.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'm.media-amazon.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'static.thcdn.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.hamleys.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'media.steelseriescdn.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'rog.asus.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.dell.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'media.currys.biz', 
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'static2-ecemea.acer.com', 
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.shopify.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'dlcdnwebimgs.asus.com',
+        port: '',
       }
     ],
   },

@@ -6,7 +6,11 @@ import React, { useState } from 'react';
 import { useSession } from "next-auth/react";
 
 
-const ManagerServersSelectionList = () => {
+interface MyComponentProps {
+    className?: string;
+  }
+
+const ManagerServersSelectionList: React.FC<MyComponentProps> = () => {
     const { data: session } = useSession();
     const [selectedSubscription, setSelectedSubscription] = useState<string | null>(null);
     const [selectedRegion, setSelectedRegion] = useState<string | null>(null);

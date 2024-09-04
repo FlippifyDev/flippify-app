@@ -1,3 +1,5 @@
+"use client"
+
 import React, { Suspense } from "react";
 import LayoutSubscriptionWrapper from "./LayoutSubscriptionWrapper";
 import LayoutLoadingSkeleton from "./LayoutLoadingSkeleton";
@@ -19,13 +21,13 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
           <Sidebar />
         </div>
 
-        <div className="flex flex-col xl:ml-80 w-full">
+        <div className="flex flex-col xl:ml-72 2xl:ml-80 w-full">
           <div className="fixed top-0 right-0 z-40">
             <Navbar />
           </div>
 
           {/* Wrap only the children content in Suspense */}
-          <div className="scroll-smooth mt-16 pt-5 px-2 xl:mr-80 flex justify-center">
+          <div className="scroll-smooth mt-16 pt-5 px-2 xl:mr-72 2xl:mr-80 flex justify-center">
             <Suspense fallback={<LayoutLoadingSkeleton />}>
               {children}
             </Suspense>
@@ -36,33 +38,43 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+
 const Layout: React.FC<LayoutProps> = ({ children, requiredSubscriptions, anySubscriptions }) => {
-  // The follow negates the required and any subscription so if the user has none of the subscriptions then the LayoutNoAccess is displayed.
+  // The following negates the required and any subscription so if the user has none of the subscriptions, then the LayoutNoAccess is displayed.
   let notRequiredSubscriptions: string[] = [];
   let notAnySubscriptions: string[] = [];
 
-  if (requiredSubscriptions !== undefined) {
-    requiredSubscriptions.forEach(sub => {
-      notRequiredSubscriptions.push(`!${sub}`)
-    })
+  if (requiredSubscriptions) {
+    if (requiredSubscriptions[0] === "") {
+      notRequiredSubscriptions = ["no access"]
+    } else {
+      requiredSubscriptions.forEach(sub => {
+        notRequiredSubscriptions.push(`!${sub}`);
+      });
+    }
   }
 
-  if (anySubscriptions !== undefined) {
-    anySubscriptions.forEach(sub => {
-      notAnySubscriptions.push(`!${sub}`)
-    })
+  if (anySubscriptions) {
+    if (anySubscriptions[0] === "") {
+      notAnySubscriptions = ["no access"]
+    } else {
+      anySubscriptions.forEach(sub => {
+        notAnySubscriptions.push(`!${sub}`);
+      });
+    }
   }
+
 
   return (
     <>
-      {/* User does not have required subscription and is not an admin. Block Access */}
-      <LayoutSubscriptionWrapper requiredSubscriptions={notRequiredSubscriptions} anySubscriptions={notAnySubscriptions}>
+      {/* Check if the user does NOT have access, and display the LayoutNoAccess if true */}
+      <LayoutSubscriptionWrapper requiredSubscriptions={notRequiredSubscriptions}>
         <LayoutContent>
           <LayoutNoAccess />
         </LayoutContent>
       </LayoutSubscriptionWrapper>
 
-      {/* User has the required subscription and is not an admin. Allow Access */}
+      {/* Render the actual content if the user has the required subscriptions */}
       <LayoutSubscriptionWrapper requiredSubscriptions={requiredSubscriptions} anySubscriptions={anySubscriptions}>
         <LayoutContent>{children}</LayoutContent>
       </LayoutSubscriptionWrapper>

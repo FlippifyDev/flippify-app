@@ -18,22 +18,7 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({ showAlert 
   return (
     <div>
       {/* Electronics */}
-      <LayoutSubscriptionWrapper anySubscriptions={['standard', 'electronics', 'admin']}>
-        <SidebarButton
-          text="Electronics"
-          redirect="monitor-electronics"
-          symbol={<FaLaptop className="text-md" />}
-        />
-      </LayoutSubscriptionWrapper>
-
-      <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', '!electronics', '!admin']}>
-        <DisabledSideBarButton
-          text="Electronics"
-          redirect="monitor-electronics"
-          symbol={<FaLaptop className="text-md" />}
-          showAlert={showAlert}
-        />
-      </LayoutSubscriptionWrapper>
+      <DisabledSideBarButton text="Electronics" redirect='monitor-electronics' symbol={<FaLaptop className="text-lg" />} tooltip="Coming Soon To Website"/>
 
       {/* Retiring Sets Deals */}
       <LayoutSubscriptionWrapper anySubscriptions={['standard', 'retiring sets', 'admin']}>
@@ -53,7 +38,7 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({ showAlert 
         />
       </LayoutSubscriptionWrapper>
 
-      <DisabledSideBarButton text="Deal Watch" redirect='deal-watch' symbol={<FaParachuteBox className="text-lg" />} tooltip="Coming Soon"/>
+      <DisabledSideBarButton text="Deal Watch" redirect='monitor-deal-watch' symbol={<FaParachuteBox className="text-lg" />} tooltip="Coming Soon To Website"/>
     </div>
   );
 };

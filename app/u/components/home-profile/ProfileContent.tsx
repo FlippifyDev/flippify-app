@@ -6,7 +6,7 @@ import ProfileEbayConnect from './ProfileEbayConnect';
 
 const ProfileContent = () => {
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="border flex flex-col w-full h-full">
       <div className="w-full mb-4">
         <ProfileOverview />
       </div>

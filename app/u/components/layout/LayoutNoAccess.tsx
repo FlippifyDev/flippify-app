@@ -18,7 +18,7 @@ const LayoutNoAccess = () => {
   return (
     <div className="mt-10">
         <div className="flex flex-col text-center">
-            <h1 className="text-4xl font-bold mb-4">No Access</h1>
+            <h1 className="text-4xl font-bold mb-4">Permission Denied</h1>
             <p className="text-lg">You do not have the required permissions to access this page.</p>
             <p className="text-lg">You will be redirect back to the dashboard shortly.</p>
         </div>

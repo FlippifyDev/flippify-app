@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import LayoutSubscriptionWrapper from "../layout/LayoutSubscriptionWrapper";
 import PlansSubscribeNow from "../home-plans/PlansSubscribeNow";
+import PlansGetAccessButton from "../home-plans/PlansGetAccessButton";
 import ManageMembershipsButton from "../home-plans/PlansManageMembershipButton";
 import OnboardingJoinButton from "../home-dashboard/OnboardingJoinButton";
 import { useSession } from "next-auth/react";
@@ -101,10 +102,10 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
             {prices.length > 0 && (
               <div className="h-full w-full flex">
                 <LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
-                  <OnboardingJoinButton text="Get Access" redirect="dashboard"/>
+                  <PlansGetAccessButton specialPlan={specialPlan} redirect="dashboard"/>
                 </LayoutSubscriptionWrapper>
                 <LayoutSubscriptionWrapper requiredSubscriptions={["accessGranted", `!${requiredSubscription}`]}>
-                  <PlansSubscribeNow priceId={selectedPriceId} specialPlan={specialPlan} unavailable={description} />
+                  <PlansSubscribeNow priceId={selectedPriceId} specialPlan={specialPlan} unavailable={description} serverPlan={true} />
                 </LayoutSubscriptionWrapper>
                 <LayoutSubscriptionWrapper requiredSubscriptions={[requiredSubscription]}>
                   <ManageMembershipsButton specialPlan={specialPlan} />

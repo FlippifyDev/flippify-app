@@ -87,19 +87,24 @@ const NavbarProfileAvatar = () => {
         tabIndex={0}
         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
       >
-        <li>
-          <a onClick={handleProfileOpen}>
-            Profile
-          </a>
-        </li>
-        <li>
-          <a onClick={handleBillingPortalButtonClick}>
-            Billing Portal
-          </a>
-        </li>
-        <li>
-          <a className="hover:bg-red-600 hover:text-white" onClick={handleSignOut}>Sign Out</a>
-        </li>
+        <button 
+          className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200' 
+          onClick={handleProfileOpen}>
+          <span 
+            className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Profile</span>
+        </button>
+        <button 
+          className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200' 
+          onClick={handleBillingPortalButtonClick}>
+          <span 
+            className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Billing Portal</span>
+        </button>
+        <button 
+          className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-red-600 hover:text-white active:bg-red-700 transform transition duration-200' 
+          onClick={handleSignOut}>
+          <span 
+            className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Sign Out</span>
+        </button>
       </ul>
     </div>
   );

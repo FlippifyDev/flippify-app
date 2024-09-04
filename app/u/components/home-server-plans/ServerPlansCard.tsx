@@ -5,7 +5,6 @@ import LayoutSubscriptionWrapper from "../layout/LayoutSubscriptionWrapper";
 import PlansSubscribeNow from "../home-plans/PlansSubscribeNow";
 import PlansGetAccessButton from "../home-plans/PlansGetAccessButton";
 import ManageMembershipsButton from "../home-plans/PlansManageMembershipButton";
-import OnboardingJoinButton from "../home-dashboard/OnboardingJoinButton";
 import { useSession } from "next-auth/react";
 import { database, ref, get } from "../../../api/auth-firebase/firebaseConfig";
 
@@ -102,7 +101,7 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
             {prices.length > 0 && (
               <div className="h-full w-full flex">
                 <LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
-                  <PlansGetAccessButton specialPlan={specialPlan} redirect="dashboard"/>
+                  <PlansGetAccessButton specialPlan={specialPlan} redirect="dashboard" unavailable={description}/>
                 </LayoutSubscriptionWrapper>
                 <LayoutSubscriptionWrapper requiredSubscriptions={["accessGranted", `!${requiredSubscription}`]}>
                   <PlansSubscribeNow priceId={selectedPriceId} specialPlan={specialPlan} unavailable={description} serverPlan={true} />

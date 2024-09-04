@@ -34,14 +34,15 @@ const DisabledSideBarButton: React.FC<DisabledSideBarButtonProps> = ({ text, red
         `}
         onClick={handleButtonClick}
       >
-        {tooltip && (
-          <div className="absolute bottom-full mb-2 right-0 p-2 bg-gray-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
-            {tooltip}
-          </div>
-        )}
         <span className={`col-span-2 text-lg ${isActive ? 'text-white' : ''}`}>{symbol}</span>
         <span className="col-span-10 text-base text-left">{text}</span>
       </button>
+      
+      {tooltip && (
+        <div className="absolute bottom-full mb-2 right-0 p-2 bg-gray-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+          {tooltip}
+        </div>
+      )}
     </div>
   );
 };

@@ -8,7 +8,7 @@ export default function RetiringSets() {
   return (
     <>
       <ThemeSetter theme="light" />
-      <Layout anySubscriptions={["standard", "retiring-sets", "admin"]}>
+      <Layout anySubscriptions={["standard", "retiring sets", "admin"]} pagePath='monitor'>
         <RetiringSetsPage />
       </Layout>
     </>

@@ -11,6 +11,7 @@ interface LayoutProps {
   children: React.ReactNode;
   requiredSubscriptions?: string[];
   anySubscriptions?: string[];
+  pagePath?: string;
 }
 
 const LayoutContent = ({ children }: { children: React.ReactNode }) => {
@@ -39,7 +40,7 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
 };
 
 
-const Layout: React.FC<LayoutProps> = ({ children, requiredSubscriptions, anySubscriptions }) => {
+const Layout: React.FC<LayoutProps> = ({ children, requiredSubscriptions, anySubscriptions, pagePath }) => {
   // The following negates the required and any subscription so if the user has none of the subscriptions, then the LayoutNoAccess is displayed.
   let notRequiredSubscriptions: string[] = [];
   let notAnySubscriptions: string[] = [];
@@ -68,7 +69,7 @@ const Layout: React.FC<LayoutProps> = ({ children, requiredSubscriptions, anySub
   return (
     <>
       {/* Check if the user does NOT have access, and display the LayoutNoAccess if true */}
-      <LayoutSubscriptionWrapper requiredSubscriptions={notRequiredSubscriptions}>
+      <LayoutSubscriptionWrapper requiredSubscriptions={notRequiredSubscriptions} anySubscriptions={notAnySubscriptions} pagePath={pagePath}>
         <LayoutContent>
           <LayoutNoAccess />
         </LayoutContent>

@@ -116,7 +116,7 @@ const OnboardingFlow: React.FC = () => {
               )}
             </div>
             <button
-              className="btn btn-primary bg-houseBlue text-white hover:bg-blue-600 w-full"
+              className="btn border-0 bg-houseBlue text-white hover:bg-blue-600 w-full"
               onClick={handleNextStep}
             >
               {showReferralMessage && !referralError ? "Click again to continue" : "Next"}
@@ -156,7 +156,7 @@ const OnboardingFlow: React.FC = () => {
               </select>
             </div>
             <button
-              className="btn btn-primary bg-houseBlue text-white hover:bg-blue-600 w-full"
+              className="btn border-0 bg-houseBlue text-white hover:bg-blue-600 w-full"
               onClick={handleCompleteOnboarding}
             >
               Get Access

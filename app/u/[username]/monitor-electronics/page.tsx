@@ -8,7 +8,7 @@ export default function RetiringSets() {
   return (
     <>
       <ThemeSetter theme="light" />
-      <Layout anySubscriptions={["standard", "electronics", "admin"]}>
+      <Layout requiredSubscriptions={["admin"]}>
         <ElectronicsPage />
       </Layout>
     </>

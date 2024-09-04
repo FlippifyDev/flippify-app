@@ -57,8 +57,8 @@ const PlansSubscribeNow: React.FC<PlansSubscribeNowProps> = ({ priceId, specialP
 
   const btnClassColours = specialPlan !== true ? 'btn border-0 bg-gray-200 hover:bg-gray-300 text-gray-500 w-2/3 mx-auto rounded-md': 'btn border-0 bg-white hover:bg-gray-200 text-black w-2/3 mx-auto rounded-sm';
   const btnClass = isAvailable ? btnClassColours : `${btnClassColours} cursor-not-allowed`;
-  const btnFunction = serverPlan !== true ? handleBuyButtonClick: handleContactUsClick
-  const btnText = serverPlan !== true ? 'Get Started': 'Contact Us'
+  const btnFunction = serverPlan !== true ? handleBuyButtonClick: handleContactUsClick;
+  const btnText = serverPlan !== true ? 'Get Started': 'Contact Us';
 
   return (
     <div className="relative group w-full flex flex-col justify-end">

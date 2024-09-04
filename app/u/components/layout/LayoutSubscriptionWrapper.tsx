@@ -9,6 +9,7 @@ interface LayoutSubscriptionWrapperProps {
     anySubscriptions?: string[];
     children: ReactNode;
     redirectPath?: string;
+    pagePath?: string;
 }
 
 export interface Subscription {
@@ -20,9 +21,11 @@ const LayoutSubscriptionWrapper: React.FC<LayoutSubscriptionWrapperProps> = ({
     anySubscriptions = [],
     children,
     redirectPath,
+    pagePath
 }) => {
     const { data: session } = useSession();
     const router = useRouter();
+    
 
     useEffect(() => {
         if (!session || !session.user) {

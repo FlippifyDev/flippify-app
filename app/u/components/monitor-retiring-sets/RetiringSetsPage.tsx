@@ -33,8 +33,8 @@ export default function RetiringSetsPage() {
         return products
             .sort((a, b) => {
                 // Check if stock is available
-                const inStockA = a["stock-available"];
-                const inStockB = b["stock-available"];
+                const inStockA = a.stock_available;
+                const inStockB = b.stock_available;
 
                 if (inStockA && !inStockB) return -1; // In-stock products come first
                 if (!inStockA && inStockB) return 1;  // Out-of-stock products come last
@@ -83,7 +83,7 @@ export default function RetiringSetsPage() {
         if (searchQueryToSubmit.trim() !== '') {
             const lowercasedQuery = searchQueryToSubmit.toLowerCase();
             filtered = products.filter(product => {
-                const productName = product['product-name']?.toLowerCase() || '';
+                const productName = product.product_name?.toLowerCase() || '';
                 const website = product.website?.toLowerCase() || '';
                 const sku = product.sku?.toLowerCase() || '';
                 const region = product.region?.toLowerCase() || '';

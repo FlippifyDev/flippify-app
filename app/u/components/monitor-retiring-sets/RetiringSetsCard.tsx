@@ -21,7 +21,7 @@ const RetiringSetsCard: React.FC<CardProps> = ({ product }) => {
   }
 
   const profitClass = estimatedProfit > 0 ? 'text-green-500 font-semibold' : 'text-red-500 font-semibold';
-  const stockAvailable = product["stock-available"] ? "In Stock" : "Out of Stock";
+  const stockAvailable = product.stock_available ? "In Stock" : "Out of Stock";
   const stockClass = stockAvailable === "In Stock" ? 'mt-2 p-2 text-sm text-green-500 font-semibold' : 'p-2 text-sm text-red-500 font-semibold';
 
   return (
@@ -30,12 +30,12 @@ const RetiringSetsCard: React.FC<CardProps> = ({ product }) => {
       <div className='row-span-3 grid grid-cols-12 p-2 gap-2'>
         <div className='col-span-8'>
           <h5 className='text-sm mb-2'>{product.website} {product.region.toUpperCase()}</h5>
-          <h2 className='text-lg font-semibold'>{product['product-name']}</h2>
+          <h2 className='text-lg font-semibold'>{product.product_name}</h2>
           
         </div>
         <div tabIndex={0} role="button" className="flex items-start avatar col-span-4">
           <div className="w-24 rounded-lg border-2">
-            <Image src={product.image} alt={product['product-name']} width={500} height={500}/>
+            <Image src={product.image} alt={product.product_name} width={500} height={500}/>
           </div>
         </div>
       </div>
@@ -63,7 +63,7 @@ const RetiringSetsCard: React.FC<CardProps> = ({ product }) => {
                 </tr>
                 <tr>
                   <td>Retirement Date</td>
-                  <td>{product['retirement-date']}</td>
+                  <td>{product.retirement_date}</td>
                 </tr>
                 <tr>
                   <td>Estimated Profit</td>
@@ -79,7 +79,7 @@ const RetiringSetsCard: React.FC<CardProps> = ({ product }) => {
         <div className='flex flex-row px-1 sm:px-2'>
           <div className='w-7/12 sm:w-1/2'>
             <Link 
-              href={`https://www.ebay.co.uk/sch/i.html?_nkw=${encodeURIComponent(product['product-name'])}&_sacat=0&rt=nc&LH_Sold=1&LH_Complete=1`}
+              href={`https://www.ebay.co.uk/sch/i.html?_nkw=${encodeURIComponent(product.product_name)}&_sacat=0&rt=nc&LH_Sold=1&LH_Complete=1`}
               target='_blank'
               className="flex justify-start text-blue-600 hover:text-blue-800 font-semibold text-sm px-3 py-2.5 text-center items-center"
               >

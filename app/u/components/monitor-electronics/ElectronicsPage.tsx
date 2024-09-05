@@ -29,14 +29,14 @@ export default function ElectronicsPage() {
 
       const updatedProducts = allProducts.map(product => {
         const matchingEbayProduct = ebayProducts.find(ebayProduct =>
-          ebayProduct['product-name'].toLowerCase() === product['product-name'].toLowerCase() &&
+          ebayProduct.product_name.toLowerCase() === product.product_name.toLowerCase() &&
           ebayProduct['region'].toLowerCase() === product['region'].toLowerCase()
         );
 
         if (matchingEbayProduct) {
-            product.estimatedProfit = matchingEbayProduct['mean-price'] - (product.price || 0);
-            product.ebayMeanPrice = matchingEbayProduct['mean-price'];
-            product.ebayMaxPrice = matchingEbayProduct['max-price'];
+            product.estimatedProfit = matchingEbayProduct.mean_price - (product.price || 0);
+            product.ebayMeanPrice = matchingEbayProduct.mean_price;
+            product.ebayMaxPrice = matchingEbayProduct.max_price;
         } else {
             product.estimatedProfit = product.rrp - (product.price || 0);
         }
@@ -62,8 +62,8 @@ export default function ElectronicsPage() {
         if (!missingDataA && missingDataB) return -1; // Move products with missing data to the end
   
         // Check if stock is available
-        const inStockA = a["stock-available"];
-        const inStockB = b["stock-available"];
+        const inStockA = a.stock_available;
+        const inStockB = b.stock_available;
   
         if (inStockA && !inStockB) return -1; // In-stock products come first
         if (!inStockA && inStockB) return 1;  // Out-of-stock products come last
@@ -110,7 +110,7 @@ export default function ElectronicsPage() {
     if (searchQueryToSubmit.trim() !== '') {
       const lowercasedQuery = searchQueryToSubmit.toLowerCase();
       filtered = products.filter(product => {
-        const productName = product['product-name']?.toLowerCase() || '';
+        const productName = product.product_name?.toLowerCase() || '';
         const website = product.website?.toLowerCase() || '';
         const device = product.device?.toLowerCase() || '';
         const region = product.region?.toLowerCase() || '';

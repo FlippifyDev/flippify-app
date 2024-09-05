@@ -18,23 +18,14 @@ interface SidebarToolButtonsProps {
 const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({ showAlert }) => {
   return (
     <div>
-
       <DisabledSideBarButton
         text="Reseller News"
         redirect="reseller-news"
         symbol={<FaRegNewspaper className="text-md" />}
         tooltip="Coming Soon"
       />
- 
 
-      <LayoutSubscriptionWrapper anySubscriptions={['server', 'admin']}>
-        <SidebarButton
-          text="Manage Servers"
-          redirect="manage-servers"
-          symbol={<MdManageAccounts className="text-md" />}
-        />
-      </LayoutSubscriptionWrapper>
-
+      {/* Sales & Profits */}
       <LayoutSubscriptionWrapper anySubscriptions={['standard', 'admin']}>
         <SidebarButton
           text="Sales & Profits"
@@ -43,29 +34,21 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({ showAlert }) =>
         />
       </LayoutSubscriptionWrapper>
 
-      <LayoutSubscriptionWrapper requiredSubscriptions={['admin']}>
-        <SidebarButton
-          text="Admin"
-          redirect="asldf0987asDa230fDs"
-          symbol={<GiPointySword className="text-md" />}
-        />
-      </LayoutSubscriptionWrapper>
-
-      <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', '!server', '!admin']}>
-        <DisabledSideBarButton
-          text="Manage Servers"
-          redirect="manage-servers"
-          symbol={<MdManageAccounts className="text-md" />}
-          showAlert={showAlert}
-        />
-      </LayoutSubscriptionWrapper>
-
       <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', '!server', '!admin']}>
         <DisabledSideBarButton
           text="Sales & Profits"
           redirect="sales-tracker"
           symbol={<AiOutlineStock className="text-md" />}
           showAlert={showAlert}
+        />
+      </LayoutSubscriptionWrapper>
+
+      {/* Admin */}
+      <LayoutSubscriptionWrapper requiredSubscriptions={['admin']}>
+        <SidebarButton
+          text="Admin"
+          redirect="asldf0987asDa230fDs"
+          symbol={<GiPointySword className="text-md" />}
         />
       </LayoutSubscriptionWrapper>
     </div>

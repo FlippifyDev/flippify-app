@@ -3,6 +3,7 @@
 import DisabledSideBarButton from './SidebarButtonDisabled';
 import SidebarMonitorButtons from './SidebarMonitorButtons';
 import SidebarSignOutButton from './SidebarSignOutButton';
+import SidebarHomeButtons from './SidebarHomeButtons';
 import SidebarToolButtons from './SidebarToolButtons';
 import SidebarButton from './SidebarButton';
 import Alert from '../../../components/Alert';
@@ -35,36 +36,26 @@ const Sidebar = () => {
         <div className="drawer-side shadow-lg">
           <ul className="menu bg-white text-base-content min-h-full w-72 2xl:w-80 px-4 flex flex-col justify-between border-r border-gray-200">
             <div className="flex flex-col">
+              {/* Home Section */}
               <section>
                 <div className="mb-2">
-                  <a className="text-lightModeText text-lg font-bold select-none">Home</a>
+                  <p className="text-lightModeText text-lg font-bold select-none">Home</p>
                 </div>
-                <div>
-                  <SidebarButton text="Dashboard" redirect="dashboard" symbol={<FaHouse className="text-lg" />} />
-                  <SidebarButton text="Plans" redirect="plans" symbol={<FaSearch className="text-lg" />} />
-                  <SidebarButton text="Server Plans" redirect="server-plans" symbol={<MdGroups className="text-2xl" />} />
-                  <DisabledSideBarButton text="Courses" redirect='courses' symbol={<FaBook className="text-lg" />} tooltip="Coming Soon"/>
-                  <Link
-                    href="https://discord.gg/gNPYfe7YFm"
-                    className="hover:bg-gray-100 active:bg-gray-300 text-lightModeText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transition duration-200"
-                    target="_blank"
-                  >
-                    <span className="col-span-2 text-lg"><FaDiscord /></span>
-                    <span className="col-span-10 text-base">Discord</span>
-                  </Link>
-                </div>
+                <SidebarHomeButtons showAlert={showAlert}/>
               </section>
 
+              {/* Monitors Section */}
               <section className="mt-6 md:mt-10">
                 <div className="mb-2">
-                  <a className="text-lightModeText text-lg font-bold select-none">Monitors</a>
+                  <p className="text-lightModeText text-lg font-bold select-none">Monitors</p>
                 </div>
                 <SidebarMonitorButtons showAlert={showAlert} />
               </section>
-
+              
+              {/* Tools Section */}
               <section className="mt-6 md:mt-10">
                 <div className="mb-2">
-                  <a className="text-lightModeText text-lg font-bold select-none">Tools</a>
+                  <p className="text-lightModeText text-lg font-bold select-none">Tools</p>
                 </div>
                 <SidebarToolButtons showAlert={showAlert} />
               </section>

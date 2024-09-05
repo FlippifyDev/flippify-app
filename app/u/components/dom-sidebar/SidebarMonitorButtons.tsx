@@ -18,7 +18,6 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({ showAlert 
   return (
     <div>
       {/* Electronics */}
-      <SidebarButton text="Electronics" redirect='monitor-electronics' symbol={<FaLaptop className="text-lg" />}/>
       <DisabledSideBarButton text="Electronics" redirect='monitor-electronics' symbol={<FaLaptop className="text-lg" />} tooltip="Coming Soon"/>
 
       {/* Retiring Sets Deals */}

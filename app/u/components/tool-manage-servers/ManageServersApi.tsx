@@ -1,9 +1,11 @@
 import React from 'react';
 
-const Api: React.FC = () => {
+const ManageServersApi = () => {
   return (
-        <h1>The Api settings</h1>
-  );
-};
+    <div>
+      <h1>The Api settings</h1>
+    </div>
+  )
+}
 
-export default Api;
+export default ManageServersApi

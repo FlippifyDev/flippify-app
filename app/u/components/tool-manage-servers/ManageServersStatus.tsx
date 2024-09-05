@@ -1,9 +1,11 @@
-import React from 'react';
+import React from 'react'
 
-const StatusF: React.FC = () => {
+const ManageServersStatus = () => {
   return (
-        <h1>The status page, passibly using atlassain status component or similar</h1>
-  );
-};
+    <div>
+      <h1>The status page, passibly using atlassain status component or similar</h1>
+    </div>
+  )
+}
 
-export default StatusF;
+export default ManageServersStatus

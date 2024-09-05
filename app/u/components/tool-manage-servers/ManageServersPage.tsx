@@ -1,86 +1,87 @@
 "use client";
+
 import React, { useState } from "react";
+import Link from "next/link";
+
 import ManagerServersSelectionList from "./ManageServersSelectionList";
-import Docu from "./ManageServersDocs";
-import Api from "./ManageServersApi";
-import StatusF from "./ManageServersStatus";
-import Metrik from "./ManageServersMetrics";
-import Cust from "./ManageServersCust";
+import ManageServersBotsCustom from "./ManageServersBotsCustom";
+import ManageServersMetrics from "./ManageServersMetrics";
+import ManageServersStatus from "./ManageServersStatus";
+import ManageServersDocs from "./ManageServersDocs";
+import ManageServersApi from "./ManageServersApi";
 
+import DisabledLink from "./ManageServersDisabledLink";
 
-const BotCustomizations = () => <Cust />;
-const Metrics = () => <Metrik />;
-const Documentation = () => <Docu />;
-const API = () => <Api />;
-const Status = () => <StatusF />;
 
 const ManagerServersPage = () => {
-  const [activeComponent, setActiveComponent] = useState<string>("BotCustomizations");
+  const [activeComponent, setActiveComponent] = useState<string>("Monitors");
 
   const renderComponent = () => {
     switch (activeComponent) {
-      case "BotCustomizations":
-        return <BotCustomizations />;
+      case "Monitors":
+        return <ManageServersBotsCustom />;
       case "Metrics":
-        return <Metrics />;
+        return <ManageServersMetrics />;
       case "Documentation":
-        return <Documentation />;
+        return <ManageServersDocs />;
       case "API":
-        return <API />;
+        return <ManageServersApi />;
       case "Status":
-        return <Status />;
+        return <ManageServersStatus />;
       default:
         return <ManagerServersSelectionList />;
     }
   };
 
+  const tabClass = "row-span-5 md:col-span-2 text-center text-black hover:text-gray-400 transition duration-200"
+
   return (
-    <div className="w-full h-screen flex flex-col justify-start mt-5">
+    <div className="w-full h-screen flex flex-col justify-start">
       <nav className="w-full p-4 bg-white shadow">
-        <div className="container mx-auto flex justify-between items-center">
+        <div className="container flex justify-center">
           {/* Navbar Items */}
-          <div className="flex space-x-4 justify-center flex-grow">
-            <a
-              href="#randomshits"
-              className={`text-black hover:text-gray-300 ${activeComponent === "BotCustomizations" ? "font-bold" : ""}`}
-              onClick={() => setActiveComponent("BotCustomizations")}
+          <div className="grid grid-rows-3 md:grid-rows-none md:grid-cols-10 w-full">
+            <Link
+              href="#monitors"
+              className={`${tabClass} ${activeComponent === "Monitors" ? "font-bold" : ""}`}
+              onClick={() => setActiveComponent("Monitors")}
             >
-              Bot Customizations
-            </a>
-            <a
-              href="#numbershit"
-              className={`text-black hover:text-gray-300 ${activeComponent === "Metrics" ? "font-bold" : ""}`}
-              onClick={() => setActiveComponent("Metrics")}
-            >
-              Metrics
-            </a>
-            <a
-              href="#nerdystuff"
-              className={`text-black hover:text-gray-300 ${activeComponent === "Documentation" ? "font-bold" : ""}`}
-              onClick={() => setActiveComponent("Documentation")}
-            >
-              Documentation
-            </a>
-            <a
-              href="#ultra-nerdy-stuff"
-              className={`text-black hover:text-gray-300 ${activeComponent === "API" ? "font-bold" : ""}`}
-              onClick={() => setActiveComponent("API")}
-            >
-              API
-            </a>
-            <a
-              href="#status-for-when-we-fuck-up"
-              className={`text-black hover:text-gray-300 ${activeComponent === "Status" ? "font-bold" : ""}`}
-              onClick={() => setActiveComponent("Status")}
-            >
-              Status
-            </a>
+              Monitors
+            </Link>
+            <DisabledLink
+              href="#metrics"
+              text="Metrics"
+              isDisabled={true}
+              tooltip="In Development"
+              activeComponent={activeComponent}
+              setActiveComponent={setActiveComponent} />
+            <DisabledLink
+              href="#documentation"
+              text="Documentation"
+              isDisabled={true}
+              tooltip="In Development"
+              activeComponent={activeComponent}
+              setActiveComponent={setActiveComponent} />
+            <DisabledLink
+              href="#api"
+              text="API"
+              isDisabled={true}
+              tooltip="In Development"
+              activeComponent={activeComponent}
+              setActiveComponent={setActiveComponent} />        
+            <DisabledLink
+              href="#status"
+              text="Status"
+              isDisabled={true}
+              tooltip="In Development"
+              activeComponent={activeComponent}
+              setActiveComponent={setActiveComponent} />   
           </div>
         </div>
       </nav>
 
       {/* Render the selected component */}
-      <div className="p-4 flex-grow">
+      <div className="pt-4">
         {renderComponent()}
       </div>
     </div>

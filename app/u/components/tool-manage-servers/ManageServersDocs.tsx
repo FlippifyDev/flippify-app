@@ -1,12 +1,13 @@
-import React from 'react';
+import React from 'react'
 
-const Docu: React.FC = () => {
+const ManageServersDocs = () => {
   return (
-        <div>
-        <h1>The documentation</h1>
-        <p>Someone else can write this</p>
-        </div>
-  );
-};
+    <div>
+      <h1>The documentation</h1>
+      <p>Someone else can write this</p>
+    </div>
+  )
+}
 
-export default Docu;
+export default ManageServersDocs
+

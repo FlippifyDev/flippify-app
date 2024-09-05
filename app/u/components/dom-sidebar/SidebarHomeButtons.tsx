@@ -29,16 +29,8 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ showAlert }) =>
         <LayoutSubscriptionWrapper anySubscriptions={['standard', 'server', 'admin']}>
             <SidebarButton
                 text="Server Management"
-                redirect="manage-servers"
+                redirect="manage-servers#monitors"
                 symbol={<FaServer className="text-base" />}
-            />
-        </LayoutSubscriptionWrapper>
-        <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', '!server', '!admin']}>
-            <DisabledSideBarButton
-                text="Server Management"
-                redirect="manage-servers"
-                symbol={<FaServer className="text-base" />}
-                showAlert={showAlert}
             />
         </LayoutSubscriptionWrapper>
 

@@ -4,7 +4,7 @@ interface MyComponentProps {
     className?: string;
   }
   
-const Frequency: React.FC<MyComponentProps> = () => {
+const ManageServersFreq: React.FC<MyComponentProps> = () => {
   const [frequency, setFrequency] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -61,4 +61,4 @@ const Frequency: React.FC<MyComponentProps> = () => {
   );
 };
 
-export default Frequency;
+export default ManageServersFreq;

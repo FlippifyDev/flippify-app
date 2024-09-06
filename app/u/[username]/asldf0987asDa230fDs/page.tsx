@@ -1,7 +1,7 @@
 import React from 'react';
 import Layout from '../../components/layout/Layout';
 import ThemeSetter from '@/app/components/ThemeSetter';
-import AdminContent from '../../components/tools/admin/AdminContent';
+import AdminContent from '../../components/home/admin/AdminContent';
 
 export const metadata = {
   title: 'Admin - Flippify',

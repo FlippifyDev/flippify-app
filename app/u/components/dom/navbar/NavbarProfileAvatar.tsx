@@ -5,6 +5,7 @@ import Image from "next/image";
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter, usePathname } from 'next/navigation';
 import createBillingPortalUrl from '@/app/api/stripe-handlers/create-billing-portal';
+import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
 
 const NavbarProfileAvatar = () => {
   const { data: session } = useSession();
@@ -66,6 +67,16 @@ const NavbarProfileAvatar = () => {
     }
   };
 
+  const handleAdminOpen = () => {
+    if (session) {
+      if (session.user?.name) {
+        router.push(`/u/${session.user.name}/asldf0987asDa230fDs`);
+      } else {
+        router.push(`/u/loading`);
+      }
+    }
+  };
+
   return (
     <div className="dropdown dropdown-end">
       <div
@@ -93,6 +104,14 @@ const NavbarProfileAvatar = () => {
           <span 
             className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Profile</span>
         </button>
+        <LayoutSubscriptionWrapper requiredSubscriptions={['admin']}>
+          <button 
+            className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200' 
+            onClick={handleAdminOpen}>
+            <span 
+              className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Admin</span>
+          </button>
+        </LayoutSubscriptionWrapper>
         <button 
           className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200' 
           onClick={handleBillingPortalButtonClick}>

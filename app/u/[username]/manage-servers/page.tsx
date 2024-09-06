@@ -1,6 +1,6 @@
 import React from 'react';
 import Layout from '../../components/layout/Layout';
-import ManageServersPage from '../../components/home/manage-servers/ManageServersPage';
+import ManageServersPage from '../../components/tools/manage-servers/ManageServersPage';
 import ThemeSetter from '@/app/components/ThemeSetter';
 
 export const metadata = {

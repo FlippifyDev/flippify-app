@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent, FocusEvent } from 'react';
 
 import { IUser, ISubscriptionSimple } from '@/app/api/auth-mongodb/userModel';
-import Alert from '../../../components/Alert';
+import Alert from '@/app/components/Alert';
 
 
 interface CardProps {

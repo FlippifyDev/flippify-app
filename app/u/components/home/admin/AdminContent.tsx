@@ -1,7 +1,7 @@
 'use client';
 
 import { IUser, ISubscriptionSimple } from 'app/api/auth-mongodb/userModel';
-import PlansCardAdmin from '@/app/u/components/tools/admin/AdminUserCards';
+import PlansCardAdmin from '@/app/u/components/home/admin/AdminUserCards';
 import fetchProducts from '@/app/api/auth-mongodb/fetchProducts';
 import LayoutProductsSkeleton from '../../layout/LayoutProductsSkeleton';
 

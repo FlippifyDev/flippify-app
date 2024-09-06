@@ -7,7 +7,6 @@ import SidebarButton from './SidebarButton';
 import React from 'react';
 import { AiOutlineStock } from 'react-icons/ai';
 import { FaRegNewspaper } from 'react-icons/fa6';
-import { GiPointySword } from "react-icons/gi";
 import { FaServer } from "react-icons/fa6";
 
 
@@ -49,15 +48,6 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({ showAlert }) =>
           redirect="sales-tracker"
           symbol={<AiOutlineStock className="text-md" />}
           showAlert={showAlert}
-        />
-      </LayoutSubscriptionWrapper>
-
-      {/* Admin */}
-      <LayoutSubscriptionWrapper requiredSubscriptions={['admin']}>
-        <SidebarButton
-          text="Admin"
-          redirect="asldf0987asDa230fDs"
-          symbol={<GiPointySword className="text-md" />}
         />
       </LayoutSubscriptionWrapper>
     </div>

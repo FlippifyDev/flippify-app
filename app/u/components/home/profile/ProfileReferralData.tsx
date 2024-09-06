@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { FaClipboard } from 'react-icons/fa';
 import ReferralRewardsTimeline from './ProfileReferralRewardsTimeline';
-import Alert from '@/app/components/Alert';
 
 const ProfileReferralData: React.FC = () => {
   const { data: session } = useSession();
@@ -12,8 +11,6 @@ const ProfileReferralData: React.FC = () => {
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const [selectedRewards, setSelectedRewards] = useState<{ [key: number]: string }>({});
   const [canGenerateReceipt, setCanGenerateReceipt] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
-  const [isAlertVisible, setIsAlertVisible] = useState(false);
 
   const referralCode = session?.user?.referral?.referral_code || 'None';
   const referralCount = session?.user?.referral?.valid_referrals.length || 0;
@@ -51,24 +48,15 @@ const ProfileReferralData: React.FC = () => {
       Thank you!
     `;
     navigator.clipboard.writeText(receiptText);
-    setAlertMessage('Receipt copied to clipboard!');
-    setIsAlertVisible(true);
+    alert('Receipt copied to clipboard!');
     window.open(
       'https://discord.com/channels/1236428617962229830/1236436288442466394',
       '_blank'
     );
   };
 
-  const copyReferralCode = () => {
-    navigator.clipboard.writeText(referralCode);
-    setAlertMessage('Referral code copied to clipboard!');
-    setIsAlertVisible(true); 
-  };
-
   return (
     <div className="card bg-white shadow-md rounded-lg p-4 h-full flex flex-col">
-      <Alert message={alertMessage} visible={isAlertVisible} onClose={() => setIsAlertVisible(false)} />
-
       <div className="flex justify-between items-center mb-2">
         <h2 className="card-title text-black text-xl font-semibold">Referral Program</h2>
         <p className="text-sm text-gray-500 px-2 text-center sm:text-left">
@@ -80,7 +68,10 @@ const ProfileReferralData: React.FC = () => {
           <p className="text-lg font-semibold text-gray-900 mr-2">Your code:</p>
           <button
             className="flex items-center px-2 py-1 bg-gray-100 border rounded-lg hover:bg-gray-200 transition duration-200"
-            onClick={copyReferralCode}
+            onClick={() => {
+              navigator.clipboard.writeText(referralCode);
+              alert('Referral code copied to clipboard!');
+            }}
           >
             <span className="mr-2">{referralCode}</span>
             <FaClipboard className="text-gray-900" />

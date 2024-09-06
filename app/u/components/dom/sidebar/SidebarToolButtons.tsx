@@ -8,6 +8,7 @@ import React from 'react';
 import { AiOutlineStock } from 'react-icons/ai';
 import { FaRegNewspaper } from 'react-icons/fa6';
 import { GiPointySword } from "react-icons/gi";
+import { FaServer } from "react-icons/fa6";
 
 
 interface SidebarToolButtonsProps {
@@ -23,6 +24,15 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({ showAlert }) =>
         symbol={<FaRegNewspaper className="text-md" />}
         tooltip="Coming Soon"
       />
+
+      {/* Manage Servers Tab */}
+      <LayoutSubscriptionWrapper anySubscriptions={['server', 'admin']}>
+          <SidebarButton
+              text="Server Management"
+              redirect="manage-servers#monitors"
+              symbol={<FaServer className="text-base" />}
+          />
+      </LayoutSubscriptionWrapper>
 
       {/* Sales & Profits */}
       <LayoutSubscriptionWrapper anySubscriptions={['standard', 'admin']}>

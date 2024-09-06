@@ -10,7 +10,6 @@ import { FaSearch, FaDiscord } from 'react-icons/fa';
 import { MdGroups } from 'react-icons/md';
 import { FaHouse } from 'react-icons/fa6';
 import { FaBook } from "react-icons/fa";
-import { FaServer } from "react-icons/fa6";
 
 interface SidebarHomeButtonsProps {
   showAlert: () => void;
@@ -21,16 +20,6 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ showAlert }) =>
     <div>
 
         <SidebarButton text="Dashboard" redirect="dashboard" symbol={<FaHouse className="text-lg" />} />
-
-        {/* Manage Servers Tab */}
-        <LayoutSubscriptionWrapper anySubscriptions={['standard', 'server', 'admin']}>
-            <SidebarButton
-                text="Server Management"
-                redirect="manage-servers#monitors"
-                symbol={<FaServer className="text-base" />}
-            />
-        </LayoutSubscriptionWrapper>
-
         <SidebarButton text="Plans" redirect="plans" symbol={<FaSearch className="text-lg" />} />
         <SidebarButton text="Server Plans" redirect="server-plans" symbol={<MdGroups className="text-2xl" />} />
 

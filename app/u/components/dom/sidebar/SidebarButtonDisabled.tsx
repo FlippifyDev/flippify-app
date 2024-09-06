@@ -38,7 +38,7 @@ const DisabledSideBarButton: React.FC<DisabledSideBarButtonProps> = ({ text, red
       </button>
       
       {tooltip && (
-        <div className="absolute bottom-full mb-2 right-0 p-2 bg-gray-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+        <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 p-2 bg-gray-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
           {tooltip}
         </div>
       )}

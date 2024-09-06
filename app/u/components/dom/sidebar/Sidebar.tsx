@@ -1,6 +1,5 @@
 "use client";
 
-import DisabledSideBarButton from './SidebarButtonDisabled';
 import SidebarMonitorButtons from './SidebarMonitorButtons';
 import SidebarSignOutButton from './SidebarSignOutButton';
 import SidebarHomeButtons from './SidebarHomeButtons';
@@ -10,12 +9,8 @@ import Alert from '@/app/components/Alert';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { FaSearch, FaDiscord } from 'react-icons/fa';
 import { BsClipboard2Fill } from 'react-icons/bs';
 import { MdFeedback } from "react-icons/md";
-import { MdGroups } from 'react-icons/md';
-import { FaHouse } from 'react-icons/fa6';
-import { FaBook } from "react-icons/fa";
 
 const Sidebar = () => {
   const [alertVisible, setAlertVisible] = useState(false);

@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
+
+interface Reward {
+  id: number;
+  leftOption: string;
+  rightOption: string;
+}
 
 interface ReferralRewardsTimelineProps {
   availableRewards: number;
@@ -19,17 +25,26 @@ const ReferralRewardsTimeline: React.FC<ReferralRewardsTimelineProps> = ({
   const [currentPage, setCurrentPage] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const rewards = [
+  // Define the base rewards
+  const baseRewards: Reward[] = [
     { id: 1, leftOption: "£5 Cash Reward", rightOption: "25% Off Next Month" },
     { id: 2, leftOption: "£10 Cash Reward", rightOption: "50% Off Next Month" },
     { id: 3, leftOption: "£15 Cash Reward", rightOption: "One Free Month" },
   ];
 
-  const totalPages = Math.ceil(rewards.length / rewardsPerPage);
-  const startTier = currentPage * rewardsPerPage;
-  const endTier = startTier + rewardsPerPage;
+  // Adding placeholders for remaining rewards, filling up to total referrals.
+  const allRewards = [...baseRewards];
+  while (allRewards.length < availableRewards + totalRewardsClaimed) {
+    allRewards.push({
+      id: allRewards.length + 1,
+      leftOption: "£15 Cash Reward",
+      rightOption: "One Free Month",
+    });
+  }
 
-  const visibleRewards = rewards.slice(startTier, endTier);
+  const totalPages = Math.ceil(allRewards.length / rewardsPerPage);
+  const startTier = currentPage * rewardsPerPage;
+  const visibleRewards = allRewards.slice(startTier, startTier + rewardsPerPage);
 
   useEffect(() => {
     // Set the initial height based on the first page's content
@@ -37,14 +52,14 @@ const ReferralRewardsTimeline: React.FC<ReferralRewardsTimelineProps> = ({
       const height = containerRef.current.clientHeight;
       containerRef.current.style.height = `${height}px`;
     }
-  }, []);
+  }, [currentPage]);
 
   return (
     <div className="relative w-full max-w-lg mx-auto">
       <div
         ref={containerRef}
         className="transition-all duration-200"
-        style={{ minHeight: '200px' }} // Minimum height to keep the menu stable
+        style={{ minHeight: "200px" }} // Minimum height to keep the menu stable
       >
         <ul className="timeline timeline-vertical">
           {visibleRewards.map((reward, index) => {
@@ -60,12 +75,12 @@ const ReferralRewardsTimeline: React.FC<ReferralRewardsTimelineProps> = ({
                   <button
                     className={`w-full p-4 rounded-lg transition-all duration-200 border bg-white ${
                       isSelectedLeft
-                        ? 'shadow-lg border-houseBlue'
-                        : 'shadow-md border-transparent hover:shadow-lg'
+                        ? "shadow-lg border-houseBlue"
+                        : "shadow-md border-transparent hover:shadow-lg"
                     } ${
                       isDisabled
-                        ? 'text-gray-400 border-gray-300 cursor-not-allowed'
-                        : 'hover:border-houseHoverBlue'
+                        ? "text-gray-400 border-gray-300 cursor-not-allowed"
+                        : "hover:border-houseHoverBlue"
                     }`}
                     onClick={() => handleRewardSelection(tierIndex, reward.leftOption)}
                     disabled={isDisabled}
@@ -80,7 +95,7 @@ const ReferralRewardsTimeline: React.FC<ReferralRewardsTimelineProps> = ({
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                     fill="currentColor"
-                    className={`h-5 w-5 ${isDisabled ? 'text-gray-400' : 'text-houseBlue'}`}
+                    className={`h-5 w-5 ${isDisabled ? "text-gray-400" : "text-houseBlue"}`}
                   >
                     <path
                       fillRule="evenodd"
@@ -89,7 +104,7 @@ const ReferralRewardsTimeline: React.FC<ReferralRewardsTimelineProps> = ({
                     />
                   </svg>
                   {index < visibleRewards.length - 1 && (
-                    <div className={`w-px h-8 ${isDisabled ? 'bg-gray-300' : 'bg-houseBlue'}`}></div>
+                    <div className={`w-px h-8 ${isDisabled ? "bg-gray-300" : "bg-houseBlue"}`}></div>
                   )}
                 </div>
 
@@ -98,12 +113,12 @@ const ReferralRewardsTimeline: React.FC<ReferralRewardsTimelineProps> = ({
                   <button
                     className={`w-full p-4 rounded-lg transition-all duration-200 border bg-white ${
                       isSelectedRight
-                        ? 'shadow-lg border-houseBlue'
-                        : 'shadow-md border-transparent hover:shadow-lg'
+                        ? "shadow-lg border-houseBlue"
+                        : "shadow-md border-transparent hover:shadow-lg"
                     } ${
                       isDisabled
-                        ? 'text-gray-400 border-gray-300 cursor-not-allowed'
-                        : 'hover:border-houseHoverBlue'
+                        ? "text-gray-400 border-gray-300 cursor-not-allowed"
+                        : "hover:border-houseHoverBlue"
                     }`}
                     onClick={() => handleRewardSelection(tierIndex, reward.rightOption)}
                     disabled={isDisabled}
@@ -122,7 +137,7 @@ const ReferralRewardsTimeline: React.FC<ReferralRewardsTimelineProps> = ({
         <div className="flex justify-center mt-4">
           <button
             className={`px-4 py-2 transition-all duration-200 border border-gray-300 rounded-l-lg bg-white text-gray-700 hover:bg-gray-100 ${
-              currentPage === 0 ? 'text-gray-400 cursor-not-allowed' : 'hover:border-gray-400'
+              currentPage === 0 ? "text-gray-400 cursor-not-allowed" : "hover:border-gray-400"
             }`}
             onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 0}
@@ -131,7 +146,7 @@ const ReferralRewardsTimeline: React.FC<ReferralRewardsTimelineProps> = ({
           </button>
           <button
             className={`px-4 py-2 transition-all duration-200 border border-gray-300 rounded-r-lg bg-white text-gray-700 hover:bg-gray-100 ${
-              currentPage === totalPages - 1 ? 'text-gray-400 cursor-not-allowed' : 'hover:border-gray-400'
+              currentPage === totalPages - 1 ? "text-gray-400 cursor-not-allowed" : "hover:border-gray-400"
             }`}
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={currentPage === totalPages - 1}

@@ -1,6 +1,6 @@
 import React from 'react';
 import Layout from '../../components/layout/Layout';
-import PlansPageContent from '../../components/home-plans/PlansPage';
+import PlansPageContent from '../../components/home/plans/PlansPage';
 import ThemeSetter from '@/app/components/ThemeSetter';
 
 export const metadata = {

@@ -2,7 +2,6 @@ import React from 'react'
 
 
 const SkeletonItem = () => {
-
   return (
     <div>
         <div className="w-full h-[29rem] bg-gray-200 rounded-md mb-2.5"></div>
@@ -13,7 +12,7 @@ const SkeletonItem = () => {
 
 const LayoutProductsSkeleton = () => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 w-full gap-10 items-center">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 w-full gap-10 items-center">
         <SkeletonItem />
         <SkeletonItem />
         <SkeletonItem />

@@ -1,4 +1,5 @@
 import LayoutLoadingSkeleton from "../../components/layout/LayoutLoadingSkeleton";
+import LayoutProductsSkeleton from "../../components/layout/LayoutProductsSkeleton";
 import ThemeSetter from "@/app/components/ThemeSetter";
 import Layout from "../../components/layout/Layout";
 
@@ -7,7 +8,7 @@ export default function LoadingPage() {
         <>
             <ThemeSetter theme="light" />
             <Layout requiredSubscriptions={['admin']}>
-                <LayoutLoadingSkeleton />
+                <LayoutProductsSkeleton />
             </Layout>
         </>
     );

@@ -1,0 +1,164 @@
+'use client';
+
+import React, { useEffect, useState, useCallback } from 'react';
+import Card from './RetiringSetsCard';
+import { IRetiringSet } from '@/app/api/monitors/retiringSetsModel';
+import { fetchProducts } from '@/app/api/monitors/fetchProducts';
+import LayoutProductsSkeleton from '../../layout/LayoutProductsSkeleton';
+import { IoSearch } from "react-icons/io5";
+
+export default function RetiringSetsPage() {
+    const [products, setProducts] = useState<IRetiringSet[]>([]);
+    const [displayedProducts, setDisplayedProducts] = useState<IRetiringSet[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [searchQuery, setSearchQuery] = useState<string>('');
+    const [searchQueryToSubmit, setSearchQueryToSubmit] = useState<string>(''); // State for submitted search query
+    const [offset, setOffset] = useState(0);
+    const limit = 20; // Number of products to display at a time
+
+    // Fetch all products initially
+    useEffect(() => {
+        async function loadProducts() {
+            const allProducts = await fetchProducts<IRetiringSet>("RetiringSet");
+            setProducts(allProducts);
+            // Display products sorted by estimated profit initially
+            setDisplayedProducts(sortByProfitAndStock(allProducts).slice(0, limit)); // Display the first batch
+        }
+
+        loadProducts();
+    }, []);
+
+    // Function to sort products by estimated profit and stock availability
+    const sortByProfitAndStock = (products: IRetiringSet[]) => {
+        return products
+            .sort((a, b) => {
+                // Check if stock is available
+                const inStockA = a.stock_available;
+                const inStockB = b.stock_available;
+
+                if (inStockA && !inStockB) return -1; // In-stock products come first
+                if (!inStockA && inStockB) return 1;  // Out-of-stock products come last
+
+
+                // If both have the same stock status, sort by estimated profit
+                const profitA = a.rrp - (a.price || 0);
+                const profitB = b.rrp - (b.price || 0);
+                return profitB - profitA; // Sort descending
+            });
+    };
+
+    const loadMoreProducts = useCallback(() => {
+        const nextOffset = Math.min(offset + limit, products.length);
+        // Prevent loading if we already have all products or are in a loading state
+        if (loading || nextOffset >= products.length) return;
+      
+        setLoading(true);
+      
+        setTimeout(() => {
+          setDisplayedProducts((prevProducts) => {
+            // Calculate the new offset, make sure it doesn't exceed the total products length
+            const nextOffset = Math.min(offset + limit, products.length);
+      
+            // Slice the products from the current offset to the next
+            const newProducts = products.slice(offset, nextOffset);
+      
+            // Stop loading if no new products found
+            if (newProducts.length === 0) {
+              setLoading(false);
+              return prevProducts;
+            }
+      
+            // Update the offset to the new position
+            setOffset(nextOffset);
+      
+            // Stop loading and append new products
+            setLoading(false);
+            return [...prevProducts, ...newProducts];
+          });
+        }, 1000); // Simulate network delay
+      }, [loading, offset, products, limit]);
+    
+    // Infinite scrolling logic
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight && !loading) {
+                loadMoreProducts();
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [loading, loadMoreProducts]);
+
+
+    // Filter products based on submitted search query
+    useEffect(() => {
+        let filtered = products;
+
+        if (searchQueryToSubmit.trim() !== '') {
+            const lowercasedQuery = searchQueryToSubmit.toLowerCase();
+            filtered = products.filter(product => {
+                const productName = product.product_name?.toLowerCase() || '';
+                const website = product.website?.toLowerCase() || '';
+                const sku = product.sku?.toLowerCase() || '';
+                const region = product.region?.toLowerCase() || '';
+
+                // Split the query into individual terms and check if any term matches
+                const queryTerms = lowercasedQuery.split(/\s+/);
+
+                return queryTerms.every(term => 
+                    productName.includes(term) ||
+                    website.includes(term) ||
+                    sku.includes(term) ||
+                    region.includes(term)
+                );
+            });
+        } else {
+            // If no search query, sort by estimated profit
+            filtered = sortByProfitAndStock(products);
+        }
+
+        // Reset pagination and display filtered products
+        setOffset(0);
+        setDisplayedProducts(filtered.slice(0, limit));
+    }, [searchQueryToSubmit, products]);
+
+    const handleSearchSubmit = () => {
+        setSearchQueryToSubmit(searchQuery);
+    };
+
+    return (
+        <div className="p-5 w-full h-full">
+            {/* Search Input */}
+            <label className="input input-bordered flex items-center gap-2 w-80 mb-8 text-xl">
+                <input
+                    type="text"
+                    placeholder="Search"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            handleSearchSubmit();
+                        }
+                    }}
+                    className="grow border-0 input input-bordered"
+                />
+                <IoSearch />
+            </label>
+
+            {/* Products List */}
+            {displayedProducts.length > 0 ? (
+                <div className="flex flex-wrap gap-10 justify-center p-4">
+                    {displayedProducts.map((product, index) => (
+                        <Card key={`${product._id.toString()}-${index}`} product={product} />
+                    ))}
+                    {loading && <LayoutProductsSkeleton />}
+                </div>
+            ) : (
+                <LayoutProductsSkeleton />
+            )}
+        </div>
+    );
+}

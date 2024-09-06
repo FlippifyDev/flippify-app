@@ -1,6 +1,6 @@
 import React from "react";
 import Layout from "../../components/layout/Layout";
-import SalesTrackerPageContent from "../../components/tool-sales-tracker/SalesTrackerPage";
+import SalesTrackerPageContent from "../../components/tools/sales-tracker/SalesTrackerPage";
 import { EstimateProvider } from "../../../components/EstimateContext";
 import "../../../../styles/sales-and-profits.css";
 import ThemeSetter from "@/app/components/ThemeSetter";

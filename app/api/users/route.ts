@@ -1,5 +1,4 @@
 // pages/api/users.ts
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { NextRequest, NextResponse } from 'next/server';
 
 import dbConnect from '../../lib/mongodb';

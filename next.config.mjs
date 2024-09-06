@@ -116,7 +116,12 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'dlcdnwebimgs.asus.com',
         port: '',
-      }
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.hotukdeals.com',
+        port: '',
+      },
     ],
   },
   env: {

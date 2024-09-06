@@ -4,8 +4,8 @@ import React, { Suspense } from "react";
 import LayoutSubscriptionWrapper from "./LayoutSubscriptionWrapper";
 import LayoutLoadingSkeleton from "./LayoutLoadingSkeleton";
 import LayoutNoAccess from "./LayoutNoAccess";
-import Sidebar from "../dom-sidebar/Sidebar";
-import Navbar from "../dom-navbar/Navbar";
+import Sidebar from "../dom/sidebar/Sidebar";
+import Navbar from "../dom/navbar/Navbar";
 
 interface LayoutProps {
   children: React.ReactNode;

@@ -5,7 +5,7 @@ import ManageMembershipsButton from "./PlansManageMembershipButton";
 import PlansGetAccessButton from "./PlansGetAccessButton";
 import { useSession } from "next-auth/react";
 import { database, ref, get } from "@/app/api/auth-firebase/firebaseConfig";
-import { MovingBorder } from "@/components/ui/moving-border";
+import { BackgroundGradient } from "@/components/ui/background-gradient";
 
 interface PlansCardProps {
   title: string;
@@ -71,50 +71,81 @@ const PlansCard: React.FC<PlansCardProps> = ({
 
   const selectedPriceId = priceRange === 0 ? priceIds.monthly : priceIds.yearly;
 
-  const cardBG = specialPlan ? 'bg-white' : 'bg-white';
-  const cardClass = specialPlan 
-    ? 'card flex flex-col px-5 py-8 text-gray-700 rounded-xl shadow-lg overflow-hidden' 
-    : 'card flex flex-col px-5 py-8 text-gray-700 rounded-xl shadow-lg overflow-hidden';
-
   return (
-    <div className="col-span-1 row-span-1 flex justify-center hover:scale-101 transition duration-200">
-      {/* Ensure all cards have equal height */}
-      <div className="w-80 sm:w-88 min-h-[600px] relative">
-        {specialPlan && (
-          <MovingBorder duration={3000} rx="15%" ry="15%">
-            <div className="absolute inset-0 border-[3px] rounded-xl border-gradient border-houseBlue pointer-events-none"></div>
-          </MovingBorder>
+    <div className="w-full flex justify-center hover:scale-101 transition duration-200">
+      <div className="w-full sm:w-full min-h-[600px] relative">
+        {specialPlan ? (
+          <BackgroundGradient className="rounded-xl">
+            <div className="bg-white rounded-xl h-full p-4">
+              <section className="flex flex-col gap-3">
+                <h2 className="font-bold text-start pl-2 text-[20px]">{title}</h2>
+                <h3 className="font-extrabold text-start pl-2 text-[30px]">
+                  {`${currencySymbol}${convertedPrices[priceRange].toFixed(2)}`}
+                </h3>
+              </section>
+
+              <section className="flex-grow mt-5">
+                {whatsIncludedComponent}
+              </section>
+
+              <section className="mt-auto">
+                {prices.length > 0 && (
+                  <div className="flex">
+                    <LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
+                      <PlansGetAccessButton
+                        redirect="dashboard"
+                        specialPlan={specialPlan}
+                        unavailable={description}
+                      />
+                    </LayoutSubscriptionWrapper>
+                    <LayoutSubscriptionWrapper requiredSubscriptions={["accessGranted", `!${requiredSubscription}`]}>
+                      <PlansSubscribeNow
+                        priceId={selectedPriceId}
+                        specialPlan={specialPlan}
+                        unavailable={description}
+                      />
+                    </LayoutSubscriptionWrapper>
+                    <LayoutSubscriptionWrapper requiredSubscriptions={[requiredSubscription]}>
+                      <ManageMembershipsButton specialPlan={specialPlan} />
+                    </LayoutSubscriptionWrapper>
+                  </div>
+                )}
+              </section>
+            </div>
+          </BackgroundGradient>
+        ) : (
+          <div className="bg-white rounded-xl h-full p-4">
+            <section className="flex flex-col gap-3">
+              <h2 className="font-bold text-start pl-2 text-[20px]">{title}</h2>
+              <h3 className="font-extrabold text-start pl-2 text-[30px]">
+                {`${currencySymbol}${convertedPrices[priceRange].toFixed(2)}`}
+              </h3>
+            </section>
+
+            <section className="flex-grow mt-5">
+              {whatsIncludedComponent}
+            </section>
+
+            <section className="mt-auto">
+              {prices.length > 0 && (
+                <div className="flex">
+                  <LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
+                    <PlansGetAccessButton redirect="dashboard" unavailable={description} />
+                  </LayoutSubscriptionWrapper>
+                  <LayoutSubscriptionWrapper requiredSubscriptions={["accessGranted", `!${requiredSubscription}`]}>
+                    <PlansSubscribeNow priceId={selectedPriceId} unavailable={description} />
+                  </LayoutSubscriptionWrapper>
+                  <LayoutSubscriptionWrapper requiredSubscriptions={[requiredSubscription]}>
+                    <ManageMembershipsButton />
+                  </LayoutSubscriptionWrapper>
+                </div>
+              )}
+            </section>
+          </div>
         )}
-
-        <div className={cardClass} style={{ background: cardBG }}>
-          <section className='flex flex-col gap-3'>
-            <h2 className='font-bold text-start pl-2 text-[20px]'>{title}</h2>
-            <h3 className='font-extrabold text-start pl-2 text-[30px]'>{`${currencySymbol}${convertedPrices[priceRange].toFixed(2)}`}</h3>
-          </section>
-
-          <section className="flex-grow mt-5">
-            {whatsIncludedComponent}
-          </section>
-
-          <section className="mt-auto">
-            {prices.length > 0 && (
-              <div className="flex">
-                <LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
-                  <PlansGetAccessButton redirect="dashboard" specialPlan={specialPlan} unavailable={description} />
-                </LayoutSubscriptionWrapper>
-                <LayoutSubscriptionWrapper requiredSubscriptions={["accessGranted", `!${requiredSubscription}`]}>
-                  <PlansSubscribeNow priceId={selectedPriceId} specialPlan={specialPlan} unavailable={description} />
-                </LayoutSubscriptionWrapper>
-                <LayoutSubscriptionWrapper requiredSubscriptions={[requiredSubscription]}>
-                  <ManageMembershipsButton specialPlan={specialPlan} />
-                </LayoutSubscriptionWrapper>
-              </div>
-            )}
-          </section>
-        </div>
       </div>
     </div>
   );
-}
+};
 
 export default PlansCard;

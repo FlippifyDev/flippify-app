@@ -50,7 +50,6 @@ const PlansPage = () => {
         </div>
       </div>
 
-      {/* Updated to use Flexbox/Grid with equal height */}
       <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
         <PlansCard
           title="Standard"

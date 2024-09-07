@@ -43,7 +43,7 @@ const ManageMembershipsButton: React.FC<Props> = ({ specialPlan }) => {
     }
   };
 
-  const btnClass = specialPlan !== true ? 'btn border-0 bg-gray-200 hover:bg-gray-300 text-gray-500 w-2/3 mx-auto rounded-md': 'btn border-0 bg-white hover:bg-gray-200 text-black w-2/3 mx-auto rounded-sm'
+  const btnClass = specialPlan !== true ? 'btn border-0 bg-white hover:bg-gray-300 shadow-md text-black w-2/3 mx-auto rounded-md': 'btn border-0 bg-white hover:bg-gray-200 shadow-md text-black w-2/3 mx-auto rounded-sm'
 
   return (
     <div className="relative group w-full flex flex-col justify-end">

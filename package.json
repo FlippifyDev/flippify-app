@@ -21,7 +21,7 @@
     "file-saver": "^2.0.5",
     "firebase": "^10.12.4",
     "flowbite": "^2.4.1",
-    "framer-motion": "^11.3.30",
+    "framer-motion": "^11.5.4",
     "lucide-react": "^0.435.0",
     "ml-matrix": "^6.11.1",
     "mongoose": "^8.4.4",

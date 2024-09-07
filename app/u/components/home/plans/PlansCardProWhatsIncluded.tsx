@@ -8,11 +8,11 @@ interface Props {
 const PlansCardStandardWhatsIncluded: React.FC<Props> = ({ specialPlan }) => {
   const rootClass = specialPlan !== true ? 
   "flex flex-col items-start text-gray-500 pt-6 pb-6 pl-2 gap-3": 
-  "flex flex-col items-start text-white pt-6 pb-6 pl-2 gap-3"
+  "flex flex-col items-start text-gray-500 pt-6 pb-6 pl-2 gap-3"
 
   const iconClass = specialPlan !== true ?
   "col-span-1 inline-block mr-3 text-gray-500 text-sm":
-  "col-span-1 inline-block mr-3 text-white text-sm"
+  "col-span-1 inline-block mr-3 text-gray-500 text-sm"
 
   return (
     <div className={rootClass}>

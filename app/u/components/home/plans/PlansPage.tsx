@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
 import PlansCard from "./PlansCard";
 import PlansCardStandardWhatsIncluded from "./PlansCardProWhatsIncluded";
 import PlansCardPremiumWhatsIncluded from "./PlansCardEliteWhatsIncluded";
-import PlansCardBasicWhatsIncluded from "./PlansCardBasicWhatsIncluded";
+import PlansCardBasicWhatsIncluded from "./PlansCardStandardWhatsIncluded";
 import React, { useState } from "react";
 
 import { Lato, Inter } from "next/font/google";
@@ -12,12 +12,9 @@ const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
 
 const PlansPage = () => {
-  // State to manage selected plan: 0 for Monthly, 1 for Yearly
   const [selectedPlan, setSelectedPlan] = useState<number>(0);
 
-  // Function to handle toggle switch change
   const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Set selectedPlan based on whether the toggle is checked
     setSelectedPlan(event.target.checked ? 1 : 0);
   };
 
@@ -25,14 +22,10 @@ const PlansPage = () => {
     <div className="w-full h-full mb-2">
       <div className="flex flex-col items-center space-y-5 text-center mt-10">
         <div className="flex flex-wrap justify-center">
-          <p
-            className={`${lato.className} text-4xl sm:text-5xl w-4/5 sm:w-full text-gradient bg-gradient-to-tr from-houseBlue to-houseHoverBlue bg-clip-text text-transparent py-1`}
-          >
+          <p className={`${lato.className} text-4xl sm:text-5xl w-4/5 sm:w-full text-gradient bg-gradient-to-tr from-houseBlue to-houseHoverBlue bg-clip-text text-transparent py-1`}>
             Pricing
-            <a
-              className={`${inter.className} mb-8 text-lightModeText text-4xl sm:text-5xl font-bold`}
-            >
-              {/* This is the space between pricing and made easy */} Made Easy
+            <a className={`${inter.className} mb-8 text-lightModeText text-4xl sm:text-5xl font-bold`}>
+              Made Easy
             </a>
           </p>
         </div>
@@ -57,12 +50,12 @@ const PlansPage = () => {
         </div>
       </div>
 
-      {/* Use Flexbox with items-stretch to make all cards the same height */}
-      <div className="mt-10 grid grid-rows-3 md:grid-rows-none md:grid-cols-3 2xl:px-[100px] mb-8 gap-5 items-stretch">
+      {/* Updated to use Flexbox/Grid with equal height */}
+      <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
         <PlansCard
           title="Standard"
           description="Unlock unlimited access to our comprehensive suite of tools, bots, and insights designed to supercharge your profitability. Our all-in-one subscription provides everything you need to optimize performance and drive growth."
-          prices={[19.99, 199.99]} // Monthly and Yearly prices
+          prices={[19.99, 199.99]}
           priceIds={{
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
@@ -74,7 +67,7 @@ const PlansPage = () => {
         <PlansCard
           title="Pro"
           description="unavailable"
-          prices={[49.99, 499.99]} // Monthly and Yearly prices
+          prices={[49.99, 499.99]}
           priceIds={{
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
@@ -87,7 +80,7 @@ const PlansPage = () => {
         <PlansCard
           title="Elite"
           description="unavailable"
-          prices={[99.99, 999.90]} // Monthly and Yearly prices
+          prices={[99.99, 999.90]}
           priceIds={{
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",

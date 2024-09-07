@@ -1,5 +1,9 @@
 import type { Config } from "tailwindcss";
 
+const {
+  default: flattenColorPalette,
+} = require("tailwindcss/lib/util/flattenColorPalette");
+
 const config: Config = {
   darkMode: ["class"],
   content: [
@@ -116,6 +120,7 @@ const config: Config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -129,7 +134,8 @@ const config: Config = {
     require('flowbite/plugin')({
       charts: true,
     }),
-    require("tailwindcss-animate")
+    require("tailwindcss-animate"),
+    addVariablesForColors,
   ],
   daisyui: {
     themes: ["light", "dark"],
@@ -137,3 +143,14 @@ const config: Config = {
 } satisfies Config;
 
 export default config;
+
+function addVariablesForColors({ addBase, theme }: any) {
+  let allColors = flattenColorPalette(theme("colors"));
+  let newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+  );
+ 
+  addBase({
+    ":root": newVars,
+  });
+}

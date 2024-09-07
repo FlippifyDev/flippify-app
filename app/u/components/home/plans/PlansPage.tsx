@@ -1,8 +1,8 @@
 'use client';
 
 import PlansCard from "./PlansCard";
-import PlansCardStandardWhatsIncluded from "./PlansCardStandardWhatsIncluded";
-import PlansCardPremiumWhatsIncluded from "./PlansCardPremiumWhatsIncluded";
+import PlansCardStandardWhatsIncluded from "./PlansCardProWhatsIncluded";
+import PlansCardPremiumWhatsIncluded from "./PlansCardEliteWhatsIncluded";
 import React, { useState } from "react";
 
 import { Lato, Inter } from "next/font/google";
@@ -57,9 +57,9 @@ const PlansPage = () => {
       </div>
       <div className="mt-10 grid grid-rows-3 md:grid-rows-none md:grid-cols-3 2xl:px-[100px] mb-8 gap-5">
         <PlansCard
-          title="Early Access"
+          title="Basic"
           description="Unlock unlimited access to our comprehensive suite of tools, bots, and insights designed to supercharge your profitability. Our all-in-one subscription provides everything you need to optimize performance and drive growth."
-          prices={[34.99, 349.90]} // Monthly and Yearly prices
+          prices={[19.99, 199.99]} // Monthly and Yearly prices
           priceIds={{
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
@@ -70,9 +70,9 @@ const PlansPage = () => {
           priceRange={selectedPlan}
         />
         <PlansCard
-          title="Standard"
+          title="Pro"
           description="unavailable"
-          prices={[59.99, 599.9]} // Monthly and Yearly prices
+          prices={[49.99, 499.99]} // Monthly and Yearly prices
           priceIds={{
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
@@ -82,9 +82,9 @@ const PlansPage = () => {
           priceRange={selectedPlan}
         />
         <PlansCard
-          title="Premium"
+          title="Elite"
           description="unavailable"
-          prices={[89.99, 899.90]} // Monthly and Yearly prices
+          prices={[99.99, 999.90]} // Monthly and Yearly prices
           priceIds={{
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",

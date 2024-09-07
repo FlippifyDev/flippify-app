@@ -40,7 +40,7 @@ const Sidebar = () => {
               </section>
 
               {/* Monitors Section */}
-              <section className="mt-5 md:mt-10">
+              <section className="mt-5 md:mt-6">
                 <div className="mb-2">
                   <p className="text-lightModeText text-lg font-bold select-none">Monitors</p>
                 </div>
@@ -48,7 +48,7 @@ const Sidebar = () => {
               </section>
               
               {/* Tools Section */}
-              <section className="mt-5 md:mt-10">
+              <section className="mt-5 md:mt-6">
                 <div className="mb-2">
                   <p className="text-lightModeText text-lg font-bold select-none">Tools</p>
                 </div>

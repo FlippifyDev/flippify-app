@@ -7,7 +7,7 @@ import SidebarButton from './SidebarButton';
 import React from 'react';
 import { AiOutlineStock } from 'react-icons/ai';
 import { FaRegNewspaper } from 'react-icons/fa6';
-import { FaServer } from "react-icons/fa6";
+import { FaServer, FaBoxOpen } from "react-icons/fa6";
 
 
 interface SidebarToolButtonsProps {
@@ -36,7 +36,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({ showAlert }) =>
       {/* Sales & Profits */}
       <LayoutSubscriptionWrapper anySubscriptions={['standard', 'admin']}>
         <SidebarButton
-          text="Sales & Profits"
+          text="Financial Hub"
           redirect="sales-tracker"
           symbol={<AiOutlineStock className="text-md" />}
         />
@@ -44,12 +44,20 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({ showAlert }) =>
 
       <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', '!server', '!admin']}>
         <DisabledSideBarButton
-          text="Sales & Profits"
+          text="Financial Hub"
           redirect="sales-tracker"
           symbol={<AiOutlineStock className="text-md" />}
           showAlert={showAlert}
         />
       </LayoutSubscriptionWrapper>
+
+      {/* Inventory & Orders */}
+      <DisabledSideBarButton
+        text="Inventory & Orders"
+        redirect="inventory-orders"
+        symbol={<FaBoxOpen className="text-md" />}
+        tooltip="Coming Soon"
+      />
     </div>
   );
 };

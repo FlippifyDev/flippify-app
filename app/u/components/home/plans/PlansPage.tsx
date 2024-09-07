@@ -64,9 +64,8 @@ const PlansPage = () => {
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
           }}
-          whatsIncludedComponent={<PlansCardStandardWhatsIncluded specialPlan={true} />}
-          specialPlan={true}
-          requiredSubscription={"standard"}
+          whatsIncludedComponent={<PlansCardStandardWhatsIncluded />}
+          requiredSubscription={"accessGranted"}
           priceRange={selectedPlan}
         />
         <PlansCard
@@ -77,8 +76,9 @@ const PlansPage = () => {
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
           }}
-          whatsIncludedComponent={<PlansCardStandardWhatsIncluded />}
-          requiredSubscription={"standarduser"}
+          whatsIncludedComponent={<PlansCardStandardWhatsIncluded specialPlan={true} />}
+          specialPlan={true}
+          requiredSubscription={"accessGranted"}
           priceRange={selectedPlan}
         />
         <PlansCard
@@ -90,7 +90,7 @@ const PlansPage = () => {
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
           }}
           whatsIncludedComponent={<PlansCardPremiumWhatsIncluded />}
-          requiredSubscription={"premium"}
+          requiredSubscription={"accessGranted"}
           priceRange={selectedPlan}
         />
       </div>

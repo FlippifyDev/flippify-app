@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useState, useEffect } from "react";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import PlansSubscribeNow from "./PlansSubscribeNow";
@@ -6,8 +7,6 @@ import ManageMembershipsButton from "./PlansManageMembershipButton";
 import PlansGetAccessButton from "./PlansGetAccessButton";
 import { useSession } from "next-auth/react";
 import { database, ref, get } from "@/app/api/auth-firebase/firebaseConfig";
-
-
 
 interface PlansCardProps {
   title: string;
@@ -32,7 +31,6 @@ const currencySymbols: Record<'GBP' | 'USD' | 'EUR', string> = {
   EUR: '€',
 };
 
-
 const PlansCard: React.FC<PlansCardProps> = ({
   title,
   prices,
@@ -51,7 +49,6 @@ const PlansCard: React.FC<PlansCardProps> = ({
     const loadUserCurrency = async () => {
       if (session && session.user) {
         const userRef = ref(database, `users/${session.user.customerId}`);
-
         try {
           const snapshot = await get(userRef);
           const userData = snapshot.val();
@@ -69,40 +66,39 @@ const PlansCard: React.FC<PlansCardProps> = ({
     }
   }, [session]);
 
-
   const convertedPrices = prices.map(price =>
     Number((price * currencyConversionRates[currency]).toFixed(2))
   );
 
   const selectedPriceId = priceRange === 0 ? priceIds.monthly : priceIds.yearly;
 
-  const cardBG = specialPlan === true ? 'linear-gradient(to top, #112ddb, #51b6f4)': 'bg-white'
-  const cardClass = specialPlan === true ? 
-  'card grid grid-rows-12 px-5 py-8 text-white rounded-xl h-full shadow-lg overflow-hidden': 
-  'card grid grid-rows-12 px-5 py-8 text-gray-700 rounded-xl h-full shadow-lg overflow-hidden'
+  const cardBG = specialPlan === true ? 'linear-gradient(to top, #112ddb, #51b6f4)' : 'bg-white';
+  const cardClass = specialPlan === true 
+    ? 'card flex flex-col px-5 py-8 text-white rounded-xl shadow-lg overflow-hidden' 
+    : 'card flex flex-col px-5 py-8 text-gray-700 rounded-xl shadow-lg overflow-hidden';
 
   return (
     <div className="col-span-1 row-span-1 flex justify-center hover:scale-101 transition duration-200">
-      <div className="w-80 sm:w-88 h-[550px]">
+      <div className="w-80 sm:w-88 min-h-[550px]">
         <div 
             className={cardClass}
             style={{ background: cardBG }}
-          >
+        >
           {/* Name & Price Section */}
-          <section className='row-span-2 flex flex-col gap-3'>
+          <section className='flex flex-col gap-3'>
             <h2 className='font-bold text-start pl-2 text-[20px]'>{title}</h2>
             <h3 className='font-extrabold text-start pl-2 text-[30px]'>{`${currencySymbol}${convertedPrices[priceRange].toFixed(2)}`}</h3>
           </section>
 
           {/* Whats Included Section */}
-          <section className="row-span-8 mt-5">
+          <section className="flex-grow mt-5">
             {whatsIncludedComponent}
           </section>
 
           {/* Button Section */}
-          <section className="row-span-2 h-full w-full">
+          <section className="mt-auto">
             {prices.length > 0 && (
-              <div className="h-full w-full flex">
+              <div className="flex">
                 <LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
                   <PlansGetAccessButton redirect="dashboard" specialPlan={specialPlan} unavailable={description}/>
                 </LayoutSubscriptionWrapper>
@@ -114,12 +110,11 @@ const PlansCard: React.FC<PlansCardProps> = ({
                 </LayoutSubscriptionWrapper>
               </div>
             )}
-
           </section>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default PlansCard
+export default PlansCard;

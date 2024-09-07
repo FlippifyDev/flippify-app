@@ -25,7 +25,7 @@ const PlansCardStandardWhatsIncluded: React.FC<Props> = ({ specialPlan }) => {
       <div className="grid grid-cols-12 mb-2 items-center">
         <TbPointFilled className={iconClass} />
         <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
-          eBay & Amazon Automation (Unlimited Sales)
+          eBay & Amazon Automation (20 Sales/Month)
         </p>
       </div>
       <div className="grid grid-cols-12 mb-2 items-center">
@@ -44,18 +44,6 @@ const PlansCardStandardWhatsIncluded: React.FC<Props> = ({ specialPlan }) => {
         <TbPointFilled className={iconClass} />
         <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
           Exclusive Reselling Inner Circle
-        </p>
-      </div>
-      <div className="grid grid-cols-12 mb-2 items-center">
-        <TbPointFilled className={iconClass} />
-        <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
-          Reseller News
-        </p>
-      </div>
-      <div className="grid grid-cols-12 mb-2 items-center">
-        <TbPointFilled className={iconClass} />
-        <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
-          In-Store Stock Monitors (Tesco, Nike Outlet..)
         </p>
       </div>
     </div>

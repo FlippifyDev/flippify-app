@@ -16,45 +16,78 @@ const PlansCardPremiumWhatsIncluded: React.FC<Props> = ({ specialPlan }) => {
 
   return (
     <div className={rootClass}>
-        {/*<h2 className="mb-4 font-bold text-lg">What&apos;s included:</h2>*/}
         <div className="grid grid-cols-12 mb-2 items-center">
-            <TbPointFilled className={iconClass} />
-            <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left text-md">
-                Everything in Standard
-            </p>
-        </div>
-        <div className="grid grid-cols-12 mb-2 items-center">
-            <TbPointFilled className={iconClass} />
-            <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
-                eBay Fulfulment
-            </p>
-        </div>
-        <div className="grid grid-cols-12 mb-2 items-center">
-            <TbPointFilled className={iconClass} />
-            <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
-                AI Store Integration
-            </p>
-        </div>
-        <div className="grid grid-cols-12 mb-2 items-center">
-            <TbPointFilled className={iconClass} />
-            <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
-                Data Visualisation and Reporting
-            </p>
-        </div>
-        <div className="grid grid-cols-12 mb-2 items-center">
-            <TbPointFilled className={iconClass} />
-            <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
-                Self Promotion Access
-            </p>
-        </div>
-
-        <div className="grid grid-cols-12 mb-2 items-center">
-            <TbPointFilled className={iconClass} />
-            <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
-                Access To All Courses
-            </p>
-        </div>
-
+        <TbPointFilled className={iconClass} />
+        <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left text-md">
+            Deal-Finder Access + Exclusive Bots
+        </p>
+      </div>
+      <div className="grid grid-cols-12 mb-2 items-center">
+        <TbPointFilled className={iconClass} />
+        <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
+            eBay & Amazon Automation (Unlimited Sales)
+        </p>
+      </div>
+      <div className="grid grid-cols-12 mb-2 items-center">
+        <TbPointFilled className={iconClass} />
+        <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
+            Financial Hub Automation
+        </p>
+      </div>
+      <div className="grid grid-cols-12 mb-2 items-center">
+        <TbPointFilled className={iconClass} />
+        <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
+            Welcome to Flippify Course
+        </p>
+      </div>
+      <div className="grid grid-cols-12 mb-2 items-center">
+        <TbPointFilled className={iconClass} />
+        <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
+            Exclusive Reselling Inner Circle
+        </p>
+      </div>
+      <div className="grid grid-cols-12 mb-2 items-center">
+        <TbPointFilled className={iconClass} />
+        <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
+            Reseller News (Early Access)
+        </p>
+      </div>
+      <div className="grid grid-cols-12 mb-2 items-center">
+        <TbPointFilled className={iconClass} />
+        <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
+            In-Store Stock Monitors (Tesco, Nike Outlet..)
+        </p>
+      </div>
+      <div className="grid grid-cols-12 mb-2 items-center">
+        <TbPointFilled className={iconClass} />
+        <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
+            1-on-1 Onboarding Call
+        </p>
+      </div>
+      <div className="grid grid-cols-12 mb-2 items-center">
+        <TbPointFilled className={iconClass} />
+        <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
+            Exclusive Weekly 1-on-1 Calls
+        </p>
+      </div>
+      <div className="grid grid-cols-12 mb-2 items-center">
+        <TbPointFilled className={iconClass} />
+        <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
+            VIP Community Access
+        </p>
+      </div>
+      <div className="grid grid-cols-12 mb-2 items-center">
+        <TbPointFilled className={iconClass} />
+        <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
+            Beta Access to New Features
+        </p>
+      </div>
+      <div className="grid grid-cols-12 mb-2 items-center">
+        <TbPointFilled className={iconClass} />
+        <p className="ml-1 sm:ml-0 col-span-11 mb-0 text-left">
+            Auto CSV Data Export
+        </p>
+      </div>
     </div>
   );
 };

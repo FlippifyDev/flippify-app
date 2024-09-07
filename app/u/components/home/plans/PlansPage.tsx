@@ -3,6 +3,7 @@
 import PlansCard from "./PlansCard";
 import PlansCardStandardWhatsIncluded from "./PlansCardProWhatsIncluded";
 import PlansCardPremiumWhatsIncluded from "./PlansCardEliteWhatsIncluded";
+import PlansCardBasicWhatsIncluded from "./PlansCardBasicWhatsIncluded";
 import React, { useState } from "react";
 
 import { Lato, Inter } from "next/font/google";
@@ -55,16 +56,18 @@ const PlansPage = () => {
           </label>
         </div>
       </div>
-      <div className="mt-10 grid grid-rows-3 md:grid-rows-none md:grid-cols-3 2xl:px-[100px] mb-8 gap-5">
+
+      {/* Use Flexbox with items-stretch to make all cards the same height */}
+      <div className="mt-10 grid grid-rows-3 md:grid-rows-none md:grid-cols-3 2xl:px-[100px] mb-8 gap-5 items-stretch">
         <PlansCard
-          title="Basic"
+          title="Standard"
           description="Unlock unlimited access to our comprehensive suite of tools, bots, and insights designed to supercharge your profitability. Our all-in-one subscription provides everything you need to optimize performance and drive growth."
           prices={[19.99, 199.99]} // Monthly and Yearly prices
           priceIds={{
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
           }}
-          whatsIncludedComponent={<PlansCardStandardWhatsIncluded />}
+          whatsIncludedComponent={<PlansCardBasicWhatsIncluded />}
           requiredSubscription={"accessGranted"}
           priceRange={selectedPlan}
         />
@@ -94,7 +97,6 @@ const PlansPage = () => {
           priceRange={selectedPlan}
         />
       </div>
-      
     </div>
   );
 };

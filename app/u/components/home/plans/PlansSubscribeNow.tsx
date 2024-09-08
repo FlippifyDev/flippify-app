@@ -4,7 +4,6 @@ import createCheckoutSession from '@/app/api/stripe-handlers/create-checkout-ses
 import React, { useEffect, useState, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 
-
 interface PlansSubscribeNowProps {
   priceId: string;
   specialPlan?: boolean;
@@ -55,10 +54,14 @@ const PlansSubscribeNow: React.FC<PlansSubscribeNowProps> = ({ priceId, specialP
       window.open("https://discord.com/channels/1236428617962229830/1236436288442466394", '_blank', 'noopener,noreferrer');
   };
 
-  const btnClassColours = specialPlan !== true ? 'btn border-0 bg-gray-200 hover:bg-gray-300 text-gray-500 w-2/3 mx-auto rounded-md': 'btn border-0 bg-white hover:bg-gray-200 text-black w-2/3 mx-auto rounded-sm';
+  // Update button styles for the special plan
+  const btnClassColours = specialPlan
+    ? 'btn border-0 bg-houseBlue hover:bg-houseHoverBlue text-white w-2/3 mx-auto rounded-lg shadow-lg' // Special plan button with houseBlue
+    : 'btn border-0 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 text-opacity-100 w-2/3 mx-auto rounded-lg shadow-lg'; // Default button styles for non-special plans
+
   const btnClass = isAvailable ? btnClassColours : `${btnClassColours} cursor-not-allowed`;
-  const btnFunction = serverPlan !== true ? handleBuyButtonClick: handleContactUsClick;
-  const btnText = serverPlan !== true ? 'Get Started': 'Contact Us';
+  const btnFunction = serverPlan !== true ? handleBuyButtonClick : handleContactUsClick;
+  const btnText = serverPlan !== true ? 'Get Started' : 'Contact Us';
 
   return (
     <div className="relative group w-full flex flex-col justify-end">

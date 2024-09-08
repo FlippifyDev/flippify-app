@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { handleUser } from '@/app/api/auth-firebase/firebaseConfig'; 
 
-import DashboardServerSubscription from "./DashboardServerSubscription";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import DashboardRecentSalesCard from './DashboardRecentSalesCard';
 import DashboardNoSubscription from "./DashboardNoSubscription";
@@ -48,7 +47,7 @@ const DashboardPage: React.FC = () => {
       </LayoutSubscriptionWrapper>
 
       {/* If They Have Access but NO Subscription */}
-      <LayoutSubscriptionWrapper requiredSubscriptions={['accessGranted', '!standard', '!server']}> 
+      <LayoutSubscriptionWrapper requiredSubscriptions={['accessGranted', '!standard']}> 
         <div className="flex flex-col lg:flex-row my-4 md:my-11 mx-2 md:mx-6 py-2 md:py-4 md:px-8 bg-white border border-gray-300 rounded-lg shadow-md overflow-hidden">
           <div className="lg:w-1/3">
             <DashboardNoSubscription username={session.user.username} />
@@ -69,13 +68,6 @@ const DashboardPage: React.FC = () => {
         </div>
         <div className="w-full">
           <DashboardRecentSalesCard customerId={userData.customerId} />
-        </div>
-      </LayoutSubscriptionWrapper>
-
-      {/* If They Have Subscription */}
-      <LayoutSubscriptionWrapper requiredSubscriptions={['server']}> 
-        <div className="w-full">
-          <DashboardServerSubscription customerId={userData.customerId} />
         </div>
       </LayoutSubscriptionWrapper>
     </div>

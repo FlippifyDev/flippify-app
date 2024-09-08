@@ -9,13 +9,13 @@ import { BackgroundGradient } from "@/components/ui/background-gradient";
 
 interface PlansCardProps {
   title: string;
+  description: string; // New quick description of who the plan is for
   prices: number[];
-  description: string;
   priceIds: { monthly: string; yearly: string };
   whatsIncludedComponent: any;
   specialPlan?: boolean;
-  requiredSubscription: string;
   priceRange: number;
+  className?: string;  // Allow className to be passed
 }
 
 const currencyConversionRates: Record<'GBP' | 'USD' | 'EUR', number> = {
@@ -32,13 +32,13 @@ const currencySymbols: Record<'GBP' | 'USD' | 'EUR', string> = {
 
 const PlansCard: React.FC<PlansCardProps> = ({
   title,
-  prices,
   description,
+  prices,
   priceIds,
   whatsIncludedComponent,
   specialPlan,
-  requiredSubscription,
-  priceRange
+  priceRange,
+  className,  // Accept the className
 }) => {
   const { data: session } = useSession();
   const [currency, setCurrency] = useState<'GBP' | 'USD' | 'EUR'>('GBP');
@@ -72,22 +72,38 @@ const PlansCard: React.FC<PlansCardProps> = ({
   const selectedPriceId = priceRange === 0 ? priceIds.monthly : priceIds.yearly;
 
   return (
-    <div className="w-full flex justify-center hover:scale-101 transition duration-200">
-      <div className="w-full sm:w-full min-h-[600px] relative">
+    <div className={`w-full flex justify-center hover:scale-101 transition duration-200 ${className || ""}`}>
+      <div className="w-full sm:w-full min-h-[650px] flex flex-col justify-between relative">
         {specialPlan ? (
-          <BackgroundGradient className="rounded-xl">
-            <div className="bg-white rounded-xl h-full p-4">
-              <section className="flex flex-col gap-3">
-                <h2 className="font-bold text-start pl-2 text-[20px]">{title}</h2>
-                <h3 className="font-extrabold text-start pl-2 text-[30px]">
+          <BackgroundGradient>
+            <div className="bg-white rounded-2xl h-full p-6 flex flex-col justify-between min-h-[650px]">
+              {/* Badge for "Most Popular" */}
+              <div className="absolute top-[-10px] left-6 z-20 bg-houseBlue text-white px-3 py-1 rounded-full text-xs">
+                Most Popular
+              </div>
+
+              {/* Title and Description */}
+              <div className="text-center">
+                <h2 className="font-bold text-[24px]">{title}</h2>
+                <p className="text-sm text-gray-600">{description}</p>
+              </div>
+
+              {/* Price Section */}
+              <div className="flex flex-row items-center mt-5 justify-center">
+                <h3 className="font-extrabold text-[40px] text-gray-900">
                   {`${currencySymbol}${convertedPrices[priceRange].toFixed(2)}`}
                 </h3>
-              </section>
+                <span className="ml-1 mt-4 text-lg text-black font-semibold">
+                  /{priceRange === 0 ? 'mo' : 'yr'}
+                </span>
+              </div>
 
+              {/* Features */}
               <section className="flex-grow mt-5">
                 {whatsIncludedComponent}
               </section>
 
+              {/* Button */}
               <section className="mt-auto">
                 {prices.length > 0 && (
                   <div className="flex">
@@ -98,14 +114,14 @@ const PlansCard: React.FC<PlansCardProps> = ({
                         unavailable={description}
                       />
                     </LayoutSubscriptionWrapper>
-                    <LayoutSubscriptionWrapper requiredSubscriptions={["accessGranted", `!${requiredSubscription}`]}>
+                    <LayoutSubscriptionWrapper requiredSubscriptions={["accessGranted", "!member"]}>
                       <PlansSubscribeNow
                         priceId={selectedPriceId}
-                        specialPlan={specialPlan}
+                        specialPlan={specialPlan}  
                         unavailable={description}
                       />
                     </LayoutSubscriptionWrapper>
-                    <LayoutSubscriptionWrapper requiredSubscriptions={[requiredSubscription]}>
+                    <LayoutSubscriptionWrapper requiredSubscriptions={["member"]}>
                       <ManageMembershipsButton specialPlan={specialPlan} />
                     </LayoutSubscriptionWrapper>
                   </div>
@@ -114,28 +130,39 @@ const PlansCard: React.FC<PlansCardProps> = ({
             </div>
           </BackgroundGradient>
         ) : (
-          <div className="bg-white rounded-xl h-full p-4">
-            <section className="flex flex-col gap-3">
-              <h2 className="font-bold text-start pl-2 text-[20px]">{title}</h2>
-              <h3 className="font-extrabold text-start pl-2 text-[30px]">
+          <div className="bg-white border rounded-2xl hover:shadow-md transition duration-200 h-full p-6 flex flex-col justify-between min-h-[650px]">
+            {/* Title and Description */}
+            <div className="text-center">
+              <h2 className="font-bold text-[24px]">{title}</h2>
+              <p className="text-sm text-gray-600">{description}</p>
+            </div>
+
+            {/* Price Section */}
+            <div className="flex flex-row items-center mt-5 justify-center">
+              <h3 className="font-extrabold text-[40px] text-gray-900">
                 {`${currencySymbol}${convertedPrices[priceRange].toFixed(2)}`}
               </h3>
-            </section>
+              <span className="ml-1 mt-4 text-lg text-black font-semibold">
+                /{priceRange === 0 ? 'mo' : 'yr'}
+              </span>
+            </div>
 
+            {/* Features */}
             <section className="flex-grow mt-5">
               {whatsIncludedComponent}
             </section>
 
+            {/* Button */}
             <section className="mt-auto">
               {prices.length > 0 && (
                 <div className="flex">
                   <LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
                     <PlansGetAccessButton redirect="dashboard" unavailable={description} />
                   </LayoutSubscriptionWrapper>
-                  <LayoutSubscriptionWrapper requiredSubscriptions={["accessGranted", `!${requiredSubscription}`]}>
+                  <LayoutSubscriptionWrapper requiredSubscriptions={["accessGranted", "!member"]}>
                     <PlansSubscribeNow priceId={selectedPriceId} unavailable={description} />
                   </LayoutSubscriptionWrapper>
-                  <LayoutSubscriptionWrapper requiredSubscriptions={[requiredSubscription]}>
+                  <LayoutSubscriptionWrapper requiredSubscriptions={["member"]}>
                     <ManageMembershipsButton />
                   </LayoutSubscriptionWrapper>
                 </div>

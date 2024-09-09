@@ -2,7 +2,7 @@
 
 import PlansCard from "./PlansCard";
 import PlansCardStandardWhatsIncluded from "./PlansCardProWhatsIncluded";
-import PlansCardPremiumWhatsIncluded from "./PlansCardEliteWhatsIncluded";
+import PlansCardEliteWhatsIncluded from "./PlansCardEliteWhatsIncluded";
 import PlansCardBasicWhatsIncluded from "./PlansCardStandardWhatsIncluded";
 import React, { useState } from "react";
 
@@ -92,7 +92,7 @@ const PlansPage = () => {
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
           }}
-          whatsIncludedComponent={<PlansCardPremiumWhatsIncluded />}
+          whatsIncludedComponent={<PlansCardEliteWhatsIncluded />}
           priceRange={selectedPlan}
         />
       </div>

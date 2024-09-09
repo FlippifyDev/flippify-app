@@ -1,19 +1,12 @@
 import React from "react";
-import { SiTicktick } from "react-icons/si";
+import ClickableBulletPoint from "./PlansClickableBulletPoint"; // Correct import path for ClickableBulletPoint
 
 interface Props {
   specialPlan?: boolean;
 }
 
-const PlansCardPremiumWhatsIncluded: React.FC<Props> = ({ specialPlan }) => {
-  const rootClass =
-    specialPlan !== true
-      ? "flex flex-col items-start text-gray-500 pt-6 pb-6 pl-2 gap-3"
-      : "flex flex-col items-start text-white pt-6 pb-6 pl-2 gap-3";
-
-  const iconClass = "col-span-1 inline-block mr-3 text-houseBlue text-sm";
-  const comingSoonIconClass =
-    "col-span-1 inline-block mr-3 text-grey-200 text-sm";
+const PlansCardEliteWhatsIncluded: React.FC<Props> = ({ specialPlan }) => {
+  const rootClass = "flex flex-col items-start text-gray-500 pt-6 pb-6 pl-2 gap-3";
 
   return (
     <div className="mb-4">
@@ -21,50 +14,41 @@ const PlansCardPremiumWhatsIncluded: React.FC<Props> = ({ specialPlan }) => {
         <p>Everything in Pro, plus:</p>
       </div>
       <div className={rootClass}>
-        <div className="grid grid-cols-12 mb-2 items-center">
-          <SiTicktick className={iconClass} />
-          <p className="pl-2 ml-1 sm:ml-0 col-span-11 mb-0 text-left">
-            1-on-1 Onboarding Call
-          </p>
-        </div>
-        <div className="grid grid-cols-12 mb-2 items-center">
-          <SiTicktick className={iconClass} />
-          <p className="pl-2 ml-1 sm:ml-0 col-span-11 mb-0 text-left">
-            Weekly 1-on-1 Calls
-          </p>
-        </div>
-        <div className="grid grid-cols-12 mb-2 items-center">
-          <SiTicktick className={iconClass} />
-          <p className="pl-2 ml-1 sm:ml-0 col-span-11 mb-0 text-left">
-            VIP Community Access
-          </p>
-        </div>
-        <div className="grid grid-cols-12 mb-2 items-center">
-          <SiTicktick className={iconClass} />
-          <p className="pl-2 ml-1 sm:ml-0 col-span-11 mb-0 text-left">
-            Beta Access to New Features
-          </p>
-        </div>
+        <ClickableBulletPoint
+          text="1-on-1 Onboarding Call"
+          tooltip="Receive a personalized 1-on-1 onboarding session."
+        />
+        <ClickableBulletPoint
+          text="Weekly 1-on-1 Calls"
+          tooltip="Have weekly 1-on-1 calls to ensure your success."
+        />
+        <ClickableBulletPoint
+          text="VIP Community Access"
+          tooltip="Join an exclusive VIP community of elite resellers."
+        />
+        <ClickableBulletPoint
+          text="Beta Access to New Features"
+          tooltip="Be the first to try out new features in beta."
+        />
       </div>
+
       <div className="text-black font-semibold ml-2 mb-[-6px]">
         <p>Coming Soon:</p>
       </div>
       <div className={rootClass}>
-        <div className="grid grid-cols-12 mb-2 items-center">
-          <SiTicktick className={comingSoonIconClass} />
-          <p className="pl-2 ml-1 sm:ml-0 col-span-11 mb-0 text-left">
-            Amazon Account Connection
-          </p>
-        </div>
-        <div className="grid grid-cols-12 mb-2 items-center">
-          <SiTicktick className={comingSoonIconClass} />
-          <p className="pl-2 ml-1 sm:ml-0 col-span-11 mb-0 text-left text-md">
-            Exclusive Limited Deals
-          </p>
-        </div>
+        <ClickableBulletPoint
+          text="Amazon Account Connection"
+          tooltip="Integrate your Amazon account for seamless automation."
+          comingSoon // Changed from "disabled" to "comingSoon"
+        />
+        <ClickableBulletPoint
+          text="Exclusive Limited Deals"
+          tooltip="Gain access to exclusive deals available only to VIP members."
+          comingSoon // Changed from "disabled" to "comingSoon"
+        />
       </div>
     </div>
   );
 };
 
-export default PlansCardPremiumWhatsIncluded;
+export default PlansCardEliteWhatsIncluded;

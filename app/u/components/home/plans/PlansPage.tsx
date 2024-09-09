@@ -59,7 +59,7 @@ const PlansPage = () => {
       </div>
 
       {/* Subscription Cards with equal heights */}
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-3 mx-8 gap-6 items-stretch">
+      <div className="mt-10 grid grid-cols-1 md:grid-cols-3 mx-16 gap-8 items-stretch">
         <PlansCard
           title="Standard"
           description="For beginners"
@@ -87,7 +87,7 @@ const PlansPage = () => {
         <PlansCard
           title="Elite"
           description="For experts"
-          prices={[99.99, 999.90]}
+          prices={[79.99, 799.99]}
           priceIds={{
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",

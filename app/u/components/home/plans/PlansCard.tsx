@@ -73,10 +73,10 @@ const PlansCard: React.FC<PlansCardProps> = ({
 
   return (
     <div className={`w-full flex justify-center hover:scale-101 transition duration-200 ${className || ""}`}>
-      <div className="w-full sm:w-full min-h-[650px] flex flex-col justify-between relative">
+      <div className="w-full sm:w-full min-h-[700px] flex flex-col justify-between relative">
         {specialPlan ? (
           <BackgroundGradient>
-            <div className="bg-white rounded-2xl h-full p-6 flex flex-col justify-between min-h-[650px]">
+            <div className="bg-white rounded-2xl h-full p-6 flex flex-col justify-between min-h-[700px]">
               {/* Badge for "Most Popular" */}
               <div className="absolute top-[-10px] left-6 z-20 bg-houseBlue text-white px-3 py-1 rounded-full text-xs">
                 Most Popular
@@ -130,7 +130,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
             </div>
           </BackgroundGradient>
         ) : (
-          <div className="bg-white border rounded-2xl hover:shadow-md transition duration-200 h-full p-6 flex flex-col justify-between min-h-[650px]">
+          <div className="bg-white border rounded-2xl hover:shadow-md transition duration-200 h-full p-6 flex flex-col justify-between min-h-[700px]">
             {/* Title and Description */}
             <div className="text-center">
               <h2 className="font-bold text-[24px]">{title}</h2>

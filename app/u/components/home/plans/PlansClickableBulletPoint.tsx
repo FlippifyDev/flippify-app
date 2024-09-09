@@ -8,8 +8,8 @@ interface ClickableBulletPointProps {
 }
 
 const PlansClickableBulletPoint: React.FC<ClickableBulletPointProps> = ({ text, tooltip, comingSoon }) => {
-  const textColor = 'text-gray-500'; 
-  const hoverColor = 'hover:text-houseBlue';  // Use regular hover for color change
+  const textColor = 'text-gray-500';
+  const hoverColor = 'hover:text-houseBlue';  // Color change on hover
   const iconColor = comingSoon ? 'text-gray-500' : 'text-houseBlue';
 
   return (
@@ -25,7 +25,7 @@ const PlansClickableBulletPoint: React.FC<ClickableBulletPointProps> = ({ text, 
       </span>
 
       {/* Tooltip */}
-      <div className="absolute top-full left-0 mt-2 p-2 bg-gray-800 text-white text-sm rounded-md z-10 shadow-lg transition-opacity duration-300 max-w-xs opacity-0 hover:opacity-100 pointer-events-none">
+      <div className="absolute top-full left-0 mt-1 p-2 bg-gray-800 text-white text-sm rounded-md z-10 shadow-lg transition-opacity duration-300 max-w-xs opacity-0 hover:opacity-100">
         {tooltip}
       </div>
     </div>

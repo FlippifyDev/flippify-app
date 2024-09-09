@@ -5,17 +5,17 @@ import ManageMembershipsButton from "./PlansManageMembershipButton";
 import PlansGetAccessButton from "./PlansGetAccessButton";
 import { useSession } from "next-auth/react";
 import { database, ref, get } from "@/app/api/auth-firebase/firebaseConfig";
-import { BackgroundGradient } from "@/components/ui/background-gradient";
+import { BackgroundGradient } from "@/components/ui/background-gradient";  // Re-add BackgroundGradient
 
 interface PlansCardProps {
   title: string;
-  description: string; // New quick description of who the plan is for
+  description: string; 
   prices: number[];
   priceIds: { monthly: string; yearly: string };
   whatsIncludedComponent: any;
   specialPlan?: boolean;
   priceRange: number;
-  className?: string;  // Allow className to be passed
+  className?: string;
 }
 
 const currencyConversionRates: Record<'GBP' | 'USD' | 'EUR', number> = {
@@ -38,7 +38,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
   whatsIncludedComponent,
   specialPlan,
   priceRange,
-  className,  // Accept the className
+  className,
 }) => {
   const { data: session } = useSession();
   const [currency, setCurrency] = useState<'GBP' | 'USD' | 'EUR'>('GBP');
@@ -72,10 +72,10 @@ const PlansCard: React.FC<PlansCardProps> = ({
   const selectedPriceId = priceRange === 0 ? priceIds.monthly : priceIds.yearly;
 
   return (
-    <div className={`w-full flex justify-center hover:scale-101 transition duration-200 ${className || ""}`}>
+    <div className={`w-full flex justify-center transition duration-200 ${className || ""}`}>
       <div className="w-full sm:w-full min-h-[700px] flex flex-col justify-between relative">
         {specialPlan ? (
-          <BackgroundGradient>
+          <BackgroundGradient> {/* Background Gradient re-added */}
             <div className="bg-white rounded-2xl h-full p-6 flex flex-col justify-between min-h-[700px]">
               {/* Badge for "Most Popular" */}
               <div className="absolute top-[-10px] left-6 z-20 bg-houseBlue text-white px-3 py-1 rounded-full text-xs">
@@ -117,7 +117,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
                     <LayoutSubscriptionWrapper requiredSubscriptions={["accessGranted", "!member"]}>
                       <PlansSubscribeNow
                         priceId={selectedPriceId}
-                        specialPlan={specialPlan}  
+                        specialPlan={specialPlan}
                         unavailable={description}
                       />
                     </LayoutSubscriptionWrapper>

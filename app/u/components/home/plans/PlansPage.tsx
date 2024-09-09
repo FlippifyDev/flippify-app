@@ -79,10 +79,9 @@ const PlansPage = () => {
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
           }}
-          whatsIncludedComponent={<PlansCardStandardWhatsIncluded specialPlan={true} />}
+          whatsIncludedComponent={<PlansCardStandardWhatsIncluded />}
           specialPlan={true}
           priceRange={selectedPlan}
-          className="min-h-[650px]"  // Ensure consistent height with others
         />
         <PlansCard
           title="Elite"

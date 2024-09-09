@@ -1,14 +1,8 @@
 import React from "react";
-import ClickableBulletPoint from "./PlansClickableBulletPoint"; // Ensure the correct import path
+import PlansClickableBulletPoint from "./PlansClickableBulletPoint";
 
-interface Props {
-  specialPlan?: boolean;
-}
-
-const PlansCardStandardWhatsIncluded: React.FC<Props> = ({ specialPlan }) => {
-  const rootClass = specialPlan !== true ? 
-    "flex flex-col items-start text-gray-500 pt-6 pb-6 pl-2 gap-3": 
-    "flex flex-col items-start text-white pt-6 pb-6 pl-2 gap-3";
+const PlansCardStandardWhatsIncluded = () => {
+  const rootClass = "flex flex-col items-start text-gray-500 pt-6 pb-6 pl-2 gap-3"
 
   return (
     <div className="mb-4">
@@ -16,11 +10,11 @@ const PlansCardStandardWhatsIncluded: React.FC<Props> = ({ specialPlan }) => {
         <p>Features Include:</p>
       </div>
       <div className={rootClass}>
-        <ClickableBulletPoint
+        <PlansClickableBulletPoint
           text="All Deal-Finding Bots"
           tooltip="Get access to all available deal-finding bots that continuously scan the market for opportunities."
         />
-        <ClickableBulletPoint
+        <PlansClickableBulletPoint
           text="Exclusive Reselling Inner Circle"
           tooltip="Join a community of top resellers and get insider tips and tricks."
         />
@@ -30,25 +24,25 @@ const PlansCardStandardWhatsIncluded: React.FC<Props> = ({ specialPlan }) => {
         <p>Coming Soon:</p>
       </div>
       <div className={rootClass}>
-        <ClickableBulletPoint
+        <PlansClickableBulletPoint
           text="20 Manually Tracked Sales/month"
           tooltip="Track your top 20 sales manually with our advanced tracking tools."
-          comingSoon // Mark as coming soon
+          comingSoon 
         />
-        <ClickableBulletPoint
+        <PlansClickableBulletPoint
           text="Financial Hub (Manual)"
           tooltip="Keep track of all financial transactions manually in our Financial Hub."
-          comingSoon // Mark as coming soon
+          comingSoon 
         />
-        <ClickableBulletPoint
+        <PlansClickableBulletPoint
           text="Inventory & Order Management (Manual)"
           tooltip="Manage your inventory and orders manually with advanced features."
-          comingSoon // Mark as coming soon
+          comingSoon 
         />
-        <ClickableBulletPoint
+        <PlansClickableBulletPoint
           text="'Welcome to Flippify' Course"
           tooltip="Learn everything you need to know with our 'Welcome to Flippify' course."
-          comingSoon // Mark as coming soon
+          comingSoon 
         />
       </div>
     </div>

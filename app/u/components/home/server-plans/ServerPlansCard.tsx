@@ -45,12 +45,12 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
   const selectedPriceId = priceRange === 0 ? priceIds.monthly : priceIds.yearly;
 
   return (
-    <div className="w-full flex justify-center transition duration-200">
-      <div className="w-full sm:w-full min-h-[700px] flex flex-col justify-between relative">
+    <div className="w-full flex justify-center transition duration-200 relative z-0"> {/* Set z-index to 0 */}
+      <div className="w-full sm:w-full min-h-[700px] flex flex-col justify-between relative z-0">
         {specialPlan ? (
           <BackgroundGradient>
-            <div className="bg-white rounded-2xl h-full p-6 flex flex-col justify-between min-h-[700px]">
-              <div className="absolute top-[-10px] left-6 z-20 bg-houseBlue text-white px-3 py-1 rounded-full text-xs">
+            <div className="bg-white rounded-2xl h-full p-6 flex flex-col justify-between min-h-[700px] relative z-0">
+              <div className="absolute top-[-10px] left-6 z-10 bg-houseBlue text-white px-3 py-1 rounded-full text-xs">
                 Most Popular
               </div>
 
@@ -93,7 +93,7 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
             </div>
           </BackgroundGradient>
         ) : (
-          <div className="bg-white border rounded-2xl hover:shadow-md transition duration-200 h-full p-6 flex flex-col justify-between min-h-[700px]">
+          <div className="bg-white border rounded-2xl hover:shadow-md transition duration-200 h-full p-6 flex flex-col justify-between min-h-[700px] relative z-0">
             <div className="text-center">
               <h2 className="font-bold text-[24px]">{title}</h2>
               <p className="text-sm text-gray-600">{description}</p>

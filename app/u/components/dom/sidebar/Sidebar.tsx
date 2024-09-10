@@ -1,5 +1,3 @@
-"use client";
-
 import SidebarMonitorButtons from './SidebarMonitorButtons';
 import SidebarSignOutButton from './SidebarSignOutButton';
 import SidebarHomeButtons from './SidebarHomeButtons';
@@ -26,7 +24,7 @@ const Sidebar = () => {
   return (
     <div>
       <Alert message="Membership Required." visible={alertVisible} onClose={hideAlert} />
-      <div className="drawer drawer-mobile xl:drawer-open">
+      <div className="drawer drawer-mobile xl:drawer-open z-50"> {/* Increased z-index */}
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
         <div className="drawer-side shadow-lg">
           <ul className="menu bg-white text-base-content min-h-full w-72 2xl:w-80 px-4 flex flex-col justify-between border-r border-gray-200">
@@ -36,7 +34,7 @@ const Sidebar = () => {
                 <div className="mb-2">
                   <p className="text-lightModeText text-lg font-bold select-none">Home</p>
                 </div>
-                <SidebarHomeButtons showAlert={showAlert}/>
+                <SidebarHomeButtons showAlert={showAlert} />
               </section>
 
               {/* Monitors Section */}

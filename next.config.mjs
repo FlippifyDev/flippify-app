@@ -122,6 +122,11 @@ const nextConfig = {
         hostname: 'images.hotukdeals.com',
         port: '',
       },
+      {
+        protocol: 'https',
+        hostname: 'img.ebyrcdn.net',
+        port: '',
+      },
     ],
   },
   env: {

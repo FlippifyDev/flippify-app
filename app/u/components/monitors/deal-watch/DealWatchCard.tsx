@@ -9,10 +9,13 @@ interface CardProps {
 }
 
 const DealWatchCard: React.FC<CardProps> = ({ product }) => {
+  const estimatedProfit = (product.estimatedProfit ?? 0) * 0.97;
+  
   // Price display logic
   const price = product.price !== undefined ? `£${product.price.toFixed(2)}` : "Not Found";
   const ebayMeanPrice = product.ebay_mean_price !== undefined ? `£${product.ebay_mean_price.toFixed(2)}` : "Not Found";
   const ebayMaxPrice = product.ebay_max_price !== undefined ? `£${product.ebay_max_price.toFixed(2)}` : "Not Found";
+  const profitClass = estimatedProfit > 0 ? 'text-green-500 font-semibold' : 'text-red-500 font-semibold';
 
   return (
     <div className="grid grid-rows-10 bg-white shadow-lg rounded-lg overflow-hidden w-86 p-2 h-[32rem]">
@@ -52,6 +55,10 @@ const DealWatchCard: React.FC<CardProps> = ({ product }) => {
                 <tr>
                   <td>eBay Max Price</td>
                   <td>{ebayMaxPrice}</td>
+                </tr>
+                <tr>
+                  <td>Estimated profit</td>
+                  <td className={profitClass}>£{estimatedProfit.toFixed(2)}</td>
                 </tr>
               </tbody>
             </table>

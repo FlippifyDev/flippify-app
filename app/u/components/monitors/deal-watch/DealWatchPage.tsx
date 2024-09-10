@@ -21,15 +21,21 @@ const DealWatchPage = () => {
     async function loadProducts() {
       const allProducts = await fetchProducts<IDealWatch>("DealWatch");
 
-      setProducts(allProducts);
-      setDisplayedProducts(sortByPriceAndStock(allProducts).slice(0, limit)); // Display the first batch
+      // Calculate estimated profit
+      const updatedProducts = allProducts.map(product => {
+        product.estimatedProfit = product.ebay_mean_price - (product.price || 0);
+        return product;
+      });
+
+      setProducts(updatedProducts);
+      setDisplayedProducts(sortByProfitAndStock(updatedProducts).slice(0, limit)); // Display the first batch
     }
 
     loadProducts();
   }, []);
 
   // Function to sort products by price and stock availability
-  const sortByPriceAndStock = (products: IDealWatch[]) => {
+  const sortByProfitAndStock = (products: IDealWatch[]) => {
     return products
       .sort((a, b) => {
         // Check if either product is missing essential data
@@ -39,34 +45,27 @@ const DealWatchPage = () => {
         if (missingDataA && !missingDataB) return 1;  // Move products with missing data to the end
         if (!missingDataA && missingDataB) return -1; // Move products with missing data to the end
 
-        // If both have the same stock status, sort by price (higher prices first)
-        const priceA = a.price || 0;
-        const priceB = b.price || 0;
-        return priceB - priceA; // Sort descending by price
+        // If both have the same stock status, sort by estimated profit
+        const profitA = a.estimatedProfit || 0;
+        const profitB = b.estimatedProfit || 0;
+        return profitB - profitA; // Sort descending by estimated profit
       });
   };
 
   const loadMoreProducts = useCallback(() => {
-    const nextOffset = Math.min(offset + limit, products.length);
-    // Prevent loading if we already have all products or are in a loading state
-    if (loading || nextOffset >= products.length) return;
+    if (loading) return; // If already loading, do nothing
+  
+    let nextOffset = Math.min(offset + limit, products.length);
+    nextOffset = Math.min(nextOffset + limit, products.length); // Prevents duplicating products
+  
+    // Prevent loading if we already have all products
+    if (nextOffset >= products.length) return;
   
     setLoading(true);
   
     setTimeout(() => {
-      setDisplayedProducts((prevProducts) => {
-        // Calculate the new offset, make sure it doesn't exceed the total products length
-        const nextOffset = Math.min(offset + limit, products.length);
-  
-        // Slice the products from the current offset to the next
+      setDisplayedProducts(prevProducts => {
         const newProducts = products.slice(offset, nextOffset);
-  
-        // Stop loading if no new products found
-        if (newProducts.length === 0) {
-          setLoading(false);
-          return prevProducts;
-        }
-  
         // Update the offset to the new position
         setOffset(nextOffset);
   
@@ -113,7 +112,7 @@ const DealWatchPage = () => {
       });
     } else {
       // If no search query, sort by price and stock
-      filtered = sortByPriceAndStock(products);
+      filtered = sortByProfitAndStock(products);
     }
 
     // Reset pagination and display filtered products

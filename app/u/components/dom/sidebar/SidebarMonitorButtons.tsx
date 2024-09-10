@@ -21,6 +21,15 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({ showAlert 
       <DisabledSideBarButton text="Electronics" redirect='monitor-electronics' symbol={<FaLaptop className="text-lg" />} tooltip="Coming Soon"/>
 
       {/* Deal Watch */}
+      <LayoutSubscriptionWrapper anySubscriptions={['standard', 'electronics', 'admin']}>
+        <SidebarButton
+          text="Electronics"
+          redirect="monitors/electronics"
+          symbol={<FaParachuteBox className="text-md" />}
+        />
+      </LayoutSubscriptionWrapper>
+
+      {/* Deal Watch */}
       <LayoutSubscriptionWrapper anySubscriptions={['standard', 'deal watch', 'admin']}>
         <SidebarButton
           text="Deal Watch"

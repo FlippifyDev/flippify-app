@@ -17,6 +17,7 @@ interface IDealWatch extends Document {
     timestamp: Date;
     type: string;
     region: string;
+    estimatedProfit?: number
 }
 
 
@@ -36,6 +37,7 @@ const dealWatchSchema = new Schema<IDealWatch>({
     timestamp: { type: Date, default: Date.now, required: true },
     type: { type: String, required: true },
     region: { type: String, required: true },
+    estimatedProfit: { type: Number, required: false },
   });
   
 

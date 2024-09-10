@@ -28,8 +28,11 @@ const PlansGetAccessButton: React.FC<PlansGetAccessButtonProps> = ({ redirect, s
     }
   };
 
-
-  const btnClass = specialPlan !== true ? 'btn border-0 bg-gray-200 hover:bg-gray-300 text-gray-500 w-2/3 mx-auto rounded-md': 'btn border-0 bg-white hover:bg-gray-200 text-black w-2/3 mx-auto rounded-sm';
+  // Apply the new button theming based on whether it's a special plan
+  const btnClass = specialPlan
+    ? 'btn border-0 bg-houseBlue hover:bg-houseHoverBlue text-white w-2/3 mx-auto rounded-lg shadow-lg' // Special plan button with houseBlue
+    : 'btn border-0 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 text-opacity-100 w-2/3 mx-auto rounded-lg shadow-lg'; // Default button styles for non-special plans
+  
   const isAvailable = unavailable !== 'unavailable';
 
   return (

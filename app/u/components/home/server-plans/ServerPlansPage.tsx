@@ -1,9 +1,11 @@
 "use client";
 
-import { Lato, Inter } from "next/font/google";
-import ServerPlansCard from "./ServerPlansCard";
-import ServerPlansCardWhatsIncluded from "./ServerPlansCardWhatsIncluded";
 import React, { useState } from "react";
+import { Lato, Inter } from "next/font/google";
+import ServerPlansCard from "./ServerPlansCard"; // New Server Plan Card component
+import ServerPlansCardDealWatchWhatsIncluded from "./ServerPlansCardDealWatchWhatsIncluded"; // Deal Watch Features
+import ServerPlansCardRetiringSetsWhatsIncluded from "./ServerPlansCardRetiringSetsWhatsIncluded"; // Retiring Sets Features
+import ServerPlansCardElectronicsWhatsIncluded from "./ServerPlansCardElectronicsWhatsIncluded"; // Electronics Features
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
@@ -13,7 +15,6 @@ const ServerPlansPage = () => {
 
   // Function to handle toggle switch change
   const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Set selectedPlan based on whether the toggle is checked
     setSelectedPlan(event.target.checked ? 1 : 0);
   };
 
@@ -28,13 +29,15 @@ const ServerPlansPage = () => {
             <a
               className={`${inter.className} mb-8 text-lightModeText text-4xl sm:text-5xl font-bold`}
             >
-              {/* This is the space between pricing and made easy */} Made Easy
+              Made Easy
             </a>
           </p>
         </div>
         <div className="flex justify-center w-4/5 sm:w-full">
           <p className="mx-4 sm:mx-2 text-lightModeText text-md sm:text-lg text-center">
-            Looking to integrate a bot into your server? <br />Discover powerful features designed to elevate your Discord community&apos;s interaction.
+            Looking to integrate a bot into your server? <br />
+            Utilize our bots to elevate your Discord
+            community's value.
           </p>
         </div>
         <div className="flex justify-center w-4/5 sm:w-full">
@@ -46,53 +49,58 @@ const ServerPlansPage = () => {
               checked={selectedPlan === 1}
               onChange={handleToggleChange}
             />
-            <span className="mr-3 text-sm font-medium text-gray-900 dark:text-gray-300 select-none">Monthly</span>
+            <span className="mr-3 text-sm font-medium text-gray-900 dark:text-gray-300 select-none">
+              Monthly
+            </span>
             <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-            <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300 select-none">Yearly</span>
+            <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300 select-none">
+              Yearly
+            </span>
           </label>
         </div>
       </div>
-      <div className="mt-10 grid grid-rows-3 md:grid-rows-none md:grid-cols-3 2xl:px-[100px] mb-8 gap-5">
+
+      {/* Server Plans */}
+      <div className="mt-10 grid grid-cols-1 md:grid-cols-3 mx-16 gap-8 items-stretch">
         <ServerPlansCard
           title="Deal Watch UK"
-          description="Effortlessly discover profitable reselling opportunities with our advanced webscraper, which scans hotukdeals.co.uk and compares prices with sold items on eBay to maximize your profits."
+          description="Discover endless profitable deals found by our advanced webscraper searching 'hotukdeals'."
           prices={[69.99, 699.90]}
           priceIds={{
             monthly: "price_1PfJ9bJJRepiHZ8dk689bT3H",
             yearly: "price_1PfJ9bJJRepiHZ8dTK0EGZ8k",
           }}
-          whatsIncludedComponent={<ServerPlansCardWhatsIncluded specialPlan={true} whatsIncludedText={["Advanced eBay Price Comparison", "Real-time HotUKDeals Scanning", "Instant Alerts for High-Profit Opportunities", "UK-Focused Deal Tracking", "Frequent Updates on Trending Electronics Deals"]}/>}
+          whatsIncludedComponent={<ServerPlansCardDealWatchWhatsIncluded />}
           specialPlan={true}
-          requiredSubscription="deal watch"
           priceRange={selectedPlan}
         />
         <ServerPlansCard
           title="Retiring Sets Deals"
-          description="Enhance your reselling efficiency with our cutting-edge bot, scanning diverse websites to identify Lego sets nearing retirement and ensuring you never miss a profitable sale."
+          description="Scanning all corners of the internet for deals on soon-to-retire lego sets meaning big profits long-term."
           prices={[119.99, 1199.90]}
           priceIds={{
             monthly: "price_1PfJ7pJJRepiHZ8d7gs78YEp",
             yearly: "price_1PfJ7pJJRepiHZ8dAkwkWqHy",
           }}
-          whatsIncludedComponent={<ServerPlansCardWhatsIncluded whatsIncludedText={["Comprehensive eBay Price Analysis", "Integrated Keepa Price History Links", "Accurate Retirement Date Notifications", "UK-Centric Retailer Monitoring", "Continuous Expansion of Supported Websites"]}/>}
-          requiredSubscription="retiring sets"
+          whatsIncludedComponent={<ServerPlansCardRetiringSetsWhatsIncluded />}
+          specialPlan={false}
           priceRange={selectedPlan}
         />
         <ServerPlansCard
-            title="Electronics"
-            description="unavailable"
-            prices={[169.99, 1699.90]}
-            priceIds={{
-              monthly: "price_1PfJ9bJJRepiHZ8dk689bT3H",
-              yearly: "price_1PfJ9bJJRepiHZ8dTK0EGZ8k",
-            }}
-            whatsIncludedComponent={<ServerPlansCardWhatsIncluded whatsIncludedText={["Automated eBay Price Comparison", "Monitoring Across Thousands of Products", "High-Precision Profit Potential Alerts", "Dedicated UK Marketplace Focus", "Regular Alerts on Electronics Deals"]}/>}
-            requiredSubscription="electronics"
-            priceRange={selectedPlan}
-          />
+          title="Electronics"
+          description="Coming Soon - Searching for profitable deals on the best selling electronics on the market."
+          prices={[169.99, 1699.90]}
+          priceIds={{
+            monthly: "price_1PfJ9bJJRepiHZ8dk689bT3H",
+            yearly: "price_1PfJ9bJJRepiHZ8dTK0EGZ8k",
+          }}
+          whatsIncludedComponent={<ServerPlansCardElectronicsWhatsIncluded />}
+          specialPlan={false}  // Highlighted as special plan
+          priceRange={selectedPlan}
+        />
       </div>
     </div>
   );
-}
+};
 
 export default ServerPlansPage;

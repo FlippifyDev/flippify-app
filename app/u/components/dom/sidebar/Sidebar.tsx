@@ -25,7 +25,7 @@ const Sidebar = () => {
 
   return (
     <div>
-      <Alert message="Flippify Membership Required." visible={alertVisible} onClose={hideAlert} />
+      <Alert message="Membership Required." visible={alertVisible} onClose={hideAlert} />
       <div className="drawer drawer-mobile xl:drawer-open">
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
         <div className="drawer-side shadow-lg">

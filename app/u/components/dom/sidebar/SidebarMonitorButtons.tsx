@@ -1,36 +1,44 @@
-'use client';
+"use client";
 
-import DisabledSideBarButton from './SidebarButtonDisabled';
-import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
-import SidebarButton from './SidebarButton';
+import DisabledSideBarButton from "./SidebarButtonDisabled";
+import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
+import SidebarButton from "./SidebarButton";
 
-import React from 'react';
+import React from "react";
 import { PiLegoFill } from "react-icons/pi";
 import { FaLaptop } from "react-icons/fa";
 import { FaParachuteBox } from "react-icons/fa6";
-
 
 interface SidebaMonitorButtonsProps {
   showAlert: () => void;
 }
 
-const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({ showAlert }) => {
+const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
+  showAlert,
+}) => {
   return (
     <div>
       {/* Electronics */}
-      <DisabledSideBarButton text="Electronics" redirect='monitor-electronics' symbol={<FaLaptop className="text-lg" />} tooltip="Coming Soon"/>
-
-      {/* Deal Watch */}
-      <LayoutSubscriptionWrapper anySubscriptions={['standard', 'electronics', 'admin']}>
+      <LayoutSubscriptionWrapper anySubscriptions={["electronics", "admin"]}>
         <SidebarButton
           text="Electronics"
           redirect="monitors/electronics"
-          symbol={<FaParachuteBox className="text-md" />}
+          symbol={<FaLaptop className="text-md" />}
+        />
+      </LayoutSubscriptionWrapper>
+
+      {/* Electronics Disabled */}
+      <LayoutSubscriptionWrapper anySubscriptions={["!electronics", "!admin"]}>
+        <DisabledSideBarButton
+          text="Electronics"
+          redirect="monitor-electronics"
+          symbol={<FaLaptop className="text-lg" />}
+          tooltip="Coming Soon"
         />
       </LayoutSubscriptionWrapper>
 
       {/* Deal Watch */}
-      <LayoutSubscriptionWrapper anySubscriptions={['standard', 'deal watch', 'admin']}>
+      <LayoutSubscriptionWrapper anySubscriptions={["deal watch", "admin"]}>
         <SidebarButton
           text="Deal Watch"
           redirect="monitors/deal-watch"
@@ -38,7 +46,10 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({ showAlert 
         />
       </LayoutSubscriptionWrapper>
 
-      <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', '!deal watch', '!admin']}>
+      {/* Deal Watch Disabled */}
+      <LayoutSubscriptionWrapper
+        requiredSubscriptions={["!deal watch", "!admin"]}
+      >
         <DisabledSideBarButton
           text="Deal Watch"
           redirect="monitors/deal-watch"
@@ -47,8 +58,10 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({ showAlert 
         />
       </LayoutSubscriptionWrapper>
 
-      {/* Retiring Sets Deals */}
-      <LayoutSubscriptionWrapper anySubscriptions={['standard', 'retiring sets', 'admin']}>
+      {/* Retiring Sets */}
+      <LayoutSubscriptionWrapper
+        anySubscriptions={["retiring sets", "admin"]}
+      >
         <SidebarButton
           text="Retiring Sets"
           redirect="monitors/retiring-sets"
@@ -56,7 +69,10 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({ showAlert 
         />
       </LayoutSubscriptionWrapper>
 
-      <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', '!retiring sets', '!admin']}>
+      {/* Retiring Sets Disabled */}
+      <LayoutSubscriptionWrapper
+        requiredSubscriptions={["!retiring sets", "!admin"]}
+      >
         <DisabledSideBarButton
           text="Retiring Sets"
           redirect="monitors/retiring-sets"
@@ -64,8 +80,6 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({ showAlert 
           showAlert={showAlert}
         />
       </LayoutSubscriptionWrapper>
-
-     
     </div>
   );
 };

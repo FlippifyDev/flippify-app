@@ -59,7 +59,7 @@ const PlansPage = () => {
       </div>
 
       {/* Subscription Cards with equal heights */}
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-3 mx-16 gap-8 items-stretch">
+      <div className="mt-10 grid grid-cols-1 md:grid-cols-3 mx-4 md:mx-2 lg:mx-16 gap-8 gap-8 items-stretch">
         <PlansCard
           title="Standard"
           description="For beginners"

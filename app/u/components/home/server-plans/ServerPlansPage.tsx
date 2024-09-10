@@ -36,8 +36,7 @@ const ServerPlansPage = () => {
         <div className="flex justify-center w-4/5 sm:w-full">
           <p className="mx-4 sm:mx-2 text-lightModeText text-md sm:text-lg text-center">
             Looking to integrate a bot into your server? <br />
-            Utilize our bots to elevate your Discord
-            community's value.
+            Utilize our bots to elevate your Discord community's value.
           </p>
         </div>
         <div className="flex justify-center w-4/5 sm:w-full">
@@ -61,7 +60,7 @@ const ServerPlansPage = () => {
       </div>
 
       {/* Server Plans */}
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-3 mx-16 gap-8 items-stretch">
+      <div className="mt-10 grid grid-cols-1 md:grid-cols-3 mx-4 md:mx-2 lg:mx-16 gap-8 items-stretch">
         <ServerPlansCard
           title="Deal Watch UK"
           description="Discover endless profitable deals found by our advanced webscraper searching 'hotukdeals'."
@@ -73,6 +72,7 @@ const ServerPlansPage = () => {
           whatsIncludedComponent={<ServerPlansCardDealWatchWhatsIncluded />}
           specialPlan={true}
           priceRange={selectedPlan}
+          planRole="deal watch"
         />
         <ServerPlansCard
           title="Retiring Sets Deals"
@@ -85,6 +85,7 @@ const ServerPlansPage = () => {
           whatsIncludedComponent={<ServerPlansCardRetiringSetsWhatsIncluded />}
           specialPlan={false}
           priceRange={selectedPlan}
+          planRole="retiring sets"
         />
         <ServerPlansCard
           title="Electronics"
@@ -95,8 +96,9 @@ const ServerPlansPage = () => {
             yearly: "price_1PfJ9bJJRepiHZ8dTK0EGZ8k",
           }}
           whatsIncludedComponent={<ServerPlansCardElectronicsWhatsIncluded />}
-          specialPlan={false}  // Highlighted as special plan
+          specialPlan={false}  // Not highlighted as a special plan
           priceRange={selectedPlan}
+          planRole="electronics"
         />
       </div>
     </div>

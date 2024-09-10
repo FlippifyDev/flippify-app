@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
-import PlansSubscribeNow from "../plans/PlansSubscribeNow";
 import PlansGetAccessButton from "../plans/PlansGetAccessButton";
 import ManageMembershipsButton from "../plans/PlansManageMembershipButton";
-import { useSession } from "next-auth/react";
-import { database, ref, get } from "@/app/api/auth-firebase/firebaseConfig";
+import PlansContactUs from "./ServerPlansContactUs"; // Import the new Contact Us button
 import { BackgroundGradient } from "@/components/ui/background-gradient";
 
 interface ServerPlansCardProps {
@@ -15,6 +13,7 @@ interface ServerPlansCardProps {
   whatsIncludedComponent: any;
   specialPlan?: boolean;
   priceRange: number;
+  planRole: string;
 }
 
 const currencyConversionRates: Record<"GBP" | "USD" | "EUR", number> = {
@@ -37,34 +36,10 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
   whatsIncludedComponent,
   specialPlan,
   priceRange,
+  planRole,
 }) => {
-  const { data: session } = useSession();
-  const [currency, setCurrency] = useState<"GBP" | "USD" | "EUR">("GBP");
-  const [currencySymbol, setCurrencySymbol] = useState("£");
-
-  useEffect(() => {
-    const loadUserCurrency = async () => {
-      if (session && session.user) {
-        const userRef = ref(database, `users/${session.user.customerId}`);
-        try {
-          const snapshot = await get(userRef);
-          const userData = snapshot.val();
-          const userCurrency = (userData?.currency || "GBP") as keyof typeof currencySymbols;
-          setCurrency(userCurrency);
-          setCurrencySymbol(currencySymbols[userCurrency]);
-        } catch (error) {
-          console.error("Error loading user currency from Firebase:", error);
-        }
-      }
-    };
-
-    if (session && session.user && session.user.customerId) {
-      loadUserCurrency();
-    }
-  }, [session]);
-
   const convertedPrices = prices.map((price) =>
-    Number((price * currencyConversionRates[currency]).toFixed(2))
+    Number((price * currencyConversionRates.GBP).toFixed(2))
   );
 
   const selectedPriceId = priceRange === 0 ? priceIds.monthly : priceIds.yearly;
@@ -86,7 +61,7 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
 
               <div className="flex flex-row items-center mt-5 justify-center">
                 <h3 className="font-extrabold text-[40px] text-gray-900">
-                  {`${currencySymbol}${convertedPrices[priceRange].toFixed(2)}`}
+                  {`${currencySymbols.GBP}${convertedPrices[priceRange].toFixed(2)}`}
                 </h3>
                 <span className="ml-1 mt-4 text-lg text-black font-semibold">
                   /{priceRange === 0 ? "mo" : "yr"}
@@ -97,15 +72,20 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
 
               <section className="mt-auto">
                 {prices.length > 0 && (
-                  <div className="flex">
+                  <div className="flex flex-col gap-4">
+                    {/* Get Access button if user doesn't have access */}
                     <LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
                       <PlansGetAccessButton specialPlan={specialPlan} redirect="dashboard" unavailable={description} />
                     </LayoutSubscriptionWrapper>
-                    <LayoutSubscriptionWrapper requiredSubscriptions={["accessGranted", `!member`]}>
-                      <PlansSubscribeNow priceId={selectedPriceId} specialPlan={specialPlan} unavailable={description} />
-                    </LayoutSubscriptionWrapper>
-                    <LayoutSubscriptionWrapper requiredSubscriptions={["member"]}>
+
+                    {/* Show Manage Membership button if they have the role */}
+                    <LayoutSubscriptionWrapper anySubscriptions={[planRole, "admin"]}>
                       <ManageMembershipsButton specialPlan={specialPlan} />
+                    </LayoutSubscriptionWrapper>
+
+                    {/* Show "Contact Us" instead of Subscribe Now */}
+                    <LayoutSubscriptionWrapper requiredSubscriptions={[`!${planRole}`, "!admin"]}>
+                      <PlansContactUs specialPlan={specialPlan} />
                     </LayoutSubscriptionWrapper>
                   </div>
                 )}
@@ -121,7 +101,7 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
 
             <div className="flex flex-row items-center mt-5 justify-center">
               <h3 className="font-extrabold text-[40px] text-gray-900">
-                {`${currencySymbol}${convertedPrices[priceRange].toFixed(2)}`}
+                {`${currencySymbols.GBP}${convertedPrices[priceRange].toFixed(2)}`}
               </h3>
               <span className="ml-1 mt-4 text-lg text-black font-semibold">
                 /{priceRange === 0 ? "mo" : "yr"}
@@ -132,15 +112,18 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
 
             <section className="mt-auto">
               {prices.length > 0 && (
-                <div className="flex">
+                <div className="flex flex-col gap-4">
                   <LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
                     <PlansGetAccessButton redirect="dashboard" unavailable={description} />
                   </LayoutSubscriptionWrapper>
-                  <LayoutSubscriptionWrapper requiredSubscriptions={["accessGranted", "!member"]}>
-                    <PlansSubscribeNow priceId={selectedPriceId} unavailable={description} />
-                  </LayoutSubscriptionWrapper>
-                  <LayoutSubscriptionWrapper requiredSubscriptions={["member"]}>
+
+                  <LayoutSubscriptionWrapper anySubscriptions={[planRole, "admin"]}>
                     <ManageMembershipsButton />
+                  </LayoutSubscriptionWrapper>
+
+                  {/* Replace Subscribe Now with Contact Us */}
+                  <LayoutSubscriptionWrapper requiredSubscriptions={[`!${planRole}`, "!admin"]}>
+                    <PlansContactUs specialPlan={specialPlan} />
                   </LayoutSubscriptionWrapper>
                 </div>
               )}

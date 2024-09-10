@@ -47,11 +47,11 @@ const PlansPage = () => {
               checked={selectedPlan === 1}
               onChange={handleToggleChange}
             />
-            <span className="mr-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+            <span className="mr-3 text-sm font-medium text-gray-900 dark:text-gray-300 select-none">
               Monthly
             </span>
             <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-            <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+            <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300 select-none">
               Yearly
             </span>
           </label>
@@ -63,7 +63,7 @@ const PlansPage = () => {
         <PlansCard
           title="Standard"
           description="For beginners"
-          prices={[19.99, 199.99]}
+          prices={[19.99, 199.90]}
           priceIds={{
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
@@ -74,7 +74,7 @@ const PlansPage = () => {
         <PlansCard
           title="Pro"
           description="For growing resellers"
-          prices={[49.99, 499.99]}
+          prices={[49.99, 499.90]}
           priceIds={{
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
@@ -86,7 +86,7 @@ const PlansPage = () => {
         <PlansCard
           title="Elite"
           description="For experts"
-          prices={[79.99, 799.99]}
+          prices={[79.99, 799.90]}
           priceIds={{
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",

@@ -13,19 +13,14 @@ const PlansClickableBulletPoint: React.FC<ClickableBulletPointProps> = ({ text, 
   const iconColor = comingSoon ? 'text-gray-500' : 'text-houseBlue';
 
   return (
-    <div className="relative flex items-start cursor-pointer"> 
-      {/* Icon */}
-      <span className="flex justify-center items-center mt-1 mr-3">
-        <SiTicktick className={`inline-block ${iconColor} text-sm`} />
-      </span>
-
-      {/* Text */}
-      <span className={`flex items-center ${textColor} ${hoverColor} transition-colors duration-200 text-left text-md`}>
-        {text}
-      </span>
-
-      {/* Tooltip */}
-      <div className="absolute top-full left-0 mt-1 p-2 bg-gray-800 text-white text-sm rounded-md z-10 shadow-lg transition-opacity duration-300 max-w-xs opacity-0 hover:opacity-100">
+    <div className="relative group/tooltip cursor-pointer"> 
+      <div className='grid grid-cols-12 px-2'>
+        <span className="2xl:col-span-1 col-span-2 flex justify-end mr-3 items-center"><SiTicktick className={`2xl:col-span-11 col-span-10 flex items-center font-semibold ${iconColor} transition-colors duration-200 select-none text-sm 2xl:text-base`} /></span>
+        <span className={`2xl:col-span-11 col-span-10 flex items-center ${textColor} ${hoverColor} transition-colors duration-200 text-left text-md`}>{text}</span>
+      </div>
+      <div 
+        className="absolute top-full left-0 mt-1 p-2 bg-gray-800 text-white text-sm rounded-md z-10 shadow-lg transition-opacity duration-300 max-w-xs opacity-0 group-hover/tooltip:opacity-100 pointer-events-none"
+      >
         {tooltip}
       </div>
     </div>

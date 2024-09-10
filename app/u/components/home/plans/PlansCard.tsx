@@ -76,7 +76,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
       <div className="w-full sm:w-full min-h-[700px] flex flex-col justify-between relative">
         {specialPlan ? (
           <BackgroundGradient> {/* Background Gradient re-added */}
-            <div className="bg-white rounded-2xl h-full p-6 flex flex-col justify-between min-h-[700px]">
+            <div className="bg-white rounded-2xl h-full p-6 flex flex-col justify-between min-h-[700px] ">
               {/* Badge for "Most Popular" */}
               <div className="absolute top-[-10px] left-6 z-20 bg-houseBlue text-white px-3 py-1 rounded-full text-xs">
                 Most Popular
@@ -99,7 +99,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
               </div>
 
               {/* Features */}
-              <section className="flex-grow mt-5">
+              <section className="flex-grow mt-5 ">
                 {whatsIncludedComponent}
               </section>
 

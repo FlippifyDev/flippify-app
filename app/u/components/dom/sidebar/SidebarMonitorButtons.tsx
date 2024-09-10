@@ -19,26 +19,26 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
   return (
     <div>
       {/* Electronics */}
-      <LayoutSubscriptionWrapper anySubscriptions={["electronics", "admin"]}>
+      <LayoutSubscriptionWrapper anySubscriptions={["electronics"]}>
         <SidebarButton
           text="Electronics"
-          redirect="monitors/electronics"
+          redirect="monitors/electronics"  // Correct redirect path for Electronics
           symbol={<FaLaptop className="text-md" />}
         />
       </LayoutSubscriptionWrapper>
 
       {/* Electronics Disabled */}
-      <LayoutSubscriptionWrapper anySubscriptions={["!electronics", "!admin"]}>
+      <LayoutSubscriptionWrapper requiredSubscriptions={["!electronics"]}>
         <DisabledSideBarButton
           text="Electronics"
-          redirect="monitor-electronics"
+          redirect="monitors/electronics"  // Updated the redirect path
           symbol={<FaLaptop className="text-lg" />}
-          tooltip="Coming Soon"
+          showAlert={showAlert}  // Ensuring alert is triggered correctly
         />
       </LayoutSubscriptionWrapper>
 
       {/* Deal Watch */}
-      <LayoutSubscriptionWrapper anySubscriptions={["deal watch", "admin"]}>
+      <LayoutSubscriptionWrapper anySubscriptions={["deal watch"]}>
         <SidebarButton
           text="Deal Watch"
           redirect="monitors/deal-watch"
@@ -48,7 +48,7 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
 
       {/* Deal Watch Disabled */}
       <LayoutSubscriptionWrapper
-        requiredSubscriptions={["!deal watch", "!admin"]}
+        requiredSubscriptions={["!deal watch"]}
       >
         <DisabledSideBarButton
           text="Deal Watch"
@@ -60,7 +60,7 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
 
       {/* Retiring Sets */}
       <LayoutSubscriptionWrapper
-        anySubscriptions={["retiring sets", "admin"]}
+        anySubscriptions={["retiring sets"]}
       >
         <SidebarButton
           text="Retiring Sets"
@@ -71,7 +71,7 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
 
       {/* Retiring Sets Disabled */}
       <LayoutSubscriptionWrapper
-        requiredSubscriptions={["!retiring sets", "!admin"]}
+        requiredSubscriptions={["!retiring sets"]}
       >
         <DisabledSideBarButton
           text="Retiring Sets"

@@ -19,7 +19,7 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
   return (
     <div>
       {/* Electronics */}
-      <LayoutSubscriptionWrapper anySubscriptions={["electronics"]}>
+      <LayoutSubscriptionWrapper anySubscriptions={["standard", "electronics"]}>
         <SidebarButton
           text="Electronics"
           redirect="monitors/electronics"  // Correct redirect path for Electronics
@@ -38,7 +38,7 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
       </LayoutSubscriptionWrapper>
 
       {/* Deal Watch */}
-      <LayoutSubscriptionWrapper anySubscriptions={["deal watch"]}>
+      <LayoutSubscriptionWrapper anySubscriptions={["standard", "deal watch"]}>
         <SidebarButton
           text="Deal Watch"
           redirect="monitors/deal-watch"
@@ -60,7 +60,7 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
 
       {/* Retiring Sets */}
       <LayoutSubscriptionWrapper
-        anySubscriptions={["retiring sets"]}
+        anySubscriptions={["standard", "retiring sets"]}
       >
         <SidebarButton
           text="Retiring Sets"

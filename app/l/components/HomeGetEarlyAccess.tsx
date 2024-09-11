@@ -28,7 +28,7 @@ const HomeGetEarlyAccess = () => {
     };
     
     return (
-        <button className="btn bg-white text-black rounded-lg mr-1 hover:bg-textGradStart hover:border-white transition-color duration-300" onClick={handleSignIn}>Get Early Access</button>
+        <button className="btn bg-white text-black rounded-lg mr-1 hover:text-white hover:bg-houseHoverBlue hover:shadow-lg hover:pb-[2px] border-none transform-duration-400 transition-duration-400" onClick={handleSignIn}>Get Access Now</button>
     )
 }
 

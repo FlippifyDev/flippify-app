@@ -11,21 +11,15 @@ const HomeContent = ({ className = '' }) => {
   return (
     <div className={`home-details-container ${className}`}>
       <div className='flex flex-col items-center'>
-        <div className="w-11/12 md:w-4/5 lg:w-3/5 xl:w-2/5">
-          <p className={`${lato.className} text-5xl from-textGradStart to-textGradEnd to-60% bg-gradient-to-tr bg-clip-text text-transparent text-center`}>
-            Reselling
-            <a href="#" className={`${inter.className} text-white text-5xl font-bold text-center`}> with cutting-edge bots and tools</a>
+        <div className="w-11/12 mt-3 lg:mt-10 md:w-4/5 lg:w-3/5 xl:w-2/5">
+          <p className={`${lato.className} text-6xl text-white text-center`}>
+            Automated Reselling using <span className="bg-gradient-to-tr pb-1 from-[#35B4F8] to-[#81EAFA] bg-clip-text text-transparent">AI</span>
           </p>
         </div>
-        <p className='w-11/12 sm:w-full mt-3 mb-8 pb-1 pt-2 text-greyText text-lg text-center'>
-          Providing An All-In-One Service Focused On Accelerating Your Reselling Profits.
+        <p className='w-11/12 sm:w-full mt-3 mb-8 pb-1 pt-2 text-gray-300 text-lg text-center'>
+          We handle everything so you don't have to, eBay & Amazon store automation & tracking in all areas.
         </p>
-        {/*
-        <div className="flex items-center mb-3 pb-2">
-            <span className="inline-block mr-2 text-grayText opacity-90 text-md">Connected with</span>
-            <span><HomePoweredByCompanies /></span>
-        </div>
-        */}
+        
         <HomeGetEarlyAccess />
         <HomeAbout />
         <HomeMockupPhone />

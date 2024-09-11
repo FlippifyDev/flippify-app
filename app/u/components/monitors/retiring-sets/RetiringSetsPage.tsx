@@ -48,29 +48,21 @@ export default function RetiringSetsPage() {
     };
 
     const loadMoreProducts = useCallback(() => {
-        const nextOffset = Math.min(offset + limit, products.length);
-        // Prevent loading if we already have all products or are in a loading state
-        if (loading || nextOffset >= products.length) return;
+        if (loading) return; // Prevent further loading if it's already in progress
+        
+        const nextOffset = offset + limit; // Correctly increment the offset
+        
+        // Prevent loading if we already have all products
+        if (offset >= products.length) return;
       
         setLoading(true);
       
         setTimeout(() => {
-          setDisplayedProducts((prevProducts) => {
-            // Calculate the new offset, make sure it doesn't exceed the total products length
-            const nextOffset = Math.min(offset + limit, products.length);
-      
-            // Slice the products from the current offset to the next
-            const newProducts = products.slice(offset, nextOffset);
-      
-            // Stop loading if no new products found
-            if (newProducts.length === 0) {
-              setLoading(false);
-              return prevProducts;
-            }
-      
+          setDisplayedProducts(prevProducts => {
+            const newProducts = products.slice(nextOffset, nextOffset + limit);
             // Update the offset to the new position
             setOffset(nextOffset);
-      
+            
             // Stop loading and append new products
             setLoading(false);
             return [...prevProducts, ...newProducts];

@@ -53,22 +53,21 @@ const DealWatchPage = () => {
   };
 
   const loadMoreProducts = useCallback(() => {
-    if (loading) return; // If already loading, do nothing
-  
-    let nextOffset = Math.min(offset + limit, products.length);
-    nextOffset = Math.min(nextOffset + limit, products.length); // Prevents duplicating products
-  
+    if (loading) return; // Prevent further loading if it's already in progress
+    
+    const nextOffset = offset + limit; // Correctly increment the offset
+    
     // Prevent loading if we already have all products
-    if (nextOffset >= products.length) return;
+    if (offset >= products.length) return;
   
     setLoading(true);
   
     setTimeout(() => {
       setDisplayedProducts(prevProducts => {
-        const newProducts = products.slice(offset, nextOffset);
+        const newProducts = products.slice(nextOffset, nextOffset + limit);
         // Update the offset to the new position
         setOffset(nextOffset);
-  
+        
         // Stop loading and append new products
         setLoading(false);
         return [...prevProducts, ...newProducts];

@@ -14,6 +14,8 @@ interface IDealWatch extends Document {
     ebay_min_price: number;
     ebay_max_price: number;
     ebay_link: string
+    sold_last_7_days: number;
+    sold_last_month: number;
     timestamp: Date;
     type: string;
     region: string;
@@ -34,6 +36,8 @@ const dealWatchSchema = new Schema<IDealWatch>({
     ebay_min_price: { type: Number, required: true },
     ebay_max_price: { type: Number, required: true },
     ebay_link: { type: String, required: true },
+    sold_last_7_days: { type: Number, required: true },
+    sold_last_month: { type: Number, required: true },
     timestamp: { type: Date, default: Date.now, required: true },
     type: { type: String, required: true },
     region: { type: String, required: true },

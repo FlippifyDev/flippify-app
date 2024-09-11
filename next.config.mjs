@@ -127,6 +127,11 @@ const nextConfig = {
         hostname: 'img.ebyrcdn.net',
         port: '',
       },
+      {
+        protocol: 'https',
+        hostname: 'www.laptopsdirect.co.uk',
+        port: '',
+      },
     ],
   },
   env: {

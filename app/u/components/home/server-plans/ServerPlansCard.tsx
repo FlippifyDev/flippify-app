@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import PlansGetAccessButton from "../plans/PlansGetAccessButton";
 import ManageMembershipsButton from "../plans/PlansManageMembershipButton";
 import PlansContactUs from "./ServerPlansContactUs"; // Import the new Contact Us button
 import { BackgroundGradient } from "@/components/ui/background-gradient";
+import { useSession } from 'next-auth/react';
+import { database, ref, get } from "@/app/api/auth-firebase/firebaseConfig";
 
 interface ServerPlansCardProps {
   title: string;
@@ -38,14 +40,41 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
   priceRange,
   planRole,
 }) => {
+  const { data: session } = useSession();
+  const [currency, setCurrency] = useState<"GBP" | "USD" | "EUR">("GBP");
+  const [currencySymbol, setCurrencySymbol] = useState("£");
+
+  // Fetch user's preferred currency from Firebase
+  useEffect(() => {
+    const loadUserCurrency = async () => {
+      if (session && session.user) {
+        const userRef = ref(database, `users/${session.user.customerId}`);
+        try {
+          const snapshot = await get(userRef);
+          const userData = snapshot.val();
+          const userCurrency = (userData?.currency || "GBP") as keyof typeof currencySymbols;
+          setCurrency(userCurrency);
+          setCurrencySymbol(currencySymbols[userCurrency]);
+        } catch (error) {
+          console.error("Error loading user currency from Firebase:", error);
+        }
+      }
+    };
+
+    if (session && session.user && session.user.customerId) {
+      loadUserCurrency();
+    }
+  }, [session]);
+
+  // Convert prices based on the selected currency
   const convertedPrices = prices.map((price) =>
-    Number((price * currencyConversionRates.GBP).toFixed(2))
+    Number((price * currencyConversionRates[currency]).toFixed(2))
   );
 
   const selectedPriceId = priceRange === 0 ? priceIds.monthly : priceIds.yearly;
 
   return (
-    <div className="w-full flex justify-center transition duration-200 relative z-0"> {/* Set z-index to 0 */}
+    <div className="w-full flex justify-center transition duration-200 relative z-0">
       <div className="w-full sm:w-full min-h-[700px] flex flex-col justify-between relative z-0">
         {specialPlan ? (
           <BackgroundGradient>
@@ -61,7 +90,7 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
 
               <div className="flex flex-row items-center mt-5 justify-center">
                 <h3 className="font-extrabold text-[40px] text-gray-900">
-                  {`${currencySymbols.GBP}${convertedPrices[priceRange].toFixed(2)}`}
+                  {`${currencySymbol}${convertedPrices[priceRange].toFixed(2)}`}
                 </h3>
                 <span className="ml-1 mt-4 text-lg text-black font-semibold">
                   /{priceRange === 0 ? "mo" : "yr"}
@@ -101,14 +130,14 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
 
             <div className="flex flex-row items-center mt-5 justify-center">
               <h3 className="font-extrabold text-[40px] text-gray-900">
-                {`${currencySymbols.GBP}${convertedPrices[priceRange].toFixed(2)}`}
+                {`${currencySymbol}${convertedPrices[priceRange].toFixed(2)}`}
               </h3>
               <span className="ml-1 mt-4 text-lg text-black font-semibold">
                 /{priceRange === 0 ? "mo" : "yr"}
               </span>
             </div>
 
-            <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
+            <section className="flex-grow mt-4">{whatsIncludedComponent}</section>
 
             <section className="mt-auto">
               {prices.length > 0 && (

@@ -50,15 +50,18 @@ const PlansCard: React.FC<PlansCardProps> = ({
 
   const selectedPriceId = priceRange === 0 ? priceIds.monthly : priceIds.yearly;
 
-  // New Discounted Prices
+  // Discounted Prices for Standard, Pro, and Elite
   const discountPrices = {
+    Standard: 19.99, // Discounted price for Standard
     Pro: 29.99, // Discounted price for Pro
     Elite: 49.99, // Discounted price for Elite
   };
 
   const originalPrice = prices[priceRange];
   const discountedPrice =
-    title === "Pro"
+    title === "Standard"
+      ? discountPrices.Standard
+      : title === "Pro"
       ? discountPrices.Pro
       : title === "Elite"
       ? discountPrices.Elite
@@ -82,13 +85,13 @@ const PlansCard: React.FC<PlansCardProps> = ({
               </div>
 
               {/* Early Access Discount Section */}
-              <div className="flex items-center justify-center text-houseBlue font-semibold text-md mt-2">
+              <div className="flex items-center justify-center text-houseBlue font-semibold text-md mt-4">
                 <AiOutlineTag className="mr-2" />
                 Early Access Discount
               </div>
 
               {/* Price Section */}
-              <div className="flex flex-col items-center mt-2 justify-center">
+              <div className="flex flex-col items-center justify-center mt-4">
                 <div className="flex items-baseline">
                   <h3 className="font-extrabold text-[40px] text-gray-900">
                     {`${currencySymbol}${discountedPrice.toFixed(2)}`}
@@ -131,13 +134,13 @@ const PlansCard: React.FC<PlansCardProps> = ({
             </div>
 
             {/* Early Access Discount Section */}
-            <div className="flex items-center justify-center text-houseBlue font-semibold text-md mt-2">
+            <div className="flex items-center justify-center text-houseBlue font-semibold text-md mt-4">
               <AiOutlineTag className="mr-2" />
               Early Access Discount
             </div>
 
             {/* Price Section */}
-            <div className="flex flex-col items-center mt-2 justify-center">
+            <div className="flex flex-col items-center justify-center mt-4">
               <div className="flex items-baseline">
                 <h3 className="font-extrabold text-[40px] text-gray-900">
                   {`${currencySymbol}${discountedPrice.toFixed(2)}`}

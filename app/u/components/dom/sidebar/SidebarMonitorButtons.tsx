@@ -19,7 +19,7 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
   return (
     <div>
       {/* Electronics */}
-      <LayoutSubscriptionWrapper anySubscriptions={["standard", "electronics"]}>
+      <LayoutSubscriptionWrapper anySubscriptions={["member", "electronics"]}>
         <SidebarButton
           text="Electronics"
           redirect="monitors/electronics"  // Correct redirect path for Electronics
@@ -28,7 +28,7 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
       </LayoutSubscriptionWrapper>
 
       {/* Electronics Disabled */}
-      <LayoutSubscriptionWrapper requiredSubscriptions={["!electronics"]}>
+      <LayoutSubscriptionWrapper requiredSubscriptions={["!electronics", "!member"]}>
         <DisabledSideBarButton
           text="Electronics"
           redirect="monitors/electronics"  // Updated the redirect path
@@ -38,7 +38,7 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
       </LayoutSubscriptionWrapper>
 
       {/* Deal Watch */}
-      <LayoutSubscriptionWrapper anySubscriptions={["standard", "deal watch"]}>
+      <LayoutSubscriptionWrapper anySubscriptions={["member", "deal watch"]}>
         <SidebarButton
           text="Deal Watch"
           redirect="monitors/deal-watch"
@@ -48,7 +48,7 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
 
       {/* Deal Watch Disabled */}
       <LayoutSubscriptionWrapper
-        requiredSubscriptions={["!deal watch"]}
+        requiredSubscriptions={["!deal watch", "!member"]}
       >
         <DisabledSideBarButton
           text="Deal Watch"
@@ -60,7 +60,7 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
 
       {/* Retiring Sets */}
       <LayoutSubscriptionWrapper
-        anySubscriptions={["standard", "retiring sets"]}
+        anySubscriptions={["member", "retiring sets"]}
       >
         <SidebarButton
           text="Retiring Sets"
@@ -71,7 +71,7 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
 
       {/* Retiring Sets Disabled */}
       <LayoutSubscriptionWrapper
-        requiredSubscriptions={["!retiring sets"]}
+        requiredSubscriptions={["!retiring sets", "!member"]}
       >
         <DisabledSideBarButton
           text="Retiring Sets"

@@ -132,6 +132,11 @@ const nextConfig = {
         hostname: 'www.laptopsdirect.co.uk',
         port: '',
       },
+      {
+        protocol: 'https',
+        hostname: 'rewarddeals.co.uk',
+        port: '',
+      },
     ],
   },
   env: {

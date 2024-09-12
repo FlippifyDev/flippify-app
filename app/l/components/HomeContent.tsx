@@ -23,7 +23,7 @@ const HomeContent = ({ className = '' }) => {
         
         <HomeGetEarlyAccess />
         
-        <div className="pt-[90px]" />
+        <div className="pt-[90px] lg:pt-[150px]" />
         <div className="flex flex-col lg:flex-row my-4 md:my-11 mx-2 md:mx-6 py-8 sm:py-2 md:py-0 md:pl-4 bg-white bg-opacity-85 border border-gray-300 rounded-3xl shadow-md overflow-hidden">
           <div className="lg:w-1/3">
             <HomeAbout />

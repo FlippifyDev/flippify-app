@@ -29,7 +29,7 @@ const HomeMockupPhone = () => {
           <a href="#" className={`${inter.className} mb-8 text-lightModeText text-4xl font-bold`}> Deals Right To Your Phone.</a>
         </p>
         <p className="pt-4 text-lightModeText text-center font-semibold lg:w-4/5 mx-auto">
-          Real-time alerts ensuring you never miss a deal with notifications right to your phone using our extremely fast discord bots.
+          Real-time alerts ensuring you never miss a deal with notifications right to your phone using our extremely fast bots.
         </p>
         <div className="flex justify-center pt-6">
           <HomeGetEarlyAccess />

@@ -13,7 +13,7 @@ const HomeAbout = () => {
       <div className="w-full h-auto flex flex-col justify-center">
         {/* Center the content vertically */}
         <div className="text-center mx-4">
-          <h2 className={`${lato.className} text-4xl text-houseBlue font-bold mb-2`}>
+          <h2 className={`${lato.className} text-4xl text-houseBlue md:pt-2 lg:pt-0 font-bold mb-2`}>
             Unlock Automated Profits
           </h2>
           <p className="text-gray-600 mb-4">

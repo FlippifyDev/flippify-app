@@ -11,11 +11,11 @@ const HomeMockupBrowser = () => {
     <div className="grid sm:grid-cols-1 md:grid-cols-2 pt-12 mx-8 md:mx-1 lg:mx-2 xl:mx-8 place-content-center">
       <div className="order-2 md:order-1 px-2 pt-6 md:pt-0 lg:pt-20 xl:pt-44">
         <p className={`${lato.className} text-4xl from-houseBlue to-houseHoverBlue to-60% bg-gradient-to-tr bg-clip-text text-transparent py-1 text-center`}>
-          Boost
-          <a href="#" className={`${inter.className} mb-8 text-lightModeText text-4xl font-bold`}>{" "}Reselling Efficiency.</a>
+          Automate
+          <a href="#" className={`${inter.className} mb-8 text-lightModeText text-4xl font-bold`}>{" "}Every Step.</a>
         </p>
         <p className="pt-4 text-darkGreyText text-center font-semibold">
-        Access exclusive tools to automate and streamline your reselling. Enjoy seamless integration with Discord and other platforms, offering features you won&apos;t find anywhere else.
+        Connect your eBay and Amazon accounts for automatic listings, inventory management, track orders, and get detailed financial and tax reports. We handle everything — you just buy, ship and print profits.
         </p>
         <div className="flex justify-center pt-6">
           <HomeGetEarlyAccess />
@@ -28,7 +28,7 @@ const HomeMockupBrowser = () => {
         <div className="bg-white flex justify-center px-1 py-1">
           <figure>
             <Image
-              src="https://i.imgur.com/EaiIavg.png"
+              src="https://i.imgur.com/9it15G1.png"
               alt="Browser Mockup"
               width={2448}
               height={1336}

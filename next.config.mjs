@@ -137,6 +137,11 @@ const nextConfig = {
         hostname: 'rewarddeals.co.uk',
         port: '',
       },
+      {
+        protocol: 'https',
+        hostname: '*.game.co.uk',
+        port: '',
+      }      
     ],
   },
   env: {

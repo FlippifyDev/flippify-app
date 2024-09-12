@@ -1,6 +1,6 @@
 import React from 'react';
 import Layout from '../components/layout/Layout';
-import ProductsPageContent from '../components/services/ServicesPage';
+import ServicesPage from '../components/services/ServicesPage';
 import Loading from '@/app/components/Loading';
 import { Suspense } from 'react';
 import MetadataHead from '../../components/MetadataHead';
@@ -44,7 +44,7 @@ export default function ProductsPage() {
       <ThemeSetter theme="dark" />
       <Suspense fallback={<Loading />}>
         <Layout>
-        <ProductsPageContent />
+        <ServicesPage />
         </Layout>
       </Suspense>
     </>

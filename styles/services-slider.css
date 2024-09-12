@@ -1,0 +1,32 @@
+/* Remove the default underline */
+.tab {
+    border-bottom: none; /* Remove the default underline */
+  }
+  
+  /* Add smooth transition for the active tab */
+  .tab-active-indicator {
+    position: relative;
+    display: inline-block;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .tab-active-indicator::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px; /* Height of the active tab indicator */
+    background-color: #ffffff; /* houseHoverBlue color */
+    border-radius: 2px;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .tab-active .tab-active-indicator::before {
+    transform: scaleX(1); /* Show the indicator */
+  }
+  
+  .tab-inactive .tab-active-indicator::before {
+    transform: scaleX(0); /* Hide the indicator */
+  }
+  

@@ -24,22 +24,28 @@ const ProductList: React.FC = () => {
         </div>
         <div className="flex justify-center max-w-2xl">
           <p className="mx-4 sm:mx-2 text-white text-md sm:text-lg text-center">
-            Explore a curated selection of exclusive deals and offers across a variety of products. Find savings and limited-time promotions on items you love.
+            Our monitors scan hundreds of sites to find the most profitable deals, using advanced algorithms to compare prices with eBay and Amazon—delivering top opportunities directly to you.
           </p>
         </div>
       </div>
       <div className="flex flex-wrap justify-center">
         <ProductsCard
-          title="Retiring Set Deals"
-          description="Track soon-to-be-retired LEGO sets across various websites. Stay informed about valuable collector items before they disappear from shelves."
-          disclaimer="Prices and availability may change or contain errors. Verify details on the respective websites and eBay before purchasing."
-          image="https://i.imgur.com/xSay8Kn.png"
+          title="Retiring Sets"
+          description="Track soon-to-retire LEGO sets across various sites and stay ahead of collectors. Secure valuable sets before they vanish, with potential long-term profit as prices rise post-retirement."
+          disclaimer="Prices and availability may fluctuate. Always verify details on respective websites and eBay before purchasing."
+          image="https://i.imgur.com/DZfSIM6.png"
+        />
+        <ProductsCard
+          title="Electronics"
+          description="Discover fast-selling electronics with big discounts and high resale value. Our tool monitors thousands of items, finding consistent, profitable deals that sell quickly for easy returns."
+          disclaimer="Prices and availability may change. Verify all details on the seller's site and eBay before purchasing."
+          image="https://i.imgur.com/CibOg9Y.png"
         />
         <ProductsCard
           title="Deal Watch UK"
-          description="Discover high-demand products from hotukdeals that can be resold for profit on eBay. Our tool identifies the hottest deals and trends, helping you capitalize on profitable opportunities."
-          disclaimer="We strive for accurate, up-to-date prices, but some deals may be outdated or incorrect. Verify prices and availability on hotukdeals and eBay before purchasing."
-          image="https://i.imgur.com/5MQt2Gd.png"
+          description="Find high-demand products from top deal sites like hotukdeals & rewarddeals, filtered and compared to eBay prices for maximum profitability. Spot opportunities across a wide range of categories."
+          disclaimer="Deals may expire or be inaccurate. Confirm prices and stock on deal sites and eBay before making a purchase."
+          image="https://i.imgur.com/pfQk3lq.png"
         />
       </div>
     </div>

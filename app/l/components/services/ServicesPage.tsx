@@ -8,9 +8,14 @@ import "@/styles/services-slider.css"; // Import the CSS for slider
 
 const ServicesPage = () => {
   const [activeTab, setActiveTab] = useState("monitors");
+  const [fadeIn, setFadeIn] = useState(true); // To control fade effect
 
   const handleTabChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setActiveTab(event.target.value);
+    setFadeIn(false); // Start fading out the current content
+    setTimeout(() => {
+      setActiveTab(event.target.value); // Change the tab after fade out is complete
+      setFadeIn(true); // Start fading in the new content
+    }, 300); // 300ms matches the fade-out transition
   };
 
   return (
@@ -41,8 +46,8 @@ const ServicesPage = () => {
         </label>
       </div>
 
-      {/* Static Content */}
-      <div className="w-full flex justify-center">
+      {/* Sliding Content with Fade Transition */}
+      <div className={`w-full flex justify-center transition-opacity duration-300 ${fadeIn ? 'opacity-100' : 'opacity-0'}`}>
         {activeTab === "monitors" ? <ProductList /> : <ToolList />}
       </div>
     </div>

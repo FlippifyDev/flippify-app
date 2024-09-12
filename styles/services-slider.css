@@ -17,7 +17,7 @@
     left: 0;
     right: 0;
     height: 4px; /* Height of the active tab indicator */
-    background-color: #ffffff; /* houseHoverBlue color */
+    background-color: #ffffff; /* houseHoverBlue */
     border-radius: 2px;
     transition: all 0.3s ease-in-out;
   }
@@ -28,5 +28,14 @@
   
   .tab-inactive .tab-active-indicator::before {
     transform: scaleX(0); /* Hide the indicator */
+  }
+  
+  /* Add transition for the content to fade in and out */
+  .transition-opacity {
+    opacity: 0;
+  }
+  
+  .transition-opacity.opacity-100 {
+    opacity: 1;
   }
   

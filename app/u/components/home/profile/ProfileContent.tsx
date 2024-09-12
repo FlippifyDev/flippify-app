@@ -2,7 +2,7 @@ import React from 'react';
 import ProfileOverview from './ProfileOverview';
 import ProfileReferralData from './ProfileReferralData';
 import ProfileSettings from './ProfileSettings';
-import ProfileEbayConnect from './ProfileEbayConnect';
+import ProfileEbayConnect from './ProfileMarketplaceConnect';
 
 const ProfileContent = () => {
   return (

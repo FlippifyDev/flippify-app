@@ -70,7 +70,17 @@ const NavbarProfileAvatar = () => {
   const handleAdminOpen = () => {
     if (session) {
       if (session.user?.name) {
-        router.push(`/u/${session.user.name}/asldf0987asDa230fDs`);
+        router.push(`/u/${session.user.name}/asldf0987asDa230fDsADMIN`);
+      } else {
+        router.push(`/u/loading`);
+      }
+    }
+  };
+
+  const handleTestingOpen = () => {
+    if (session) {
+      if (session.user?.name) {
+        router.push(`/u/${session.user.name}/bfoau214QNI42nAjTEST`);
       } else {
         router.push(`/u/loading`);
       }
@@ -110,6 +120,14 @@ const NavbarProfileAvatar = () => {
             onClick={handleAdminOpen}>
             <span 
               className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Admin</span>
+          </button>
+        </LayoutSubscriptionWrapper>
+        <LayoutSubscriptionWrapper requiredSubscriptions={['admin']}>
+          <button 
+            className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200' 
+            onClick={handleTestingOpen}>
+            <span 
+              className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Testing Area</span>
           </button>
         </LayoutSubscriptionWrapper>
         <button 

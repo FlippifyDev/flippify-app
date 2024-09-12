@@ -1,6 +1,6 @@
 import React from 'react';
-import Layout from '../components/Layout';
-import ServerPricingPageContent from '../components/ServerPricingPage';
+import Layout from '../components/layout/Layout';
+import ServerPricingPageContent from '../components/server-plans/ServerPlansPage';
 import Loading from '@/app/components/Loading';
 import { Suspense } from 'react';
 import MetadataHead from '../../components/MetadataHead';

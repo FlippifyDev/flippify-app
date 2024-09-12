@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Navbar from "./Navbar";
+import Navbar from "../dom/Navbar";
 import LayoutGradientBackground from "./LayoutGradientBackground";
 import LayoutWhiteSection from "./LayoutWhiteSection";
 import LayoutFooter from "./LayoutFooter";

@@ -1,6 +1,6 @@
 import React from 'react';
-import Layout from '../components/Layout';
-import PricingPageContent from '../components/PricingPage';
+import Layout from '../components/layout/Layout';
+import PlansContent from '../components/plans/PlansContent';
 import Loading from '@/app/components/Loading';
 import { Suspense } from 'react';
 import MetadataHead from '../../components/MetadataHead';
@@ -44,7 +44,7 @@ export default function PricingPage() {
       <ThemeSetter theme="dark" />
       <Suspense fallback={<Loading />}>
         <Layout>
-          <PricingPageContent />
+          <PlansContent />
         </Layout>
       </Suspense>
     </>

@@ -1,5 +1,5 @@
 import React from 'react';
-import Layout from '../components/Layout';
+import Layout from '../components/layout/Layout';
 import LegalContent from '../../components/LegalContent';
 import Loading from '@/app/components/Loading';
 import { Suspense } from 'react';

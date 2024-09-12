@@ -1,16 +1,12 @@
 'use client';
-import Loading from '../../components/Loading'; 
-import AnimationArrow from '@/app/components/AnimationArrow';
+import Loading from '@/app/components/Loading'; 
 
 import React, { useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { FaDiscord } from 'react-icons/fa6';
 
-
-
-const NavbarSignInWithDiscord = () => {
+const NavbarSignInWithDiscordSideBar = () => {
     const { data: session, status } = useSession();
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
@@ -33,10 +29,8 @@ const NavbarSignInWithDiscord = () => {
     
     return (
         <div>
-            <button className="btn btn-primary text-white bg-discordBlue border-discordBlue lg:w-64 group" onClick={handleSignIn}>
-                <FaDiscord className="text-xl lg:mr-2 sm:text-3xl" /> 
-                <span className='sm:inline md:hidden lg:inline text-xs sm:text-sm'>Sign in with Discord</span>
-                <AnimationArrow />
+            <button className="lg:w-56" onClick={handleSignIn}>
+                Sign In
             </button>
             {isLoading && (
                 <div className="mt-4">
@@ -47,4 +41,4 @@ const NavbarSignInWithDiscord = () => {
     )
 }
 
-export default NavbarSignInWithDiscord;
+export default NavbarSignInWithDiscordSideBar;

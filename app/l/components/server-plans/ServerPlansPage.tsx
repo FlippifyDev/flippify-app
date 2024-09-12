@@ -2,8 +2,8 @@
 
 import React from "react";
 import { Lato, Inter } from "next/font/google";
-import ServerPlansCard from "./ServerPricingCard";
-import ServerPlansCardWhatsIncluded from "./ServerPricingWhatsIncluded";
+import ServerPlansCard from "./ServerPlansCard";
+import ServerPlansCardWhatsIncluded from "./ServerPlansWhatsIncluded";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });

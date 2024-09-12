@@ -1,6 +1,6 @@
 "use client";
 
-import ProductsCardViewPrices from "./ProductsCardViewPricesButton";
+import ProductsCardViewPrices from "./ServicesCardViewPricesButton";
 
 import Image from "next/image";
 import { Lato, Inter } from "next/font/google";

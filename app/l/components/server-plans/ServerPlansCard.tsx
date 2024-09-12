@@ -1,6 +1,6 @@
 "use client";
 
-import ServerPricingPriceStat from "./ServerPricingPriceStat";
+import ServerPricingPriceStat from "./ServerPlansPriceStat";
 import React, { useState } from "react";
 import { Lato } from "next/font/google";
 import Link from 'next/link';

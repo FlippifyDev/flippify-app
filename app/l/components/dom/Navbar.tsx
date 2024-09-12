@@ -48,7 +48,7 @@ const Navbar = () => {
         <div className="drawer-content flex flex-col lg:ml-64 right-0">
           <label
             htmlFor="my-drawer"
-            className="btn btn-primary text-white text-2xl bg-transparent border-transparent drawer-button xl:hidden hover:bg-transparent hover:border-transparent hover:scale-125 z-50">
+            className="btn btn-primary text-white text-2xl bg-transparent border-transparent shadow-none drawer-button xl:hidden hover:bg-transparent hover:border-transparent hover:scale-125 z-50">
             <IoMenu />
           </label>
         </div>
@@ -60,13 +60,13 @@ const Navbar = () => {
               <Link href="/l/home">Home</Link>
             </li>
             <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-base">
-              <Link href="/l/products">Services</Link>
+              <Link href="/l/services">Services</Link>
             </li>
             <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-base">
-              <Link href="/l/pricing">Plans</Link>
+              <Link href="/l/plans">Plans</Link>
             </li>
             <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-base">
-              <Link href="/l/server-pricing">Servers</Link>
+              <Link href="/l/server-plans">Servers</Link>
             </li>
             <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-base">
               <a href="#about" onClick={(e) => handleSmoothScroll(e, 'about')}>About</a>
@@ -91,13 +91,13 @@ const Navbar = () => {
           <Link href="/l/home">Home</Link>
         </li>
         <li className="transition duration-100 hover:scale-105 rounded-btn p-1">
-          <Link href="/l/products">Services</Link>
+          <Link href="/l/services">Services</Link>
         </li>
         <li className="transition duration-100 hover:scale-105 rounded-btn p-1">
-          <Link href="/l/pricing">Plans</Link>
+          <Link href="/l/plans">Plans</Link>
         </li>
         <li className="transition duration-100 hover:scale-105 rounded-btn p-1">
-          <Link href="/l/server-pricing">Servers Plans</Link>
+          <Link href="/l/server-plans">Servers Plans</Link>
         </li>
         <li className="transition duration-100 hover:scale-105 rounded-btn p-1">
           <a href="#about" onClick={(e) => handleSmoothScroll(e, 'about')}>About</a>

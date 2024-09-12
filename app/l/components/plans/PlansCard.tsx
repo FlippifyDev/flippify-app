@@ -11,7 +11,7 @@ interface PlansCardProps {
   specialPlan?: boolean;
   priceRange: number;
   className?: string;
-  currency: 'GBP' | 'USD' | 'EUR'; // Add currency as a prop
+  currency: 'GBP' | 'USD' | 'EUR'; 
 }
 
 const currencyConversionRates: Record<'GBP' | 'USD' | 'EUR', number> = {
@@ -35,7 +35,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
   specialPlan,
   priceRange,
   className,
-  currency, // Receive the currency prop
+  currency, 
 }) => {
   const [currencySymbol, setCurrencySymbol] = useState('£');
 
@@ -88,7 +88,6 @@ const PlansCard: React.FC<PlansCardProps> = ({
                     <PlansGetAccessButton
                       redirect="dashboard"
                       specialPlan={specialPlan}
-                      unavailable={description}
                     />
                   </div>
                 )}
@@ -122,7 +121,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
             <section className="mt-auto">
               {prices.length > 0 && (
                 <div className="flex">
-                  <PlansGetAccessButton redirect="dashboard" unavailable={description} />
+                  <PlansGetAccessButton redirect="dashboard" />
                 </div>
               )}
             </section>

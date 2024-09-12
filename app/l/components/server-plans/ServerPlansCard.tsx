@@ -1,93 +1,120 @@
-"use client";
+import React, { useState, useEffect } from "react";
+import ServerPlansContactUs from "./ServerPlansContactUs"; 
+import { BackgroundGradient } from "@/components/ui/background-gradient";
 
-import ServerPricingPriceStat from "./ServerPlansPriceStat";
-import React, { useState } from "react";
-import { Lato } from "next/font/google";
-import Link from 'next/link';
-
-const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
-
-type BadgeColor = 'greenLabel' | 'blueLabel' | 'orangeLabel';
-
-const badgeColorClasses: Record<BadgeColor, string> = {
-  greenLabel: "bg-greenLabel",
-  blueLabel: "bg-houseBlue",
-  orangeLabel: "bg-orangeLabel",
-};
-
-interface PricingCardProps {
-    title: string;
-    price: number;
-    description: string;
-    whatsIncludedComponent: any;
-    labelText: string;
-    badgeColor: BadgeColor;
+interface ServerPlansCardProps {
+  title: string;
+  prices: number;
+  description: string;
+  whatsIncludedComponent: any;
+  specialPlan?: boolean;
+  priceRange: number;
+  planRole: string;
+  unavailable?: boolean;
+  currency: 'GBP' | 'USD' | 'EUR'; // Matching the currency prop from the other PlansCard
 }
 
-const ServerPricingCard: React.FC<PricingCardProps> = ({
-    title,
-    price,
-    description,
-    whatsIncludedComponent,
-    labelText,
-    badgeColor,
+const currencyConversionRates: Record<"GBP" | "USD" | "EUR", number> = {
+  GBP: 1,
+  USD: 1.28,
+  EUR: 1.16,
+};
+
+const currencySymbols: Record<"GBP" | "USD" | "EUR", string> = {
+  GBP: "£",
+  USD: "$",
+  EUR: "€",
+};
+
+const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
+  title,
+  prices,
+  description,
+  whatsIncludedComponent,
+  specialPlan,
+  priceRange,
+  unavailable = false,
+  currency,
 }) => {
-  const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
-  const [currency, setCurrency] = useState<"GBP" | "USD">("GBP"); // Default to GBP
+  const [currencySymbol, setCurrencySymbol] = useState("£");
 
-  const handlePlanSelect = (index: number) => {
-    setSelectedPlan(index);
-  };
+  useEffect(() => {
+    setCurrencySymbol(currencySymbols[currency]);
+  }, [currency]);
 
-
-  const badgeClassName = `text-white ${badgeColorClasses[badgeColor]}`;
+  // Convert prices based on the selected currency
+  const convertedPrice =
+    Number((prices * currencyConversionRates[currency]).toFixed(2))
 
   return (
-    <div className="w-86 sm:w-96 sm:mx-4 mt-8 mx-3">
-      <div className="h-full card bg-base-100 shadow-xl opacity-90 border border-white flex flex-col items-center justify-center pt-6 pb-6">
-        <div className="w-full px-8 sm:px-6">
-          <div className={`absolute top-1 left-1 ${badgeClassName} border-white border ml-2 mt-1 rounded-full px-4 py-1 text-xs font-semibold`}>
-            {labelText}
-          </div>
-          <div className="flex items-center justify-center pt-4 pb-2">
-            <h2
-              className={`${lato.className} text-3xl from-textGradStart to-textGradEnd to-60% bg-gradient-to-tr bg-clip-text text-transparent py-1 text-center mb-2`}
-            >
-              {title}
-            </h2>
-          </div>
-          <p className="text-white text-sm lg:text-base mb-4 flex justify-center text-center">
-            {description}
-          </p>
+    <div className="w-full flex justify-center transition duration-200 relative z-0">
+      <div className="w-full sm:w-full min-h-[650px] flex flex-col justify-between relative z-0">
+        {specialPlan ? (
+          <BackgroundGradient>
+            <div className="bg-white rounded-2xl h-full p-6 flex flex-col justify-between min-h-[650px] relative z-0">
+              <div className="absolute top-[-10px] left-6 z-10 bg-houseBlue text-white px-3 py-1 rounded-full text-xs">
+                Most Popular
+              </div>
 
-          <div className="flex flex-col items-center">
-            <hr className="w-full" />
-            {price && (
-              <ServerPricingPriceStat
-                price={price}
-                onPlanSelect={handlePlanSelect}
-                selectedPlan={selectedPlan}
-                currencySymbol="£"
-              />
-            )}
-            <hr className="w-full" />
+              <div className="text-center">
+                <h2 className="font-bold text-[24px]">{title}</h2>
+                <p className="text-sm text-gray-600">{description}</p>
+              </div>
+
+              {/* Price Section */}
+              <div className="flex flex-col items-center mt-5">
+                <span className="text-sm text-gray-400 mb-0">Starting From...</span>
+                <div className="flex flex-row items-center">
+                  <h3 className="font-extrabold text-[40px] text-gray-900">
+                    {`${currencySymbol}${convertedPrice.toFixed(2)}`}
+                  </h3>
+                  <span className="ml-1 mt-4 text-lg text-black font-semibold">
+                    /{priceRange === 0 ? "mo" : "yr"}
+                  </span>
+                </div>
+              </div>
+
+              <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
+
+              <section className="mt-auto">
+                <div className="flex flex-col gap-4">
+                  <ServerPlansContactUs specialPlan={specialPlan} unavailable={unavailable} />
+                </div>
+              </section>
+            </div>
+          </BackgroundGradient>
+        ) : (
+          <div className="bg-white border rounded-2xl hover:shadow-md transition duration-200 h-full p-6 flex flex-col justify-between min-h-[650px] relative z-0">
+            <div className="text-center">
+              <h2 className="font-bold text-[24px]">{title}</h2>
+              <p className="text-sm text-gray-600">{description}</p>
+            </div>
+
+            {/* Price Section */}
+            <div className="flex flex-col items-center mt-5">
+                <span className="text-sm text-gray-400 mb-0">Starting From...</span>
+                <div className="flex flex-row items-center">
+                  <h3 className="font-extrabold text-[40px] text-gray-900">
+                    {`${currencySymbol}${convertedPrice.toFixed(2)}`}
+                  </h3>
+                  <span className="ml-1 mt-4 text-lg text-black font-semibold">
+                    /{priceRange === 0 ? "mo" : "yr"}
+                  </span>
+                </div>
+              </div>
+
+            <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
+
+            <section className="mt-auto">
+              <div className="flex flex-col gap-4">
+                <ServerPlansContactUs specialPlan={specialPlan} unavailable={unavailable} />
+              </div>
+            </section>
           </div>
-          {whatsIncludedComponent}
-          <div className="flex justify-center mt-2">
-            {selectedPlan !== null && (
-              <Link
-              href="https://discord.com/channels/1236428617962229830/1236436288442466394"
-              target="_blank"
-              className="btn bg-white text-black rounded-lg mr-1 hover:bg-textGradStart hover:border-white transition-color duration-300 w-2/3"
-            >
-              Contact Us
-            </Link>
-            )}
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default ServerPricingCard;
+export default ServerPlansCard;

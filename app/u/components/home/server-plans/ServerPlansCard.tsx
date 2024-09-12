@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import PlansGetAccessButton from "../plans/PlansGetAccessButton";
 import ManageMembershipsButton from "../plans/PlansManageMembershipButton";
-import PlansContactUs from "./ServerPlansContactUs"; // Import the new Contact Us button
+import PlansContactUs from "./ServerPlansContactUs";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
 import { useSession } from 'next-auth/react';
 import { database, ref, get } from "@/app/api/auth-firebase/firebaseConfig";

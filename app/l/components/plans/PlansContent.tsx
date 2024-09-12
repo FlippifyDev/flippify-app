@@ -27,11 +27,11 @@ const PlansContent = () => {
       <div className="flex flex-col items-center space-y-5 text-center mt-2 md:mt-6">
         <div className="flex flex-wrap justify-center">
           <p
-            className={`${lato.className} text-5xl sm:text-5xl w-4/5 sm:w-full text-gradient bg-gradient-to-tr from-textGradStart to-textGradEnd bg-clip-text text-transparent py-1`}
+            className={`${lato.className} text-5xl w-4/5 sm:w-full text-gradient bg-gradient-to-tr from-textGradStart to-textGradEnd bg-clip-text text-transparent py-1`}
           >
             Pricing
             <a
-              className={`${inter.className} text-white text-5xl sm:text-5xl font-bold`}
+              className={`${inter.className} text-white text-5xl font-bold`}
             >
               {" "}Made Easy
             </a>

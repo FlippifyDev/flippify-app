@@ -57,7 +57,7 @@ const ServerPlansPage = () => {
         />
         <ServerPlansCard
           title="Deal Watch UK"
-          description="Discover endless profitable deals found by our advanced webscraper searching 'hotukdeals'."
+          description="Discover Endless profitable deals scraped and filtered from site like 'hotukdeals' & 'rewarddeals'"
           prices={69.99}
           whatsIncludedComponent={<ServerPlansCardDealWatchWhatsIncluded />}
           specialPlan={true}

@@ -63,7 +63,7 @@ const ServerPlansPage = () => {
       <div className="mt-10 grid grid-cols-1 md:grid-cols-3 mx-4 md:mx-2 lg:mx-16 gap-8 items-stretch">
         <ServerPlansCard
           title="Deal Watch UK"
-          description="Discover endless profitable deals found by our advanced webscraper searching 'hotukdeals'."
+          description="Endless profitable deals scraped and filtered from site like 'hotukdeals' & 'rewarddeals'."
           prices={[69.99, 699.90]}
           priceIds={{
             monthly: "price_1PfJ9bJJRepiHZ8dk689bT3H",

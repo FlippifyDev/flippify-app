@@ -1,4 +1,4 @@
-import ProductCard from "./ServicesCard";
+import ProductCard from "./ServicesToolsCard";
 import { Lato, Inter } from "next/font/google";
 import React from "react";
 
@@ -29,16 +29,28 @@ const ToolList: React.FC = () => {
       </div>
       <div className="flex flex-wrap justify-center ">
         <ProductCard
-          title="Smart Deal Finder"
+          title="Auto Deal Finding"
           description="Discover unbeatable prices with our Smart Deal Finder! Effortlessly search through a vast database of thousands of products across multiple websites. Our tool provides real-time updates and detailed comparisons to help you find the best deals available."
           disclaimer={null}
-          image="https://i.imgur.com/LOvfMmz.png"
+          image="https://i.imgur.com/uXqxOZm.png"
         />
         <ProductCard
           title="Inventory Tracking"
           description="One of the most important aspects of reselling is keeping a consistent inventory of purchased and sold products. This allows for effective analytics, informed purchasing decisions, and streamlined operations. Soon to be automated with eBay."
           disclaimer={null}
-          image="https://i.imgur.com/OnuXuDl.png"
+          image="https://i.imgur.com/vNFMFBR.png"
+        />
+        <ProductCard
+          title="Financial Hub"
+          description="One of the most important aspects of reselling is keeping a consistent inventory of purchased and sold products. This allows for effective analytics, informed purchasing decisions, and streamlined operations. Soon to be automated with eBay."
+          disclaimer={null}
+          image="https://i.imgur.com/r5viQMS.png"
+        />
+        <ProductCard
+          title="Store Automation"
+          description="One of the most important aspects of reselling is keeping a consistent inventory of purchased and sold products. This allows for effective analytics, informed purchasing decisions, and streamlined operations. Soon to be automated with eBay."
+          disclaimer={null}
+          image="https://i.imgur.com/hnTZgcx.png"
         />
       </div>
     </div>

@@ -1,4 +1,4 @@
-import ProductsCard from "./ServicesCard";
+import ProductsCard from "./ServicesBotsCard";
 import { Lato, Inter } from "next/font/google";
 import React from "react";
 

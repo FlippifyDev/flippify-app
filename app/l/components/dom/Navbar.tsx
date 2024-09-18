@@ -66,10 +66,7 @@ const Navbar = () => {
               <Link href="/l/plans">Plans</Link>
             </li>
             <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-base">
-              <Link href="/l/server-plans">Servers</Link>
-            </li>
-            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-base">
-              <a href="#about" onClick={(e) => handleSmoothScroll(e, 'about')}>About</a>
+              <Link href="/l/server-plans">Server Plans</Link>
             </li>
             <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-base">
               <Link 
@@ -97,7 +94,7 @@ const Navbar = () => {
           <Link href="/l/plans">Plans</Link>
         </li>
         <li className="transition duration-100 hover:scale-105 rounded-btn p-1">
-          <Link href="/l/server-plans">Servers Plans</Link>
+          <Link href="/l/server-plans">Server Plans</Link>
         </li>
         <li className="transition duration-100 hover:scale-105 rounded-btn p-1">
           <Link href="https://discord.gg/gNPYfe7YFm" target="_blank">Discord</Link>

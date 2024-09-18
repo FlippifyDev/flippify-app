@@ -30,27 +30,51 @@ const ToolList: React.FC = () => {
       <div className="flex flex-wrap justify-center ">
         <ProductCard
           title="Auto Deal Finding"
-          description="Discover unbeatable prices with our Smart Deal Finder! Effortlessly search through a vast database of thousands of products across multiple websites. Our tool provides real-time updates and detailed comparisons to help you find the best deals available."
+          description="Discover unbeatable sales with our Smart Deal Finder! Our bots do all the hard work for you, constantly searching thousands of products over hundreds of websites. Our tool provides real-time updates and detailed comparisons to help you find the best deals available."
           disclaimer={null}
           image="https://i.imgur.com/uXqxOZm.png"
         />
         <ProductCard
           title="Inventory Tracking"
-          description="One of the most important aspects of reselling is keeping a consistent inventory of purchased and sold products. This allows for effective analytics, informed purchasing decisions, and streamlined operations. Soon to be automated with eBay."
+          description="Keep full control of your reselling operation with our automated inventory tracker. Monitor your stock levels, sold products, and purchase history to make informed decisions and streamline your business operations."
           disclaimer={null}
           image="https://i.imgur.com/vNFMFBR.png"
         />
         <ProductCard
           title="Financial Hub"
-          description="One of the most important aspects of reselling is keeping a consistent inventory of purchased and sold products. This allows for effective analytics, informed purchasing decisions, and streamlined operations. Soon to be automated with eBay."
+          description="Manage your reselling profits and expenses with ease using our Financial Hub. Track your earnings, costs, and generate detailed financial reports, including tax summaries, to keep your business financially organized."
           disclaimer={null}
           image="https://i.imgur.com/r5viQMS.png"
         />
         <ProductCard
           title="Store Automation"
-          description="One of the most important aspects of reselling is keeping a consistent inventory of purchased and sold products. This allows for effective analytics, informed purchasing decisions, and streamlined operations. Soon to be automated with eBay."
+          description="Automate your entire reselling process from product listings to order fulfillment. With integrated tools for eBay and Amazon, our system manages your store’s operations, so you can focus on scaling your business."
           disclaimer={null}
           image="https://i.imgur.com/hnTZgcx.png"
+        />
+        <ProductCard
+          title="Reseller News"
+          description="Stay ahead of the competition with real-time updates and insights from the reselling world. Our Reseller News keeps you informed about market trends, product releases, and exclusive deals that can boost your profits."
+          disclaimer={null}
+          image="https://i.imgur.com/IwQsPG4.png"
+        />
+        <ProductCard
+          title="Masterclass Courses"
+          description="Level up your reselling expertise with our in-depth Masterclass courses. Designed for beginners and experts alike, these courses provide strategies and tips from industry leaders to help you maximize your earnings."
+          disclaimer={null}
+          image="https://i.imgur.com/G5FcJf4.png"
+        />
+        <ProductCard
+          title="In-Store Monitors"
+          description="Get real-time updates on in-store stock from major retailers like Tesco, Nike, and more. Our in-store monitors track inventory levels, helping you spot local deals that can be resold quickly for a profit."
+          disclaimer={null}
+          image="https://i.imgur.com/wWTl7Yd.png"
+        />
+        <ProductCard
+          title="Exclusive Inner-Circle"
+          description="Join our Exclusive Inner-Circle for insider access to advanced tools, expert advice, and a supportive community of top-tier resellers. Collaborate, learn, and take your reselling business to the next level."
+          disclaimer={null}
+          image="https://i.imgur.com/EPRnIHa.png"
         />
       </div>
     </div>

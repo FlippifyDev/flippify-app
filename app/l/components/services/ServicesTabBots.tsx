@@ -30,10 +30,10 @@ const ProductList: React.FC = () => {
       </div>
       <div className="flex flex-wrap justify-center">
         <ProductsCard
-          title="Retiring Sets"
-          description="Track soon-to-retire LEGO sets across various sites and stay ahead of collectors. Secure valuable sets before they vanish, with potential long-term profit as prices rise post-retirement."
-          disclaimer="Prices and availability may fluctuate. Always verify details on respective websites and eBay before purchasing."
-          image="https://i.imgur.com/DZfSIM6.png"
+          title="Deal Watch UK"
+          description="Find high-demand products from top deal sites like hotukdeals & rewarddeals, filtered and compared to eBay prices for maximum profitability. Spot opportunities across a wide range of categories."
+          disclaimer="Deals may expire or be inaccurate. Confirm prices and stock on deal sites and eBay before making a purchase."
+          image="https://i.imgur.com/pfQk3lq.png"
         />
         <ProductsCard
           title="Electronics"
@@ -42,10 +42,10 @@ const ProductList: React.FC = () => {
           image="https://i.imgur.com/CibOg9Y.png"
         />
         <ProductsCard
-          title="Deal Watch UK"
-          description="Find high-demand products from top deal sites like hotukdeals & rewarddeals, filtered and compared to eBay prices for maximum profitability. Spot opportunities across a wide range of categories."
-          disclaimer="Deals may expire or be inaccurate. Confirm prices and stock on deal sites and eBay before making a purchase."
-          image="https://i.imgur.com/pfQk3lq.png"
+          title="Retiring Sets"
+          description="Track soon-to-retire LEGO sets across various sites and stay ahead of collectors. Secure valuable sets before they vanish, with potential long-term profit as prices rise post-retirement."
+          disclaimer="Prices and availability may fluctuate. Always verify details on respective websites and eBay before purchasing."
+          image="https://i.imgur.com/DZfSIM6.png"
         />
       </div>
     </div>

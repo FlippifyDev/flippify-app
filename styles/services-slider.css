@@ -16,7 +16,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 4px; /* Height of the active tab indicator */
+    height: 3px; /* Height of the active tab indicator */
     background-color: #ffffff; /* houseHoverBlue */
     border-radius: 2px;
     transition: all 0.3s ease-in-out;

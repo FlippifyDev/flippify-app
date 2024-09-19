@@ -1,25 +1,36 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Lato, Inter } from "next/font/google";
 import ServerPlansCard from "./ServerPlansCard";
 import ServerPlansCardDealWatchWhatsIncluded from "./ServerPlansCardDealWatchWhatsIncluded";
 import ServerPlansCardRetiringSetsWhatsIncluded from "./ServerPlansCardRetiringSetsWhatsIncluded";
 import ServerPlansCardElectronicsWhatsIncluded from "./ServerPlansCardElectronicsWhatsIncluded";
+import { fetchConversionRates } from "@/app/api/conversion/currencyApi"; // Your currency API
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
 
 const ServerPlansPage = () => {
   const [selectedPlan, setSelectedPlan] = useState<number>(0);
-  const [currency, setCurrency] = useState<'GBP' | 'USD' | 'EUR'>('GBP');
+  const [currency, setCurrency] = useState<'GBP' | 'USD' | 'EUR' | 'AUD' | 'CAD'>('GBP');
+  const [conversionRates, setConversionRates] = useState<Record<string, number>>({});
+
+  // Fetch conversion rates
+  useEffect(() => {
+    const fetchRates = async () => {
+      const rates = await fetchConversionRates();
+      setConversionRates(rates || {});
+    };
+    fetchRates();
+  }, []);
 
   const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedPlan(event.target.checked ? 1 : 0);
   };
 
   const handleCurrencyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setCurrency(event.target.value as 'GBP' | 'USD' | 'EUR');
+    setCurrency(event.target.value as 'GBP' | 'USD' | 'EUR' | 'AUD' | 'CAD');
   };
 
   return (
@@ -43,51 +54,75 @@ const ServerPlansPage = () => {
         </div>
       </div>
 
+      {/* Monthly/Yearly Toggle */}
+      <div className="flex justify-center w-4/5 sm:w-full items-center space-x-4 mb-6 mt-6">
+        <label className="inline-flex items-center cursor-pointer">
+          <input
+            type="checkbox"
+            value=""
+            className="sr-only peer"
+            checked={selectedPlan === 1}
+            onChange={handleToggleChange}
+          />
+          <span className="mr-3 text-sm font-medium text-gray-300 select-none">
+            Monthly
+          </span>
+          <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+          <span className="ms-3 text-sm font-medium text-gray-300 select-none">
+            Yearly
+          </span>
+        </label>
+      </div>
+
       {/* Server Plans */}
-      <div className="mt-16 grid grid-cols-1 md:grid-cols-3 mx-6 lg:px-32 md:mx-2 lg:mx-16 gap-8 items-stretch">
+      <div className="mt-10 grid grid-cols-1 md:grid-cols-3 mx-6 lg:px-32 md:mx-2 lg:mx-16 gap-8 items-stretch">
         <ServerPlansCard
           title="Retiring Sets Deals"
           description="Scanning all corners of the internet for deals on soon-to-retire LEGO sets meaning big profits long-term."
-          prices={119.99}
+          prices={{ monthly: 119.99, yearly: 1199.99 }}
           whatsIncludedComponent={<ServerPlansCardRetiringSetsWhatsIncluded />}
           specialPlan={false}
           priceRange={selectedPlan}
-          planRole="retiring sets"
           currency={currency}
+          conversionRates={conversionRates}
         />
         <ServerPlansCard
           title="Deal Watch UK"
           description="Discover Endless profitable deals scraped and filtered from site like 'hotukdeals' & 'rewarddeals'"
-          prices={69.99}
+          prices={{ monthly: 69.99, yearly: 699.99 }}
           whatsIncludedComponent={<ServerPlansCardDealWatchWhatsIncluded />}
           specialPlan={true}
           priceRange={selectedPlan}
-          planRole="deal watch"
           currency={currency}
+          conversionRates={conversionRates}
         />
         <ServerPlansCard
           title="Electronics"
           description="Coming Soon - Searching for profitable deals on the best-selling electronics on the market."
-          prices={169.99}
+          prices={{ monthly: 169.99, yearly: 1699.99 }}
           whatsIncludedComponent={<ServerPlansCardElectronicsWhatsIncluded />}
           specialPlan={false}
           priceRange={selectedPlan}
-          planRole="electronics"
-          unavailable={true}
           currency={currency}
+          unavailable={true}
+          conversionRates={conversionRates}
         />
       </div>
+
+      {/* Currency Selector */}
       <div className="flex justify-center mt-12 mb-[-48px]">
-          <select
-            id="currency"
-            value={currency}
-            onChange={handleCurrencyChange}
-            className="py-2 px-4 rounded-lg bg-white border-gray-200 text-gray-500 font-semibold text-sm"
-          >
-            <option className="font-semibold text-gray-500" value="GBP">GBP</option>
-            <option className="font-semibold text-gray-500" value="USD">USD</option>
-            <option className="font-semibold text-gray-500" value="EUR">EUR</option>
-          </select>
+        <select
+          id="currency"
+          value={currency}
+          onChange={handleCurrencyChange}
+          className="py-2 px-4 rounded-lg bg-white border-gray-200 text-gray-500 font-semibold text-sm"
+        >
+          <option className="font-semibold text-gray-500" value="GBP">GBP</option>
+          <option className="font-semibold text-gray-500" value="USD">USD</option>
+          <option className="font-semibold text-gray-500" value="EUR">EUR</option>
+          <option className="font-semibold text-gray-500" value="AUD">AUD</option>
+          <option className="font-semibold text-gray-500" value="CAD">CAD</option>
+        </select>
       </div>
     </div>
   );

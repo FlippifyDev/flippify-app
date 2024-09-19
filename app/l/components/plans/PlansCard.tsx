@@ -6,66 +6,57 @@ import { BackgroundGradient } from "@/components/ui/background-gradient";
 interface PlansCardProps {
   title: string;
   description: string;
-  prices: number[];
+  prices: { monthly: number; yearly: number };
+  discountedPrices: { monthly: number; yearly: number };
   priceIds: { monthly: string; yearly: string };
   whatsIncludedComponent: any;
   specialPlan?: boolean;
   priceRange: number;
   className?: string;
-  currency: 'GBP' | 'USD' | 'EUR'; 
+  currency: "GBP" | "USD" | "EUR" | "AUD" | "CAD"; // More currencies added
+  conversionRates: Record<string, number>; // New prop for conversion rates
 }
 
-const currencyConversionRates: Record<'GBP' | 'USD' | 'EUR', number> = {
-  GBP: 1,
-  USD: 1.28,
-  EUR: 1.16,
-};
-
-const currencySymbols: Record<'GBP' | 'USD' | 'EUR', string> = {
-  GBP: '£',
-  USD: '$',
-  EUR: '€',
+const currencySymbols: Record<"GBP" | "USD" | "EUR" | "AUD" | "CAD", string> = {
+  GBP: "£",
+  USD: "$",
+  EUR: "€",
+  AUD: "A$",
+  CAD: "C$",
 };
 
 const PlansCard: React.FC<PlansCardProps> = ({
   title,
   description,
   prices,
+  discountedPrices,
   priceIds,
   whatsIncludedComponent,
   specialPlan,
   priceRange,
   className,
   currency,
+  conversionRates,
 }) => {
-  const [currencySymbol, setCurrencySymbol] = useState('£');
+  const [currencySymbol, setCurrencySymbol] = useState("£");
 
   useEffect(() => {
     setCurrencySymbol(currencySymbols[currency]);
   }, [currency]);
 
-  const convertedPrices = prices.map(price =>
-    Number((price * currencyConversionRates[currency]).toFixed(2))
-  );
-
-  const selectedPriceId = priceRange === 0 ? priceIds.monthly : priceIds.yearly;
-
-  // Discounted Prices for Standard, Pro, and Elite
-  const discountPrices = {
-    Standard: 19.99, // Discounted price for Standard
-    Pro: 29.99, // Discounted price for Pro
-    Elite: 49.99, // Discounted price for Elite
+  // Apply conversion rates to the prices
+  const originalPricesConverted = {
+    monthly: (prices.monthly * conversionRates[currency]).toFixed(2),
+    yearly: (prices.yearly * conversionRates[currency]).toFixed(2),
   };
 
-  const originalPrice = prices[priceRange];
-  const discountedPrice =
-    title === "Standard"
-      ? discountPrices.Standard
-      : title === "Pro"
-      ? discountPrices.Pro
-      : title === "Elite"
-      ? discountPrices.Elite
-      : originalPrice;
+  const discountedPricesConverted = {
+    monthly: (discountedPrices.monthly * conversionRates[currency]).toFixed(2),
+    yearly: (discountedPrices.yearly * conversionRates[currency]).toFixed(2),
+  };
+
+  const displayPrice = priceRange === 0 ? discountedPricesConverted.monthly : discountedPricesConverted.yearly;
+  const displayOriginalPrice = priceRange === 0 ? originalPricesConverted.monthly : originalPricesConverted.yearly;
 
   return (
     <div className={`w-full flex justify-center transition duration-200 ${className || ""}`}>
@@ -94,34 +85,27 @@ const PlansCard: React.FC<PlansCardProps> = ({
               <div className="flex flex-col items-center justify-center mt-4">
                 <div className="flex items-baseline">
                   <h3 className="font-extrabold text-[40px] text-gray-900">
-                    {`${currencySymbol}${discountedPrice.toFixed(2)}`}
+                    {`${currencySymbol}${displayPrice}`}
                   </h3>
                   <span className="ml-1 text-lg text-black font-semibold">
-                    /{priceRange === 0 ? 'mo' : 'yr'}
+                    /{priceRange === 0 ? "mo" : "yr"}
                   </span>
                 </div>
-                {discountedPrice !== originalPrice && (
+                {Number(displayPrice) !== Number(displayOriginalPrice) && (
                   <span className="text-md text-gray-500 line-through">
-                    {`${currencySymbol}${originalPrice.toFixed(2)}`}
+                    {`${currencySymbol}${displayOriginalPrice}`}
                   </span>
                 )}
               </div>
 
               {/* Features */}
-              <section className="flex-grow mt-5">
-                {whatsIncludedComponent}
-              </section>
+              <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
 
               {/* Button */}
               <section className="mt-auto">
-                {prices.length > 0 && (
-                  <div className="flex">
-                    <PlansGetAccessButton
-                      redirect="dashboard"
-                      specialPlan={specialPlan}
-                    />
-                  </div>
-                )}
+                <div className="flex">
+                  <PlansGetAccessButton redirect="dashboard" specialPlan={specialPlan} />
+                </div>
               </section>
             </div>
           </BackgroundGradient>
@@ -143,31 +127,27 @@ const PlansCard: React.FC<PlansCardProps> = ({
             <div className="flex flex-col items-center justify-center mt-4">
               <div className="flex items-baseline">
                 <h3 className="font-extrabold text-[40px] text-gray-900">
-                  {`${currencySymbol}${discountedPrice.toFixed(2)}`}
+                  {`${currencySymbol}${displayPrice}`}
                 </h3>
                 <span className="ml-1 text-lg text-black font-semibold">
-                  /{priceRange === 0 ? 'mo' : 'yr'}
+                  /{priceRange === 0 ? "mo" : "yr"}
                 </span>
               </div>
-              {discountedPrice !== originalPrice && (
+              {Number(displayPrice) !== Number(displayOriginalPrice) && (
                 <span className="text-md text-gray-500 line-through">
-                  {`${currencySymbol}${originalPrice.toFixed(2)}`}
+                  {`${currencySymbol}${displayOriginalPrice}`}
                 </span>
               )}
             </div>
 
             {/* Features */}
-            <section className="flex-grow mt-5">
-              {whatsIncludedComponent}
-            </section>
+            <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
 
             {/* Button */}
             <section className="mt-auto">
-              {prices.length > 0 && (
-                <div className="flex">
-                  <PlansGetAccessButton redirect="dashboard" />
-                </div>
-              )}
+              <div className="flex">
+                <PlansGetAccessButton redirect="dashboard" />
+              </div>
             </section>
           </div>
         )}

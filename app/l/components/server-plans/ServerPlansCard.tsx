@@ -4,26 +4,23 @@ import { BackgroundGradient } from "@/components/ui/background-gradient";
 
 interface ServerPlansCardProps {
   title: string;
-  prices: number;
+  prices: { monthly: number; yearly: number };
   description: string;
   whatsIncludedComponent: any;
   specialPlan?: boolean;
   priceRange: number;
-  planRole: string;
+  planRole?: string;
   unavailable?: boolean;
-  currency: 'GBP' | 'USD' | 'EUR'; // Matching the currency prop from the other PlansCard
+  currency: 'GBP' | 'USD' | 'EUR' | 'AUD' | 'CAD';
+  conversionRates: Record<string, number>;
 }
 
-const currencyConversionRates: Record<"GBP" | "USD" | "EUR", number> = {
-  GBP: 1,
-  USD: 1.28,
-  EUR: 1.16,
-};
-
-const currencySymbols: Record<"GBP" | "USD" | "EUR", string> = {
+const currencySymbols: Record<"GBP" | "USD" | "EUR" | "AUD" | "CAD", string> = {
   GBP: "£",
   USD: "$",
   EUR: "€",
+  AUD: "A$",
+  CAD: "C$",
 };
 
 const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
@@ -35,16 +32,21 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
   priceRange,
   unavailable = false,
   currency,
+  conversionRates,
 }) => {
   const [currencySymbol, setCurrencySymbol] = useState("£");
+  const [convertedPrice, setConvertedPrice] = useState(prices.monthly);
 
   useEffect(() => {
     setCurrencySymbol(currencySymbols[currency]);
-  }, [currency]);
 
-  // Convert prices based on the selected currency
-  const convertedPrice =
-    Number((prices * currencyConversionRates[currency]).toFixed(2))
+    // Update the converted price based on currency
+    const newPrice =
+      priceRange === 0
+        ? prices.monthly * (conversionRates[currency] || 1)
+        : prices.yearly * (conversionRates[currency] || 1);
+    setConvertedPrice(Number(newPrice.toFixed(2)));
+  }, [currency, priceRange, prices, conversionRates]);
 
   return (
     <div className="w-full flex justify-center transition duration-200 relative z-0">

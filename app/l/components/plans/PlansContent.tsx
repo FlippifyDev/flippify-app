@@ -4,22 +4,39 @@ import PlansCard from "./PlansCard";
 import PlansCardStandardWhatsIncluded from "./PlansCardProWhatsIncluded";
 import PlansCardEliteWhatsIncluded from "./PlansCardEliteWhatsIncluded";
 import PlansCardBasicWhatsIncluded from "./PlansCardStandardWhatsIncluded";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Lato, Inter } from "next/font/google";
+import { fetchConversionRates } from "@/app/api/conversion/currencyApi"; // Corrected named import
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
 
 const PlansContent = () => {
   const [selectedPlan, setSelectedPlan] = useState<number>(0);
-  const [currency, setCurrency] = useState<'GBP' | 'USD' | 'EUR'>('GBP');
+  const [currency, setCurrency] = useState<'GBP' | 'USD' | 'EUR' | 'AUD' | 'CAD'>('GBP');
+  const [conversionRates, setConversionRates] = useState<Record<string, number>>({
+    GBP: 1,
+    USD: 1.28,
+    EUR: 1.16,
+    AUD: 1.80,
+    CAD: 1.65,
+  });
+
+  // Fetch conversion rates from an API
+  useEffect(() => {
+    const fetchRates = async () => {
+      const rates = await fetchConversionRates();
+      setConversionRates(rates);
+    };
+    fetchRates();
+  }, []);
 
   const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedPlan(event.target.checked ? 1 : 0);
   };
 
   const handleCurrencyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setCurrency(event.target.value as 'GBP' | 'USD' | 'EUR');
+    setCurrency(event.target.value as 'GBP' | 'USD' | 'EUR' | 'AUD' | 'CAD');
   };
 
   return (
@@ -30,9 +47,7 @@ const PlansContent = () => {
             className={`${lato.className} text-5xl w-4/5 sm:w-full text-gradient bg-gradient-to-tr from-textGradStart to-textGradEnd bg-clip-text text-transparent py-1`}
           >
             Pricing
-            <a
-              className={`${inter.className} text-white text-5xl font-bold`}
-            >
+            <a className={`${inter.className} text-white text-5xl font-bold`}>
               {" "}Made Easy
             </a>
           </p>
@@ -69,7 +84,8 @@ const PlansContent = () => {
         <PlansCard
           title="Standard"
           description="For beginners"
-          prices={[24.99, 249.99]}
+          prices={{ monthly: 24.99, yearly: 249.99 }}
+          discountedPrices={{ monthly: 19.99, yearly: 199.99 }}
           priceIds={{
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
@@ -77,11 +93,13 @@ const PlansContent = () => {
           whatsIncludedComponent={<PlansCardBasicWhatsIncluded />}
           priceRange={selectedPlan}
           currency={currency}
+          conversionRates={conversionRates}
         />
         <PlansCard
           title="Pro"
           description="For growing resellers"
-          prices={[49.99, 499.99]}
+          prices={{ monthly: 49.99, yearly: 499.99 }}
+          discountedPrices={{ monthly: 29.99, yearly: 299.99 }}
           priceIds={{
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
@@ -90,11 +108,13 @@ const PlansContent = () => {
           specialPlan={true}
           priceRange={selectedPlan}
           currency={currency}
+          conversionRates={conversionRates}
         />
         <PlansCard
           title="Elite"
           description="For experts"
-          prices={[79.99, 799.99]}
+          prices={{ monthly: 79.99, yearly: 799.99 }}
+          discountedPrices={{ monthly: 49.99, yearly: 499.99 }}
           priceIds={{
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
@@ -102,22 +122,25 @@ const PlansContent = () => {
           whatsIncludedComponent={<PlansCardEliteWhatsIncluded />}
           priceRange={selectedPlan}
           currency={currency}
+          conversionRates={conversionRates}
         />
       </div>
 
       {/* Currency Selector at the bottom center */}
-        <div className="flex justify-center mt-12 mb-[-48px]">
-          <select
-            id="currency"
-            value={currency}
-            onChange={handleCurrencyChange}
-            className="py-2 px-4 rounded-lg bg-white border-gray-200 text-gray-500 font-semibold text-sm"
-          >
-            <option className="font-semibold text-gray-500" value="GBP">GBP</option>
-            <option className="font-semibold text-gray-500" value="USD">USD</option>
-            <option className="font-semibold text-gray-500" value="EUR">EUR</option>
-          </select>
-        </div>
+      <div className="flex justify-center mt-12 mb-[-48px]">
+        <select
+          id="currency"
+          value={currency}
+          onChange={handleCurrencyChange}
+          className="py-2 px-4 rounded-lg bg-white border-gray-200 text-gray-500 font-semibold text-sm"
+        >
+          <option className="font-semibold text-gray-500" value="GBP">GBP</option>
+          <option className="font-semibold text-gray-500" value="USD">USD</option>
+          <option className="font-semibold text-gray-500" value="EUR">EUR</option>
+          <option className="font-semibold text-gray-500" value="AUD">AUD</option>
+          <option className="font-semibold text-gray-500" value="CAD">CAD</option>
+        </select>
+      </div>
     </div>
   );
 };

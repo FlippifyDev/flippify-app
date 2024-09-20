@@ -9,14 +9,17 @@ const SidebarSignOutButton = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
+  // Handle redirect after session becomes null
   useEffect(() => {
     if (!session) {
       router.push(`/l/home`);
     }
-  }, [session, router]); // Added session to the dependency array
+  }, [session, router]);
 
   const handleSignOut = () => {
-    signOut();
+    signOut({
+      callbackUrl: '/l/home', // Redirect to landing page after sign out
+    });
   };
 
   return (
@@ -31,4 +34,3 @@ const SidebarSignOutButton = () => {
 };
 
 export default SidebarSignOutButton;
-    

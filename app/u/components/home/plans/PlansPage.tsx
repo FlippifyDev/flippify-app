@@ -1,18 +1,65 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import PlansCard from "./PlansCard";
-import PlansCardStandardWhatsIncluded from "./PlansCardProWhatsIncluded";
+import PlansCardStandardWhatsIncluded from "./PlansCardStandardWhatsIncluded";
 import PlansCardEliteWhatsIncluded from "./PlansCardEliteWhatsIncluded";
-import PlansCardBasicWhatsIncluded from "./PlansCardStandardWhatsIncluded";
-import React, { useState } from "react";
-
+import PlansCardProWhatsIncluded from "./PlansCardProWhatsIncluded";
 import { Lato, Inter } from "next/font/google";
+import { useSession } from "next-auth/react";
+import { database, ref, get } from "@/app/api/auth-firebase/firebaseConfig";
+import { fetchConversionRates } from "@/app/api/conversion/currencyApi"; // To fetch conversion rates
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
 
+const currencySymbols: Record<"GBP" | "USD" | "EUR", string> = {
+  GBP: "£",
+  USD: "$",
+  EUR: "€",
+};
+
 const PlansPage = () => {
+  const { data: session } = useSession();
   const [selectedPlan, setSelectedPlan] = useState<number>(0);
+  const [currency, setCurrency] = useState<"GBP" | "USD" | "EUR">("GBP");
+  const [conversionRates, setConversionRates] = useState<Record<string, number>>({
+    GBP: 1,
+    USD: 1.33,
+    EUR: 1.19,
+  });
+  const [currencySymbol, setCurrencySymbol] = useState("£");
+
+  // Fetch conversion rates from an API
+  useEffect(() => {
+    const fetchRates = async () => {
+      const rates = await fetchConversionRates(); // Assuming API call for conversion rates
+      setConversionRates(rates);
+    };
+    fetchRates();
+  }, []);
+
+  // Fetch user's preferred currency from Firebase
+  useEffect(() => {
+    const loadUserCurrency = async () => {
+      if (session && session.user) {
+        const userRef = ref(database, `users/${session.user.customerId}`);
+        try {
+          const snapshot = await get(userRef);
+          const userData = snapshot.val();
+          const userCurrency = (userData?.currency || "GBP") as keyof typeof currencySymbols;
+          setCurrency(userCurrency);
+          setCurrencySymbol(currencySymbols[userCurrency]);
+        } catch (error) {
+          console.error("Error loading user currency from Firebase:", error);
+        }
+      }
+    };
+
+    if (session && session.user && session.user.customerId) {
+      loadUserCurrency();
+    }
+  }, [session]);
 
   const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedPlan(event.target.checked ? 1 : 0);
@@ -29,7 +76,7 @@ const PlansPage = () => {
             <a
               className={`${inter.className} text-lightModeText text-4xl sm:text-5xl font-bold`}
             >
-              {/* This is the space between pricing and made easy */} Made Easy
+              {" "}Made Easy
             </a>
           </p>
         </div>
@@ -58,23 +105,27 @@ const PlansPage = () => {
         </div>
       </div>
 
-      {/* Subscription Cards with equal heights */}
+      {/* Subscription Cards */}
       <div className="mt-10 grid grid-cols-1 md:grid-cols-3 mx-4 md:mx-2 lg:mx-16 gap-8 items-stretch">
         <PlansCard
           title="Standard"
           description="For beginners"
-          prices={[19.99, 199.90]}
+          prices={{ monthly: 24.99, yearly: 249.99 }}
+          discountedPrices={{ monthly: 19.99, yearly: 199.99 }}
           priceIds={{
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
           }}
-          whatsIncludedComponent={<PlansCardBasicWhatsIncluded />}
+          whatsIncludedComponent={<PlansCardProWhatsIncluded />}
           priceRange={selectedPlan}
+          currency={currency}  // Passing the currency prop
+          conversionRates={conversionRates} // Passing the conversionRates prop
         />
         <PlansCard
           title="Pro"
           description="For growing resellers"
-          prices={[49.99, 499.90]}
+          prices={{ monthly: 49.99, yearly: 499.99 }}
+          discountedPrices={{ monthly: 29.99, yearly: 299.99 }}
           priceIds={{
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
@@ -82,17 +133,22 @@ const PlansPage = () => {
           whatsIncludedComponent={<PlansCardStandardWhatsIncluded />}
           specialPlan={true}
           priceRange={selectedPlan}
+          currency={currency}  // Passing the currency prop
+          conversionRates={conversionRates} // Passing the conversionRates prop
         />
         <PlansCard
           title="Elite"
           description="For experts"
-          prices={[79.99, 799.90]}
+          prices={{ monthly: 79.99, yearly: 799.99 }}
+          discountedPrices={{ monthly: 49.99, yearly: 499.99 }}
           priceIds={{
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
           }}
           whatsIncludedComponent={<PlansCardEliteWhatsIncluded />}
           priceRange={selectedPlan}
+          currency={currency}  // Passing the currency prop
+          conversionRates={conversionRates} // Passing the conversionRates prop
         />
       </div>
     </div>

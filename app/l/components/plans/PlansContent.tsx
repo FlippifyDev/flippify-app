@@ -16,10 +16,10 @@ const PlansContent = () => {
   const [currency, setCurrency] = useState<'GBP' | 'USD' | 'EUR' | 'AUD' | 'CAD'>('GBP');
   const [conversionRates, setConversionRates] = useState<Record<string, number>>({
     GBP: 1,
-    USD: 1.28,
-    EUR: 1.16,
-    AUD: 1.80,
-    CAD: 1.65,
+    USD: 1.33,
+    EUR: 1.19,
+    AUD: 1.95,
+    CAD: 1.8,
   });
 
   // Fetch conversion rates from an API

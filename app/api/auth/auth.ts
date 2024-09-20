@@ -1,11 +1,8 @@
 import DiscordProvider from 'next-auth/providers/discord';
 import { AuthOptions } from 'next-auth';
-import mongoose from 'mongoose';
-
+import connectDB from '../auth-mongodb/dbConnect';  // Import your dbConnect function
 import retrieveStripeCustomer from '../stripe-handlers/retrieve-customer';
 import { User, ISubscription, IReferral } from '../auth-mongodb/userModel';
-
-mongoose.connect(process.env.MONGO_URL as string);
 
 const generateReferralCode = () => {
   return Math.random().toString(36).substring(2, 10);
@@ -28,6 +25,7 @@ const authOptions: AuthOptions = {
       }
 
       if (token.id) {
+        await connectDB();  // Ensure MongoDB connection before querying
         const userFromDb = await User.findOne({ discord_id: token.id });
         if (userFromDb) {
           token.subscriptions = userFromDb.subscriptions;
@@ -49,6 +47,7 @@ const authOptions: AuthOptions = {
         referral?: IReferral;
       };
 
+      await connectDB();  // Ensure MongoDB connection before querying
       const user = await User.findOne({ discord_id: id });
       if (!user) {
         console.error(`User not found in database for id ${id}`);
@@ -71,6 +70,7 @@ const authOptions: AuthOptions = {
       return session;
     },
     async signIn({ profile }: any) {
+      await connectDB();  // Ensure MongoDB connection before querying
       try {
         const { id, username, email } = profile as { id: string; username: string; email: string };
 
@@ -90,7 +90,7 @@ const authOptions: AuthOptions = {
             referral_code: generateReferralCode(),
             referred_by: null,
             referral_count: 0,
-            valid_referrals: [],    
+            valid_referrals: [],
             rewards_claimed: 0,
           };
 

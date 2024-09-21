@@ -16,13 +16,9 @@ interface ServerPlansCardProps {
   specialPlan?: boolean;
   priceRange: number;
   planRole: string;
+  currency: 'GBP' | 'USD' | 'EUR'; // Currency prop
+  conversionRates: Record<string, number>; // Conversion rates prop
 }
-
-const currencyConversionRates: Record<"GBP" | "USD" | "EUR", number> = {
-  GBP: 1,
-  USD: 1.28,
-  EUR: 1.16,
-};
 
 const currencySymbols: Record<"GBP" | "USD" | "EUR", string> = {
   GBP: "£",
@@ -39,36 +35,19 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
   specialPlan,
   priceRange,
   planRole,
+  currency,
+  conversionRates
 }) => {
   const { data: session } = useSession();
-  const [currency, setCurrency] = useState<"GBP" | "USD" | "EUR">("GBP");
   const [currencySymbol, setCurrencySymbol] = useState("£");
 
-  // Fetch user's preferred currency from Firebase
   useEffect(() => {
-    const loadUserCurrency = async () => {
-      if (session && session.user) {
-        const userRef = ref(database, `users/${session.user.customerId}`);
-        try {
-          const snapshot = await get(userRef);
-          const userData = snapshot.val();
-          const userCurrency = (userData?.currency || "GBP") as keyof typeof currencySymbols;
-          setCurrency(userCurrency);
-          setCurrencySymbol(currencySymbols[userCurrency]);
-        } catch (error) {
-          console.error("Error loading user currency from Firebase:", error);
-        }
-      }
-    };
-
-    if (session && session.user && session.user.customerId) {
-      loadUserCurrency();
-    }
-  }, [session]);
+    setCurrencySymbol(currencySymbols[currency]);
+  }, [currency]);
 
   // Convert prices based on the selected currency
   const convertedPrices = prices.map((price) =>
-    Number((price * currencyConversionRates[currency]).toFixed(2))
+    Number((price * conversionRates[currency]).toFixed(2))
   );
 
   const selectedPriceId = priceRange === 0 ? priceIds.monthly : priceIds.yearly;

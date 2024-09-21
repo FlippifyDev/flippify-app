@@ -8,7 +8,7 @@ import PlansCardProWhatsIncluded from "./PlansCardProWhatsIncluded";
 import { Lato, Inter } from "next/font/google";
 import { useSession } from "next-auth/react";
 import { database, ref, get } from "@/app/api/auth-firebase/firebaseConfig";
-import { fetchConversionRates } from "@/app/api/conversion/currencyApi"; // To fetch conversion rates
+import { fetchConversionRatesFromFirebase  } from "@/app/api/conversion/currencyApi"; // To fetch conversion rates
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
@@ -33,7 +33,7 @@ const PlansPage = () => {
   // Fetch conversion rates from an API
   useEffect(() => {
     const fetchRates = async () => {
-      const rates = await fetchConversionRates(); // Assuming API call for conversion rates
+      const rates = await fetchConversionRatesFromFirebase (); // Assuming API call for conversion rates
       setConversionRates(rates);
     };
     fetchRates();

@@ -1,19 +1,34 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Lato, Inter } from "next/font/google";
-import ServerPlansCard from "./ServerPlansCard"; // New Server Plan Card component
-import ServerPlansCardDealWatchWhatsIncluded from "./ServerPlansCardDealWatchWhatsIncluded"; // Deal Watch Features
-import ServerPlansCardRetiringSetsWhatsIncluded from "./ServerPlansCardRetiringSetsWhatsIncluded"; // Retiring Sets Features
-import ServerPlansCardElectronicsWhatsIncluded from "./ServerPlansCardElectronicsWhatsIncluded"; // Electronics Features
+import ServerPlansCard from "./ServerPlansCard";
+import ServerPlansCardDealWatchWhatsIncluded from "./ServerPlansCardDealWatchWhatsIncluded";
+import ServerPlansCardRetiringSetsWhatsIncluded from "./ServerPlansCardRetiringSetsWhatsIncluded";
+import ServerPlansCardElectronicsWhatsIncluded from "./ServerPlansCardElectronicsWhatsIncluded";
+import { fetchConversionRatesFromFirebase } from "@/app/api/conversion/currencyApi"; // Import from Firebase
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
 
 const ServerPlansPage = () => {
   const [selectedPlan, setSelectedPlan] = useState<number>(0);
+  const [currency, setCurrency] = useState<'GBP' | 'USD' | 'EUR'>('GBP');
+  const [conversionRates, setConversionRates] = useState<Record<string, number>>({
+    GBP: 1,
+    USD: 1.33,
+    EUR: 1.16,
+  });
 
-  // Function to handle toggle switch change
+  // Fetch conversion rates from Firebase
+  useEffect(() => {
+    const fetchRates = async () => {
+      const rates = await fetchConversionRatesFromFirebase();
+      setConversionRates(rates);
+    };
+    fetchRates();
+  }, []);
+
   const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedPlan(event.target.checked ? 1 : 0);
   };
@@ -73,10 +88,12 @@ const ServerPlansPage = () => {
           specialPlan={true}
           priceRange={selectedPlan}
           planRole="deal watch"
+          currency={currency}
+          conversionRates={conversionRates}
         />
         <ServerPlansCard
           title="Retiring Sets Deals"
-          description="Scanning all corners of the internet for deals on soon-to-retire lego sets meaning big profits long-term."
+          description="Scanning all corners of the internet for deals on soon-to-retire LEGO sets meaning big profits long-term."
           prices={[119.99, 1199.90]}
           priceIds={{
             monthly: "price_1PfJ7pJJRepiHZ8d7gs78YEp",
@@ -86,19 +103,23 @@ const ServerPlansPage = () => {
           specialPlan={false}
           priceRange={selectedPlan}
           planRole="retiring sets"
+          currency={currency}
+          conversionRates={conversionRates}
         />
         <ServerPlansCard
           title="Electronics"
-          description="Coming Soon - Searching for profitable deals on the best selling electronics on the market."
+          description="Coming Soon - Searching for profitable deals on the best-selling electronics on the market."
           prices={[169.99, 1699.90]}
           priceIds={{
             monthly: "price_1PfJ9bJJRepiHZ8dk689bT3H",
             yearly: "price_1PfJ9bJJRepiHZ8dTK0EGZ8k",
           }}
           whatsIncludedComponent={<ServerPlansCardElectronicsWhatsIncluded />}
-          specialPlan={false}  // Not highlighted as a special plan
+          specialPlan={false}
           priceRange={selectedPlan}
           planRole="electronics"
+          currency={currency}
+          conversionRates={conversionRates}
         />
       </div>
     </div>

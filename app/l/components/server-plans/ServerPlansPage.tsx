@@ -6,7 +6,7 @@ import ServerPlansCard from "./ServerPlansCard";
 import ServerPlansCardDealWatchWhatsIncluded from "./ServerPlansCardDealWatchWhatsIncluded";
 import ServerPlansCardRetiringSetsWhatsIncluded from "./ServerPlansCardRetiringSetsWhatsIncluded";
 import ServerPlansCardElectronicsWhatsIncluded from "./ServerPlansCardElectronicsWhatsIncluded";
-import { fetchConversionRates } from "@/app/api/conversion/currencyApi"; // Your currency API
+import { fetchConversionRatesFromFirebase  } from "@/app/api/conversion/currencyApi"; // Your currency API
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
@@ -19,7 +19,7 @@ const ServerPlansPage = () => {
   // Fetch conversion rates
   useEffect(() => {
     const fetchRates = async () => {
-      const rates = await fetchConversionRates();
+      const rates = await fetchConversionRatesFromFirebase ();
       setConversionRates(rates || {});
     };
     fetchRates();

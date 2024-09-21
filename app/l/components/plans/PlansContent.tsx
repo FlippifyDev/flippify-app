@@ -6,7 +6,7 @@ import PlansCardEliteWhatsIncluded from "./PlansCardEliteWhatsIncluded";
 import PlansCardBasicWhatsIncluded from "./PlansCardStandardWhatsIncluded";
 import React, { useState, useEffect } from "react";
 import { Lato, Inter } from "next/font/google";
-import { fetchConversionRates } from "@/app/api/conversion/currencyApi"; // Corrected named import
+import { fetchConversionRatesFromFirebase } from "@/app/api/conversion/currencyApi"; // Using Firebase fetch
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
@@ -22,10 +22,10 @@ const PlansContent = () => {
     CAD: 1.8,
   });
 
-  // Fetch conversion rates from an API
+  // Fetch conversion rates from Firebase
   useEffect(() => {
     const fetchRates = async () => {
-      const rates = await fetchConversionRates();
+      const rates = await fetchConversionRatesFromFirebase();
       setConversionRates(rates);
     };
     fetchRates();

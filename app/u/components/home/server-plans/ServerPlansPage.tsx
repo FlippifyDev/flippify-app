@@ -6,12 +6,21 @@ import ServerPlansCard from "./ServerPlansCard";
 import ServerPlansCardDealWatchWhatsIncluded from "./ServerPlansCardDealWatchWhatsIncluded";
 import ServerPlansCardRetiringSetsWhatsIncluded from "./ServerPlansCardRetiringSetsWhatsIncluded";
 import ServerPlansCardElectronicsWhatsIncluded from "./ServerPlansCardElectronicsWhatsIncluded";
+import { useSession } from "next-auth/react";
+import { database, ref, get } from "@/app/api/auth-firebase/firebaseConfig";
 import { fetchConversionRatesFromFirebase } from "@/app/api/conversion/currencyApi"; // Import from Firebase
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
 
+const currencySymbols: Record<"GBP" | "USD" | "EUR", string> = {
+  GBP: "£",
+  USD: "$",
+  EUR: "€",
+};
+
 const ServerPlansPage = () => {
+  const { data: session } = useSession();
   const [selectedPlan, setSelectedPlan] = useState<number>(0);
   const [currency, setCurrency] = useState<'GBP' | 'USD' | 'EUR'>('GBP');
   const [conversionRates, setConversionRates] = useState<Record<string, number>>({
@@ -19,6 +28,7 @@ const ServerPlansPage = () => {
     USD: 1.33,
     EUR: 1.16,
   });
+  const [currencySymbol, setCurrencySymbol] = useState("£");
 
   // Fetch conversion rates from Firebase
   useEffect(() => {
@@ -28,6 +38,28 @@ const ServerPlansPage = () => {
     };
     fetchRates();
   }, []);
+
+  // Fetch user's preferred currency from Firebase
+  useEffect(() => {
+    const loadUserCurrency = async () => {
+      if (session && session.user) {
+        const userRef = ref(database, `users/${session.user.customerId}`);
+        try {
+          const snapshot = await get(userRef);
+          const userData = snapshot.val();
+          const userCurrency = (userData?.currency || "GBP") as keyof typeof currencySymbols;
+          setCurrency(userCurrency);
+          setCurrencySymbol(currencySymbols[userCurrency]);
+        } catch (error) {
+          console.error("Error loading user currency from Firebase:", error);
+        }
+      }
+    };
+
+    if (session && session.user && session.user.customerId) {
+      loadUserCurrency();
+    }
+  }, [session]);
 
   const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedPlan(event.target.checked ? 1 : 0);

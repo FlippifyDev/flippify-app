@@ -113,8 +113,8 @@ const PlansPage = () => {
           prices={{ monthly: 24.99, yearly: 249.99 }}
           discountedPrices={{ monthly: 19.99, yearly: 199.99 }}
           priceIds={{
-            monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
-            yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
+            monthly: "price_1PxRRCJJRepiHZ8dXF4MyyCO",
+            yearly: "price_1PxRRMJJRepiHZ8duiGgCQI8",
           }}
           whatsIncludedComponent={<PlansCardProWhatsIncluded />}
           priceRange={selectedPlan}
@@ -127,8 +127,8 @@ const PlansPage = () => {
           prices={{ monthly: 49.99, yearly: 499.99 }}
           discountedPrices={{ monthly: 29.99, yearly: 299.99 }}
           priceIds={{
-            monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
-            yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
+            monthly: "price_1Px4KUJJRepiHZ8d1wnDMoUZ",
+            yearly: "price_1PxRQIJJRepiHZ8dGuGOAkE3",
           }}
           whatsIncludedComponent={<PlansCardStandardWhatsIncluded />}
           specialPlan={true}
@@ -142,8 +142,8 @@ const PlansPage = () => {
           prices={{ monthly: 79.99, yearly: 799.99 }}
           discountedPrices={{ monthly: 49.99, yearly: 499.99 }}
           priceIds={{
-            monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
-            yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
+            monthly: "price_1Px4LdJJRepiHZ8dqBON3u0T",
+            yearly: "price_1PxRPnJJRepiHZ8dk2i4Yjql",
           }}
           whatsIncludedComponent={<PlansCardEliteWhatsIncluded />}
           priceRange={selectedPlan}

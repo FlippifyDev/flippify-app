@@ -88,7 +88,7 @@ const OnboardingFlow: React.FC = () => {
         {step === 1 && (
           <section className="text-center">
             <h2 className="text-5xl font-bold mb-2">Welcome to</h2>
-            <h2 className={`${lato.className} pb-1 text-5xl font-bold mb-4 text-gradient bg-gradient-to-tr from-blue-500 to-purple-500 bg-clip-text text-transparent`}>
+            <h2 className={`${lato.className} pb-1 text-5xl font-bold mb-4 text-gradient bg-gradient-to-r from-houseBlue to-textGradEnd bg-clip-text text-transparent`}>
               flippify
             </h2>
             <p className="text-lg text-gray-700 mb-8">
@@ -126,7 +126,7 @@ const OnboardingFlow: React.FC = () => {
         {step === 2 && (
           <section className="text-center">
             <h2 className="text-5xl font-bold mb-2">Welcome to</h2>
-            <h2 className={`${lato.className} pb-1 text-5xl font-bold mb-4 text-gradient bg-gradient-to-tr from-blue-500 to-purple-500 bg-clip-text text-transparent`}>
+            <h2 className={`${lato.className} pb-1 text-5xl font-bold mb-4 text-gradient bg-gradient-to-r from-houseBlue to-textGradEnd bg-clip-text text-transparent`}>
               flippify
             </h2>
             <p className="text-lg text-gray-700 mb-8">

@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlineTag } from "react-icons/ai"; // Icon for the discount tag
 import PlansGetAccessButton from "./PlansGetAccessButton";
+import PlansSubscribeNow from "./PlansSubscribeNow";
+import ManageMembershipsButton from "./PlansManageMembershipButton";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
+import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 
 interface PlansCardProps {
   title: string;
@@ -53,11 +56,22 @@ const PlansCard: React.FC<PlansCardProps> = ({
     yearly: (discountedPrices.yearly * conversionRates[currency]).toFixed(2),
   };
 
-  const displayPrice = priceRange === 0 ? discountedPricesConverted.monthly : discountedPricesConverted.yearly;
-  const displayOriginalPrice = priceRange === 0 ? originalPricesConverted.monthly : originalPricesConverted.yearly;
+  const displayPrice =
+    priceRange === 0
+      ? discountedPricesConverted.monthly
+      : discountedPricesConverted.yearly;
+  const displayOriginalPrice =
+    priceRange === 0
+      ? originalPricesConverted.monthly
+      : originalPricesConverted.yearly;
+
+  // Select the appropriate priceId based on the selected price range
+  const selectedPriceId = priceRange === 0 ? priceIds.monthly : priceIds.yearly;
 
   return (
-    <div className={`w-full flex justify-center transition duration-200 ${className || ""}`}>
+    <div
+      className={`w-full flex justify-center transition duration-200 ${className || ""}`}
+    >
       <div className="w-full sm:w-full min-h-[700px] flex flex-col justify-between relative z-0">
         {specialPlan ? (
           <BackgroundGradient>
@@ -101,8 +115,18 @@ const PlansCard: React.FC<PlansCardProps> = ({
 
               {/* Button */}
               <section className="mt-auto">
-                <div className="flex">
-                  <PlansGetAccessButton redirect="dashboard" specialPlan={specialPlan} />
+                <div className="flex flex-col items-center gap-3">
+                  <LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
+                    <PlansGetAccessButton redirect="dashboard" specialPlan={specialPlan} />
+                  </LayoutSubscriptionWrapper>
+
+                  <LayoutSubscriptionWrapper requiredSubscriptions={["accessGranted", "!member"]}>
+                    <PlansSubscribeNow priceId={selectedPriceId} specialPlan={specialPlan} />
+                  </LayoutSubscriptionWrapper>
+
+                  <LayoutSubscriptionWrapper requiredSubscriptions={["member"]}>
+                    <ManageMembershipsButton specialPlan={specialPlan} />
+                  </LayoutSubscriptionWrapper>
                 </div>
               </section>
             </div>
@@ -143,8 +167,18 @@ const PlansCard: React.FC<PlansCardProps> = ({
 
             {/* Button */}
             <section className="mt-auto">
-              <div className="flex">
-                <PlansGetAccessButton redirect="dashboard" />
+              <div className="flex flex-col items-center gap-3">
+                <LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
+                  <PlansGetAccessButton redirect="dashboard" />
+                </LayoutSubscriptionWrapper>
+
+                <LayoutSubscriptionWrapper requiredSubscriptions={["accessGranted", "!member"]}>
+                  <PlansSubscribeNow priceId={selectedPriceId} />
+                </LayoutSubscriptionWrapper>
+
+                <LayoutSubscriptionWrapper requiredSubscriptions={["member"]}>
+                  <ManageMembershipsButton />
+                </LayoutSubscriptionWrapper>
               </div>
             </section>
           </div>

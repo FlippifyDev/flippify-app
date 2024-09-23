@@ -141,6 +141,11 @@ const nextConfig = {
         protocol: 'https',
         hostname: '*.game.co.uk',
         port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.currys.co.uk',
+        port: '',
       }      
     ],
   },

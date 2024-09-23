@@ -4,56 +4,96 @@ import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { FaClipboard } from 'react-icons/fa';
 import ReferralRewardsTimeline from './ProfileReferralRewardsTimeline';
+import { ISubscription } from '@/app/api/auth-mongodb/userModel';
+import createAndApplyCoupon from '@/app/api/stripe-handlers/create-and-apply-coupon';
+import incrementRewardsClaimed from '@/app/api/auth-mongodb/increment-rewards-claim';
+import checkForExistingDiscount from '@/app/api/stripe-handlers/check-for-existing-discount';
+import ProfileCashRewardModal from './ProfileCashRewardModel';
 
 const ProfileReferralData: React.FC = () => {
   const { data: session } = useSession();
   const [isTimelineOpen, setIsTimelineOpen] = useState(false);
-  const [isReceiptOpen, setIsReceiptOpen] = useState(false);
-  const [selectedRewards, setSelectedRewards] = useState<{ [key: number]: string }>({});
-  const [canGenerateReceipt, setCanGenerateReceipt] = useState(false);
+  const [selectedRewards, setSelectedRewards] = useState<{ [key: number]: number }>({});
+  const [canSelectSubscription, setCanSelectSubscription] = useState(false);
+  const [selectedSubscription, setSelectedSubscription] = useState<string | null>(null);
+  const [discountApplied, setDiscountApplied] = useState(false);
+  const [showCongratulations, setShowCongratulations] = useState(false);
+  const [showCashRewardModal, setShowCashRewardModal] = useState(false);
+  const [showDiscountRewardModal, setShowDiscountRewardModal] = useState(false); 
 
+  const customerId = session?.user?.customerId || 'None';
   const referralCode = session?.user?.referral?.referral_code || 'None';
   const referralCount = session?.user?.referral?.valid_referrals.length || 0;
   const totalRewardsClaimed = session?.user?.referral?.rewards_claimed || 0;
-  const availableRewards = referralCount - totalRewardsClaimed;
+
+  let availableRewards;
+  if (referralCount - totalRewardsClaimed === 0) {
+    availableRewards = 0;
+  } else {
+    availableRewards = referralCount <= 3 ? referralCount : 3;
+  }
+
+  const userSubscriptions = session?.user?.subscriptions?.filter((sub: ISubscription) => 
+    !sub.name.includes('accessGranted')
+  ) || [];
+
+  const memberSubscriptions = session?.user?.subscriptions?.filter((sub: ISubscription) => 
+    sub.name.includes('member')
+  ) || [];
 
   useEffect(() => {
-    const allSelected = Object.keys(selectedRewards).length === availableRewards;
-    setCanGenerateReceipt(allSelected);
+    const checkDiscounts = async () => {
+      const hasDiscount = await checkForExistingDiscount(customerId);
+      setDiscountApplied(hasDiscount);
+    };
+    
+    checkDiscounts();
+  }, [session]);
+
+  useEffect(() => {
+    const allSelected = parseInt(Object.keys(selectedRewards)[0]) === availableRewards;
+    setCanSelectSubscription(allSelected);
   }, [selectedRewards, availableRewards]);
 
-  const handleRewardSelection = (tier: number, reward: string) => {
-    setSelectedRewards((prev) => ({ ...prev, [tier]: reward }));
-  };
-
-  const handleGenerateReceipt = () => {
-    if (canGenerateReceipt) {
-      setIsTimelineOpen(false);
-      setIsReceiptOpen(true);
+  const handleRewardSelection = (tier: number, discount: number, cash: number, isSelectedLeft: boolean, isSelectedRight: boolean) => {
+    if (isSelectedLeft) { // Assuming tier 1 is the cash reward
+      setSelectedRewards((prev) => ({ ...prev, [tier]: cash }));
+    } else if (isSelectedRight) {
+      setSelectedRewards((prev) => ({ ...prev, [tier]: discount }));
     }
   };
 
-  const copyReceipt = () => {
-    const receiptText = `
-      Hey Flippify Team,
-
-      I would like to claim my rewards. Here is my receipt:
-
-      Lifetime Referrals: ${referralCount}
-      Total Rewards Claimed: ${totalRewardsClaimed}
-      Selected Rewards: ${Object.entries(selectedRewards)
-        .map(([tier, reward]) => `Tier ${tier}: ${reward}`)
-        .join('\n')}
-
-      Thank you!
-    `;
-    navigator.clipboard.writeText(receiptText);
-    alert('Receipt copied to clipboard!');
-    window.open(
-      'https://discord.com/channels/1236428617962229830/1236436288442466394',
-      '_blank'
-    );
+  const handleSelectSubscription = () => {
+    if ([5, 10, 15].includes(Object.values(selectedRewards)[0])) {
+      setIsTimelineOpen(false);
+      setShowCashRewardModal(true);
+    } else if ([25, 50, 100].includes(Object.values(selectedRewards)[0])) {
+      setIsTimelineOpen(false);
+      setShowDiscountRewardModal(true);
+    }
   };
+
+  const handleSubscriptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedSubscription(e.target.value);
+  };
+
+  const applyRewardToSubscription = async () => {
+    await createAndApplyCoupon(selectedSubscription, customerId, Object.values(selectedRewards)[0]);
+    await incrementRewardsClaimed(customerId);
+    setIsTimelineOpen(false);
+    setShowDiscountRewardModal(false);
+    setShowCongratulations(true);
+  };
+
+  const handleCloseCongradulations = () => {
+    setShowCongratulations(false);
+    window.location.reload();
+  };
+
+  const closeCashRewardModal = () => {
+    setShowCashRewardModal(false);
+  };
+
 
   return (
     <div className="card bg-white shadow-md rounded-lg p-4 h-full flex flex-col">
@@ -92,23 +132,60 @@ const ProfileReferralData: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="mt-4 text-center">
+
+      {userSubscriptions.length > 0 && (
+        <div className="mt-4">
+          <h3 className="text-lg font-semibold text-gray-900">Your Subscriptions</h3>
+          <ul className="mt-2 list-disc list-inside">
+            {userSubscriptions.map((subscription, index) => (
+              <li key={index} className="text-gray-700">
+                {subscription.name}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <div className="mt-4 text-center relative group">
         <h3 className="text-lg font-semibold text-gray-900">
-          {availableRewards > 0 ? 'You have rewards to claim!' : 'No rewards available at the moment.'}
+          {availableRewards > 0 
+            ? discountApplied 
+              ? 'Discount already active. You can claim again after discount is over.' 
+              : 'You have rewards to claim!' 
+            : 'No rewards available at the moment.'}
         </h3>
+
         <button
           type="button"
           onClick={() => setIsTimelineOpen(true)}
           className={`mt-2 inline-block text-white py-2 px-4 rounded-md w-48 transition duration-200 ${
-            availableRewards <= 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-houseBlue hover:bg-houseHoverBlue'
+            availableRewards <= 0 || discountApplied ? 'bg-gray-300 cursor-not-allowed' : 'bg-houseBlue hover:bg-houseHoverBlue'
           }`}
-          disabled={availableRewards <= 0}
+          disabled={availableRewards <= 0 || discountApplied}
         >
           Claim Rewards
         </button>
       </div>
 
-      {/* Timeline Modal */}
+
+      {/* Congratulations Modal */}
+      {showCongratulations && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h4 className="text-xl font-semibold mb-2">Congratulations!</h4>
+            <p>Your rewards have been successfully applied!</p>
+            <div className="flex justify-end mt-4">
+              <button
+                className="btn bg-houseBlue hover:bg-houseHoverBlue text-white px-4 py-2 rounded-lg"
+                onClick={handleCloseCongradulations}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {isTimelineOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl">
@@ -117,7 +194,6 @@ const ProfileReferralData: React.FC = () => {
               availableRewards={availableRewards}
               selectedRewards={selectedRewards}
               handleRewardSelection={handleRewardSelection}
-              totalRewardsClaimed={totalRewardsClaimed} // Pass the total rewards claimed
             />
             <div className="flex justify-between mt-6">
               <button
@@ -128,42 +204,42 @@ const ProfileReferralData: React.FC = () => {
               </button>
               <button
                 className={`btn ${
-                  canGenerateReceipt ? 'bg-houseBlue hover:bg-houseHoverBlue' : 'bg-gray-300 cursor-not-allowed'
+                  canSelectSubscription ? 'bg-houseBlue hover:bg-houseHoverBlue' : 'bg-gray-300 cursor-not-allowed'
                 } text-white px-4 py-2 rounded-lg`}
-                onClick={handleGenerateReceipt}
-                disabled={!canGenerateReceipt}
+                onClick={handleSelectSubscription}
+                disabled={!canSelectSubscription}
               >
-                Generate Receipt
+                Select Reward
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Receipt Modal */}
-      {isReceiptOpen && (
+      {showDiscountRewardModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl">
-            <h3 className="text-lg font-semibold mb-4">Your Rewards Receipt</h3>
-            <div className="mb-4 p-4 bg-gray-100 rounded-lg">
-              <p>Hey Flippify Team,</p>
-              <p>I would like to claim my rewards. Here is my receipt:</p>
-              <p><strong>Lifetime Referrals:</strong> {referralCount}</p>
-              <p><strong>Total Rewards Claimed:</strong> {totalRewardsClaimed}</p>
-              <p><strong>Selected Rewards:</strong></p>
-              <ul className="list-disc ml-4">
-                {Object.entries(selectedRewards).map(([tier, reward]) => (
-                  <li key={tier}>
-                    Tier {tier}: {reward}
-                  </li>
+            <h3 className="text-lg font-semibold mb-4">Select Subscription to Apply Rewards</h3>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Subscription:</label>
+              <select
+                className="w-full p-2 border border-gray-300 rounded-lg"
+                onChange={handleSubscriptionChange}
+                value={selectedSubscription || ''}
+              >
+                <option value="" disabled>Select a subscription</option>
+                {memberSubscriptions.map((subscription, index) => (
+                  <option key={index} value={subscription.name}>
+                    {subscription.name}
+                  </option>
                 ))}
-              </ul>
+              </select>
             </div>
             <div className="flex justify-between mt-6">
               <button
                 className="btn border border-gray-300 text-black mr-3 px-4 py-2 rounded-lg bg-white hover:bg-gray-100"
                 onClick={() => {
-                  setIsReceiptOpen(false);
+                  setShowDiscountRewardModal(false);
                   setIsTimelineOpen(true);
                 }}
               >
@@ -171,14 +247,18 @@ const ProfileReferralData: React.FC = () => {
               </button>
               <button
                 className="btn bg-houseBlue hover:bg-houseHoverBlue text-white px-4 py-2 rounded-lg"
-                onClick={copyReceipt}
+                onClick={applyRewardToSubscription}
+                disabled={!selectedSubscription}
               >
-                Copy Receipt & Claim
+                Apply Reward
               </button>
             </div>
           </div>
         </div>
       )}
+
+      {/* Cash Reward Modal */}
+      {showCashRewardModal && <ProfileCashRewardModal onClose={closeCashRewardModal} referralCount={referralCount} totalRewardsClaimed={totalRewardsClaimed} selectedRewards={selectedRewards}/>}
     </div>
   );
 };

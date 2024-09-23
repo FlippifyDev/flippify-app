@@ -6,45 +6,35 @@ interface Reward {
   id: number;
   leftOption: string;
   rightOption: string;
+  discount: number;
+  cash: number;
 }
 
 interface ReferralRewardsTimelineProps {
   availableRewards: number;
-  selectedRewards: { [key: number]: string };
-  handleRewardSelection: (tier: number, reward: string) => void;
-  totalRewardsClaimed: number;
+  selectedRewards: { [key: number]: number | string };
+  handleRewardSelection: (tier: number, discount: number, cash: number, isSelectedLeft: boolean, isSelectedRight: boolean) => void;
 }
 
 const ReferralRewardsTimeline: React.FC<ReferralRewardsTimelineProps> = ({
   availableRewards,
   selectedRewards,
   handleRewardSelection,
-  totalRewardsClaimed,
 }) => {
-  const rewardsPerPage = 4; // Number of rewards to show per page
+  const rewardsPerPage = 3; // Number of rewards to show per page
   const [currentPage, setCurrentPage] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Define the base rewards
   const baseRewards: Reward[] = [
-    { id: 1, leftOption: "£5 Cash Reward", rightOption: "25% Off Next Month" },
-    { id: 2, leftOption: "£10 Cash Reward", rightOption: "50% Off Next Month" },
-    { id: 3, leftOption: "£15 Cash Reward", rightOption: "One Free Month" },
+    { id: 1, leftOption: "£5 Cash Reward", rightOption: "25% Off Next Month", discount: 25, cash: 5 },
+    { id: 2, leftOption: "£10 Cash Reward", rightOption: "50% Off Next Month", discount: 50, cash: 10 },
+    { id: 3, leftOption: "£15 Cash Reward", rightOption: "One Free Month", discount: 100, cash: 15 },
   ];
 
-  // Adding placeholders for remaining rewards, filling up to total referrals.
-  const allRewards = [...baseRewards];
-  while (allRewards.length < availableRewards + totalRewardsClaimed) {
-    allRewards.push({
-      id: allRewards.length + 1,
-      leftOption: "£15 Cash Reward",
-      rightOption: "One Free Month",
-    });
-  }
-
-  const totalPages = Math.ceil(allRewards.length / rewardsPerPage);
+  const totalPages = Math.ceil(baseRewards.length / rewardsPerPage);
   const startTier = currentPage * rewardsPerPage;
-  const visibleRewards = allRewards.slice(startTier, startTier + rewardsPerPage);
+  const visibleRewards = baseRewards.slice(startTier, startTier + rewardsPerPage);
 
   useEffect(() => {
     // Set the initial height based on the first page's content
@@ -64,16 +54,16 @@ const ReferralRewardsTimeline: React.FC<ReferralRewardsTimelineProps> = ({
         <ul className="timeline timeline-vertical">
           {visibleRewards.map((reward, index) => {
             const tierIndex = startTier + index + 1;
-            const isSelectedLeft = selectedRewards[tierIndex] === reward.leftOption;
-            const isSelectedRight = selectedRewards[tierIndex] === reward.rightOption;
-            const isDisabled = tierIndex <= totalRewardsClaimed;
+            const isSelectedLeft = selectedRewards[tierIndex] === reward.cash;
+            const isSelectedRight = selectedRewards[tierIndex] === reward.discount;
+            const isDisabled = tierIndex !== availableRewards;
 
             return (
               <li key={reward.id} className="flex items-center mb-4">
                 {/* Left Option */}
                 <div className="flex-1 px-2">
                   <button
-                    className={`w-full p-4 rounded-lg transition-all duration-200 border bg-white ${
+                    className={`w-full p-4 rounded-lg transition-all duration-200 focus:border-houseBlue border bg-white ${
                       isSelectedLeft
                         ? "shadow-lg border-houseBlue"
                         : "shadow-md border-transparent hover:shadow-lg"
@@ -82,7 +72,7 @@ const ReferralRewardsTimeline: React.FC<ReferralRewardsTimelineProps> = ({
                         ? "text-gray-400 border-gray-300 cursor-not-allowed"
                         : "hover:border-houseHoverBlue"
                     }`}
-                    onClick={() => handleRewardSelection(tierIndex, reward.leftOption)}
+                    onClick={() => handleRewardSelection(tierIndex, reward.discount, reward.cash, true, false)}
                     disabled={isDisabled}
                   >
                     {reward.leftOption}
@@ -111,7 +101,7 @@ const ReferralRewardsTimeline: React.FC<ReferralRewardsTimelineProps> = ({
                 {/* Right Option */}
                 <div className="flex-1 px-2">
                   <button
-                    className={`w-full p-4 rounded-lg transition-all duration-200 border bg-white ${
+                    className={`w-full p-4 rounded-lg transition-all duration-200 focus:border-houseBlue border bg-white ${
                       isSelectedRight
                         ? "shadow-lg border-houseBlue"
                         : "shadow-md border-transparent hover:shadow-lg"
@@ -120,7 +110,7 @@ const ReferralRewardsTimeline: React.FC<ReferralRewardsTimelineProps> = ({
                         ? "text-gray-400 border-gray-300 cursor-not-allowed"
                         : "hover:border-houseHoverBlue"
                     }`}
-                    onClick={() => handleRewardSelection(tierIndex, reward.rightOption)}
+                    onClick={() => handleRewardSelection(tierIndex, reward.discount, reward.cash, false, true)}
                     disabled={isDisabled}
                   >
                     {reward.rightOption}

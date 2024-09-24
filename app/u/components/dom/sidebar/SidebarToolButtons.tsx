@@ -33,23 +33,24 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({ showAlert }) =>
           />
       </LayoutSubscriptionWrapper>
 
-      {/* Sales & Profits */}
-      <LayoutSubscriptionWrapper anySubscriptions={['standard', 'admin']}>
-        <SidebarButton
-          text="Financial Hub"
-          redirect="sales-tracker"
-          symbol={<AiOutlineStock className="text-md" />}
-        />
+      {/* Manage Servers Tab */}
+      <LayoutSubscriptionWrapper requiredSubscriptions={['!server', '!admin']}>
+          <DisabledSideBarButton
+              text="Server Management"
+              redirect="manage-servers#monitors"
+              symbol={<FaServer className="text-base" />}
+              showAlert={showAlert}
+          />
       </LayoutSubscriptionWrapper>
 
-      <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', '!server', '!admin']}>
-        <DisabledSideBarButton
-          text="Financial Hub"
-          redirect="sales-tracker"
-          symbol={<AiOutlineStock className="text-md" />}
-          showAlert={showAlert}
-        />
-      </LayoutSubscriptionWrapper>
+
+      <DisabledSideBarButton
+        text="Financial Hub"
+        redirect="sales-tracker"
+        symbol={<AiOutlineStock className="text-md" />}
+        tooltip="Coming Soon"
+      />
+
 
       {/* Inventory & Orders */}
       <DisabledSideBarButton

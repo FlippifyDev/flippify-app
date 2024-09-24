@@ -57,9 +57,9 @@ const RetiringSetsCard: React.FC<CardProps> = ({ product }) => {
     price = "Not Found"
   }
 
-  const profitClass = estimatedProfit > 0 ? 'text-green-500 font-extrabold' : 'text-red-500 font-extrabold';
+  const profitClass = estimatedProfit > 0 ? 'text-houseBlue font-extrabold' : 'text-red-500 font-extrabold';
   const stockAvailable = product.stock_available ? "In Stock" : "Out of Stock";
-  const stockClass = stockAvailable === "In Stock" ? 'text-sm text-green-500 font-semibold' : 'text-sm text-red-500 font-semibold';
+  const stockClass = stockAvailable === "In Stock" ? 'text-sm text-houseBlue font-semibold' : 'text-sm text-red-500 font-semibold';
 
   const truncatedTitle = truncateTitle(product.product_name, 60); 
 

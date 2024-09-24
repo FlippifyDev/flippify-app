@@ -1,6 +1,7 @@
 'use client';
 import Loading from '@/app/components/Loading'; 
 import AnimationArrow from '@/app/components/AnimationArrow';
+import Link from 'next/link';
 
 import React, { useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
@@ -32,12 +33,11 @@ const NavbarSignInWithDiscord = () => {
     };
     
     return (
-        <div>
-            <button className="btn btn-primary text-white bg-discordBlue border-discordBlue lg:w-64 group" onClick={handleSignIn}>
-                <FaDiscord className="text-xl lg:mr-2 sm:text-3xl" /> 
-                <span className='sm:inline md:hidden lg:inline text-xs sm:text-sm'>Sign in with Discord</span>
-                <AnimationArrow />
-            </button>
+        <div className='transition duration-100 hover:scale-105 rounded-btn p-1'>
+            <a className="text-white group flex flex-row" onClick={handleSignIn}>
+                <span className='text-md select-none'>Sign in</span>
+                <span className='pt-[2px] pl-1'><AnimationArrow /></span>
+            </a>
             {isLoading && (
                 <div className="mt-4">
                     <Loading />

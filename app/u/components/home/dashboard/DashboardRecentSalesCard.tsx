@@ -136,7 +136,7 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ cus
               ))
             ) : (
               <tr>
-                <td colSpan={7} className="text-center">Log sales with the Sales & Profits tool.</td>
+                <td colSpan={12} className="text-center">Log sales with the Sales & Profits tool.</td>
               </tr>
             )}
           </tbody>

@@ -18,8 +18,8 @@ export async function PATCH(req: NextRequest) {
   await connectDB();  // Ensure MongoDB connection
 
   try {
-    const { _id, email, subscriptions } = await req.json();
-    if (!_id || !email || !subscriptions) {
+    const { _id, email, subscriptions, referral } = await req.json();
+    if (!_id || !email || !subscriptions || !referral) {
       return NextResponse.json({ error: 'User ID, email, and subscriptions are required' }, { status: 400 });
     }
 
@@ -29,6 +29,7 @@ export async function PATCH(req: NextRequest) {
         $set: {
           email,
           subscriptions,
+          referral
         },
       }
     );

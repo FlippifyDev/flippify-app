@@ -116,7 +116,7 @@ const PlansPage = () => {
             monthly: "price_1PxRRCJJRepiHZ8dXF4MyyCO",
             yearly: "price_1PxRRMJJRepiHZ8duiGgCQI8",
           }}
-          whatsIncludedComponent={<PlansCardProWhatsIncluded />}
+          whatsIncludedComponent={<PlansCardStandardWhatsIncluded />}
           priceRange={selectedPlan}
           currency={currency}  // Passing the currency prop
           conversionRates={conversionRates} // Passing the conversionRates prop
@@ -130,7 +130,7 @@ const PlansPage = () => {
             monthly: "price_1Px4KUJJRepiHZ8d1wnDMoUZ",
             yearly: "price_1PxRQIJJRepiHZ8dGuGOAkE3",
           }}
-          whatsIncludedComponent={<PlansCardStandardWhatsIncluded />}
+          whatsIncludedComponent={<PlansCardProWhatsIncluded />}
           specialPlan={true}
           priceRange={selectedPlan}
           currency={currency}  // Passing the currency prop

@@ -40,10 +40,10 @@ const Alert: React.FC<AlertProps> = ({ message, visible, onClose }) => {
 
   return (
     <div
-      className={`fixed top-16 left-1/2 transform -translate-x-1/2 mt-4 ml-[86px] bg-white border border-gray-300 p-2 rounded-md shadow-lg z-50 ${
+      className={`fixed top-16 left-1/2 transform mt-4 bg-white border border-gray-300 p-2 rounded-md shadow-lg z-50 ${
         isAnimating && visible ? 'animate-slide-in' : 'animate-slide-out'
       }`}
-      style={{ transition: 'opacity 0.5s, transform 0.5s' }}
+      style={{ transition: 'opacity 0.4s, transform 0.4s' }}
     >
       <div className="flex items-center">
         <svg

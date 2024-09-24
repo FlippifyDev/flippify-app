@@ -1,84 +1,87 @@
-// pages/api/ebay/callback.ts
-
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { MongoClient } from 'mongodb';
 import { getSession } from 'next-auth/react';
-import { getEnvVar } from '@/app/api/ebay/getEnvVar';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  console.log("eBay OAuth Callback Handler Invoked");
-  
-  // Extract the authorization code from the query string
   const { code } = req.query;
-  
+
   if (!code || Array.isArray(code)) {
-    console.error("Authorization code is missing or invalid:", code);
     return res.status(400).json({ error: 'Authorization code is missing or invalid.' });
   }
 
-  console.log("Authorization Code:", code);
+  // Get environment variables
+  const CLIENT_ID = process.env.NEXT_PUBLIC_EBAY_CLIENT_ID;
+  const CLIENT_SECRET = process.env.EBAY_CLIENT_SECRET;
+  const REDIRECT_URI = process.env.NEXT_PUBLIC_EBAY_REDIRECT_URI;
 
-  const CLIENT_ID = getEnvVar('EBAY_CLIENT_ID');
-  const CLIENT_SECRET = getEnvVar('EBAY_CLIENT_SECRET');
-  const REDIRECT_URI = getEnvVar('EBAY_REDIRECT_URI');
+  // Check if environment variables are set
+  if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI) {
+    console.error('Missing environment variables', {
+      CLIENT_ID,
+      CLIENT_SECRET,
+      REDIRECT_URI,
+    });
+    return res.status(500).json({ error: 'Missing environment variables' });
+  }
 
-  console.log("Using Environment Variables:");
-  console.log("CLIENT_ID:", CLIENT_ID);
-  console.log("REDIRECT_URI:", REDIRECT_URI);
-
+  // Ensure variables are treated as strings (since we verified they are not undefined)
   const basicAuth = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64');
 
   try {
-    // Exchange the authorization code for an access token
+    // Exchange authorization code for access token
     const tokenResponse = await fetch('https://api.sandbox.ebay.com/identity/v1/oauth2/token', {
       method: 'POST',
       headers: {
         'Authorization': `Basic ${basicAuth}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: `grant_type=authorization_code&code=${code}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`,
+      body: `grant_type=authorization_code&code=${code}&redirect_uri=${encodeURIComponent(REDIRECT_URI as string)}`,
     });
 
     const tokenData = await tokenResponse.json();
 
     if (tokenData.error) {
-      console.error("Error during token exchange:", tokenData.error_description);
       return res.status(400).json({ error: tokenData.error_description });
     }
 
-    console.log("Token Data:", tokenData);
-
+    // Retrieve session
     const session = await getSession({ req });
 
     if (!session || !session.user?.discordId) {
-      console.error("User session not found or Discord ID missing.");
       return res.status(401).json({ error: 'User not authenticated or Discord ID not found' });
     }
 
     const discordId = session.user.discordId;
 
-    console.log("Discord ID:", discordId);
+    // Connect to MongoDB
+    const client = await MongoClient.connect(process.env.MONGODB_URI as string);
+    const db = client.db('flippifyDB');
+    const usersCollection = db.collection('users');
 
-    const client = await MongoClient.connect(getEnvVar('MONGODB_URI'));
-    const db = client.db('your-db-name');
-    const collection = db.collection('users');
+    // Query for the user's stripe_customer_id using discord_id
+    const user = await usersCollection.findOne({ discord_id: discordId });
+    if (!user || !user.stripe_customer_id) {
+      return res.status(404).json({ error: 'Stripe Customer ID not found for user' });
+    }
 
-    await collection.updateOne(
-      { discordID: discordId },
+    const stripeCustomerId = user.stripe_customer_id;
+
+    // Store tokens in MongoDB
+    await usersCollection.updateOne(
+      { discord_id: discordId },
       {
         $set: {
           ebayAccessToken: tokenData.access_token,
           ebayRefreshToken: tokenData.refresh_token,
           ebayTokenExpiry: Date.now() + tokenData.expires_in * 1000,
         },
-      }
+      },
+      { upsert: true }
     );
 
     client.close();
 
-    console.log("User eBay tokens stored successfully.");
-
-    // Redirect to a profile or dashboard page after successful connection
+    // Redirect to user profile or another page after connection
     res.redirect('/profile?ebayConnected=true');
   } catch (error) {
     console.error('Error handling eBay OAuth callback:', error);

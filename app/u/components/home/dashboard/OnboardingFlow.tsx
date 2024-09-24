@@ -92,7 +92,7 @@ const OnboardingFlow: React.FC = () => {
               flippify
             </h2>
             <p className="text-lg text-gray-700 mb-8">
-              Join now and take the first step to becoming a full-time reseller.
+              Join now to take the first step to becoming a full-time reseller.
             </p>
             <div className="mb-6">
               <input
@@ -130,7 +130,7 @@ const OnboardingFlow: React.FC = () => {
               flippify
             </h2>
             <p className="text-lg text-gray-700 mb-8">
-              Join now and take the first step to becoming a full-time reseller.
+              Join now to take the first step to becoming a full-time reseller.
             </p>
             <div className="mb-6">
               <input

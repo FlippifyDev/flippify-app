@@ -27,14 +27,18 @@ interface IReferral {
 }
 
 interface IUser extends Document {
-  _id: Types.ObjectId; // Explicitly specify that _id is an ObjectId
-  discord_id: String; // Correctly type discord_id
+  _id: Types.ObjectId;
+  discord_id: string;
   username: string;
   email: string;
   stripe_customer_id: string;
   subscriptions: ISubscription[];
   referral?: IReferral;
+  ebayAccessToken?: string;
+  ebayRefreshToken?: string;
+  ebayTokenExpiry?: number;  
 }
+
 
 const subscriptionSchema = new Schema<ISubscription>({
   name: { type: String, required: true },
@@ -58,7 +62,11 @@ const userSchema = new Schema<IUser>({
   stripe_customer_id: { type: String, required: true },
   subscriptions: [subscriptionSchema],
   referral: referralSchema,
+  ebayAccessToken: { type: String, default: null },
+  ebayRefreshToken: { type: String, default: null },
+  ebayTokenExpiry: { type: Number, default: null },
 });
+
 
 const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', userSchema);
 

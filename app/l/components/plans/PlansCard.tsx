@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineTag } from "react-icons/ai"; // Icon for the discount tag
 import PlansGetAccessButton from "./PlansGetAccessButton";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
@@ -15,6 +15,7 @@ interface PlansCardProps {
   className?: string;
   currency: "GBP" | "USD" | "EUR" | "AUD" | "CAD";
   conversionRates: Record<string, number>;
+  comingSoon?: boolean; // Add a new prop for "Coming Soon"
 }
 
 const currencySymbols: Record<"GBP" | "USD" | "EUR" | "AUD" | "CAD", string> = {
@@ -37,6 +38,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
   className,
   currency,
   conversionRates,
+  comingSoon = false, // Default to false if not provided
 }) => {
   const [currencySymbol, setCurrencySymbol] = useState("£");
 
@@ -59,8 +61,9 @@ const PlansCard: React.FC<PlansCardProps> = ({
   const displayOriginalPrice = priceRange === 0 ? originalPricesConverted.monthly : originalPricesConverted.yearly;
 
   return (
-    <div className={`w-full flex justify-center transition duration-200 ${className || ""}`}>
-      <div className="w-full sm:w-full min-h-[700px] flex flex-col justify-between relative">
+    <div className="relative w-full flex justify-center transition duration-200">
+      {/* Card Content */}
+      <div className={`w-full sm:w-full min-h-[700px] flex flex-col justify-between relative ${className || ""} ${comingSoon ? "opacity-50" : ""}`}>
         {specialPlan ? (
           <BackgroundGradient>
             <div className="bg-white rounded-2xl h-full p-6 flex flex-col justify-between min-h-[700px]">
@@ -98,7 +101,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
 
               <section className="mt-auto">
                 <div className="flex">
-                  <PlansGetAccessButton redirect="dashboard" specialPlan={specialPlan} />
+                  {!comingSoon && <PlansGetAccessButton redirect="dashboard" specialPlan={specialPlan} />}
                 </div>
               </section>
             </div>
@@ -135,12 +138,21 @@ const PlansCard: React.FC<PlansCardProps> = ({
 
             <section className="mt-auto">
               <div className="flex">
-                <PlansGetAccessButton redirect="dashboard" />
+                {!comingSoon && <PlansGetAccessButton redirect="dashboard" />}
               </div>
             </section>
           </div>
         )}
       </div>
+
+      {/* Coming Soon Box - moved out of card opacity */}
+      {comingSoon && (
+        <div className="absolute inset-0 flex items-center justify-center z-40 pointer-events-none">
+          <div className="bg-white font-semibold text-black py-2 px-4 rounded-lg shadow-xl">
+            Coming Soon
+          </div>
+        </div>
+      )}
     </div>
   );
 };

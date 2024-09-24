@@ -94,6 +94,7 @@ const PlansContent = () => {
           priceRange={selectedPlan}
           currency={currency}
           conversionRates={conversionRates}
+          specialPlan={true}
         />
         <PlansCard
           title="Pro"
@@ -105,10 +106,10 @@ const PlansContent = () => {
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
           }}
           whatsIncludedComponent={<PlansCardStandardWhatsIncluded />}
-          specialPlan={true}
           priceRange={selectedPlan}
           currency={currency}
           conversionRates={conversionRates}
+          comingSoon={true}  
         />
         <PlansCard
           title="Elite"
@@ -123,6 +124,7 @@ const PlansContent = () => {
           priceRange={selectedPlan}
           currency={currency}
           conversionRates={conversionRates}
+          comingSoon={true} 
         />
       </div>
 

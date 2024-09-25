@@ -28,27 +28,36 @@ const DealWatchPage = () => {
       });
 
       setProducts(updatedProducts);
-      setDisplayedProducts(sortByProfitAndStock(updatedProducts).slice(0, limit)); // Display the first batch
+      setDisplayedProducts(sortByRoiAndStock(updatedProducts).slice(0, limit)); // Display the first batch
     }
 
     loadProducts();
   }, []);
 
   // Function to sort products by price and stock availability
-  const sortByProfitAndStock = (products: IDealWatch[]) => {
+  const sortByRoiAndStock = (products: IDealWatch[]) => {
     return products
       .sort((a, b) => {
         // Check if either product is missing essential data
         const missingDataA = !a.price || a.ebay_mean_price === undefined || a.ebay_max_price === undefined;
         const missingDataB = !b.price || b.ebay_mean_price === undefined || b.ebay_max_price === undefined;
-
+  
         if (missingDataA && !missingDataB) return 1;  // Move products with missing data to the end
         if (!missingDataA && missingDataB) return -1; // Move products with missing data to the end
-
-        // If both have the same stock status, sort by estimated profit
-        const profitA = a.estimatedProfit || 0;
-        const profitB = b.estimatedProfit || 0;
-        return profitB - profitA; // Sort descending by estimated profit
+  
+        // Calculate ROI for each product
+        const roiA = a.estimatedProfit && a.price ? (a.estimatedProfit / a.price) : 0;
+        const roiB = b.estimatedProfit && b.price ? (b.estimatedProfit / b.price) : 0;
+  
+        // If both have the same ROI, sort by stock (sold_last_7_days or sold_last_month)
+        if (roiA === roiB) {
+          const stockA = a.sold_last_7_days || a.sold_last_month || 0;
+          const stockB = b.sold_last_7_days || b.sold_last_month || 0;
+          return stockB - stockA; // Sort descending by stock availability
+        }
+  
+        // Sort descending by ROI
+        return roiB - roiA;
       });
   };
 
@@ -111,7 +120,7 @@ const DealWatchPage = () => {
       });
     } else {
       // If no search query, sort by price and stock
-      filtered = sortByProfitAndStock(products);
+      filtered = sortByRoiAndStock(products);
     }
 
     // Reset pagination and display filtered products

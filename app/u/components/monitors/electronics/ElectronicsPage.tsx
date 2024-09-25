@@ -44,14 +44,14 @@ export default function ElectronicsPage() {
       });
 
       setProducts(updatedProducts);
-      setDisplayedProducts(sortByProfitAndStock(updatedProducts).slice(0, limit)); // Display the first batch
+      setDisplayedProducts(sortByRoiAndStock(updatedProducts).slice(0, limit)); // Display the first batch
     }
 
     loadProducts();
   }, []);
 
-  // Function to sort products by estimated profit and stock availability
-  const sortByProfitAndStock = (products: IElectronics[]) => {
+  // Function to sort products by ROI and stock availability
+  const sortByRoiAndStock = (products: IElectronics[]) => {
     return products
       .sort((a, b) => {
         // Check if either product is missing essential data
@@ -62,18 +62,23 @@ export default function ElectronicsPage() {
         if (!missingDataA && missingDataB) return -1; // Move products with missing data to the end
   
         // Check if stock is available
-        const inStockA = a.stock_available;
-        const inStockB = b.stock_available;
+        const inStockA = a.stock_available ? 1 : 0;
+        const inStockB = b.stock_available ? 1 : 0;
   
-        if (inStockA && !inStockB) return -1; // In-stock products come first
-        if (!inStockA && inStockB) return 1;  // Out-of-stock products come last
+        // If stock status differs, prioritize in-stock products (true > false)
+        if (inStockA !== inStockB) return inStockB - inStockA;
   
-        // If both have the same stock status, sort by estimated profit
-        const profitA = a.estimatedProfit || 0;
-        const profitB = b.estimatedProfit || 0;
-        return profitB - profitA; // Sort descending by estimated profit
+        // Calculate ROI for each product
+        const roiA = a.estimatedProfit && a.price ? (a.estimatedProfit / a.price) : 0;
+        const roiB = b.estimatedProfit && b.price ? (b.estimatedProfit / b.price) : 0;
+  
+        // If both have the same ROI, no need to re-sort by stock as it's handled above
+        if (roiA === roiB) return 0;
+  
+        // Sort descending by ROI
+        return roiB - roiA;
       });
-  };
+  };;
 
   const loadMoreProducts = useCallback(() => {
     if (loading) return; // Prevent further loading if it's already in progress
@@ -136,7 +141,7 @@ export default function ElectronicsPage() {
       });
     } else {
       // If no search query, sort by estimated profit
-      filtered = sortByProfitAndStock(products);
+      filtered = sortByRoiAndStock(products);
     }
 
     // Reset pagination and display filtered products

@@ -146,7 +146,12 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'www.currys.co.uk',
         port: '',
-      }      
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.scan.co.uk',
+        port: '',
+      }       
     ],
   },
   env: {

@@ -29,7 +29,7 @@ const NavbarSignInWithDiscordSideBar = () => {
     
     return (
         <div>
-            <button className="lg:w-56" onClick={handleSignIn}>
+            <button onClick={handleSignIn}>
                 Sign In
             </button>
             {isLoading && (

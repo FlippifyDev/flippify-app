@@ -1,10 +1,12 @@
 import { useState, useEffect, MouseEvent } from 'react';
 import { Lato } from 'next/font/google';
-import { IoMenu } from "react-icons/io5";
-import { FaHouse } from "react-icons/fa6";
+import { IoMenu } from 'react-icons/io5';
+import { FaHouse } from 'react-icons/fa6';
+import { FaSearch, FaBook, FaDiscord, FaSignInAlt  } from "react-icons/fa";
+import { MdGroups } from 'react-icons/md';
 import Link from 'next/link';
 import NavbarSignInWithDiscord from './NavbarSignInWithDiscord';
-import NavbarSignInWithDiscordSideBar from './NavbarSignInWithDiscordSideBar'
+import NavbarSignInWithDiscordSideBar from './NavbarSignInWithDiscordSideBar';
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
@@ -42,33 +44,37 @@ const Navbar = () => {
           <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
           <ul className="menu bg-base-200 text-base-content min-h-full w-full pt-20">
             <li className="transition duration-100 active:bg-base-100 rounded-btn grid grid-cols-12 items-center gap-2 px-4 py-2 text-white text-lg font-medium">
-              <span><FaHouse className="col-span-2 text-lg"/></span>
-              <Link href="/l/home">Home</Link>
+              <span><FaHouse className="col-span-2 text-lg pb-[2px]" /></span>
+              <Link href="/l/home" className="col-span-10 text-left">Home</Link>
             </li>
-            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-white text-lg font-medium">
-              <Link href="/l/services">Services</Link>
+            <li className="transition duration-100 active:bg-base-100 rounded-btn grid grid-cols-12 items-center gap-2 px-4 pb-2 text-white text-lg font-medium">
+              <span><FaBook className="col-span-2 text-lg pb-[2px]" /></span>
+              <Link href="/l/services" className="col-span-10 text-left">Services</Link>
             </li>
-            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-white text-lg font-medium">
-              <Link href="/l/plans">Plans</Link>
+            <li className="transition duration-100 active:bg-base-100 rounded-btn grid grid-cols-12 items-center gap-2 px-4 pb-2 text-white text-lg font-medium">
+              <span><FaSearch className="col-span-2 text-lg pb-[2px]" /></span>
+              <Link href="/l/plans" className="col-span-10 text-left">Plans</Link>
             </li>
-            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-white text-lg font-medium">
-              <Link href="/l/server-plans">Server Plans</Link>
+            <li className="transition duration-100 active:bg-base-100 rounded-btn grid grid-cols-12 items-center gap-2 px-4 pb-2 text-white text-lg font-medium">
+              <span><MdGroups className="col-span-2 text-lg pb-[2px]" /></span>
+              <Link href="/l/server-plans" className="col-span-10 text-left">Server Plans</Link>
             </li>
-            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-white text-lg font-medium">
-              <Link 
-                href="https://discord.gg/gNPYfe7YFm" 
-                target="_blank">
-                  Discord
-              </Link>
+            <li className="transition duration-100 active:bg-base-100 rounded-btn grid grid-cols-12 items-center gap-2 px-4 pb-2 text-white text-lg font-medium">
+              <span><FaDiscord className="col-span-2 text-lg pb-[2px]" /></span>
+              <Link href="https://discord.gg/gNPYfe7YFm" target="_blank" className="col-span-10 text-left">Discord</Link>
             </li>
-            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-white text-lg font-medium">
-              <NavbarSignInWithDiscordSideBar />
+            {/* Adjusted Sign In button alignment */}
+            <li className="transition duration-100 active:bg-base-100 rounded-btn grid grid-cols-12 items-center gap-2 px-4 pb-2 text-white text-lg font-medium">
+              <span><FaSignInAlt className="col-span-2 text-lg pb-[2px]" /></span>
+              <span className="col-span-10 text-left">
+                <NavbarSignInWithDiscordSideBar />
+              </span>
             </li>
           </ul>
         </div>
       </div>
-      
-      {/* Main Navbar which appears on larger screens */} 
+
+      {/* Main Navbar which appears on larger screens */}
       <ul className="hidden md:flex flex-row space-x-3 xl:space-x-8 col-span-8 justify-center">
         <li className="transition duration-100 hover:scale-105 rounded-btn p-1">
           <Link href="/l/home">Home</Link>

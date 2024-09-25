@@ -1,6 +1,7 @@
 import { useState, useEffect, MouseEvent } from 'react';
 import { Lato } from 'next/font/google';
 import { IoMenu } from "react-icons/io5";
+import { FaHouse } from "react-icons/fa6";
 import Link from 'next/link';
 import NavbarSignInWithDiscord from './NavbarSignInWithDiscord';
 import NavbarSignInWithDiscordSideBar from './NavbarSignInWithDiscordSideBar'
@@ -21,25 +22,9 @@ const Navbar = () => {
     };
   }, []);
 
-  const handleSmoothScroll = (e: MouseEvent<HTMLAnchorElement>, id: string) => {
-    e.preventDefault();
-    if (window.location.pathname !== '/l/home') {
-      localStorage.setItem('scrollTo', id);
-      window.location.href = `/l/home`;
-    } else {
-      const element = document.getElementById(id);
-      if (element) {
-        window.scrollTo({
-          top: element.offsetTop - 50,
-          behavior: 'smooth'
-        });
-      }
-    }
-  };
-
   return (
     <div className={`navbar grid grid-cols-12 grid-rows-1 items-center px-4 py-3 text-white transition duration-300 ${isScrolled ? 'bg-base-100 opacity-90 transition-colors duration-500' : 'bg-transparent'}`}>
-      <div className="col-span-2">
+      <div className="col-span-2 z-50">
         <a href="/l/home" className={`${lato.className} text-white text-4xl hover:text-gray-300 transition-colors duration-400`}>flippify</a>
       </div>
 
@@ -53,29 +38,30 @@ const Navbar = () => {
           </label>
         </div>
         {/* Side bar which appears on small screens */}
-        <div className="drawer-side opacity-98">
+        <div className="drawer-side opacity-98 z-40">
           <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-          <ul className="menu bg-base-200 text-base-content min-h-full w-full pt-12">
-            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-base">
+          <ul className="menu bg-base-200 text-base-content min-h-full w-full pt-20">
+            <li className="transition duration-100 active:bg-base-100 rounded-btn grid grid-cols-12 items-center gap-2 px-4 py-2 text-white text-lg font-medium">
+              <span><FaHouse className="col-span-2 text-lg"/></span>
               <Link href="/l/home">Home</Link>
             </li>
-            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-base">
+            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-white text-lg font-medium">
               <Link href="/l/services">Services</Link>
             </li>
-            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-base">
+            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-white text-lg font-medium">
               <Link href="/l/plans">Plans</Link>
             </li>
-            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-base">
+            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-white text-lg font-medium">
               <Link href="/l/server-plans">Server Plans</Link>
             </li>
-            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-base">
+            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-white text-lg font-medium">
               <Link 
                 href="https://discord.gg/gNPYfe7YFm" 
                 target="_blank">
                   Discord
               </Link>
             </li>
-            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-base">
+            <li className="transition duration-100 active:bg-base-100 rounded-btn p-1 text-white text-lg font-medium">
               <NavbarSignInWithDiscordSideBar />
             </li>
           </ul>

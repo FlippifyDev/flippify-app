@@ -48,7 +48,7 @@ const ProfileReferralData: React.FC = () => {
     };
     
     checkDiscounts();
-  }, [session]);
+  }, [customerId]);
 
   useEffect(() => {
     const allSelected = parseInt(Object.keys(selectedRewards)[0]) === availableRewards;

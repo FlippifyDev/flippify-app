@@ -16,19 +16,19 @@ interface LayoutProps {
 
 const LayoutContent = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="min-h-screen bg-cover bg-gray-50 bg-center bg-fixed overflow-x-hidden">
+    <div className="min-h-screen bg-cover bg-gray-40 bg-center bg-fixed overflow-x-hidden">
       <div className="flex flex-col min-h-screen">
-        <div className="fixed top-0 left-0 h-screen z-10">
+        <div className="fixed top-0 left-0 h-screen z-40">
           <Sidebar />
         </div>
 
         <div className="flex flex-col xl:ml-72 2xl:ml-80 w-full">
-          <div className="fixed top-0 right-0 z-40">
+          <div className="fixed top-0 right-0 z-50"> 
             <Navbar />
           </div>
 
           {/* Wrap only the children content in Suspense */}
-          <div className="scroll-smooth mt-16 pt-5 px-2 xl:mr-72 2xl:mr-80 flex justify-center">
+          <div className="scroll-smooth mt-16 pt-5 px-2 xl:mr-72 2xl:mr-80 flex justify-center z-0">
             <Suspense fallback={<LayoutLoadingSkeleton />}>
               {children}
             </Suspense>

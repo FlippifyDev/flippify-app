@@ -5,6 +5,7 @@ import ManageMembershipsButton from "../plans/PlansManageMembershipButton";
 import PlansContactUs from "./ServerPlansContactUs";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
 import { useSession } from 'next-auth/react';
+import { database, ref, get } from "@/app/api/auth-firebase/firebaseConfig";
 
 interface ServerPlansCardProps {
   title: string;
@@ -29,6 +30,7 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
   title,
   prices,
   description,
+  priceIds,
   whatsIncludedComponent,
   specialPlan,
   priceRange,
@@ -36,6 +38,7 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
   currency,
   conversionRates
 }) => {
+  const { data: session } = useSession();
   const [currencySymbol, setCurrencySymbol] = useState("£");
 
   useEffect(() => {
@@ -47,13 +50,15 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
     Number((price * conversionRates[currency]).toFixed(2))
   );
 
+  const selectedPriceId = priceRange === 0 ? priceIds.monthly : priceIds.yearly;
+
   return (
-    <div className="w-full flex justify-center transition duration-200 relative z-10">
-      <div className="w-full sm:w-full min-h-[700px] flex flex-col justify-between relative z-0">
+    <div className="w-full flex justify-center transition duration-200 relative">
+      <div className="w-full sm:w-full min-h-[700px] flex flex-col justify-between relative">
         {specialPlan ? (
-          <BackgroundGradient>
-            <div className="relative bg-transparent rounded-2xl h-full p-6 flex flex-col justify-between min-h-[700px] z-20">
-              <div className="absolute top-[-10px] left-6 z-30 bg-houseBlue text-white px-3 py-1 rounded-full text-xs">
+          <BackgroundGradient className="z-40">
+            <div className="bg-white rounded-2xl h-full p-6 flex flex-col justify-between min-h-[700px] relative z-50">
+              <div className="absolute top-[-10px] left-6 bg-houseBlue text-white px-3 py-1 rounded-full text-xs">
                 Most Popular
               </div>
 
@@ -76,14 +81,17 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
               <section className="mt-auto">
                 {prices.length > 0 && (
                   <div className="flex flex-col gap-4">
+                    {/* Get Access button if user doesn't have access */}
                     <LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
                       <PlansGetAccessButton specialPlan={specialPlan} redirect="dashboard" unavailable={description} />
                     </LayoutSubscriptionWrapper>
 
+                    {/* Show Manage Membership button if they have the role */}
                     <LayoutSubscriptionWrapper anySubscriptions={[planRole, "admin"]}>
                       <ManageMembershipsButton specialPlan={specialPlan} />
                     </LayoutSubscriptionWrapper>
 
+                    {/* Show "Contact Us" instead of Subscribe Now */}
                     <LayoutSubscriptionWrapper requiredSubscriptions={[`!${planRole}`, "!admin"]}>
                       <PlansContactUs specialPlan={specialPlan} />
                     </LayoutSubscriptionWrapper>
@@ -121,6 +129,7 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
                     <ManageMembershipsButton />
                   </LayoutSubscriptionWrapper>
 
+                  {/* Replace Subscribe Now with Contact Us */}
                   <LayoutSubscriptionWrapper requiredSubscriptions={[`!${planRole}`, "!admin"]}>
                     <PlansContactUs specialPlan={specialPlan} />
                   </LayoutSubscriptionWrapper>

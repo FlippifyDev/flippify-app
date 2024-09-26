@@ -71,38 +71,38 @@ const PlansCard: React.FC<PlansCardProps> = ({
   const selectedPriceId = priceRange === 0 ? priceIds.monthly : priceIds.yearly;
 
   return (
-    <div className="relative w-full flex justify-center transition duration-200 z-10"> 
-      {/* Increase z-index here to ensure the card is above the background */}
-      
+    <div className="relative w-full flex justify-center transition duration-200">
+      {/* Card Content */}
       <div className={`w-full sm:w-full min-h-[700px] flex flex-col justify-between relative ${className || ""} ${comingSoon ? "opacity-50" : ""}`}>
-        
         {specialPlan ? (
-          <BackgroundGradient>
-            {/* Card Content */}
-            <div className="relative bg-transparent rounded-2xl h-full p-6 flex flex-col justify-between min-h-[700px] z-20">
-              {/* Add bg-transparent to avoid any white background issue */}
-              <div className="absolute top-[-10px] left-6 z-30 bg-houseBlue text-white px-3 py-1 rounded-full text-xs">
+          <BackgroundGradient className="z-40">
+            {/* Badge for "Most Popular" */}
+            <div className="bg-white rounded-2xl h-full z-50 p-6 flex flex-col justify-between min-h-[700px]">
+              <div className="absolute top-[-10px] left-6 bg-houseBlue text-white px-3 py-1 rounded-full text-xs">
                 Most Popular
               </div>
-              
+
               {/* Title and Description */}
               <div className="text-center">
                 <h2 className="font-bold text-[24px]">{title}</h2>
                 <p className="text-sm text-gray-600">{description}</p>
               </div>
-              
-              {/* Price Section */}
+
+              {/* Early Access Discount Section */}
               <div className="flex items-center justify-center text-houseBlue font-semibold text-md mt-4">
                 <AiOutlineTag className="mr-2" />
                 Early Access Discount
               </div>
-              
+
+              {/* Price Section */}
               <div className="flex flex-col items-center justify-center mt-4">
                 <div className="flex items-baseline">
                   <h3 className="font-extrabold text-[40px] text-gray-900">
                     {`${currencySymbol}${displayPrice}`}
                   </h3>
-                  <span className="ml-1 text-lg text-black font-semibold">/{priceRange === 0 ? "mo" : "yr"}</span>
+                  <span className="ml-1 text-lg text-black font-semibold">
+                    /{priceRange === 0 ? "mo" : "yr"}
+                  </span>
                 </div>
                 {Number(displayPrice) !== Number(displayOriginalPrice) && (
                   <span className="text-md text-gray-500 line-through">
@@ -111,9 +111,10 @@ const PlansCard: React.FC<PlansCardProps> = ({
                 )}
               </div>
 
+              {/* Features */}
               <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
 
-              {/* Buttons */}
+              {/* Buttons - Wont show any buttons if the plan is coming soon */}
               <section className="mt-auto">
                 <div className="flex flex-col items-center gap-3">
                   {!comingSoon && (
@@ -121,11 +122,11 @@ const PlansCard: React.FC<PlansCardProps> = ({
                       <LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
                         <PlansGetAccessButton redirect="dashboard" specialPlan={specialPlan} />
                       </LayoutSubscriptionWrapper>
-                      
+
                       <LayoutSubscriptionWrapper requiredSubscriptions={["accessGranted", "!member"]}>
                         <PlansSubscribeNow priceId={selectedPriceId} specialPlan={specialPlan} />
                       </LayoutSubscriptionWrapper>
-                      
+
                       <LayoutSubscriptionWrapper requiredSubscriptions={["member"]}>
                         <ManageMembershipsButton specialPlan={specialPlan} />
                       </LayoutSubscriptionWrapper>
@@ -137,7 +138,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
           </BackgroundGradient>
         ) : (
           <div className="bg-white border rounded-2xl hover:shadow-md transition duration-200 h-full p-6 flex flex-col justify-between min-h-[700px]">
-            {/* Regular Card Content */}
+            {/* Title and Description */}
             <div className="text-center">
               <h2 className="font-bold text-[24px]">{title}</h2>
               <p className="text-sm text-gray-600">{description}</p>
@@ -150,15 +151,21 @@ const PlansCard: React.FC<PlansCardProps> = ({
             </div>
 
             {/* Price Section */}
-            <div className="flex items-center justify-center mt-4">
-              <h3 className="font-extrabold text-[40px] text-gray-900">{`${currencySymbol}${displayPrice}`}</h3>
-              <span className="ml-1 text-lg text-black font-semibold">/{priceRange === 0 ? "mo" : "yr"}</span>
+            <div className="flex flex-col items-center justify-center mt-4">
+              <div className="flex items-baseline">
+                <h3 className="font-extrabold text-[40px] text-gray-900">
+                  {`${currencySymbol}${displayPrice}`}
+                </h3>
+                <span className="ml-1 text-lg text-black font-semibold">
+                  /{priceRange === 0 ? "mo" : "yr"}
+                </span>
+              </div>
+              {Number(displayPrice) !== Number(displayOriginalPrice) && (
+                <span className="text-md text-gray-500 line-through">
+                  {`${currencySymbol}${displayOriginalPrice}`}
+                </span>
+              )}
             </div>
-            {Number(displayPrice) !== Number(displayOriginalPrice) && (
-              <span className="text-md text-gray-500 line-through">
-                {`${currencySymbol}${displayOriginalPrice}`}
-              </span>
-            )}
 
             {/* Features */}
             <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
@@ -172,10 +179,10 @@ const PlansCard: React.FC<PlansCardProps> = ({
           </div>
         )}
       </div>
-      
+
       {/* Coming Soon Box */}
       {comingSoon && (
-        <div className="absolute inset-0 flex items-center justify-center z-40 pointer-events-none">
+        <div className="absolute inset-0 flex items-center justify-center z-50 pointer-events-none">
           <div className="bg-white font-semibold text-black py-2 px-4 rounded-lg shadow-xl">
             Coming Soon
           </div>

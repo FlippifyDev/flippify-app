@@ -1,8 +1,8 @@
 import '../styles/globals.css';
 import { Inter } from 'next/font/google';
 import Providers from './providers';
-import { Metadata } from 'next'
-
+import ServiceWorkerRegister from '@/components/ServiceWorkerRegister'; // Import the client-side component
+import { Metadata } from 'next';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -24,18 +24,21 @@ const metadata: Metadata = {
   },
 };
 
-
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en" className="!scroll-smooth">
       <body className={inter.className}>
         {/* Providers component */}
-        <Providers>{children}</Providers>
+        <Providers>
+          {/* Include Service Worker registration */}
+          <ServiceWorkerRegister />
+          {children}
+        </Providers>
       </body>
     </html>
-  )
+  );
 }

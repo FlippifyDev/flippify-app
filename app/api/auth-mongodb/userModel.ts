@@ -1,64 +1,74 @@
 import mongoose, { Document, Model, Schema, Types } from 'mongoose';
-import mongooseLong from 'mongoose-long';
 
-mongooseLong(mongoose);
-const Long = Types.Long;
 
 interface ISubscription {
   name: string;
-  role_id: typeof Long;
+  role_id: string;
   override: boolean;
   server_subscription: boolean;
 }
 
-interface IWaitListed {
-  position: number; // Ensure position is strictly a number
+
+interface ISubscriptionSimple {
+  name: string;
+  role_id: string;
+  override: boolean;
+  server_subscription: boolean;
 }
+
+
 
 interface IReferral {
   referral_code: string;
   referred_by: string | null;
   referral_count: number;
+  valid_referrals: string[];
+  rewards_claimed: number;
 }
 
 interface IUser extends Document {
-  discord_id: typeof Long;
+  _id: Types.ObjectId;
+  discord_id: string;
   username: string;
   email: string;
   stripe_customer_id: string;
   subscriptions: ISubscription[];
   referral?: IReferral;
-  waitlisted?: IWaitListed;
+  ebayAccessToken?: string;
+  ebayRefreshToken?: string;
+  ebayTokenExpiry?: number;  
 }
 
-const waitListedSchema = new Schema<IWaitListed>({
-  position: { type: Number, required: true, default: -1 }, // Ensure position is always a number
-});
-
-const referralSchema = new Schema<IReferral>({
-  referral_code: { type: String, default: null },
-  referred_by: { type: String, default: null },
-  referral_count: { type: Number, default: 0 },
-});
 
 const subscriptionSchema = new Schema<ISubscription>({
   name: { type: String, required: true },
-  role_id: { type: Long, required: true },
+  role_id: { type: String, required: true },
   override: { type: Boolean, default: false },
   server_subscription: { type: Boolean, default: false },
 });
 
-const UserSchema = new Schema<IUser>({
-  discord_id: { type: Long, required: true },
+const referralSchema = new Schema<IReferral>({
+  referral_code: { type: String, required: true },
+  referred_by: { type: String, default: null },
+  referral_count: { type: Number, default: 0 },
+  valid_referrals: { type: [String], default: [] },
+  rewards_claimed: { type: Number, default: 0 },
+});
+
+const userSchema = new Schema<IUser>({
+  discord_id: { type: String, required: true },
   username: { type: String, required: true },
   email: { type: String, required: true },
   stripe_customer_id: { type: String, required: true },
   subscriptions: [subscriptionSchema],
-  referral: { type: referralSchema },
-  waitlisted: { type: waitListedSchema },
+  referral: referralSchema,
+  ebayAccessToken: { type: String, default: null },
+  ebayRefreshToken: { type: String, default: null },
+  ebayTokenExpiry: { type: Number, default: null },
 });
 
-const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
+
+const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', userSchema);
 
 export { User };
-export type { IUser, IWaitListed, ISubscription, IReferral };
+export type { IUser, ISubscription, IReferral, ISubscriptionSimple };

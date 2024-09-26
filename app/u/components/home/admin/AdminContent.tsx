@@ -1,6 +1,6 @@
 'use client';
 
-import { IUser, ISubscriptionSimple } from 'app/api/auth-mongodb/userModel';
+import { IUser, ISubscription } from 'app/api/auth-mongodb/userModel';
 import PlansCardAdmin from '@/app/u/components/home/admin/AdminUserCards';
 import fetchProducts from '@/app/api/auth-mongodb/fetchProducts';
 import LayoutProductsSkeleton from '../../layout/LayoutProductsSkeleton';
@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 const AdminContent = () => {
   const [users, setUsers] = useState<IUser[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
-  const [subscriptions, setSubscriptions] = useState<ISubscriptionSimple[]>([]);
+  const [subscriptions, setSubscriptions] = useState<ISubscription[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   useEffect(() => {

@@ -121,13 +121,13 @@ const ProfileReferralData: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
         <div className="stats shadow-md bg-white p-2 text-center">
           <div className="stat">
-            <div className="stat-title text-sm text-houseBlue">Lifetime Referrals</div>
+            <div className="stat-title text-sm text-houseBlue font-semibold">Lifetime Referrals</div>
             <div className="stat-value text-xl font-bold text-black">{referralCount}</div>
           </div>
         </div>
         <div className="stats shadow-md bg-white p-2 text-center">
           <div className="stat">
-            <div className="stat-title text-sm text-houseBlue">Total Rewards Claimed</div>
+            <div className="stat-title text-sm text-houseBlue font-semibold">Total Rewards Claimed</div>
             <div className="stat-value text-xl font-bold text-black">{totalRewardsClaimed}</div>
           </div>
         </div>

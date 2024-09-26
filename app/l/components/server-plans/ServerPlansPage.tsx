@@ -55,7 +55,7 @@ const ServerPlansPage = () => {
       </div>
 
       {/* Monthly/Yearly Toggle */}
-      <div className="flex justify-center w-4/5 sm:w-full items-center space-x-4 mb-6 mt-6">
+      <div className="flex justify-center w-full items-center space-x-4 mb-6 mt-6">
         <label className="inline-flex items-center cursor-pointer">
           <input
             type="checkbox"

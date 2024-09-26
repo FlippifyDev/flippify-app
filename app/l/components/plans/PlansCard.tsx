@@ -15,7 +15,7 @@ interface PlansCardProps {
   className?: string;
   currency: "GBP" | "USD" | "EUR" | "AUD" | "CAD";
   conversionRates: Record<string, number>;
-  comingSoon?: boolean; // Add a new prop for "Coming Soon"
+  comingSoon?: boolean;
 }
 
 const currencySymbols: Record<"GBP" | "USD" | "EUR" | "AUD" | "CAD", string> = {
@@ -31,14 +31,13 @@ const PlansCard: React.FC<PlansCardProps> = ({
   description,
   prices,
   discountedPrices,
-  priceIds,
   whatsIncludedComponent,
   specialPlan,
   priceRange,
   className,
   currency,
   conversionRates,
-  comingSoon = false, // Default to false if not provided
+  comingSoon = false,
 }) => {
   const [currencySymbol, setCurrencySymbol] = useState("£");
 
@@ -66,21 +65,25 @@ const PlansCard: React.FC<PlansCardProps> = ({
       <div className={`w-full sm:w-full min-h-[700px] flex flex-col justify-between relative ${className || ""} ${comingSoon ? "opacity-50" : ""}`}>
         {specialPlan ? (
           <BackgroundGradient>
+            {/* Badge for "Most Popular" */}
             <div className="bg-white rounded-2xl h-full p-6 flex flex-col justify-between min-h-[700px]">
               <div className="absolute top-[-10px] left-6 z-20 bg-houseBlue text-white px-3 py-1 rounded-full text-xs">
                 Most Popular
               </div>
 
+              {/* Title and Description */}
               <div className="text-center">
                 <h2 className="font-bold text-[24px]">{title}</h2>
                 <p className="text-sm text-gray-600">{description}</p>
               </div>
 
+              {/* Early Access Discount Section */}
               <div className="flex items-center justify-center text-houseBlue font-semibold text-md mt-4">
                 <AiOutlineTag className="mr-2" />
                 Early Access Discount
               </div>
 
+              {/* Price Section */}
               <div className="flex flex-col items-center justify-center mt-4">
                 <div className="flex items-baseline">
                   <h3 className="font-extrabold text-[40px] text-gray-900">
@@ -96,9 +99,11 @@ const PlansCard: React.FC<PlansCardProps> = ({
                   </span>
                 )}
               </div>
-
+              
+              {/* Features */}
               <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
-
+              
+              {/* Button - Wont show any button if the plan is coming soon */}
               <section className="mt-auto">
                 <div className="flex">
                   {!comingSoon && <PlansGetAccessButton redirect="dashboard" specialPlan={specialPlan} />}
@@ -108,16 +113,19 @@ const PlansCard: React.FC<PlansCardProps> = ({
           </BackgroundGradient>
         ) : (
           <div className="bg-white border rounded-2xl hover:shadow-md transition duration-200 h-full p-6 flex flex-col justify-between min-h-[700px]">
+            {/* Title and Description */}
             <div className="text-center">
               <h2 className="font-bold text-[24px]">{title}</h2>
               <p className="text-sm text-gray-600">{description}</p>
             </div>
 
+            {/* Early Access Discount Section */}
             <div className="flex items-center justify-center text-houseBlue font-semibold text-md mt-4">
               <AiOutlineTag className="mr-2" />
               Early Access Discount
             </div>
 
+            {/* Price Section */}
             <div className="flex flex-col items-center justify-center mt-4">
               <div className="flex items-baseline">
                 <h3 className="font-extrabold text-[40px] text-gray-900">
@@ -134,8 +142,10 @@ const PlansCard: React.FC<PlansCardProps> = ({
               )}
             </div>
 
+            {/* Features */}
             <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
-
+            
+            {/* Button */}
             <section className="mt-auto">
               <div className="flex">
                 {!comingSoon && <PlansGetAccessButton redirect="dashboard" />}
@@ -145,7 +155,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
         )}
       </div>
 
-      {/* Coming Soon Box - moved out of card opacity */}
+      {/* Coming Soon Box */}
       {comingSoon && (
         <div className="absolute inset-0 flex items-center justify-center z-40 pointer-events-none">
           <div className="bg-white font-semibold text-black py-2 px-4 rounded-lg shadow-xl">

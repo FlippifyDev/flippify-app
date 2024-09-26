@@ -120,6 +120,7 @@ const PlansPage = () => {
           priceRange={selectedPlan}
           currency={currency}  // Passing the currency prop
           conversionRates={conversionRates} // Passing the conversionRates prop
+          specialPlan={true}
         />
         <PlansCard
           title="Pro"
@@ -131,10 +132,10 @@ const PlansPage = () => {
             yearly: "price_1PxRQIJJRepiHZ8dGuGOAkE3",
           }}
           whatsIncludedComponent={<PlansCardProWhatsIncluded />}
-          specialPlan={true}
           priceRange={selectedPlan}
-          currency={currency}  // Passing the currency prop
-          conversionRates={conversionRates} // Passing the conversionRates prop
+          currency={currency}  
+          conversionRates={conversionRates} 
+          comingSoon={true}
         />
         <PlansCard
           title="Elite"
@@ -147,8 +148,9 @@ const PlansPage = () => {
           }}
           whatsIncludedComponent={<PlansCardEliteWhatsIncluded />}
           priceRange={selectedPlan}
-          currency={currency}  // Passing the currency prop
-          conversionRates={conversionRates} // Passing the conversionRates prop
+          currency={currency} 
+          conversionRates={conversionRates} 
+          comingSoon={true}
         />
       </div>
     </div>

@@ -23,7 +23,7 @@ export const BackgroundGradient = ({
   };
 
   return (
-    <div className={cn("relative p-[2px] group", containerClassName)}>
+    <div className={cn("relative p-[2px]", containerClassName)}>
       <motion.div
         variants={animate ? variants : undefined}
         initial={animate ? "initial" : undefined}
@@ -41,7 +41,7 @@ export const BackgroundGradient = ({
           backgroundSize: animate ? "400% 400%" : undefined,
         }}
         className={cn(
-          "absolute inset-0 z-[1] opacity-50 group-hover:opacity-80 blur-md transition duration-500 will-change-transform", // Slightly increased blur and opacity
+          "absolute inset-0 z-[1] opacity-50 blur-md transition duration-500 will-change-transform", // Removed hover effect
           // Blue gradient effect
           "bg-[radial-gradient(circle_farthest-side_at_0_100%,#00aaff,transparent),radial-gradient(circle_farthest-side_at_100%_0,#1a73e8,transparent),radial-gradient(circle_farthest-side_at_100%_100%,#b3e5fc,transparent),radial-gradient(circle_farthest-side_at_0_0,#1a73e8,#141316)]"
         )}
@@ -72,5 +72,3 @@ export const BackgroundGradient = ({
     </div>
   );
 };
-
-

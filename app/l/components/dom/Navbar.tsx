@@ -42,31 +42,31 @@ const Navbar = () => {
         {/* Side bar which appears on small screens */}
         <div className="drawer-side opacity-98 z-40">
           <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-          <ul className="menu bg-base-200 text-base-content min-h-full w-full pt-20">
-            <li className="transition duration-100 active:bg-base-100 rounded-btn grid grid-cols-12 items-center gap-2 px-4 py-2 text-white text-lg font-medium">
-              <span><FaHouse className="col-span-2 text-lg pb-[2px]" /></span>
-              <Link href="/l/home" className="col-span-10 text-left">Home</Link>
+          <ul className="menu bg-base-200 text-base-content min-h-full w-full pt-24 gap-2">
+            <li className="transition duration-100 active:bg-gray-700 rounded-btn grid grid-cols-12 gap-8 items-center mx-2 text-white text-lg font-medium">
+              <span className='col-span-1 h-full pt-3 rounded-none'><FaHouse className="text-lg" /></span>
+              <span className='col-span-11 rounded-none'><Link href="/l/home" className="text-left">Home</Link></span>
             </li>
-            <li className="transition duration-100 active:bg-base-100 rounded-btn grid grid-cols-12 items-center gap-2 px-4 pb-2 text-white text-lg font-medium">
+            <li className="transition duration-100 active:bg-gray-700 rounded-btn grid grid-cols-12 gap-8 items-center mx-2 text-white text-lg font-medium">
               <span><FaBook className="col-span-2 text-lg pb-[2px]" /></span>
-              <Link href="/l/services" className="col-span-10 text-left">Services</Link>
+              <span className='col-span-11 rounded-none'><Link href="/l/services" className="col-span-10 text-left">Services</Link></span>
             </li>
-            <li className="transition duration-100 active:bg-base-100 rounded-btn grid grid-cols-12 items-center gap-2 px-4 pb-2 text-white text-lg font-medium">
-              <span><FaSearch className="col-span-2 text-lg pb-[2px]" /></span>
-              <Link href="/l/plans" className="col-span-10 text-left">Plans</Link>
+            <li className="transition duration-100 active:bg-gray-700 rounded-btn grid grid-cols-12 gap-8 items-center mx-2 text-white text-lg font-medium">
+              <span><FaSearch className="col-span-2 text-lg" /></span>
+              <span className='col-span-11 rounded-none'><Link href="/l/plans" className="col-span-10 text-left">Plans</Link></span>
             </li>
-            <li className="transition duration-100 active:bg-base-100 rounded-btn grid grid-cols-12 items-center gap-2 px-4 pb-2 text-white text-lg font-medium">
-              <span><MdGroups className="col-span-2 text-lg pb-[2px]" /></span>
-              <Link href="/l/server-plans" className="col-span-10 text-left">Server Plans</Link>
+            <li className="transition duration-100 active:bg-gray-700 rounded-btn grid grid-cols-12 gap-8 items-center mx-2 text-white text-lg font-medium">
+              <span><MdGroups className="col-span-2 text-lg" /></span>
+              <span className='col-span-11 rounded-none'><Link href="/l/server-plans" className="col-span-10 text-left">Server Plans</Link></span>
             </li>
-            <li className="transition duration-100 active:bg-base-100 rounded-btn grid grid-cols-12 items-center gap-2 px-4 pb-2 text-white text-lg font-medium">
-              <span><FaDiscord className="col-span-2 text-lg pb-[2px]" /></span>
-              <Link href="https://discord.gg/gNPYfe7YFm" target="_blank" className="col-span-10 text-left">Discord</Link>
+            <li className="transition duration-100 active:bg-gray-700 rounded-btn grid grid-cols-12 gap-8 items-center mx-2 text-white text-lg font-medium">
+              <span><FaDiscord className="col-span-2 text-lg" /></span>
+              <span className='col-span-11 rounded-none'><Link href="https://discord.gg/gNPYfe7YFm" target="_blank" className="col-span-10 text-left">Discord</Link></span>
             </li>
             {/* Adjusted Sign In button alignment */}
-            <li className="transition duration-100 active:bg-base-100 rounded-btn grid grid-cols-12 items-center gap-2 px-4 pb-2 text-white text-lg font-medium">
-              <span><FaSignInAlt className="col-span-2 text-lg pb-[2px]" /></span>
-              <span className="col-span-10 text-left">
+            <li className="transition duration-100 active:bg-gray-700 rounded-btn grid grid-cols-12 gap-8 items-center mx-2 text-white text-lg font-medium">
+              <span><FaSignInAlt className="col-span-1 text-lg" /></span>
+              <span className="col-span-11 text-left">
                 <NavbarSignInWithDiscordSideBar />
               </span>
             </li>

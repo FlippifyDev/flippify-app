@@ -1,11 +1,10 @@
-import React, { useState, ChangeEvent, FocusEvent } from 'react';
-
-import { IUser, ISubscriptionSimple } from '@/app/api/auth-mongodb/userModel';
+import React, { useState, ChangeEvent, FocusEvent, useRef, useEffect } from 'react';
+import { IUser, ISubscription } from '@/app/api/auth-mongodb/userModel';
 import Alert from '@/app/components/Alert';
 
 interface CardProps {
   user: IUser;
-  unique_subscriptions: ISubscriptionSimple[];
+  unique_subscriptions: ISubscription[];
 }
 
 const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => {
@@ -19,11 +18,12 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
   const referral = user.referral || {
     referral_code: '',
     referral_count: 0,
+    valid_referrals: [],
     rewards_claimed: 0,
   };
 
   const [newEmail, setNewEmail] = useState(email);
-  const [selectedRoles, setSelectedRoles] = useState<ISubscriptionSimple[]>(
+  const [selectedRoles, setSelectedRoles] = useState<ISubscription[]>(
     subscriptions.map(sub => ({
       name: sub.name,
       role_id: sub.role_id.toString(),
@@ -33,6 +33,9 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
   );
   const [searchTerm, setSearchTerm] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  
+  const dropdownRef = useRef<HTMLDivElement>(null); // Ref for dropdown
+  const inputRef = useRef<HTMLInputElement>(null); // Ref for input
 
   // Referral state
   const [referralCode, setReferralCode] = useState(referral.referral_code);
@@ -44,18 +47,19 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
   const handleReferralChange = (e: ChangeEvent<HTMLInputElement>, field: string) => {
     const value = e.target.value;
     if (field === 'referralCode') setReferralCode(value);
-    if (field === 'referralCount') setReferralCount(parseInt(value) || 0)
+    if (field === 'referralCount') setReferralCount(parseInt(value) || 0);
     if (field === 'rewardsClaimed') setRewardsClaimed(parseInt(value) || 0);
   };
 
   const isRoleSelected = (roleName: string) => selectedRoles.some(role => role.name === roleName);
 
-  const handleRoleChange = (role: ISubscriptionSimple) => {
+  const handleRoleChange = (role: ISubscription) => {
     setSelectedRoles(prevRoles =>
       isRoleSelected(role.name)
-        ? prevRoles.filter(r => r.name !== role.name)
-        : [...prevRoles, role]
+        ? prevRoles.filter(r => r.name !== role.name) // Deselect the role
+        : [...prevRoles, role] // Select the role
     );
+    // Do not close the dropdown here
   };
 
   const [alertVisible, setAlertVisible] = useState(false);
@@ -98,9 +102,38 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
   );
 
   const handleFocus = () => setIsDropdownOpen(true);
+
+  // Handle click outside to close dropdown
   const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
-    setTimeout(() => setIsDropdownOpen(false), 100);
+    const relatedTarget = e.relatedTarget;
+    if (
+      dropdownRef.current && 
+      inputRef.current && 
+      !dropdownRef.current.contains(relatedTarget as Node) &&
+      !inputRef.current.contains(relatedTarget as Node)
+    ) {
+      setTimeout(() => setIsDropdownOpen(false), 100);
+    }
   };
+
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (
+      dropdownRef.current && 
+      !dropdownRef.current.contains(event.target as Node) && 
+      inputRef.current && 
+      !inputRef.current.contains(event.target as Node)
+    ) {
+      setIsDropdownOpen(false);
+    }
+  };
+
+  // Adding event listener for clicks outside of dropdown
+  useEffect(() => {
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, []);
 
   return (
     <div className="card bg-base-100 sm:w-96 w-86 shadow-xl">
@@ -157,6 +190,7 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
         <div className="relative mt-2">
           <h3 className="mb-2 font-semibold">Update Roles</h3>
           <input
+            ref={inputRef} // Set ref for input
             type="text"
             placeholder="Search roles..."
             value={searchTerm}
@@ -166,7 +200,7 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
             className="input input-bordered w-full"
           />
           {isDropdownOpen && (
-            <div className="absolute z-10 bg-base-100 border overflow-y-auto rounded-box shadow-lg w-full mt-1 max-h-48 overflow-hidden">
+            <div ref={dropdownRef} className="absolute z-10 bg-base-100 border overflow-y-auto rounded-box shadow-lg w-full mt-1 max-h-48 overflow-hidden">
               <ul className="menu p-2 overflow-y-auto max-h-full pt-0">
                 {filteredRoles.length > 0 ? (
                   filteredRoles.map(role => (
@@ -175,7 +209,7 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
                       <input
                         type="checkbox"
                         checked={isRoleSelected(role.name)}
-                        onChange={() => handleRoleChange(role)}
+                        onChange={() => handleRoleChange(role)} // Keep the dropdown open
                         className="checkbox col-span-2"
                       />
                     </li>

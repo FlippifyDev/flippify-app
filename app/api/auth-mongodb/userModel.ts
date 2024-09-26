@@ -9,14 +9,6 @@ interface ISubscription {
 }
 
 
-interface ISubscriptionSimple {
-  name: string;
-  role_id: string;
-  override: boolean;
-  server_subscription: boolean;
-}
-
-
 
 interface IReferral {
   referral_code: string;
@@ -71,4 +63,4 @@ const userSchema = new Schema<IUser>({
 const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', userSchema);
 
 export { User };
-export type { IUser, ISubscription, IReferral, ISubscriptionSimple };
+export type { IUser, ISubscription, IReferral };

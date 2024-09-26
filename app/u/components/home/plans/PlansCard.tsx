@@ -17,7 +17,7 @@ interface PlansCardProps {
   priceRange: number;
   className?: string;
   currency: "GBP" | "USD" | "EUR";
-  conversionRates: Record<string, number>; 
+  conversionRates: Record<string, number>;
   comingSoon?: boolean;
 }
 
@@ -71,7 +71,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
   const selectedPriceId = priceRange === 0 ? priceIds.monthly : priceIds.yearly;
 
   return (
-    <div className="w-full flex justify-center transition duration-200">
+    <div className="relative w-full flex justify-center transition duration-200">
       {/* Card Content */}
       <div className={`w-full sm:w-full min-h-[700px] flex flex-col justify-between relative ${className || ""} ${comingSoon ? "opacity-50" : ""}`}>
         {specialPlan ? (
@@ -172,22 +172,8 @@ const PlansCard: React.FC<PlansCardProps> = ({
 
             {/* Button */}
             <section className="mt-auto">
-              <div className="flex flex-col items-center gap-3">
-                { !comingSoon && (
-                  <>
-                    <LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
-                      <PlansGetAccessButton redirect="dashboard" />
-                    </LayoutSubscriptionWrapper>
-
-                    <LayoutSubscriptionWrapper requiredSubscriptions={["accessGranted", "!member"]}>
-                      <PlansSubscribeNow priceId={selectedPriceId} />
-                    </LayoutSubscriptionWrapper>
-
-                    <LayoutSubscriptionWrapper requiredSubscriptions={["member"]}>
-                      <ManageMembershipsButton />
-                    </LayoutSubscriptionWrapper>
-                  </>
-                )}
+              <div className="flex">
+                {!comingSoon && <PlansGetAccessButton redirect="dashboard" />}
               </div>
             </section>
           </div>

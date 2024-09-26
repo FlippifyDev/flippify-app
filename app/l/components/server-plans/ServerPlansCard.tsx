@@ -9,7 +9,6 @@ interface ServerPlansCardProps {
   whatsIncludedComponent: any;
   specialPlan?: boolean;
   priceRange: number;
-  planRole?: string;
   unavailable?: boolean;
   currency: 'GBP' | 'USD' | 'EUR' | 'AUD' | 'CAD';
   conversionRates: Record<string, number>;
@@ -49,12 +48,12 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
   }, [currency, priceRange, prices, conversionRates]);
 
   return (
-    <div className="w-full flex justify-center transition duration-200 relative z-0">
+    <div className="w-full flex justify-center transition duration-200 relative z-10">
       <div className="w-full sm:w-full min-h-[650px] flex flex-col justify-between relative z-0">
         {specialPlan ? (
           <BackgroundGradient>
-            <div className="bg-white rounded-2xl h-full p-6 flex flex-col justify-between min-h-[650px] relative z-0">
-              <div className="absolute top-[-10px] left-6 z-10 bg-houseBlue text-white px-3 py-1 rounded-full text-xs">
+            <div className="relative bg-transparent rounded-2xl h-full p-6 flex flex-col justify-between min-h-[650px] z-20">
+              <div className="absolute top-[-10px] left-6 z-30 bg-houseBlue text-white px-3 py-1 rounded-full text-xs">
                 Most Popular
               </div>
 
@@ -94,16 +93,16 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
 
             {/* Price Section */}
             <div className="flex flex-col items-center mt-5">
-                <span className="text-sm text-gray-400 mb-0">Starting From...</span>
-                <div className="flex flex-row items-center">
-                  <h3 className="font-extrabold text-[40px] text-gray-900">
-                    {`${currencySymbol}${convertedPrice.toFixed(2)}`}
-                  </h3>
-                  <span className="ml-1 mt-4 text-lg text-black font-semibold">
-                    /{priceRange === 0 ? "mo" : "yr"}
-                  </span>
-                </div>
+              <span className="text-sm text-gray-400 mb-0">Starting From...</span>
+              <div className="flex flex-row items-center">
+                <h3 className="font-extrabold text-[40px] text-gray-900">
+                  {`${currencySymbol}${convertedPrice.toFixed(2)}`}
+                </h3>
+                <span className="ml-1 mt-4 text-lg text-black font-semibold">
+                  /{priceRange === 0 ? "mo" : "yr"}
+                </span>
               </div>
+            </div>
 
             <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
 

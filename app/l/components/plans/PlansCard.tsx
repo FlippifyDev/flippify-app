@@ -60,14 +60,15 @@ const PlansCard: React.FC<PlansCardProps> = ({
   const displayOriginalPrice = priceRange === 0 ? originalPricesConverted.monthly : originalPricesConverted.yearly;
 
   return (
-    <div className="relative w-full flex justify-center transition duration-200">
+    <div className="relative w-full flex justify-center transition duration-200 z-10">
       {/* Card Content */}
       <div className={`w-full sm:w-full min-h-[700px] flex flex-col justify-between relative ${className || ""} ${comingSoon ? "opacity-50" : ""}`}>
         {specialPlan ? (
           <BackgroundGradient>
             {/* Badge for "Most Popular" */}
-            <div className="bg-white rounded-2xl h-full p-6 flex flex-col justify-between min-h-[700px]">
-              <div className="absolute top-[-10px] left-6 z-20 bg-houseBlue text-white px-3 py-1 rounded-full text-xs">
+            <div className="relative bg-transparent rounded-2xl h-full p-6 flex flex-col justify-between min-h-[700px] z-20">
+              {/* Ensure no white background leakage */}
+              <div className="absolute top-[-10px] left-6 z-30 bg-houseBlue text-white px-3 py-1 rounded-full text-xs">
                 Most Popular
               </div>
 
@@ -99,11 +100,11 @@ const PlansCard: React.FC<PlansCardProps> = ({
                   </span>
                 )}
               </div>
-              
+
               {/* Features */}
               <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
-              
-              {/* Button - Wont show any button if the plan is coming soon */}
+
+              {/* Button - Won't show any button if the plan is coming soon */}
               <section className="mt-auto">
                 <div className="flex">
                   {!comingSoon && <PlansGetAccessButton redirect="dashboard" specialPlan={specialPlan} />}
@@ -144,7 +145,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
 
             {/* Features */}
             <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
-            
+
             {/* Button */}
             <section className="mt-auto">
               <div className="flex">

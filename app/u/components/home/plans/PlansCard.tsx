@@ -71,7 +71,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
   const selectedPriceId = priceRange === 0 ? priceIds.monthly : priceIds.yearly;
 
   return (
-    <div className="relative w-full flex justify-center transition duration-200">
+    <div className="relative w-full flex justify-center transition duration-200 z-0">
       {/* Card Content */}
       <div className={`w-full sm:w-full min-h-[700px] flex flex-col justify-between relative ${className || ""} ${comingSoon ? "opacity-50" : ""}`}>
         {specialPlan ? (

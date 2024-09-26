@@ -18,7 +18,7 @@ const HomeContent = ({ className = '' }) => {
           </p>
         </div>
         <p className='w-11/12 sm:w-full mt-3 mb-8 pb-1 pt-2 text-gray-300 text-lg text-center'>
-          Handling everything so you don't have to, eBay & Amazon store automation & tracking in all areas.
+          Handling everything so you don&apos;t have to, eBay & Amazon store automation & tracking in all areas.
         </p>
         
         <HomeGetEarlyAccess />

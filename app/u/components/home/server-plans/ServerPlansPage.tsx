@@ -83,7 +83,7 @@ const ServerPlansPage = () => {
         <div className="flex justify-center w-4/5 sm:w-full">
           <p className="mx-4 sm:mx-2 text-lightModeText text-md sm:text-lg text-center">
             Looking to integrate a bot into your server? <br />
-            Utilize our bots to elevate your Discord community's value.
+            Utilize our bots to elevate your Discord community&apos;s value.
           </p>
         </div>
         <div className="flex justify-center w-4/5 sm:w-full">

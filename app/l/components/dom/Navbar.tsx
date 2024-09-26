@@ -44,23 +44,23 @@ const Navbar = () => {
           <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
           <ul className="menu bg-base-200 text-base-content min-h-full w-full pt-24 gap-2">
             <li className="transition duration-100 active:bg-gray-700 rounded-btn grid grid-cols-12 gap-8 items-center mx-2 text-white text-lg font-medium">
-              <span className='col-span-1 h-full pt-3 rounded-none'><FaHouse className="text-lg" /></span>
+              <span className='col-span-1 rounded-none'><FaHouse className="text-lg pb-[2px]" /></span>
               <span className='col-span-11 rounded-none'><Link href="/l/home" className="text-left">Home</Link></span>
             </li>
             <li className="transition duration-100 active:bg-gray-700 rounded-btn grid grid-cols-12 gap-8 items-center mx-2 text-white text-lg font-medium">
-              <span><FaBook className="col-span-2 text-lg pb-[2px]" /></span>
+              <span className='col-span-1 rounded-none'><FaBook className="text-lg pb-[2px]" /></span>
               <span className='col-span-11 rounded-none'><Link href="/l/services" className="col-span-10 text-left">Services</Link></span>
             </li>
             <li className="transition duration-100 active:bg-gray-700 rounded-btn grid grid-cols-12 gap-8 items-center mx-2 text-white text-lg font-medium">
-              <span><FaSearch className="col-span-2 text-lg" /></span>
+              <span className='col-span-1 rounded-none'><FaSearch className="text-lg" /></span>
               <span className='col-span-11 rounded-none'><Link href="/l/plans" className="col-span-10 text-left">Plans</Link></span>
             </li>
             <li className="transition duration-100 active:bg-gray-700 rounded-btn grid grid-cols-12 gap-8 items-center mx-2 text-white text-lg font-medium">
-              <span><MdGroups className="col-span-2 text-lg" /></span>
+              <span className='col-span-1 rounded-none'><MdGroups className="text-lg" /></span>
               <span className='col-span-11 rounded-none'><Link href="/l/server-plans" className="col-span-10 text-left">Server Plans</Link></span>
             </li>
             <li className="transition duration-100 active:bg-gray-700 rounded-btn grid grid-cols-12 gap-8 items-center mx-2 text-white text-lg font-medium">
-              <span><FaDiscord className="col-span-2 text-lg" /></span>
+              <span className='col-span-1 rounded-none'><FaDiscord className="text-lg" /></span>
               <span className='col-span-11 rounded-none'><Link href="https://discord.gg/gNPYfe7YFm" target="_blank" className="col-span-10 text-left">Discord</Link></span>
             </li>
             {/* Adjusted Sign In button alignment */}

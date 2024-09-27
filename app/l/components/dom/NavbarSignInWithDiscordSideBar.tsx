@@ -28,10 +28,10 @@ const NavbarSignInWithDiscordSideBar = () => {
     };
     
     return (
-        <div>
-            <button onClick={handleSignIn}>
-                Sign In
-            </button>
+        <div className='transition duration-100 hover:scale-105 rounded-btn p-1'>
+            <a className="text-white group flex flex-row" onClick={handleSignIn}>
+                <span className='text-md select-none'>Sign in</span>
+            </a>
             {isLoading && (
                 <div className="mt-4">
                     <Loading />

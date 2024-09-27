@@ -78,7 +78,7 @@ const ServerPlansPage = () => {
       <div className="mt-10 grid grid-cols-1 md:grid-cols-3 mx-6 lg:px-32 md:mx-2 lg:mx-16 gap-8 items-stretch">
         <ServerPlansCard
           title="Retiring Sets Deals"
-          description="Scanning all corners of the internet for deals on soon-to-retire LEGO sets meaning big profits long-term."
+          description="Scanning all corners of the internet for deals on soon-to-retire LEGO sets meaning large profits long-term."
           prices={{ monthly: 119.99, yearly: 1199.99 }}
           whatsIncludedComponent={<ServerPlansCardRetiringSetsWhatsIncluded />}
           specialPlan={false}

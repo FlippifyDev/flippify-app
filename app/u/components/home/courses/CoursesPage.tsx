@@ -8,22 +8,19 @@ const inter = Inter({ subsets: ["latin"] });
 const CoursesPageContent = () => {
   const courses = [
     {
-      status: 'Coming Soon',
       image: 'https://i.imgur.com/EOAUhYX.png', // Image for Flippify Fundamentals
     },
     {
-      status: 'Coming Soon',
       image: 'https://i.imgur.com/fhlG48K.png', // Image for The Retail Goldmine
     },
     {
-      status: 'Coming Soon',
       image: 'https://i.imgur.com/vUn4p6D.png', // Image for The Art of Reselling
     },
   ];
 
   return (
     <div className="w-full h-full mb-2">
-      <div className="flex flex-col items-center space-y-5 text-center mt-20 mb-28">
+      <div className="flex flex-col items-center space-y-5 text-center mt-14 mb-20">
         <div className="flex flex-wrap justify-center">
           <p
             className={`${lato.className} text-4xl sm:text-5xl w-4/5 sm:w-full text-gradient bg-gradient-to-tr from-houseBlue to-houseHoverBlue bg-clip-text text-transparent py-1`}
@@ -48,8 +45,7 @@ const CoursesPageContent = () => {
         {courses.map((course, index) => (
           <CourseCard
             key={index}
-            status={course.status}
-            image={course.image} // Passing only status and image props now
+            image={course.image} // Passing only image prop now
           />
         ))}
       </div>

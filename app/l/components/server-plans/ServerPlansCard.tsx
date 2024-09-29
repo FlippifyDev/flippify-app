@@ -50,7 +50,7 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
 
   return (
     <div className="w-full flex justify-center transition duration-200 relative">
-      <div className="w-full sm:w-full min-h-[650px] flex flex-col justify-between relative ">
+      <div className={`w-full sm:w-full min-h-[650px] flex flex-col justify-between relative ${unavailable ? "opacity-50" : ""}`}>
         {specialPlan ? (
           <BackgroundGradient className="z-40">
             <div className="bg-white rounded-2xl h-full p-6 flex flex-col justify-between min-h-[650px] relative z-50">
@@ -63,7 +63,6 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
                 <p className="text-sm text-gray-600">{description}</p>
               </div>
 
-              {/* Price Section */}
               <div className="flex flex-col items-center mt-5">
                 <span className="text-sm text-gray-400 mb-0">Starting From...</span>
                 <div className="flex flex-row items-center">
@@ -79,9 +78,12 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
               <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
 
               <section className="mt-auto">
-                <div className="flex flex-col gap-4">
-                  <ServerPlansContactUs specialPlan={specialPlan} unavailable={unavailable} />
-                </div>
+                {/* Always show Contact Us button if not unavailable */}
+                {!unavailable && (
+                  <div className="flex flex-col gap-4">
+                    <ServerPlansContactUs specialPlan={specialPlan} />
+                  </div>
+                )}
               </section>
             </div>
           </BackgroundGradient>
@@ -92,26 +94,37 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
               <p className="text-sm text-gray-600">{description}</p>
             </div>
 
-            {/* Price Section */}
             <div className="flex flex-col items-center mt-5">
-                <span className="text-sm text-gray-400 mb-0">Starting From...</span>
-                <div className="flex flex-row items-center">
-                  <h3 className="font-extrabold text-[40px] text-gray-900">
-                    {`${currencySymbol}${convertedPrice.toFixed(2)}`}
-                  </h3>
-                  <span className="ml-1 mt-4 text-lg text-black font-semibold">
-                    /{priceRange === 0 ? "mo" : "yr"}
-                  </span>
-                </div>
+              <span className="text-sm text-gray-400 mb-0">Starting From...</span>
+              <div className="flex flex-row items-center">
+                <h3 className="font-extrabold text-[40px] text-gray-900">
+                  {`${currencySymbol}${convertedPrice.toFixed(2)}`}
+                </h3>
+                <span className="ml-1 mt-4 text-lg text-black font-semibold">
+                  /{priceRange === 0 ? "mo" : "yr"}
+                </span>
               </div>
+            </div>
 
             <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
 
             <section className="mt-auto">
-              <div className="flex flex-col gap-4">
-                <ServerPlansContactUs specialPlan={specialPlan} unavailable={unavailable} />
-              </div>
+              {/* Always show Contact Us button if not unavailable */}
+              {!unavailable && (
+                <div className="flex flex-col gap-4">
+                  <ServerPlansContactUs specialPlan={specialPlan} />
+                </div>
+              )}
             </section>
+          </div>
+        )}
+
+        {/* Coming Soon Box */}
+        {unavailable && (
+          <div className="absolute inset-0 flex items-center justify-center z-50 pointer-events-none">
+            <div className="bg-white font-semibold text-black py-2 px-4 rounded-lg shadow-xl">
+              Coming Soon
+            </div>
           </div>
         )}
       </div>

@@ -2,20 +2,20 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation'; // Change to 'next/navigation'
+import { useRouter } from 'next/navigation';
 
 interface CourseCardProps {
   image: string;
   link: string;
   type: "yourCourses" | "otherCourses";
-  progress?: number; // Progress bar (optional)
+  progress?: number; // Optional progress bar
 }
 
 const CourseCard: React.FC<CourseCardProps> = ({ image, link, type, progress = 0 }) => {
-  const router = useRouter(); // This now comes from 'next/navigation'
+  const router = useRouter();
 
   const handleMoreInfoClick = () => {
-    router.push(link); // This will redirect the user to the provided link
+    router.push(link);
   };
 
   return (
@@ -27,7 +27,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ image, link, type, progress = 0
     >
       {/* Course Image with Coming Soon Overlay */}
       <div
-        className="relative w-full h-[250px] bg-cover bg-center opacity-50 group-hover:opacity-100 transition-opacity duration-500"
+        className="relative w-full h-[250px] bg-cover bg-center opacity-80 group-hover:opacity-80 transition-opacity duration-500"
         style={{
           backgroundImage: `url(${image})`,
           backgroundSize: "contain",

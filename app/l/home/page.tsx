@@ -15,7 +15,7 @@ export const metadata = {
     url: 'https://flippify.co.uk/l/home',
     images: [
       {
-        url: "https://i.imgur.com/iofmtlb.png",
+        url: "https://i.imgur.com/JzWi4ye.png",
         width: 1908,
         height: 1076,
         alt: "Home Page Image"

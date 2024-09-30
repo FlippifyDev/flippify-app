@@ -1,53 +1,122 @@
 import React from 'react';
 import CourseCard from './CourseCard';
-import { Lato, Inter } from "next/font/google";
-
-const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
-const inter = Inter({ subsets: ["latin"] });
+import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 
 const CoursesPageContent = () => {
-  const courses = [
-    {
-      image: 'https://i.imgur.com/EOAUhYX.png', // Image for Flippify Fundamentals
-    },
-    {
-      image: 'https://i.imgur.com/fhlG48K.png', // Image for The Retail Goldmine
-    },
-    {
-      image: 'https://i.imgur.com/vUn4p6D.png', // Image for The Art of Reselling
-    },
-  ];
-
   return (
     <div className="w-full h-full mb-2">
-      <div className="flex flex-col items-center space-y-5 text-center mt-14 mb-20">
-        <div className="flex flex-wrap justify-center">
-          <p
-            className={`${lato.className} text-4xl sm:text-5xl w-4/5 sm:w-full text-gradient bg-gradient-to-tr from-houseBlue to-houseHoverBlue bg-clip-text text-transparent py-1`}
-          >
-            Courses
-            <a
-              className={`${inter.className} text-lightModeText text-4xl sm:text-5xl font-bold`}
-            >
-              {" "}For Everyone
-            </a>
-          </p>
-        </div>
-        <div className="flex justify-center w-4/5 sm:w-full">
-          <p className="mx-4 mt-[-12px] mb-2 sm:mx-2 text-lightModeText text-md sm:text-lg text-center">
-            Flexible Plans for Every Reseller: From Beginners to Experts
-          </p>
-        </div>
+
+      {/* Your Courses Section */}
+      <div className="container mx-auto px-4">
+        <h2 className="text-2xl font-bold mb-4">Your Courses</h2>
+
+        {/* Flippify Fundamentals - Available to all subscriptions */}
+        <LayoutSubscriptionWrapper requiredSubscriptions={['member']}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <CourseCard
+              image="https://i.imgur.com/ahFKtE7.png"
+              link="/flippify-fundamentals"
+              type="yourCourses"
+            />
+          </div>
+        </LayoutSubscriptionWrapper>
+
+        {/* The Retail Goldmine - Available to pro and elite subscriptions */}
+        <LayoutSubscriptionWrapper anySubscriptions={['pro', 'elite']}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <CourseCard
+              image="https://i.imgur.com/z2ztJqx.png"
+              link="/the-retail-goldmine"
+              type="yourCourses"
+            />
+          </div>
+        </LayoutSubscriptionWrapper>
+
+        {/* The Art of Reselling - Available to elite subscriptions */}
+        <LayoutSubscriptionWrapper requiredSubscriptions={['elite']}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <CourseCard
+              image="https://i.imgur.com/bgsfbi2.png"
+              link="/the-art-of-reselling"
+              type="yourCourses"
+            />
+          </div>
+        </LayoutSubscriptionWrapper>
+
+        {/* Coming Soon */}
+        <LayoutSubscriptionWrapper requiredSubscriptions={['!member']}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <CourseCard
+              image="https://i.imgur.com/d00eUMe.png"
+              link="/coming-soon"
+              type="yourCourses"
+            />
+          </div>
+        </LayoutSubscriptionWrapper>
       </div>
 
-      {/* Course Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-12">
-        {courses.map((course, index) => (
-          <CourseCard
-            key={index}
-            image={course.image} // Passing only image prop now
-          />
-        ))}
+      {/* Other Courses Section */}
+      <div className="container mx-auto px-4 mt-10">
+        <h2 className="text-2xl font-bold mb-4">Other Courses</h2>
+
+        {/* Courses for Elite Members */}
+        <LayoutSubscriptionWrapper requiredSubscriptions={['elite']}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <CourseCard
+              image="https://i.imgur.com/d00eUMe.png"
+              link="/coming-soon"
+              type="otherCourses"
+            />
+          </div>
+        </LayoutSubscriptionWrapper>
+
+        {/* Courses for Pro Members */}
+        <LayoutSubscriptionWrapper requiredSubscriptions={['pro']}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <CourseCard
+              image="https://i.imgur.com/bgsfbi2.png"
+              link="/the-art-of-reselling"
+              type="otherCourses"
+            />
+          </div>
+        </LayoutSubscriptionWrapper>
+
+        {/* Courses for Standard Members */}
+        <LayoutSubscriptionWrapper requiredSubscriptions={['standard']}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <CourseCard
+              image="https://i.imgur.com/z2ztJqx.png"
+              link="/the-retail-goldmine"
+              type="otherCourses"
+            />
+            <CourseCard
+              image="https://i.imgur.com/bgsfbi2.png"
+              link="/the-art-of-reselling"
+              type="otherCourses"
+            />
+          </div>
+        </LayoutSubscriptionWrapper>
+
+        {/* For Non-Members */}
+        <LayoutSubscriptionWrapper requiredSubscriptions={['!member']}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <CourseCard
+              image="https://i.imgur.com/ahFKtE7.png"
+              link="/flippify-fundamentals"
+              type="otherCourses"
+            />
+            <CourseCard
+              image="https://i.imgur.com/z2ztJqx.png"
+              link="/the-retail-goldmine"
+              type="otherCourses"
+            />
+            <CourseCard
+              image="https://i.imgur.com/bgsfbi2.png"
+              link="/the-art-of-reselling"
+              type="otherCourses"
+            />
+          </div>
+        </LayoutSubscriptionWrapper>
       </div>
     </div>
   );

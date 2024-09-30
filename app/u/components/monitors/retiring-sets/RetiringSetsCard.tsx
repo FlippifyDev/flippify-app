@@ -85,7 +85,7 @@ const RetiringSetsCard: React.FC<CardProps> = ({ product }) => {
       {/* Title Section */}
       <section className='row-span-3 grid grid-cols-12 p-2 gap-2 mx-2'>
         <div className='col-span-8'>
-          <h5 className='text-sm mb-2'>{product.website} {product.region.toUpperCase()}</h5>
+          <h5 className='text-sm mb-2 text-gray-600 font-semibold'>{product.website} {product.region.toUpperCase()}</h5>
           <h2 className='text-lg font-semibold'>{truncatedTitle}</h2>
         </div>
         {/* Image Section with onClick to open the modal */}

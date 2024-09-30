@@ -13,13 +13,13 @@ const PlansCardProWhatsIncluded = () => {
         <li className="w-full">
           <PlansClickableBulletPoint
             text="Priority Support"
-            tooltip="Get priority access to support for all your needs."
+            tooltip="Get prioritized support with a dedicated team ready to assist you as soon as possible. Whether it's a simple question or a complex issue, help will always be on hand."
           />
         </li>
         <li className="w-full">
           <PlansClickableBulletPoint
             text="Auto CSV Data Export"
-            tooltip="Easily export your data in CSV format for analysis."
+            tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
           />
         </li>
       </ul>
@@ -31,35 +31,42 @@ const PlansCardProWhatsIncluded = () => {
         <li className="w-full">
           <PlansClickableBulletPoint
             text="eBay Account Connection"
-            tooltip="Seamlessly integrate your eBay account."
+            tooltip="Connect your eBay account to Flippify, allowing us to track your sales, automatically list purchases, and handle everything in between. Say goodbye to manual entries and enjoy seamless automation."
             comingSoon
           />
         </li>
         <li className="w-full">
           <PlansClickableBulletPoint
             text="Unlimited AI Automated Sales"
-            tooltip="Enjoy unlimited sales automation powered by AI."
+            tooltip="With unlimited automated sales, simply purchase a product our bots find, fill out some minor details, and let us do the rest. We'll automatically list your product on eBay, generate descriptions with AI, and handle the entire process. Manual entry is also available if preferred."
             comingSoon
           />
         </li>
         <li className="w-full">
           <PlansClickableBulletPoint
             text="Financial Hub Automation"
-            tooltip="Automate your financial hub for maximum efficiency."
+            tooltip="Now fully automated, your Financial Hub will automatically track and log your transactions and sales once your eBay account is connected. This provides detailed financial insights and reports, maximizing efficiency."
             comingSoon
           />
         </li>
         <li className="w-full">
           <PlansClickableBulletPoint
             text="In-Store Monitors (Tesco, Nike Outlet...)"
-            tooltip="Monitor in-store stock from major outlets like Tesco and Nike."
+            tooltip="Set your location and preferred radius, and our monitors will track stock in major retail stores like Tesco, Nike, and Costco. Get real-time updates on profitable deals available in physical stores near you."
             comingSoon
           />
         </li>
         <li className="w-full">
           <PlansClickableBulletPoint
             text="Reseller News"
-            tooltip="Stay updated with the latest reseller news."
+            tooltip="Stay ahead of the competition with regular reseller news updates. Using AI, we deliver timely insights on market trends, new product drops, and opportunities, so you're always in the know."
+            comingSoon
+          />
+        </li>
+        <li className="w-full">
+          <PlansClickableBulletPoint
+            text="&apos;The Retail Goldmine&apos; Course"
+            tooltip="Learn the art of reselling in-store deals and wholesale opportunities with our &apos;Retail Goldmine&apos; course. Master the use of our in-store monitors and sourcing from physical retail locations such as Tesco, Costco and Nike-Outlets."
             comingSoon
           />
         </li>

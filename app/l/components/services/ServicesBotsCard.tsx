@@ -29,7 +29,7 @@ const ProductsCard: React.FC<ProductsCardProps> = ({
   };
 
   return (
-    <div className="border card card-compact m-4 mx-10 p-2 bg-white w-80 sm:w-96 shadow-xl h-[38rem] mt-10">
+    <div className="border card card-compact m-4 mx-10 p-2 bg-white w-80 sm:w-96 shadow-xl h-[34rem] sm:h-[38rem] mt-10">
       <figure className="h-72 overflow-y-auto">
         <div className="relative w-full h-full">
           <Image
@@ -43,11 +43,11 @@ const ProductsCard: React.FC<ProductsCardProps> = ({
       </figure>
       <div className="card-body">
         <h2
-          className={`${lato.className} text-2xl flex justify-center text-houseBlue`}
+          className={`${lato.className} text-2xl pb-2 flex justify-center text-houseBlue`}
         >
           {title}
         </h2>
-        <hr className="w-full mb-[-10px]" />
+        <hr className="w-full sm:mb-[-10px]" />
         <p className="flex items-center font-medium text-center text-lightModeText">{description}</p>
         {disclaimer && (
           <div>

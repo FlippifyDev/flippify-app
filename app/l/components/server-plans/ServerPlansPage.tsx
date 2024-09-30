@@ -77,21 +77,21 @@ const ServerPlansPage = () => {
       {/* Server Plans */}
       <div className="mt-10 grid grid-cols-1 md:grid-cols-3 mx-6 lg:px-32 md:mx-2 lg:mx-16 gap-8 items-stretch">
         <ServerPlansCard
-          title="Retiring Sets Deals"
-          description="Scanning all corners of the internet for deals on soon-to-retire LEGO sets meaning big profits long-term."
-          prices={{ monthly: 119.99, yearly: 1199.99 }}
-          whatsIncludedComponent={<ServerPlansCardRetiringSetsWhatsIncluded />}
-          specialPlan={false}
-          priceRange={selectedPlan}
-          currency={currency}
-          conversionRates={conversionRates}
-        />
-        <ServerPlansCard
           title="Deal Watch UK"
           description="Discover Endless profitable deals scraped and filtered from site like 'hotukdeals' & 'rewarddeals'"
           prices={{ monthly: 69.99, yearly: 699.99 }}
           whatsIncludedComponent={<ServerPlansCardDealWatchWhatsIncluded />}
           specialPlan={true}
+          priceRange={selectedPlan}
+          currency={currency}
+          conversionRates={conversionRates}
+        />
+        <ServerPlansCard
+          title="Retiring Sets Deals"
+          description="Scanning all corners of the internet for deals on soon-to-retire LEGO sets meaning large profits long-term."
+          prices={{ monthly: 119.99, yearly: 1199.99 }}
+          whatsIncludedComponent={<ServerPlansCardRetiringSetsWhatsIncluded />}
+          specialPlan={false}
           priceRange={selectedPlan}
           currency={currency}
           conversionRates={conversionRates}

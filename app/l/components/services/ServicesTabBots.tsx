@@ -33,19 +33,19 @@ const ProductList: React.FC = () => {
           title="Deal Watch UK"
           description="Find high-demand products from top deal sites like hotukdeals & rewarddeals, filtered and compared to eBay prices for maximum profitability. Spot opportunities across a wide range of categories."
           disclaimer="Deals may expire or be inaccurate. Confirm prices and stock on deal sites and eBay before making a purchase."
-          image="https://i.imgur.com/pfQk3lq.png"
+          image="https://i.imgur.com/elI3IE7.png"
         />
         <ProductsCard
           title="Electronics"
           description="Discover fast-selling electronics with big discounts and high resale value. Our tool monitors thousands of items, finding consistent, profitable deals that sell quickly for easy returns."
           disclaimer="Prices and availability may change. Verify all details on the seller's site and eBay before purchasing."
-          image="https://i.imgur.com/CibOg9Y.png"
+          image="https://i.imgur.com/8JK1AMT.png"
         />
         <ProductsCard
           title="Retiring Sets"
           description="Track soon-to-retire LEGO sets across various sites and stay ahead of collectors. Secure valuable sets before they vanish, with potential long-term profit as prices rise post-retirement."
           disclaimer="Prices and availability may fluctuate. Always verify details on respective websites and eBay before purchasing."
-          image="https://i.imgur.com/DZfSIM6.png"
+          image="https://i.imgur.com/pgcpi13.png"
         />
       </div>
     </div>

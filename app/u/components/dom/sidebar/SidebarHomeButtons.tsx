@@ -22,8 +22,12 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ showAlert }) =>
         <SidebarButton text="Dashboard" redirect="dashboard" symbol={<FaHouse className="text-lg" />} />
         <SidebarButton text="Plans" redirect="plans" symbol={<FaSearch className="text-lg" />} />
         <SidebarButton text="Server Plans" redirect="server-plans" symbol={<MdGroups className="text-2xl" />} />
-
-        <DisabledSideBarButton text="Courses" redirect='courses' symbol={<FaBook className="text-lg" />} tooltip="Coming Soon"/>
+        <LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
+          <SidebarButton text="Courses" redirect='courses' symbol={<FaBook className="text-lg" />} />
+        </LayoutSubscriptionWrapper>
+        <LayoutSubscriptionWrapper requiredSubscriptions={["!admin"]}>
+          <DisabledSideBarButton text="Courses" redirect="courses" symbol={<FaBook className="text-lg" />} tooltip="Coming Soon"/>
+        </LayoutSubscriptionWrapper>
         <Link
             href="https://discord.gg/gNPYfe7YFm"
             className="hover:bg-gray-100 active:bg-gray-300 text-lightModeText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transition duration-200"

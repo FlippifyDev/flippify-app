@@ -8,16 +8,10 @@ import ServerPlansCardRetiringSetsWhatsIncluded from "./ServerPlansCardRetiringS
 import ServerPlansCardElectronicsWhatsIncluded from "./ServerPlansCardElectronicsWhatsIncluded";
 import { useSession } from "next-auth/react";
 import { database, ref, get } from "@/app/api/auth-firebase/firebaseConfig";
-import { fetchConversionRatesFromFirebase } from "@/app/api/conversion/currencyApi"; // Import from Firebase
+import { fetchConversionRatesFromFirebase } from "@/app/api/conversion/currencyApi";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
-
-const currencySymbols: Record<"GBP" | "USD" | "EUR", string> = {
-  GBP: "£",
-  USD: "$",
-  EUR: "€",
-};
 
 const ServerPlansPage = () => {
   const { data: session } = useSession();
@@ -28,9 +22,7 @@ const ServerPlansPage = () => {
     USD: 1.33,
     EUR: 1.16,
   });
-  const [currencySymbol, setCurrencySymbol] = useState("£");
 
-  // Fetch conversion rates from Firebase
   useEffect(() => {
     const fetchRates = async () => {
       const rates = await fetchConversionRatesFromFirebase();
@@ -38,28 +30,6 @@ const ServerPlansPage = () => {
     };
     fetchRates();
   }, []);
-
-  // Fetch user's preferred currency from Firebase
-  useEffect(() => {
-    const loadUserCurrency = async () => {
-      if (session && session.user) {
-        const userRef = ref(database, `users/${session.user.customerId}`);
-        try {
-          const snapshot = await get(userRef);
-          const userData = snapshot.val();
-          const userCurrency = (userData?.currency || "GBP") as keyof typeof currencySymbols;
-          setCurrency(userCurrency);
-          setCurrencySymbol(currencySymbols[userCurrency]);
-        } catch (error) {
-          console.error("Error loading user currency from Firebase:", error);
-        }
-      }
-    };
-
-    if (session && session.user && session.user.customerId) {
-      loadUserCurrency();
-    }
-  }, [session]);
 
   const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedPlan(event.target.checked ? 1 : 0);
@@ -110,8 +80,8 @@ const ServerPlansPage = () => {
       <div className="mt-10 grid grid-cols-1 md:grid-cols-3 mx-4 md:mx-2 lg:mx-16 gap-8 items-stretch">
         <ServerPlansCard
           title="Deal Watch UK"
-          description="Endless profitable deals scraped and filtered from site like 'hotukdeals' & 'rewarddeals'."
-          prices={[69.99, 699.90]}
+          description="Endless profitable deals scraped and filtered from sites like 'hotukdeals' & 'rewarddeals'."
+          prices={[69.99, 699.99]}
           priceIds={{
             monthly: "price_1PfJ9bJJRepiHZ8dk689bT3H",
             yearly: "price_1PfJ9bJJRepiHZ8dTK0EGZ8k",
@@ -126,7 +96,7 @@ const ServerPlansPage = () => {
         <ServerPlansCard
           title="Retiring Sets Deals"
           description="Scanning all corners of the internet for deals on soon-to-retire LEGO sets meaning big profits long-term."
-          prices={[119.99, 1199.90]}
+          prices={[119.99, 1199.99]}
           priceIds={{
             monthly: "price_1PfJ7pJJRepiHZ8d7gs78YEp",
             yearly: "price_1PfJ7pJJRepiHZ8dAkwkWqHy",
@@ -134,14 +104,14 @@ const ServerPlansPage = () => {
           whatsIncludedComponent={<ServerPlansCardRetiringSetsWhatsIncluded />}
           specialPlan={false}
           priceRange={selectedPlan}
-          planRole="retiring sets"
+          planRole="lego retirement"
           currency={currency}
           conversionRates={conversionRates}
         />
         <ServerPlansCard
           title="Electronics"
           description="Coming Soon - Searching for profitable deals on the best-selling electronics on the market."
-          prices={[169.99, 1699.90]}
+          prices={[169.99, 1699.99]}
           priceIds={{
             monthly: "price_1PfJ9bJJRepiHZ8dk689bT3H",
             yearly: "price_1PfJ9bJJRepiHZ8dTK0EGZ8k",
@@ -151,6 +121,7 @@ const ServerPlansPage = () => {
           priceRange={selectedPlan}
           planRole="electronics"
           currency={currency}
+          unavailable={true}
           conversionRates={conversionRates}
         />
       </div>

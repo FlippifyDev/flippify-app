@@ -135,10 +135,13 @@ const CoursesPageContent = () => {
         <h3 className="text-xl font-bold mb-4 text-center lg:text-left">Need 1-on-1 Support?</h3>
         <p className="text-gray-600 mb-4 text-center lg:text-left">Book a call with one of our experts for personalized assistance.</p>
         <div className="flex justify-center lg:justify-start">
-          <button className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">
-            Book a 1-on-1 Call
+          <button className="btn-disabled bg-gray-300 text-gray-400 opacity-90 py-2 px-4 rounded-lg transition duration-200">
+            Coming Soon
           </button>
         </div>
+
+        <h3 className="text-xl font-bold mb-4 mt-10 text-center lg:text-left">Upcoming Events</h3>
+        <div></div>
       </div>
     </div>
   );

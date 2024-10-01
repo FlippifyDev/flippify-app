@@ -50,7 +50,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ image, link, type, progress = 0
         <>
         <div className="ml-2 mt-2 font-semibold">{title}</div>
         <div className="ml-2 text-gray-600 text-sm">{tagline}</div>
-        <div className="flex pt-4 justify-between text-gray-700 items-center px-2">
+        <div className="flex pt-4 justify-between text-gray-700 items-center px-14">
           <span className="flex items-center">
             <HiOutlineFolder className="mr-1"/> 6
           </span>

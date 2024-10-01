@@ -22,12 +22,19 @@ const Sidebar = () => {
   };
 
   return (
-    <div>
+    <div className="relative">
       <Alert message="Membership Required." visible={alertVisible} onClose={hideAlert} />
+
+      {/* Sidebar drawer */}
       <div className="drawer drawer-mobile xl:drawer-open">
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-side shadow-lg">
-          <ul className="menu bg-white text-base-content min-h-[150vh] w-72 2xl:w-80 px-4 flex flex-col justify-between border-r border-gray-200">
+
+        {/* Wrapper for the white background behind the sidebar */}
+        <div className="absolute bg-white h-[250vh] w-full top-[-100vh] left-0 z-10"></div>
+
+        {/* Sidebar itself */}
+        <div className="drawer-side shadow-lg z-20">
+          <ul className="menu bg-white text-base-content min-h-full w-72 2xl:w-80 px-4 flex flex-col justify-between border-r border-gray-200">
             <div className="flex flex-col">
               {/* Home Section */}
               <section>
@@ -54,7 +61,8 @@ const Sidebar = () => {
               </section>
             </div>
 
-            <section className="mt-10 flex flex-col">
+            {/* Feedback and Sign-out Section */}
+            <section className="mt-5 md:mt-6">
               <Link
                 href="https://discord.com/channels/1236428617962229830/1236439119123447892"
                 className="hover:bg-gray-100 active:bg-gray-300 text-lightModeText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transition duration-200"

@@ -28,7 +28,7 @@ const SidebarSignOutButton = () => {
       onClick={handleSignOut}
     >
       <span className="col-span-2 text-lg"><FaSignOutAlt /></span>
-      <span className="col-span-10 text-base text-left">Sign Out</span>
+      <span className="col-span-10 text-base text-left ml-4">Sign Out</span>
     </button>
   );
 };

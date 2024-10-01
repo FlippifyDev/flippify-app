@@ -4,11 +4,11 @@ import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 
 const CoursesPageContent = () => {
   return (
-    <div className="w-full h-full mb-2 flex flex-col lg:flex-row lg:space-x-4 px-4 lg:px-6">
+    <div className="w-full h-full mb-2 flex flex-col lg:flex-row lg:space-x-2 px-2">
       {/* Left Section: Courses */}
-      <div className="flex-1 flex flex-col space-y-4">
+      <div className="flex-1 flex flex-col space-y-4 md:space-y-2">
         {/* Your Courses Section */}
-        <div className="container mx-auto pb-4 pt-2 border bg-white shadow-lg rounded-lg">
+        <div className="container mx-auto pb-6 md:pb-4 pt-2 mt-2 border bg-white shadow-lg rounded-lg">
           <h2 className="text-2xl font-bold pb-2 text-center lg:text-left">Your Courses</h2>
 
           <LayoutSubscriptionWrapper requiredSubscriptions={["member"]}>
@@ -54,7 +54,7 @@ const CoursesPageContent = () => {
 
         {/* Other Courses Section */}
         <div className="container mx-auto pb-4 pt-2 border bg-white shadow-lg rounded-lg">
-          <h2 className="text-2xl font-bold pb-1 text-center lg:text-left">Other Courses</h2>
+          <h2 className="text-2xl font-bold pb-2 text-center lg:text-left">Other Courses</h2>
 
           <LayoutSubscriptionWrapper requiredSubscriptions={["elite"]}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
@@ -92,7 +92,7 @@ const CoursesPageContent = () => {
           </LayoutSubscriptionWrapper>
 
           <LayoutSubscriptionWrapper requiredSubscriptions={["!member"]}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center">
               <CourseCard
                 image="https://i.imgur.com/ahFKtE7.png"
                 link="/flippify-fundamentals"
@@ -114,7 +114,7 @@ const CoursesPageContent = () => {
       </div>
 
       {/* Right Side Section: 1-on-1 Support */}
-      <div className="lg:w-1/4 flex-shrink-0 bg-white shadow-lg rounded-lg px-4 py-6 lg:ml-2 mt-4 lg:mt-0">
+      <div className="lg:w-1/4 flex-shrink-0 bg-white border shadow-lg rounded-lg px-4 py-6 lg:ml-4 mt-4 lg:mt-2  ">
         <h3 className="text-xl font-bold mb-4 text-center lg:text-left">Need 1-on-1 Support?</h3>
         <p className="text-gray-600 mb-4 text-center lg:text-left">Book a call with one of our experts for personalized assistance.</p>
         <div className="flex justify-center lg:justify-start">

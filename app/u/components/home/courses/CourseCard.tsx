@@ -2,20 +2,21 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation"; // For navigation
+import { useRouter } from "next/navigation";
+import { HiOutlineFolder, HiOutlineClock, HiOutlineVideoCamera   } from "react-icons/hi";
 
 interface CourseCardProps {
   image: string;
   link: string;
   type: "yourCourses" | "otherCourses";
-  progress?: number; // Optional progress for "yourCourses"
+  progress?: number;
 }
 
 const CourseCard: React.FC<CourseCardProps> = ({ image, link, type, progress = 0 }) => {
-  const router = useRouter(); // Used for handling navigation
+  const router = useRouter();
 
   const handleMoreInfoClick = () => {
-    router.push(link); // Redirect to the specified course link
+    router.push(link);
   };
 
   return (
@@ -24,6 +25,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ image, link, type, progress = 0
       whileHover={{ scale: 1.05 }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
+      // onClick={handleMoreInfoClick} - Make available when ready
     >
       {/* Image container with opacity hover effect */}
       <div className="relative w-full h-auto">
@@ -43,25 +45,35 @@ const CourseCard: React.FC<CourseCardProps> = ({ image, link, type, progress = 0
 
       {/* White Section below the image */}
       {type === "yourCourses" ? (
-        <div className="w-full bg-white p-4 flex flex-col items-center justify-center">
+        <>
+        <div className="ml-2 mt-2 font-semibold">Flippify Fundamentals</div>
+        <div className="ml-2 text-gray-600 text-sm">Your Launchpad to Reselling Success</div>
+        <div className="flex pt-4 justify-between text-gray-700 items-center px-2">
+          <span className="flex items-center">
+            <HiOutlineFolder className="mr-1"/> 6
+          </span>
+          <span className="flex items-center">
+            <HiOutlineVideoCamera className="mr-1"/> 22
+          </span>
+          <span className="flex items-center">
+            <HiOutlineClock className="mr-1"/> 70m
+          </span>
+        </div>
+        <div className="w-full bg-white px-2 pb-2 pt-2 flex flex-col items-center justify-center">
           {/* Progress Bar */}
-          <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+          <div className="w-full bg-gray-200 rounded-full h-2">
             <div
-              className="bg-blue-600 h-2 rounded-full"
+              className="bg-houseBlue h-2 rounded-full"
               style={{ width: `${progress}%` }}
             ></div>
           </div>
-          <p className="text-sm text-gray-700">Progress: {progress}%</p>
-          <p className="text-sm text-blue-600 cursor-pointer mt-2" onClick={handleMoreInfoClick}>
-            More info &gt;
+          <p className="text-sm text-gray-700 flex justify-center">
+            Progress: <span className="text-black ml-1">{progress}%</span>
           </p>
-        </div>
+          </div>
+        </>
       ) : (
-        <div className="w-full bg-white p-4 flex items-center justify-center">
-          <p className="text-sm text-blue-600 cursor-pointer" onClick={handleMoreInfoClick}>
-            More info &gt;
-          </p>
-        </div>
+        <></>
       )}
     </motion.div>
   );

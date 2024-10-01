@@ -6,13 +6,15 @@ import { useRouter } from "next/navigation";
 import { HiOutlineFolder, HiOutlineClock, HiOutlineVideoCamera   } from "react-icons/hi";
 
 interface CourseCardProps {
+  title: string;
+  tagline: string;
   image: string;
   link: string;
   type: "yourCourses" | "otherCourses";
   progress?: number;
 }
 
-const CourseCard: React.FC<CourseCardProps> = ({ image, link, type, progress = 0 }) => {
+const CourseCard: React.FC<CourseCardProps> = ({ image, link, type, progress = 0, title, tagline }) => {
   const router = useRouter();
 
   const handleMoreInfoClick = () => {
@@ -33,7 +35,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ image, link, type, progress = 0
           src={image}
           alt="Course"
           className="w-full rounded-t-2xl transition-opacity duration-300"
-          style={{ display: "block", maxWidth: "100%", opacity: 0.7 }} // Set initial lower opacity
+          style={{ display: "block", maxWidth: "100%", opacity: 0.5 }} // Set initial lower opacity
         />
         {/* Coming Soon Box */}
         <div className="absolute inset-0 flex items-center justify-center opacity-100">
@@ -46,8 +48,8 @@ const CourseCard: React.FC<CourseCardProps> = ({ image, link, type, progress = 0
       {/* White Section below the image */}
       {type === "yourCourses" ? (
         <>
-        <div className="ml-2 mt-2 font-semibold">Flippify Fundamentals</div>
-        <div className="ml-2 text-gray-600 text-sm">Your Launchpad to Reselling Success</div>
+        <div className="ml-2 mt-2 font-semibold">{title}</div>
+        <div className="ml-2 text-gray-600 text-sm">{tagline}</div>
         <div className="flex pt-4 justify-between text-gray-700 items-center px-2">
           <span className="flex items-center">
             <HiOutlineFolder className="mr-1"/> 6
@@ -73,7 +75,10 @@ const CourseCard: React.FC<CourseCardProps> = ({ image, link, type, progress = 0
           </div>
         </>
       ) : (
-        <></>
+        <>
+        <div className="ml-2 mt-2 font-semibold">{title}</div>
+        <div className="ml-2 mb-4 text-gray-600 text-sm">{tagline}</div>
+        </>
       )}
     </motion.div>
   );

@@ -2,6 +2,34 @@ import React from "react";
 import CourseCard from "./CourseCard";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 
+
+const coursesData = {
+  flippifyFundamentals: {
+    title: "Flippify Fundamentals",
+    tagline: "Your Launchpad to Reselling Success",
+    image: "https://i.imgur.com/ahFKtE7.png",
+    link: "/flippify-fundamentals",
+  },
+  theRetailGoldmine: {
+    title: "The Retail Goldmine",
+    tagline: "Unlocking Profits In-Store",
+    image: "https://i.imgur.com/z2ztJqx.png",
+    link: "/the-retail-goldmine",
+  },
+  theArtOfReselling: {
+    title: "The Art of Reselling",
+    tagline: "Mastering Your Online Reselling Empire",
+    image: "https://i.imgur.com/bgsfbi2.png",
+    link: "/the-art-of-reselling",
+  },
+  comingSoon: {
+    title: "Coming Soon",
+    tagline: "More Courses Coming Soon..",
+    image: "https://i.imgur.com/d00eUMe.png",
+    link: "/coming-soon",
+  },
+};
+
 const CoursesPageContent = () => {
   return (
     <div className="w-full h-full mb-2 flex flex-col lg:flex-row lg:space-x-2 px-2">
@@ -14,8 +42,7 @@ const CoursesPageContent = () => {
           <LayoutSubscriptionWrapper requiredSubscriptions={["member"]}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
               <CourseCard
-                image="https://i.imgur.com/ahFKtE7.png"
-                link="/flippify-fundamentals"
+                {...coursesData.flippifyFundamentals} 
                 type="yourCourses"
               />
             </div>
@@ -24,8 +51,7 @@ const CoursesPageContent = () => {
           <LayoutSubscriptionWrapper anySubscriptions={["pro", "elite"]}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
               <CourseCard
-                image="https://i.imgur.com/z2ztJqx.png"
-                link="/the-retail-goldmine"
+                {...coursesData.theRetailGoldmine} 
                 type="yourCourses"
               />
             </div>
@@ -34,8 +60,7 @@ const CoursesPageContent = () => {
           <LayoutSubscriptionWrapper requiredSubscriptions={["elite"]}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
               <CourseCard
-                image="https://i.imgur.com/bgsfbi2.png"
-                link="/the-art-of-reselling"
+                {...coursesData.theArtOfReselling} 
                 type="yourCourses"
               />
             </div>
@@ -44,8 +69,7 @@ const CoursesPageContent = () => {
           <LayoutSubscriptionWrapper requiredSubscriptions={["!member"]}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
               <CourseCard
-                image="https://i.imgur.com/d00eUMe.png"
-                link="/coming-soon"
+                {...coursesData.comingSoon} 
                 type="yourCourses"
               />
             </div>
@@ -59,8 +83,7 @@ const CoursesPageContent = () => {
           <LayoutSubscriptionWrapper requiredSubscriptions={["elite"]}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
               <CourseCard
-                image="https://i.imgur.com/d00eUMe.png"
-                link="/coming-soon"
+                {...coursesData.comingSoon} 
                 type="otherCourses"
               />
             </div>
@@ -69,8 +92,7 @@ const CoursesPageContent = () => {
           <LayoutSubscriptionWrapper requiredSubscriptions={["pro"]}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
               <CourseCard
-                image="https://i.imgur.com/bgsfbi2.png"
-                link="/the-art-of-reselling"
+                {...coursesData.theArtOfReselling} 
                 type="otherCourses"
               />
             </div>
@@ -79,13 +101,11 @@ const CoursesPageContent = () => {
           <LayoutSubscriptionWrapper requiredSubscriptions={["standard"]}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
               <CourseCard
-                image="https://i.imgur.com/z2ztJqx.png"
-                link="/the-retail-goldmine"
+                {...coursesData.theRetailGoldmine} 
                 type="otherCourses"
               />
               <CourseCard
-                image="https://i.imgur.com/bgsfbi2.png"
-                link="/the-art-of-reselling"
+                {...coursesData.theArtOfReselling} 
                 type="otherCourses"
               />
             </div>
@@ -94,18 +114,15 @@ const CoursesPageContent = () => {
           <LayoutSubscriptionWrapper requiredSubscriptions={["!member"]}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center">
               <CourseCard
-                image="https://i.imgur.com/ahFKtE7.png"
-                link="/flippify-fundamentals"
+                {...coursesData.flippifyFundamentals} 
                 type="otherCourses"
               />
               <CourseCard
-                image="https://i.imgur.com/z2ztJqx.png"
-                link="/the-retail-goldmine"
+                {...coursesData.theRetailGoldmine} 
                 type="otherCourses"
               />
               <CourseCard
-                image="https://i.imgur.com/bgsfbi2.png"
-                link="/the-art-of-reselling"
+                {...coursesData.theArtOfReselling} 
                 type="otherCourses"
               />
             </div>

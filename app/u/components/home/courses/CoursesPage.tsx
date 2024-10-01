@@ -1,7 +1,9 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import CourseCard from "./CourseCard";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
-
+import { database, ref, onValue } from "@/app/api/auth-firebase/firebaseConfig";
 
 const coursesData = {
   flippifyFundamentals: {
@@ -31,109 +33,92 @@ const coursesData = {
 };
 
 const CoursesPageContent = () => {
+  const [events, setEvents] = useState<any[]>([]);
+
+  useEffect(() => {
+    const eventsRef = ref(database, "events");
+    onValue(eventsRef, (snapshot) => {
+      const eventList: any[] = [];
+      snapshot.forEach((childSnapshot) => {
+        const event = childSnapshot.val();
+        eventList.push(event);
+      });
+      setEvents(eventList);
+    });
+  }, []);
+
   return (
     <div className="w-full h-full mb-2 flex flex-col lg:flex-row lg:space-x-2 px-2">
       {/* Left Section: Courses */}
       <div className="flex-1 flex flex-col space-y-4 md:space-y-2">
         {/* Your Courses Section */}
-        <div className="container mx-auto pb-6 md:pb-4 pt-2 mt-2 border bg-white shadow-lg rounded-lg">
-          <h2 className="text-2xl font-bold pb-2 text-center lg:text-left">Your Courses</h2>
+        <h2 className="text-2xl font-bold pt-2 text-center lg:text-left">Courses</h2>
+        <div className="container mx-auto pb-6 md:pb-4 pt-4 mt-2 border bg-white shadow-lg rounded-lg">
 
           <LayoutSubscriptionWrapper requiredSubscriptions={["member"]}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
-              <CourseCard
-                {...coursesData.flippifyFundamentals} 
-                type="yourCourses"
-              />
+              <CourseCard {...coursesData.flippifyFundamentals} type="yourCourses" />
             </div>
           </LayoutSubscriptionWrapper>
 
           <LayoutSubscriptionWrapper anySubscriptions={["pro", "elite"]}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
-              <CourseCard
-                {...coursesData.theRetailGoldmine} 
-                type="yourCourses"
-              />
+              <CourseCard {...coursesData.theRetailGoldmine} type="yourCourses" />
             </div>
           </LayoutSubscriptionWrapper>
 
           <LayoutSubscriptionWrapper requiredSubscriptions={["elite"]}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
-              <CourseCard
-                {...coursesData.theArtOfReselling} 
-                type="yourCourses"
-              />
+              <CourseCard {...coursesData.theArtOfReselling} type="yourCourses" />
             </div>
           </LayoutSubscriptionWrapper>
 
           <LayoutSubscriptionWrapper requiredSubscriptions={["!member"]}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
-              <CourseCard
-                {...coursesData.comingSoon} 
-                type="yourCourses"
-              />
+              <CourseCard {...coursesData.comingSoon} type="yourCourses" />
             </div>
           </LayoutSubscriptionWrapper>
         </div>
 
         {/* Other Courses Section */}
-        <div className="container mx-auto pb-4 pt-2 border bg-white shadow-lg rounded-lg">
-          <h2 className="text-2xl font-bold pb-2 text-center lg:text-left">Other Courses</h2>
+        <h2 className="text-2xl font-bold pt-2 text-center lg:text-left">Other Courses</h2>
+        <div className="container mx-auto pb-4 pt-4 border bg-white shadow-lg rounded-lg">
 
           <LayoutSubscriptionWrapper requiredSubscriptions={["elite"]}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
-              <CourseCard
-                {...coursesData.comingSoon} 
-                type="otherCourses"
-              />
+              <CourseCard {...coursesData.comingSoon} type="otherCourses" />
             </div>
           </LayoutSubscriptionWrapper>
 
           <LayoutSubscriptionWrapper requiredSubscriptions={["pro"]}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
-              <CourseCard
-                {...coursesData.theArtOfReselling} 
-                type="otherCourses"
-              />
+              <CourseCard {...coursesData.theArtOfReselling} type="otherCourses" />
             </div>
           </LayoutSubscriptionWrapper>
 
           <LayoutSubscriptionWrapper requiredSubscriptions={["standard"]}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
-              <CourseCard
-                {...coursesData.theRetailGoldmine} 
-                type="otherCourses"
-              />
-              <CourseCard
-                {...coursesData.theArtOfReselling} 
-                type="otherCourses"
-              />
+              <CourseCard {...coursesData.theRetailGoldmine} type="otherCourses" />
+              <CourseCard {...coursesData.theArtOfReselling} type="otherCourses" />
             </div>
           </LayoutSubscriptionWrapper>
 
           <LayoutSubscriptionWrapper requiredSubscriptions={["!member"]}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center">
-              <CourseCard
-                {...coursesData.flippifyFundamentals} 
-                type="otherCourses"
-              />
-              <CourseCard
-                {...coursesData.theRetailGoldmine} 
-                type="otherCourses"
-              />
-              <CourseCard
-                {...coursesData.theArtOfReselling} 
-                type="otherCourses"
-              />
+              <CourseCard {...coursesData.flippifyFundamentals} type="otherCourses" />
+              <CourseCard {...coursesData.theRetailGoldmine} type="otherCourses" />
+              <CourseCard {...coursesData.theArtOfReselling} type="otherCourses" />
             </div>
           </LayoutSubscriptionWrapper>
         </div>
       </div>
 
-      {/* Right Side Section: 1-on-1 Support */}
-      <div className="lg:w-1/4 flex-shrink-0 bg-white border shadow-lg rounded-lg px-4 py-6 lg:ml-4 mt-4 lg:mt-2  ">
+      {/* Right Side Section: 1-on-1 Support and Upcoming Events */}
+      <div className="lg:w-1/4 flex-shrink-0 bg-white border shadow-lg rounded-lg px-4 py-6 lg:ml-4 mt-4 lg:mt-2">
         <h3 className="text-xl font-bold mb-4 text-center lg:text-left">Need 1-on-1 Support?</h3>
-        <p className="text-gray-600 mb-4 text-center lg:text-left">Book a call with one of our experts for personalized assistance.</p>
+        <p className="text-gray-600 mb-4 text-center lg:text-left">
+          Book a call with one of our experts for personalized assistance.
+        </p>
         <div className="flex justify-center lg:justify-start">
           <button className="btn-disabled bg-gray-300 text-gray-400 opacity-90 py-2 px-4 rounded-lg transition duration-200">
             Coming Soon
@@ -141,7 +126,22 @@ const CoursesPageContent = () => {
         </div>
 
         <h3 className="text-xl font-bold mb-4 mt-10 text-center lg:text-left">Upcoming Events</h3>
-        <div></div>
+        <div className="bg-gray-200 p-4 rounded-lg overflow-y-auto">
+          {events.length > 0 ? (
+            events.map((event, index) => (
+              <div key={index} className="mb-4 p-4 bg-white rounded-lg shadow-md">
+                <h4 className="text-lg font-semibold">{event.title}</h4>
+                <p>{event.description}</p>
+                <p>Date: {new Date(event.date).toLocaleString()}</p>
+                <a href={event.link} target="_blank" rel="noopener noreferrer" className="text-blue-600">
+                  Join on Discord
+                </a>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-600">No Upcoming Events.</p>
+          )}
+        </div>
       </div>
     </div>
   );

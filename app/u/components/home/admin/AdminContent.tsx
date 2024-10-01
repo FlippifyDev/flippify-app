@@ -4,7 +4,7 @@ import { IUser, ISubscription } from "app/api/auth-mongodb/userModel";
 import PlansCardAdmin from "@/app/u/components/home/admin/AdminUserCards";
 import fetchProducts from "@/app/api/auth-mongodb/fetchProducts";
 import LayoutProductsSkeleton from "../../layout/LayoutProductsSkeleton";
-
+import AdminEventManagement from "./AdminEventManagement"; // New Event Management component
 import { IoSearch } from "react-icons/io5";
 import { useEffect, useState } from "react";
 
@@ -13,6 +13,7 @@ const AdminContent = () => {
   const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
   const [subscriptions, setSubscriptions] = useState<ISubscription[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [activeTab, setActiveTab] = useState("userDatabase");
 
   useEffect(() => {
     async function fetchUsers() {
@@ -52,34 +53,49 @@ const AdminContent = () => {
 
   return (
     <div className="w-full p-5">
-      <h1 className="font-semibold text-lg">User Database</h1>
-      <div>
-        <div className="flex justify-center mb-4">
-          <label className="input input-bordered flex items-center gap-2 w-80 text-xl">
-            <input
-              type="text"
-              placeholder="Search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="grow border-0 input input-bordered"
-            />
-            <IoSearch />
-          </label>
-        </div>
-        {filteredUsers.length > 0 ? (
-          <div className="flex flex-wrap gap-20 justify-center">
-            {filteredUsers.map((user) => (
-              <PlansCardAdmin
-                key={user._id.toString()}
-                user={user}
-                unique_subscriptions={subscriptions}
-              />
-            ))}
-          </div>
-        ) : (
-          <LayoutProductsSkeleton />
-        )}
+      {/* Tab Navigation */}
+      <div className="flex space-x-4 mb-5">
+        <button
+          className={`font-semibold ${activeTab === "userDatabase" ? "text-blue-600" : "text-gray-600"}`}
+          onClick={() => setActiveTab("userDatabase")}
+        >
+          User Database
+        </button>
+        <button
+          className={`font-semibold ${activeTab === "eventManagement" ? "text-blue-600" : "text-gray-600"}`}
+          onClick={() => setActiveTab("eventManagement")}
+        >
+          Event Management
+        </button>
       </div>
+
+      {activeTab === "userDatabase" && (
+          <div>
+            <div className="flex justify-center mb-4">
+              <label className="input input-bordered flex items-center gap-2 w-80 text-xl">
+                <input
+                  type="text"
+                  placeholder="Search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="grow border-0 input input-bordered"
+                />
+                <IoSearch />
+              </label>
+            </div>
+            {filteredUsers.length > 0 ? (
+              <div className="flex flex-wrap gap-20 justify-center">
+                {filteredUsers.map((user) => (
+                  <PlansCardAdmin key={user._id.toString()} user={user} unique_subscriptions={subscriptions} />
+                ))}
+              </div>
+            ) : (
+              <LayoutProductsSkeleton />
+            )}
+          </div>
+      )}
+
+      {activeTab === "eventManagement" && <AdminEventManagement />}
     </div>
   );
 };

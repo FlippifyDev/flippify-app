@@ -75,10 +75,10 @@ const CourseCard: React.FC<CourseCardProps> = ({ image, link, type, progress = 0
           </div>
         </>
       ) : (
-        <>
+        <div className="p-2">
         <div className="ml-2 mt-2 font-semibold">{title}</div>
         <div className="ml-2 mb-4 text-gray-600 text-sm">{tagline}</div>
-        </>
+        </div>
       )}
     </motion.div>
   );

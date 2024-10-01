@@ -35,7 +35,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ image, link, type, progress = 0
           src={image}
           alt="Course"
           className="w-full rounded-t-2xl transition-opacity duration-300"
-          style={{ display: "block", maxWidth: "100%", opacity: 0.5 }} // Set initial lower opacity
+          style={{ display: "block", maxWidth: "100%", opacity: 0.8 }} // Set initial lower opacity
         />
         {/* Coming Soon Box */}
         <div className="absolute inset-0 flex items-center justify-center opacity-100">

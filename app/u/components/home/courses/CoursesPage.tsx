@@ -27,7 +27,7 @@ const coursesData = {
   comingSoon: {
     title: "Coming Soon",
     tagline: "More Courses Coming Soon..",
-    image: "https://i.imgur.com/d00eUMe.png",
+    image: "https://i.imgur.com/HRI81ZJ.png",
     link: "/coming-soon",
   },
 };
@@ -52,54 +52,32 @@ const CoursesPageContent = () => {
       {/* Left Section: Courses */}
       <div className="flex-1 flex flex-col space-y-4 md:space-y-2">
         {/* Your Courses Section */}
-        <h2 className="text-2xl font-bold pt-2 text-center lg:text-left">Courses</h2>
-        <div className="container mx-auto pb-6 md:pb-4 pt-4 mt-2 border bg-white shadow-lg rounded-lg">
+        <div className="container mx-auto px-6 pb-6 md:pb-6 pt-4 mt-2 border bg-white shadow-lg rounded-lg">
+          <h2 className="text-2xl font-bold pb-4 text-center lg:text-left">Courses</h2>
 
-          <LayoutSubscriptionWrapper requiredSubscriptions={["member"]}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
-              <CourseCard {...coursesData.flippifyFundamentals} type="yourCourses" />
-            </div>
-          </LayoutSubscriptionWrapper>
-
-          <LayoutSubscriptionWrapper anySubscriptions={["pro", "elite"]}>
+          <LayoutSubscriptionWrapper requiredSubscriptions={["elite"]}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
               <CourseCard {...coursesData.theRetailGoldmine} type="yourCourses" />
-            </div>
-          </LayoutSubscriptionWrapper>
-
-          <LayoutSubscriptionWrapper requiredSubscriptions={["elite"]}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
               <CourseCard {...coursesData.theArtOfReselling} type="yourCourses" />
-            </div>
-          </LayoutSubscriptionWrapper>
-
-          <LayoutSubscriptionWrapper requiredSubscriptions={["!member"]}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
-              <CourseCard {...coursesData.comingSoon} type="yourCourses" />
-            </div>
-          </LayoutSubscriptionWrapper>
-        </div>
-
-        {/* Other Courses Section */}
-        <h2 className="text-2xl font-bold pt-2 text-center lg:text-left">Other Courses</h2>
-        <div className="container mx-auto pb-4 pt-4 border bg-white shadow-lg rounded-lg">
-
-          <LayoutSubscriptionWrapper requiredSubscriptions={["elite"]}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
               <CourseCard {...coursesData.comingSoon} type="otherCourses" />
             </div>
           </LayoutSubscriptionWrapper>
 
           <LayoutSubscriptionWrapper requiredSubscriptions={["pro"]}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
+              <CourseCard {...coursesData.flippifyFundamentals} type="yourCourses" />
+              <CourseCard {...coursesData.theRetailGoldmine} type="yourCourses" />
               <CourseCard {...coursesData.theArtOfReselling} type="otherCourses" />
+              <CourseCard {...coursesData.comingSoon} type="otherCourses" />
             </div>
           </LayoutSubscriptionWrapper>
 
           <LayoutSubscriptionWrapper requiredSubscriptions={["standard"]}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
+              <CourseCard {...coursesData.flippifyFundamentals} type="yourCourses" />
               <CourseCard {...coursesData.theRetailGoldmine} type="otherCourses" />
               <CourseCard {...coursesData.theArtOfReselling} type="otherCourses" />
+              <CourseCard {...coursesData.comingSoon} type="otherCourses" />
             </div>
           </LayoutSubscriptionWrapper>
 
@@ -108,6 +86,7 @@ const CoursesPageContent = () => {
               <CourseCard {...coursesData.flippifyFundamentals} type="otherCourses" />
               <CourseCard {...coursesData.theRetailGoldmine} type="otherCourses" />
               <CourseCard {...coursesData.theArtOfReselling} type="otherCourses" />
+              <CourseCard {...coursesData.comingSoon} type="otherCourses" />
             </div>
           </LayoutSubscriptionWrapper>
         </div>

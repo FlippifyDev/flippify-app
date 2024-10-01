@@ -28,7 +28,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({ showAlert }) =>
       <LayoutSubscriptionWrapper anySubscriptions={['server', 'admin']}>
           <SidebarButton
               text="Server Management"
-              redirect="manage-servers#monitors"
+              redirect="manage-servers"
               symbol={<FaServer className="text-base" />}
           />
       </LayoutSubscriptionWrapper>
@@ -37,7 +37,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({ showAlert }) =>
       <LayoutSubscriptionWrapper requiredSubscriptions={['!server', '!admin']}>
           <DisabledSideBarButton
               text="Server Management"
-              redirect="manage-servers#monitors"
+              redirect="manage-servers"
               symbol={<FaServer className="text-base" />}
               showAlert={showAlert}
           />

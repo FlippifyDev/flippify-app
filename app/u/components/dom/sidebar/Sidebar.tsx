@@ -26,7 +26,7 @@ const Sidebar = () => {
       <Alert message="Membership Required." visible={alertVisible} onClose={hideAlert} />
       <div className="drawer drawer-mobile xl:drawer-open">
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-side shadow-lg">
+        <div className="drawer-side shadow-lg max-h-screen overflow-y-auto touch-none">
           <ul className="menu bg-white text-base-content min-h-full w-72 2xl:w-80 px-4 flex flex-col justify-between border-r border-gray-200">
             <div className="flex flex-col">
               {/* Home Section */}

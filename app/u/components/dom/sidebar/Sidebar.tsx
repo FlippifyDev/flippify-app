@@ -4,16 +4,15 @@ import SidebarHomeButtons from './SidebarHomeButtons';
 import SidebarToolButtons from './SidebarToolButtons';
 import SidebarButton from './SidebarButton';
 import Alert from '@/app/components/Alert';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { BsClipboard2Fill } from 'react-icons/bs';
 import { MdFeedback } from "react-icons/md";
-
-// Import custom CSS for scrollbar hiding
-import '@/styles/user-sidebar.css';
+import '@/styles/user-sidebar.css';  // Importing the custom CSS
 
 const Sidebar = () => {
   const [alertVisible, setAlertVisible] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const showAlert = () => {
     setAlertVisible(true);
@@ -23,15 +22,32 @@ const Sidebar = () => {
     setAlertVisible(false);
   };
 
+  // Disable background scrolling when sidebar is open
+  useEffect(() => {
+    if (drawerOpen) {
+      document.body.classList.add('body-no-scroll');  // Prevent scrolling of main page
+    } else {
+      document.body.classList.remove('body-no-scroll');  // Allow scrolling when sidebar is closed
+    }
+    return () => {
+      document.body.classList.remove('body-no-scroll');  // Cleanup to remove scroll lock when unmounted
+    };
+  }, [drawerOpen]);
+
   return (
     <div className="relative">
       <Alert message="Membership Required." visible={alertVisible} onClose={hideAlert} />
 
       {/* Sidebar drawer */}
       <div className="drawer drawer-mobile xl:drawer-open">
-        <input id="my-drawer" type="checkbox" className="drawer-toggle" />
+        <input
+          id="my-drawer"
+          type="checkbox"
+          className="drawer-toggle"
+          onChange={(e) => setDrawerOpen(e.target.checked)} // Control drawer open state
+        />
 
-        {/* Sidebar with scrollable content */}
+        {/* Sidebar itself */}
         <div className="drawer-side shadow-lg z-20">
           <div className="h-full overflow-y-scroll scrollbar-hide"> {/* Using the scrollbar-hide class */}
             <ul className="menu bg-white text-base-content min-h-full w-72 2xl:w-80 px-4 flex flex-col justify-between border-r border-gray-200">

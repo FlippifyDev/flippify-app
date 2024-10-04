@@ -8,7 +8,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { BsClipboard2Fill } from 'react-icons/bs';
 import { MdFeedback } from "react-icons/md";
-import '@/styles/user-sidebar.css';  // Importing the custom CSS
+import '@/styles/user-sidebar.css';
 
 const Sidebar = () => {
   const [alertVisible, setAlertVisible] = useState(false);
@@ -22,7 +22,7 @@ const Sidebar = () => {
     setAlertVisible(false);
   };
 
-  // Disable background scrolling when sidebar is open
+  // Disable background scrolling when the sidebar is open
   useEffect(() => {
     if (drawerOpen) {
       document.body.classList.add('body-no-scroll');  // Prevent scrolling of main page
@@ -47,9 +47,12 @@ const Sidebar = () => {
           onChange={(e) => setDrawerOpen(e.target.checked)} // Control drawer open state
         />
 
-        {/* Sidebar itself */}
+        {/* Sidebar background (fixed) */}
+        <div className="sidebar-fixed-background"></div>
+
+        {/* Sidebar content (scrollable) */}
         <div className="drawer-side shadow-lg z-20">
-          <div className="h-full overflow-y-scroll scrollbar-hide"> {/* Using the scrollbar-hide class */}
+          <div className="sidebar-scrollable-content scrollbar-hide h-full">
             <ul className="menu bg-white text-base-content min-h-full w-72 2xl:w-80 px-4 flex flex-col justify-between border-r border-gray-200">
               <div className="flex flex-col">
                 {/* Home Section */}

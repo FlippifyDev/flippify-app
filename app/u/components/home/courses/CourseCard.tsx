@@ -23,8 +23,8 @@ const CourseCard: React.FC<CourseCardProps> = ({ image, link, type, progress = 0
 
   return (
     <motion.div
-      className="group relative w-full max-w-md rounded-2xl overflow-hidden bg-white shadow-lg cursor-pointer transition-transform duration-500 hover:scale-105"
-      whileHover={{ scale: 1.05 }}
+      className="group relative w-full max-w-md rounded-2xl overflow-hidden bg-white shadow-lg cursor-pointer transition-transform duration-300 hover:scale-101"
+      whileHover={{ scale: 1.01 }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       // onClick={handleMoreInfoClick} - Make available when ready

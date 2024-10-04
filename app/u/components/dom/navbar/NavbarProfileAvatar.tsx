@@ -1,16 +1,17 @@
-"use client";
-
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react'; // Ensure useState is imported
 import Image from "next/image";
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import createBillingPortalUrl from '@/app/api/stripe-handlers/create-billing-portal';
 import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
 
-const NavbarProfileAvatar = () => {
+interface NavbarProfileAvatarProps {
+  isDropdownOpen: boolean;
+}
+
+const NavbarProfileAvatar: React.FC<NavbarProfileAvatarProps> = ({ isDropdownOpen }) => {
   const { data: session } = useSession();
   const [billingUrl, setBillingUrl] = useState<string | null>(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Toggle state for dropdown
   const router = useRouter();
   const customerIdRef = useRef<string | null>(null);
   const dropdownRef = useRef<HTMLUListElement | null>(null);
@@ -89,17 +90,12 @@ const NavbarProfileAvatar = () => {
     }
   };
 
-  const handleDropdownToggle = () => {
-    setIsDropdownOpen(!isDropdownOpen); // Toggle dropdown visibility
-  };
-
   return (
     <div className="dropdown dropdown-end">
       <div
         tabIndex={0}
         role="button"
         className="btn btn-ghost btn-circle avatar"
-        onClick={handleDropdownToggle} // Toggle dropdown on click
       >
         <div className="w-10 rounded-full">
           <Image

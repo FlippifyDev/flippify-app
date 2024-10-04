@@ -22,7 +22,7 @@ const Sidebar = () => {
     setAlertVisible(false);
   };
 
-  // Disable background scrolling when the sidebar is open
+  // Disable background scrolling when sidebar is open
   useEffect(() => {
     if (drawerOpen) {
       document.body.classList.add('body-no-scroll');  // Prevent scrolling of main page
@@ -47,12 +47,9 @@ const Sidebar = () => {
           onChange={(e) => setDrawerOpen(e.target.checked)} // Control drawer open state
         />
 
-        {/* Sidebar background (fixed) */}
-        <div className="sidebar-fixed-background"></div>
-
-        {/* Sidebar content (scrollable) */}
+        {/* Sidebar itself */}
         <div className="drawer-side shadow-lg z-20">
-          <div className="sidebar-scrollable-content scrollbar-hide h-full">
+          <div className="h-full overflow-y-scroll scrollbar-hide"> {/* Using the scrollbar-hide class */}
             <ul className="menu bg-white text-base-content min-h-full w-72 2xl:w-80 px-4 flex flex-col justify-between border-r border-gray-200">
               <div className="flex flex-col">
                 {/* Home Section */}

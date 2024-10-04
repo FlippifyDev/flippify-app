@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { ref, get } from 'firebase/database';
+import { ref, get, set } from 'firebase/database';
 import { updateUserInFirebase } from '@/app/api/auth-firebase/firebaseConfig';
 import { database } from '@/app/api/auth-firebase/firebaseConfig';
 
@@ -16,6 +16,7 @@ const ProfileSettings = () => {
   const [originalCurrency, setOriginalCurrency] = useState<CurrencyType>('GBP');
   const [feedback, setFeedback] = useState('');
   const [isChanged, setIsChanged] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true); // Notification setting state
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -38,6 +39,13 @@ const ProfileSettings = () => {
           const userCurrency = userData?.currency || session.user.currency || 'GBP';
           setCurrency(userCurrency);
           setOriginalCurrency(userCurrency);
+
+          // Load notification preference
+          if (typeof userData?.notificationsEnabled === 'boolean') {
+            setNotificationsEnabled(userData.notificationsEnabled); // Load saved preference
+          } else {
+            setNotificationsEnabled(true); // Default to true if not set
+          }
         } catch (error) {
           console.error('Error loading user data from Firebase:', error);
           setEmail(session.user.email || '');
@@ -53,13 +61,18 @@ const ProfileSettings = () => {
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-    setIsChanged(e.target.value !== originalEmail || currency !== originalCurrency);
+    setIsChanged(e.target.value !== originalEmail || currency !== originalCurrency || notificationsEnabled !== true);
   };
 
   const handleCurrencyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newCurrency = e.target.value as CurrencyType;
     setCurrency(newCurrency);
-    setIsChanged(newCurrency !== originalCurrency || email !== originalEmail);
+    setIsChanged(newCurrency !== originalCurrency || email !== originalEmail || notificationsEnabled !== true);
+  };
+
+  const handleToggleNotifications = () => {
+    setNotificationsEnabled(!notificationsEnabled);
+    setIsChanged(true); // Mark as changed when toggling notifications
   };
 
   const handleSaveChanges = async () => {
@@ -75,8 +88,10 @@ const ProfileSettings = () => {
     }
 
     try {
-      // Only update the preferred email and currency in Firebase
+      // Update preferred email, currency, and notification settings in Firebase
       await updateUserInFirebase(customerId, email, currency, 'preferredEmail');
+      await set(ref(database, `users/${customerId}/notificationsEnabled`), notificationsEnabled); // Save notification setting
+
       setFeedback('Settings updated successfully.');
       setOriginalEmail(email);
       setOriginalCurrency(currency);
@@ -108,6 +123,7 @@ const ProfileSettings = () => {
           className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
         />
       </div>
+
       <div className="mb-4">
         <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2" htmlFor="currency">
           Preferred Currency
@@ -123,6 +139,21 @@ const ProfileSettings = () => {
           <option value="EUR">EUR (€)</option>
         </select>
       </div>
+
+      {/* Notification Setting */}
+      <div className="mb-4 flex items-center">
+        <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2" htmlFor="notificationsEnabled">
+          Enable Notifications
+        </label>
+        <input
+          type="checkbox"
+          id="notificationsEnabled"
+          className="ml-4 toggle toggle-primary"
+          checked={notificationsEnabled}
+          onChange={handleToggleNotifications}
+        />
+      </div>
+
       {feedback && (
         <p className="mb-4 text-center text-sm font-semibold text-gray-900 dark:text-white">
           {feedback}

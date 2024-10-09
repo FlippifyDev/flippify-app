@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from "react";
 import NavbarNotificationBell from "./NavbarNotificationBell";
 import NavbarProfileAvatar from "./NavbarProfileAvatar";
+import { useSession } from 'next-auth/react';  // Using NextAuth
 
 const NavbarProfile = () => {
+  const { data: session } = useSession();  // Assuming session contains customerId (from Stripe)
+  
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState<boolean>(false);
   const [isNotificationDropdownOpen, setIsNotificationDropdownOpen] = useState<boolean>(false);
+
+  // Ensure customerId is available from the session
+  const userData = {
+    customerId: session?.user?.customerId || "",  // Only using customerId, no uid
+  };
 
   // Close both dropdowns when clicking outside
   useEffect(() => {
@@ -46,6 +54,7 @@ const NavbarProfile = () => {
           notificationsEnabled={notificationsEnabled}
           isDropdownOpen={isNotificationDropdownOpen}
           setIsDropdownOpen={handleNotificationClick}
+          userData={userData}  // Only passing customerId
         />
       </div>
 

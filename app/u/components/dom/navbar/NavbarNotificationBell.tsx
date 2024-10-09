@@ -1,26 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { BsBell, BsBellFill, BsBellSlash, BsBellSlashFill } from 'react-icons/bs';
 import { database, ref, onValue, update } from '@/app/api/auth-firebase/firebaseConfig';
-import { useSession } from 'next-auth/react';  // Assuming next-auth is being used
 
 interface NavbarNotificationBellProps {
   notificationsEnabled: boolean;
   isDropdownOpen: boolean;
   setIsDropdownOpen: () => void;
+  userData: { customerId: string }; // Assuming you pass customerId as a prop from the parent component
 }
+
+const sanitizePath = (path: string): string => {
+  return path.replace(/[.#$[\]]/g, '_');  // Sanitize customerId for Firebase paths
+};
 
 const NavbarNotificationBell: React.FC<NavbarNotificationBellProps> = ({ 
   notificationsEnabled, 
   isDropdownOpen, 
-  setIsDropdownOpen 
+  setIsDropdownOpen, 
+  userData 
 }) => {
-  const { data: session } = useSession();  // Retrieve the current session/user
   const [hasNewNotifications, setHasNewNotifications] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
 
   useEffect(() => {
-    if (!session?.user) return;  // If no user, do nothing
+    if (!userData?.customerId) return;  // Ensure customerId is available
 
+    const sanitizedCustomerId = sanitizePath(userData.customerId);  // Sanitize customerId
     const notificationsRef = ref(database, 'notifications');
     
     // Listen for notifications from Firebase
@@ -31,7 +36,7 @@ const NavbarNotificationBell: React.FC<NavbarNotificationBellProps> = ({
         const notification = { id: childSnapshot.key, ...childSnapshot.val() };
 
         // Check if the current user has read the notification
-        if (!notification.readBy || !notification.readBy[session.user.id]) {
+        if (!notification.readBy || !notification.readBy[sanitizedCustomerId]) {
           unreadNotifications = true;
         }
 
@@ -42,24 +47,25 @@ const NavbarNotificationBell: React.FC<NavbarNotificationBellProps> = ({
     });
 
     return () => unsubscribe();
-  }, [session?.user]);
+  }, [userData?.customerId]);
 
   // Mark all notifications as read by the current user when the dropdown opens
   useEffect(() => {
-    if (isDropdownOpen && session?.user) {
+    if (isDropdownOpen && userData?.customerId) {
+      const sanitizedCustomerId = sanitizePath(userData.customerId);  // Sanitize customerId again
       notifications.forEach(async (notification) => {
         const notificationRef = ref(database, `notifications/${notification.id}`);
         
-        if (!notification.readBy || !notification.readBy[session.user.id]) {
-          // Add current user to the `readBy` list
+        if (!notification.readBy || !notification.readBy[sanitizedCustomerId]) {
+          // Add current user to the `readBy` list using their customerId
           await update(notificationRef, {
-            [`readBy/${session.user.id}`]: true  // Mark as read by this user
+            [`readBy/${sanitizedCustomerId}`]: true  // Mark as read by this user
           });
         }
       });
       setHasNewNotifications(false);  // Reset the new notification indicator
     }
-  }, [isDropdownOpen, notifications, session?.user]);
+  }, [isDropdownOpen, notifications, userData?.customerId]);
 
   const handleBellClick = () => {
     if (notificationsEnabled) {

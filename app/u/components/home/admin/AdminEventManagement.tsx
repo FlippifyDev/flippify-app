@@ -127,7 +127,7 @@ const AdminEventManagement = () => {
         />
       </div>
 
-      <button onClick={handleAddEvent} className="btn btn-primary w-full mb-4">
+      <button onClick={handleAddEvent} className="btn bg-houseBlue hover:bg-houseHoverBlue text-white w-full mb-4">
         Add Event
       </button>
 
@@ -156,7 +156,7 @@ const AdminEventManagement = () => {
 
           <button
             onClick={handleDeleteSelectedEvents}
-            className="btn btn-error mt-4"
+            className="btn bg-gray-300 text-black hover:bg-red-600 hover:text-white transition-colors duration-200 mt-4"
             disabled={selectedEvents.length === 0}
           >
             Delete Selected Events

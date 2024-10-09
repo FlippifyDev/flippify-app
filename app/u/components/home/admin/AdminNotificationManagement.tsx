@@ -1,4 +1,3 @@
-// AdminNotificationManagement.tsx
 import React, { useState, useEffect } from 'react';
 import { database, ref, push, set, onValue, remove } from '@/app/api/auth-firebase/firebaseConfig';
 
@@ -32,7 +31,8 @@ const AdminNotificationManagement = () => {
       await set(newNotificationRef, {
         title: notificationTitle,
         message: notificationMessage,
-        read: false,
+        read: false, // Notifications start as unread
+        timestamp: Date.now(), // Include a timestamp for sorting
       });
 
       setNotificationTitle("");
@@ -95,7 +95,7 @@ const AdminNotificationManagement = () => {
         />
       </div>
 
-      <button onClick={handleAddNotification} className="btn btn-primary w-full mb-4">
+      <button onClick={handleAddNotification} className="btn bg-houseBlue hover:bg-houseHoverBlue text-white w-full mb-4">
         Add Notification
       </button>
 
@@ -111,7 +111,7 @@ const AdminNotificationManagement = () => {
                 </div>
                 <input
                   type="checkbox"
-                  className="checkbox checkbox-primary"
+                  className="checkbox checkbox-houseBlue"
                   checked={selectedNotifications.includes(notification.id)}
                   onChange={() => handleSelectNotification(notification.id)}
                 />
@@ -121,7 +121,7 @@ const AdminNotificationManagement = () => {
 
           <button
             onClick={handleDeleteSelectedNotifications}
-            className="btn btn-error mt-4"
+            className="btn bg-gray-300 text-black hover:bg-red-600 hover:text-white transition-colors duration-200 mt-4"
             disabled={selectedNotifications.length === 0}
           >
             Delete Selected Notifications

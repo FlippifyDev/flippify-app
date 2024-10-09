@@ -1,5 +1,6 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BsBell, BsBellFill, BsBellSlash, BsBellSlashFill } from 'react-icons/bs';
+import { database, ref, onValue, set } from '@/app/api/auth-firebase/firebaseConfig';
 
 interface NavbarNotificationBellProps {
   notificationsEnabled: boolean;
@@ -8,8 +9,12 @@ interface NavbarNotificationBellProps {
   setIsDropdownOpen: () => void;
 }
 
-const NavbarNotificationBell: React.FC<NavbarNotificationBellProps> = ({ notificationsEnabled, hasNewNotifications, isDropdownOpen, setIsDropdownOpen }) => {
-  const dropdownRef = useRef<HTMLUListElement | null>(null);
+const NavbarNotificationBell: React.FC<NavbarNotificationBellProps> = ({ 
+  notificationsEnabled, 
+  hasNewNotifications, 
+  isDropdownOpen, 
+  setIsDropdownOpen 
+}) => {
 
   const handleBellClick = () => {
     if (notificationsEnabled) {
@@ -43,7 +48,6 @@ const NavbarNotificationBell: React.FC<NavbarNotificationBellProps> = ({ notific
       {/* Notifications Dropdown */}
       {isDropdownOpen && (
         <ul
-          ref={dropdownRef}
           className="absolute right-0 mt-3 bg-base-100 shadow-lg rounded-lg w-52 p-2 z-10"
         >
           <li className="text-sm text-gray-700">

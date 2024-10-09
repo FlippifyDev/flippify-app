@@ -21,6 +21,7 @@ const NavbarNotificationBell: React.FC<NavbarNotificationBellProps> = ({
 }) => {
   const [hasNewNotifications, setHasNewNotifications] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     if (!userData?.customerId) return;  // Ensure customerId is available
@@ -31,19 +32,20 @@ const NavbarNotificationBell: React.FC<NavbarNotificationBellProps> = ({
     // Listen for notifications from Firebase
     const unsubscribe = onValue(notificationsRef, (snapshot) => {
       const notificationList: any[] = [];
-      let unreadNotifications = false;
+      let unreadNotifications = 0;
       snapshot.forEach((childSnapshot) => {
         const notification = { id: childSnapshot.key, ...childSnapshot.val() };
 
         // Check if the current user has read the notification
         if (!notification.readBy || !notification.readBy[sanitizedCustomerId]) {
-          unreadNotifications = true;
+          unreadNotifications++;
         }
 
         notificationList.push(notification);
       });
       setNotifications(notificationList);
-      setHasNewNotifications(unreadNotifications);
+      setUnreadCount(unreadNotifications);
+      setHasNewNotifications(unreadNotifications > 0);
     });
 
     return () => unsubscribe();
@@ -64,6 +66,7 @@ const NavbarNotificationBell: React.FC<NavbarNotificationBellProps> = ({
         }
       });
       setHasNewNotifications(false);  // Reset the new notification indicator
+      setUnreadCount(0);  // Reset unread count
     }
   }, [isDropdownOpen, notifications, userData?.customerId]);
 
@@ -78,26 +81,29 @@ const NavbarNotificationBell: React.FC<NavbarNotificationBellProps> = ({
       <div
         tabIndex={0}
         role="button"
-        className="text-xl cursor-pointer"
+        className="text-xl cursor-pointer relative"
         onClick={handleBellClick}
       >
         {notificationsEnabled ? (
-          hasNewNotifications ? (
-            <BsBellFill className="text-houseBlue animate-pulse" />
-          ) : (
-            <BsBell className="text-lightModeText" />
-          )
+          <>
+            {hasNewNotifications ? (
+              <BsBellFill className="text-lightModeText" />
+            ) : (
+              <BsBell className="text-lightModeText" />
+            )}
+            {unreadCount > 0 && (
+              <span className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-houseBlue rounded-full">
+                {unreadCount}
+              </span>
+            )}
+          </>
         ) : (
-          hasNewNotifications ? (
-            <BsBellSlashFill className="text-houseBlue" />
-          ) : (
-            <BsBellSlash className="text-lightModeText" />
-          )
+          <BsBellSlash className="text-lightModeText" />  // Bell slash when notifications are disabled
         )}
       </div>
 
       {/* Notifications Dropdown */}
-      {isDropdownOpen && (
+      {isDropdownOpen && notificationsEnabled && (
         <ul className="absolute right-0 mt-3 bg-base-100 shadow-lg rounded-lg w-52 p-2 z-10">
           {notifications.length === 0 ? (
             <li className="text-sm text-gray-700">No new notifications</li>

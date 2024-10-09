@@ -4,7 +4,6 @@ import NavbarProfileAvatar from "./NavbarProfileAvatar";
 
 const NavbarProfile = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [hasNewNotifications, setHasNewNotifications] = useState(false); // Set this to true if new notifications exist
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState<boolean>(false);
   const [isNotificationDropdownOpen, setIsNotificationDropdownOpen] = useState<boolean>(false);
 
@@ -45,7 +44,6 @@ const NavbarProfile = () => {
       <div className="dropdown-notification">
         <NavbarNotificationBell
           notificationsEnabled={notificationsEnabled}
-          hasNewNotifications={hasNewNotifications}
           isDropdownOpen={isNotificationDropdownOpen}
           setIsDropdownOpen={handleNotificationClick}
         />

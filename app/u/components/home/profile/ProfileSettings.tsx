@@ -141,16 +141,17 @@ const ProfileSettings = () => {
       </div>
 
       {/* Notification Setting */}
-      <div className="mb-4 flex items-center">
-        <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2" htmlFor="notificationsEnabled">
+      <div className="mb-4 flex items-center space-x-3">
+        <label className="text-gray-700 dark:text-gray-300 font-semibold" htmlFor="notificationsEnabled">
           Enable Notifications
         </label>
         <input
           type="checkbox"
           id="notificationsEnabled"
-          className="ml-4 toggle toggle-primary"
+          className="toggle"
           checked={notificationsEnabled}
           onChange={handleToggleNotifications}
+          style={{ transform: 'scale(1.2)', backgroundColor: notificationsEnabled ? '#0070f3' : '#e5e7eb' }}
         />
       </div>
 
@@ -164,7 +165,7 @@ const ProfileSettings = () => {
         onClick={handleSaveChanges}
         disabled={!isChanged}
         className={`mt-auto inline-block text-white py-2 px-4 rounded-md transition duration-200 ${
-          isChanged ? 'bg-blue-600 hover:bg-houseHoverBlue' : 'bg-gray-300 cursor-not-allowed'
+          isChanged ? 'bg-houseBlue hover:bg-houseHoverBlue' : 'bg-gray-300 cursor-not-allowed'
         }`}
       >
         Save Changes

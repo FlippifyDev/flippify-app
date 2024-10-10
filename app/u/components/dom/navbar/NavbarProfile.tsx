@@ -1,30 +1,42 @@
-import React, { useState, useEffect } from "react";
-import NavbarNotificationBell from "./NavbarNotificationBell";
-import NavbarProfileAvatar from "./NavbarProfileAvatar";
-import { useSession } from 'next-auth/react';  // Using NextAuth
-import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
+import React, { useState, useEffect } from 'react';
+import NavbarNotificationBell from './NavbarNotificationBell';
+import NavbarProfileAvatar from './NavbarProfileAvatar';
+import { useSession } from 'next-auth/react'; // Using NextAuth
+import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
 
 const NavbarProfile = () => {
-  const { data: session } = useSession();  // Assuming session contains customerId (from Stripe)
-  
+  const { data: session } = useSession(); // Assuming session contains customerId (from Stripe)
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState<boolean>(false);
   const [isNotificationDropdownOpen, setIsNotificationDropdownOpen] = useState<boolean>(false);
+  const [isSmallScreen, setIsSmallScreen] = useState<boolean>(false);
+  const [unreadCount, setUnreadCount] = useState<number>(0);
 
   // Ensure customerId is available from the session
   const userData = {
-    customerId: session?.user?.customerId || "",  // Only using customerId, no uid
+    customerId: session?.user?.customerId || '', // Only using customerId, no uid
   };
+
+  // Detect screen size to determine whether it's a small screen
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 768); // Small screens: 768px or less
+    };
+
+    handleResize(); // Call once on mount
+    window.addEventListener('resize', handleResize); // Listen for resize
+
+    return () => {
+      window.removeEventListener('resize', handleResize); // Cleanup on unmount
+    };
+  }, []);
 
   // Close both dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
 
-      if (
-        !target.closest('.dropdown-profile') && 
-        !target.closest('.dropdown-notification')
-      ) {
+      if (!target.closest('.dropdown-profile') && !target.closest('.dropdown-notification')) {
         setIsProfileDropdownOpen(false);
         setIsNotificationDropdownOpen(false);
       }
@@ -49,22 +61,28 @@ const NavbarProfile = () => {
 
   return (
     <div className="flex items-center bg-transparent p-1 group relative">
-
       <LayoutSubscriptionWrapper requiredSubscriptions={['member']}>
-        {/* Notification Bell */}
-        <div className="dropdown-notification">
-          <NavbarNotificationBell
-            notificationsEnabled={notificationsEnabled}
-            isDropdownOpen={isNotificationDropdownOpen}
-            setIsDropdownOpen={handleNotificationClick}
-            userData={userData}  // Only passing customerId
-          />
-        </div>
+        {!isSmallScreen && (
+          <div className="dropdown-notification">
+            <NavbarNotificationBell
+              notificationsEnabled={notificationsEnabled}
+              isDropdownOpen={isNotificationDropdownOpen}
+              setIsDropdownOpen={handleNotificationClick}
+              userData={userData}
+              unreadCount={unreadCount} // Pass unread count to the bell
+            />
+          </div>
+        )}
       </LayoutSubscriptionWrapper>
 
       {/* Profile Avatar */}
       <div className="dropdown-profile" onClick={handleProfileClick}>
-        <NavbarProfileAvatar isDropdownOpen={isProfileDropdownOpen} />
+        <NavbarProfileAvatar
+          isDropdownOpen={isProfileDropdownOpen}
+          unreadCount={unreadCount} // Pass unread count to avatar
+          onNotificationBellClick={handleNotificationClick}
+          isSmallScreen={isSmallScreen} // Pass small screen state
+        />
       </div>
     </div>
   );

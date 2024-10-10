@@ -6,7 +6,8 @@ interface NavbarNotificationBellProps {
   notificationsEnabled: boolean;
   isDropdownOpen: boolean;
   setIsDropdownOpen: () => void;
-  userData: { customerId: string }; // Assuming you pass customerId as a prop from the parent component
+  userData: { customerId: string };
+  unreadCount: number;  // Add unreadCount prop here
 }
 
 const sanitizePath = (path: string): string => {
@@ -17,11 +18,11 @@ const NavbarNotificationBell: React.FC<NavbarNotificationBellProps> = ({
   notificationsEnabled, 
   isDropdownOpen, 
   setIsDropdownOpen, 
-  userData 
+  userData, 
+  unreadCount  // Destructure unreadCount
 }) => {
   const [hasNewNotifications, setHasNewNotifications] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
-  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     if (!userData?.customerId) return;  // Ensure customerId is available
@@ -44,7 +45,6 @@ const NavbarNotificationBell: React.FC<NavbarNotificationBellProps> = ({
         notificationList.push(notification);
       });
       setNotifications(notificationList);
-      setUnreadCount(unreadNotifications);
       setHasNewNotifications(unreadNotifications > 0);
     });
 
@@ -66,7 +66,6 @@ const NavbarNotificationBell: React.FC<NavbarNotificationBellProps> = ({
         }
       });
       setHasNewNotifications(false);  // Reset the new notification indicator
-      setUnreadCount(0);  // Reset unread count
     }
   }, [isDropdownOpen, notifications, userData?.customerId]);
 

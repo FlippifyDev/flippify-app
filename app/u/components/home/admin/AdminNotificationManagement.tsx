@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { database, ref, push, set, onValue, remove } from '@/app/api/auth-firebase/firebaseConfig';
+import { useSession } from 'next-auth/react';
 
 const AdminNotificationManagement = () => {
   const [notificationTitle, setNotificationTitle] = useState("");
   const [notificationMessage, setNotificationMessage] = useState("");
+  const [redirectPath, setRedirectPath] = useState(""); // Path to append after the username
   const [notifications, setNotifications] = useState<any[]>([]);
   const [selectedNotifications, setSelectedNotifications] = useState<string[]>([]);
+
+  const { data: session } = useSession();  // Use session to get username
 
   useEffect(() => {
     const notificationsRef = ref(database, 'notifications');
@@ -24,19 +28,31 @@ const AdminNotificationManagement = () => {
       return;
     }
 
+    if (!session?.user?.name) {
+      alert("Unable to retrieve username.");
+      return;
+    }
+
     const notificationsRef = ref(database, 'notifications');
     const newNotificationRef = push(notificationsRef);
 
     try {
+      const redirectUrl = redirectPath 
+        ? `/u/${session.user.name}/${redirectPath}`  // Create URL using username and custom redirect path
+        : null;  // If no redirect path is provided, set it to null
+
+      // Add notification, including optional redirectUrl if provided
       await set(newNotificationRef, {
         title: notificationTitle,
         message: notificationMessage,
-        read: false, // Notifications start as unread
-        timestamp: Date.now(), // Include a timestamp for sorting
+        redirectUrl: redirectUrl, // Use dynamic URL with username
+        read: false,
+        timestamp: Date.now(),
       });
 
       setNotificationTitle("");
       setNotificationMessage("");
+      setRedirectPath(""); // Reset redirect path
       alert("Notification added!");
     } catch (error) {
       console.error("Error adding notification:", error);
@@ -93,6 +109,20 @@ const AdminNotificationManagement = () => {
           onChange={(e) => setNotificationMessage(e.target.value)}
           className="textarea textarea-bordered w-full"
         />
+      </div>
+
+      <div className="mb-4">
+        <label className="block text-gray-700">Optional Redirect Path</label>
+        <input
+          type="text"
+          value={redirectPath}
+          onChange={(e) => setRedirectPath(e.target.value)}
+          className="input input-bordered w-full"
+          placeholder="e.g., events/123"
+        />
+        <small className="text-gray-600">
+          This will generate the redirect URL: <strong>/u/{session?.user?.name}/{redirectPath || "..."}</strong>
+        </small>
       </div>
 
       <button onClick={handleAddNotification} className="btn bg-houseBlue hover:bg-houseHoverBlue text-white w-full mb-4">

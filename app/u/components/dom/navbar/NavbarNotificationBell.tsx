@@ -89,6 +89,13 @@ const NavbarNotificationBell: React.FC<NavbarNotificationBellProps> = ({
     }
   };
 
+  // Handle clicking a notification and redirecting if a URL is provided
+  const handleNotificationClick = (redirectUrl?: string) => {
+    if (redirectUrl) {
+      window.location.href = redirectUrl;  // Redirect to the specified URL
+    }
+  };
+
   return (
     <div className="relative pr-4">
       <div
@@ -113,16 +120,20 @@ const NavbarNotificationBell: React.FC<NavbarNotificationBellProps> = ({
 
       {/* Notifications Dropdown */}
       {isDropdownOpen && notificationsEnabled && (
-        <ul className="absolute right-0 mt-3 bg-base-100 shadow-lg rounded-lg w-72 p-2 z-10">
+        <ul className="absolute right-0 mt-3 bg-base-100 shadow-lg rounded-lg w-52 p-2 z-10">
           {notifications.length === 0 ? (
             <li className="text-sm text-gray-700">No new notifications</li>
           ) : (
             notifications.map((notification) => (
-              <li key={notification.id} className="p-2 mb-2 bg-gray-200 border rounded-lg">
+              <li 
+                key={notification.id} 
+                className="p-2 mb-2 bg-gray-100 border rounded-lg cursor-pointer hover:bg-gray-200 transition"
+                onClick={() => handleNotificationClick(notification.redirectUrl)}  // Handle click and redirect
+              >
                 <div className="text-sm font-bold text-black mb-1">{notification.title}</div>
                 <div className="text-xs text-lightModeText">{notification.message}</div>
                 <div className="text-xs text-gray-500 mt-1">
-                  {getTimeAgo(notification.timestamp)}
+                  {getTimeAgo(notification.timestamp)}  {/* Time ago display */}
                 </div>
               </li>
             ))

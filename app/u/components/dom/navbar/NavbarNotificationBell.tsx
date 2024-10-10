@@ -86,13 +86,9 @@ const NavbarNotificationBell: React.FC<NavbarNotificationBellProps> = ({
       >
         {notificationsEnabled ? (
           <>
-            {hasNewNotifications ? (
-              <BsBellFill className="text-lightModeText" />
-            ) : (
               <BsBell className="text-lightModeText" />
-            )}
             {unreadCount > 0 && (
-              <span className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-houseBlue rounded-full">
+              <span className="absolute top-[-4px] right-[-4px] flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-houseBlue rounded-full">
                 {unreadCount}
               </span>
             )}
@@ -110,7 +106,7 @@ const NavbarNotificationBell: React.FC<NavbarNotificationBellProps> = ({
           ) : (
             notifications.map((notification) => (
               <li key={notification.id} className="text-sm text-gray-700">
-                {notification.title}: {notification.message}
+                {notification.title} {notification.message}
               </li>
             ))
           )}

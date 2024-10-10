@@ -30,7 +30,7 @@ const Navbar = () => {
         </svg>
         </label>
       </div>
-      <div className="col-span-8 ml-2 xl:col-span-4 flex justify-center xl:justify-start items-center">
+      <div className="col-span-8 ml-2 mb-1 xl:col-span-4 flex justify-center xl:justify-start items-center">
         <Link href="/" className={`text-lightModeText text-4xl ${lato.className}`}>
           flippify
         </Link>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BsBell, BsBellFill, BsBellSlash, BsBellSlashFill } from 'react-icons/bs';
+import { BsBell, BsBellSlash } from 'react-icons/bs';
 import { database, ref, onValue, update } from '@/app/api/auth-firebase/firebaseConfig';
 
 interface NavbarNotificationBellProps {
@@ -76,6 +76,19 @@ const NavbarNotificationBell: React.FC<NavbarNotificationBellProps> = ({
     }
   };
 
+  // Function to calculate time ago in minutes or hours
+  const getTimeAgo = (timestamp: number) => {
+    const now = Date.now();
+    const diffInMinutes = Math.floor((now - timestamp) / (1000 * 60));  // Difference in minutes
+
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes}m ago`;  // Less than an hour
+    } else {
+      const diffInHours = Math.floor(diffInMinutes / 60);
+      return `${diffInHours}h ago`;  // More than an hour
+    }
+  };
+
   return (
     <div className="relative pr-4">
       <div
@@ -86,7 +99,7 @@ const NavbarNotificationBell: React.FC<NavbarNotificationBellProps> = ({
       >
         {notificationsEnabled ? (
           <>
-              <BsBell className="text-lightModeText" />
+            <BsBell className="text-lightModeText" />
             {unreadCount > 0 && (
               <span className="absolute top-[-4px] right-[-4px] flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-houseBlue rounded-full">
                 {unreadCount}
@@ -100,13 +113,17 @@ const NavbarNotificationBell: React.FC<NavbarNotificationBellProps> = ({
 
       {/* Notifications Dropdown */}
       {isDropdownOpen && notificationsEnabled && (
-        <ul className="absolute right-0 mt-3 bg-base-100 shadow-lg rounded-lg w-52 p-2 z-10">
+        <ul className="absolute right-0 mt-3 bg-base-100 shadow-lg rounded-lg w-72 p-2 z-10">
           {notifications.length === 0 ? (
             <li className="text-sm text-gray-700">No new notifications</li>
           ) : (
             notifications.map((notification) => (
-              <li key={notification.id} className="text-sm text-gray-700">
-                {notification.title} {notification.message}
+              <li key={notification.id} className="p-2 mb-2 bg-gray-200 border rounded-lg">
+                <div className="text-sm font-bold text-black mb-1">{notification.title}</div>
+                <div className="text-xs text-lightModeText">{notification.message}</div>
+                <div className="text-xs text-gray-500 mt-1">
+                  {getTimeAgo(notification.timestamp)}
+                </div>
               </li>
             ))
           )}

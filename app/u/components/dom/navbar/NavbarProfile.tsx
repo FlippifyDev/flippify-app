@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import NavbarNotificationBell from "./NavbarNotificationBell";
 import NavbarProfileAvatar from "./NavbarProfileAvatar";
 import { useSession } from 'next-auth/react';  // Using NextAuth
+import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 
 const NavbarProfile = () => {
   const { data: session } = useSession();  // Assuming session contains customerId (from Stripe)
@@ -48,15 +49,18 @@ const NavbarProfile = () => {
 
   return (
     <div className="flex items-center bg-transparent p-1 group relative">
-      {/* Notification Bell */}
-      <div className="dropdown-notification">
-        <NavbarNotificationBell
-          notificationsEnabled={notificationsEnabled}
-          isDropdownOpen={isNotificationDropdownOpen}
-          setIsDropdownOpen={handleNotificationClick}
-          userData={userData}  // Only passing customerId
-        />
-      </div>
+
+      <LayoutSubscriptionWrapper requiredSubscriptions={['member']}>
+        {/* Notification Bell */}
+        <div className="dropdown-notification">
+          <NavbarNotificationBell
+            notificationsEnabled={notificationsEnabled}
+            isDropdownOpen={isNotificationDropdownOpen}
+            setIsDropdownOpen={handleNotificationClick}
+            userData={userData}  // Only passing customerId
+          />
+        </div>
+      </LayoutSubscriptionWrapper>
 
       {/* Profile Avatar */}
       <div className="dropdown-profile" onClick={handleProfileClick}>

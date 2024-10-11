@@ -4,27 +4,29 @@ import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import createBillingPortalUrl from '@/app/api/stripe-handlers/create-billing-portal';
 import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
-import { BsBell, BsBellFill } from 'react-icons/bs'; // For notification bell
+import { BsBell } from 'react-icons/bs';
+import NavbarNotificationBell from './NavbarNotificationBell'; // Ensure this import exists
 
 interface NavbarProfileAvatarProps {
   isDropdownOpen: boolean;
   unreadCount: number;
-  onNotificationBellClick: () => void; // Handler for the bell click
-  isSmallScreen: boolean; // Check if it's small screen
+  onNotificationBellClick: () => void;
+  isSmallScreen: boolean;
+  isNotificationDropdownOpen: boolean;
 }
 
 const NavbarProfileAvatar: React.FC<NavbarProfileAvatarProps> = ({
   isDropdownOpen,
   unreadCount,
   onNotificationBellClick,
-  isSmallScreen
+  isSmallScreen,
+  isNotificationDropdownOpen,
 }) => {
   const { data: session } = useSession();
   const [billingUrl, setBillingUrl] = useState<string | null>(null);
   const router = useRouter();
   const dropdownRef = useRef<HTMLUListElement | null>(null);
 
-  // Default avatar
   let avatar = 'https://i.pinimg.com/originals/40/a4/59/40a4592d0e7f4dc067ec0cdc24e038b9.png';
 
   if (session && session.user?.image) {
@@ -93,7 +95,7 @@ const NavbarProfileAvatar: React.FC<NavbarProfileAvatarProps> = ({
       </div>
 
       {/* Dropdown menu */}
-      {isDropdownOpen && (
+      {isDropdownOpen && !isNotificationDropdownOpen && (
         <ul ref={dropdownRef} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
           <button
             className="relative flex flex-col rounded-md hover:bg-gray-200 active:bg-gray-300 transition"
@@ -142,7 +144,10 @@ const NavbarProfileAvatar: React.FC<NavbarProfileAvatarProps> = ({
           {isSmallScreen && (
             <button
               className="relative flex items-center justify-between rounded-md hover:bg-gray-200 active:bg-gray-300 transition p-2"
-              onClick={onNotificationBellClick} // Trigger notification dropdown
+              onClick={() => {
+                console.log("Notification bell clicked inside avatar");
+                onNotificationBellClick();
+              }}
             >
               <BsBell className="text-lg" />
               {unreadCount > 0 && (
@@ -153,6 +158,14 @@ const NavbarProfileAvatar: React.FC<NavbarProfileAvatarProps> = ({
             </button>
           )}
         </ul>
+      )}
+
+      {/* Notification dropdown replaces profile menu on small screens */}
+      {isNotificationDropdownOpen && isSmallScreen && (
+        <div className="absolute bg-base-100 rounded-lg p-3 shadow-md w-52 z-[1] mt-3">
+          <h3 className="text-sm text-gray-900">Notifications</h3>
+          <div className="bg-gray-200 p-2 mt-2 rounded-md">Debug Box: Notification Dropdown</div>
+        </div>
       )}
     </div>
   );

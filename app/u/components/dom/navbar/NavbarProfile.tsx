@@ -1,89 +1,76 @@
 import React, { useState, useEffect } from 'react';
 import NavbarNotificationBell from './NavbarNotificationBell';
 import NavbarProfileAvatar from './NavbarProfileAvatar';
-import { useSession } from 'next-auth/react'; // Using NextAuth
+import { useSession } from 'next-auth/react';
 import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
 
 const NavbarProfile = () => {
-  const { data: session } = useSession(); // Assuming session contains customerId (from Stripe)
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const { data: session } = useSession();
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState<boolean>(false);
   const [isNotificationDropdownOpen, setIsNotificationDropdownOpen] = useState<boolean>(false);
   const [isSmallScreen, setIsSmallScreen] = useState<boolean>(false);
   const [unreadCount, setUnreadCount] = useState<number>(0);
 
-  // Ensure customerId is available from the session
   const userData = {
-    customerId: session?.user?.customerId || '', // Only using customerId, no uid
+    customerId: session?.user?.customerId || '',
   };
 
-  // Detect screen size to determine whether it's a small screen
   useEffect(() => {
     const handleResize = () => {
-      setIsSmallScreen(window.innerWidth <= 768); // Small screens: 768px or less
+      setIsSmallScreen(window.innerWidth <= 768); // Small screens <= 768px
     };
 
-    handleResize(); // Call once on mount
-    window.addEventListener('resize', handleResize); // Listen for resize
+    handleResize(); // Trigger on mount
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize); // Cleanup on unmount
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
-  // Close both dropdowns when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-
-      if (!target.closest('.dropdown-profile') && !target.closest('.dropdown-notification')) {
-        setIsProfileDropdownOpen(false);
-        setIsNotificationDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  // Close notification dropdown if profile is opened and vice-versa
+  // Toggle profile dropdown and close notification dropdown if open
   const handleProfileClick = () => {
-    setIsNotificationDropdownOpen(false);
-    setIsProfileDropdownOpen(!isProfileDropdownOpen);
+    console.log("Profile clicked"); // Debug log
+    setIsNotificationDropdownOpen(false); // Close notification dropdown if profile is clicked
+    setIsProfileDropdownOpen((prevState) => !prevState); // Toggle profile dropdown
+    console.log("isProfileDropdownOpen:", !isProfileDropdownOpen); // Track profile dropdown state
   };
 
+  // Toggle notification dropdown and close profile dropdown if open
   const handleNotificationClick = () => {
-    setIsProfileDropdownOpen(false);
-    setIsNotificationDropdownOpen(!isNotificationDropdownOpen);
+    console.log("Notification bell clicked"); // Debug log
+    setIsProfileDropdownOpen(false); // Close profile dropdown if notification bell is clicked
+    setIsNotificationDropdownOpen((prevState) => !prevState); // Toggle notification dropdown
+    console.log("isNotificationDropdownOpen:", !isNotificationDropdownOpen); // Track notification dropdown state
   };
 
   return (
     <div className="flex items-center bg-transparent p-1 group relative">
       <LayoutSubscriptionWrapper requiredSubscriptions={['member']}>
+        {/* Notification bell on navbar for large screens */}
         {!isSmallScreen && (
           <div className="dropdown-notification">
             <NavbarNotificationBell
-              notificationsEnabled={notificationsEnabled}
+              notificationsEnabled={true}
               isDropdownOpen={isNotificationDropdownOpen}
               setIsDropdownOpen={handleNotificationClick}
               userData={userData}
-              unreadCount={unreadCount} // Pass unread count to the bell
+              unreadCount={unreadCount}
             />
           </div>
         )}
-      </LayoutSubscriptionWrapper>
 
-      {/* Profile Avatar */}
-      <div className="dropdown-profile" onClick={handleProfileClick}>
-        <NavbarProfileAvatar
-          isDropdownOpen={isProfileDropdownOpen}
-          unreadCount={unreadCount} // Pass unread count to avatar
-          onNotificationBellClick={handleNotificationClick}
-          isSmallScreen={isSmallScreen} // Pass small screen state
-        />
-      </div>
+        {/* Profile Avatar with notification bell in avatar dropdown on small screens */}
+        <div className="dropdown-profile" onClick={handleProfileClick}>
+          <NavbarProfileAvatar
+            isDropdownOpen={isProfileDropdownOpen}
+            unreadCount={unreadCount}
+            onNotificationBellClick={handleNotificationClick} // Click handler for notification bell
+            isSmallScreen={isSmallScreen}
+            isNotificationDropdownOpen={isNotificationDropdownOpen} // Pass notification dropdown state
+          />
+        </div>
+      </LayoutSubscriptionWrapper>
     </div>
   );
 };

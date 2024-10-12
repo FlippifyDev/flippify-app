@@ -10,13 +10,13 @@ const ServerPlansCardDealWatchWhatsIncluded = () => {
         <li className="w-full">
           <PlansClickableBulletPoint
             text="Advanced eBay Price Comparison"
-            tooltip="Compare eBay prices with HotUKDeals."
+            tooltip="Get notified only when the items is selling well and quick on eBay."
           />
         </li>
         <li className="w-full">
           <PlansClickableBulletPoint
-            text="Real-time HotUKDeals Scanning"
-            tooltip="Get instant updates from HotUKDeals."
+            text="Frequent Website Scanning"
+            tooltip="Frequent monitoring of several websites to find the best deals."
           />
         </li>
         <li className="w-full">

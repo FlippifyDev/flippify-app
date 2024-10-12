@@ -49,7 +49,7 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
   }, [currency, priceRange, prices, conversionRates]);
 
   return (
-    <div className="w-full flex justify-center transition duration-200 relative">
+    <div className="col-span-1 relative w-full sm:w-[420px] flex justify-center transition duration-200 px-2 sm:mx-auto 2xl:w-[380px]">
       <div className={`w-full sm:w-full min-h-[650px] flex flex-col justify-between relative ${unavailable ? "opacity-50" : ""}`}>
         {specialPlan ? (
           <BackgroundGradient className="z-40">

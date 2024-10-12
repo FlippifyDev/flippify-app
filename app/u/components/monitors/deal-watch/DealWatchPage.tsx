@@ -28,38 +28,48 @@ const DealWatchPage = () => {
       });
 
       setProducts(updatedProducts);
-      setDisplayedProducts(sortByRoiAndStock(updatedProducts).slice(0, limit)); // Display the first batch
+      setDisplayedProducts(sortByTimestampRoiAndStock(updatedProducts).slice(0, limit)); // Display the first batch
     }
 
     loadProducts();
   }, []);
 
-  // Function to sort products by price and stock availability
-  const sortByRoiAndStock = (products: IDealWatch[]) => {
+
+  // Function to sort products by timestamp, then ROI, and stock availability
+  const sortByTimestampRoiAndStock = (products: IDealWatch[]) => {
     return products
       .sort((a, b) => {
         // Check if either product is missing essential data
         const missingDataA = !a.price || a.ebay_mean_price === undefined || a.ebay_max_price === undefined;
         const missingDataB = !b.price || b.ebay_mean_price === undefined || b.ebay_max_price === undefined;
-  
+
         if (missingDataA && !missingDataB) return 1;  // Move products with missing data to the end
         if (!missingDataA && missingDataB) return -1; // Move products with missing data to the end
-  
-        // Calculate ROI for each product
+
+        // Compare by timestamp (most recent first)
+        const timestampA = new Date(a.timestamp).getTime(); // Convert to timestamp if needed
+        const timestampB = new Date(b.timestamp).getTime();
+
+        if (timestampA !== timestampB) {
+          return timestampB - timestampA; // Sort descending by timestamp (newest first)
+        }
+
+        // If timestamps are equal, sort by ROI
         const roiA = a.estimatedProfit && a.price ? (a.estimatedProfit / a.price) : 0;
         const roiB = b.estimatedProfit && b.price ? (b.estimatedProfit / b.price) : 0;
-  
+
         // If both have the same ROI, sort by stock (sold_last_7_days or sold_last_month)
         if (roiA === roiB) {
           const stockA = a.sold_last_7_days || a.sold_last_month || 0;
           const stockB = b.sold_last_7_days || b.sold_last_month || 0;
           return stockB - stockA; // Sort descending by stock availability
         }
-  
+
         // Sort descending by ROI
         return roiB - roiA;
       });
   };
+
 
   const loadMoreProducts = useCallback(() => {
     if (loading) return; // Prevent further loading if it's already in progress
@@ -120,7 +130,7 @@ const DealWatchPage = () => {
       });
     } else {
       // If no search query, sort by price and stock
-      filtered = sortByRoiAndStock(products);
+      filtered = sortByTimestampRoiAndStock(products);
     }
 
     // Reset pagination and display filtered products

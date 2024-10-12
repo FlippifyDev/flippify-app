@@ -48,7 +48,7 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
   );
 
   return (
-    <div className="relative w-full flex justify-center transition duration-200">
+    <div className="col-span-1 relative w-full sm:w-[420px] flex justify-center transition duration-200 px-2 sm:mx-auto 2xl:w-[380px]">
       {/* Card Content */}
       <div className={`w-full sm:w-full min-h-[700px] flex flex-col justify-between relative ${unavailable ? "opacity-50" : ""}`}>
         {specialPlan ? (

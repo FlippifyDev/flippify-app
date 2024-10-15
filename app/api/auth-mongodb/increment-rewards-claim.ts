@@ -1,10 +1,7 @@
 "use server"
 
-import mongoose from 'mongoose';
-
 import { User } from './userModel';
 
-mongoose.connect(process.env.MONGO_URL as string)
 
 const incrementRewardsClaimed = async (customerId: string) => {
     try {

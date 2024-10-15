@@ -2,8 +2,6 @@
 
 import mongoose, { FilterQuery, UpdateQuery } from 'mongoose';
 
-mongoose.connect(process.env.MONGO_URL as string)
-
 // Define the schema interface
 interface ISubscriptionServers {
     stripe_customer_id: string;

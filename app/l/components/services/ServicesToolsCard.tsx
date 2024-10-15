@@ -27,7 +27,7 @@ const ProductsCard: React.FC<ProductsCardProps> = ({
   };
 
   return (
-    <div className="border card card-compact m-2 p-2 bg-white w-72 sm:w-80 shadow-lg h-[30rem] mt-6">
+    <div className="card card-compact m-2 p-2 bg-white w-72 sm:w-80 shadow-lg h-[30rem] mt-6">
       <figure className="h-62">
         <div className="relative w-full h-full">
           <Image

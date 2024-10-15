@@ -59,6 +59,7 @@ const NavbarProfile = () => {
             />
           </div>
         )}
+      </LayoutSubscriptionWrapper>
 
         {/* Profile Avatar with notification bell in avatar dropdown on small screens */}
         <div className="dropdown-profile" onClick={handleProfileClick}>
@@ -70,7 +71,6 @@ const NavbarProfile = () => {
             isNotificationDropdownOpen={isNotificationDropdownOpen} // Pass notification dropdown state
           />
         </div>
-      </LayoutSubscriptionWrapper>
     </div>
   );
 };

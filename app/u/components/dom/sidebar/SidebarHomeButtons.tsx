@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { FaSearch, FaDiscord } from 'react-icons/fa';
 import { MdGroups } from 'react-icons/md';
 import { FaHouse } from 'react-icons/fa6';
-import { FaBook } from "react-icons/fa";
+import { FaBook, FaBell } from "react-icons/fa";
 
 interface SidebarHomeButtonsProps {
   showAlert: () => void;
@@ -20,6 +20,7 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ showAlert }) =>
     <div>
 
         <SidebarButton text="Dashboard" redirect="dashboard" symbol={<FaHouse className="text-lg" />} />
+        <SidebarButton text="Notifications" redirect="notifications" symbol={<FaBell className="text-lg" />} />
         <SidebarButton text="Plans" redirect="plans" symbol={<FaSearch className="text-lg" />} />
         <SidebarButton text="Server Plans" redirect="server-plans" symbol={<MdGroups className="text-2xl" />} />
         <LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>

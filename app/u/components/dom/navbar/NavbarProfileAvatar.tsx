@@ -1,171 +1,172 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
-import { signOut, useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import createBillingPortalUrl from '@/app/api/stripe-handlers/create-billing-portal';
-import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
-import { BsBell } from 'react-icons/bs';
-import NavbarNotificationBell from './NavbarNotificationBell'; // Ensure this import exists
+"use client";
 
-interface NavbarProfileAvatarProps {
-  isDropdownOpen: boolean;
-  unreadCount: number;
-  onNotificationBellClick: () => void;
-  isSmallScreen: boolean;
-  isNotificationDropdownOpen: boolean;
-}
+import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
+import { signOut, useSession } from "next-auth/react";
+import { useRouter, usePathname } from "next/navigation";
+import createBillingPortalUrl from "@/app/api/stripe-handlers/create-billing-portal";
+import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 
-const NavbarProfileAvatar: React.FC<NavbarProfileAvatarProps> = ({
-  isDropdownOpen,
-  unreadCount,
-  onNotificationBellClick,
-  isSmallScreen,
-  isNotificationDropdownOpen,
-}) => {
+const NavbarProfileAvatar = () => {
   const { data: session } = useSession();
   const [billingUrl, setBillingUrl] = useState<string | null>(null);
   const router = useRouter();
-  const dropdownRef = useRef<HTMLUListElement | null>(null);
+  const customerIdRef = useRef<string | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  let avatar = 'https://i.pinimg.com/originals/40/a4/59/40a4592d0e7f4dc067ec0cdc24e038b9.png';
+  // Default avatar
+  let avatar =
+    "https://i.pinimg.com/originals/40/a4/59/40a4592d0e7f4dc067ec0cdc24e038b9.png";
+  let referral_code = "None";
 
-  if (session && session.user?.image) {
-    avatar = session.user.image;
+  if (session) {
+    if (session.user?.image) {
+      avatar = session.user.image;
+    }
+    if (session?.user.referral?.referral_code) {
+      referral_code = session.user.referral.referral_code;
+    }
   }
 
-  useEffect(() => {
-    const fetchCheckoutUrl = async () => {
-      if (session?.user?.customerId) {
-        try {
-          const url = await createBillingPortalUrl(session.user.name, session.user.customerId);
-          setBillingUrl(url);
-        } catch (error) {
-          console.error('Failed to create billing portal:', error);
-        }
-      }
-    };
-    fetchCheckoutUrl();
-  }, [session]);
-
-  const handleProfileClick = () => {
-    if (session?.user?.name) {
-      router.push(`/u/${session.user.name}/profile`);
-    }
-  };
-
-  const handleBillingPortalClick = () => {
-    if (billingUrl) {
-      window.open(billingUrl, '_blank');
-    }
-  };
-
-  const handleSignOutClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
+  const handleSignOut = () => {
     signOut();
   };
 
-  const handleAdminClick = () => {
-    if (session?.user?.name) {
-      router.push(`/u/${session.user.name}/asldf0987asDa230fDsADMIN`);
+  useEffect(() => {
+    const fetchCheckoutUrl = async () => {
+      if (session?.user) {
+        const user = session.user;
+        customerIdRef.current = user.customerId || null;
+
+        if (customerIdRef.current) {
+          try {
+            const url = await createBillingPortalUrl(
+              user.name,
+              customerIdRef.current
+            );
+            setBillingUrl(url);
+          } catch (error) {
+            console.error("Failed to create billing portal:", error);
+            setBillingUrl(
+              "http://flippify.co.uk/u/failed-to-create-billing-portal"
+            );
+          }
+        }
+      }
+    };
+
+    fetchCheckoutUrl();
+  }, [session]);
+
+  const handleBillingPortalButtonClick = () => {
+    if (billingUrl) {
+      window.open(billingUrl, "_blank");
     }
   };
 
-  const handleTestingClick = () => {
-    if (session?.user?.name) {
-      router.push(`/u/${session.user.name}/bfoau214QNI42nAjTEST`);
+  const handleProfileOpen = () => {
+    if (session) {
+      if (session.user?.name) {
+        router.push(`/u/${session.user.name}/profile`);
+      } else {
+        router.push(`/u/loading`);
+      }
+    }
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen((prev) => !prev);
+  };
+
+  const handleAdminOpen = () => {
+    if (session) {
+      if (session.user?.name) {
+        router.push(`/u/${session.user.name}/asldf0987asDa230fDsADMIN`);
+      } else {
+        router.push(`/u/loading`);
+      }
+    }
+  };
+
+  const handleTestingOpen = () => {
+    if (session) {
+      if (session.user?.name) {
+        router.push(`/u/${session.user.name}/bfoau214QNI42nAjTEST`);
+      } else {
+        router.push(`/u/loading`);
+      }
     }
   };
 
   return (
     <div className="dropdown dropdown-end">
-      {/* Avatar with unread notification count */}
       <div
         tabIndex={0}
         role="button"
-        className="btn btn-ghost btn-circle avatar relative"
+        className="btn btn-ghost btn-circle avatar"
+        onClick={toggleDropdown}
       >
         <div className="w-10 rounded-full">
-          <Image alt="Avatar" src={avatar} width={40} height={40} />
+          <Image
+            alt="Avatar"
+            src={avatar}
+            width={50}
+            height={50}
+            loading="lazy"
+          />
         </div>
-        {isSmallScreen && unreadCount > 0 && (
-          <span className="absolute top-[-4px] right-[-4px] flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-houseBlue rounded-full">
-            {unreadCount}
-          </span>
-        )}
       </div>
 
-      {/* Dropdown menu */}
-      {isDropdownOpen && !isNotificationDropdownOpen && (
-        <ul ref={dropdownRef} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+      {/* Decide to open / close menu */}
+      {isDropdownOpen && (
+        <ul
+          className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+        >
           <button
-            className="relative flex flex-col rounded-md hover:bg-gray-200 active:bg-gray-300 transition"
-            onClick={handleProfileClick}
+            className="relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200"
+            onClick={handleProfileOpen}
           >
-            <span className="text-start px-3 py-1">Profile</span>
+            <span className="text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]">
+              Profile
+            </span>
           </button>
-
-          {/* Admin */}
-          <LayoutSubscriptionWrapper requiredSubscriptions={['admin']}>
+          <LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
             <button
-              className="relative flex flex-col rounded-md hover:bg-gray-200 active:bg-gray-300 transition"
-              onClick={handleAdminClick}
+              className="relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200"
+              onClick={handleAdminOpen}
             >
-              <span className="text-start px-3 py-1">Admin</span>
+              <span className="text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]">
+                Admin
+              </span>
             </button>
           </LayoutSubscriptionWrapper>
-
-          {/* Testing Area */}
-          <LayoutSubscriptionWrapper requiredSubscriptions={['admin']}>
+          <LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
             <button
-              className="relative flex flex-col rounded-md hover:bg-gray-200 active:bg-gray-300 transition"
-              onClick={handleTestingClick}
+              className="relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200"
+              onClick={handleTestingOpen}
             >
-              <span className="text-start px-3 py-1">Testing Area</span>
+              <span className="text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]">
+                Testing Area
+              </span>
             </button>
           </LayoutSubscriptionWrapper>
-
-          {/* Billing Portal */}
           <button
-            className="relative flex flex-col rounded-md hover:bg-gray-200 active:bg-gray-300 transition"
-            onClick={handleBillingPortalClick}
+            className="relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200"
+            onClick={handleBillingPortalButtonClick}
           >
-            <span className="text-start px-3 py-1">Billing Portal</span>
+            <span className="text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]">
+              Billing Portal
+            </span>
           </button>
-
-          {/* Sign Out */}
           <button
-            className="relative flex flex-col rounded-md hover:bg-red-600 hover:text-white active:bg-red-700 transition"
-            onClick={handleSignOutClick}
+            className="relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-red-600 hover:text-white active:bg-red-700 transform transition duration-200"
+            onClick={handleSignOut}
           >
-            <span className="text-start px-3 py-1">Sign Out</span>
+            <span className="text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]">
+              Sign Out
+            </span>
           </button>
-
-          {/* Notifications (for small screen) */}
-          {isSmallScreen && (
-            <button
-              className="relative flex items-center justify-between rounded-md hover:bg-gray-200 active:bg-gray-300 transition p-2"
-              onClick={() => {
-                console.log("Notification bell clicked inside avatar");
-                onNotificationBellClick();
-              }}
-            >
-              <BsBell className="text-lg" />
-              {unreadCount > 0 && (
-                <span className="ml-2 flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-houseBlue rounded-full">
-                  {unreadCount}
-                </span>
-              )}
-            </button>
-          )}
         </ul>
-      )}
-
-      {/* Notification dropdown replaces profile menu on small screens */}
-      {isNotificationDropdownOpen && isSmallScreen && (
-        <div className="absolute bg-base-100 rounded-lg p-3 shadow-md w-52 z-[1] mt-3">
-          <h3 className="text-sm text-gray-900">Notifications</h3>
-          <div className="bg-gray-200 p-2 mt-2 rounded-md">Debug Box: Notification Dropdown</div>
-        </div>
       )}
     </div>
   );

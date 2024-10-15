@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import NavbarProfile from "./NavbarProfile";
+import NavbarProfileAvatar from "./NavbarProfileAvatar";
 import { Lato } from 'next/font/google';
 import Link from 'next/link';
 import '@/styles/user-navbar.css';
@@ -36,7 +36,9 @@ const Navbar = () => {
         </Link>
       </div>
       <div className="flex items-center justify-end col-span-2 xl:col-span-8">
-        <NavbarProfile />
+        <div className="flex items-center bg-transparent p-1 group">
+          <NavbarProfileAvatar />
+        </div>
       </div>
     </div>
   );

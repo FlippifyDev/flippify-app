@@ -35,7 +35,7 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ showAlert }) =>
             target="_blank"
         >
             <span className="col-span-2 text-lg"><FaDiscord /></span>
-            <span className="col-span-10 text-base">Discord</span>
+            <span className="col-span-10 text-base select-none">Discord</span>
         </Link>
     </div>
   );

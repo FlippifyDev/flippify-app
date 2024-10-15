@@ -18,6 +18,12 @@ const PlansCardStandardWhatsIncluded = () => {
         </li>
         <li className="w-full">
           <PlansClickableBulletPoint
+            text="Restock Monitors"
+            tooltip="Stay ahead of the game with real-time alerts for high-demand product restocks. Be the first to secure items and maximize your profits with unbeatable resale opportunities."
+          />
+        </li>
+        <li className="w-full">
+          <PlansClickableBulletPoint
             text="Exclusive Reselling Inner Circle"
             tooltip="Join a community of experienced, top-tier resellers and gain access to exclusive networking opportunities. Participate in live Q&A sessions, giveaways, and get access to private community spaces not available to the general public. Learn from the best and stay ahead of the competition."
           />

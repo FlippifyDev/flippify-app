@@ -31,14 +31,14 @@ export default function RestockInfoPage() {
       });
 
       setProducts(updatedProducts);
-      setDisplayedProducts(sortByRoiAndStock(updatedProducts).slice(0, limit)); // Display the first batch
+      setDisplayedProducts(sortByRoiStockAndTimestamp(updatedProducts).slice(0, limit)); // Display the first batch
     }
 
     loadProducts();
   }, []);
 
-  // Function to sort products by ROI and stock availability
-  const sortByRoiAndStock = (products: IRestockInfo[]) => {
+  // Function to sort products by timestamp and stock availability
+  const sortByRoiStockAndTimestamp = (products: IRestockInfo[]) => {
     return products
       .sort((a, b) => {
         // Check if either product is missing essential data
@@ -55,12 +55,17 @@ export default function RestockInfoPage() {
         // If stock status differs, prioritize in-stock products (true > false)
         if (inStockA !== inStockB) return inStockB - inStockA;
   
+        // Compare by timestamp (most recent first)
+        const timestampA = new Date(a.timestamp).getTime(); // Convert to timestamp if needed
+        const timestampB = new Date(b.timestamp).getTime();
+  
+        if (timestampA !== timestampB) {
+          return timestampB - timestampA; // Sort descending by timestamp (newest first)
+        }
+  
         // Calculate ROI for each product
         const roiA = a.estimatedProfit && a.price ? (a.estimatedProfit / a.price) : 0;
         const roiB = b.estimatedProfit && b.price ? (b.estimatedProfit / b.price) : 0;
-  
-        // If both have the same ROI, no need to re-sort by stock as it's handled above
-        if (roiA === roiB) return 0;
   
         // Sort descending by ROI
         return roiB - roiA;
@@ -126,7 +131,7 @@ export default function RestockInfoPage() {
       });
     } else {
       // If no search query, sort by estimated profit
-      filtered = sortByRoiAndStock(products);
+      filtered = sortByRoiStockAndTimestamp(products);
     }
 
     // Reset pagination and display filtered products

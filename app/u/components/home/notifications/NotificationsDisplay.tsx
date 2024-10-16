@@ -12,14 +12,14 @@ const NotificationsDisplay: React.FC<NavbarNotificationListProps> = ({
   getTimeAgo,
 }) => {
   return (
-    <ul className="space-y-2">
+    <ul className="space-y-2 bg-gray-100 px-4 pt-4 pb-20 rounded-xl" >
       {notifications.length === 0 ? (
         <li className="text-gray-500">No new notifications</li>
       ) : (
         notifications.map((notification) => (
           <li
             key={notification.id}
-            className="cursor-pointer p-2 bg-gray-100 hover:bg-gray-200 rounded"
+            className="cursor-pointer p-4 bg-white shadow-sm rounded-lg hover:bg-gray-50"
             onClick={() => handleNotificationClick(notification.redirectUrl)}
           >
             <div className="font-bold">{notification.title}</div>

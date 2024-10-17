@@ -34,6 +34,9 @@ const Sidebar = () => {
     };
   }, [drawerOpen]);
 
+
+
+
   return (
     <div className="relative">
       <Alert message="Membership Required." visible={alertVisible} onClose={hideAlert} />
@@ -48,7 +51,7 @@ const Sidebar = () => {
         />
 
         {/* Sidebar itself */}
-        <div className="drawer-side shadow-lg z-20 fixed">
+        <div className="drawer-side shadow-lg z-30 sm:z-20 fixed">
           <div className="h-full overflow-y-hidden"> {/* Using the scrollbar-hide class */}
             <div className="h-full overflow-y-scroll scrollbar-hide border-r bg-white">
               <ul className="menu bg-white text-base-content min-h-full w-72 2xl:w-80 px-4 flex flex-col justify-between border-gray-200">

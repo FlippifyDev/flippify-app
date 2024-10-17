@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import createBillingPortalUrl from "@/app/api/stripe-handlers/create-billing-portal";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 
@@ -64,7 +64,8 @@ const NavbarProfileAvatar = () => {
     }
   };
 
-  const handleProfileOpen = () => {
+  const handleProfileOpen = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (session) {
       if (session.user?.name) {
         router.push(`/u/${session.user.name}/profile`);
@@ -78,7 +79,8 @@ const NavbarProfileAvatar = () => {
     setIsDropdownOpen((prev) => !prev);
   };
 
-  const handleAdminOpen = () => {
+  const handleAdminOpen = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (session) {
       if (session.user?.name) {
         router.push(`/u/${session.user.name}/asldf0987asDa230fDsADMIN`);
@@ -88,7 +90,8 @@ const NavbarProfileAvatar = () => {
     }
   };
 
-  const handleTestingOpen = () => {
+  const handleTestingOpen = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (session) {
       if (session.user?.name) {
         router.push(`/u/${session.user.name}/bfoau214QNI42nAjTEST`);
@@ -121,6 +124,7 @@ const NavbarProfileAvatar = () => {
       {isDropdownOpen && (
         <ul
           className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+          onClick={(e) => e.stopPropagation()} // Prevents closing when clicking on the menu
         >
           <button
             className="relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200"

@@ -39,7 +39,6 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
 
   // Referral state
   const [referralCode, setReferralCode] = useState(referral.referral_code);
-  const [referralCount, setReferralCount] = useState(referral.referral_count);
   const [rewardsClaimed, setRewardsClaimed] = useState(referral.rewards_claimed);
 
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => setNewEmail(e.target.value);
@@ -47,7 +46,6 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
   const handleReferralChange = (e: ChangeEvent<HTMLInputElement>, field: string) => {
     const value = e.target.value;
     if (field === 'referralCode') setReferralCode(value);
-    if (field === 'referralCount') setReferralCount(parseInt(value) || 0);
     if (field === 'rewardsClaimed') setRewardsClaimed(parseInt(value) || 0);
   };
 
@@ -72,7 +70,6 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
         subscriptions: selectedRoles,
         referral: {
           referral_code: referralCode,
-          referral_count: referralCount,
           rewards_claimed: rewardsClaimed,
         },
       };
@@ -163,15 +160,6 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
               className="input input-bordered col-span-6"
               value={referralCode}
               onChange={(e) => handleReferralChange(e, 'referralCode')}
-            />
-          </div>
-          <div className="grid grid-cols-12 gap-2 mt-2">
-            <label className="col-span-6 flex items-center">Referral Count:</label>
-            <input
-              type="number"
-              className="input input-bordered col-span-6"
-              value={referralCount}
-              onChange={(e) => handleReferralChange(e, 'referralCount')}
             />
           </div>
           <div className="grid grid-cols-12 gap-2 mt-2">

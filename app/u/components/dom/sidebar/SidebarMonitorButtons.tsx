@@ -8,6 +8,8 @@ import React from "react";
 import { PiLegoFill } from "react-icons/pi";
 import { FaLaptop } from "react-icons/fa";
 import { FaParachuteBox } from "react-icons/fa6";
+import { BiSolidBinoculars } from "react-icons/bi";
+import Layout from "../../layout/Layout";
 
 interface SidebaMonitorButtonsProps {
   showAlert: () => void;
@@ -18,22 +20,43 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
 }) => {
   return (
     <div>
+      {/* Restock Info */}
+      <LayoutSubscriptionWrapper anySubscriptions={["member", "electronics"]}>
+        <SidebarButton
+          text="Restock Info"
+          redirect="monitors/restock-info"
+          symbol={<FaParachuteBox className="text-md" />}
+        />
+      </LayoutSubscriptionWrapper>
+
+      {/* Restock Info Disabled */}
+      <LayoutSubscriptionWrapper requiredSubscriptions={["!member"]}>
+        <DisabledSideBarButton
+          text="Restock Info"
+          redirect="monitors/restock-info"
+          symbol={<FaParachuteBox className="text-md" />}
+          showAlert={showAlert}
+        />
+      </LayoutSubscriptionWrapper>
+
       {/* Electronics */}
       <LayoutSubscriptionWrapper anySubscriptions={["member", "electronics"]}>
         <SidebarButton
           text="Electronics"
-          redirect="monitors/electronics"  // Correct redirect path for Electronics
+          redirect="monitors/electronics"
           symbol={<FaLaptop className="text-md" />}
         />
       </LayoutSubscriptionWrapper>
 
       {/* Electronics Disabled */}
-      <LayoutSubscriptionWrapper requiredSubscriptions={["!electronics", "!member"]}>
+      <LayoutSubscriptionWrapper
+        requiredSubscriptions={["!electronics", "!member"]}
+      >
         <DisabledSideBarButton
           text="Electronics"
-          redirect="monitors/electronics"  // Updated the redirect path
+          redirect="monitors/electronics"
           symbol={<FaLaptop className="text-lg" />}
-          showAlert={showAlert}  // Ensuring alert is triggered correctly
+          showAlert={showAlert}
         />
       </LayoutSubscriptionWrapper>
 
@@ -42,7 +65,7 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
         <SidebarButton
           text="Deal Watch"
           redirect="monitors/deal-watch"
-          symbol={<FaParachuteBox className="text-md" />}
+          symbol={<BiSolidBinoculars className="text-md" />}
         />
       </LayoutSubscriptionWrapper>
 
@@ -53,15 +76,13 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
         <DisabledSideBarButton
           text="Deal Watch"
           redirect="monitors/deal-watch"
-          symbol={<FaParachuteBox className="text-md" />}
+          symbol={<BiSolidBinoculars className="text-md" />}
           showAlert={showAlert}
         />
       </LayoutSubscriptionWrapper>
 
       {/* Retiring Sets */}
-      <LayoutSubscriptionWrapper
-        anySubscriptions={["member", "retiring sets"]}
-      >
+      <LayoutSubscriptionWrapper anySubscriptions={["member", "retiring sets"]}>
         <SidebarButton
           text="Retiring Sets"
           redirect="monitors/retiring-sets"

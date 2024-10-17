@@ -1,10 +1,7 @@
 "use server";
 
 import mongoose from 'mongoose';
-
 import { IProduct, productSchema } from './productModel';
-
-mongoose.connect(process.env.MONGO_URL as string);
 
 const ProductsConfig = mongoose.models['config.products'] || mongoose.model<IProduct>('config.products', productSchema);
 

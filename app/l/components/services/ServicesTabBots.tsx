@@ -42,6 +42,12 @@ const ProductList: React.FC = () => {
           image="https://i.imgur.com/8JK1AMT.png"
         />
         <ProductsCard
+          title="Restock Monitor"
+          description="Stay informed with our Real-Time Restock Alerts! Monitor multiple retailers, set customizable alerts, and never miss out on high-demand products. Sign up today to shop smarter!"
+          disclaimer="Prices and availability may fluctuate very quicklky. Always verify details on respective websites and eBay before purchasing."
+          image="https://i.imgur.com/F8EYAdE.png"
+        />
+        <ProductsCard
           title="Retiring Sets"
           description="Track soon-to-retire LEGO sets across various sites and stay ahead of collectors. Secure valuable sets before they vanish, with potential long-term profit as prices rise post-retirement."
           disclaimer="Prices and availability may fluctuate. Always verify details on respective websites and eBay before purchasing."

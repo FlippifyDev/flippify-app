@@ -2,8 +2,6 @@
 
 import mongoose from 'mongoose';
 
-mongoose.connect(process.env.MONGO_URL as string);
-
 // Define the schema interface
 interface IProductsConfig {
     "subscription-name-server": string;

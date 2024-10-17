@@ -6,7 +6,8 @@ import ServerPlansCard from "./ServerPlansCard";
 import ServerPlansCardDealWatchWhatsIncluded from "./ServerPlansCardDealWatchWhatsIncluded";
 import ServerPlansCardRetiringSetsWhatsIncluded from "./ServerPlansCardRetiringSetsWhatsIncluded";
 import ServerPlansCardElectronicsWhatsIncluded from "./ServerPlansCardElectronicsWhatsIncluded";
-import { fetchConversionRatesFromFirebase  } from "@/app/api/conversion/currencyApi"; // Your currency API
+import ServerPlansCardRestockInfoWhatsIncluded from "./ServerPlansCardRestockInfoWhatsIncluded";
+import { fetchConversionRatesFromFirebase  } from "@/app/api/conversion/currencyApi"; 
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
@@ -34,7 +35,7 @@ const ServerPlansPage = () => {
   };
 
   return (
-    <div className="w-full h-full mb-2">
+    <div className="w-full h-full flex flex-col justify-center items-center mb-2 relative">
       <div className="flex flex-col items-center space-y-5 text-center mt-2 md:mt-6">
         <div className="flex flex-wrap justify-center">
           <p
@@ -75,7 +76,7 @@ const ServerPlansPage = () => {
       </div>
 
       {/* Server Plans */}
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-3 mx-6 lg:px-32 md:mx-2 lg:mx-16 gap-8 items-stretch">
+      <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 mx-2 md:mx-2 lg:mx-16 2xl:mx-2 gap-8 w-full xl:w-4/5">
         <ServerPlansCard
           title="Deal Watch UK"
           description="Discover Endless profitable deals scraped and filtered from site like 'hotukdeals' & 'rewarddeals'"
@@ -94,6 +95,17 @@ const ServerPlansPage = () => {
           specialPlan={false}
           priceRange={selectedPlan}
           currency={currency}
+          conversionRates={conversionRates}
+        />
+        <ServerPlansCard
+          title="Retock Info"
+          description="Keep your community updated with instant restock alerts, helping them grab hot products and boost profits."
+          prices={{ monthly: 149.99, yearly: 1499.99 }}
+          whatsIncludedComponent={<ServerPlansCardRestockInfoWhatsIncluded />}
+          specialPlan={false}
+          priceRange={selectedPlan}
+          currency={currency}
+          unavailable={true}
           conversionRates={conversionRates}
         />
         <ServerPlansCard

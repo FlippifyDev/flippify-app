@@ -3,6 +3,7 @@ import { Model } from 'mongoose';
 import { Electronics } from './electronicsModel';
 import { RetiringSet } from './retiringSetsModel';
 import { DealWatch } from './dealWatchModel';
+import { RestockInfo } from './restockInfoModel';
 import { Ebay } from './ebayModel';
 
 
@@ -17,6 +18,7 @@ export const modelRegistry: ModelRegistry = {
     Ebay,
     Electronics,
     DealWatch,
+    RestockInfo,
     RetiringSet,
 };
 

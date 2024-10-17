@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, get, set, push, child, query, orderByChild, equalTo, increment, onValue } from 'firebase/database';
+import { getDatabase, ref, get, set, push, child, query, orderByChild, equalTo, increment, onValue, remove, update } from 'firebase/database';
 import { getAuth, signInAnonymously } from 'firebase/auth';
 
 // Firebase configuration
@@ -53,4 +53,4 @@ export const updateUserInFirebase = async (
 };
 
 // Export necessary Firebase functionalities
-export { database, auth, ref, get, set, push, child, query, orderByChild, equalTo, increment, onValue };
+export { database, auth, ref, get, set, push, child, query, orderByChild, equalTo, increment, onValue, remove, update };

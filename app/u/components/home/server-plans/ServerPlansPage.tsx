@@ -6,6 +6,7 @@ import ServerPlansCard from "./ServerPlansCard";
 import ServerPlansCardDealWatchWhatsIncluded from "./ServerPlansCardDealWatchWhatsIncluded";
 import ServerPlansCardRetiringSetsWhatsIncluded from "./ServerPlansCardRetiringSetsWhatsIncluded";
 import ServerPlansCardElectronicsWhatsIncluded from "./ServerPlansCardElectronicsWhatsIncluded";
+import ServerPlansCardRestockInfoWhatsIncluded from "./ServerPlansCardRestockInfoWhatsIncluded";
 import { useSession } from "next-auth/react";
 import { database, ref, get } from "@/app/api/auth-firebase/firebaseConfig";
 import { fetchConversionRatesFromFirebase } from "@/app/api/conversion/currencyApi";
@@ -36,13 +37,13 @@ const ServerPlansPage = () => {
   };
 
   return (
-    <div className="w-full h-full mb-2">
+    <div className="w-full h-full flex flex-col justify-center items-center mb-2 relative">
       <div className="flex flex-col items-center space-y-5 text-center mt-10">
         <div className="flex flex-wrap justify-center">
           <p
             className={`${lato.className} text-4xl sm:text-5xl w-4/5 sm:w-full text-gradient bg-gradient-to-tr from-houseBlue to-houseHoverBlue bg-clip-text text-transparent py-1`}
           >
-            Server Integration
+            Server Integration {" "}
             <a
               className={`${inter.className} mb-8 text-lightModeText text-4xl sm:text-5xl font-bold`}
             >
@@ -77,10 +78,10 @@ const ServerPlansPage = () => {
       </div>
 
       {/* Server Plans */}
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-3 mx-4 md:mx-2 lg:mx-16 gap-8 items-stretch">
+      <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 mx-2 md:mx-2 lg:mx-16 2xl:mx-2 gap-8 w-full xl:w-4/5">
         <ServerPlansCard
           title="Deal Watch UK"
-          description="Endless profitable deals scraped and filtered from sites like 'hotukdeals' & 'rewarddeals'."
+          description="Endless profitable deals scraped and filtered from sites like 'hotukdeals', 'rewarddeals' & more."
           prices={[69.99, 699.99]}
           priceIds={{
             monthly: "price_1PfJ9bJJRepiHZ8dk689bT3H",
@@ -106,6 +107,22 @@ const ServerPlansPage = () => {
           priceRange={selectedPlan}
           planRole="lego retirement"
           currency={currency}
+          conversionRates={conversionRates}
+        />
+        <ServerPlansCard
+          title="Retock Info"
+          description="Keep your community updated with instant restock alerts, helping them grab hot products and boost profits."
+          prices={[149.99, 1499.99]}
+          priceIds={{
+            monthly: "price_1Q6a5wJJRepiHZ8dElbHRUwg",
+            yearly: "price_1Q6a5wJJRepiHZ8di2BHYt8k",
+          }}
+          whatsIncludedComponent={<ServerPlansCardRestockInfoWhatsIncluded />}
+          specialPlan={false}
+          priceRange={selectedPlan}
+          planRole="restock info"
+          currency={currency}
+          unavailable={true}
           conversionRates={conversionRates}
         />
         <ServerPlansCard

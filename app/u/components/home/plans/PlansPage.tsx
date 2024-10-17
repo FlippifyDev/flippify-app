@@ -66,7 +66,7 @@ const PlansPage = () => {
   };
 
   return (
-    <div className="w-full h-full mb-2">
+    <div className="w-full h-full flex flex-col justify-center items-center mb-2 relative">
       <div className="flex flex-col items-center space-y-5 text-center mt-6">
         <div className="flex flex-wrap justify-center">
           <p
@@ -106,7 +106,7 @@ const PlansPage = () => {
       </div>
 
       {/* Subscription Cards */}
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-3 mx-4 md:mx-2 lg:mx-16 gap-8 items-stretch">
+      <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 mx-2 md:mx-2 lg:mx-16 2xl:mx-2 gap-8 w-full xl:w-4/5">
         <PlansCard
           title="Standard"
           description="For beginners"

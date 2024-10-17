@@ -30,21 +30,31 @@ const ManageServersSelectionWebhook = ({ subscription_name, region }: Props) => 
     const stripe_customer_id = user.customerId;
     const webhook = webhookUrl.trim();
 
-    if (webhook) {
-      const success = await addWebhook(stripe_customer_id, subscription_name, region, webhook);
-      if (success) {
-        setAlertMessage('Webhook added successfully!');
-        setAlertVisible(true);
-        setWebhookUrl(''); // Optionally clear input field or reset form state
-      } else {
-        setAlertMessage('Failed to add webhook. Please try again.');
-        setAlertVisible(true);
-      }
+    // Validate webhook URL
+    const discordWebhookRegex = /^https:\/\/discord\.com\/api\/webhooks\/\d{18,19}\/[A-Za-z0-9_-]+$/;
+    if (!webhook) {
+      setAlertMessage('Please enter a webhook URL');
+      setAlertVisible(true);
+      return;
+    }
+
+    if (!discordWebhookRegex.test(webhook)) {
+      setAlertMessage('Invalid webhook URL');
+      setAlertVisible(true);
+      return;
+    }
+
+    const success = await addWebhook(stripe_customer_id, subscription_name, region, webhook);
+    if (success) {
+      setAlertMessage('Webhook added successfully!');
+      setAlertVisible(true);
+      setWebhookUrl(''); // Optionally clear input field or reset form state
     } else {
-      setAlertMessage('Please enter a webhook URL.');
+      setAlertMessage('Failed to add webhook. Please try again.');
       setAlertVisible(true);
     }
   };
+
 
   return (
     <div className="form-control w-full mt-2 text-lightModeText">

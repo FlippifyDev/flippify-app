@@ -1,20 +1,22 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { signOut, useSession } from 'next-auth/react';
-import { useRouter, usePathname } from 'next/navigation';
-import createBillingPortalUrl from '@/app/api/stripe-handlers/create-billing-portal';
-import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
+import { signOut, useSession } from "next-auth/react";
+import { useRouter, usePathname } from "next/navigation";
+import createBillingPortalUrl from "@/app/api/stripe-handlers/create-billing-portal";
+import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 
 const NavbarProfileAvatar = () => {
   const { data: session } = useSession();
   const [billingUrl, setBillingUrl] = useState<string | null>(null);
   const router = useRouter();
   const customerIdRef = useRef<string | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   // Default avatar
-  let avatar = "https://i.pinimg.com/originals/40/a4/59/40a4592d0e7f4dc067ec0cdc24e038b9.png";
+  let avatar =
+    "https://i.pinimg.com/originals/40/a4/59/40a4592d0e7f4dc067ec0cdc24e038b9.png";
   let referral_code = "None";
 
   if (session) {
@@ -22,7 +24,7 @@ const NavbarProfileAvatar = () => {
       avatar = session.user.image;
     }
     if (session?.user.referral?.referral_code) {
-        referral_code = session.user.referral.referral_code;
+      referral_code = session.user.referral.referral_code;
     }
   }
 
@@ -38,11 +40,16 @@ const NavbarProfileAvatar = () => {
 
         if (customerIdRef.current) {
           try {
-            const url = await createBillingPortalUrl(user.name, customerIdRef.current);
+            const url = await createBillingPortalUrl(
+              user.name,
+              customerIdRef.current
+            );
             setBillingUrl(url);
           } catch (error) {
-            console.error('Failed to create billing portal:', error);
-            setBillingUrl('http://flippify.co.uk/u/failed-to-create-billing-portal');
+            console.error("Failed to create billing portal:", error);
+            setBillingUrl(
+              "http://flippify.co.uk/u/failed-to-create-billing-portal"
+            );
           }
         }
       }
@@ -53,10 +60,10 @@ const NavbarProfileAvatar = () => {
 
   const handleBillingPortalButtonClick = () => {
     if (billingUrl) {
-      window.open(billingUrl, '_blank');
+      window.open(billingUrl, "_blank");
     }
   };
-  
+
   const handleProfileOpen = () => {
     if (session) {
       if (session.user?.name) {
@@ -65,6 +72,10 @@ const NavbarProfileAvatar = () => {
         router.push(`/u/loading`);
       }
     }
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen((prev) => !prev);
   };
 
   const handleAdminOpen = () => {
@@ -93,6 +104,7 @@ const NavbarProfileAvatar = () => {
         tabIndex={0}
         role="button"
         className="btn btn-ghost btn-circle avatar"
+        onClick={toggleDropdown}
       >
         <div className="w-10 rounded-full">
           <Image
@@ -104,45 +116,58 @@ const NavbarProfileAvatar = () => {
           />
         </div>
       </div>
-      <ul
-        tabIndex={0}
-        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
-      >
-        <button 
-          className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200' 
-          onClick={handleProfileOpen}>
-          <span 
-            className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Profile</span>
-        </button>
-        <LayoutSubscriptionWrapper requiredSubscriptions={['admin']}>
-          <button 
-            className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200' 
-            onClick={handleAdminOpen}>
-            <span 
-              className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Admin</span>
+
+      {/* Decide to open / close menu */}
+      {isDropdownOpen && (
+        <ul
+          className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+        >
+          <button
+            className="relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200"
+            onClick={handleProfileOpen}
+          >
+            <span className="text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]">
+              Profile
+            </span>
           </button>
-        </LayoutSubscriptionWrapper>
-        <LayoutSubscriptionWrapper requiredSubscriptions={['admin']}>
-          <button 
-            className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200' 
-            onClick={handleTestingOpen}>
-            <span 
-              className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Testing Area</span>
+          <LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
+            <button
+              className="relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200"
+              onClick={handleAdminOpen}
+            >
+              <span className="text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]">
+                Admin
+              </span>
+            </button>
+          </LayoutSubscriptionWrapper>
+          <LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
+            <button
+              className="relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200"
+              onClick={handleTestingOpen}
+            >
+              <span className="text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]">
+                Testing Area
+              </span>
+            </button>
+          </LayoutSubscriptionWrapper>
+          <button
+            className="relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200"
+            onClick={handleBillingPortalButtonClick}
+          >
+            <span className="text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]">
+              Billing Portal
+            </span>
           </button>
-        </LayoutSubscriptionWrapper>
-        <button 
-          className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200' 
-          onClick={handleBillingPortalButtonClick}>
-          <span 
-            className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Billing Portal</span>
-        </button>
-        <button 
-          className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-red-600 hover:text-white active:bg-red-700 transform transition duration-200' 
-          onClick={handleSignOut}>
-          <span 
-            className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Sign Out</span>
-        </button>
-      </ul>
+          <button
+            className="relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-red-600 hover:text-white active:bg-red-700 transform transition duration-200"
+            onClick={handleSignOut}
+          >
+            <span className="text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]">
+              Sign Out
+            </span>
+          </button>
+        </ul>
+      )}
     </div>
   );
 };

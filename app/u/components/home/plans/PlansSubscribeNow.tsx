@@ -24,13 +24,15 @@ const PlansSubscribeNow: React.FC<PlansSubscribeNowProps> = ({ priceId, specialP
         const user = session.user;
         customerIdRef.current = user.customerId || null;
         usernameRef.current = user.name;
+        const referred_by = user.referral?.referred_by;
 
         if (customerIdRef.current && usernameRef.current) {
           try {
             const url = await createCheckoutSession(
               usernameRef.current,
               customerIdRef.current,
-              priceId
+              priceId,
+              referred_by
             );
             setCheckoutUrl(url);
           } catch (error) {

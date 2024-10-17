@@ -18,7 +18,7 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="min-h-screen bg-cover bg-gray-40 bg-center bg-fixed overflow-x-hidden">
       <div className="flex flex-col min-h-screen">
-        <div className="fixed top-0 left-0 h-screen z-40">
+        <div className="fixed top-0 left-0 h-screen z-40 overflow-y-auto">
           <Sidebar />
         </div>
 

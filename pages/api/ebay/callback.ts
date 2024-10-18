@@ -1,12 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import connectDB from '../auth-mongodb/dbConnect';
+import connectDB from '@/app/api/auth-mongodb/dbConnect';
 import { getSession } from 'next-auth/react';
 import { User } from 'app/api/auth-mongodb/userModel';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { code } = req.query;
 
+  console.log("OAuth Callback Invoked with Code:", code);
+
   if (!code || Array.isArray(code)) {
+    console.error("Authorization code is missing or invalid.");
     return res.status(400).json({ error: 'Authorization code is missing or invalid.' });
   }
 
@@ -14,14 +17,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const CLIENT_SECRET = process.env.EBAY_CLIENT_SECRET;
   const REDIRECT_URI = process.env.NEXT_PUBLIC_EBAY_REDIRECT_URI;
 
+  console.log("Client ID:", CLIENT_ID);
+  console.log("Client Secret:", CLIENT_SECRET ? "Present" : "Not Set");
+  console.log("Redirect URI:", REDIRECT_URI);
+
   if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI) {
+    console.error('Missing eBay credentials');
     return res.status(500).json({ error: 'Missing eBay credentials' });
   }
 
   const basicAuth = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64');
 
   try {
-    // Exchange authorization code for access token
+    // Request tokens from eBay
     const tokenResponse = await fetch('https://api.sandbox.ebay.com/identity/v1/oauth2/token', {
       method: 'POST',
       headers: {
@@ -33,7 +41,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const tokenData = await tokenResponse.json();
 
+    // Log the returned tokens
+    console.log("Token Data Returned from eBay:", tokenData);
+
     if (tokenData.error) {
+      console.error("Error during token exchange:", tokenData.error_description);
       return res.status(400).json({ error: tokenData.error_description });
     }
 
@@ -41,6 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const session = await getSession({ req });
 
     if (!session || !session.user?.discordId) {
+      console.error("User session not found or Discord ID missing.");
       return res.status(401).json({ error: 'User not authenticated or Discord ID not found' });
     }
 
@@ -51,15 +64,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const user = await User.findOne({ discord_id: discordId });
 
     if (!user) {
+      console.error("User not found in MongoDB for Discord ID:", discordId);
       return res.status(404).json({ error: 'User not found' });
     }
+
+    // Log the current state of the user object
+    console.log("User before token update:", user);
 
     // Store tokens in MongoDB
     user.ebayAccessToken = tokenData.access_token;
     user.ebayRefreshToken = tokenData.refresh_token;
     user.ebayTokenExpiry = Date.now() + tokenData.expires_in * 1000;
 
-    await user.save();  // Save updated user info
+    console.log("Updated User with eBay Tokens:", {
+      ebayAccessToken: user.ebayAccessToken,
+      ebayRefreshToken: user.ebayRefreshToken,
+      ebayTokenExpiry: user.ebayTokenExpiry,
+    });
+
+    // Save updated user info to MongoDB
+    await user.save();
+
+    // Log confirmation of saving
+    console.log("User tokens successfully stored in MongoDB");
 
     // Redirect to the profile page after connecting
     res.redirect('/profile?ebayConnected=true');

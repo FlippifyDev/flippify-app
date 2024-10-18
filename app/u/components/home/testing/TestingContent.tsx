@@ -1,7 +1,7 @@
 import React from "react";
 import ControlNotificationsButton from "./ControlNotificationsButton";
 import TestNotificationButton from "./TestNotificationButton";
-import EbayConnect from "./EbayConnect"
+import EbayConnectAndStatus from "./EbayConnectAndStatus";
 
 const testContent = () => {
   return (
@@ -12,10 +12,10 @@ const testContent = () => {
         <TestNotificationButton />
       </div>
       <div className="mb-4">
-        eBay and Amazon Connection Testing here
+        eBay Account Connection Testing
       </div>
       <div className="w-full mb-10 flex justify-start">
-        <EbayConnect />
+        <EbayConnectAndStatus />
       </div>
     </div>
   );

@@ -1,14 +1,11 @@
 import mongoose, { Document, Model, Schema, Types } from 'mongoose';
 
-
 interface ISubscription {
   name: string;
   role_id: string;
   override: boolean;
   server_subscription: boolean;
 }
-
-
 
 interface IReferral {
   referral_code: string;
@@ -26,11 +23,12 @@ interface IUser extends Document {
   stripe_customer_id: string;
   subscriptions: ISubscription[];
   referral?: IReferral;
+
+  // eBay 
   ebayAccessToken?: string;
   ebayRefreshToken?: string;
   ebayTokenExpiry?: number;  
 }
-
 
 const subscriptionSchema = new Schema<ISubscription>({
   name: { type: String, required: true },
@@ -54,6 +52,8 @@ const userSchema = new Schema<IUser>({
   stripe_customer_id: { type: String, required: true },
   subscriptions: [subscriptionSchema],
   referral: referralSchema,
+
+  // eBay
   ebayAccessToken: { type: String, default: null },
   ebayRefreshToken: { type: String, default: null },
   ebayTokenExpiry: { type: Number, default: null },

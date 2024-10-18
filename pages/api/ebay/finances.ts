@@ -12,37 +12,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const { customerId, ebay } = session.user;
 
-  const ebayAccessToken = ebay?.ebayAccessToken;
-  const ebayTokenExpiry = ebay?.ebayTokenExpiry;
-
-  if (!ebayAccessToken || !ebayTokenExpiry) {
+  if (!ebay || !ebay.ebayAccessToken || !ebay.ebayTokenExpiry) {
     return res.status(400).json({ error: 'eBay tokens not found' });
   }
 
-  if (Date.now() >= ebayTokenExpiry) {
-    console.log("eBay token expired. Refreshing...");
-    await refreshEbayToken(customerId);  // Refresh token using customer ID
+  if (Date.now() >= ebay.ebayTokenExpiry) {
+    await refreshEbayToken(customerId);
   }
+
+  const refreshedSession = await getSession({ req });
+  const ebayAccessToken = refreshedSession?.user?.ebay?.ebayAccessToken;
 
   try {
     const url = 'https://api.ebay.com/sell/finances/v1/transaction?limit=10';
-
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${ebayAccessToken}`,
+        Authorization: `Bearer ${ebayAccessToken}`,
         'Content-Type': 'application/json',
       },
     });
 
     if (!response.ok) {
-      throw new Error('Error fetching financial data');
+      return res.status(500).json({ error: 'Failed to fetch eBay financial data' });
     }
 
     const data = await response.json();
     res.status(200).json(data);
   } catch (error) {
-    console.error('Error fetching eBay finances:', error);
-    res.status(500).json({ error: 'Error fetching eBay finances' });
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }

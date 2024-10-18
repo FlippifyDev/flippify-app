@@ -1,34 +1,36 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import connectDB from '@/app/api/auth-mongodb/dbConnect';  // Adjust path if necessary
+import connectDB from '@/app/api/auth-mongodb/dbConnect';
 import { getSession } from 'next-auth/react';
-import { User } from '@/app/api/auth-mongodb/userModel';  // Adjust path if necessary
+import { User } from 'app/api/auth-mongodb/userModel';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const session = await getSession({ req });
 
-    if (!session || !session.user?.discordId) {
-      return res.status(401).json({ error: 'User not authenticated or Discord ID not found' });
+    if (!session || !session.user?.customerId) {
+      return res.status(401).json({ error: 'User not authenticated' });
     }
 
-    const discordId = session.user.discordId;
+    const customerId = session.user.customerId;
 
     await connectDB();
 
-    const user = await User.findOne({ discord_id: discordId });
+    const user = await User.findOne({ stripe_customer_id: customerId });
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Disconnect the eBay account
-    user.ebay = {
-      ebayAccessToken: null,
-      ebayRefreshToken: null,
-      ebayTokenExpiry: null,
-    };
+    // Ensure eBay data exists
+    if (!user.ebay) {
+      return res.status(400).json({ error: 'No eBay data found for this user' });
+    }
 
-    await user.save();  // Save updated user info
+    // Remove the eBay tokens from the user object
+    user.ebay.ebayAccessToken = undefined;
+    user.ebay.ebayRefreshToken = undefined;
+    user.ebay.ebayTokenExpiry = undefined;
 
+    await user.save();
 
     return res.status(200).json({ message: 'eBay account disconnected successfully' });
   } catch (error) {

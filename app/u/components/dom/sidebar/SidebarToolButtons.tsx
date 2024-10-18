@@ -1,20 +1,21 @@
-'use client';
+"use client";
 
-import DisabledSideBarButton from './SidebarButtonDisabled';
-import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
-import SidebarButton from './SidebarButton';
+import DisabledSideBarButton from "./SidebarButtonDisabled";
+import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
+import SidebarButton from "./SidebarButton";
 
-import React from 'react';
-import { AiOutlineStock } from 'react-icons/ai';
-import { FaRegNewspaper } from 'react-icons/fa6';
+import React from "react";
+import { AiOutlineStock } from "react-icons/ai";
+import { FaRegNewspaper } from "react-icons/fa6";
 import { FaServer, FaBoxOpen } from "react-icons/fa6";
-
 
 interface SidebarToolButtonsProps {
   showAlert: () => void;
 }
 
-const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({ showAlert }) => {
+const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
+  showAlert,
+}) => {
   return (
     <div>
       <DisabledSideBarButton
@@ -24,41 +25,71 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({ showAlert }) =>
         tooltip="Coming Soon"
       />
 
+
+
       {/* Manage Servers Tab */}
-      <LayoutSubscriptionWrapper anySubscriptions={['server', 'admin']}>
-          <SidebarButton
-              text="Server Management"
-              redirect="manage-servers"
-              symbol={<FaServer className="text-base" />}
-          />
+      <LayoutSubscriptionWrapper anySubscriptions={["server", "admin"]}>
+        <SidebarButton
+          text="Server Management"
+          redirect="manage-servers"
+          symbol={<FaServer className="text-base" />}
+        />
       </LayoutSubscriptionWrapper>
 
       {/* Manage Servers Tab */}
-      <LayoutSubscriptionWrapper requiredSubscriptions={['!server', '!admin']}>
-          <DisabledSideBarButton
-              text="Server Management"
-              redirect="manage-servers"
-              symbol={<FaServer className="text-base" />}
-              showAlert={showAlert}
-          />
+      <LayoutSubscriptionWrapper requiredSubscriptions={["!server", "!admin"]}>
+        <DisabledSideBarButton
+          text="Server Management"
+          redirect="manage-servers"
+          symbol={<FaServer className="text-base" />}
+          showAlert={showAlert}
+        />
       </LayoutSubscriptionWrapper>
 
 
-      <DisabledSideBarButton
-        text="Financial Hub"
-        redirect="sales-tracker"
-        symbol={<AiOutlineStock className="text-md" />}
-        tooltip="Coming Soon"
-      />
+
+      {/* Disabled Financial Hub */}
+      <LayoutSubscriptionWrapper requiredSubscriptions={["!admin"]}>
+        <DisabledSideBarButton
+          text="Financial Hub"
+          redirect="sales-tracker"
+          symbol={<AiOutlineStock className="text-md" />}
+          tooltip="Coming Soon"
+        />
+      </LayoutSubscriptionWrapper>
+
+      {/* Admin Access Financial Hub */}
+      <LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
+        <SidebarButton
+          text="Financial Hub"
+          redirect="financial-hub"
+          symbol={<AiOutlineStock className="text-md" />}
+        />
+      </LayoutSubscriptionWrapper>
 
 
-      {/* Inventory & Orders */}
-      <DisabledSideBarButton
-        text="Inventory & Orders"
-        redirect="inventory-orders"
-        symbol={<FaBoxOpen className="text-md" />}
-        tooltip="Coming Soon"
-      />
+
+      {/* Disabled Inventory & Orders */}
+      <LayoutSubscriptionWrapper requiredSubscriptions={["!admin"]}>
+        <DisabledSideBarButton
+          text="Inventory & Orders"
+          redirect="inventory-orders"
+          symbol={<FaBoxOpen className="text-md" />}
+          tooltip="Coming Soon"
+        />
+      </LayoutSubscriptionWrapper>
+
+      {/* Admin Access Inventory & Orders */}
+      <LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
+        <SidebarButton
+          text="Inventory & Orders"
+          redirect="inventory-orders"
+          symbol={<FaBoxOpen className="text-md" />}
+        />
+      </LayoutSubscriptionWrapper>
+
+
+
     </div>
   );
 };

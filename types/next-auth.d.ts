@@ -18,9 +18,16 @@ interface SessionUser extends NextAuthUser {
     referral_count: number;
     rewards_claimed: number;
   };
-  accessGranted?: boolean;  // New property to track access status
+  accessGranted?: boolean;
   username: string;
   currency?: CurrencyType;
+
+  // Add the ebay section to SessionUser
+  ebay?: {
+    ebayAccessToken: string;
+    ebayRefreshToken: string;
+    ebayTokenExpiry: number;
+  };
 }
 
 declare module 'next-auth' {

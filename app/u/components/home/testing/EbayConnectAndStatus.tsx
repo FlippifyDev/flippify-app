@@ -15,10 +15,13 @@ const EbayConnectAndStatus = () => {
         throw new Error(`Failed to fetch eBay status: ${response.status} ${response.statusText}`);
       }
       const data = await response.json();
-      if (data.ebayAccessToken) {
+      
+      // Accessing the ebay object from the response
+      const ebay = data.ebay || {};
+      if (ebay.ebayAccessToken) {
         console.log("eBay connected, data:", data);
         setConnected(true);
-        setEbayData(data);
+        setEbayData(ebay);  // Set the ebay object to state
       } else {
         console.log("eBay not connected");
         setConnected(false);
@@ -30,7 +33,6 @@ const EbayConnectAndStatus = () => {
       setLoading(false); // Done loading
     }
   };
-
 
   useEffect(() => {
     fetchEbayStatus();

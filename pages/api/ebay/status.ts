@@ -2,20 +2,21 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 import connectDB from '@/app/api/auth-mongodb/dbConnect'; 
 import { User } from '@/app/api/auth-mongodb/userModel'; 
+import { refreshEbayToken } from '@/app/api/ebay/refreshEbayToken';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await connectDB();  // Ensure MongoDB is connected
 
   const session = await getSession({ req });
 
-  if (!session || !session.user?.discordId) {
+  if (!session || !session.user?.customerId) {
     return res.status(401).json({ error: 'User not authenticated' });
   }
 
-  const discordId = session.user.discordId;
+  const stripeCustomerId = session.user.customerId;  // Use Stripe customer ID
 
   try {
-    const user = await User.findOne({ discord_id: discordId });
+    const user = await User.findOne({ stripe_customer_id: stripeCustomerId });
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -25,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const ebayData = user.ebay || {};
 
     res.status(200).json({
-      discordId: user.discord_id,
+      stripeCustomerId: user.stripe_customer_id,
       ebay: {
         ebayAccessToken: ebayData.ebayAccessToken || null,
         ebayRefreshToken: ebayData.ebayRefreshToken || null,

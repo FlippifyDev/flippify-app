@@ -54,10 +54,10 @@ const ebaySchema = new Schema<IEbay>({
 })
 
 const userSchema = new Schema<IUser>({
+  stripe_customer_id: { type: String, required: true },
   discord_id: { type: String, required: true },
   username: { type: String, required: true },
   email: { type: String, required: true },
-  stripe_customer_id: { type: String, required: true },
   subscriptions: [subscriptionSchema],
   referral: referralSchema,
   ebay: ebaySchema,

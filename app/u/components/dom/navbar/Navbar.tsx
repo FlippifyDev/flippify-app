@@ -70,7 +70,7 @@ const Navbar = () => {
         </Link>
       </div>
       <div className="flex items-center justify-end col-span-2 xl:col-span-8">
-        <div className="flex items-center bg-transparent p-1 group">
+        <div className="flex items-center bg-transparent p-1">
           <NavbarProfileAvatar />
         </div>
       </div>

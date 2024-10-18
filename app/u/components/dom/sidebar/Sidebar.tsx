@@ -25,14 +25,17 @@ const Sidebar = () => {
   // Disable background scrolling when sidebar is open
   useEffect(() => {
     if (drawerOpen) {
-      document.body.classList.add('body-no-scroll');  // Prevent scrolling of main page
+      document.body.classList.add('overflow-hidden');  // Tailwind utility to prevent page scrolling
     } else {
-      document.body.classList.remove('body-no-scroll');  // Allow scrolling when sidebar is closed
+      document.body.classList.remove('overflow-hidden');
     }
     return () => {
-      document.body.classList.remove('body-no-scroll');  // Cleanup to remove scroll lock when unmounted
+      document.body.classList.remove('overflow-hidden');
     };
-  }, [drawerOpen]);
+  }, [drawerOpen])
+
+
+
 
   return (
     <div className="relative">
@@ -48,8 +51,8 @@ const Sidebar = () => {
         />
 
         {/* Sidebar itself */}
-        <div className="drawer-side shadow-lg z-20 fixed">
-          <div className="h-full overflow-y-hidden"> {/* Using the scrollbar-hide class */}
+        <div className="drawer-side shadow-lg z-30 sm:z-20 fixed">
+          <div className="h-full overflow-y-auto">
             <div className="h-full overflow-y-scroll scrollbar-hide border-r bg-white">
               <ul className="menu bg-white text-base-content min-h-full w-72 2xl:w-80 px-4 flex flex-col justify-between border-gray-200">
                 <div className="flex flex-col">

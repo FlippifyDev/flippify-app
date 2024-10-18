@@ -21,11 +21,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(404).json({ error: 'User not found' });
     }
 
+    // Check if eBay details exist under the "ebay" object
+    const ebayData = user.ebay || {};
+
     res.status(200).json({
       discordId: user.discord_id,
-      ebayAccessToken: user.ebayAccessToken,
-      ebayRefreshToken: user.ebayRefreshToken,
-      ebayTokenExpiry: user.ebayTokenExpiry,
+      ebay: {
+        ebayAccessToken: ebayData.ebayAccessToken || null,
+        ebayRefreshToken: ebayData.ebayRefreshToken || null,
+        ebayTokenExpiry: ebayData.ebayTokenExpiry || null,
+      },
     });
   } catch (error) {
     console.error('Error fetching eBay status:', error);

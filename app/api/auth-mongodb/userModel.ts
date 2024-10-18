@@ -15,6 +15,12 @@ interface IReferral {
   rewards_claimed: number;
 }
 
+interface IEbay {
+  ebayAccessToken?: string | null;
+  ebayRefreshToken?: string | null;
+  ebayTokenExpiry?: number | null;
+}
+
 interface IUser extends Document {
   _id: Types.ObjectId;
   discord_id: string;
@@ -23,11 +29,7 @@ interface IUser extends Document {
   stripe_customer_id: string;
   subscriptions: ISubscription[];
   referral?: IReferral;
-
-  // eBay 
-  ebayAccessToken?: string;
-  ebayRefreshToken?: string;
-  ebayTokenExpiry?: number;  
+  ebay?: IEbay;
 }
 
 const subscriptionSchema = new Schema<ISubscription>({
@@ -45,6 +47,12 @@ const referralSchema = new Schema<IReferral>({
   rewards_claimed: { type: Number, default: 0 },
 });
 
+const ebaySchema = new Schema<IEbay>({
+  ebayAccessToken: { type: String, default: null },
+  ebayRefreshToken: { type: String, default: null },
+  ebayTokenExpiry: { type: Number, default: null },
+})
+
 const userSchema = new Schema<IUser>({
   discord_id: { type: String, required: true },
   username: { type: String, required: true },
@@ -52,11 +60,7 @@ const userSchema = new Schema<IUser>({
   stripe_customer_id: { type: String, required: true },
   subscriptions: [subscriptionSchema],
   referral: referralSchema,
-
-  // eBay
-  ebayAccessToken: { type: String, default: null },
-  ebayRefreshToken: { type: String, default: null },
-  ebayTokenExpiry: { type: Number, default: null },
+  ebay: ebaySchema,
 });
 
 

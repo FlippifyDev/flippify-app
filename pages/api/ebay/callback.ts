@@ -65,21 +65,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Store tokens in MongoDB
-    user.ebayAccessToken = tokenData.access_token;
-    user.ebayRefreshToken = tokenData.refresh_token;
-    user.ebayTokenExpiry = Date.now() + tokenData.expires_in * 1000;
+    // Store tokens in MongoDB under the "ebay" object
+    user.ebay = {
+      ebayAccessToken: tokenData.access_token,
+      ebayRefreshToken: tokenData.refresh_token,
+      ebayTokenExpiry: Date.now() + tokenData.expires_in * 1000
+    };
 
     await user.save();
 
     console.log("User tokens successfully stored in MongoDB:", {
-      ebayAccessToken: user.ebayAccessToken,
-      ebayRefreshToken: user.ebayRefreshToken,
-      ebayTokenExpiry: user.ebayTokenExpiry,
+      ebayAccessToken: user.ebay.ebayAccessToken,
+      ebayRefreshToken: user.ebay.ebayRefreshToken,
+      ebayTokenExpiry: user.ebay.ebayTokenExpiry,
     });
 
-    // Redirect to a confirmation page or profile
-    res.redirect('/profile?ebayConnected=true');
+    // Redirect to a confirmation page or home
+    res.redirect('/?ebayConnected=true');
   } catch (error) {
     console.error('Error during eBay OAuth callback:', error);
     res.status(500).json({ error: 'Internal Server Error' });

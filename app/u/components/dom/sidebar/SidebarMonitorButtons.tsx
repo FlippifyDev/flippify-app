@@ -9,7 +9,7 @@ import { PiLegoFill } from "react-icons/pi";
 import { FaLaptop } from "react-icons/fa";
 import { FaParachuteBox } from "react-icons/fa6";
 import { BiSolidBinoculars } from "react-icons/bi";
-import Layout from "../../layout/Layout";
+import { PiSneakerMoveFill } from "react-icons/pi";
 
 interface SidebaMonitorButtonsProps {
   showAlert: () => void;
@@ -20,21 +20,23 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
 }) => {
   return (
     <div>
-      {/* Restock Info */}
-      <LayoutSubscriptionWrapper anySubscriptions={["member", "electronics"]}>
+      {/* Deal Watch */}
+      <LayoutSubscriptionWrapper anySubscriptions={["member", "deal watch"]}>
         <SidebarButton
-          text="Restock Info"
-          redirect="monitors/restock-info"
-          symbol={<FaParachuteBox className="text-md" />}
+          text="Deal Watch"
+          redirect="monitors/deal-watch"
+          symbol={<BiSolidBinoculars className="text-md" />}
         />
       </LayoutSubscriptionWrapper>
 
-      {/* Restock Info Disabled */}
-      <LayoutSubscriptionWrapper requiredSubscriptions={["!member"]}>
+      {/* Deal Watch Disabled */}
+      <LayoutSubscriptionWrapper
+        requiredSubscriptions={["!deal watch", "!member"]}
+      >
         <DisabledSideBarButton
-          text="Restock Info"
-          redirect="monitors/restock-info"
-          symbol={<FaParachuteBox className="text-md" />}
+          text="Deal Watch"
+          redirect="monitors/deal-watch"
+          symbol={<BiSolidBinoculars className="text-md" />}
           showAlert={showAlert}
         />
       </LayoutSubscriptionWrapper>
@@ -60,28 +62,26 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
         />
       </LayoutSubscriptionWrapper>
 
-      {/* Deal Watch */}
-      <LayoutSubscriptionWrapper anySubscriptions={["member", "deal watch"]}>
+      {/* Restock Info */}
+      <LayoutSubscriptionWrapper anySubscriptions={["member", "electronics"]}>
         <SidebarButton
-          text="Deal Watch"
-          redirect="monitors/deal-watch"
-          symbol={<BiSolidBinoculars className="text-md" />}
+          text="Restock Info"
+          redirect="monitors/restock-info"
+          symbol={<FaParachuteBox className="text-md" />}
         />
       </LayoutSubscriptionWrapper>
 
-      {/* Deal Watch Disabled */}
-      <LayoutSubscriptionWrapper
-        requiredSubscriptions={["!deal watch", "!member"]}
-      >
+      {/* Restock Info Disabled */}
+      <LayoutSubscriptionWrapper requiredSubscriptions={["!member"]}>
         <DisabledSideBarButton
-          text="Deal Watch"
-          redirect="monitors/deal-watch"
-          symbol={<BiSolidBinoculars className="text-md" />}
+          text="Restock Info"
+          redirect="monitors/restock-info"
+          symbol={<FaParachuteBox className="text-md" />}
           showAlert={showAlert}
         />
       </LayoutSubscriptionWrapper>
 
-      {/* Retiring Sets */}
+        {/* Retiring Sets */}
       <LayoutSubscriptionWrapper anySubscriptions={["member", "retiring sets"]}>
         <SidebarButton
           text="Retiring Sets"
@@ -101,6 +101,26 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
           showAlert={showAlert}
         />
       </LayoutSubscriptionWrapper>
+      
+      {/* Sneaker Release Info */}
+      <LayoutSubscriptionWrapper anySubscriptions={["member"]}>
+        <SidebarButton
+          text="Sneaker Releases"
+          redirect="monitors/sneaker-release-info"
+          symbol={<PiSneakerMoveFill className="text-md" />}
+        />
+      </LayoutSubscriptionWrapper>
+
+      {/* Sneaker Release Info */}
+      <LayoutSubscriptionWrapper anySubscriptions={["!member"]}>
+        <DisabledSideBarButton
+          text="Sneaker Releases"
+          redirect="monitors/sneaker-release-info"
+          symbol={<PiSneakerMoveFill className="text-md" />}
+          showAlert={showAlert}
+        />
+      </LayoutSubscriptionWrapper>
+
     </div>
   );
 };

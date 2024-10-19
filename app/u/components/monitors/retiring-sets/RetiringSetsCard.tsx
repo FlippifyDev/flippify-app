@@ -49,8 +49,12 @@ const RetiringSetsCard: React.FC<CardProps> = ({ product }) => {
   let estimatedProfit;
   let price;
 
+  if (product.ebayMeanPrice === undefined) {
+    return;
+  }
+
   if (product.price !== null) {
-    estimatedProfit = product.rrp - product.price
+    estimatedProfit = product.ebayMeanPrice - product.price
     price = "£" + product.price.toString() 
   } else {
     estimatedProfit = 0
@@ -81,7 +85,7 @@ const RetiringSetsCard: React.FC<CardProps> = ({ product }) => {
   };
 
   return (
-    <div className="grid grid-rows-10 bg-white shadow-lg rounded-lg overflow-hidden w-86 pt-2 pb-0 h-[30rem]">
+    <div className="grid grid-rows-10 bg-white shadow-lg rounded-lg overflow-hidden w-86 pt-2 pb-0 h-[34rem]">
       {/* Title Section */}
       <section className='row-span-3 grid grid-cols-12 p-2 gap-2 mx-2'>
         <div className='col-span-8'>
@@ -133,6 +137,14 @@ const RetiringSetsCard: React.FC<CardProps> = ({ product }) => {
                 <tr>
                   <td>RRP</td>
                   <td>£{product.rrp}</td>
+                </tr>
+                <tr>
+                  <td>eBay Mean Price</td>
+                  <td>{product.ebayMeanPrice}</td>
+                </tr>
+                <tr>
+                  <td>eBay Max Price</td>
+                  <td>{product.ebayMaxPrice}</td>
                 </tr>
                 <tr>
                   <td>Retirement Date</td>

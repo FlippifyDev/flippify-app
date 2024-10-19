@@ -4,6 +4,7 @@ import { Electronics } from './electronicsModel';
 import { RetiringSet } from './retiringSetsModel';
 import { DealWatch } from './dealWatchModel';
 import { RestockInfo } from './restockInfoModel';
+import { SneakerReleaseInfo } from './sneakerReleaseInfoModel';
 import { Ebay } from './ebayModel';
 
 
@@ -19,6 +20,7 @@ export const modelRegistry: ModelRegistry = {
     Electronics,
     DealWatch,
     RestockInfo,
+    SneakerReleaseInfo,
     RetiringSet,
 };
 

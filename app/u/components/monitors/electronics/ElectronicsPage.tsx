@@ -23,7 +23,8 @@ export default function ElectronicsPage() {
   useEffect(() => {
     async function loadProducts() {
       const [allProducts, ebayProducts] = await Promise.all([
-        fetchProducts<IElectronics>("Electronics"),
+        // Query the products with stock available and that are on sale
+        fetchProducts<IElectronics>("Electronics", {"stock_available": true, "$expr": { "$lt": ["$price", "$rrp"] }}),
         fetchProducts<IEbay>("Ebay", {"type": "Electronics"})
       ]);
 

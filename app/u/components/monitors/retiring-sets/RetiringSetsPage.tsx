@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Card from './RetiringSetsCard';
 import { IRetiringSet } from '@/app/api/monitors/retiringSetsModel';
+import { IEbay } from '@/app/api/monitors/ebayModel';
 import { fetchProducts } from '@/app/api/monitors/fetchProducts';
 import LayoutProductsSkeleton from '../../layout/LayoutProductsSkeleton';
 import { IoSearch } from "react-icons/io5";
@@ -19,10 +20,34 @@ export default function RetiringSetsPage() {
     // Fetch all products initially
     useEffect(() => {
         async function loadProducts() {
-            const allProducts = await fetchProducts<IRetiringSet>("RetiringSet");
-            setProducts(allProducts);
-            // Display products sorted by estimated profit initially
-            setDisplayedProducts(sortByProfitAndStock(allProducts).slice(0, limit)); // Display the first batch
+            const [allProducts, ebayProducts] = await Promise.all([
+                // Query the products with stock available and that are on sale
+                fetchProducts<IRetiringSet>("RetiringSet", {"stock_available": true, "price": { "$ne": null }, "$expr": { "$lt": ["$price", "$rrp"] }}),
+                fetchProducts<IEbay>("Ebay", {"type": "Retiring-Sets-Deals"})
+            ]);
+
+            // Compare and update RetiringSet products with matching eBay products
+            const updatedProducts = allProducts.map(product => {
+                const matchingEbayProduct = ebayProducts.find(ebayProduct =>
+                    ebayProduct.product_name.toLowerCase() === product.product_name.toLowerCase() &&
+                    ebayProduct['region'].toLowerCase() === product['region'].toLowerCase()
+                );
+
+                // If a matching eBay product is found, calculate estimated profit using eBay data
+                if (matchingEbayProduct) {
+                    product.estimatedProfit = matchingEbayProduct.mean_price - (product.price || 0);
+                    product.ebayMeanPrice = matchingEbayProduct.mean_price;
+                    product.ebayMaxPrice = matchingEbayProduct.max_price;
+                } else {
+                    // Otherwise, use the default rrp - price for profit calculation
+                    product.estimatedProfit = product.rrp - (product.price || 0);
+                }
+                return product;
+            });
+
+            // Update the state with the products and display the first batch sorted by profit and stock
+            setProducts(updatedProducts);
+            setDisplayedProducts(sortByProfitAndStock(updatedProducts).slice(0, limit));
         }
 
         loadProducts();
@@ -36,15 +61,17 @@ export default function RetiringSetsPage() {
                 const inStockA = a.stock_available;
                 const inStockB = b.stock_available;
 
-                if (inStockA && !inStockB) return -1; // In-stock products come first
-                if (!inStockA && inStockB) return 1;  // Out-of-stock products come last
+                // Prioritize in-stock products
+                if (inStockA && !inStockB) return -1;
+                if (!inStockA && inStockB) return 1;
 
+                // Calculate profit based on eBay mean price if available, otherwise use estimatedProfit
+                const profitA = a.ebayMeanPrice !== undefined ? a.ebayMeanPrice - (a.price || 0) : a.estimatedProfit || 0;
+                const profitB = b.ebayMeanPrice !== undefined ? b.ebayMeanPrice - (b.price || 0) : b.estimatedProfit || 0;
 
-                // If both have the same stock status, sort by estimated profit
-                const profitA = a.rrp - (a.price || 0);
-                const profitB = b.rrp - (b.price || 0);
-                return profitB - profitA; // Sort descending
-            });
+                // Sort descending by the calculated profit
+                return profitB - profitA;
+            })
     };
 
     const loadMoreProducts = useCallback(() => {
@@ -83,7 +110,6 @@ export default function RetiringSetsPage() {
             window.removeEventListener('scroll', handleScroll);
         };
     }, [loading, loadMoreProducts]);
-
 
     // Filter products based on submitted search query
     useEffect(() => {

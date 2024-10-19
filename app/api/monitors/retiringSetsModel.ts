@@ -11,10 +11,13 @@ interface IRetiringSet extends Document {
     timestamp: Date;
     image: string;
     price: number;
-    'retirement_date': string;
+    retirement_date: string;
     rrp: number;
-    'stock_available': boolean;
+    stock_available: boolean;
     type: string;
+    estimatedProfit?: number;
+    ebayMeanPrice?: number;
+    ebayMaxPrice?: number;
 }
 
 const retiringSetsSchema = new Schema<IRetiringSet>({

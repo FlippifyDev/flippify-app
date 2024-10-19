@@ -7,7 +7,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Flippify',
-  description: 'Reselling bots and tools. Powered by Stripe and Discord.',
+  description: 'Reselling bots and tools. Monitoring the best releases and restocks on the market from sneakers to PS5s',
   openGraph: {
     title: 'Transform Your Reselling Game - Flippify Home',
     description: 'Welcome to Flippify, your ultimate reselling platform for flipping, buying, and selling unique items. Boost your profits with our fast deal bots, covering everything from Lego to sneakers. Learn how Flippify makes reselling easy and lucrative.',

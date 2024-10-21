@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'eBay tokens not found' });
     }
 
-    let { ebayAccessToken, ebayTokenExpiry, ebayRefreshToken } = user.ebay;
+    let { ebayAccessToken, ebayTokenExpiry } = user.ebay;
 
     // Check if the token is expired and refresh it
     if (Date.now() >= ebayTokenExpiry) {
@@ -48,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!response.ok) {
       const errorResponse = await response.json();
-      return res.status(500).json({ error: (errorResponse as any).message || 'Failed to fetch orders data' });
+      return res.status(500).json({ error: errorResponse?.message || 'Failed to fetch orders data' });
     }
 
     const data = await response.json();

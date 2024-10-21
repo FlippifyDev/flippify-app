@@ -52,7 +52,7 @@ const ProfileMarketplaceConnect = () => {
       CLIENT_ID
     )}&redirect_uri=${encodeURIComponent(
       REDIRECT_URI
-    )}&response_type=code&scope=${encodeURIComponent(SCOPES)}`;
+    )}&response_type=code&scope=${encodeURIComponent(SCOPES)}&prompt=login`; // Forces login screen
 
     window.location.href = ebayAuthUrl;
   };
@@ -77,7 +77,7 @@ const ProfileMarketplaceConnect = () => {
       
       <div className="flex flex-col space-y-4 w-full items-center">
         {/* eBay Connect Button */}
-        <div className="relative group w-full"> {/* Full width for all screen sizes */}
+        <div className="relative group w-full">
           {loading ? (
             <button 
               disabled 
@@ -103,7 +103,7 @@ const ProfileMarketplaceConnect = () => {
         </div>
 
         {/* Amazon Connect Button */}
-        <div className="relative group w-full"> {/* Full width for all screen sizes */}
+        <div className="relative group w-full">
           <button 
             disabled={true} 
             className="btn btn-disabled bg-white text-black border-black hover:bg-houseHoverBlue hover:border-black w-full h-full py-3 px-6 rounded-lg transition duration-300"

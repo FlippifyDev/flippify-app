@@ -31,7 +31,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const basicAuth = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64');
 
   try {
-    // Use production endpoint for token exchange
     const tokenResponse = await fetch('https://api.ebay.com/identity/v1/oauth2/token', {
       method: 'POST',
       headers: {
@@ -69,10 +68,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       await user.save();
 
-      // Redirect the user to the profile page with eBay connection success status
-      res.redirect('/profile?ebayConnected=true');
+      // Redirect to profile with success status
+      return res.redirect('/profile?ebayConnected=true');
     } else {
-      // Log the error details for debugging
       const errorDetails = await tokenResponse.text();
       console.error("Error exchanging authorization code:", errorDetails);
       return res.status(tokenResponse.status).json({ error: errorDetails });

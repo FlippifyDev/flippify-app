@@ -133,19 +133,6 @@ const ProfileReferralData: React.FC = () => {
         </div>
       </div>
 
-      {userSubscriptions.length > 0 && (
-        <div className="mt-4">
-          <h3 className="text-lg font-semibold text-gray-900">Your Subscriptions</h3>
-          <ul className="mt-2 list-disc list-inside">
-            {userSubscriptions.map((subscription, index) => (
-              <li key={index} className="text-gray-700">
-                {subscription.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
       <div className="mt-4 text-center relative group">
         <h3 className="text-lg font-semibold text-gray-900">
           {availableRewards > 0 

@@ -58,7 +58,7 @@ interface CardProps {
     product: ISneakerReleaseInfo;
 }
 
-const RetiringSetsCard: React.FC<CardProps> = ({ product }) => {
+const ReleaseInfoCard: React.FC<CardProps> = ({ product }) => {
     const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
     const [modalImage, setModalImage] = useState<string | null>(null); // Image to display in modal
     const [timeRemaining, setTimeRemaining] = useState<string>(''); // Countdown timer state
@@ -188,4 +188,4 @@ const RetiringSetsCard: React.FC<CardProps> = ({ product }) => {
     );
 };
 
-export default RetiringSetsCard;
+export default ReleaseInfoCard;

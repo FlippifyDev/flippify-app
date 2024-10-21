@@ -1,39 +1,41 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import crypto from 'crypto';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const verificationToken = process.env.EBAY_VERIFICATION_TOKEN;
-
-  // Handle GET request for challenge validation
+  const endpoint = 'https://flippify.co.uk/api/ebay/marketplaceDeletion'; // Replace with your endpoint
+  
   if (req.method === 'GET') {
+    // Handle the initial verification GET request from eBay
     const challengeCode = req.query.challenge_code as string;
 
     if (!challengeCode) {
       return res.status(400).json({ error: 'No challenge code provided' });
     }
 
-    const endpoint = 'https://flippify.co.uk/api/ebay/marketplaceDeletion';
-
+    // Generate the SHA-256 hash (challengeCode + verificationToken + endpoint)
     const hash = crypto.createHash('sha256');
     hash.update(challengeCode + verificationToken + endpoint);
     const challengeResponse = hash.digest('hex');
 
+    // Send the challengeResponse back to eBay
     return res.status(200).json({ challengeResponse });
   }
 
-  // Handle POST request for notifications
   if (req.method === 'POST') {
+    // Handle actual notifications sent by eBay
     const notification = req.body;
 
-    // Validate the verification token in the request
+    // Verify the notification using the verification token
     if (notification.verification_token !== verificationToken) {
-      // This is the key part - if tokens don't match, respond with 401 Unauthorized
       return res.status(401).json({ error: 'Invalid verification token' });
     }
 
     if (notification.event === 'MARKETPLACE_ACCOUNT_DELETION') {
+      // Log or handle account deletion event
       console.log('eBay account deleted:', notification.userId);
-      // Perform actions for account deletion, e.g., remove user data
+
+      // Perform any necessary cleanup, such as deleting the user's data
       return res.status(200).json({ success: true });
     }
 

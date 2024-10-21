@@ -40,41 +40,39 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       body: `grant_type=authorization_code&code=${code}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`,
     });
 
-    if (tokenResponse.ok) {
-      const tokenData = await tokenResponse.json() as EbayTokenData;
+    const tokenData = await tokenResponse.json() as EbayTokenData;  // Explicitly cast
 
-      const session = await getSession({ req });
-
-      if (!session || !session.user?.customerId) {
-        return res.status(401).json({ error: 'User not authenticated' });
-      }
-
-      const customerId = session.user.customerId;
-
-      await connectDB();
-      const user = await User.findOne({ stripe_customer_id: customerId });
-
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-
-      if (!user.ebay) {
-        user.ebay = {};  // Initialize eBay object if it doesn't exist
-      }
-
-      user.ebay.ebayAccessToken = tokenData.access_token;
-      user.ebay.ebayTokenExpiry = Date.now() + tokenData.expires_in * 1000;
-      user.ebay.ebayRefreshToken = tokenData.refresh_token;
-
-      await user.save();
-
-      // Redirect to profile with success status
-      return res.redirect('/profile?ebayConnected=true');
-    } else {
-      const errorDetails = await tokenResponse.text();
-      console.error("Error exchanging authorization code:", errorDetails);
-      return res.status(tokenResponse.status).json({ error: errorDetails });
+    if (tokenData.error) {
+      return res.status(400).json({ error: tokenData.error_description });
     }
+
+    const session = await getSession({ req });
+
+    if (!session || !session.user?.customerId) {
+      return res.status(401).json({ error: 'User not authenticated' });
+    }
+
+    const customerId = session.user.customerId;
+
+    await connectDB();
+    const user = await User.findOne({ stripe_customer_id: customerId });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (!user.ebay) {
+      user.ebay = {};  // Initialize eBay object if it doesn't exist
+    }
+
+    user.ebay.ebayAccessToken = tokenData.access_token;
+    user.ebay.ebayTokenExpiry = Date.now() + tokenData.expires_in * 1000;
+    user.ebay.ebayRefreshToken = tokenData.refresh_token;
+
+    await user.save();
+
+    // After saving, redirect to homepage
+    res.redirect('/'); // Redirect to homepage after eBay connection
   } catch (error) {
     console.error('Error during eBay OAuth callback:', error);
     res.status(500).json({ error: 'Internal Server Error' });

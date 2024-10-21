@@ -88,7 +88,7 @@ const RetiringSetsCard: React.FC<CardProps> = ({ product }) => {
     }, [product.release_date]);
 
     return (
-        <div className="grid grid-rows-10 bg-white shadow-lg rounded-lg overflow-hidden w-86 pt-2 pb-0 h-[26rem]">
+        <div className="grid grid-rows-10 bg-white shadow-lg rounded-lg overflow-hidden w-86 pt-2 pb-0 h-[28rem]">
             {/* Title Section */}
             <section className='row-span-3 grid grid-cols-12 p-2 gap-2 mx-2'>
                 <div className='col-span-8'>
@@ -129,10 +129,40 @@ const RetiringSetsCard: React.FC<CardProps> = ({ product }) => {
                                     <td>Release Date</td>
                                     <td className='text-end'>{new Date(product.release_date).toLocaleDateString()}</td>
                                 </tr>
-                                <tr>
-                                    <td>Number of Raffles</td>
-                                    <td className='text-end'>{product.no_raffles}</td>
-                                </tr>
+                                {/* Dynamically render custom fields */}
+                                {Object.entries(product.custom_fields).map(([field, value]) => {
+                                    // Handle Regions abbreviation
+                                    if (field === 'Regions' && Array.isArray(value)) {
+                                        const abbreviatedRegions = value.map(region => {
+                                            switch (region) {
+                                                case 'Europe':
+                                                    return 'EU';
+                                                case 'United States':
+                                                    return 'US';
+                                                default:
+                                                    return region; // Keep the value if it doesn't need abbreviation
+                                            }
+                                        });
+                                        return (
+                                            <tr key={field}>
+                                                <td>{field}</td>
+                                                <td className='text-end'>
+                                                    {abbreviatedRegions.join(', ')}
+                                                </td>
+                                            </tr>
+                                        );
+                                    }
+
+                                    // For other fields, just render normally
+                                    return (
+                                        <tr key={field}>
+                                            <td>{field}</td>
+                                            <td className='text-end'>
+                                                {Array.isArray(value) ? value.join(', ') : value?.toString() || 'N/A'}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>

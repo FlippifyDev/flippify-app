@@ -81,7 +81,7 @@ export default function SneakerReleaseInfoPage() {
             filtered = products.filter(product => {
                 const productName = product.product_name?.toLowerCase() || '';
                 const website = product.website?.toLowerCase() || '';
-                const region = product.regions?.join(' ').toLowerCase() || ''; // Ensure regions are concatenated for search
+                const region = product.custom_fields.Regions?.join(' ').toLowerCase() || ''; 
 
                 // Split the query into individual terms and check if any term matches
                 const queryTerms = lowercasedQuery.split(/\s+/);

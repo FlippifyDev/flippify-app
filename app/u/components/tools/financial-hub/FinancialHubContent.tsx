@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 
-const FinancialHubContent: React.FC = () => {
+const FinancialHubContent = () => {
   const [financialData, setFinancialData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -12,12 +12,14 @@ const FinancialHubContent: React.FC = () => {
       try {
         const response = await fetch("/api/ebay/finances");
         if (!response.ok) {
-          throw new Error("Failed to fetch financial data.");
+          const errorData = await response.json();
+          console.error("Failed to fetch financial data:", errorData);
+          throw new Error(errorData.error || "Unknown error occurred while fetching financial data.");
         }
         const data = await response.json();
-        setFinancialData(data.transactions || []); // Ensure it's always an array
+        setFinancialData(data.transactions || []);
       } catch (error: any) {
-        setError(error.message);
+        setError(error.message || "An error occurred");
       } finally {
         setLoading(false);
       }

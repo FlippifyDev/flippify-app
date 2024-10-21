@@ -5,6 +5,11 @@ import { User } from '@/app/api/auth-mongodb/userModel';
 import { refreshEbayToken } from '@/app/api/ebay/refreshEbayToken'; 
 import fetch from 'node-fetch';
 
+interface EbayError {
+  message?: string;
+  error?: string;
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     await connectDB();  // Ensure MongoDB is connected
@@ -16,7 +21,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const customerId = session.user.customerId;
 
-    // Fetch user from the database using stripeCustomerId
     const user = await User.findOne({ stripe_customer_id: customerId });
 
     if (!user || !user.ebay || !user.ebay.ebayAccessToken || !user.ebay.ebayTokenExpiry) {
@@ -28,16 +32,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Check if the token is expired and refresh it
     if (Date.now() >= ebayTokenExpiry) {
       console.log("eBay token expired. Refreshing...");
-      await refreshEbayToken(customerId);  // This will refresh the eBay token in MongoDB
+      await refreshEbayToken(customerId);
       const refreshedUser = await User.findOne({ stripe_customer_id: customerId });
-      ebayAccessToken = refreshedUser?.ebay?.ebayAccessToken ?? '';  // Set default to an empty string
+      ebayAccessToken = refreshedUser?.ebay?.ebayAccessToken ?? '';
     }
 
     if (!ebayAccessToken) {
       return res.status(400).json({ error: 'Unable to fetch eBay Access Token' });
     }
 
-    // Now proceed to make your eBay API request using the new or existing eBay access token
+    // Make API request
     const response = await fetch('https://api.ebay.com/sell/finances/v1/transaction?limit=10', {
       method: 'GET',
       headers: {
@@ -47,19 +51,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     if (!response.ok) {
-      const errorResponse = await response.json();
-      return res.status(500).json({ error: errorResponse?.message || 'Failed to fetch financial data' });
+      const errorResponse = await response.json() as EbayError;
+      const errorMessage = errorResponse.message || errorResponse.error || 'Failed to fetch financial data';
+      return res.status(500).json({ error: errorMessage });
     }
 
     const data = await response.json();
     return res.status(200).json(data);
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error('Error fetching eBay finances:', error.message);
-      return res.status(500).json({ error: error.message });
-    } else {
-      console.error('Unknown error occurred');
-      return res.status(500).json({ error: 'An unknown error occurred' });
-    }
+  } catch (error: any) {
+    console.error('Error fetching eBay finances:', error.message || 'Unknown error');
+    return res.status(500).json({ error: error.message || 'Unknown error occurred' });
   }
 }

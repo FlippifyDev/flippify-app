@@ -33,7 +33,7 @@ const NotificationsList: React.FC<NotificationsListProps> = ({
       {/* Display notifications */}
       <div className="flex-grow overflow-y-auto pb-4">
         {notifications.length === 0 ? (
-          <p>No notifications available.</p>
+          <p className="flex justify-center">No notifications available.</p>
         ) : (
           <NotificationsDisplay
             notifications={notifications}

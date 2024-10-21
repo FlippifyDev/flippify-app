@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 
-const FinancialHubContent = () => {
+const FinancialHubContent: React.FC = () => {
   const [financialData, setFinancialData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -15,7 +15,7 @@ const FinancialHubContent = () => {
           throw new Error("Failed to fetch financial data.");
         }
         const data = await response.json();
-        setFinancialData(data.transactions || []);  // Ensure it's always an array
+        setFinancialData(data.transactions || []); // Ensure it's always an array
       } catch (error: any) {
         setError(error.message);
       } finally {

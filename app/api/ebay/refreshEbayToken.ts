@@ -23,7 +23,7 @@ export async function refreshEbayToken(customerId: string) {
     const CLIENT_SECRET = getEnvVar('EBAY_CLIENT_SECRET');
 
     const basicAuth = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64');
-    const tokenResponse = await fetch('https://api.sandbox.ebay.com/identity/v1/oauth2/token', {
+    const tokenResponse = await fetch('https://api.ebay.com/identity/v1/oauth2/token', {
       method: 'POST',
       headers: {
         'Authorization': `Basic ${basicAuth}`,
@@ -32,7 +32,7 @@ export async function refreshEbayToken(customerId: string) {
       body: `grant_type=refresh_token&refresh_token=${refreshToken}`,
     });
 
-    const tokenData = await tokenResponse.json() as EbayTokenData;  // Explicitly cast response
+    const tokenData = await tokenResponse.json() as EbayTokenData;
 
     if (tokenData.error) {
       throw new Error(tokenData.error_description || 'Error refreshing eBay token');

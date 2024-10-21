@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 
-const InventoryOrdersContent = () => {
+const InventoryOrdersContent: React.FC = () => {
   const [inventoryData, setInventoryData] = useState<any[]>([]);
   const [orderData, setOrderData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

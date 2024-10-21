@@ -28,10 +28,24 @@ export default function SneakerReleaseInfoPage() {
         loadProducts();
     }, []);
 
-    // Function to sort products by release date
+    // Function to sort products by release date, placing past releases at the end
     const sortByReleaseDate = (products: ISneakerReleaseInfo[]) => {
+        const now = new Date().getTime(); // Get current time
+    
         return products.sort((a, b) => {
-            return new Date(a.release_date).getTime() - new Date(b.release_date).getTime();
+            const releaseA = new Date(a.release_date).getTime();
+            const releaseB = new Date(b.release_date).getTime();
+    
+            const isPastA = releaseA < now; // Check if A's release date is in the past
+            const isPastB = releaseB < now; // Check if B's release date is in the past
+    
+            // If both are in the past or both are in the future, sort by date
+            if (isPastA === isPastB) {
+                return releaseA - releaseB;
+            }
+    
+            // If A is in the past but B is in the future, place A after B
+            return isPastA ? 1 : -1;
         });
     };
 
@@ -81,7 +95,7 @@ export default function SneakerReleaseInfoPage() {
             filtered = products.filter(product => {
                 const productName = product.product_name?.toLowerCase() || '';
                 const website = product.website?.toLowerCase() || '';
-                const region = product.regions?.join(' ').toLowerCase() || ''; // Ensure regions are concatenated for search
+                const region = product.custom_fields.Regions?.join(' ').toLowerCase() || ''; 
 
                 // Split the query into individual terms and check if any term matches
                 const queryTerms = lowercasedQuery.split(/\s+/);

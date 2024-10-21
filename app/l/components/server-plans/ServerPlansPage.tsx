@@ -76,7 +76,7 @@ const ServerPlansPage = () => {
       </div>
 
       {/* Server Plans */}
-      <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 mx-2 md:mx-2 lg:mx-16 2xl:mx-2 gap-8 w-full xl:w-4/5">
+      <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-8 w-full max-w-screen-xl mx-auto px-4">
         <ServerPlansCard
           title="Deal Watch UK"
           description="Discover Endless profitable deals scraped and filtered from site like 'hotukdeals' & 'rewarddeals'"

@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import connectDB from '@/app/api/auth-mongodb/dbConnect';
 import { getSession } from 'next-auth/react';
 import { User } from 'app/api/auth-mongodb/userModel';
+import { setCookie } from 'nookies';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -31,6 +32,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     user.ebay.ebayTokenExpiry = undefined;
 
     await user.save();
+
+    // Clear the eBay session cookies to allow for a new login
+    setCookie({ res }, 'ebay_login', '', { maxAge: -1, path: '/' });
+    setCookie({ res }, 'ebay_refresh_token', '', { maxAge: -1, path: '/' });
 
     return res.status(200).json({ message: 'eBay account disconnected successfully' });
   } catch (error) {

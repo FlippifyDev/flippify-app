@@ -121,19 +121,43 @@ const ProfileOverview = () => {
         </div>
       </div>
       <div className="flex flex-col md:flex-row gap-4 w-full font-semibold md:w-auto mt-4 md:mt-0 md:ml-auto">
-        <LayoutSubscriptionWrapper anySubscriptions={['standard', 'server']}>
+        <LayoutSubscriptionWrapper requiredSubscriptions={['standard']}>
           <div className="stats shadow-md bg-white p-4 rounded-lg">
             <div className="stat">
               <div className="stat-title text-sm sm:text-base text-houseBlue">
                 Subscription Status
               </div>
               <div className="stat-value font-bold text-xl sm:text-2xl text-black">
-                Active
+                Standard
               </div>
             </div>
           </div>
         </LayoutSubscriptionWrapper>
-        <LayoutSubscriptionWrapper requiredSubscriptions={['!standard', '!server']}>
+        <LayoutSubscriptionWrapper requiredSubscriptions={['pro']}>
+          <div className="stats shadow-md bg-white p-4 rounded-lg">
+            <div className="stat">
+              <div className="stat-title text-sm sm:text-base text-houseBlue">
+                Subscription Status
+              </div>
+              <div className="stat-value font-bold text-xl sm:text-2xl text-black">
+                Pro
+              </div>
+            </div>
+          </div>
+        </LayoutSubscriptionWrapper>
+        <LayoutSubscriptionWrapper requiredSubscriptions={['elite']}>
+          <div className="stats shadow-md bg-white p-4 rounded-lg">
+            <div className="stat">
+              <div className="stat-title text-sm sm:text-base text-houseBlue">
+                Subscription Status
+              </div>
+              <div className="stat-value font-bold text-xl sm:text-2xl text-black">
+                Elite
+              </div>
+            </div>
+          </div>
+        </LayoutSubscriptionWrapper>
+        <LayoutSubscriptionWrapper requiredSubscriptions={['!member']}>
           <div className="stats shadow-md bg-white p-4 rounded-lg">
             <div className="stat">
               <div className="stat-title text-sm sm:text-base text-houseBlue">

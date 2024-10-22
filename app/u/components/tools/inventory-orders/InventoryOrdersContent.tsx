@@ -17,15 +17,17 @@ const InventoryOrdersContent: React.FC = () => {
         ]);
 
         if (!inventoryResponse.ok || !ordersResponse.ok) {
-          throw new Error("Failed to fetch inventory or orders");
+          throw new Error("Failed to fetch inventory or orders.");
         }
 
         const inventory = await inventoryResponse.json();
         const orders = await ordersResponse.json();
+
         setInventoryData(inventory.inventoryItems || []);
         setOrderData(orders.orders || []);
       } catch (error: any) {
-        setError(error.message);
+        console.error("Error fetching inventory or orders:", error);
+        setError(error.message || "Failed to load inventory or orders.");
       } finally {
         setLoading(false);
       }
@@ -38,43 +40,48 @@ const InventoryOrdersContent: React.FC = () => {
     return <div>Loading inventory and orders...</div>;
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
   return (
     <div className="w-full mb-4">
       <h2 className="text-xl font-bold mb-4">Inventory & Order Management</h2>
 
-      <h3 className="text-lg font-semibold">Inventory:</h3>
-      {inventoryData.length > 0 ? (
-        inventoryData.map((item, index) => (
-          <div key={index}>
-            <p>Name: {item.name}</p>
-            <p>SKU: {item.sku}</p>
-            <p>Quantity: {item.quantity}</p>
-            <p>Price: {item.price}</p>
-            <hr />
-          </div>
-        ))
+      {error ? (
+        <div className="text-red-500">
+          <p>Error: {error}</p>
+          <p>Unable to load inventory or orders. Please try again later.</p>
+        </div>
       ) : (
-        <p>No inventory items available.</p>
-      )}
+        <>
+          <h3 className="text-lg font-semibold">Inventory:</h3>
+          {inventoryData.length > 0 ? (
+            inventoryData.map((item, index) => (
+              <div key={index} className="mb-4">
+                <p>Name: {item.name}</p>
+                <p>SKU: {item.sku}</p>
+                <p>Quantity: {item.quantity}</p>
+                <p>Price: {item.price}</p>
+                <hr />
+              </div>
+            ))
+          ) : (
+            <p>No inventory items available.</p>
+          )}
 
-      <h3 className="text-lg font-semibold mt-4">Orders:</h3>
-      {orderData.length > 0 ? (
-        orderData.map((order, index) => (
-          <div key={index}>
-            <p>Order ID: {order.id}</p>
-            <p>Item Name: {order.itemName}</p>
-            <p>Quantity: {order.quantity}</p>
-            <p>Status: {order.status}</p>
-            <p>Price: {order.price}</p>
-            <hr />
-          </div>
-        ))
-      ) : (
-        <p>No orders available.</p>
+          <h3 className="text-lg font-semibold mt-4">Orders:</h3>
+          {orderData.length > 0 ? (
+            orderData.map((order, index) => (
+              <div key={index} className="mb-4">
+                <p>Order ID: {order.id}</p>
+                <p>Item Name: {order.itemName}</p>
+                <p>Quantity: {order.quantity}</p>
+                <p>Status: {order.status}</p>
+                <p>Price: {order.price}</p>
+                <hr />
+              </div>
+            ))
+          ) : (
+            <p>No orders available.</p>
+          )}
+        </>
       )}
     </div>
   );

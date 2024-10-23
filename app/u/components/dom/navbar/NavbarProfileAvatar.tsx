@@ -4,12 +4,15 @@ import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+
 import createBillingPortalUrl from "@/app/api/stripe-handlers/create-billing-portal";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
+
 
 const NavbarProfileAvatar = () => {
   const { data: session } = useSession();
   const [billingUrl, setBillingUrl] = useState<string | null>(null);
+  const discordUrl = "https://discord.gg/gNPYfe7YFm"
   const router = useRouter();
   const customerIdRef = useRef<string | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -63,6 +66,14 @@ const NavbarProfileAvatar = () => {
       window.open(billingUrl, "_blank");
     }
   };
+
+
+  const handleDiscordButtonClick = () => {
+    if (discordUrl) {
+      window.open(discordUrl, "_blank");
+    }
+  };
+
 
   const handleProfileOpen = (e: React.MouseEvent) => {
     if (session) {
@@ -159,6 +170,12 @@ const NavbarProfileAvatar = () => {
             className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200' 
             onClick={handleBillingPortalButtonClick}>
             <span className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Billing Portal</span>
+          </button>
+          <button
+            onClick={handleDiscordButtonClick}
+            className="relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200"
+          >
+            <span className="text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]">Discord</span>
           </button>
           <button 
             className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-red-600 hover:text-white active:bg-red-700 transform transition duration-200' 

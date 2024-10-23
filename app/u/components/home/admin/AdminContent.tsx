@@ -4,8 +4,9 @@ import { IUser, ISubscription } from "app/api/auth-mongodb/userModel";
 import PlansCardAdmin from "@/app/u/components/home/admin/AdminUserCards";
 import fetchProducts from "@/app/api/auth-mongodb/fetchProducts";
 import LayoutProductsSkeleton from "../../layout/LayoutProductsSkeleton";
-import AdminEventManagement from "./AdminEventManagement"; // Event Management component
-import AdminNotificationManagement from "./AdminNotificationManagement"; // Notification Management component
+import AdminEventManagement from "./AdminEventManagement";
+import AdminNotificationManagement from "./AdminNotificationManagement";
+import AdminResellerNewsManagement from "./AdminResellerNewsManagement";
 import { IoSearch } from "react-icons/io5";
 import { useEffect, useState } from "react";
 
@@ -55,7 +56,7 @@ const AdminContent = () => {
   return (
     <div className="w-full p-5">
       {/* Tab Navigation */}
-      <div className="flex space-x-4 mb-5">
+      <div className="flex space-x-8 mb-5 flex-col sm:flex-row ">
         <button
           className={`font-semibold ${activeTab === "userDatabase" ? "text-blue-600" : "text-gray-600"}`}
           onClick={() => setActiveTab("userDatabase")}
@@ -73,6 +74,12 @@ const AdminContent = () => {
           onClick={() => setActiveTab("notificationManagement")}
         >
           Notification Management
+        </button>
+        <button
+          className={`font-semibold ${activeTab === "resellerNewsManagement" ? "text-blue-600" : "text-gray-600"}`}
+          onClick={() => setActiveTab("resellerNewsManagement")}
+        >
+          Reseller News Management
         </button>
       </div>
 
@@ -104,6 +111,7 @@ const AdminContent = () => {
 
       {activeTab === "eventManagement" && <AdminEventManagement />}
       {activeTab === "notificationManagement" && <AdminNotificationManagement />}
+      {activeTab === "resellerNewsManagement" && <AdminResellerNewsManagement />}
     </div>
   );
 };

@@ -44,7 +44,7 @@ export async function refreshEbayToken(customerId: string) {
 
     await user.save();
 
-    console.log('eBay token successfully refreshed for Stripe customer:', customerId);
+    return tokenData.access_token;
   } catch (error) {
     console.error('Error refreshing eBay token:', error);
     throw error;

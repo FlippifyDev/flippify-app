@@ -15,7 +15,6 @@ export async function linkTracker(path: string) {
     // Update the count in the database
     await set(pathRef, count);
     
-    console.log(`Count for ${path} updated to ${count}`);
   } catch (error) {
     console.error("Error updating count:", error);
   }

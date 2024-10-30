@@ -6,7 +6,6 @@ import SidebarButton from "./SidebarButton";
 
 import React from "react";
 import { AiOutlineStock } from "react-icons/ai";
-import { FaRegNewspaper } from "react-icons/fa6";
 import { FaServer, FaBoxOpen } from "react-icons/fa6";
 
 interface SidebarToolButtonsProps {
@@ -18,15 +17,6 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 }) => {
   return (
     <div>
-      <DisabledSideBarButton
-        text="Reseller News"
-        redirect="reseller-news"
-        symbol={<FaRegNewspaper className="text-md" />}
-        tooltip="Coming Soon"
-      />
-
-
-
       {/* Manage Servers Tab */}
       <LayoutSubscriptionWrapper anySubscriptions={["server", "admin"]}>
         <SidebarButton
@@ -45,7 +35,6 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
           showAlert={showAlert}
         />
       </LayoutSubscriptionWrapper>
-
 
 
       {/* Disabled Financial Hub */}

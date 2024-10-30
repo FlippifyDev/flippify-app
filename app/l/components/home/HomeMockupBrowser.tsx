@@ -7,6 +7,8 @@ const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 const inter = Inter({ subsets: ['latin'] });
 
 const HomeMockupBrowser = () => {
+  const root = process.env.ROOT as string;
+
   return (
     <div className="grid sm:grid-cols-1 md:grid-cols-2 pt-12 mx-8 md:mx-1 lg:mx-2 xl:mx-8 place-content-center">
       <div className="order-2 md:order-1 px-2 pt-6 md:pt-0 lg:pt-20 xl:pt-44">
@@ -23,7 +25,7 @@ const HomeMockupBrowser = () => {
       </div>
       <div className="mockup-browser order-1 bg-gray-100 md:order-2 w-full md:w-auto mockup-shadow">
         <div className="mockup-browser-toolbar bg-gray-100">
-          <div className="input !bg-gray-200 text-black border-2 border-gray-300">https://flippify.co.uk</div>
+          <div className="input !bg-gray-200 text-black border-2 border-gray-300">{root}</div>
         </div> 
         <div className="bg-white flex justify-center px-1 py-1">
           <figure>

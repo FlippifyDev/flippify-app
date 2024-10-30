@@ -12,7 +12,9 @@ interface EbayError {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    await connectDB();  // Ensure MongoDB is connected
+    // Ensure MongoDB is connected
+    await connectDB();  
+
     const session = await getSession({ req });
 
     if (!session || !session.user?.customerId) {
@@ -20,42 +22,50 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const customerId = session.user.customerId;
-
     const user = await User.findOne({ stripe_customer_id: customerId });
 
+    // Check if user has valid eBay tokens
     if (!user || !user.ebay || !user.ebay.ebayAccessToken || !user.ebay.ebayTokenExpiry) {
       return res.status(400).json({ error: 'eBay tokens not found' });
     }
 
     let { ebayAccessToken, ebayTokenExpiry } = user.ebay;
 
+    // Check if user has valid eBay tokens
     if (Date.now() >= ebayTokenExpiry) {
-      console.log("eBay token expired. Refreshing...");
       await refreshEbayToken(customerId);
       const refreshedUser = await User.findOne({ stripe_customer_id: customerId });
       ebayAccessToken = refreshedUser?.ebay?.ebayAccessToken ?? '';
+
+      // Handle case where token still isn't available
+      if (!ebayAccessToken) {
+        return res.status(400).json({ error: 'Failed to refresh eBay Access Token' });
+      }
     }
 
-    if (!ebayAccessToken) {
-      return res.status(400).json({ error: 'Unable to fetch eBay Access Token' });
+    const ebay_inventory_api_url = process.env.EBAY_INVENTORY_API_URL;
+    if (!ebay_inventory_api_url) {
+      return res.status(400).json({ error: 'Failed to find ebay inventory api' });
     }
 
-    const response = await fetch('https://api.ebay.com/sell/inventory/v1/inventory_item', {
+    const response = await fetch(ebay_inventory_api_url, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${ebayAccessToken}`,
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
     });
-
     if (!response.ok) {
       const errorResponse = await response.json() as EbayError;
       const errorMessage = errorResponse.message || errorResponse.error || 'Failed to fetch inventory data';
       return res.status(500).json({ error: errorMessage });
     }
 
+    // Successfully fetched inventory data
     const data = await response.json();
     return res.status(200).json(data);
+
   } catch (error: any) {
     console.error('Error fetching eBay inventory:', error.message || 'Unknown error');
     return res.status(500).json({ error: error.message || 'Unknown error occurred' });

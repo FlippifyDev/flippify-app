@@ -12,7 +12,9 @@ interface EbayError {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    await connectDB();  // Ensure MongoDB is connected
+    // Ensure MongoDB is connected
+    await connectDB();  
+
     const session = await getSession({ req });
 
     if (!session || !session.user?.customerId) {
@@ -20,7 +22,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const customerId = session.user.customerId;
-
     const user = await User.findOne({ stripe_customer_id: customerId });
 
     if (!user || !user.ebay || !user.ebay.ebayAccessToken || !user.ebay.ebayTokenExpiry) {
@@ -30,26 +31,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     let { ebayAccessToken, ebayTokenExpiry } = user.ebay;
 
     if (Date.now() >= ebayTokenExpiry) {
-      console.log("eBay token expired. Refreshing...");
-      await refreshEbayToken(customerId);
-      const refreshedUser = await User.findOne({ stripe_customer_id: customerId });
-      ebayAccessToken = refreshedUser?.ebay?.ebayAccessToken ?? '';
+      ebayAccessToken = await refreshEbayToken(customerId);
     }
 
     if (!ebayAccessToken) {
       return res.status(400).json({ error: 'Unable to fetch eBay Access Token' });
     }
+    
+    const ebay_orders_api_url = process.env.EBAY_ORDERS_API_URL;
+    if (!ebay_orders_api_url) {
+      return res.status(400).json({ error: 'Failed to find ebay inventory api' });
+    }
 
-    const response = await fetch('https://api.ebay.com/sell/fulfillment/v1/order?limit=10', {
+    const response = await fetch(ebay_orders_api_url, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${ebayAccessToken}`,
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
     });
 
     if (!response.ok) {
       const errorResponse = await response.json() as EbayError;
+      console.error('Error fetching orders:', errorResponse);
       const errorMessage = errorResponse.message || errorResponse.error || 'Failed to fetch orders data';
       return res.status(500).json({ error: errorMessage });
     }

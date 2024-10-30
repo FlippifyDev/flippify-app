@@ -38,7 +38,6 @@ const completeOnboarding = async (userId: string, referralCode: string | null): 
       }
     });
 
-    console.log(`Successfully granted access and updated referral for user ${userId}`);
   } catch (error) {
     console.error('Error granting access:', error);
   }

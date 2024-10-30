@@ -6,13 +6,15 @@ import { Suspense } from 'react';
 import MetadataHead from '../../components/MetadataHead';
 import ThemeSetter from '../../components/ThemeSetter';
 
+const root = process.env.ROOT as string;
+
 export const metadata = {
   title: 'Affordable Pricing Plans for Server Resellers - Flippify',
   description: 'Discover Flippify’s pricing plans designed to suit all your servers reselling needs. From monitoring soon-to-retire Lego sets to exclusive deals, our affordable plans help you maximize profits and stay ahead in the flipping game.',
   openGraph: {
     title: 'Affordable Pricing Plans for Server Resellers - Flippify',
     description: 'Discover Flippify’s pricing plans designed to suit all your servers reselling needs. From monitoring soon-to-retire Lego sets to exclusive deals, our affordable plans help you maximize profits and stay ahead in the flipping game.',
-    url: 'https://flippify.co.uk/l/server-pricing',
+    url: root.concat('/l/server-pricing'),
     images: [
       {
         url: 'https://i.imgur.com/Q6iaqhS.png',

@@ -10,7 +10,7 @@ const createCheckoutSession = async (
     referred_by: string | null | undefined
 ): Promise<string | null> => {
     const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
-    const root = "https://flippify.co.uk";
+    const root = process.env.ROOT as string;
     
     if (!stripeAPIKey) {
         throw new Error('Stripe API key not found');

@@ -17,6 +17,7 @@ const ProfileBillingPortalButton = () => {
   const { data: session } = useSession();
   const [billingUrl, setBillingUrl] = useState<string | null>(null);
   const customerIdRef = useRef<string | null>(null);
+  const root = process.env.ROOT as string;
 
   useEffect(() => {
     const fetchCheckoutUrl = async () => {
@@ -30,7 +31,7 @@ const ProfileBillingPortalButton = () => {
             setBillingUrl(url);
           } catch (error) {
             console.error('Failed to create billing portal:', error);
-            setBillingUrl('http://flippify.co.uk/u/failed-to-create-billing-portal');
+            setBillingUrl(root.concat('/u/failed-to-create-billing-portal'));
           }
         }
       }

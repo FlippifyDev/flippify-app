@@ -16,6 +16,7 @@ const NavbarProfileAvatar = () => {
   const router = useRouter();
   const customerIdRef = useRef<string | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const root = process.env.ROOT as string;
 
   // Default avatar
   let avatar = "https://i.pinimg.com/originals/40/a4/59/40a4592d0e7f4dc067ec0cdc24e038b9.png";
@@ -50,7 +51,7 @@ const NavbarProfileAvatar = () => {
           } catch (error) {
             console.error("Failed to create billing portal:", error);
             setBillingUrl(
-              "http://flippify.co.uk/u/failed-to-create-billing-portal"
+              root.concat("/u/failed-to-create-billing-portal")
             );
           }
         }
@@ -99,7 +100,6 @@ const NavbarProfileAvatar = () => {
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      console.log("Cleaning up, removing event listener");
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);

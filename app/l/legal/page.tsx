@@ -6,13 +6,15 @@ import { Suspense } from 'react';
 import MetadataHead from '../../components/MetadataHead';
 import ThemeSetter from '../../components/ThemeSetter';
 
+const root = process.env.ROOT as string;
+
 export const metadata = {
   title: 'Flippify - Privacy and Terms & Conditions',
   description: 'Access detailed legal information on Flippify, including our Privacy Policy and Terms and Conditions. Stay informed about our data practices, your rights, and our commitment to a fair trading platform. We want a safe environment for all our users.',
   openGraph: {
     title: 'Flippify - Privacy and Terms & Conditions',
     description: 'Access detailed legal information on Flippify, including our Privacy Policy and Terms and Conditions. Stay informed about our data practices, your rights, and our commitment to a fair trading platform. We want a safe environment for all our users.',
-    url: 'https://flippify.co.uk/legal',
+    url: root.concat("/legal"),
     images: [
       {
         url: 'https://i.imgur.com/m4TzKj9.png',

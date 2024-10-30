@@ -6,13 +6,15 @@ import { Suspense } from 'react';
 import MetadataHead from '../../components/MetadataHead';
 import ThemeSetter from '../../components/ThemeSetter';
 
+const root = process.env.ROOT as string;
+
 export const metadata = {
   title: 'Exclusive Flipping Products - Flippify Deals',
   description: 'Explore Flippify’s product offerings, including Advanced Lego retirement deals, Discounted Electronics, Sneakers and other upcoming releases. Our platform tracks soon-to-retire Lego sets across multiple websites along with many other categories like electronics and sneakers, ensuring you never miss a valuable deal. Stay updated for more exclusive products and offers.',
   openGraph: {
     title: 'Exclusive Flipping Products - Flippify Deals',
     description: 'Explore Flippify’s product offerings, including Advanced Lego retirement deals, Discounted Electronics, Sneakers and other upcoming releases. Our platform tracks soon-to-retire Lego sets across multiple websites along with many other categories like electronics and sneakers, ensuring you never miss a valuable deal. Stay updated for more exclusive products and offers.',
-    url: 'https://flippify.co.uk/l/products',
+    url: root.concat('/l/products'),
     images: [
       {
         url: 'https://i.imgur.com/RfR639r.png',

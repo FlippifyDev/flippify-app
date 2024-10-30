@@ -37,7 +37,6 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
       </LayoutSubscriptionWrapper>
 
 
-
       {/* Disabled Financial Hub */}
       <LayoutSubscriptionWrapper requiredSubscriptions={["!admin"]}>
         <DisabledSideBarButton

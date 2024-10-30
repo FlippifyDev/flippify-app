@@ -28,7 +28,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Check if the token is expired and refresh it if necessary
     if (Date.now() >= ebayTokenExpiry) {
-      console.log("eBay token expired. Refreshing...");
       await refreshEbayToken(customerId);  // This refreshes the token in MongoDB
       const refreshedUser = await User.findOne({ stripe_customer_id: customerId });
       ebayAccessToken = refreshedUser?.ebay?.ebayAccessToken || '';

@@ -2,8 +2,9 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import crypto from 'crypto';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  const root = process.env.ROOT as string;
   const verificationToken = process.env.EBAY_VERIFICATION_TOKEN;
-  const endpoint = 'https://flippify.co.uk/api/ebay/marketplaceDeletion'; // Replace with your endpoint
+  const endpoint = root.concat('/api/ebay/marketplaceDeletion'); // Replace with your endpoint
   
   if (req.method === 'GET') {
     // Handle the initial verification GET request from eBay
@@ -32,9 +33,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     if (notification.event === 'MARKETPLACE_ACCOUNT_DELETION') {
-      // Log or handle account deletion event
-      console.log('eBay account deleted:', notification.userId);
-
       // Perform any necessary cleanup, such as deleting the user's data
       return res.status(200).json({ success: true });
     }

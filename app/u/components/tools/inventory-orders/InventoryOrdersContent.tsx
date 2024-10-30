@@ -11,19 +11,22 @@ const InventoryOrdersContent: React.FC = () => {
   useEffect(() => {
     const fetchInventoryAndOrders = async () => {
       try {
-        const [inventoryResponse, ordersResponse] = await Promise.all([
-          fetch("/api/ebay/inventory"),
+        const [ordersResponse] = await Promise.all([
+          //fetch("/api/ebay/inventory"),
           fetch("/api/ebay/orders"),
         ]);
 
-        if (!inventoryResponse.ok || !ordersResponse.ok) {
-          throw new Error("Failed to fetch inventory or orders.");
+        //if (!inventoryResponse.ok || !ordersResponse.ok) {
+        //  throw new Error("Failed to fetch inventory or orders.");
+        //}
+        if (!ordersResponse.ok) {
+          throw new Error("Failed to fetch orders.");
         }
 
-        const inventory = await inventoryResponse.json();
+        //const inventory = await inventoryResponse.json();
         const orders = await ordersResponse.json();
 
-        setInventoryData(inventory.inventoryItems || []);
+        //setInventoryData(inventory.inventoryItems || []);
         setOrderData(orders.orders || []);
       } catch (error: any) {
         console.error("Error fetching inventory or orders:", error);
@@ -66,6 +69,7 @@ const InventoryOrdersContent: React.FC = () => {
             <p>No inventory items available.</p>
           )}
 
+          {/*
           <h3 className="text-lg font-semibold mt-4">Orders:</h3>
           {orderData.length > 0 ? (
             orderData.map((order, index) => (
@@ -81,6 +85,7 @@ const InventoryOrdersContent: React.FC = () => {
           ) : (
             <p>No orders available.</p>
           )}
+          */}
         </>
       )}
     </div>

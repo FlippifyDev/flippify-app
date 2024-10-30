@@ -17,6 +17,7 @@ const PlansSubscribeNow: React.FC<PlansSubscribeNowProps> = ({ priceId, specialP
   const customerIdRef = useRef<string | null>(null);
   const usernameRef = useRef<string | null>(null);
   const isAvailable = unavailable !== "unavailable";
+  const root = process.env.ROOT as string;
 
   useEffect(() => {
     const fetchCheckoutUrl = async () => {
@@ -37,7 +38,7 @@ const PlansSubscribeNow: React.FC<PlansSubscribeNowProps> = ({ priceId, specialP
             setCheckoutUrl(url);
           } catch (error) {
             console.error('Failed to create checkout session:', error);
-            setCheckoutUrl('http://flippify.co.uk/u/failed-to-create-checkout-session');
+            setCheckoutUrl(root.concat('/u/failed-to-create-checkout-session'));
           }
         }
       }

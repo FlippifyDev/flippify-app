@@ -22,8 +22,7 @@ const DashboardPage: React.FC = () => {
       const fetchUserData = async () => {
         try {
           const customerId = session.user.customerId;
-          const filteredCustomerId = customerId?.replace("cus_", "")
-          const data = await handleUser(filteredCustomerId as string);
+          const data = await handleUser(customerId as string);
           setUserData(data);
         } catch (error) {
           console.error('Error handling user:', error);

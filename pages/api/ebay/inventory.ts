@@ -33,10 +33,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Check if user has valid eBay tokens
     if (Date.now() >= ebayTokenExpiry) {
-      await refreshEbayToken(customerId);
-      const refreshedUser = await User.findOne({ stripe_customer_id: customerId });
-      ebayAccessToken = refreshedUser?.ebay?.ebayAccessToken ?? '';
-
+      ebayAccessToken = await refreshEbayToken(customerId);
+      
       // Handle case where token still isn't available
       if (!ebayAccessToken) {
         return res.status(400).json({ error: 'Failed to refresh eBay Access Token' });
@@ -58,6 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
     if (!response.ok) {
       const errorResponse = await response.json() as EbayError;
+      console.error('Error fetching inventory:', errorResponse);
       const errorMessage = errorResponse.message || errorResponse.error || 'Failed to fetch inventory data';
       return res.status(500).json({ error: errorMessage });
     }

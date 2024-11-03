@@ -4,6 +4,7 @@ import '@/styles/overview-cards.css';
 
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import { MdError } from "react-icons/md";
 
 // Currency symbols mapping
 const currencySymbols: Record<string, string> = {
@@ -12,12 +13,30 @@ const currencySymbols: Record<string, string> = {
   EUR: '€',
 };
 
-interface DashboardOverviewCardProps {
-  customerId: string;
+
+interface IOrder {
+  buyerUsername: string;
+  expectedPayoutDate: string | null | undefined;
+  itemName: string;
+  legacyItemId: string;
+  orderId: string;
+  otherFees: number;
+  purchaseDate: string | null;
+  purchasePlatform: string | null;
+  purchasePrice: number | null;
+  quantitySold: number;
+  saleDate: string;
+  salePlatform: string;
+  salePrice: number;
+  shippingFees: number;
 }
 
-const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ customerId }) => {
+
+
+const DashboardOverviewCard = () => {
   const { data: session } = useSession();
+  const [missingCosts, setMissingCosts] = useState(false);
+  const customerId = session?.user.customerId;
   const [overviewData, setOverviewData] = useState({
     totalRevenue: 0,
     totalCosts: 0,
@@ -28,8 +47,7 @@ const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ customerI
   useEffect(() => {
     const loadUserCurrency = async () => {
       if (session && session.user) {
-        const userRef = ref(database, `users/${session.user.customerId}`);
-
+        const userRef = ref(database, `users/${customerId}`);
         try {
           const snapshot = await get(userRef);
           const userData = snapshot.val();
@@ -41,52 +59,65 @@ const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ customerI
       }
     };
 
-    if (session && session.user && session.user.customerId) {
+    if (session && session.user && customerId) {
       loadUserCurrency();
     }
   }, [session]);
 
   useEffect(() => {
-    if (customerId) {
-      const fetchData = async () => {
-        try {
-          const salesRef = ref(database, `sales/${customerId}`);
-          const salesSnapshot = await get(salesRef);
-          const salesData = salesSnapshot.val() || {};
+    const fetchData = async () => {
+      if (!customerId) return;
 
-          let totalRevenue = 0;
-          let totalCosts = 0;
-          let totalSales = 0;
+      try {
+        // Target sales data for the specific customerId
+        const salesRef = ref(database, `sales/${customerId}`);
+        const salesSnapshot = await get(salesRef);
+        const salesData = salesSnapshot.val();
 
-          for (const saleKey in salesData) {
-            const sale: ISale = salesData[saleKey];
-            if (sale.itemName && sale.purchaseDate && sale.saleDate) {
-              const salePrice = sale.salePrice || 0;
-              const purchasePricePerUnit = sale.purchasePricePerUnit || 0;
-              const platformFees = sale.platformFees || 0;
-              const shippingCost = sale.shippingCost || 0;
-
-              const totalSaleRevenue = sale.quantitySold * salePrice;
-              const totalPurchaseCost = sale.quantitySold * purchasePricePerUnit;
-
-              totalRevenue += totalSaleRevenue;
-              totalCosts += totalPurchaseCost + shippingCost + (totalSaleRevenue * (platformFees / 100));
-              totalSales += sale.quantitySold;
-            }
-          }
-
-          setOverviewData({
-            totalRevenue,
-            totalCosts,
-            totalSales
-          });
-        } catch (error) {
-          console.error('Error fetching data:', error);
+        if (!salesData) {
+          return;
         }
-      };
 
-      fetchData();
-    }
+        let totalRevenue = 0;
+        let totalCosts = 0;
+        let totalSales = 0;
+
+        // Iterate over each order within the customer's sales data
+        for (const orderId in salesData) {
+          const sale: IOrder = salesData[orderId];
+
+          // Ensure all necessary fields are available
+          if (sale.itemName && sale.saleDate) {
+            const salePrice = sale.salePrice || 0;
+            const purchasePricePerUnit = sale.purchasePrice || null;
+            const shippingCost = sale.shippingFees || 0;
+            const otherCosts = sale.otherFees || 0;
+
+            const totalSaleRevenue = sale.quantitySold * salePrice;
+
+            if (purchasePricePerUnit) {
+              const totalPurchaseCost = sale.quantitySold * purchasePricePerUnit;
+              totalRevenue += totalSaleRevenue;
+              totalCosts += totalPurchaseCost + shippingCost + otherCosts;
+            } else {
+              setMissingCosts(true);
+            }
+            
+            totalSales += sale.quantitySold;
+          }
+        }
+
+        setOverviewData({
+          totalRevenue,
+          totalCosts,
+          totalSales
+        });
+      } catch (error) {
+        console.error('Error fetching sales data from Firebase:', error);
+      }
+    };
+
+    fetchData();
   }, [customerId]);
 
   const roi = overviewData.totalCosts > 0

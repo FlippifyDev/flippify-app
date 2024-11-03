@@ -24,12 +24,11 @@ const database = getDatabase(app);
 const auth = getAuth(app);
 
 // Function to handle user authentication and return cleaned customer ID
-export const handleUser = async (customerId: string) => {
+export const handleUser = async () => {
   try {
     const userCredential = await signInAnonymously(auth);
     const user = userCredential.user;
-    const cleanedCustomerId = customerId.replace("cus_", ""); // Clean the customer ID
-    return { uid: user.uid, customerId: cleanedCustomerId };
+    return { uid: user.uid };
   } catch (error) {
     console.error('Firebase auth error:', error);
     throw error;

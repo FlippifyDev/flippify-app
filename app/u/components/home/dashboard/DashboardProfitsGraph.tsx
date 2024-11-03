@@ -1,4 +1,4 @@
-import { format, subDays, eachDayOfInterval, eachMonthOfInterval, endOfDay, parse } from 'date-fns';
+import { format, subDays, eachDayOfInterval, eachMonthOfInterval, endOfDay, parse, parseISO } from 'date-fns';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
@@ -25,12 +25,29 @@ interface SalesData {
   series: ChartData[];
 }
 
-interface DashboardProfitsGraphProps {
-  customerId: string;
+
+interface IOrder {
+  buyerUsername: string;
+  expectedPayoutDate: string | null | undefined;
+  itemName: string;
+  legacyItemId: string;
+  orderId: string;
+  otherFees: number;
+  purchaseDate: string | null;
+  purchasePlatform: string | null;
+  purchasePrice: number | null;
+  quantitySold: number;
+  saleDate: string;
+  salePlatform: string;
+  salePrice: number;
+  shippingFees: number;
 }
 
-const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerId }) => {
+
+
+const DashboardProfitsGraph = () => {
   const { data: session } = useSession();
+  const customerId = session?.user.customerId;
   const [salesData, setSalesData] = useState<SalesData>({
     categories: [],
     series: [],
@@ -43,65 +60,79 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
 
   const fetchSalesData = useCallback(async (rangeInDays: number) => {
     if (!customerId) return;
-
+  
     try {
       const salesRef = ref(database, `sales/${customerId}`);
       const salesSnapshot = await get(salesRef);
       const salesData = salesSnapshot.val() || {};
-
+  
       const today = endOfDay(new Date());
       const rangeStartDate = subDays(today, rangeInDays - 1);
       const previousRangeStartDate = subDays(rangeStartDate, rangeInDays);
-
+  
+      // Generate categories based on the range
       let allCategories: string[];
       if (rangeInDays > 90) {
-        allCategories = eachMonthOfInterval({ start: rangeStartDate, end: today }).map(date => format(date, 'yyyy-MM'));
+        allCategories = eachMonthOfInterval({ start: rangeStartDate, end: today }).map(date =>
+          format(date, 'yyyy-MM')
+        );
       } else {
-        allCategories = eachDayOfInterval({ start: rangeStartDate, end: today }).map(date => format(date, 'yyyy-MM-dd'));
+        allCategories = eachDayOfInterval({ start: rangeStartDate, end: today }).map(date =>
+          format(date, 'yyyy-MM-dd')
+        );
       }
-
+  
       let seriesData: number[] = Array(allCategories.length).fill(0);
-
+  
       let totalNetProfit = 0;
       let totalPreviousNetProfit = 0;
-
+  
       for (const saleKey in salesData) {
-        const sale: ISale = salesData[saleKey];
+        const sale: IOrder = salesData[saleKey];
         const saleDate = sale.saleDate;
-
+        if (!sale.purchaseDate || !sale.purchasePrice) {
+          continue;
+        }
+  
         if (saleDate && sale.salePrice) {
-          const parsedSaleDate = parse(saleDate, 'dd/MM/yyyy', new Date());
+          // Parse ISO date
+          const parsedSaleDate = parseISO(saleDate);
+          
           if (isNaN(parsedSaleDate.getTime())) {
-            console.error(`Invalid date: ${saleDate}`);
+            console.error(`Invalid date format: ${saleDate}`);
             continue;
           }
-
-          const formattedSaleDate = rangeInDays > 90 ? format(parsedSaleDate, 'yyyy-MM') : format(parsedSaleDate, 'yyyy-MM-dd');
-
-          const purchasePricePerUnit = sale.purchasePricePerUnit || 0;
-          const platformFees = sale.platformFees || 0;
-          const shippingCost = sale.shippingCost || 0;
-          const totalSaleRevenue = sale.quantitySold * sale.salePrice;
-          const totalPurchaseCost = sale.quantitySold * purchasePricePerUnit;
-          const estimatedProfit =
-            totalSaleRevenue -
-            totalPurchaseCost -
-            totalSaleRevenue * (platformFees / 100) -
-            shippingCost;
-
-          const index = allCategories.indexOf(formattedSaleDate);
-          if (index !== -1) {
-            seriesData[index] += estimatedProfit;
-          }
-
-          if (parsedSaleDate >= rangeStartDate && parsedSaleDate <= today) {
-            totalNetProfit += estimatedProfit;
-          } else if (parsedSaleDate < rangeStartDate && parsedSaleDate >= previousRangeStartDate) {
-            totalPreviousNetProfit += estimatedProfit;
+  
+          // Format date based on rangeInDays
+          const formattedSaleDate = rangeInDays > 90
+            ? format(parsedSaleDate, 'yyyy-MM')
+            : format(parsedSaleDate, 'yyyy-MM-dd');
+  
+          // Calculate estimated profit
+          const purchasePricePerUnit = sale.purchasePrice || null;
+          if (purchasePricePerUnit) {
+            const shippingCost = sale.shippingFees || 0;
+            const otherCosts = sale.otherFees || 0;
+            const totalSaleRevenue = sale.quantitySold * sale.salePrice;
+            const totalPurchaseCost = sale.quantitySold * purchasePricePerUnit;
+            const estimatedProfit = totalSaleRevenue - totalPurchaseCost - shippingCost - otherCosts;
+            
+            // Update series data if date falls within categories
+            const index = allCategories.indexOf(formattedSaleDate);
+            if (index !== -1) {
+              seriesData[index] += estimatedProfit;
+            }
+            
+            // Accumulate net profit within and outside the selected range
+            if (parsedSaleDate >= rangeStartDate && parsedSaleDate <= today) {
+              totalNetProfit += estimatedProfit;
+            } else if (parsedSaleDate < rangeStartDate && parsedSaleDate >= previousRangeStartDate) {
+              totalPreviousNetProfit += estimatedProfit;
+            }
           }
         }
       }
-
+  
       setSalesData({
         categories: allCategories,
         series: [{ name: 'Profits', data: seriesData }],
@@ -109,7 +140,7 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({ customerI
       setNetProfit(totalNetProfit);
       setPreviousNetProfit(totalPreviousNetProfit);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('Error fetching sales data:', error);
     }
   }, [customerId]);
 

@@ -14,7 +14,7 @@ import DashboardShowcase from "./DashboardShowcase";
 import OnboardingFlow from "./OnboardingFlow";
 
 const DashboardPage: React.FC = () => {
-  const [userData, setUserData] = useState<{ uid: string; customerId: string } | null>(null);
+  const [userData, setUserData] = useState<{ uid: string; } | null>(null);
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const DashboardPage: React.FC = () => {
       const fetchUserData = async () => {
         try {
           const customerId = session.user.customerId;
-          const data = await handleUser(customerId as string);
+          const data = await handleUser();
           setUserData(data);
         } catch (error) {
           console.error('Error handling user:', error);
@@ -60,13 +60,13 @@ const DashboardPage: React.FC = () => {
       {/* If They Have Subscription */}
       <LayoutSubscriptionWrapper requiredSubscriptions={['standard']}> 
         <div className="w-full">
-          <DashboardOverviewCard customerId={userData.customerId} />
+          <DashboardOverviewCard />
         </div>
         <div className="w-full mt-2 mb-2">
-          <DashboardProfitsGraph customerId={userData.customerId} />
+          <DashboardProfitsGraph />
         </div>
         <div className="w-full">
-          <DashboardRecentSalesCard customerId={userData.customerId} />
+          <DashboardRecentSalesCard />
         </div>
       </LayoutSubscriptionWrapper>
     </div>

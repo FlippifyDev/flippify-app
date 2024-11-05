@@ -1,128 +1,98 @@
-import { database, ref, get } from '../../../../api/auth-firebase/firebaseConfig';
-import { ISale } from '../../tools/sales-tracker/SalesTrackerModels';
 import '@/styles/overview-cards.css';
+import { IOrder } from '@/hooks/useSalesData';
 
-import React, { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
-import { MdError } from "react-icons/md";
+import React, { useEffect, useState } from 'react';
 
-// Currency symbols mapping
 const currencySymbols: Record<string, string> = {
   GBP: '£',
   USD: '$',
   EUR: '€',
 };
 
-
-interface IOrder {
-  buyerUsername: string;
-  expectedPayoutDate: string | null | undefined;
-  itemName: string;
-  legacyItemId: string;
-  orderId: string;
-  otherFees: number;
-  purchaseDate: string | null;
-  purchasePlatform: string | null;
-  purchasePrice: number | null;
-  quantitySold: number;
-  saleDate: string;
-  salePlatform: string;
-  salePrice: number;
-  shippingFees: number;
+interface DashboardOverviewCardProps {
+  salesData: IOrder[];
+  currency: string;
+  selectedRange: number;
 }
 
-
-
-const DashboardOverviewCard = () => {
-  const { data: session } = useSession();
-  const [missingCosts, setMissingCosts] = useState(false);
-  const customerId = session?.user.customerId;
+const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ salesData, currency, selectedRange }) => {
   const [overviewData, setOverviewData] = useState({
     totalRevenue: 0,
     totalCosts: 0,
-    totalSales: 0
+    totalSales: 0,
   });
-  const [currencySymbol, setCurrencySymbol] = useState('£');
+  const [missingCosts, setMissingCosts] = useState(false);
 
   useEffect(() => {
-    const loadUserCurrency = async () => {
-      if (session && session.user) {
-        const userRef = ref(database, `users/${customerId}`);
-        try {
-          const snapshot = await get(userRef);
-          const userData = snapshot.val();
-          const userCurrency = userData?.currency || 'GBP';
-          setCurrencySymbol(currencySymbols[userCurrency] || '£');
-        } catch (error) {
-          console.error('Error loading user currency from Firebase:', error);
-        }
-      }
-    };
+    if (!salesData || salesData.length === 0) return;
 
-    if (session && session.user && customerId) {
-      loadUserCurrency();
+    // Calculate range start date based on selectedRange
+    const currentDate = new Date();
+    let rangeStartDate = new Date();
+
+    if (selectedRange === 1) {
+      // Today: start from midnight today
+      rangeStartDate.setHours(0, 0, 0, 0);
+    } else if (selectedRange === 7) {
+      // This Week: start from the most recent Monday
+      const dayOfWeek = currentDate.getDay();
+      rangeStartDate.setDate(currentDate.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1)); // Adjust for Sunday (0)
+      rangeStartDate.setHours(0, 0, 0, 0);
+    } else if (selectedRange === 30) {
+      // This Month: start from the first day of the current month
+      rangeStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    } else if (selectedRange === 365) {
+      // This Year: start from January 1 of the current year
+      rangeStartDate = new Date(currentDate.getFullYear(), 0, 1);
+    } else {
+      // Custom range: calculate by subtracting the number of days
+      rangeStartDate.setDate(currentDate.getDate() - selectedRange);
     }
-  }, [session]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!customerId) return;
+    let totalRevenue = 0;
+    let totalCosts = 0;
+    let totalSales = 0;
+    let costsMissing = false;
 
-      try {
-        // Target sales data for the specific customerId
-        const salesRef = ref(database, `sales/${customerId}`);
-        const salesSnapshot = await get(salesRef);
-        const salesData = salesSnapshot.val();
+    salesData.forEach((sale: IOrder) => {
+      const saleDate = new Date(sale.saleDate);
 
-        if (!salesData) {
-          return;
+      // Only include sales within the calculated range
+      if (saleDate >= rangeStartDate && saleDate <= currentDate) {
+        const salePrice = sale.salePrice || 0;
+        const purchasePricePerUnit = sale.purchasePrice || null;
+        const shippingCost = sale.shippingFees || 0;
+        const otherCosts = sale.otherFees || 0;
+
+        const totalSaleRevenue = sale.quantitySold * salePrice;
+
+        if (purchasePricePerUnit) {
+          const totalPurchaseCost = sale.quantitySold * purchasePricePerUnit;
+          totalRevenue += totalSaleRevenue;
+          totalCosts += totalPurchaseCost + shippingCost + otherCosts;
+        } else {
+          costsMissing = true;
         }
 
-        let totalRevenue = 0;
-        let totalCosts = 0;
-        let totalSales = 0;
-
-        // Iterate over each order within the customer's sales data
-        for (const orderId in salesData) {
-          const sale: IOrder = salesData[orderId];
-
-          // Ensure all necessary fields are available
-          if (sale.itemName && sale.saleDate) {
-            const salePrice = sale.salePrice || 0;
-            const purchasePricePerUnit = sale.purchasePrice || null;
-            const shippingCost = sale.shippingFees || 0;
-            const otherCosts = sale.otherFees || 0;
-
-            const totalSaleRevenue = sale.quantitySold * salePrice;
-
-            if (purchasePricePerUnit) {
-              const totalPurchaseCost = sale.quantitySold * purchasePricePerUnit;
-              totalRevenue += totalSaleRevenue;
-              totalCosts += totalPurchaseCost + shippingCost + otherCosts;
-            } else {
-              setMissingCosts(true);
-            }
-            
-            totalSales += sale.quantitySold;
-          }
-        }
-
-        setOverviewData({
-          totalRevenue,
-          totalCosts,
-          totalSales
-        });
-      } catch (error) {
-        console.error('Error fetching sales data from Firebase:', error);
+        totalSales += sale.quantitySold;
       }
-    };
+    });
 
-    fetchData();
-  }, [customerId]);
+    setOverviewData({
+      totalRevenue,
+      totalCosts,
+      totalSales,
+    });
+    setMissingCosts(costsMissing);
+
+  }, [salesData, selectedRange]); // Re-run when salesData or selectedRange changes
+
 
   const roi = overviewData.totalCosts > 0
     ? ((overviewData.totalRevenue - overviewData.totalCosts) / overviewData.totalCosts * 100).toFixed(2)
     : 'N/A';
+
+  const currencySymbol = currencySymbols[currency] || '£';
 
   return (
     <div className="w-full flex flex-col items-center">

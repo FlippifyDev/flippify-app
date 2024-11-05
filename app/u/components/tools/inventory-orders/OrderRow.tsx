@@ -1,20 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { database, ref, update, get } from "@/app/api/auth-firebase/firebaseConfig"; // Import the necessary Firebase functions
+import { database, ref, update, get } from "@/app/api/auth-firebase/firebaseConfig";
+import { IOrder } from "@/hooks/useSalesData";
 
-interface Order {
-  orderId: string;
-  quantitySold: number;
-  saleDate: string;
-  salePrice: number;
-  salePlatform: string;
-  shippingFees: number;
-  otherFees: number;
-  expectedPayoutDate: string | null | undefined;
-  purchasePrice: number | null;
-  purchaseDate: string | null;
-  purchasePlatform: string | null;
-  buyerUsername: string;
-}
+import React, { useState } from "react";
+
 
 interface OrderRowSchema {
   itemId: string;
@@ -24,21 +12,21 @@ interface OrderRowSchema {
   totalPurchasePrice: number | null;
   totalShippingFees: number;
   totalOtherFees: number;
-  orders: Order[];
-  currency: string; // For currency symbol formatting
+  orders: IOrder[];
+  currency: string;
   currencySymbols: { [key: string]: string };
   customerId: string | undefined;
 }
 
 const formatDate = (dateString: string | null | undefined) => {
-  if (!dateString) return "N/A"; // Handle null or undefined
+  if (!dateString) return "N/A";
   const options: Intl.DateTimeFormatOptions = {
     day: "2-digit",
     month: "short",
     year: "numeric",
   };
   const date = new Date(dateString);
-  return date.toLocaleDateString("en-GB", options); // Adjust locale if needed
+  return date.toLocaleDateString("en-GB", options); 
 };
 
 const OrderRow: React.FC<OrderRowSchema> = ({
@@ -54,21 +42,25 @@ const OrderRow: React.FC<OrderRowSchema> = ({
   currencySymbols,
   customerId,
 }) => {
-  const [isOpen, setIsOpen] = useState(false); // State to manage visibility of order details
-  const [selectedOrders, setSelectedOrders] = useState<string[]>([]); // Selected order IDs
-  const [purchaseDate, setPurchaseDate] = useState<string>(""); // Input for purchase date
-  const [purchasePrice, setPurchasePrice] = useState<number | null>(null); // Input for purchase price
-  const [purchasePlatform, setPurchasePlatform] = useState<string>(""); // Input for purchase platform
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedOrders, setSelectedOrders] = useState<string[]>([]); 
+  const [purchaseDate, setPurchaseDate] = useState<string>(""); 
+  const [purchasePrice, setPurchasePrice] = useState<number | null>(null); 
+  const [purchasePlatform, setPurchasePlatform] = useState<string>("");
+  const [customTag, setCustomTag] = useState<string>("");
 
   const toggleOrderDetails = () => {
-    setIsOpen((prev) => !prev); // Toggle the visibility of the smaller table
+    // Toggle the visibility of the smaller table
+    setIsOpen((prev) => !prev);
   };
 
   // Sort orders by sale date
   const sortedOrders = [...orders].sort((a, b) => {
     const dateA = new Date(a.saleDate).getTime();
     const dateB = new Date(b.saleDate).getTime();
-    return dateB - dateA; // Descending order
+
+    // Descending order
+    return dateB - dateA; 
   });
 
   const calculateProfit = (
@@ -147,6 +139,10 @@ const OrderRow: React.FC<OrderRowSchema> = ({
 
           if (purchasePlatform) {
             updatedOrderData.purchasePlatform = purchasePlatform; // Update purchasePlatform if provided
+          }
+
+          if (customTag) {
+            updatedOrderData.customTag = customTag; // Update customTag if provided
           }
 
           // If there's anything to update, merge with existing data
@@ -230,7 +226,7 @@ const OrderRow: React.FC<OrderRowSchema> = ({
       {isOpen && (
         <tr>
           <td colSpan={7} className="ml-4">
-            <div className="border-l border-gray-300 pl-2">
+            <div>
               <table className="table w-full">
                 <thead>
                   <tr>
@@ -246,6 +242,7 @@ const OrderRow: React.FC<OrderRowSchema> = ({
                     <th>ROI (%)</th>
                     <th>Purchase Date</th>
                     <th>Purchase Platform</th>
+                    <th>Tag</th>
                     <th>Buyer</th>
                   </tr>
                 </thead>
@@ -310,6 +307,7 @@ const OrderRow: React.FC<OrderRowSchema> = ({
                       </td>
                       <td>{formatDate(order.purchaseDate)}</td>
                       <td>{order.purchasePlatform || "N/A"}</td>
+                      <td>{order.customTag || "N/A"}</td>
                       <td>{order.buyerUsername}</td>
                     </tr>
                   ))}
@@ -347,6 +345,15 @@ const OrderRow: React.FC<OrderRowSchema> = ({
                     type="text"
                     value={purchasePlatform}
                     onChange={(e) => setPurchasePlatform(e.target.value)}
+                    className="border p-1 rounded"
+                  />
+                </div>
+                <div>
+                  <label>Custom Tag:</label>
+                  <input
+                    type="text"
+                    value={customTag}
+                    onChange={(e) => setCustomTag(e.target.value)}
                     className="border p-1 rounded"
                   />
                 </div>

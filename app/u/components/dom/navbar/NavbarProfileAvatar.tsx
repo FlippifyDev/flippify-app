@@ -49,7 +49,6 @@ const NavbarProfileAvatar = () => {
             );
             setBillingUrl(url);
           } catch (error) {
-            console.error("Failed to create billing portal:", error);
             setBillingUrl(
               root.concat("/u/failed-to-create-billing-portal")
             );
@@ -59,7 +58,7 @@ const NavbarProfileAvatar = () => {
     };
 
     fetchCheckoutUrl();
-  }, [session]);
+  }, [session, root]);
 
 
   const handleBillingPortalButtonClick = () => {

@@ -37,7 +37,6 @@ const PlansSubscribeNow: React.FC<PlansSubscribeNowProps> = ({ priceId, specialP
             );
             setCheckoutUrl(url);
           } catch (error) {
-            console.error('Failed to create checkout session:', error);
             setCheckoutUrl(root.concat('/u/failed-to-create-checkout-session'));
           }
         }
@@ -45,7 +44,7 @@ const PlansSubscribeNow: React.FC<PlansSubscribeNowProps> = ({ priceId, specialP
     };
 
     fetchCheckoutUrl();
-  }, [session, priceId]);
+  }, [session, priceId, root]);
 
   const handleBuyButtonClick = () => {
     if (checkoutUrl && isAvailable) {

@@ -18,8 +18,8 @@ interface IHistoryGrid {
     quantitySold: number;
     purchasePricePerUnit: number;
     salePrice: number;
-    platformFees: number;
     shippingCost: number;
+    otherCosts: number;
     estimatedProfit: number;
     salePlatform: string;
     purchasePlatform: string;

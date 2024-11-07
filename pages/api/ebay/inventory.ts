@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 import connectDB from '@/app/api/auth-mongodb/dbConnect';
 import { User } from '@/app/api/auth-mongodb/userModel';
-import { refreshEbayToken } from '@/app/api/ebay/refreshEbayToken'; 
+import { refreshEbayToken } from '@/app/api/ebay/token-handlers';
 import fetch from 'node-fetch';
 
 interface EbayError {
@@ -10,10 +10,10 @@ interface EbayError {
   error?: string;
 }
 
+
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    // Ensure MongoDB is connected
-    await connectDB();  
 
     const session = await getSession({ req });
 
@@ -31,24 +31,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     let { ebayAccessToken, ebayTokenExpiry } = user.ebay;
 
-    // Check if user has valid eBay tokens
+    // Refresh the token if it's expired
     if (Date.now() >= ebayTokenExpiry) {
-      await refreshEbayToken(customerId);
-      const refreshedUser = await User.findOne({ stripe_customer_id: customerId });
-      ebayAccessToken = refreshedUser?.ebay?.ebayAccessToken ?? '';
-
-      // Handle case where token still isn't available
+      ebayAccessToken = await refreshEbayToken(customerId);
       if (!ebayAccessToken) {
         return res.status(400).json({ error: 'Failed to refresh eBay Access Token' });
       }
     }
 
-    const ebay_inventory_api_url = process.env.EBAY_INVENTORY_API_URL;
-    if (!ebay_inventory_api_url) {
-      return res.status(400).json({ error: 'Failed to find ebay inventory api' });
-    }
-
-    const response = await fetch(ebay_inventory_api_url, {
+    const date = new Date().toISOString().split('T')[0];
+    // Now, fetch the user's inventory items
+    const inventoryUrl = `${process.env.EBAY_FEED_API_URL}&date=${date}`;
+    const inventoryResponse = await fetch(inventoryUrl, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${ebayAccessToken}`,
@@ -56,15 +50,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         'Accept': 'application/json',
       },
     });
-    if (!response.ok) {
-      const errorResponse = await response.json() as EbayError;
+    
+
+    if (!inventoryResponse.ok) {
+      const errorResponse = await inventoryResponse.json() as EbayError;
+      console.error('Error fetching inventory:', errorResponse);
       const errorMessage = errorResponse.message || errorResponse.error || 'Failed to fetch inventory data';
       return res.status(500).json({ error: errorMessage });
     }
 
     // Successfully fetched inventory data
-    const data = await response.json();
-    return res.status(200).json(data);
+    const inventoryData = await inventoryResponse.json();
+    console.log("inventory data", inventoryData)
+    return res.status(200).json(inventoryData);
 
   } catch (error: any) {
     console.error('Error fetching eBay inventory:', error.message || 'Unknown error');

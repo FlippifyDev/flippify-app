@@ -1,5 +1,5 @@
 import { database, ref, update, get } from "@/app/api/auth-firebase/firebaseConfig";
-import { IOrder } from "@/hooks/useSalesData";
+import { IOrder } from "@/models/ebay-api-models";
 
 import React, { useState } from "react";
 

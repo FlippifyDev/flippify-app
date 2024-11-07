@@ -4,8 +4,8 @@ import { database, ref, get, set, child, remove } from "@/app/api/auth-firebase/
 import { IOrder } from "@/models/ebay-api-models";
 
 
-export const useSalesData = (customerId?: string) => {
-  const [salesData, setSalesData] = useState<IOrder[]>([]);
+export const useListedData = (customerId?: string) => {
+  const [listedData, setListedData] = useState<IOrder[]>([]);
   const [currency, setCurrency] = useState<string>("£");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -19,11 +19,13 @@ export const useSalesData = (customerId?: string) => {
         setLoading(true);
         
         // Fetch eBay orders
-        const ordersResponse = await fetch("/api/ebay/orders");
-        if (!ordersResponse.ok) {
+        const listingsResponse = await fetch("/api/ebay/inventory");
+        if (!listingsResponse.ok) {
           throw new Error("Failed to fetch eBay orders.");
         }
-        const orders = await ordersResponse.json();
+        const listings = await listingsResponse.json();
+        console.log("listings", listings);
+        return;
 
         // Reference to Firebase for user sales
         const customerSalesRef = ref(database, `sales/${customerId}`);
@@ -37,14 +39,14 @@ export const useSalesData = (customerId?: string) => {
         }
 
         // Process and save eBay orders to Firebase
-        await Promise.all(orders.orders.map((order: any) => saveOrderToFirebase(order, customerSalesRef)));
+        await Promise.all(listings.orders.map((order: any) => saveOrderToFirebase(order, customerSalesRef)));
 
         // Retrieve updated sales data from Firebase
         const snapshot = await get(customerSalesRef);
         const ordersFromFirebase = snapshot.exists() ? snapshot.val() : {};
         const firebaseOrders = Object.values(ordersFromFirebase) as IOrder[];
 
-        setSalesData(firebaseOrders);
+        setListedData(firebaseOrders);
       } catch (error: any) {
         setError(error.message || "Failed to load sales data.");
       } finally {
@@ -103,5 +105,5 @@ export const useSalesData = (customerId?: string) => {
     }
   };
 
-  return { salesData, loading, error, currency };
+  return { listedData, loading, error, currency };
 };

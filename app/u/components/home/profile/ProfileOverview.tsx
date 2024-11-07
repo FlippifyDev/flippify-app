@@ -25,9 +25,9 @@ const ProfileOverview = () => {
 
     try {
       // Authenticate the user
-      const { customerId: cleanedCustomerId } = await handleUser(customerId);
+      await handleUser();
 
-      const salesRef = ref(database, `sales/${cleanedCustomerId}`);
+      const salesRef = ref(database, `sales/${customerId}`);
       const salesSnapshot = await get(salesRef);
       const salesData = salesSnapshot.val() || {};
 

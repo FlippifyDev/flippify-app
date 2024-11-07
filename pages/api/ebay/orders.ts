@@ -1,9 +1,8 @@
 
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
-import connectDB from '@/app/api/auth-mongodb/dbConnect';
 import { User } from '@/app/api/auth-mongodb/userModel';
-import { refreshEbayToken } from '@/app/api/ebay/refreshEbayToken'; 
+import { refreshEbayToken } from '@/app/api/ebay/token-handlers'; 
 import fetch from 'node-fetch';
 
 interface EbayError {
@@ -13,9 +12,6 @@ interface EbayError {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    // Ensure MongoDB is connected
-    await connectDB();  
-
     const session = await getSession({ req });
 
     if (!session || !session.user?.customerId) {

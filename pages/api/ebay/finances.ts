@@ -6,10 +6,7 @@ import { refreshEbayToken } from '@/app/api/ebay/refreshEbayToken';
 import fetch from 'node-fetch';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  try {
-    // Ensure MongoDB is connected
-    await connectDB();
-    
+  try {    
     // Get session from next-auth
     const session = await getSession({ req });
     if (!session || !session.user?.customerId) {

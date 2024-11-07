@@ -35,6 +35,9 @@ const authOptions: AuthOptions = {
           token.accessGranted = userFromDb.subscriptions.some(sub => sub.name === 'accessGranted');
           token.username = userFromDb.username;
           token.referral = userFromDb.referral;
+          token.ebayAccessToken = userFromDb.ebay?.ebayAccessToken || null;
+          token.ebayTokenExpiry = userFromDb.ebay?.ebayTokenExpiry || null;
+          token.ebayRefreshToken = userFromDb.ebay?.ebayRefreshToken || null;
         }
       }
 
@@ -43,13 +46,16 @@ const authOptions: AuthOptions = {
 
     async session({ session, token }) {
       // Extract data from the token to pass it to the session
-      const { id, name, email, subscriptions, username, referral } = token as {
+      const { id, name, email, subscriptions, username, referral, ebayAccessToken, ebayTokenExpiry, ebayRefreshToken } = token as {
         id: string;
         name: string;
         email: string;
         subscriptions?: ISubscription[];
         username?: string;
         referral?: IReferral;
+        ebayAccessToken?: string;
+        ebayTokenExpiry?: number;
+        ebayRefreshToken?: string;
       };
 
       // Connect to the database
@@ -64,7 +70,6 @@ const authOptions: AuthOptions = {
       // Retrieve or create the Stripe customer and store the customer ID in the session
       const stripeCustomer = await retrieveStripeCustomer(user.stripe_customer_id, id, name, email);
       if (!stripeCustomer) {
-        console.error(`Stripe customer not found for id ${id}`);
         return session;
       }
 
@@ -75,6 +80,12 @@ const authOptions: AuthOptions = {
       session.user.accessGranted = subscriptions?.some(sub => sub.name === 'accessGranted') ?? false;
       session.user.username = username || user.username;  // Set username
       session.user.referral = referral || user.referral;  // Referral data
+      session.user.ebay = {
+        ebayAccessToken: ebayAccessToken || null,
+        ebayTokenExpiry: ebayTokenExpiry || null,
+        ebayRefreshToken: ebayRefreshToken || null
+      }
+
 
       return session;  // Return the modified session object
     },

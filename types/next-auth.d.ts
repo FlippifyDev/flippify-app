@@ -21,12 +21,10 @@ interface SessionUser extends NextAuthUser {
   accessGranted?: boolean;
   username: string;
   currency?: CurrencyType;
-
-  // Add the ebay section to SessionUser
   ebay?: {
-    ebayAccessToken: string;
-    ebayRefreshToken: string;
-    ebayTokenExpiry: number;
+    ebayAccessToken: string | null;
+    ebayRefreshToken: string | null;
+    ebayTokenExpiry: number | null;
   };
 }
 

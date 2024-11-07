@@ -1,5 +1,5 @@
 import '@/styles/overview-cards.css';
-import { IOrder } from '@/hooks/useSalesData';
+import { IOrder } from '@/models/ebay-api-models';
 
 import React, { useEffect, useState } from 'react';
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { IOrder } from "@/hooks/useSalesData";
+import { IOrder } from "@/models/ebay-api-models";
 import {
   startOfDay,
   startOfWeek,

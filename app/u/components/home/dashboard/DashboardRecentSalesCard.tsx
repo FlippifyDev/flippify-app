@@ -1,7 +1,7 @@
 "use client";
 
-import { IOrder } from '@/hooks/useSalesData';
-import { IHistoryGrid } from '../../tools/sales-tracker/SalesTrackerModels';
+import { IOrder } from '@/models/ebay-api-models';
+import { IHistoryGrid } from '@/models/recent-sales-models';
 import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 

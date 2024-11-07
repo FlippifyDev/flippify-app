@@ -1,8 +1,12 @@
 "use client";
 
+// External Imports
 import React, { useState } from "react";
 
+// Local Imports
 import { IEbayWarehouseData } from "@/models/ebay-api-models";
+
+
 
 interface StoreInformationProps {
   onSubmit: (data: IEbayWarehouseData) => void;
@@ -10,9 +14,6 @@ interface StoreInformationProps {
 }
 
 const StoreInformation:React.FC<StoreInformationProps> = ({ onSubmit, customerId }) => {
-  if (!customerId) {
-    return;
-  }
   const [formData, setFormData] = useState<IEbayWarehouseData>({
     location: {
       address: {
@@ -21,7 +22,7 @@ const StoreInformation:React.FC<StoreInformationProps> = ({ onSubmit, customerId
         stateOrProvince: ""
       }
     },
-    name: customerId,
+    name: customerId || "",
     merchantLocationStatus: "ENABLED",
     locationTypes: ["WAREHOUSE"],
   });

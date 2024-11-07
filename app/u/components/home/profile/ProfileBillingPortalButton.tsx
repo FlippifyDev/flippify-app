@@ -38,7 +38,7 @@ const ProfileBillingPortalButton = () => {
     };
 
     fetchCheckoutUrl();
-  }, [session]);
+  }, [session, root]);
 
   const handleBillingPortalButtonClick = () => {
     if (billingUrl) {

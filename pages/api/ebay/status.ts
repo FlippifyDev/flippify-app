@@ -2,7 +2,6 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 import connectDB from '@/app/api/auth-mongodb/dbConnect'; 
 import { User } from '@/app/api/auth-mongodb/userModel'; 
-import { refreshEbayToken } from '@/app/api/ebay/refreshEbayToken';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await connectDB();  // Ensure MongoDB is connected

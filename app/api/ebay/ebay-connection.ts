@@ -23,7 +23,6 @@ const SCOPES = [
   "https://api.ebay.com/oauth/api_scope/commerce.notification.subscription.readonly", // View your event notification subscriptions
   "https://api.ebay.com/oauth/api_scope/sell.stores", // View and manage eBay stores
   "https://api.ebay.com/oauth/api_scope/sell.stores.readonly", // View eBay stores
-  "https://api.ebay.com/oauth/api_scope/buy.item.feed"
 ]
 
 

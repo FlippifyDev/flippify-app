@@ -52,7 +52,7 @@ export const useSalesData = (ebayAccessToken: string | null | undefined, custome
 		};
 
 		fetchSalesData();
-	}, [customerId]);
+	}, [cacheKey, cacheExpirationTime, customerId, ebayAccessToken]);
 
 	return { salesData, loading, error };
 };

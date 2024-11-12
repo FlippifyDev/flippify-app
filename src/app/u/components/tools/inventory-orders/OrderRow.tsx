@@ -43,14 +43,7 @@ const OrderRow: React.FC<OrderRowSchema> = ({
 	const [purchasePlatform, setPurchasePlatform] = useState<string>("");
 	const [customTag, setCustomTag] = useState<string>("");
 
-	// Use localStorage hook to load and save data
-	const loadSalesDataFromLocalStorage = () => {
-		const salesData = localStorage.getItem(`salesData-${customerId}`);
-		if (salesData) {
-			return JSON.parse(salesData);
-		}
-		return [];
-	};
+
 
 	const saveSalesDataToLocalStorage = (updatedOrders: IOrder[]) => {
 		if (customerId) {
@@ -59,6 +52,15 @@ const OrderRow: React.FC<OrderRowSchema> = ({
 	};
 
 	useEffect(() => {
+		// Use localStorage hook to load and save data
+		const loadSalesDataFromLocalStorage = () => {
+			const salesData = localStorage.getItem(`salesData-${customerId}`);
+			if (salesData) {
+				return JSON.parse(salesData);
+			}
+			return [];
+		};
+		
 		// Load existing sales data from localStorage when the component mounts
 		const salesData = loadSalesDataFromLocalStorage();
 		if (salesData && salesData.length > 0) {

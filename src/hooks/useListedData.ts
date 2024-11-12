@@ -50,7 +50,7 @@ export const useListedData = (ebayAccessToken: string | null | undefined, custom
 		};
 
 		fetchSalesData();
-	}, [customerId]);
+	}, [cacheKey, cacheExpirationTime, customerId, ebayAccessToken]);
 
 	return { listedData, loading, error };
 };

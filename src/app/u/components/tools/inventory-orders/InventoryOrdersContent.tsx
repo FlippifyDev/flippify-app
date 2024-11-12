@@ -9,7 +9,6 @@ import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
 import OrdersContent from './OrdersContent';
 import InventoryContent from './InventoryContent';
 import { refreshEbayToken } from '@/src/services/ebay/refresh-token';
-import { revalidatePath } from 'next/cache';
 import "@/src/styles/inventory-orders-tabs.css"
 
 const InventoryOrdersContent = () => {
@@ -19,12 +18,14 @@ const InventoryOrdersContent = () => {
 
 	const customerId = session?.user.customerId;
 	const ebayTokenExpiry = session?.user.ebay?.ebayTokenExpiry;
-	if (!customerId || !ebayTokenExpiry) {
-		return <div>Loading...</div>;
-	}
+
 
 	useEffect(() => {
 		const checkRefreshToken = async () => {
+			if (!session || !customerId || !ebayTokenExpiry) {
+				return null;
+			}
+
 			// Check if the token needs to be refreshed
 			if (Date.now() >= ebayTokenExpiry) {
 				await refreshEbayToken(customerId);
@@ -32,7 +33,7 @@ const InventoryOrdersContent = () => {
 		}
 
 		checkRefreshToken()
-	}, [session, customerId])
+	}, [session, ebayTokenExpiry, customerId])
 
 
 	// Function to handle tab switching

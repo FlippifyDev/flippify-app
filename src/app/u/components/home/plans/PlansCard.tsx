@@ -5,6 +5,7 @@ import PlansSubscribeNow from "./PlansSubscribeNow";
 import ManageMembershipsButton from "./PlansManageMembershipButton";
 import { BackgroundGradient } from "@/src/components/ui/background-gradient";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
+import { currencySymbols } from "@/src/config/currency-config";
 
 interface PlansCardProps {
 	title: string;
@@ -16,16 +17,11 @@ interface PlansCardProps {
 	specialPlan?: boolean;
 	priceRange: number;
 	className?: string;
-	currency: "GBP" | "USD" | "EUR";
+	currency: string;
 	conversionRates: Record<string, number>;
 	comingSoon?: boolean;
 }
 
-const currencySymbols: Record<"GBP" | "USD" | "EUR", string> = {
-	GBP: "£",
-	USD: "$",
-	EUR: "€",
-};
 
 const PlansCard: React.FC<PlansCardProps> = ({
 	title,
@@ -41,11 +37,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
 	conversionRates,
 	comingSoon = false,
 }) => {
-	const [currencySymbol, setCurrencySymbol] = useState("£");
-
-	useEffect(() => {
-		setCurrencySymbol(currencySymbols[currency]);
-	}, [currency]);
+	const currencySymbol = currencySymbols[currency];
 
 	// Apply conversion rates to the prices
 	const originalPricesConverted = {

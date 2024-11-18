@@ -1,7 +1,8 @@
 import React from 'react';
+import { INotification } from '@/src/models/firebase';
 
 interface NavbarNotificationListProps {
-	notifications: any[];
+	notifications: INotification[];
 	handleNotificationClick: (redirectUrl?: string) => void;
 	getTimeAgo: (timestamp: number) => string;
 }

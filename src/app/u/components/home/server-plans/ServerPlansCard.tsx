@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import PlansContactUs from "./ServerPlansContactUs";
 import { BackgroundGradient } from "@/src/components/ui/background-gradient";
+import { currencySymbols } from "@/src/config/currency-config";
 
 interface ServerPlansCardProps {
 	title: string;
@@ -13,16 +14,10 @@ interface ServerPlansCardProps {
 	specialPlan?: boolean;
 	priceRange: number;
 	planRole: string;
-	currency: "GBP" | "USD" | "EUR";
+	currency: string;
 	conversionRates: Record<string, number>;
 	unavailable?: boolean;
 }
-
-const currencySymbols: Record<"GBP" | "USD" | "EUR", string> = {
-	GBP: "£",
-	USD: "$",
-	EUR: "€",
-};
 
 const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
 	title,
@@ -37,11 +32,7 @@ const ServerPlansCard: React.FC<ServerPlansCardProps> = ({
 	conversionRates,
 	unavailable = false,
 }) => {
-	const [currencySymbol, setCurrencySymbol] = useState("£");
-
-	useEffect(() => {
-		setCurrencySymbol(currencySymbols[currency]);
-	}, [currency]);
+	const currencySymbol = currencySymbols[currency];
 
 	const convertedPrices = prices.map((price) =>
 		Number((price * conversionRates[currency]).toFixed(2))

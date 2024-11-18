@@ -1,8 +1,6 @@
-"use client";
-
-import DisabledSideBarButton from "./SidebarButtonDisabled";
+import DisabledSideBarButton from "./ButtonDisabled";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
-import SidebarButton from "./SidebarButton";
+import SidebarButton from "./Button";
 
 import React from "react";
 import { PiLegoFill } from "react-icons/pi";
@@ -12,20 +10,23 @@ import { BiSolidBinoculars } from "react-icons/bi";
 import { PiSneakerMoveFill } from "react-icons/pi";
 
 interface SidebaMonitorButtonsProps {
+	isSidebarOpen: boolean;
 	showAlert: () => void;
 }
 
 const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
+	isSidebarOpen,
 	showAlert,
 }) => {
 	return (
-		<div>
+		<div className='w-full flex flex-col gap-1'>
 			{/* Deal Watch */}
 			<LayoutSubscriptionWrapper anySubscriptions={["member", "deal watch"]}>
 				<SidebarButton
 					text="Deal Watch"
 					redirect="monitors/deal-watch"
-					symbol={<BiSolidBinoculars className="text-md" />}
+					isSidebarOpen={isSidebarOpen}
+					symbol={<BiSolidBinoculars className="text-lg" />}
 				/>
 			</LayoutSubscriptionWrapper>
 
@@ -36,7 +37,8 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
 				<DisabledSideBarButton
 					text="Deal Watch"
 					redirect="monitors/deal-watch"
-					symbol={<BiSolidBinoculars className="text-md" />}
+					isSidebarOpen={isSidebarOpen}
+					symbol={<BiSolidBinoculars className="text-lg" />}
 					showAlert={showAlert}
 				/>
 			</LayoutSubscriptionWrapper>
@@ -46,7 +48,8 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
 				<SidebarButton
 					text="Electronics"
 					redirect="monitors/electronics"
-					symbol={<FaLaptop className="text-md" />}
+					isSidebarOpen={isSidebarOpen}
+					symbol={<FaLaptop className="text-lg" />}
 				/>
 			</LayoutSubscriptionWrapper>
 
@@ -57,6 +60,7 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
 				<DisabledSideBarButton
 					text="Electronics"
 					redirect="monitors/electronics"
+					isSidebarOpen={isSidebarOpen}
 					symbol={<FaLaptop className="text-lg" />}
 					showAlert={showAlert}
 				/>
@@ -67,7 +71,8 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
 				<SidebarButton
 					text="Restock Info"
 					redirect="monitors/restock-info"
-					symbol={<FaParachuteBox className="text-md" />}
+					isSidebarOpen={isSidebarOpen}
+					symbol={<FaParachuteBox className="text-lg" />}
 				/>
 			</LayoutSubscriptionWrapper>
 
@@ -76,7 +81,8 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
 				<DisabledSideBarButton
 					text="Restock Info"
 					redirect="monitors/restock-info"
-					symbol={<FaParachuteBox className="text-md" />}
+					isSidebarOpen={isSidebarOpen}
+					symbol={<FaParachuteBox className="text-lg" />}
 					showAlert={showAlert}
 				/>
 			</LayoutSubscriptionWrapper>
@@ -86,7 +92,8 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
 				<SidebarButton
 					text="Retiring Sets"
 					redirect="monitors/retiring-sets"
-					symbol={<PiLegoFill className="text-md" />}
+					isSidebarOpen={isSidebarOpen}
+					symbol={<PiLegoFill className="text-lg" />}
 				/>
 			</LayoutSubscriptionWrapper>
 
@@ -97,7 +104,8 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
 				<DisabledSideBarButton
 					text="Retiring Sets"
 					redirect="monitors/retiring-sets"
-					symbol={<PiLegoFill className="text-md" />}
+					isSidebarOpen={isSidebarOpen}
+					symbol={<PiLegoFill className="text-lg" />}
 					showAlert={showAlert}
 				/>
 			</LayoutSubscriptionWrapper>
@@ -107,7 +115,8 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
 				<SidebarButton
 					text="Sneaker Releases"
 					redirect="monitors/sneaker-release-info"
-					symbol={<PiSneakerMoveFill className="text-md" />}
+					isSidebarOpen={isSidebarOpen}
+					symbol={<PiSneakerMoveFill className="text-lg" />}
 				/>
 			</LayoutSubscriptionWrapper>
 
@@ -116,7 +125,8 @@ const SidebarMonitorButtons: React.FC<SidebaMonitorButtonsProps> = ({
 				<DisabledSideBarButton
 					text="Sneaker Releases"
 					redirect="monitors/sneaker-release-info"
-					symbol={<PiSneakerMoveFill className="text-md" />}
+					isSidebarOpen={isSidebarOpen}
+					symbol={<PiSneakerMoveFill className="text-lg" />}
 					showAlert={showAlert}
 				/>
 			</LayoutSubscriptionWrapper>

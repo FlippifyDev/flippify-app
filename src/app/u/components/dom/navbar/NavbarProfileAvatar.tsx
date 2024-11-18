@@ -146,35 +146,35 @@ const NavbarProfileAvatar = () => {
 			{isDropdownOpen && ( // Conditionally render the dropdown menu
 				<ul
 					tabIndex={0}
-					className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+					className="menu menu-sm dropdown-content bg-darkBackground text-white rounded-box mt-3 w-52 p-2 shadow"
 				>
 					<button
-						className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200'
+						className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-700 active:bg-gray-300 transform transition duration-200'
 						onClick={handleProfileOpen}>
 						<span className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Profile</span>
 					</button>
 					<LayoutSubscriptionWrapper requiredSubscriptions={['admin']}>
 						<button
-							className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200'
+							className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-700 active:bg-gray-300 transform transition duration-200'
 							onClick={handleAdminOpen}>
 							<span className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Admin</span>
 						</button>
 					</LayoutSubscriptionWrapper>
 					<LayoutSubscriptionWrapper requiredSubscriptions={['admin']}>
 						<button
-							className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200'
+							className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-700 active:bg-gray-300 transform transition duration-200'
 							onClick={handleTestingOpen}>
 							<span className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Testing Area</span>
 						</button>
 					</LayoutSubscriptionWrapper>
 					<button
-						className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200'
+						className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-700 active:bg-gray-300 transform transition duration-200'
 						onClick={handleBillingPortalButtonClick}>
 						<span className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Billing Portal</span>
 					</button>
 					<button
 						onClick={handleDiscordButtonClick}
-						className="relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-200 active:bg-gray-300 transform transition duration-200"
+						className="relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-700 active:bg-gray-300 transform transition duration-200"
 					>
 						<span className="text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]">Discord</span>
 					</button>

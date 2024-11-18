@@ -1,27 +1,30 @@
 "use client";
 
-import DisabledSideBarButton from "./SidebarButtonDisabled";
+import DisabledSideBarButton from "./ButtonDisabled";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
-import SidebarButton from "./SidebarButton";
+import SidebarButton from "./Button";
 
 import React from "react";
 import { AiOutlineStock } from "react-icons/ai";
 import { FaServer, FaBoxOpen } from "react-icons/fa6";
 
 interface SidebarToolButtonsProps {
+	isSidebarOpen: boolean;
 	showAlert: () => void;
 }
 
 const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
+	isSidebarOpen,
 	showAlert,
 }) => {
 	return (
-		<div>
+		<div className='w-full flex flex-col gap-1'>
 			{/* Manage Servers Tab */}
 			<LayoutSubscriptionWrapper anySubscriptions={["server", "admin"]}>
 				<SidebarButton
 					text="Server Management"
 					redirect="manage-servers"
+					isSidebarOpen={isSidebarOpen}
 					symbol={<FaServer className="text-base" />}
 				/>
 			</LayoutSubscriptionWrapper>
@@ -31,6 +34,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 				<DisabledSideBarButton
 					text="Server Management"
 					redirect="manage-servers"
+					isSidebarOpen={isSidebarOpen}
 					symbol={<FaServer className="text-base" />}
 					showAlert={showAlert}
 				/>
@@ -42,7 +46,8 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 				<DisabledSideBarButton
 					text="Financial Hub"
 					redirect="sales-tracker"
-					symbol={<AiOutlineStock className="text-md" />}
+					isSidebarOpen={isSidebarOpen}
+					symbol={<AiOutlineStock className="text-lg" />}
 					tooltip="Coming Soon"
 				/>
 			</LayoutSubscriptionWrapper>
@@ -52,7 +57,8 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 				<SidebarButton
 					text="Financial Hub"
 					redirect="financial-hub"
-					symbol={<AiOutlineStock className="text-md" />}
+					isSidebarOpen={isSidebarOpen}
+					symbol={<AiOutlineStock className="text-lg" />}
 				/>
 			</LayoutSubscriptionWrapper>
 
@@ -63,7 +69,8 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 				<DisabledSideBarButton
 					text="Inventory & Orders"
 					redirect="inventory-orders"
-					symbol={<FaBoxOpen className="text-md" />}
+					isSidebarOpen={isSidebarOpen}
+					symbol={<FaBoxOpen className="text-lg" />}
 					tooltip="Coming Soon"
 				/>
 			</LayoutSubscriptionWrapper>
@@ -73,12 +80,10 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 				<SidebarButton
 					text="Inventory & Orders"
 					redirect="inventory-orders"
-					symbol={<FaBoxOpen className="text-md" />}
+					isSidebarOpen={isSidebarOpen}
+					symbol={<FaBoxOpen className="text-lg" />}
 				/>
 			</LayoutSubscriptionWrapper>
-
-
-
 		</div>
 	);
 };

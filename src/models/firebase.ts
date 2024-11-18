@@ -44,5 +44,14 @@ interface IEbayTokenData {
 }
 
 
+interface INotification {
+	id: string;
+	title: string;
+	message: string;
+	readBy?: Record<string, boolean>;
+	timestamp: number;
+	redirectUrl: string;
+}
 
-export type { IListing, IOrder, IUserData, IEbayTokenData }
+
+export type { IListing, IOrder, IUserData, IEbayTokenData, INotification }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { ref, get } from 'firebase/database';
-import { updateUserPreferences } from '@/src/services/firebase/update-user-preferences';
+import { updateUserPreferences } from '@/src/services/firebase/users';
 import { database } from '@/src/lib/firebase/client';
 import { completeOnboarding } from '@/src/services/mongodb/complete-on-boarding';
 import { validateReferralCode } from '@/src/services/mongodb/validate-referral';
@@ -13,7 +13,7 @@ const OnboardingFlow: React.FC = () => {
 	const [step, setStep] = useState(1);
 	const [referralCode, setReferralCode] = useState<string>('');
 	const [email, setEmail] = useState<string>('');
-	const [currency, setCurrency] = useState<'GBP' | 'USD' | 'EUR'>('GBP');
+	const [currency, setCurrency] = useState<string>('GBP');
 	const [showReferralMessage, setShowReferralMessage] = useState<boolean>(false);
 	const [referralError, setReferralError] = useState<string | null>(null);
 	const [validReferralCode, setValidReferralCode] = useState<string | null>(null);

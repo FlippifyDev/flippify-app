@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import { IListing } from "@/src/models/firebase";
 import { getCachedData, setCachedData } from "../utils/cache-helpers";
-import { sendApiRequest } from "../services/api/request";
+import { sendApiRequest } from "@/src/services/api/request";
 
 
 export const useListedData = (ebayAccessToken: string | null | undefined, customerId: string) => {

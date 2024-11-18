@@ -1,18 +1,26 @@
-import SidebarMonitorButtons from './SidebarMonitorButtons';
-import SidebarSignOutButton from './SidebarSignOutButton';
-import SidebarHomeButtons from './SidebarHomeButtons';
-import SidebarToolButtons from './SidebarToolButtons';
-import SidebarButton from './SidebarButton';
+import SidebarMonitorButtons from './MonitorButtons';
+import SidebarSignOutButton from './ButtonSignout';
+import SidebarHomeButtons from './HomeButtons';
+import SidebarToolButtons from './ToolButtons';
+import SidebarButton from './Button';
+import ButtonFeedback from './ButtonFeedback';
 import Alert from '@/src/app/components/Alert';
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { BsClipboard2Fill } from 'react-icons/bs';
-import { MdFeedback } from "react-icons/md";
-import "@/src/styles/user-sidebar.css"
 
-const Sidebar = () => {
+import { BsClipboard2Fill } from 'react-icons/bs';
+import "@/src/styles/hide-scrollbar.css";
+
+import MenuButton from '@/src/app/components/MenuButton';
+
+
+interface SidebarProps {
+	isSidebarOpen: boolean;
+	setIsSidebarOpen: (value: boolean) => void;
+}
+
+
+const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, setIsSidebarOpen }) => {
 	const [alertVisible, setAlertVisible] = useState(false);
-	const [drawerOpen, setDrawerOpen] = useState(false);
 
 	const showAlert = () => {
 		setAlertVisible(true);
@@ -24,79 +32,47 @@ const Sidebar = () => {
 
 	// Disable background scrolling when sidebar is open
 	useEffect(() => {
-		if (drawerOpen) {
-			document.body.classList.add('overflow-hidden');  // Tailwind utility to prevent page scrolling
-		} else {
-			document.body.classList.remove('overflow-hidden');
-		}
+		document.body.classList.add('overflow-hidden');  // Tailwind utility to prevent page scrolling
 		return () => {
 			document.body.classList.remove('overflow-hidden');
 		};
-	}, [drawerOpen])
-
-
-
+	}, []);
 
 	return (
-		<div className="relative">
+		<div className={`relative z-0 h-full bg-darkBackground transition-all duration-300 ${isSidebarOpen ? 'w-72 2xl:w-80' : 'w-16'}`}>
 			<Alert message="Membership Required." visible={alertVisible} onClose={hideAlert} />
 
-			{/* Sidebar drawer */}
-			<div className="drawer drawer-mobile xl:drawer-open">
-				<input
-					id="my-drawer"
-					type="checkbox"
-					className="drawer-toggle"
-					onChange={(e) => setDrawerOpen(e.target.checked)} // Control drawer open state
-				/>
+			{/* Toggle Button */}
+			<div className="p-2 border-b border-gray-500 flex justify-center items-center">
+				<MenuButton onClick={() => setIsSidebarOpen(!isSidebarOpen)} />
+			</div>
 
-				{/* Sidebar itself */}
-				<div className="drawer-side z-30 sm:z-20 fixed">
-					<div className="h-full overflow-y-auto">
-						<div className="h-full overflow-y-scroll scrollbar-hide border-r bg-white">
-							<ul className="menu bg-white text-base-content min-h-full w-72 2xl:w-80 px-4 flex flex-col justify-between border-gray-200">
-								<div className="flex flex-col">
-									{/* Home Section */}
-									<section>
-										<div className="mb-2">
-											<p className="text-lightModeText text-lg font-bold select-none">Home</p>
-										</div>
-										<SidebarHomeButtons showAlert={showAlert} />
-									</section>
-
-									{/* Monitors Section */}
-									<section className="mt-5 md:mt-6">
-										<div className="mb-2">
-											<p className="text-lightModeText text-lg font-bold select-none">Monitors</p>
-										</div>
-										<SidebarMonitorButtons showAlert={showAlert} />
-									</section>
-
-									{/* Tools Section */}
-									<section className="mt-5 md:mt-6">
-										<div className="mb-2">
-											<p className="text-lightModeText text-lg font-bold select-none">Tools</p>
-										</div>
-										<SidebarToolButtons showAlert={showAlert} />
-									</section>
-								</div>
-
-								{/* Feedback and Sign-out Section */}
-								<section className="mt-5 md:mt-6">
-									<Link
-										href="https://discord.com/channels/1236428617962229830/1236439119123447892"
-										className="hover:bg-gray-100 active:bg-gray-300 text-lightModeText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md transition duration-200"
-										target="_blank"
-									>
-										<span className="col-span-2 text-lg"><MdFeedback /></span>
-										<span className="col-span-10 text-base select-none">Feedback</span>
-									</Link>
-									<SidebarButton text="Legal" redirect="legal" symbol={<BsClipboard2Fill className="text-lg" />} />
-									<SidebarSignOutButton />
-								</section>
-							</ul>
-						</div>
+			{/* Sidebar Content */}
+			<div className="p-2 h-full flex flex-col justify-between gap-4 overflow-y-auto scrollbar-hide pb-16">
+				<div className="flex flex-col gap-4">
+					<div>
+						<h2 className={`text-white text-lg font-bold px-2 ${isSidebarOpen ? 'block' : 'hidden'}`} style={{ overflow: 'hidden' }}>
+							Home
+						</h2>
+						<SidebarHomeButtons showAlert={showAlert} isSidebarOpen={isSidebarOpen} />
 					</div>
+					<div>
+						<h2 className={`text-white text-lg font-bold px-2 ${isSidebarOpen ? 'block' : 'hidden'}`} style={{ overflow: 'hidden' }}>
+							Monitors
+						</h2>
+						<SidebarMonitorButtons showAlert={showAlert} isSidebarOpen={isSidebarOpen} />
+					</div>
+					<div>
+						<h2 className={`text-white text-lg font-bold px-2 ${isSidebarOpen ? 'block' : 'hidden'}`} style={{ overflow: 'hidden' }}>
+							Tools
+						</h2>
+						<SidebarToolButtons showAlert={showAlert} isSidebarOpen={isSidebarOpen} />
+					</div>
+				</div>
+				<div className="mt-5">
+					<ButtonFeedback isSidebarOpen={isSidebarOpen} />
+					<SidebarButton text="Legal" redirect="legal" isSidebarOpen={isSidebarOpen} symbol={<BsClipboard2Fill className="text-lg" />} />
+					<SidebarSignOutButton isSidebarOpen={isSidebarOpen} />
 				</div>
 			</div>
 		</div>

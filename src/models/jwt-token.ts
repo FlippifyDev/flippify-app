@@ -9,6 +9,7 @@ interface IJwtToken extends JWT {
 	subscriptions?: ISubscription[];
 	username?: string;
 	referral?: IReferral;
+	currency?: string;
 	ebayAccessToken?: string;
 	ebayTokenExpiry?: number;
 	ebayRefreshToken?: string;

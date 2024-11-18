@@ -8,7 +8,6 @@ import ServerPlansCardRetiringSetsWhatsIncluded from "./ServerPlansCardRetiringS
 import ServerPlansCardElectronicsWhatsIncluded from "./ServerPlansCardElectronicsWhatsIncluded";
 import ServerPlansCardRestockInfoWhatsIncluded from "./ServerPlansCardRestockInfoWhatsIncluded";
 import { useSession } from "next-auth/react";
-import { database, ref, get } from "@/src/lib/firebase/client";
 import { fetchConversionRatesFromFirebase } from "@/src/utils/currencyApi";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });

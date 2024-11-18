@@ -4,8 +4,9 @@ import retrieveStripeCustomer from '../../../services/stripe/retrieve-customer';
 import { User, ISubscription, IReferral } from '@/src/models/mongodb/users';
 import { IJwtToken } from '@/src/models/jwt-token';
 import connectToMongoDB from '@/src/lib/mongo/client';
-
-const generateReferralCode = () => Math.random().toString(36).substring(2, 10);
+import { signInUser, auth } from '@/src/lib/firebase/client';
+import { fetchPreferredCurrency } from '@/src/services/firebase/users';
+import { generateReferralCode } from '@/src/utils/generateReferralCode';
 
 const authOptions: AuthOptions = {
 	providers: [
@@ -30,10 +31,17 @@ const authOptions: AuthOptions = {
 				const userFromDb = await User.findOne({ discord_id: token.id });
 
 				if (userFromDb) {
+					// Sign in to Firebase if not already signed in
+					if (!auth.currentUser) {
+						await signInUser(); // Sign in anonymously if no Firebase user exists
+					}
+					const currency = await fetchPreferredCurrency(userFromDb.stripe_customer_id);
+
 					token.subscriptions = userFromDb.subscriptions;
 					token.accessGranted = userFromDb.subscriptions.some(sub => sub.name === 'accessGranted');
 					token.username = userFromDb.username;
 					token.referral = userFromDb.referral;
+					token.currency = currency;
 					token.ebayAccessToken = userFromDb.ebay?.ebayAccessToken || null;
 					token.ebayTokenExpiry = userFromDb.ebay?.ebayTokenExpiry || null;
 					token.ebayRefreshToken = userFromDb.ebay?.ebayRefreshToken || null;
@@ -44,7 +52,7 @@ const authOptions: AuthOptions = {
 
 		async session({ session, token }) {
 			// Extract data from the token to pass it to the session
-			const { id, name, email, subscriptions, username, referral, ebayAccessToken, ebayTokenExpiry, ebayRefreshToken } = token as IJwtToken;
+			const { id, name, email, subscriptions, username, referral, currency, ebayAccessToken, ebayTokenExpiry, ebayRefreshToken } = token as IJwtToken;
 
 			await connectToMongoDB();
 
@@ -66,6 +74,7 @@ const authOptions: AuthOptions = {
 			session.user.accessGranted = subscriptions?.some(sub => sub.name === 'accessGranted') ?? false;
 			session.user.username = username || user.username;
 			session.user.referral = referral || user.referral;
+			session.user.currency = currency || "GBP";
 			session.user.ebay = {
 				ebayAccessToken: ebayAccessToken || null,
 				ebayTokenExpiry: ebayTokenExpiry || null,
@@ -77,7 +86,7 @@ const authOptions: AuthOptions = {
 
 		async signIn({ profile }: any) {
 			await connectToMongoDB();
-			
+
 			try {
 				const { id, username, email } = profile as { id: string; username: string; email: string };
 

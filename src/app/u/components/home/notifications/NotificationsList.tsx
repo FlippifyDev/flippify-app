@@ -2,24 +2,49 @@
 
 import React, { useEffect } from "react";
 import NotificationsDisplay from "./NotificationsDisplay";
+import { markNotificationsAsRead } from "@/src/services/firebase/notifications"
+import { INotification } from "@/src/models/firebase";
 
 interface NotificationsListProps {
-	notifications: any[];
-	markAllAsRead: () => void;
+	notifications: INotification[];
+	customerId: string;
+	setUnreadCount: (value: number) => void;
+	setNotifications: (notifications: INotification[]) => void;
 	getTimeAgo: (timestamp: number) => string;
 	handleNotificationClick: (url?: string) => void;
 }
 
 const NotificationsList: React.FC<NotificationsListProps> = ({
 	notifications,
-	markAllAsRead,
+	customerId,
+	setUnreadCount,
+	setNotifications,
 	getTimeAgo,
 	handleNotificationClick,
 }) => {
-	// Automatically mark all notifications as read when the page loads
 	useEffect(() => {
-		markAllAsRead();
-	}, [markAllAsRead]);
+		const markAllAsRead = async () => {
+		  // Mark notifications as read in Firebase
+		  await markNotificationsAsRead(notifications, customerId);
+	
+		  // Ensure the state is correctly typed as INotification[]
+		  const updatedNotifications: INotification[] = notifications.map((notification) => ({
+			...notification,
+			readBy: { ...notification.readBy, [customerId]: true }, // Mark as read locally
+		  }));
+	
+		  // Update local state with the correctly typed array
+		  setNotifications(updatedNotifications);
+	
+		  // Reset unread count to 0 after marking as read
+		  setUnreadCount(0);
+		};
+	
+		if (notifications.length > 0) {
+		  markAllAsRead(); // Only mark as read if there are notifications
+		}
+	  }, [notifications, customerId, setNotifications, setUnreadCount]); // Dependencies updated to include notifications and customerId
+	
 
 	return (
 		<div className="w-full h-full flex flex-col">

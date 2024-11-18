@@ -86,7 +86,7 @@ const ProfileReferralData: React.FC = () => {
 	return (
 		<div className="relative group w-full h-full">
 			{!isMember && (
-				<div className="absolute inset-0 bg-gray-100 bg-opacity-90 z-50 flex items-center justify-center rounded-lg">
+				<div className="absolute inset-0 bg-gray-100 bg-opacity-90 z-50 flex items-center justify-center rounded-xl">
 					<div className="bg-white font-semibold text-black py-2 px-4 rounded-lg shadow-xl">
 						Membership Required
 					</div>
@@ -94,14 +94,14 @@ const ProfileReferralData: React.FC = () => {
 			)}
 
 			{/* Referral Data Section */}
-			<div className="card bg-white shadow-md rounded-lg p-4 h-full flex flex-col">
-				<div className="flex justify-between items-center mb-2">
-					<h2 className="card-title text-black text-xl font-semibold">Referral Program</h2>
+			<div className="card bg-white shadow-md rounded-xl h-full flex flex-col">
+				<div className="flex justify-between items-center mb-2 border-b py-4 px-6">
+					<h2 className="card-title text-black text-lg font-semibold">Referral Program</h2>
 					<p className="text-sm text-gray-500 px-2 text-center sm:text-left">
 						Users must subscribe to count as a valid referral.
 					</p>
 				</div>
-				<div className="flex justify-between items-center mb-4">
+				<div className="flex justify-between items-center p-6">
 					<div className="flex items-center mb-4 sm:mb-0">
 						<p className="text-lg font-semibold text-gray-900 mr-2">Your code:</p>
 						<button
@@ -116,7 +116,7 @@ const ProfileReferralData: React.FC = () => {
 						</button>
 					</div>
 				</div>
-				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-6">
 					<div className="stats shadow-md bg-white p-2 text-center">
 						<div className="stat">
 							<div className="stat-title text-sm text-houseBlue font-semibold">Lifetime Referrals</div>
@@ -131,7 +131,7 @@ const ProfileReferralData: React.FC = () => {
 					</div>
 				</div>
 
-				<div className="mt-4 text-center relative group">
+				<div className="text-center relative group p-6">
 					<h3 className="text-lg font-semibold text-gray-900">
 						{availableRewards > 0
 							? discountApplied

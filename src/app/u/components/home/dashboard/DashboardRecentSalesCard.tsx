@@ -59,7 +59,7 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ sal
 	}, [salesData]);
 
 	return (
-		<div className="card bg-white shadow-sm rounded-lg p-4 h-full flex flex-col border mb-2">
+		<div className="card bg-white shadow-sm rounded-lg p-4 h-full flex flex-col mb-4">
 			<h2 className="card-title text-lightModeText text-xl font-semibold">
 				Recent Sales Activity
 			</h2>

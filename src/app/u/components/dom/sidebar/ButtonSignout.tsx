@@ -1,11 +1,19 @@
 'use client';
 
-import { signOut, useSession } from 'next-auth/react';
-import { FaSignOutAlt } from "react-icons/fa";
-import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { signOut, useSession } from 'next-auth/react';
 
-const SidebarSignOutButton = () => {
+import { FaSignOutAlt } from "react-icons/fa";
+import SidebarButton from './Button';
+
+
+interface SidebarSignOutButtonProps {
+	isSidebarOpen: boolean;
+}
+
+
+const SidebarSignOutButton:React.FC<SidebarSignOutButtonProps> = ({ isSidebarOpen }) => {
 	const { data: session } = useSession();
 	const router = useRouter();
 
@@ -23,13 +31,7 @@ const SidebarSignOutButton = () => {
 	};
 
 	return (
-		<button
-			className="text-lightModeText grid grid-cols-12 items-center gap-2 px-4 py-2 rounded-md w-full transition duration-200 hover:bg-red-600 hover:text-white"
-			onClick={handleSignOut}
-		>
-			<span className="col-span-2 text-lg"><FaSignOutAlt /></span>
-			<span className="col-span-10 text-base text-left">Sign Out</span>
-		</button>
+		<SidebarButton text="Sign Out" isSidebarOpen={isSidebarOpen} symbol={<FaSignOutAlt className='text-lg'/>} onClick={handleSignOut} />
 	);
 };
 

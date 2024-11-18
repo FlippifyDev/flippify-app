@@ -1,10 +1,9 @@
 // hooks/useSalesData.ts
 import { useEffect, useState } from "react";
 
-
 import { IOrder } from "@/src/models/firebase";
 import { getCachedData, setCachedData } from "../utils/cache-helpers";
-import { sendApiRequest } from "../services/api/request";
+import { sendApiRequest } from "@/src/services/api/request";
 
 
 export const useSalesData = (ebayAccessToken: string | null | undefined, customerId: string) => {

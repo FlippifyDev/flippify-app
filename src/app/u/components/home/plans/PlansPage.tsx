@@ -7,29 +7,24 @@ import PlansCardEliteWhatsIncluded from "./PlansCardEliteWhatsIncluded";
 import PlansCardProWhatsIncluded from "./PlansCardProWhatsIncluded";
 import { Lato, Inter } from "next/font/google";
 import { useSession } from "next-auth/react";
-import { database, ref, get } from "@/src/lib/firebase/client";
 import { fetchConversionRatesFromFirebase } from "@/src/utils/currencyApi"; // To fetch conversion rates
+import { fetchPreferredCurrency } from "@/src/services/firebase/fetch-preferred-currency";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
 
-const currencySymbols: Record<"GBP" | "USD" | "EUR", string> = {
-	GBP: "£",
-	USD: "$",
-	EUR: "€",
-};
+
 
 const PlansPage = () => {
 	const { data: session } = useSession();
 	const [selectedPlan, setSelectedPlan] = useState<number>(0);
-	const [currency, setCurrency] = useState<"GBP" | "USD" | "EUR">("GBP");
+	const [currency, setCurrency] = useState("GBP"); 
 	const [conversionRates, setConversionRates] = useState<Record<string, number>>({
 		GBP: 1,
 		USD: 1.33,
 		EUR: 1.19,
 	});
-	const [currencySymbol, setCurrencySymbol] = useState("£");
-
+	
 	// Fetch conversion rates from an API
 	useEffect(() => {
 		const fetchRates = async () => {
@@ -39,27 +34,15 @@ const PlansPage = () => {
 		fetchRates();
 	}, []);
 
-	// Fetch user's preferred currency from Firebase
 	useEffect(() => {
-		const loadUserCurrency = async () => {
-			if (session && session.user) {
-				const userRef = ref(database, `users/${session.user.customerId}`);
-				try {
-					const snapshot = await get(userRef);
-					const userData = snapshot.val();
-					const userCurrency = (userData?.currency || "GBP") as keyof typeof currencySymbols;
-					setCurrency(userCurrency);
-					setCurrencySymbol(currencySymbols[userCurrency]);
-				} catch (error) {
-					console.error("Error loading user currency from Firebase:", error);
-				}
-			}
-		};
-
-		if (session && session.user && session.user.customerId) {
-			loadUserCurrency();
+		const fetchCurrencySymbol = async () => {
+			const preferredCurrency = await fetchPreferredCurrency(session?.user.customerId as string);
+			setCurrency(preferredCurrency)
 		}
-	}, [session]);
+
+		fetchCurrencySymbol();
+	}, [session])
+
 
 	const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setSelectedPlan(event.target.checked ? 1 : 0);

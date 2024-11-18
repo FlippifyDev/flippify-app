@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 
 import { useSalesData } from "@/src/hooks/useSalesData";
-import { userSignIn } from "@/src/lib/firebase/client";
+import { signInUser } from "@/src/lib/firebase/client";
 import LayoutLoadingSkeleton from "../../layout/LayoutLoadingSkeleton";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import DashboardRecentSalesCard from "./DashboardRecentSalesCard";
@@ -13,6 +13,8 @@ import DashboardOverviewCard from "./DashboardOverviewCard";
 import DashboardProfitsGraph from "./DashboardProfitsGraph";
 import DashboardShowcase from "./DashboardShowcase";
 import OnboardingFlow from "./OnboardingFlow";
+import ProfitsGraphDateFilter from "./ProfitsGraphDateFilter";
+import ProfitsGraphTagFilter from "./ProfitsGraphTagFilter";
 
 const DashboardPage: React.FC = () => {
 	const { data: session } = useSession();
@@ -46,7 +48,7 @@ const DashboardPage: React.FC = () => {
 		if (session && session.user && session.user.customerId) {
 			const fetchUserData = async () => {
 				try {
-					await userSignIn();
+					await signInUser();
 				} catch (error) {
 					console.error("Error handling user:", error);
 				}
@@ -86,7 +88,7 @@ const DashboardPage: React.FC = () => {
 		: salesData;
 
 	return (
-		<div className="flex flex-col w-full h-full">
+		<div className="relative flex flex-col w-full h-full">
 			{/* If They Do NOT Have Access */}
 			<LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
 				<div className="h-full">
@@ -117,8 +119,8 @@ const DashboardPage: React.FC = () => {
 						selectedRange={selectedRange}
 					/>
 				</div>
-				<div className="w-full mt-2 mb-2">
-					<div className="w-full bg-white rounded-lg shadow-sm dark:bg-gray-800 p-4 md:p-6 border">
+				<div className="w-full my-4">
+					<div className="w-full bg-white rounded-lg dark:bg-gray-800 p-4 md:p-6">
 						<DashboardProfitsGraph
 							salesData={filteredSalesData}
 							currency={currency}
@@ -127,86 +129,10 @@ const DashboardPage: React.FC = () => {
 						{/* Dropdown for selecting tags */}
 						<div className="flex flex-row w-full gap-4">
 							{/* Dropdown for selecting date range */}
-							<div className="relative" ref={rangeDropdownRef}>
-								<div
-									className="btn m-1 text-lightModeText bg-white hover:bg-gray-100 transition duration-200 rounded-lg w-36"
-									onClick={() => setRangeDropdownOpen(!rangeDropdownOpen)}
-								>
-									{selectedRange === 1
-										? "Today"
-										: selectedRange === 7
-											? "This Week"
-											: selectedRange === 30
-												? "This Month"
-												: selectedRange === 90
-													? "Last 3 Months"
-													: selectedRange === 180
-														? "Last 6 Months"
-														: selectedRange === 365 || selectedRange === 730
-															? `${selectedLabel}`
-															: `Last ${selectedRange} days`}{" "}
-								</div>
-								{rangeDropdownOpen && (
-									<ul
-										className="absolute left-0 bg-white border-gray-100 z-[1] w-52 p-2 shadow transition duration-200 rounded-lg"
-										style={{ marginTop: "-4px" }}
-									>
-										{[
-											{ range: 1, label: "Today" },
-											{ range: 7, label: "This Week" },
-											{ range: 30, label: "This Month" },
-											{ range: 90, label: "Last 3 Months" },
-											{ range: 180, label: "Last 6 Months" },
-											{ range: 365, label: "This Year" },
-											{ range: 730, label: "All Time" },
-										].map(({ range, label }) => (
-											<li key={range}>
-												<a
-													onClick={() => handleRangeChange(range.toString(), label)}
-													className="block px-4 py-2 hover:bg-gray-200 transition duration-100 rounded-lg select-none"
-												>
-													{label}
-												</a>
-											</li>
-										))}
-									</ul>
-								)}
-							</div>
+							<ProfitsGraphDateFilter ref={rangeDropdownRef} rangeDropdownOpen={rangeDropdownOpen} selectedLabel={selectedLabel} selectedRange={selectedRange} setRangeDropdownOpen={setRangeDropdownOpen} handleRangeChange={handleRangeChange}/>
 
 							{/* Dropdown for selecting custom tag */}
-							<div className="relative" ref={tagDropdownRef}>
-								<div
-									className="btn m-1 text-lightModeText bg-white hover:bg-gray-100 transition duration-200 rounded-lg w-36"
-									onClick={() => setTagDropdownOpen(!tagDropdownOpen)} // toggle dropdown for tags
-								>
-									{selectedTag || "All Tags"}
-								</div>
-								{tagDropdownOpen && (
-									<ul
-										className="absolute left-0 bg-white border-gray-100 z-[1] w-52 p-2 shadow transition duration-200 rounded-lg"
-										style={{ marginTop: "-4px" }}
-									>
-										<li>
-											<a
-												onClick={() => setSelectedTag(null)} // Handle "All Tags" selection
-												className="block px-4 py-2 hover:bg-gray-200 transition duration-100 rounded-lg select-none"
-											>
-												All Tags
-											</a>
-										</li>
-										{uniqueTags.map((tag, index) => (
-											<li key={index}>
-												<a
-													onClick={() => setSelectedTag(tag)}
-													className="block px-4 py-2 hover:bg-gray-200 transition duration-100 rounded-lg select-none"
-												>
-													{tag}
-												</a>
-											</li>
-										))}
-									</ul>
-								)}
-							</div>
+							<ProfitsGraphTagFilter ref={tagDropdownRef} tagDropdownOpen={tagDropdownOpen} selectedTag={selectedTag} uniqueTags={uniqueTags} setTagDropdownOpen={setTagDropdownOpen} setSelectedTag={setSelectedTag} />
 						</div>
 					</div>
 				</div>

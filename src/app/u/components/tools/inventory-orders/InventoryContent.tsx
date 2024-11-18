@@ -16,10 +16,10 @@ const InventoryContent = () => {
 	const { listedData } = useListedData(ebayAccessToken, customerId);
 
 	return (
-		<div className="w-full mx-6 mb-4 py-4 h-full overflow-x-auto">
+		<div className="w-full h-full overflow-x-auto">
 			<table className="table w-full">
 				<thead>
-					<tr>
+					<tr className='bg-tableHeaderBackground'>
 						<th></th>
 						<th>Product</th>
 						<th>Quantity</th>
@@ -32,9 +32,9 @@ const InventoryContent = () => {
 					{listedData.length > 0 ? (
 						listedData.map((item, index) => {
 							return (
-								<tr key={index} className="hover:bg-gray-100 cursor-pointer">
+								<tr key={index} className="hover:bg-gray-100 cursor-pointer transition duration-100">
 									<td>
-									<Image src={item.image} width={100} height={100} alt={"image"} className="rounded-full w-16 h-16" style={{ objectFit: 'cover' }} />
+										<Image src={item.image} width={100} height={100} alt={"image"} loading="lazy" className="rounded-full w-12 h-12" style={{ objectFit: 'cover' }} />
 									</td>
 									<td>{item.itemName}</td>
 									<td>{item.quantity}</td>

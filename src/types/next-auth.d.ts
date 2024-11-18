@@ -2,7 +2,6 @@ import NextAuth, { DefaultSession, DefaultJWT } from 'next-auth';
 import { User as NextAuthUser } from 'next-auth';
 import { ISubscription } from '../userModel';
 
-type CurrencyType = 'GBP' | 'USD' | 'EUR';
 
 interface SessionUser extends NextAuthUser {
 	name: string;
@@ -20,7 +19,7 @@ interface SessionUser extends NextAuthUser {
 	};
 	accessGranted?: boolean;
 	username: string;
-	currency?: CurrencyType;
+	currency?: string;
 	ebay?: {
 		ebayAccessToken: string | null;
 		ebayRefreshToken: string | null;
@@ -37,7 +36,7 @@ declare module 'next-auth' {
 	interface JWT extends DefaultJWT {
 		accessToken?: string;
 		username?: string;
-		currency?: CurrencyType;
+		currency?: string;
 	}
 
 	interface NextApiRequest {

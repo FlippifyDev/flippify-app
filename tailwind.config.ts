@@ -57,10 +57,14 @@ const config: Config = {
 			colors: {
 				primary: '#5865F2',
 				white: '#ffffff',
+				orderPageText: '#17192c',
 				lightGreyBackground: '#F1F1F1',
+				userBackground: '#f2f6fa',
+				tableHeaderBackground: "#f5f9fc",
 				lightGreyHighlight: '#cccccc',
 				greyText: '#dedede',
 				slightlyDarkerGreyText: '#9A9A9A',
+				darkBackground: '#090a25',
 				greyStroke: '#A9A9A9',
 				darkGreyText: '#222222',
 				houseBlue: '#1a73e8',
@@ -123,6 +127,9 @@ const config: Config = {
 			animation: {
 				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
+			},
+			fontFamily: {
+				sans: ['Rubik', 'sans-serif'],
 			},
 		},
 	},

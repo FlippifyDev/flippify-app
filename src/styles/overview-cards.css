@@ -1,4 +1,3 @@
 .stats {
-    overflow: hidden; /* Hide any scrollbars */
+  overflow-x: hidden; /* Hide any scrollbars */
 }
-      

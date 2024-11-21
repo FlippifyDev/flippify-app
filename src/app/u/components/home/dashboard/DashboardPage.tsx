@@ -45,6 +45,7 @@ const DashboardPage: React.FC = () => {
 		new Set(salesData.map((order) => order.customTag))
 	).filter((tag) => tag);
 
+	/*
 	useEffect(() => {
 		if (session && session.user && session.user.customerId) {
 			const fetchUserData = async () => {
@@ -57,6 +58,7 @@ const DashboardPage: React.FC = () => {
 			fetchUserData();
 		}
 	}, [session]);
+	*/
 
 	// Close dropdowns if clicked outside
 	useEffect(() => {

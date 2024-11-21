@@ -31,11 +31,12 @@ const authOptions: AuthOptions = {
 				const userFromDb = await User.findOne({ discord_id: token.id });
 
 				if (userFromDb) {
+					// SIGN IN DISABLED FOR NOW
 					// Sign in to Firebase if not already signed in
-					if (!auth.currentUser) {
-						await signInUser(); // Sign in anonymously if no Firebase user exists
-					}
-					const currency = await fetchPreferredCurrency(userFromDb.stripe_customer_id);
+					//if (!auth.currentUser) {
+					//	await signInUser(); // Sign in anonymously if no Firebase user exists
+					//}
+					const currency = "GBP";//await fetchPreferredCurrency(userFromDb.stripe_customer_id);
 
 					token.subscriptions = userFromDb.subscriptions;
 					token.accessGranted = userFromDb.subscriptions.some(sub => sub.name === 'accessGranted');

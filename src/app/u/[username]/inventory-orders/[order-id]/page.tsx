@@ -10,9 +10,7 @@ export default function Dashboard() {
 		<>
 			<ThemeSetter theme="light" />
 			<Layout requiredSubscriptions={['']}>
-				<div className="w-full h-full">
-					<OrderDetails />
-				</div>
+				<OrderDetails />
 			</Layout>
 		</>
 	);

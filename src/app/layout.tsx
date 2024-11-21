@@ -35,7 +35,7 @@ export default function RootLayout({
 			<head>
 				{/* Google Site Verification Meta Tag */}
 				<meta name="google-site-verification" content="fkeCyYpXzaSUhpjO1SF_6zF_NpxEiZNB2y6708pO78w" />
-				
+
 				{/* Google AdSense Script */}
 				<Script
 					async

@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import 'flowbite';
+@import "flowbite";
 
 @layer base {
   :root {
@@ -70,7 +70,6 @@
   }
 }
 
-/* Custom Styles */
 .w-full.md\:w-auto.lg\:w-full {
   width: 100%;
 }
@@ -114,5 +113,5 @@ html {
 }
 
 .placeholder-lightModeText-light::placeholder {
-  color: rgba(59, 64, 69, 0.5); /* Adjust the opacity to make it lighter */
+  color: rgba(59, 64, 69, 0.5);
 }

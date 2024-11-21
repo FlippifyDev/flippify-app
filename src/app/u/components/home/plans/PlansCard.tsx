@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { AiOutlineTag } from "react-icons/ai"; // Icon for the discount tag
 import PlansGetAccessButton from "./PlansGetAccessButton";
 import PlansSubscribeNow from "./PlansSubscribeNow";

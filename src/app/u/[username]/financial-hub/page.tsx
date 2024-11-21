@@ -13,9 +13,7 @@ export default function Dashboard() {
 		<>
 			<ThemeSetter theme="light" />
 			<Layout requiredSubscriptions={['']}>
-				<div className="w-full h-full">
-					<FinancialHubContent />
-				</div>
+				<FinancialHubContent />
 			</Layout>
 		</>
 	);

@@ -52,4 +52,7 @@ const ProfitsGraphTagFilter = forwardRef<HTMLDivElement, ProfitsGraphTagFilterPr
 	);
 });
 
+
+ProfitsGraphTagFilter.displayName = 'ProfitsGraphTagFilter';
+
 export default ProfitsGraphTagFilter;

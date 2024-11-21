@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { database, ref, push, set, onValue, remove } from "@/src/lib/firebase/client";
+import { database } from "@/src/lib/firebase/client";
+import { ref, push, set, get, remove } from "firebase/database";
 
 const AdminEventManagement = () => {
 	const [eventTitle, setEventTitle] = useState("");
@@ -9,19 +10,30 @@ const AdminEventManagement = () => {
 	const [successMessage, setSuccessMessage] = useState("");
 	const [events, setEvents] = useState<any[]>([]);
 
-	// Fetch events from Firebase
+	// Fetch events from Firebase using get (one-time fetch)
 	useEffect(() => {
 		const eventsRef = ref(database, "events");
-		const unsubscribe = onValue(eventsRef, (snapshot) => {
-			const eventList: any[] = [];
-			snapshot.forEach((childSnapshot) => {
-				eventList.push({ id: childSnapshot.key, ...childSnapshot.val() });
-			});
-			setEvents(eventList);
-		});
+		const fetchEvents = async () => {
+			try {
+				const snapshot = await get(eventsRef);
+				if (snapshot.exists()) {
+					const eventList: any[] = [];
+					snapshot.forEach((childSnapshot) => {
+						eventList.push({ id: childSnapshot.key, ...childSnapshot.val() });
+					});
+					setEvents(eventList);
+				} else {
+					setEvents([]); // No events found
+				}
+			} catch (error) {
+				console.error("Error fetching events:", error);
+				setSuccessMessage("Error fetching events.");
+			}
+		};
 
-		return () => unsubscribe(); // Unsubscribe from Firebase listener when component unmounts
-	}, []);
+		fetchEvents(); // Call the function to fetch events
+
+	}, []); // Empty dependency array to run once when component mounts
 
 	// Add new event to Firebase and send notification
 	const handleAddEvent = async () => {
@@ -104,7 +116,6 @@ const AdminEventManagement = () => {
 					onChange={(e) => setEventDate(e.target.value)}
 					className="input input-bordered w-full"
 				/>
-			</div>
 
 			<div className="mb-4">
 				<label className="block text-gray-700">Discord Link</label>
@@ -149,6 +160,7 @@ const AdminEventManagement = () => {
 					))}
 				</ul>
 			)}
+			</div>
 		</div>
 	);
 };

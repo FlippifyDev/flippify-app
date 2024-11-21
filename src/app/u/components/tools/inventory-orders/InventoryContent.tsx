@@ -2,7 +2,7 @@
 
 import { currencySymbols } from '@/src/config/currency-config';
 import { useListedData } from '@/src/hooks/useListedData';
-import { formatTableDate } from '@/src/utils/format-table-date';
+import { formatTableDate } from '@/src/utils/format-dates';
 
 import { useSession } from "next-auth/react";
 import Image from 'next/image';
@@ -46,11 +46,11 @@ const InventoryContent = () => {
 								</tr>
 							);
 						})
-						) : (
-							<tr>
-								<td colSpan={12} className="text-center border">No inventory available.</td>
-							</tr>
-						)}
+					) : (
+						<tr>
+							<td colSpan={12} className="text-center border">No inventory available.</td>
+						</tr>
+					)}
 				</tbody>
 			</table>
 		</div>

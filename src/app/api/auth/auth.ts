@@ -6,7 +6,7 @@ import { IJwtToken } from '@/src/models/jwt-token';
 import connectToMongoDB from '@/src/lib/mongo/client';
 import { signInUser, auth } from '@/src/lib/firebase/client';
 import { fetchPreferredCurrency } from '@/src/services/firebase/users';
-import { generateReferralCode } from '@/src/utils/generateReferralCode';
+import { generateReferralCode } from '@/src/utils/generate-referral-code';
 
 const authOptions: AuthOptions = {
 	providers: [

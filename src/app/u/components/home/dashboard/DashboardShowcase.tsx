@@ -15,7 +15,7 @@ const DashboardShowcase: React.FC = () => {
 					title={item.title}
 					description={item.description}
 					header={item.header}
-					className={`h-full flex flex-col justify-between ${item.className} rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300`} // Added default shadow
+					className={`h-full flex flex-col justify-between ${item.className} rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300`}
 					icon={item.icon}
 				/>
 			))}

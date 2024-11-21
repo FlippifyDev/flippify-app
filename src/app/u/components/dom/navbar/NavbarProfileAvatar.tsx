@@ -19,7 +19,7 @@ const NavbarProfileAvatar = () => {
 	const root = process.env.ROOT as string;
 
 	// Default avatar
-	let avatar = "https://i.pinimg.com/originals/40/a4/59/40a4592d0e7f4dc067ec0cdc24e038b9.png";
+	let avatar = "https://i.imgur.com/pXG2DV3.jpeg";
 	let referral_code = "None";
 
 	if (session) {

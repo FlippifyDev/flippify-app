@@ -6,7 +6,7 @@ import PlansCardEliteWhatsIncluded from "./PlansCardEliteWhatsIncluded";
 import PlansCardBasicWhatsIncluded from "./PlansCardStandardWhatsIncluded";
 import React, { useState, useEffect } from "react";
 import { Lato, Inter } from "next/font/google";
-import { fetchConversionRatesFromFirebase } from "@/src/utils/currencyApi"; // Using Firebase fetch
+import { fetchConversionRatesFromFirebase } from "@/src/utils/currency-api"; // Using Firebase fetch
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });

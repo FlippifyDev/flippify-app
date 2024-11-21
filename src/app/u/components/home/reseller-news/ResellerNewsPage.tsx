@@ -1,8 +1,9 @@
 "use client"
+
 import React, { useState, useEffect } from 'react';
-import { database, ref, onValue } from '@/src/lib/firebase/client';
+import { database } from '@/src/lib/firebase/client';
+import { ref, get } from "firebase/database";
 import NewsCard from './NewsCard';
-import NoNewsRightNow from "./NoNewsRightNow"
 
 interface NewsItem {
 	id: string;
@@ -19,17 +20,30 @@ const ResellerNewsPage = () => {
 
 	useEffect(() => {
 		const newsRef = ref(database, 'resellerNews');
-		onValue(newsRef, (snapshot) => {
-			const newsList: NewsItem[] = [];
-			snapshot.forEach((childSnapshot) => {
-				newsList.push({
-					id: childSnapshot.key,
-					...childSnapshot.val(),
-				});
-			});
-			setNewsData(newsList);
-		});
-	}, []);
+		const fetchNews = async () => {
+			try {
+				const snapshot = await get(newsRef);  // Fetch data once
+				if (snapshot.exists()) {
+					const newsList: NewsItem[] = [];
+					snapshot.forEach((childSnapshot) => {
+						newsList.push({
+							id: childSnapshot.key,
+							...childSnapshot.val(),
+						});
+					});
+					setNewsData(newsList);
+				} else {
+					setNewsData([]);  // No news data found
+				}
+			} catch (error) {
+				console.error("Error fetching reseller news:", error);
+				alert("Error fetching reseller news.");
+			}
+		};
+
+		fetchNews(); // Fetch the data on component mount
+
+	}, []); // Empty dependency array to ensure it runs only once
 
 	return (
 		<div className="container mx-auto px-4 py-5">

@@ -29,7 +29,7 @@ const productSchema = new Schema<IProduct>({
 });
 
 // Create a Mongoose model based on the product schema
-const Product: Model<IProduct> = mongoose.models.Product || mongoose.model<IProduct>('Product', productSchema);
+const Product: Model<IProduct> = mongoose.models["config.products"] || mongoose.model<IProduct>('config.products', productSchema);
 
 
 export { Product, productSchema };

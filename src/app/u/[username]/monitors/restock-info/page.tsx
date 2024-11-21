@@ -1,4 +1,4 @@
-import RestockInfoPage from '../../../components/monitors/restock-info/RestockInfoPage'
+import RestockInfoPage from '../../../components/monitors/RestockInfo'
 import ThemeSetter from "@/src/app/components/ThemeSetter";
 import Layout from "../../../components/layout/Layout";
 

@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
+import React from "react";
 import PlansContactUs from "./ServerPlansContactUs";
 import { BackgroundGradient } from "@/src/components/ui/background-gradient";
 import { currencySymbols } from "@/src/config/currency-config";

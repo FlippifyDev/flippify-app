@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { database, ref, push, set, onValue, remove } from '@/src/lib/firebase/client';
+import { database } from '@/src/lib/firebase/client';
 import { useSession } from 'next-auth/react';
+import { ref, push, set, get, remove } from "firebase/database";
 
 const AdminNotificationManagement = () => {
 	const [notificationTitle, setNotificationTitle] = useState("");
@@ -11,16 +12,30 @@ const AdminNotificationManagement = () => {
 
 	const { data: session } = useSession();  // Use session to get username
 
+	// Fetch notifications from Firebase using get (one-time fetch)
 	useEffect(() => {
 		const notificationsRef = ref(database, 'notifications');
-		onValue(notificationsRef, (snapshot) => {
-			const notificationList: any[] = [];
-			snapshot.forEach((childSnapshot) => {
-				notificationList.push({ id: childSnapshot.key, ...childSnapshot.val() });
-			});
-			setNotifications(notificationList);
-		});
-	}, []);
+		const fetchNotifications = async () => {
+			try {
+				const snapshot = await get(notificationsRef);
+				if (snapshot.exists()) {
+					const notificationList: any[] = [];
+					snapshot.forEach((childSnapshot) => {
+						notificationList.push({ id: childSnapshot.key, ...childSnapshot.val() });
+					});
+					setNotifications(notificationList);
+				} else {
+					setNotifications([]); // No notifications found
+				}
+			} catch (error) {
+				console.error("Error fetching notifications:", error);
+				alert("Error fetching notifications.");
+			}
+		};
+
+		fetchNotifications(); // Call the function to fetch notifications
+
+	}, []); // Empty dependency array to run once when component mounts
 
 	const handleAddNotification = async () => {
 		if (!notificationTitle || !notificationMessage) {

@@ -1,20 +1,21 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
+import React, { useState, useEffect, useRef } from "react";
 
-import { useSalesData } from "@/src/hooks/useSalesData";
-import { signInUser } from "@/src/lib/firebase/client";
-import LayoutLoadingSkeleton from "../../layout/LayoutLoadingSkeleton";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import DashboardRecentSalesCard from "./DashboardRecentSalesCard";
 import DashboardNoSubscription from "./DashboardNoSubscription";
+import ProfitsGraphDateFilter from "./ProfitsGraphDateFilter";
+import LayoutLoadingSkeleton from "../../layout/LayoutLoadingSkeleton";
+import ProfitsGraphTagFilter from "./ProfitsGraphTagFilter";
 import DashboardOverviewCard from "./DashboardOverviewCard";
 import DashboardProfitsGraph from "./DashboardProfitsGraph";
 import DashboardShowcase from "./DashboardShowcase";
+import { useSalesData } from "@/src/hooks/useSalesData";
+import { signInUser } from "@/src/lib/firebase/client";
 import OnboardingFlow from "./OnboardingFlow";
-import ProfitsGraphDateFilter from "./ProfitsGraphDateFilter";
-import ProfitsGraphTagFilter from "./ProfitsGraphTagFilter";
+
 
 const DashboardPage: React.FC = () => {
 	const { data: session } = useSession();
@@ -96,11 +97,12 @@ const DashboardPage: React.FC = () => {
 				</div>
 			</LayoutSubscriptionWrapper>
 
-			{/* If They Have Access but NO Subscription */}
+			{/* If They Have Access but NO Subscription*/}
 			<LayoutSubscriptionWrapper
 				requiredSubscriptions={["accessGranted", "!standard"]}
-			>
-				<div className="flex flex-col lg:flex-row my-4 md:my-11 mx-2 md:mx-6 py-2 md:py-4 md:px-8 bg-white border border-gray-300 rounded-lg shadow-md overflow-hidden">
+			>	
+			<div className="w-full h-full overflow-y-auto">
+				<div className="flex flex-col lg:flex-row py-2 px-2 bg-white rounded-lg overflow-hidden w-full">
 					<div className="lg:w-1/3">
 						<DashboardNoSubscription username={session.user.username} />
 					</div>
@@ -108,10 +110,11 @@ const DashboardPage: React.FC = () => {
 						<DashboardShowcase />
 					</div>
 				</div>
+			</div>
 			</LayoutSubscriptionWrapper>
 
 			{/* If They Have Subscription */}
-			<LayoutSubscriptionWrapper requiredSubscriptions={["standard"]}>
+			<LayoutSubscriptionWrapper requiredSubscriptions={["admin", "standard"]}>
 				<div className="w-full">
 					<DashboardOverviewCard
 						salesData={filteredSalesData}

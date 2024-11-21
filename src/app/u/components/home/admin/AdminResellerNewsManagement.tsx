@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { database, ref, push, set, onValue, remove } from '@/src/lib/firebase/client';
+import { database } from '@/src/lib/firebase/client';
 import { useSession } from 'next-auth/react';
+import { ref, push, set, get, remove } from "firebase/database";
 
 const AdminResellerNewsManagement = () => {
 	const [newsTitle, setNewsTitle] = useState("");
@@ -13,16 +14,30 @@ const AdminResellerNewsManagement = () => {
 
 	const { data: session } = useSession(); // Use session to get username
 
+	// Fetch news from Firebase using get (one-time fetch)
 	useEffect(() => {
 		const newsRef = ref(database, 'resellerNews');
-		onValue(newsRef, (snapshot) => {
-			const newsList: any[] = [];
-			snapshot.forEach((childSnapshot) => {
-				newsList.push({ id: childSnapshot.key, ...childSnapshot.val() });
-			});
-			setNews(newsList);
-		});
-	}, []);
+		const fetchNews = async () => {
+			try {
+				const snapshot = await get(newsRef);
+				if (snapshot.exists()) {
+					const newsList: any[] = [];
+					snapshot.forEach((childSnapshot) => {
+						newsList.push({ id: childSnapshot.key, ...childSnapshot.val() });
+					});
+					setNews(newsList);
+				} else {
+					setNews([]); // No news found
+				}
+			} catch (error) {
+				console.error("Error fetching reseller news:", error);
+				alert("Error fetching reseller news.");
+			}
+		};
+
+		fetchNews(); // Call the function to fetch news
+
+	}, []); // Empty dependency array to run once when component mounts
 
 	const handleAddNews = async () => {
 		if (!newsTitle || !newsSubTitle || !newsDescription || !newsImage) {
@@ -87,7 +102,6 @@ const AdminResellerNewsManagement = () => {
 		}
 	};
 
-
 	return (
 		<div className="w-full bg-white p-5 rounded-lg shadow-lg">
 			<h2 className="text-2xl font-semibold mb-4">Reseller News Management</h2>
@@ -146,12 +160,11 @@ const AdminResellerNewsManagement = () => {
 				/>
 			</div>
 
-
 			<button onClick={handleAddNews} className="btn bg-houseBlue hover:bg-houseHoverBlue text-white w-full mb-4">
-				Add Notification
+				Add News
 			</button>
 
-			{/* Notifications List */}
+			{/* News List */}
 			<h3 className="text-xl font-semibold mb-4">Delete News Articles</h3>
 			{news.length > 0 ? (
 				<div>
@@ -180,7 +193,7 @@ const AdminResellerNewsManagement = () => {
 					</button>
 				</div>
 			) : (
-				<p>No notifications available for deletion.</p>
+				<p>No news articles available for deletion.</p>
 			)}
 		</div>
 	);

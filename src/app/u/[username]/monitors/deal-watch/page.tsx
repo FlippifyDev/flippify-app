@@ -1,4 +1,4 @@
-import DealWatchPage from '../../../components/monitors/deal-watch/DealWatchPage'
+import DealWatchPage from '../../../components/monitors/DealWatch'
 import ThemeSetter from "@/src/app/components/ThemeSetter";
 import Layout from "../../../components/layout/Layout";
 

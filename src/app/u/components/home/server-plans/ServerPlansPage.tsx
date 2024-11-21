@@ -1,35 +1,22 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useSession } from "next-auth/react";
 import { Lato, Inter } from "next/font/google";
 import ServerPlansCard from "./ServerPlansCard";
 import ServerPlansCardDealWatchWhatsIncluded from "./ServerPlansCardDealWatchWhatsIncluded";
 import ServerPlansCardRetiringSetsWhatsIncluded from "./ServerPlansCardRetiringSetsWhatsIncluded";
 import ServerPlansCardElectronicsWhatsIncluded from "./ServerPlansCardElectronicsWhatsIncluded";
 import ServerPlansCardRestockInfoWhatsIncluded from "./ServerPlansCardRestockInfoWhatsIncluded";
-import { useSession } from "next-auth/react";
-import { fetchConversionRatesFromFirebase } from "@/src/utils/currencyApi";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
 
 const ServerPlansPage = () => {
 	const { data: session } = useSession();
+	const currency = session?.user.currency as string;
 	const [selectedPlan, setSelectedPlan] = useState<number>(0);
-	const [currency, setCurrency] = useState<'GBP' | 'USD' | 'EUR'>('GBP');
-	const [conversionRates, setConversionRates] = useState<Record<string, number>>({
-		GBP: 1,
-		USD: 1.33,
-		EUR: 1.16,
-	});
-
-	useEffect(() => {
-		const fetchRates = async () => {
-			const rates = await fetchConversionRatesFromFirebase();
-			setConversionRates(rates);
-		};
-		fetchRates();
-	}, []);
+	const conversionRates = { GBP: 1, USD: 1.33, EUR: 1.19, AUD: 1.95, CAD: 1.8 };
 
 	const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setSelectedPlan(event.target.checked ? 1 : 0);

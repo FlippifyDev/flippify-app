@@ -1,12 +1,11 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import ProfileBillingPortalButton from "./ProfileBillingPortalButton";
 import ProfileSupportButton from "./ProfileSupportButton";
-import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import { currencySymbols } from "@/src/config/currency-config";
+import ImageModal from '@/src/app/components/ImageModal';
 
 
 const ProfileOverview = () => {
@@ -15,8 +14,7 @@ const ProfileOverview = () => {
 	const currencySymbol = currencySymbols[currency];
 
 	// Default avatar
-	let avatar =
-		"https://i.pinimg.com/originals/40/a4/59/40a4592d0e7f4dc067ec0cdc24e038b9.png";
+	let avatar = "https://i.imgur.com/pXG2DV3.jpeg";
 	let username = "User";
 	let email = "N/A";
 
@@ -35,13 +33,7 @@ const ProfileOverview = () => {
 	return (
 		<div className="w-full bg-white rounded-xl dark:bg-gray-800 p-4 md:p-6 flex flex-col md:flex-row justify-between items-center">
 			<div className="flex items-center">
-				<Image
-					alt="Avatar"
-					src={avatar}
-					width={100}
-					height={100}
-					className="rounded-full"
-				/>
+				<ImageModal src={avatar} alt={"Avatar"} width={80} height={80} className="rounded-full" />
 				<div className="ml-4">
 					<h2 className="text-2xl font-bold text-gray-900 dark:text-white">
 						{username}
@@ -55,59 +47,6 @@ const ProfileOverview = () => {
 					</div>
 				</div>
 			</div>
-
-			{/* 
-			<div className="flex flex-col md:flex-row gap-4 w-full font-semibold md:w-auto mt-4 md:mt-0 md:ml-auto">
-				<LayoutSubscriptionWrapper requiredSubscriptions={['standard']}>
-					<div className="stats shadow-md bg-white p-4 rounded-lg">
-						<div className="stat">
-							<div className="stat-title text-sm sm:text-base text-houseBlue">
-								Subscription Status
-							</div>
-							<div className="stat-value font-bold text-xl sm:text-2xl text-black">
-								Standard
-							</div>
-						</div>
-					</div>
-				</LayoutSubscriptionWrapper>
-				<LayoutSubscriptionWrapper requiredSubscriptions={['pro']}>
-					<div className="stats shadow-md bg-white p-4 rounded-lg">
-						<div className="stat">
-							<div className="stat-title text-sm sm:text-base text-houseBlue">
-								Subscription Status
-							</div>
-							<div className="stat-value font-bold text-xl sm:text-2xl text-black">
-								Pro
-							</div>
-						</div>
-					</div>
-				</LayoutSubscriptionWrapper>
-				<LayoutSubscriptionWrapper requiredSubscriptions={['elite']}>
-					<div className="stats shadow-md bg-white p-4 rounded-lg">
-						<div className="stat">
-							<div className="stat-title text-sm sm:text-base text-houseBlue">
-								Subscription Status
-							</div>
-							<div className="stat-value font-bold text-xl sm:text-2xl text-black">
-								Elite
-							</div>
-						</div>
-					</div>
-				</LayoutSubscriptionWrapper>
-				<LayoutSubscriptionWrapper requiredSubscriptions={['!member']}>
-					<div className="stats shadow-md bg-white p-4 rounded-lg">
-						<div className="stat">
-							<div className="stat-title text-sm sm:text-base text-houseBlue">
-								Subscription Status
-							</div>
-							<div className="stat-value font-bold text-xl sm:text-2xl text-black">
-								Not Active
-							</div>
-						</div>
-					</div>
-				</LayoutSubscriptionWrapper>
-			</div>
-			*/}
 		</div>
 	);
 };

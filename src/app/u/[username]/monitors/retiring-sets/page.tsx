@@ -1,4 +1,4 @@
-import RetiringSetsPage from '../../../components/monitors/retiring-sets/RetiringSetsPage'
+import RetiringSetsPage from '../../../components/monitors/RetiringSets'
 import ThemeSetter from "@/src/app/components/ThemeSetter";
 import Layout from "../../../components/layout/Layout";
 

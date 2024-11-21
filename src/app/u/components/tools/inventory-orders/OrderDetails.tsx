@@ -8,14 +8,15 @@ import { currencySymbols } from "@/src/config/currency-config";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import OrderInfoCard from "./OrderInfoCard";
-import { formatTableDate } from "@/src/utils/format-table-date";
-import { database, ref, get } from "@/src/lib/firebase/client";
-import DatePicker from "./OrderDatepicker";
+import { formatTableDate } from "@/src/utils/format-dates";
+import { database } from "@/src/lib/firebase/client";
+import { get, ref, update } from "firebase/database"
 import UpdateFields from "./UpdateFields";
+import { setCachedData } from "@/src/utils/cache-helpers";
+import Alert from "@/src/app/components/Alert";
 
 const OrderDetails = () => {
 	const params = useParams();
-	const [isOpen, setIsOpen] = useState(false);
 	const orderId = params?.["order-id"];
 	const [orders, setOrders] = useState<IOrder[]>([]);
 	const { data: session } = useSession();
@@ -27,10 +28,15 @@ const OrderDetails = () => {
 	const [customTag, setCustomTag] = useState<string>("");
 	const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
 	const [purchaseDate, setPurchaseDate] = useState<string>("");
-	const [purchasePrice, setPurchasePrice] = useState<number | null>(null);
+	const [purchasePrice, setPurchasePrice] = useState<number | string>("");
 	const [purchasePlatform, setPurchasePlatform] = useState<string>("");
 	const router = useRouter();
 	const [fadeIn, setFadeIn] = useState(false);
+
+	// Handle alert messages
+	const [alertMessage, setAlertMessage] = useState<string | null>(null);
+	const [isAlertVisible, setIsAlertVisible] = useState<boolean>(false);
+
 
 	// Fetch all sales data and filter for specific order ID
 	const { salesData } = useSalesData(ebayAccessToken, customerId);
@@ -70,62 +76,6 @@ const OrderDetails = () => {
 			}
 		});
 	};
-
-	// Update selected orders in Firebase
-	const updateSelectedOrders = async () => {
-		if (selectedOrders.length === 0) {
-			alert("No orders selected for update.");
-			return;
-		}
-
-		const updates: { [key: string]: any } = {};
-
-		for (const orderId of selectedOrders) {
-			const orderRef = ref(database, `sales/${customerId}/${orderId}`);
-
-			try {
-				// Get the current data for the order
-				const snapshot = await get(orderRef);
-				if (snapshot.exists()) {
-					const currentOrderData = snapshot.val();
-
-					// Create an updates object with only defined fields
-					const updatedOrderData: { [key: string]: any } = {};
-
-					// Only update if new data is provided
-					if (purchaseDate) {
-						updatedOrderData.purchaseDate = purchaseDate; // Update purchaseDate if provided
-					}
-
-					if (purchasePrice !== null) {
-						updatedOrderData.purchasePrice = purchasePrice; // Update purchasePrice if provided
-					}
-
-					if (purchasePlatform) {
-						updatedOrderData.purchasePlatform = purchasePlatform; // Update purchasePlatform if provided
-					}
-
-					if (customTag) {
-						updatedOrderData.customTag = customTag; // Update customTag if provided
-					}
-
-					// If there's anything to update, merge with existing data
-					if (Object.keys(updatedOrderData).length > 0) {
-						updates[`sales/${customerId}/${orderId}`] = {
-							...currentOrderData, // Keep existing data
-							...updatedOrderData, // Add only the new updates
-						};
-					}
-				} else {
-					console.error(`No data found for order ID ${orderId}`);
-				}
-			} catch (error) {
-				console.error("Error fetching order data from Firebase:", error);
-				alert("Error fetching order data. Please try again later.");
-				return;
-			}
-		}
-	}
 
 
 	const calculateTotals = () => {
@@ -201,8 +151,117 @@ const OrderDetails = () => {
 	const image = orders[0].image;
 	const totals = calculateTotals();
 
+	const updateSelectedOrders = async () => {
+		if (selectedOrders.length === 0) {
+			setAlertMessage("No orders selected for update.");
+			setIsAlertVisible(true);
+			return;
+		}
+
+		const updates: { [key: string]: any } = {};
+		let updatedOrders: IOrder[] = [...orders]; // Copy the current orders to modify them
+		let previousOrdersState: IOrder[] = [...orders]; // Store previous state for rollback in case of failure
+
+		// Optimistically update the UI by directly modifying the orders state
+		updatedOrders = updatedOrders.map((order) => {
+			if (selectedOrders.includes(order.orderId)) {
+				return {
+					...order,
+					purchaseDate: purchaseDate || order.purchaseDate,
+					purchasePrice: purchasePrice !== null ? +purchasePrice : order.purchasePrice, // Ensure purchasePrice is a number
+					purchasePlatform: purchasePlatform || order.purchasePlatform,
+					customTag: customTag || order.customTag,
+				};
+			}
+			return order;
+		});
+
+		for (const orderId of selectedOrders) {
+			const orderRef = ref(database, `orders/${customerId}/${orderId}`);  // Create reference to the order
+
+			try {
+				// Fetch the current data for the order
+				const snapshot = await get(orderRef);
+				if (snapshot.exists()) {
+					const currentOrderData = snapshot.val();
+
+					// Prepare the updated order data
+					const updatedOrderData: { [key: string]: any } = {};
+
+					if (purchaseDate && purchaseDate !== currentOrderData.purchaseDate) {
+						updatedOrderData.purchaseDate = purchaseDate;
+					}
+
+					if (purchasePrice !== null && purchasePrice !== currentOrderData.purchasePrice) {
+						updatedOrderData.purchasePrice = +purchasePrice; // Ensure purchasePrice is a number
+					}
+
+					if (purchasePlatform && purchasePlatform !== currentOrderData.purchasePlatform) {
+						updatedOrderData.purchasePlatform = purchasePlatform;
+					}
+
+					if (customTag && customTag !== currentOrderData.customTag) {
+						updatedOrderData.customTag = customTag;
+					}
+
+					// If there are updates, merge them with the current data
+					if (Object.keys(updatedOrderData).length > 0) {
+						updates[`orders/${customerId}/${orderId}`] = {
+							...currentOrderData,
+							...updatedOrderData,
+						};
+					}
+				} else {
+					console.error(`No data found for order ID ${orderId}`);
+				}
+			} catch (error) {
+				console.error("Error fetching order data from Firebase:", error);
+				setAlertMessage("Error fetching order data. Please try again later.");
+				setIsAlertVisible(true);
+				return;
+			}
+		}
+
+		if (Object.keys(updates).length > 0) {
+			try {
+				// Update Firebase with the new data
+				await update(ref(database), updates); // Use the `update` method for batch updates
+
+				// After successful Firebase update, update the cache
+				setCachedData(`salesData-${customerId}`, updatedOrders);  // Update the cache with new data
+
+				// Successfully updated
+				if (Object.keys(updates).length === 1) {
+					setAlertMessage("Order successfully updated");
+				} else if (Object.keys(updates).length > 1) {
+					setAlertMessage("Orders successfully updated");
+				}
+				setIsAlertVisible(true);
+
+				// Clear the selected orders to uncheck all checkboxes
+				setSelectedOrders([]);
+				// Immediately update the state for a smoother UI experience
+				setOrders(updatedOrders);
+
+			} catch (error) {
+				console.error("Error updating orders in Firebase:", error);
+				setAlertMessage("Error updating orders. Please try again later.");
+				setIsAlertVisible(true);
+
+				// If Firebase update fails, revert the changes in the UI to the previous state
+				setOrders(previousOrdersState);  // Revert to the previous state
+			}
+		}
+	};
+
+
 	return (
 		<div className="rounded-lg text-orderPageText space-y-2">
+			<Alert
+				message={alertMessage || ""}
+				visible={isAlertVisible}
+				onClose={() => setIsAlertVisible(false)}
+			/>
 			<div className="bg-white rounded-lg">
 				<div className="breadcrumbs text-sm p-2">
 					<ul>
@@ -256,7 +315,13 @@ const OrderDetails = () => {
 								<tr key={index} className="cursor-pointer hover:bg-gray-100">
 									<td>
 										<label className="flex items-center cursor-pointer relative">
-											<input onChange={() => handleCheckboxChange(order.orderId)} type="checkbox" className="peer h-5 w-5 cursor-pointer transition-all appearance-none rounded shadow hover:shadow-md border border-slate-300 checked:bg-slate-800 checked:border-slate-800 focus:ring-0" id="check" />
+											<input
+												onChange={() => handleCheckboxChange(order.orderId)}
+												type="checkbox"
+												className="peer h-5 w-5 cursor-pointer transition-all appearance-none rounded shadow hover:shadow-md border border-slate-300 checked:bg-slate-800 checked:border-slate-800 focus:ring-0"
+												id="check"
+												checked={selectedOrders.includes(order.orderId)}
+											/>
 										</label>
 									</td>
 									<td>{orderId}</td>

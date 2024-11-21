@@ -12,7 +12,7 @@ interface DashboardNoSubscriptionProps {
 
 const DashboardNoSubscription: React.FC<DashboardNoSubscriptionProps> = ({ username }) => {
 	return (
-		<div className="flex justify-center items-center h-full">
+		<div className="flex flex-col justify-center items-center w-full h-full">
 			{/* Set to full height */}
 			<div className="w-full h-auto flex flex-col justify-center">
 				{/* Center the content vertically */}

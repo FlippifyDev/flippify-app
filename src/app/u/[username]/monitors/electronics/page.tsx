@@ -1,4 +1,4 @@
-import ElectronicsPage from '../../../components/monitors/electronics/ElectronicsPage'
+import PageElectronics from '../../../components/monitors/Electronics'
 import ThemeSetter from "@/src/app/components/ThemeSetter";
 import Layout from "../../../components/layout/Layout";
 
@@ -9,7 +9,7 @@ export default function Electronics() {
 		<>
 			<ThemeSetter theme="light" />
 			<Layout anySubscriptions={["member", "electronics"]}>
-				<ElectronicsPage />
+				<PageElectronics />
 			</Layout>
 		</>
 	)

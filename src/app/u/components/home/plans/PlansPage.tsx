@@ -1,48 +1,21 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import PlansCard from "./PlansCard";
 import PlansCardStandardWhatsIncluded from "./PlansCardStandardWhatsIncluded";
 import PlansCardEliteWhatsIncluded from "./PlansCardEliteWhatsIncluded";
 import PlansCardProWhatsIncluded from "./PlansCardProWhatsIncluded";
 import { Lato, Inter } from "next/font/google";
 import { useSession } from "next-auth/react";
-import { fetchConversionRatesFromFirebase } from "@/src/utils/currencyApi"; // To fetch conversion rates
-import { fetchPreferredCurrency } from "@/src/services/firebase/fetch-preferred-currency";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
 
-
-
 const PlansPage = () => {
 	const { data: session } = useSession();
+	const currency = session?.user.currency as string;
 	const [selectedPlan, setSelectedPlan] = useState<number>(0);
-	const [currency, setCurrency] = useState("GBP"); 
-	const [conversionRates, setConversionRates] = useState<Record<string, number>>({
-		GBP: 1,
-		USD: 1.33,
-		EUR: 1.19,
-	});
-	
-	// Fetch conversion rates from an API
-	useEffect(() => {
-		const fetchRates = async () => {
-			const rates = await fetchConversionRatesFromFirebase(); // Assuming API call for conversion rates
-			setConversionRates(rates);
-		};
-		fetchRates();
-	}, []);
-
-	useEffect(() => {
-		const fetchCurrencySymbol = async () => {
-			const preferredCurrency = await fetchPreferredCurrency(session?.user.customerId as string);
-			setCurrency(preferredCurrency)
-		}
-
-		fetchCurrencySymbol();
-	}, [session])
-
+	const conversionRates = { GBP: 1, USD: 1.33, EUR: 1.19, AUD: 1.95, CAD: 1.8 };
 
 	const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setSelectedPlan(event.target.checked ? 1 : 0);

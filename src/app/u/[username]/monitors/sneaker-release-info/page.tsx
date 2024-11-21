@@ -1,4 +1,4 @@
-import SneakerReleaseInfoPage from '../../../components/monitors/sneaker-release-info/SneakerReleaseInfoPage'
+import SneakerReleaseInfoPage from '../../../components/monitors/SneakerReleaseInfo'
 import ThemeSetter from "@/src/app/components/ThemeSetter";
 import Layout from "../../../components/layout/Layout";
 

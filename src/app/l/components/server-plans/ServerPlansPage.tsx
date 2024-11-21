@@ -7,7 +7,7 @@ import ServerPlansCardDealWatchWhatsIncluded from "./ServerPlansCardDealWatchWha
 import ServerPlansCardRetiringSetsWhatsIncluded from "./ServerPlansCardRetiringSetsWhatsIncluded";
 import ServerPlansCardElectronicsWhatsIncluded from "./ServerPlansCardElectronicsWhatsIncluded";
 import ServerPlansCardRestockInfoWhatsIncluded from "./ServerPlansCardRestockInfoWhatsIncluded";
-import { fetchConversionRatesFromFirebase } from "@/src/utils/currencyApi";
+import { fetchConversionRatesFromFirebase } from "@/src/utils/currency-api";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });

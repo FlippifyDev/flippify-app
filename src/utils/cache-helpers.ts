@@ -13,11 +13,12 @@ export const getCachedData = (key: string, expirationTime: number) => {
 
 // Function to store data in localStorage with a timestamp
 export const setCachedData = (key: string, data: any) => {
-	localStorage.setItem(
-		key,
-		JSON.stringify({
-			data: data,
-			timestamp: Date.now(),
-		})
-	);
+	const currentCache = getCachedData(key, 0); // Get current cache, but don't check expiration
+	const newCache = {
+		...currentCache, // Preserve other data
+		...data, // Update with new data (e.g., updated salesData)
+		timestamp: Date.now(),
+	};
+
+	localStorage.setItem(key, JSON.stringify(newCache)); // Save the updated cache
 };

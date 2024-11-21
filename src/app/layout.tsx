@@ -34,7 +34,7 @@ export default function RootLayout({
 		<html lang="en" className="!scroll-smooth">
 			<head>
 				{/* Google Site Verification Meta Tag */}
-				<meta name="google-adsense-account" content="ca-pub-6066589868368367">
+				<meta name="google-adsense-account" content="ca-pub-6066589868368367" />
 
 				{/* Google AdSense Script */}
 				<Script

@@ -54,7 +54,7 @@ const MonitorPage: React.FC<MonitorPageProps> = ({ collection, sortType, query, 
 
 		setOffset(0); // Reset the offset when search query changes
 		setDisplayedProducts(filtered.map(mapToIMonitorCard).slice(0, limit));
-	}, [searchQueryToSubmit, products, mapToIMonitorCard]);
+	}, [sortType, searchQueryToSubmit, products, mapToIMonitorCard, limit]);
 
 	useEffect(() => {
 		loadProducts({

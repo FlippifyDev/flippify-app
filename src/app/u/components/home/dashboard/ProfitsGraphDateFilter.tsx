@@ -64,4 +64,7 @@ const ProfitsGraphDateFilter = forwardRef<HTMLDivElement, ProfitsGraphDateFilter
 	);
 });
 
+
+ProfitsGraphDateFilter.displayName = 'ProfitsGraphDateFilter';
+
 export default ProfitsGraphDateFilter;

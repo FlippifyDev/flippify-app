@@ -54,7 +54,7 @@ const MonitorPage: React.FC<MonitorPageProps> = ({ collection, sortType, query, 
 
 		setOffset(0); // Reset the offset when search query changes
 		setDisplayedProducts(filtered.map(mapToIMonitorCard).slice(0, limit));
-	}, [searchQueryToSubmit, products]);
+	}, [searchQueryToSubmit, products, mapToIMonitorCard]);
 
 	useEffect(() => {
 		loadProducts({
@@ -66,7 +66,7 @@ const MonitorPage: React.FC<MonitorPageProps> = ({ collection, sortType, query, 
 			fetchEbayData,
 			query
 		});
-	}, [limit, collection, fetchEbayData, query, mapToIMonitorCard]);
+	}, [sortType, limit, collection, fetchEbayData, query, mapToIMonitorCard]);
 
 	return (
 		<div className="p-5 w-full h-full">

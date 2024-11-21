@@ -1,0 +1,46 @@
+.tab {
+  padding: 0.5rem 1rem;
+  border: 1px solid transparent;
+  color: #000;
+}
+
+.tab-active {
+  background-color: #f1f1f1;
+  border: 1.5px solid #a9a9a9;
+  color: #000;
+  border-radius: 9999px;
+}
+
+.tabs .tab:not(.tab-active):hover {
+  background-color: #ffffff;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+.ripple {
+  position: relative;
+  overflow-x: hidden;
+}
+
+.ripple::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.3);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: ripple 0.6s linear;
+}

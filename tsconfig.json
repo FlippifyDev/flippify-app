@@ -18,13 +18,13 @@
     "paths": {
       "@/*": ["./*"]
     },
-    "typeRoots": ["./node_modules/@types", "./types"],
+    "typeRoots": ["./node_modules/@types", "src/types"],
     "plugins": [
       {
         "name": "next"
       }
     ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "types/bcryptjs.d.ts", "app/u/[username]/asldf0987asDa230fDsADMIN/page.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/u/[username]/asldf0987asDa230fDsADMIN/page.tsx"],
   "exclude": ["node_modules"]
 }

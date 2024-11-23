@@ -18,7 +18,7 @@ const ProfitsGraphTagFilter = forwardRef<HTMLDivElement, ProfitsGraphTagFilterPr
 	return (
 		<div className="relative" ref={ref}> {/* Use forwarded ref here */}
 			<div
-				className="btn m-1 text-lightModeText bg-white hover:bg-gray-100 transition duration-200 rounded-lg w-36"
+				className="btn m-1 text-lightModeText bg-white hover:bg-gray-100 transition duration-200 rounded-lg w-32 sm:w-36"
 				onClick={() => setTagDropdownOpen(!tagDropdownOpen)} // Toggle dropdown for tags
 			>
 				{selectedTag || "All Tags"} {/* Display selected tag or default text */}

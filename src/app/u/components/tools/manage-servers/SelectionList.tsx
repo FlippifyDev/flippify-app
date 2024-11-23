@@ -1,6 +1,6 @@
 "use client";
 
-import ManageServersSelectionWebhook from './ManageServersSelectionWebhook';
+import ManageServersSelectionWebhook from './SelectionWebhook';
 import fetchProductRegions from '@/src/services/mongodb/fetch-product-regions';
 
 import React, { useState } from 'react';

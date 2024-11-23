@@ -44,7 +44,7 @@ export default function RootLayout({
 					strategy="lazyOnload"
 				/>
 			</head>
-			<body className={inter.className}>
+			<body className={`${inter.className}`}>
 				{/* Providers component */}
 				<Providers>
 					{/* Include Service Worker registration */}

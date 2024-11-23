@@ -1,6 +1,6 @@
 import React from 'react';
-import ManagerServersSelectionList from "./ManageServersSelectionList";
-import Frequency from "./ManageServersFreq";
+import ManagerServersSelectionList from "./SelectionList";
+import Frequency from "./Freq";
 
 const ManageServersBotsCustom: React.FC = () => {
 	return (

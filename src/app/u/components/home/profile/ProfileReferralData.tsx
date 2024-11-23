@@ -94,15 +94,15 @@ const ProfileReferralData: React.FC = () => {
 			)}
 
 			{/* Referral Data Section */}
-			<div className="card bg-white shadow-md rounded-xl h-full flex flex-col">
-				<div className="flex justify-between items-center mb-2 border-b py-4 px-6">
+			<div className="card bg-white rounded-xl h-full flex flex-col">
+				<div className="flex justify-between items-center border-b py-4 px-6">
 					<h2 className="card-title text-black text-lg font-semibold">Referral Program</h2>
 					<p className="text-sm text-gray-500 px-2 text-center sm:text-left">
 						Users must subscribe to count as a valid referral.
 					</p>
 				</div>
-				<div className="flex justify-between items-center p-6">
-					<div className="flex items-center mb-4 sm:mb-0">
+				<div className="flex justify-between items-center p-4">
+					<div className="flex items-center sm:mb-0">
 						<p className="text-lg font-semibold text-gray-900 mr-2">Your code:</p>
 						<button
 							className="flex items-center px-2 py-1 bg-gray-100 border rounded-lg hover:bg-gray-200 transition duration-200"
@@ -116,23 +116,22 @@ const ProfileReferralData: React.FC = () => {
 						</button>
 					</div>
 				</div>
-				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-6">
-					<div className="stats shadow-md bg-white p-2 text-center">
+				<div className="grid grid-cols-1 lg:grid-cols-2 gap-4 p-4">
+					<div className="stats shadow-sm bg-white p-2 text-center">
 						<div className="stat">
 							<div className="stat-title text-sm text-houseBlue font-semibold">Lifetime Referrals</div>
 							<div className="stat-value text-xl font-bold text-black">{referralCount}</div>
 						</div>
 					</div>
-					<div className="stats shadow-md bg-white p-2 text-center">
+					<div className="stats shadow-sm bg-white p-2 text-center">
 						<div className="stat">
 							<div className="stat-title text-sm text-houseBlue font-semibold">Total Rewards Claimed</div>
 							<div className="stat-value text-xl font-bold text-black">{totalRewardsClaimed}</div>
 						</div>
 					</div>
 				</div>
-
-				<div className="text-center relative group p-6">
-					<h3 className="text-lg font-semibold text-gray-900">
+				<div className="text-center relative group p-4">
+					<h3 className="hidden lg:block text-lg font-semibold text-gray-900">
 						{availableRewards > 0
 							? discountApplied
 								? 'Discount already active. You can claim again after discount is over.'
@@ -150,8 +149,6 @@ const ProfileReferralData: React.FC = () => {
 						Claim Rewards
 					</button>
 				</div>
-
-				{/* The rest of the modal and reward logic remains unchanged */}
 			</div>
 		</div>
 	);

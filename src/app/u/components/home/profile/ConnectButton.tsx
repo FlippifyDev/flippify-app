@@ -13,7 +13,7 @@ const SubConnectButton: React.FC<SubConnectButtonProps> = ({ text, custom_class,
 		<button
 			onClick={onClick}
 			type="button"
-			className={`btn rounded-full text-white w-[7rem] text-center border-0 transition duration-300 ${custom_class}`}
+			className={`btn rounded-full text-white w-[8rem] text-center border-0 transition duration-300 ${custom_class}`}
 		>
 			{loading ? (
 				<svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -49,7 +49,7 @@ const ConnectButton: React.FC<ConnectButtonProps> = ({
 	const loadingClass = "bg-gray-500 hover:bg-gray-500 cursor-not-allowed";
 
 	return (
-		<div className="flex flex-col gap-4">
+		<div className="flex flex-col gap-5">
 			<div className="relative group">
 				{loading ? (
 					<SubConnectButton text="Loading..." loading={true} custom_class={loadingClass} />

@@ -48,7 +48,7 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
 				</div>
 
 				{/* Scrollable main content */}
-				<div className="flex-grow overflow-y-auto p-2 sm:p-4 scrollbar-hide">
+				<div className="flex-grow overflow-y-auto p-2 sm:p-4 scrollbar-hide z-20">
 					<Suspense fallback={<LayoutLoadingSkeleton />}>
 						{children}
 					</Suspense>

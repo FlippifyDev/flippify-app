@@ -31,9 +31,9 @@ const ProfileOverview = () => {
 	}
 
 	return (
-		<div className="w-full bg-white rounded-xl dark:bg-gray-800 p-4 md:p-6 flex flex-col md:flex-row justify-between items-center">
+		<div className="w-full bg-white rounded-xl dark:bg-gray-800 p-4 md:p-6 flex flex-col md:flex-row justify-start items-start">
 			<div className="flex items-center">
-				<ImageModal src={avatar} alt={"Avatar"} width={80} height={80} className="rounded-full" />
+				<ImageModal src={avatar} alt={"Avatar"} width={80} height={80} className="rounded-full hidden sm:block" />
 				<div className="ml-4">
 					<h2 className="text-2xl font-bold text-gray-900 dark:text-white">
 						{username}

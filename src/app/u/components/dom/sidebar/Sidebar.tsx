@@ -32,19 +32,19 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, setIsSidebarOpen }) =>
 
 	// Disable background scrolling when sidebar is open
 	useEffect(() => {
-		document.body.classList.add('overflow-hidden');  // Tailwind utility to prevent page scrolling
+		document.body.classList.add('overflow-hidden'); 
 		return () => {
 			document.body.classList.remove('overflow-hidden');
 		};
 	}, []);
 
 	return (
-		<div className={`relative z-0 h-full bg-darkBackground transition-all duration-300 ${isSidebarOpen ? 'w-72 2xl:w-80' : 'w-16'}`}>
+		<div className={`relative z-0 h-full bg-darkBackground transition-all duration-300 ${isSidebarOpen ? 'w-full sm:w-72 2xl:w-80' : 'hidden sm:block w-16'}`}>
 			<Alert message="Membership Required." visible={alertVisible} onClose={hideAlert} />
 
 			{/* Toggle Button */}
 			<div className="p-2 border-b border-gray-500 flex justify-center items-center">
-				<MenuButton onClick={() => setIsSidebarOpen(!isSidebarOpen)} />
+				<MenuButton isSidebarOpen={isSidebarOpen} onClick={() => setIsSidebarOpen(!isSidebarOpen)} />
 			</div>
 
 			{/* Sidebar Content */}

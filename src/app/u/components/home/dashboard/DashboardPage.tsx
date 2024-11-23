@@ -102,29 +102,29 @@ const DashboardPage: React.FC = () => {
 			{/* If They Have Access but NO Subscription*/}
 			<LayoutSubscriptionWrapper
 				requiredSubscriptions={["accessGranted", "!standard"]}
-			>	
-			<div className="w-full h-full overflow-y-auto">
-				<div className="flex flex-col lg:flex-row py-2 px-2 bg-white rounded-lg overflow-hidden w-full">
-					<div className="lg:w-1/3">
-						<DashboardNoSubscription username={session.user.username} />
-					</div>
-					<div className="lg:w-2/3">
-						<DashboardShowcase />
+			>
+				<div className="w-full h-full overflow-y-auto">
+					<div className="flex flex-col lg:flex-row py-2 px-2 bg-white rounded-lg overflow-hidden w-full">
+						<div className="lg:w-1/3">
+							<DashboardNoSubscription username={session.user.username} />
+						</div>
+						<div className="lg:w-2/3">
+							<DashboardShowcase />
+						</div>
 					</div>
 				</div>
-			</div>
 			</LayoutSubscriptionWrapper>
 
 			{/* If They Have Subscription */}
 			<LayoutSubscriptionWrapper requiredSubscriptions={["admin", "standard"]}>
-				<div className="w-full">
-					<DashboardOverviewCard
-						salesData={filteredSalesData}
-						currency={currency}
-						selectedRange={selectedRange}
-					/>
-				</div>
-				<div className="w-full my-4">
+				<div className="h-full w-full flex flex-col gap-2 sm:gap-4">
+					<div className="w-full">
+						<DashboardOverviewCard
+							salesData={filteredSalesData}
+							currency={currency}
+							selectedRange={selectedRange}
+						/>
+					</div>
 					<div className="w-full bg-white rounded-lg dark:bg-gray-800 p-4 md:p-6">
 						<DashboardProfitsGraph
 							salesData={filteredSalesData}
@@ -134,18 +134,18 @@ const DashboardPage: React.FC = () => {
 						{/* Dropdown for selecting tags */}
 						<div className="flex flex-row w-full gap-4">
 							{/* Dropdown for selecting date range */}
-							<ProfitsGraphDateFilter ref={rangeDropdownRef} rangeDropdownOpen={rangeDropdownOpen} selectedLabel={selectedLabel} selectedRange={selectedRange} setRangeDropdownOpen={setRangeDropdownOpen} handleRangeChange={handleRangeChange}/>
+							<ProfitsGraphDateFilter ref={rangeDropdownRef} rangeDropdownOpen={rangeDropdownOpen} selectedLabel={selectedLabel} selectedRange={selectedRange} setRangeDropdownOpen={setRangeDropdownOpen} handleRangeChange={handleRangeChange} />
 
 							{/* Dropdown for selecting custom tag */}
 							<ProfitsGraphTagFilter ref={tagDropdownRef} tagDropdownOpen={tagDropdownOpen} selectedTag={selectedTag} uniqueTags={uniqueTags} setTagDropdownOpen={setTagDropdownOpen} setSelectedTag={setSelectedTag} />
 						</div>
 					</div>
-				</div>
-				<div className="w-full">
-					<DashboardRecentSalesCard
-						salesData={filteredSalesData}
-						currency={currency}
-					/>
+					<div className="w-full">
+						<DashboardRecentSalesCard
+							salesData={filteredSalesData}
+							currency={currency}
+						/>
+					</div>
 				</div>
 			</LayoutSubscriptionWrapper>
 		</div>

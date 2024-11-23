@@ -33,10 +33,10 @@ const ImageModal: React.FC<ImageModalProps> = ({ src, alt, width, height, classN
 			<div
 				tabIndex={0}
 				role="button"
-				className="flex flex-col items-center avatar"
-				onClick={() => handleImageClick(src)} // Open modal on click
+				className="flex flex-col items-center avatar h-full w-full"
+				onClick={() => handleImageClick(src)}
 			>
-				<Image src={src} alt={alt} width={width} height={height} className={className}/>
+				<Image src={src} alt={alt} width={width} height={height} className={className} />
 			</div>
 			{isModalOpen && modalImage && (
 				<div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">

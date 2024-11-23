@@ -6,7 +6,7 @@ import ConnectAccount from "./ConnectAccount";
 // Component to handle eBay and Amazon account connections
 const ProfileMarketplaceConnect = () => {
 	return (
-		<div className="w-full h-full card bg-white shadow-md rounded-xl">
+		<div className="w-full h-full card bg-white rounded-xl">
 			<div className='w-full border-b py-4 px-6 text-lg font-semibold'>
 				Connect Accounts
 			</div>

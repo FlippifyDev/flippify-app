@@ -42,7 +42,7 @@ const Card: React.FC<CardProps> = ({ data }) => {
 	}, [data.release_date]);
 
 	return (
-		<div className={`grid grid-rows-10 bg-white shadow-lg rounded-lg overflow-hidden w-86 pt-2 pb-0 ${cardHeight}`}>
+		<div className={`grid grid-rows-10 bg-white shadow-lg rounded-lg overflow-hidden w-80 sm:w-86 pt-2 pb-0 ${cardHeight}`}>
 			{/* Title Section */}
 			<section className='row-span-3 grid grid-cols-12 p-2 gap-2 mx-2'>
 				<div className='col-span-8'>
@@ -52,7 +52,9 @@ const Card: React.FC<CardProps> = ({ data }) => {
 
 				{/* Image Section with onClick to open the modal */}
 				<div className='flex flex-col items-center col-span-4'>
-					<ImageModal src={data.image} alt={truncatedTitle} width={500} height={500} className='rounded-lg border-2' />
+					<div className='w-24 h-24'>
+						<ImageModal src={data.image} alt={truncatedTitle} width={500} height={500} className='rounded-lg border-2 p-1' />
+					</div>
 					<h5 className="mt-1 text-[13px] text-gray-500 font-semibold">{formatTimePastTimestamp(data.timestamp)}</h5>
 				</div>
 			</section>

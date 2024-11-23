@@ -3,14 +3,14 @@
 import React, { useState } from "react";
 import Link from "next/link";
 
-import ManagerServersSelectionList from "./ManageServersSelectionList";
-import ManageServersBotsCustom from "./ManageServersBotsCustom";
-import ManageServersMetrics from "./ManageServersMetrics";
-import ManageServersStatus from "./ManageServersStatus";
-import ManageServersDocs from "./ManageServersDocs";
-import ManageServersApi from "./ManageServersApi";
+import ManagerServersSelectionList from "./SelectionList";
+import ManageServersBotsCustom from "./BotsCustom";
+import ManageServersMetrics from "./Metrics";
+import ManageServersStatus from "./Status";
+import ManageServersDocs from "./Docs";
+import ManageServersApi from "./Api";
 
-import DisabledLink from "./ManageServersDisabledLink";
+import DisabledLink from "./DisabledLink";
 
 
 const ManagerServersPage = () => {
@@ -37,7 +37,7 @@ const ManagerServersPage = () => {
 
 	return (
 		<div className="w-full h-screen flex flex-col justify-start">
-			<nav className="w-full p-4 bg-white shadow">
+			<div className="w-full p-4 bg-white shadow rounded-l">
 				<div className="container flex justify-center">
 					{/* Navbar Items */}
 					<div className="grid grid-rows-3 md:grid-rows-none md:grid-cols-10 w-full">
@@ -78,12 +78,13 @@ const ManagerServersPage = () => {
 							setActiveComponent={setActiveComponent} />
 					</div>
 				</div>
-			</nav>
-
-			{/* Render the selected component */}
-			<div className="pt-4">
-				{renderComponent()}
+				{/* Render the selected component */}
+				<div className="pt-4">
+					{renderComponent()}
+				</div>
 			</div>
+
+
 		</div>
 	);
 };

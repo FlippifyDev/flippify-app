@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { HiOutlineFolder, HiOutlineClock, HiOutlineVideoCamera } from "react-icons/hi";
+import Image from "next/image";
 
 interface CourseCardProps {
 	title: string;
@@ -30,11 +31,13 @@ const CourseCard: React.FC<CourseCardProps> = ({ image, link, type, progress = 0
 		>
 			{/* Image container with opacity hover effect */}
 			<div className="relative w-full h-auto">
-				<img
+				<Image
 					src={image}
 					alt="Course"
 					className="w-full rounded-t-2xl transition-opacity duration-300"
 					style={{ display: "block", maxWidth: "100%", opacity: 0.8 }} // Set initial lower opacity
+					width={500} 
+					height={500}
 				/>
 				{/* Coming Soon Box */}
 				<div className="absolute inset-0 flex items-center justify-center opacity-100">

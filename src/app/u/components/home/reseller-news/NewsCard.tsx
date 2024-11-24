@@ -1,5 +1,5 @@
 import React from "react";
-
+import Image from "next/image";
 
 
 // Utility function to format timestamp into a readable format
@@ -49,7 +49,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
 			<div className="rounded overflow-hidden flex flex-col max-w-xl mx-auto">
 				{link ? (
 					<a href={link} className="block">
-						<img className="w-full" src={image} alt={title} />
+						<Image className="w-full" src={image} alt={title} width={500} height={500} />
 						<div className="relative -mt-16 px-10 pt-5 pb-16 bg-white m-10 shadow-md">
 							<p className="font-semibold text-lg inline-block hover:text-indigo-600 transition duration-500 ease-in-out mb-2">
 								{title}
@@ -63,7 +63,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
 					</a>
 				) : (
 					<div className="block">
-						<img className="w-full" src={image} alt={title} />
+						<Image className="w-full" src={image} alt={title} width={500} height={500} />
 						<div className="relative -mt-16 px-10 pt-5 pb-16 bg-white m-10 shadow-md">
 							<p className="font-semibold text-lg inline-block hover:text-indigo-600 transition duration-500 ease-in-out mb-2">
 								{title}

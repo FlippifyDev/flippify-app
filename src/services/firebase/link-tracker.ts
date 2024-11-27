@@ -4,7 +4,7 @@ import { ref, get, set } from "firebase/database"
 export async function linkTracker(path: string) {
 	try {
 		// Reference to the specific path in the database
-		const pathRef = ref(database, `linkTracker${path}/count`);
+		const pathRef = ref(database, `/linkTracker/${path}/count`);
 
 		// Get current count
 		const snapshot = await get(pathRef);

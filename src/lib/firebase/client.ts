@@ -21,10 +21,7 @@ const signInUser = async () => {
 	try {
 		const user = auth.currentUser;
 		if (!user) {
-			console.log("Signing in user to Firebase");
 			await signInAnonymously(auth); // Sign in anonymously if not already signed in
-		} else {
-			console.log("User already signed in to Firebase");
 		}
 	} catch (error) {
 		console.error('Firebase auth error:', error);

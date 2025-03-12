@@ -4,16 +4,18 @@ import React from 'react'
 interface ToggleProps {
 	text_left?: string;
 	text_right?: string;
+    checked?: boolean;
 	onChange: () => void;
 }
 
 
-const Toggle: React.FC<ToggleProps> = ({ text_left, text_right, onChange }) => {
+const Toggle: React.FC<ToggleProps> = ({ text_left, text_right, checked, onChange }) => {
 	return (
 		<label className="inline-flex items-center cursor-pointer">
 			<input
 				type="checkbox"
 				value=""
+                checked={checked}
 				className="sr-only peer"
 				onChange={onChange}
 			/>

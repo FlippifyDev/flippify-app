@@ -39,7 +39,7 @@ const NavbarProfileAvatar = () => {
 		localStorage.removeItem("apiAccessToken");
 		localStorage.removeItem("apiRefreshToken");
         firebaseSignout(auth);
-        nextSignOut()
+        nextSignOut({ callbackUrl: '/l/home' })
 	};
 
 	useEffect(() => {

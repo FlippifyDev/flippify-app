@@ -1,12 +1,16 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import Image from "next/image";
-import { signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-
+// Local Imoports
+import { auth} from "@/src/lib/firebase/client";
 import createBillingPortalUrl from "@/src/services/stripe/create-billing-portal";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
+
+// External Imports
+import { signOut as nextSignOut, useSession } from "next-auth/react";
+import { useState, useRef, useEffect } from "react";
+import { signOut as firebaseSignout } from "firebase/auth";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 
 const NavbarProfileAvatar = () => {
@@ -34,7 +38,8 @@ const NavbarProfileAvatar = () => {
 	const handleSignOut = () => {
 		localStorage.removeItem("apiAccessToken");
 		localStorage.removeItem("apiRefreshToken");
-		signOut();
+        firebaseSignout(auth);
+        nextSignOut()
 	};
 
 	useEffect(() => {

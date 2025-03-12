@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import { auth } from '@/src/lib/firebase/client';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { signOut, useSession } from 'next-auth/react';
+import { signOut as firebaseSignOut } from 'firebase/auth';
+import { signOut as nextSignOut, useSession } from 'next-auth/react';
 
 import { FaSignOutAlt } from "react-icons/fa";
 import SidebarButton from './Button';
@@ -25,7 +27,8 @@ const SidebarSignOutButton:React.FC<SidebarSignOutButtonProps> = ({ isSidebarOpe
 	}, [session, router]);
 
 	const handleSignOut = () => {
-		signOut({
+        firebaseSignOut(auth)
+        nextSignOut({
 			callbackUrl: '/l/home', // Redirect to landing page after sign out
 		});
 	};

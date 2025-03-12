@@ -7,11 +7,14 @@ import { MdGroups } from 'react-icons/md';
 import Link from 'next/link';
 import NavbarSignInWithDiscord from './NavbarSignInWithDiscord';
 import NavbarSignInWithDiscordSideBar from './NavbarSignInWithDiscordSideBar';
+import AnimationArrow from '@/src/app/components/AnimationArrow';
+import { useRouter } from 'next/navigation';
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
 const Navbar = () => {
 	const [isScrolled, setIsScrolled] = useState(false);
+    const router = useRouter();
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -94,7 +97,12 @@ const Navbar = () => {
 			</ul>
 
 			<div className="hidden md:flex items-center col-span-2 justify-end">
-				<NavbarSignInWithDiscord />
+                <div className='transition duration-100 hover:scale-105 rounded-btn p-1'>
+                    <a className="text-white group flex flex-row" onClick={() => router.push('/l/login')}>
+                        <span className='text-md select-none'>Sign in</span>
+                        <span className='pt-[2px] pl-1'><AnimationArrow /></span>
+                    </a>
+                </div>
 			</div>
 		</div>
 	);

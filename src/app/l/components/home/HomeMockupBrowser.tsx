@@ -23,14 +23,14 @@ const HomeMockupBrowser = () => {
 					<HomeGetEarlyAccess />
 				</div>
 			</div>
-			<div className="mockup-browser order-1 bg-gray-100 md:order-2 w-full md:w-auto mockup-shadow">
-				<div className="mockup-browser-toolbar bg-gray-100">
-					<div className="input !bg-gray-200 text-black border-2 border-gray-300">{root}</div>
+			<div className="mockup-browser order-1 bg-[#222222] md:order-2 w-full md:w-auto mockup-shadow">
+				<div className="mockup-browser-toolbar bg-[#222222]">
+					<div className="input !bg-[#121212] text-white border-2 border-[#121212]">{root}</div>
 				</div>
-				<div className="bg-white flex justify-center px-1 py-1">
+				<div className="bg-[#222222] flex justify-center px-1 py-1">
 					<figure>
 						<Image
-							src="https://i.imgur.com/9it15G1.png"
+							src="https://i.imgur.com/kZRQzCq.png"
 							alt="Browser Mockup"
 							width={2448}
 							height={1336}

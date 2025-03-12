@@ -94,9 +94,6 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
 			{/* Plans Button */}
 			<SidebarButton text="Plans" redirect="plans" isSidebarOpen={isSidebarOpen} symbol={<FaSearch className="text-lg" />} />
 
-			{/* Server Plans Button */}
-			<SidebarButton text="Server Plans" redirect="server-plans" isSidebarOpen={isSidebarOpen} symbol={<MdGroups className="text-xl" />} />
-
 			{/* Courses Button - for admin only */}
 			<LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
 				<SidebarButton text="Courses" redirect='courses' isSidebarOpen={isSidebarOpen} symbol={<FaBook className="text-lg" />} />

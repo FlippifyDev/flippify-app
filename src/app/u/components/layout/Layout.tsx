@@ -60,7 +60,7 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
 
 
 const Layout: React.FC<LayoutProps> = ({ children, requiredSubscriptions, anySubscriptions, pagePath }) => {
-	// The following negates the required and any subscription so if the user has none of the subscriptions, then the LayoutNoAccess is displayed.
+    // The following negates the required and any subscription so if the user has none of the subscriptions, then the LayoutNoAccess is displayed.
 	let notRequiredSubscriptions: string[] = [];
 	let notAnySubscriptions: string[] = [];
 

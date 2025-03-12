@@ -18,8 +18,8 @@ const NavbarSignInWithDiscord = () => {
 
 	useEffect(() => {
 		if (session) {
-			if (session.user?.name) {
-				router.push(`/u/${session.user.name}/dashboard`);
+			if (session.user?.username) {
+				router.push(`/u/${session.user.username}/dashboard`);
 			} else {
 				router.push(`/u/loading`);
 			}
@@ -28,7 +28,7 @@ const NavbarSignInWithDiscord = () => {
 
 	const handleSignIn = async () => {
 		setIsLoading(true);
-		signIn('discord');
+		signIn('credentials');
 		setIsLoading(false);
 	};
 

@@ -14,7 +14,7 @@ const HomeContent = ({ className = '' }) => {
 			<div className='flex flex-col items-center'>
 				<div className="w-11/12 mt-3 lg:mt-10 md:w-4/5 lg:w-3/5 xl:w-2/5">
 					<p className={`${lato.className} text-6xl text-white text-center`}>
-						Automated Reselling using <span className="bg-gradient-to-tr pb-1 pl-1 from-textGradStart to-textGradEnd bg-clip-text text-transparent">AI</span>
+						Efficient Reselling using <span className="bg-gradient-to-tr pb-1 pl-1 from-textGradStart to-textGradEnd bg-clip-text text-transparent">Software</span>
 					</p>
 				</div>
 				<p className='w-11/12 sm:w-full mt-3 mb-8 pb-1 pt-2 text-gray-300 text-lg text-center'>

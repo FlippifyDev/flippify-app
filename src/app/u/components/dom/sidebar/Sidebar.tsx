@@ -1,4 +1,3 @@
-import SidebarMonitorButtons from './MonitorButtons';
 import SidebarSignOutButton from './ButtonSignout';
 import SidebarHomeButtons from './HomeButtons';
 import SidebarToolButtons from './ToolButtons';
@@ -55,12 +54,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, setIsSidebarOpen }) =>
 							Home
 						</h2>
 						<SidebarHomeButtons showAlert={showAlert} isSidebarOpen={isSidebarOpen} />
-					</div>
-					<div>
-						<h2 className={`text-white text-lg font-bold px-2 ${isSidebarOpen ? 'block' : 'hidden'}`} style={{ overflow: 'hidden' }}>
-							Monitors
-						</h2>
-						<SidebarMonitorButtons showAlert={showAlert} isSidebarOpen={isSidebarOpen} />
 					</div>
 					<div>
 						<h2 className={`text-white text-lg font-bold px-2 ${isSidebarOpen ? 'block' : 'hidden'}`} style={{ overflow: 'hidden' }}>

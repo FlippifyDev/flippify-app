@@ -19,9 +19,9 @@ import OnboardingFlow from "./OnboardingFlow";
 
 const DashboardPage: React.FC = () => {
 	const { data: session } = useSession();
-	const customerId = session?.user.customerId as string;
-	const ebayAccessToken = session?.user.ebay?.ebayAccessToken as string;
-	const currency = session?.user.currency as string;
+	const customerId = session?.user.stripeCustomerId as string;
+	const ebayAccessToken = session?.user.connectedAccounts.ebay?.ebayAccessToken as string;
+	const currency = session?.user.preferences.locale as string;
 	const { salesData, loading, error } = useSalesData(ebayAccessToken, customerId);
 	const [selectedRange, setSelectedRange] = useState<number>(30);
 	const [selectedLabel, setSelectedLabel] = useState<string>("This Month");
@@ -81,7 +81,7 @@ const DashboardPage: React.FC = () => {
 		};
 	}, []);
 
-	if (!session || !session.user || !session.user.customerId) {
+	if (!session || !session.user || !session.user.stripeCustomerId) {
 		return <LayoutLoadingSkeleton />;
 	}
 
@@ -106,7 +106,7 @@ const DashboardPage: React.FC = () => {
 				<div className="w-full h-full overflow-y-auto">
 					<div className="flex flex-col lg:flex-row py-2 px-2 bg-white rounded-lg overflow-hidden w-full">
 						<div className="lg:w-1/3">
-							<DashboardNoSubscription username={session.user.username} />
+							<DashboardNoSubscription username={session.user.username ?? ""} />
 						</div>
 						<div className="lg:w-2/3">
 							<DashboardShowcase />

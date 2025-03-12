@@ -23,11 +23,11 @@ const NavbarProfileAvatar = () => {
 	let referral_code = "None";
 
 	if (session) {
-		if (session.user?.image) {
-			avatar = session.user.image;
+		if (session.user?.metaData.image) {
+			avatar = session.user.metaData.image;
 		}
-		if (session?.user.referral?.referral_code) {
-			referral_code = session.user.referral.referral_code;
+		if (session?.user.referral?.referralCode) {
+			referral_code = session.user.referral.referralCode;
 		}
 	}
 
@@ -41,12 +41,12 @@ const NavbarProfileAvatar = () => {
 		const fetchCheckoutUrl = async () => {
 			if (session?.user) {
 				const user = session.user;
-				customerIdRef.current = user.customerId || null;
+				customerIdRef.current = user.stripeCustomerId || null;
 
 				if (customerIdRef.current) {
 					try {
 						const url = await createBillingPortalUrl(
-							user.name,
+							user.username ?? "",
 							customerIdRef.current
 						);
 						setBillingUrl(url);
@@ -79,8 +79,8 @@ const NavbarProfileAvatar = () => {
 
 	const handleProfileOpen = (e: React.MouseEvent) => {
 		if (session) {
-			if (session.user?.name) {
-				router.push(`/u/${session.user.name}/profile`);
+			if (session.user?.username) {
+				router.push(`/u/${session.user.username}/profile`);
 			} else {
 				router.push(`/u/loading`);
 			}
@@ -107,8 +107,8 @@ const NavbarProfileAvatar = () => {
 
 	const handleAdminOpen = (e: React.MouseEvent) => {
 		if (session) {
-			if (session.user?.name) {
-				router.push(`/u/${session.user.name}/asldf0987asDa230fDsADMIN`);
+			if (session.user?.username) {
+				router.push(`/u/${session.user.username}/asldf0987asDa230fDsADMIN`);
 			} else {
 				router.push(`/u/loading`);
 			}
@@ -117,8 +117,8 @@ const NavbarProfileAvatar = () => {
 
 	const handleTestingOpen = (e: React.MouseEvent) => {
 		if (session) {
-			if (session.user?.name) {
-				router.push(`/u/${session.user.name}/bfoau214QNI42nAjTEST`);
+			if (session.user?.username) {
+				router.push(`/u/${session.user.username}/bfoau214QNI42nAjTEST`);
 			} else {
 				router.push(`/u/loading`);
 			}

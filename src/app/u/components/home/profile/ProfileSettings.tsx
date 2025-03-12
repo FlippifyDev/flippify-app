@@ -20,7 +20,7 @@ const ProfileSettings = () => {
   useEffect(() => {
     const loadUserData = async () => {
       if (session && session.user) {
-        const customerId = session.user.customerId as string;
+        const customerId = session.user.stripeCustomerId as string;
 
         try {
           const userData = await fetchUserData(customerId);
@@ -33,7 +33,7 @@ const ProfileSettings = () => {
             setOriginalEmail(session.user.email || '');
           }
 
-          const userCurrency = userData?.currency || session.user.currency || 'GBP';
+          const userCurrency = userData?.currency || session.user.preferences.locale || 'GBP';
           setCurrency(userCurrency);
           setOriginalCurrency(userCurrency);
 
@@ -47,8 +47,8 @@ const ProfileSettings = () => {
           console.error('Error loading user data:', error);
           setEmail(session.user.email || '');
           setOriginalEmail(session.user.email || '');
-          setCurrency(session?.user.currency || 'GBP');
-          setOriginalCurrency(session?.user.currency || 'GBP');
+          setCurrency(session?.user.preferences.locale || 'GBP');
+          setOriginalCurrency(session?.user.preferences.locale || 'GBP');
         }
       }
     };
@@ -78,7 +78,7 @@ const ProfileSettings = () => {
       return;
     }
 
-    const customerId = session.user.customerId as string;
+    const customerId = session.user.stripeCustomerId as string;
 
     if (!customerId) {
       throw new Error('Customer ID is missing');

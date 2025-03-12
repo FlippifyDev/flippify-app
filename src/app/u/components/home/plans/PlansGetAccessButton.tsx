@@ -15,12 +15,12 @@ const PlansGetAccessButton: React.FC<PlansGetAccessButtonProps> = ({ redirect, s
 	const router = useRouter();
 
 	// Extract the base path without the username prefix
-	const basePath = `/u/${session?.user?.name}`;
+	const basePath = `/u/${session?.user?.username}`;
 
 	const redirectUser = () => {
 		if (session) {
 			// Redirect to the username-specific URL or default redirect
-			if (session.user?.name) {
+			if (session.user?.username) {
 				router.push(`${basePath}/${redirect}`);
 			} else {
 				router.push(`/u/loading`);

@@ -15,8 +15,8 @@ const HomeGetEarlyAccess = () => {
 		if (session) {
 			// Redirect to the username-specific URL
 			{
-				session.user?.name ? (
-					router.push(`/u/${session.user.name}/dashboard`)
+				session.user?.username ? (
+					router.push(`/u/${session.user.username}/dashboard`)
 				) : (
 				router.push(`/u/loading`)
 			)
@@ -25,7 +25,7 @@ const HomeGetEarlyAccess = () => {
 	}, [session, router]);
 
 	const handleSignIn = () => {
-		signIn('discord');
+		signIn('credentials');
 	};
 
 	return (

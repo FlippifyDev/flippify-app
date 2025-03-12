@@ -2,7 +2,8 @@ import Stripe from 'stripe';
 
 
 const createBillingPortalUrl = async (username: string, customerId: string) => {
-	const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
+	const stripeAPIKey = process.env.TEST_STRIPE_SECRET_KEY as string;
+    console.log("Stripe API Key", stripeAPIKey)
 	const root = process.env.ROOT as string;
 
 	if (!stripeAPIKey) {

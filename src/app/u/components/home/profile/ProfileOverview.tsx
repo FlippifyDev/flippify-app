@@ -10,7 +10,7 @@ import ImageModal from '@/src/app/components/ImageModal';
 
 const ProfileOverview = () => {
 	const { data: session } = useSession();
-	const currency = session?.user.currency as string;
+	const currency = session?.user.preferences.locale as string;
 	const currencySymbol = currencySymbols[currency];
 
 	// Default avatar
@@ -19,11 +19,11 @@ const ProfileOverview = () => {
 	let email = "N/A";
 
 	if (session) {
-		if (session.user?.image) {
-			avatar = session.user.image;
+		if (session.user?.metaData.image) {
+			avatar = session.user.metaData.image;
 		}
-		if (session.user?.name) {
-			username = session.user.name;
+		if (session.user?.username) {
+            username = session.user.username;
 		}
 		if (session.user?.email) {
 			email = session.user.email;

@@ -22,7 +22,7 @@ const OnboardingFlow: React.FC = () => {
 	useEffect(() => {
 		const loadUserData = async () => {
 			if (session && session.user) {
-				const customerId = session.user.customerId as string;
+				const customerId = session.user.stripeCustomerId as string;
 				const userRef = ref(database, `users/${customerId}`);
 
 				try {
@@ -30,11 +30,11 @@ const OnboardingFlow: React.FC = () => {
 					const userData = snapshot.val();
 
 					setEmail(userData?.preferredEmail || session.user.email || '');
-					setCurrency(userData?.currency || session.user.currency || 'GBP');
+					setCurrency(userData?.currency || session.user.preferences.locale || 'GBP');
 				} catch (error) {
 					console.error('Error loading user data from Firebase:', error);
 					setEmail(session.user.email || '');
-					setCurrency(session.user.currency || 'GBP');
+					setCurrency(session.user.preferences.locale || 'GBP');
 				}
 			}
 		};
@@ -66,13 +66,13 @@ const OnboardingFlow: React.FC = () => {
 
 	const handleCompleteOnboarding = async () => {
 		if (session?.user) {
-			const customerId = session.user.customerId as string;
+			const customerId = session.user.stripeCustomerId as string;
 
 			// Update the user in Firebase with preferred email and currency
 			await updateUserPreferences(customerId, email, currency, 'preferredEmail');
 
 			// Complete the onboarding with the referral code
-			await completeOnboarding(session.user.discordId, validReferralCode);
+			//await completeOnboarding(session.user.discordId, validReferralCode);
 
 			// Refresh the page to reflect any role updates
 			if (typeof window !== 'undefined') {

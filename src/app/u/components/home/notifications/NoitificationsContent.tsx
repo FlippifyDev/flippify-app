@@ -11,7 +11,7 @@ const NotificationsContent: React.FC = () => {
 	const [notifications, setNotifications] = useState<any[]>([]);
 	const [unreadCount, setUnreadCount] = useState<number>(0);
 
-	const customerId = session?.user.customerId as string;
+	const customerId = session?.user.stripeCustomerId as string;
 
 	useEffect(() => {
 		const fetchNotificationsFunc = async () => {

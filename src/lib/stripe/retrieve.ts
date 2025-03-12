@@ -1,7 +1,7 @@
 import Stripe from 'stripe';
 
-const retrieveStripeCustomer = async (customerId: string | null, discordId: string, username: string, email: string) => {
-	const stripeAPIKey = process.env.TEST_STRIPE_SECRET_KEY as string;
+const retrieveStripeCustomer = async (customerId: string | null, email: string, referralCode: string | null) => {
+    const stripeAPIKey = process.env.TEST_STRIPE_SECRET_KEY as string;
 
 	if (!stripeAPIKey) {
 		throw new Error('Stripe API key not found');
@@ -34,10 +34,9 @@ const retrieveStripeCustomer = async (customerId: string | null, discordId: stri
 			// Create a new customer since one doesn't exist with the provided email
 			customer = await stripe.customers.create({
 				email: email,
-				metadata: {
-					discord_id: discordId,
-					discord_username: username,
-				},
+                metadata: {
+                    referralCode: referralCode
+                }
 			});
 			return customer;
 		}

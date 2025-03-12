@@ -9,7 +9,7 @@ const createCheckoutSession = async (
 	priceId: string,
 	referred_by: string | null | undefined
 ): Promise<string | null> => {
-	const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
+    const stripeAPIKey = process.env.TEST_STRIPE_SECRET_KEY as string;
 	const root = process.env.ROOT as string;
 
 	if (!stripeAPIKey) {

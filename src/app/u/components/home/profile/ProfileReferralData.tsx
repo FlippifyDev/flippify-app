@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { FaClipboard } from 'react-icons/fa';
 import ReferralRewardsTimeline from './ProfileReferralRewardsTimeline';
-import { ISubscription } from '@/src/models/mongodb/users';
+import { ISubscription } from '@/src/models/user';
 import createAndApplyCoupon from '@/src/services/stripe/create-and-apply-coupon';
 import incrementRewardsClaimed from '@/src/services/mongodb/increment-rewards-claim';
 import checkForExistingDiscount from '@/src/services/stripe/check-for-existing-discount';
@@ -21,10 +21,10 @@ const ProfileReferralData: React.FC = () => {
 	const [showCashRewardModal, setShowCashRewardModal] = useState(false);
 	const [showDiscountRewardModal, setShowDiscountRewardModal] = useState(false);
 
-	const customerId = session?.user?.customerId || 'None';
-	const referralCode = session?.user?.referral?.referral_code || 'None';
-	const referralCount = session?.user?.referral?.valid_referrals.length || 0;
-	const totalRewardsClaimed = session?.user?.referral?.rewards_claimed || 0;
+	const customerId = session?.user?.stripeCustomerId || 'None';
+	const referralCode = session?.user?.referral?.referralCode || 'None';
+	const referralCount = session?.user?.referral?.validReferrals.length || 0;
+	const totalRewardsClaimed = session?.user?.referral?.rewardsClaimed || 0;
 
 	const availableRewards = referralCount - totalRewardsClaimed > 0 ? referralCount : 0;
 

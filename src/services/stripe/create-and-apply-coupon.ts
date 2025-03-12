@@ -3,7 +3,7 @@ import Stripe from 'stripe';
 
 
 const createAndApplyCoupon = async (subscriptionName: string | null, customerId: string, percentOff: number) => {
-	const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
+	const stripeAPIKey = process.env.TEST_STRIPE_SECRET_KEY as string;
 
 	if (!stripeAPIKey) {
 		throw new Error('Stripe api key not found');

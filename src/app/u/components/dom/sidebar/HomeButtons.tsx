@@ -24,9 +24,9 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
 	const [unreadCount, setUnreadCount] = useState(0);
 
 	useEffect(() => {
-		if (!session?.user?.customerId) return;
+		if (!session?.user?.stripeCustomerId) return;
 
-		const sanitizedCustomerId = session.user.customerId.replace(/[.#$[\]]/g, '_');
+		const sanitizedCustomerId = session.user.stripeCustomerId.replace(/[.#$[\]]/g, '_');
 		const notificationsRef = ref(database, 'notifications');
 
 		const fetchNotifications = async () => {
@@ -46,7 +46,7 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
 		};
 
 		fetchNotifications();
-	}, [session?.user?.customerId]);
+	}, [session?.user?.stripeCustomerId]);
 
 	return (
 		<div className='w-full flex flex-col'>

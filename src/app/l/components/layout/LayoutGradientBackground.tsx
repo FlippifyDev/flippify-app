@@ -45,7 +45,6 @@ const LayoutGradientBackground = () => {
 		<div>
 			<motion.div
 				className="absolute inset-0"
-				// Set the initial gradient so there's no white flash
 				initial={{ background: 'linear-gradient(120deg, #17529C 0%, #7caed0 100%)' }}
 				animate={controls}
 			/>

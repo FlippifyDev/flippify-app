@@ -17,7 +17,7 @@ const HomeMockupBrowser = () => {
 					<a href="#" className={`${inter.className} mb-8 text-lightModeText text-4xl font-bold`}>{" "}Every Step.</a>
 				</p>
 				<p className="pt-4 text-darkGreyText text-center font-semibold">
-					Connect your eBay and Amazon accounts for automatic listings, inventory management, track orders, and get detailed financial and tax reports. We handle everything — you just buy, ship and print profits.
+					Connect your eBay account for automatic listings, inventory management, order tracking, and detailed finance & tax reports. We handle everything — you just buy, ship and print profits.
 				</p>
 				<div className="flex justify-center pt-6">
 					<HomeGetEarlyAccess />

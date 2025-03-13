@@ -1,4 +1,4 @@
-import { IUser } from '@/src/models/user';
+import { IUser } from '@/models/user';
 import { DefaultSession, DefaultJWT } from 'next-auth';
 import { User as NextAuthUser } from 'next-auth';
 

@@ -1,8 +1,8 @@
 "use client";
 
-import { IUser, ISubscription } from "@/src/models/mongodb/users";
-import PlansCardAdmin from "@/src/app/u/components/home/admin/AdminUserCards";
-import fetchProducts from "@/src/services/mongodb/fetch-products";
+import { IUser, ISubscription } from "@/models/mongodb/users";
+import PlansCardAdmin from "@/app/u/components/home/admin/AdminUserCards";
+import fetchProducts from "@/services/mongodb/fetch-products";
 import LayoutProductsSkeleton from "../../layout/LayoutProductsSkeleton";
 import AdminEventManagement from "./AdminEventManagement";
 import AdminNotificationManagement from "./AdminNotificationManagement";

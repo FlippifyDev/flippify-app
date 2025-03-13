@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import NavbarProfileAvatar from "./NavbarProfileAvatar";
 import { useSession } from "next-auth/react";
-import { getProcessedTitle } from "@/src/utils/extract-final-url-name";
+import { getProcessedTitle } from "@/utils/extract-final-url-name";
 
 
 const Navbar = () => {

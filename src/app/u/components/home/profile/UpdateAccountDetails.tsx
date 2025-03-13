@@ -1,9 +1,9 @@
 "use client";
 
 // Local Imports
-import { IUser } from "@/src/models/user";
-import UnderlineInput from "@/src/app/components/UnderlineInput";
-import { auth, firestore } from "@/src/lib/firebase/config";
+import { IUser } from "@/models/user";
+import UnderlineInput from "@/app/components/UnderlineInput";
+import { auth, firestore } from "@/lib/firebase/config";
 
 // External Imports
 import { updatePassword, EmailAuthProvider, reauthenticateWithCredential, verifyBeforeUpdateEmail } from "firebase/auth";

@@ -1,5 +1,5 @@
-import "@/src/styles/overview-cards.css"
-import { IOrder } from '@/src/models/firebase';
+import "@/styles/overview-cards.css"
+import { IOrder } from '@/models/firebase';
 
 import React, { useEffect, useState } from 'react';
 

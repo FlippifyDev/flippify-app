@@ -4,8 +4,8 @@ import React from "react";
 import { useSession } from "next-auth/react";
 import ProfileBillingPortalButton from "./ProfileBillingPortalButton";
 import ProfileSupportButton from "./ProfileSupportButton";
-import { currencySymbols } from "@/src/config/currency-config";
-import ImageModal from '@/src/app/components/ImageModal';
+import { currencySymbols } from "@/config/currency-config";
+import ImageModal from '@/app/components/ImageModal';
 
 
 const ProfileOverview = () => {

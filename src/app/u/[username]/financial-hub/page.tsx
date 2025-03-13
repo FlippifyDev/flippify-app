@@ -1,7 +1,7 @@
 import React from 'react';
 import Layout from '../../components/layout/Layout';
 import FinancialHubContent from '../../components/tools/financial-hub/FinancialHubContent';
-import ThemeSetter from '@/src/app/components/ThemeSetter';
+import ThemeSetter from '@/app/components/ThemeSetter';
 
 export const metadata = {
 	title: 'Financial Hub - Flippify',

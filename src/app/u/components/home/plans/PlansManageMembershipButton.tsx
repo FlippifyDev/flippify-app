@@ -1,7 +1,7 @@
 'use client';
 
 // Local Imports
-import createBillingPortalUrl from '@/src/services/stripe/create-billing-portal';
+import createBillingPortalUrl from '@/services/stripe/create-billing-portal';
 import React, { useEffect, useState, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 

@@ -1,8 +1,8 @@
 "use client"
 
-import { currencySymbols } from '@/src/config/currency-config';
-import { useListedData } from '@/src/hooks/useListedData';
-import { formatTableDate } from '@/src/utils/format-dates';
+import { currencySymbols } from '@/config/currency-config';
+import { useListedData } from '@/hooks/useListedData';
+import { formatTableDate } from '@/utils/format-dates';
 
 import { useSession } from "next-auth/react";
 import Image from 'next/image';

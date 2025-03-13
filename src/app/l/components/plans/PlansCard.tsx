@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlineTag } from "react-icons/ai"; // Icon for the discount tag
 import PlansGetAccessButton from "./PlansGetAccessButton";
-import { BackgroundGradient } from "@/src/components/ui/background-gradient";
+import { BackgroundGradient } from "@/components/ui/background-gradient";
 
 interface PlansCardProps {
 	title: string;

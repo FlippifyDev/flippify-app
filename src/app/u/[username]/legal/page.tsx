@@ -1,9 +1,9 @@
 import React from 'react';
-import LegalContent from '@/src/app/components/LegalContent';
+import LegalContent from '@/app/components/LegalContent';
 import Layout from '../../components/layout/Layout';
-import Loading from '@/src/app/components/Loading';
+import Loading from '@/app/components/Loading';
 import { Suspense } from 'react';
-import ThemeSetter from '@/src/app/components/ThemeSetter';
+import ThemeSetter from '@/app/components/ThemeSetter';
 
 export const metadata = {
 	title: 'Legal Info - Flippify',

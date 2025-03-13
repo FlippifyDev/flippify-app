@@ -3,8 +3,8 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 
 // Local Imports
-import connectToMongoDB from '@/src/lib/mongo/client';
-import { User } from '@/src/models/mongodb/users';
+import connectToMongoDB from '@/lib/mongo/client';
+import { User } from '@/models/mongodb/users';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -13,11 +13,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	const session = await getSession({ req });
 
-	if (!session || !session.user?.customerId) {
+	if (!session || !session.user?.stripeCustomerId) {
 		return res.status(401).json({ error: 'User not authenticated' });
 	}
 
-	const stripeCustomerId = session.user.customerId;  // Use Stripe customer ID
+	const stripeCustomerId = session.user.stripeCustomerId;  // Use Stripe customer ID
 
 	try {
 		const user = await User.findOne({ stripe_customer_id: stripeCustomerId });

@@ -1,8 +1,8 @@
 "use client";
 
 import OrderRow from "./OrderRow";
-import { useSalesData } from '@/src/hooks/useSalesData';
-import { IOrder } from "@/src/models/firebase";
+import { useSalesData } from '@/hooks/useSalesData';
+import { IOrder } from "@/models/firebase";
 
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";

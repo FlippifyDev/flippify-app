@@ -1,13 +1,13 @@
 // Local Imports
-import { auth } from "@/src/lib/firebase/config";
-import { IJwtToken } from "@/src/models/jwt-token";
+import { auth } from "@/lib/firebase/config";
+import { IUser } from "@/models/user";
+import { IJwtToken } from "@/models/jwt-token";
+import { retrieveUser } from "@/services/firebase/retrieve";
 
 // External Imports
 import { signInWithEmailAndPassword } from "firebase/auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { NextAuthOptions } from "next-auth";
-import { retrieveUser } from "@/src/lib/firebase/retrieve";
-import { IUser } from "@/src/models/user";
 
 
 export const authOptions: NextAuthOptions = {

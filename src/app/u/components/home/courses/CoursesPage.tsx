@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import CourseCard from "./CourseCard";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
-import { database } from "@/src/lib/firebase/client";
+import { database } from "@/lib/firebase/client";
 import { onValue, ref } from "firebase/database";
 
 const coursesData = {

@@ -4,10 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { FaClipboard } from 'react-icons/fa';
 import ReferralRewardsTimeline from './ProfileReferralRewardsTimeline';
-import { ISubscription } from '@/src/models/user';
-import createAndApplyCoupon from '@/src/services/stripe/create-and-apply-coupon';
-import incrementRewardsClaimed from '@/src/services/mongodb/increment-rewards-claim';
-import checkForExistingDiscount from '@/src/services/stripe/check-for-existing-discount';
+import { ISubscription } from '@/models/user';
+import createAndApplyCoupon from '@/services/stripe/create-and-apply-coupon';
+import incrementRewardsClaimed from '@/services/mongodb/increment-rewards-claim';
+import checkForExistingDiscount from '@/services/stripe/check-for-existing-discount';
 import ProfileCashRewardModal from './ProfileCashRewardModel';
 
 const ProfileReferralData: React.FC = () => {

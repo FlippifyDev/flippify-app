@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 
 // eBay functions
-import { handleConnectEbay, handleDisconnect, fetchEbayStatus } from "@/src/lib/ebay/ebay-connection";
+import { handleConnectEbay, handleDisconnect, fetchEbayStatus } from "@/lib/ebay/ebay-connection";
 import ConnectButton from "./ConnectButton";
 
 const EbayConnectButton = () => {

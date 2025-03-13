@@ -1,4 +1,4 @@
-import { database } from '@/src/lib/firebase/client';
+import { database } from '@/lib/firebase/config';
 import { ref, get, set } from "firebase/database"
 
 export async function linkTracker(path: string) {

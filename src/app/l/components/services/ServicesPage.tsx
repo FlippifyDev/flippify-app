@@ -5,7 +5,7 @@ import AmazonServices from "./ServicesTabAmazon";
 import ShopifyServices from "./ServicesTabShopify";
 import { useState, ChangeEvent } from "react";
 import React from "react";
-import "@/src/styles/services-slider.css"
+import "@/styles/services-slider.css"
 
 
 const ServicesPage = () => {

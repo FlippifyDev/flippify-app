@@ -2,7 +2,7 @@
 
 // Local Imports
 import Layout from "../components/layout/Layout";
-import ThemeSetter from "@/src/app/components/ThemeSetter";
+import ThemeSetter from "@/app/components/ThemeSetter";
 import SignOutButton from "../../components/SignOutButton";
 import LayoutLoadingSkeleton from "../components/layout/LayoutLoadingSkeleton";
 import LayoutProductsSkeleton from "../components/layout/LayoutProductsSkeleton";

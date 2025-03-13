@@ -1,6 +1,6 @@
 'use client';
 
-import createCheckoutSession from '@/src/services/stripe/create-checkout-session';
+import createCheckoutSession from '@/services/stripe/create-checkout-session';
 import React, { useEffect, useState, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 

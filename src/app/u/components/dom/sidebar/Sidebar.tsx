@@ -3,13 +3,13 @@ import SidebarHomeButtons from './HomeButtons';
 import SidebarToolButtons from './ToolButtons';
 import SidebarButton from './Button';
 import ButtonFeedback from './ButtonFeedback';
-import Alert from '@/src/app/components/Alert';
+import Alert from '@/app/components/Alert';
 import React, { useState, useEffect } from 'react';
 
 import { BsClipboard2Fill } from 'react-icons/bs';
-import "@/src/styles/hide-scrollbar.css";
+import "@/styles/hide-scrollbar.css";
 
-import MenuButton from '@/src/app/components/MenuButton';
+import MenuButton from '@/app/components/MenuButton';
 
 
 interface SidebarProps {

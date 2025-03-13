@@ -1,6 +1,6 @@
 import React from 'react'
 import DatePicker from "./OrderDatepicker";
-import { validatePriceInput, validateTextInput } from '@/src/utils/input-validation';
+import { validatePriceInput, validateTextInput } from '@/utils/input-validation';
 
 
 interface UpdateFieldsProps {

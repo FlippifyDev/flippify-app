@@ -1,7 +1,7 @@
 "use client";
 
-import { IOrder } from "@/src/models/firebase";
-import { currencySymbols } from "@/src/config/currency-config";
+import { IOrder } from "@/models/firebase";
+import { currencySymbols } from "@/config/currency-config";
 import {
 	startOfDay,
 	startOfWeek,

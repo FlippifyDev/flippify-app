@@ -1,6 +1,6 @@
 "use server"
 
-import { User, IUser } from '@/src/models/mongodb/users';
+import { User, IUser } from '@/models/mongodb/users';
 import Stripe from 'stripe';
 
 const createCheckoutSession = async (

@@ -1,7 +1,7 @@
 "use client";
 
 // Local Imports
-import { auth } from "@/src/lib/firebase/config";
+import { auth } from "@/lib/firebase/config";
 
 // External Imports
 import { signOut as firebaseSignOut } from 'firebase/auth';

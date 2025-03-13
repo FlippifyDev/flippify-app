@@ -1,8 +1,8 @@
 // Local Imports
-import { IUser } from '@/src/models/user';
-import { firestore } from './config';
-import retrieveStripeCustomer from '@/src/lib/stripe/retrieve';
-import { generateReferralCode } from '@/src/utils/generate-referral-code';
+import { IUser } from '@/models/user';
+import { firestore } from '@/lib/firebase/config';
+import retrieveStripeCustomer from '@/lib/stripe/retrieve';
+import { generateReferralCode } from '@/utils/generate-referral-code';
 
 // External Imports
 import { doc, setDoc} from 'firebase/firestore';

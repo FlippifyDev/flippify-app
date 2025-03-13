@@ -1,7 +1,7 @@
 "use client";
 
 // Local Imports
-import { auth, firestore } from '@/src/lib/firebase/config';
+import { auth, firestore } from '@/lib/firebase/config';
 
 // External Imports
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';

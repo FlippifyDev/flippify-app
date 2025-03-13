@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { ref, get } from 'firebase/database';
-import { updateUserPreferences } from '@/src/services/firebase/users';
-import { database } from '@/src/lib/firebase/client';
-import { completeOnboarding } from '@/src/services/mongodb/complete-on-boarding';
-import { validateReferralCode } from '@/src/services/mongodb/validate-referral';
+import { updateUserPreferences } from '@/services/firebase/update';
+import { firestore } from '@/lib/firebase/config';
+import { completeOnboarding } from '@/services/mongodb/complete-on-boarding';
+import { validateReferralCode } from '@/services/mongodb/validate-referral';
 import { Lato } from 'next/font/google';
+import { doc, getDoc } from 'firebase/firestore';
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
@@ -23,11 +24,11 @@ const OnboardingFlow: React.FC = () => {
 		const loadUserData = async () => {
 			if (session && session.user) {
 				const customerId = session.user.stripeCustomerId as string;
-				const userRef = ref(database, `users/${customerId}`);
+				const userRef = doc(firestore, `/users/${customerId}`);
 
 				try {
-					const snapshot = await get(userRef);
-					const userData = snapshot.val();
+					const snapshot = await getDoc(userRef);
+					const userData = snapshot.data();
 
 					setEmail(userData?.preferredEmail || session.user.email || '');
 					setCurrency(userData?.currency || session.user.preferences.locale || 'GBP');

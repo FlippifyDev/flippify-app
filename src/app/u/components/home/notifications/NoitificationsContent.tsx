@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import NotificationsList from "./NotificationsList";
 import NotificationsControls from "./NotificationsControls";
-import { fetchNotifications } from "@/src/services/firebase/notifications";
+import { fetchNotifications } from "@/services/firebase/notifications";
 
 const NotificationsContent: React.FC = () => {
 	const { data: session } = useSession();

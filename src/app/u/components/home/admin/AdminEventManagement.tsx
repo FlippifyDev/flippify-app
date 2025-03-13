@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { database } from "@/src/lib/firebase/client";
+import { firestore } from "@/lib/firebase/config";
 import { ref, push, set, get, remove } from "firebase/database";
 
 const AdminEventManagement = () => {

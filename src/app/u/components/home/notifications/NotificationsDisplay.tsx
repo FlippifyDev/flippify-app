@@ -1,5 +1,5 @@
 import React from 'react';
-import { INotification } from '@/src/models/firebase';
+import { INotification } from '@/models/firebase';
 
 interface NavbarNotificationListProps {
 	notifications: INotification[];

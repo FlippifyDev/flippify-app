@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { updateUserPreferences, fetchUserData, updateNotificationPreference } from '@/src/services/firebase/users';
-import Toggle from '@/src/app/components/Toggle';
-import UnderlineInput from '@/src/app/components/UnderlineInput';
-import UnderlineSelect from '@/src/app/components/UnderlineSelect';
+import { updateUserPreferences, fetchUserData, updateNotificationPreference } from '@/services/firebase/users';
+import Toggle from '@/app/components/Toggle';
+import UnderlineInput from '@/app/components/UnderlineInput';
+import UnderlineSelect from '@/app/components/UnderlineSelect';
 
 const ProfileSettings = () => {
     const { data: session } = useSession();

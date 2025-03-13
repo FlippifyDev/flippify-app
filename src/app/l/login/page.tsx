@@ -1,7 +1,7 @@
 'use client'
 
 // Local Imports
-import { auth, firestore } from '@/src/lib/firebase/config';
+import { auth, firestore } from '@/lib/firebase/config';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
 // External Imports
@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { doc, getDoc } from 'firebase/firestore';
-import { IUser } from '@/src/models/user';
+import { IUser } from '@/models/user';
 
 
 const Login = () => {

@@ -1,8 +1,8 @@
 import { Session } from 'next-auth';
 
-import { User } from '@/src/models/mongodb/users';
-import { IEbayTokenData } from '@/src/models/firebase';
-import connectToMongoDB from '@/src/lib/mongo/client';
+import { User } from '@/models/mongodb/users';
+import { IEbayTokenData } from '@/models/firebase';
+import connectToMongoDB from '@/lib/mongo/client';
 
 async function addEbayTokens(tokenData: IEbayTokenData, session: Session) {
 	try {

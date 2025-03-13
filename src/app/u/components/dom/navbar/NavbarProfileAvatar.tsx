@@ -1,8 +1,8 @@
 "use client";
 
 // Local Imoports
-import { auth} from "@/src/lib/firebase/client";
-import createBillingPortalUrl from "@/src/services/stripe/create-billing-portal";
+import { auth} from "@/lib/firebase/config";
+import createBillingPortalUrl from "@/services/stripe/create-billing-portal";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 
 // External Imports

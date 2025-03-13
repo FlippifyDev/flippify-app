@@ -2,18 +2,18 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { IOrder } from "@/src/models/firebase";
-import { useSalesData } from "@/src/hooks/useSalesData";
-import { currencySymbols } from "@/src/config/currency-config";
+import { IOrder } from "@/models/firebase";
+import { useSalesData } from "@/hooks/useSalesData";
+import { currencySymbols } from "@/config/currency-config";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import OrderInfoCard from "./OrderInfoCard";
-import { formatTableDate } from "@/src/utils/format-dates";
-import { database } from "@/src/lib/firebase/client";
+import { formatTableDate } from "@/utils/format-dates";
+import { database } from "@/lib/firebase/client";
 import { get, ref, update } from "firebase/database"
 import UpdateFields from "./UpdateFields";
-import { setCachedData } from "@/src/utils/cache-helpers";
-import Alert from "@/src/app/components/Alert";
+import { setCachedData } from "@/utils/cache-helpers";
+import Alert from "@/app/components/Alert";
 
 const OrderDetails = () => {
 	const params = useParams();

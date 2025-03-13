@@ -1,7 +1,7 @@
 import React from 'react';
 import Layout from '../../components/layout/Layout';
 import InventoryOrdersContent from '../../components/tools/inventory-orders/InventoryOrdersContent';
-import ThemeSetter from '@/src/app/components/ThemeSetter';
+import ThemeSetter from '@/app/components/ThemeSetter';
 
 export const metadata = {
 	title: 'Inventory & Orders - Flippify',

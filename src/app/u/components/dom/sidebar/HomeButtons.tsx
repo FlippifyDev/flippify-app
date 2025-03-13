@@ -1,15 +1,12 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { ref, get } from 'firebase/database';
-import { database } from '@/src/lib/firebase/client';
 import DisabledSideBarButton from './ButtonDisabled';
 import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
 import SidebarButton from './Button';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import { MdGroups } from 'react-icons/md';
 import { FaHouse } from 'react-icons/fa6';
 import { FaBook, FaBell } from "react-icons/fa";
 import { FaRegNewspaper } from "react-icons/fa6";
@@ -22,31 +19,6 @@ interface SidebarHomeButtonsProps {
 const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, showAlert }) => {
 	const { data: session } = useSession();
 	const [unreadCount, setUnreadCount] = useState(0);
-
-	useEffect(() => {
-		if (!session?.user?.stripeCustomerId) return;
-
-		const sanitizedCustomerId = session.user.stripeCustomerId.replace(/[.#$[\]]/g, '_');
-		const notificationsRef = ref(database, 'notifications');
-
-		const fetchNotifications = async () => {
-			try {
-				const snapshot = await get(notificationsRef);
-				let unreadNotifications = 0;
-				snapshot.forEach((childSnapshot) => {
-					const notification = childSnapshot.val();
-					if (!notification.readBy || !notification.readBy[sanitizedCustomerId]) {
-						unreadNotifications++;
-					}
-				});
-				setUnreadCount(unreadNotifications);
-			} catch (error) {
-				console.error("Error fetching notifications:", error);
-			}
-		};
-
-		fetchNotifications();
-	}, [session?.user?.stripeCustomerId]);
 
 	return (
 		<div className='w-full flex flex-col'>

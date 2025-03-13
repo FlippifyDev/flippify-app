@@ -1,8 +1,8 @@
 "use server"
 
-import connectToMongoDB from '@/src/lib/mongo/client';
-import { User } from '@/src/models/mongodb/users';
-import { IEbayTokenData } from '@/src/models/firebase';
+import connectToMongoDB from '@/lib/mongo/client';
+import { User } from '@/models/mongodb/users';
+import { IEbayTokenData } from '@/models/firebase';
 
 
 async function refreshEbayToken(customerId: string): Promise<string> {

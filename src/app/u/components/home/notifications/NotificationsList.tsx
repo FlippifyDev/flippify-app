@@ -2,8 +2,8 @@
 
 import React, { useEffect } from "react";
 import NotificationsDisplay from "./NotificationsDisplay";
-import { markNotificationsAsRead } from "@/src/services/firebase/notifications"
-import { INotification } from "@/src/models/firebase";
+import { markNotificationsAsRead } from "@/services/firebase/notifications"
+import { INotification } from "@/models/firebase";
 
 interface NotificationsListProps {
 	notifications: INotification[];

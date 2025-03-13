@@ -24,7 +24,7 @@ interface IAuthentication {
 }
 
 interface IMetaData {
-    image: string;
+    image?: string;
     createdAt: string;
 }
 

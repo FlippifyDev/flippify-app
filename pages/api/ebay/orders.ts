@@ -1,8 +1,8 @@
 
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
-import { User } from '@/src/models/mongodb/users';
-import { refreshEbayToken } from '@/src/services/ebay/refresh-token';
+import { User } from '@/models/mongodb/users';
+import { refreshEbayToken } from '@/services/ebay/refresh-token';
 import fetch from 'node-fetch';
 
 interface EbayError {
@@ -14,12 +14,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	try {
 		const session = await getSession({ req });
 
-		if (!session || !session.user?.customerId) {
+		if (!session || !session.user?.stripeCustomerId) {
 			return res.status(401).json({ error: 'User not authenticated' });
 		}
 
-		const customerId = session.user.customerId;
-		const user = await User.findOne({ stripe_customer_id: customerId });
+		const stripeCustomerId = session.user.stripeCustomerId;
+		const user = await User.findOne({ stripe_customer_id: stripeCustomerId });
 
 		if (!user || !user.ebay || !user.ebay.ebayAccessToken || !user.ebay.ebayTokenExpiry) {
 			return res.status(400).json({ error: 'eBay tokens not found' });
@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		let { ebayAccessToken, ebayTokenExpiry } = user.ebay;
 
 		if (Date.now() >= ebayTokenExpiry) {
-			ebayAccessToken = await refreshEbayToken(customerId);
+			ebayAccessToken = await refreshEbayToken(stripeCustomerId);
 		}
 
 		if (!ebayAccessToken) {

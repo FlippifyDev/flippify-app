@@ -16,8 +16,8 @@ const ServicesGetAccessButton = () => {
 	// Handle redirect or sign-in
 	const handleRedirect = () => {
 		if (session) {
-			if (session.user?.name) {
-				router.push(`/u/${session.user.name}/dashboard`);
+			if (session.user?.username) {
+				router.push(`/u/${session.user.username}/dashboard`);
 			} else {
 				router.push(`/u/loading`);
 			}

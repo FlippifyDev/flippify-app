@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
-import connectToMongoDB from '@/src/lib/mongo/client';
-import { User } from '@/src/models/mongodb/users';
-import { refreshEbayToken } from '@/src/services/ebay/refresh-token';
+import connectToMongoDB from '@/lib/mongo/client';
+import { User } from '@/models/mongodb/users';
+import { refreshEbayToken } from '@/services/ebay/refresh-token';
 import fetch from 'node-fetch';
 
 interface EbayError {
@@ -17,14 +17,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 		const session = await getSession({ req });
 
-		if (!session || !session.user?.customerId) {
+		if (!session || !session.user?.stripeCustomerId) {
 			return res.status(401).json({ error: 'User not authenticated' });
 		}
 
 		await connectToMongoDB();
 
-		const customerId = session.user.customerId;
-		const user = await User.findOne({ stripe_customer_id: customerId });
+		const stripeCustomerId = session.user.stripeCustomerId;
+		const user = await User.findOne({ stripe_customer_id: stripeCustomerId });
 
 		// Check if user has valid eBay tokens
 		if (!user || !user.ebay || !user.ebay.ebayAccessToken || !user.ebay.ebayTokenExpiry) {
@@ -35,7 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 		// Refresh the token if it's expired
 		if (Date.now() >= ebayTokenExpiry) {
-			ebayAccessToken = await refreshEbayToken(customerId);
+			ebayAccessToken = await refreshEbayToken(stripeCustomerId);
 			if (!ebayAccessToken) {
 				return res.status(400).json({ error: 'Failed to refresh eBay Access Token' });
 			}

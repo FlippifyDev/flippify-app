@@ -5,9 +5,7 @@ import { FaHouse } from 'react-icons/fa6';
 import { FaSearch, FaBook, FaDiscord, FaSignInAlt } from "react-icons/fa";
 import { MdGroups } from 'react-icons/md';
 import Link from 'next/link';
-import NavbarSignInWithDiscord from './NavbarSignInWithDiscord';
-import NavbarSignInWithDiscordSideBar from './NavbarSignInWithDiscordSideBar';
-import AnimationArrow from '@/src/app/components/AnimationArrow';
+import AnimationArrow from '@/app/components/AnimationArrow';
 import { useRouter } from 'next/navigation';
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
@@ -59,10 +57,6 @@ const Navbar = () => {
 							<span className='col-span-11 rounded-none'><Link href="/l/plans" className="col-span-10 text-left">Plans</Link></span>
 						</li>
 						<li className="transition duration-100 active:bg-gray-700 rounded-btn grid grid-cols-12 gap-8 items-center mx-2 text-white text-lg font-medium">
-							<span className='col-span-1 rounded-none'><MdGroups className="text-lg" /></span>
-							<span className='col-span-11 rounded-none'><Link href="/l/server-plans" className="col-span-10 text-left">Server Plans</Link></span>
-						</li>
-						<li className="transition duration-100 active:bg-gray-700 rounded-btn grid grid-cols-12 gap-8 items-center mx-2 text-white text-lg font-medium">
 							<span className='col-span-1 rounded-none'><FaDiscord className="text-lg" /></span>
 							<span className='col-span-11 rounded-none'><Link href="https://discord.gg/gNPYfe7YFm" target="_blank" className="col-span-10 text-left">Discord</Link></span>
 						</li>
@@ -70,7 +64,7 @@ const Navbar = () => {
 						<li className="transition duration-100 active:bg-gray-700 rounded-btn grid grid-cols-12 gap-8 items-center mx-2 text-white text-lg font-medium">
 							<span><FaSignInAlt className="col-span-1 text-lg" /></span>
 							<span className="col-span-11 text-left">
-								<NavbarSignInWithDiscordSideBar />
+								<Link href="/l/login">Login</Link>
 							</span>
 						</li>
 					</ul>
@@ -87,9 +81,6 @@ const Navbar = () => {
 				</li>
 				<li className="transition duration-100 hover:scale-105 rounded-btn p-1">
 					<Link href="/l/plans">Plans</Link>
-				</li>
-				<li className="transition duration-100 hover:scale-105 rounded-btn p-1">
-					<Link href="/l/server-plans">Server Plans</Link>
 				</li>
 				<li className="transition duration-100 hover:scale-105 rounded-btn p-1">
 					<Link href="https://discord.gg/gNPYfe7YFm" target="_blank">Discord</Link>

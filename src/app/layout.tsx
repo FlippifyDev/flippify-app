@@ -1,7 +1,7 @@
-import "@/src/styles/globals.css"
+import "@/styles/globals.css"
 import { Inter } from 'next/font/google';
 import Providers from './providers';
-import ServiceWorkerRegister from '@/src/components/ServiceWorkerRegister';
+import ServiceWorkerRegister from '@/components/ServiceWorkerRegister';
 import { Metadata } from 'next';
 import Script from "next/script";
 

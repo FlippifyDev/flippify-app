@@ -1,4 +1,4 @@
-import { IEbayTokenData } from '@/src/models/firebase';
+import { IEbayTokenData } from '@/models/firebase';
 
 async function createEbayToken(code: string): Promise<IEbayTokenData> {
 	const CLIENT_ID = process.env.NEXT_PUBLIC_EBAY_CLIENT_ID;

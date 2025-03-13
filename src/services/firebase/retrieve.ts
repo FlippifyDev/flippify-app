@@ -1,9 +1,11 @@
-import { IUser } from "@/src/models/user";
-import { firestore } from "./config";
+// Local Imports
+import { IUser } from "@/models/user";
+import { firestore } from "@/lib/firebase/config";
 import { createUser } from "./create";
 
 // External Imports
 import { doc, getDoc } from 'firebase/firestore';
+
 
 export async function retrieveUser(uid: string, email?: string | null): Promise<IUser | void> {
     try {

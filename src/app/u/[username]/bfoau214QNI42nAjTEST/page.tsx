@@ -1,6 +1,6 @@
 import React from 'react';
 import Layout from '../../components/layout/Layout';
-import ThemeSetter from '@/src/app/components/ThemeSetter';
+import ThemeSetter from '@/app/components/ThemeSetter';
 import TestingContent from '../../components/home/testing/TestingContent'
 
 export const metadata = {

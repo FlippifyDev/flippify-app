@@ -12,8 +12,8 @@ import ProfitsGraphTagFilter from "./ProfitsGraphTagFilter";
 import DashboardOverviewCard from "./DashboardOverviewCard";
 import DashboardProfitsGraph from "./DashboardProfitsGraph";
 import DashboardShowcase from "./DashboardShowcase";
-import { useSalesData } from "@/src/hooks/useSalesData";
-import { signInUser } from "@/src/lib/firebase/client";
+import { useSalesData } from "@/hooks/useSalesData";
+import { signInUser } from "@/lib/firebase/client";
 import OnboardingFlow from "./OnboardingFlow";
 
 

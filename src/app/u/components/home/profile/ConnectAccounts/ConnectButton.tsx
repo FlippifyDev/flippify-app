@@ -1,4 +1,4 @@
-import LayoutSubscriptionWrapper from "../../../layout/LayoutSubscriptionWrapper";
+import LayoutSubscriptionWrapper from "@/app/u/components/layout/LayoutSubscriptionWrapper";
 
 interface SubConnectButtonProps {
     text: string;

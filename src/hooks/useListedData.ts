@@ -1,13 +1,13 @@
-// hooks/useListedData.ts
+// Local Imports
+import { sendApiRequest } from "@/services/api/request";
+import { IEbayInventoryItem } from "@/models/user";
+import { getCachedData, setCachedData } from "../utils/cache-helpers";
+
+// External Imports
 import { useEffect, useState } from "react";
 
-import { IListing } from "@/models/firebase";
-import { getCachedData, setCachedData } from "../utils/cache-helpers";
-import { sendApiRequest } from "@/services/api/request";
-
-
 export const useListedData = (ebayAccessToken: string | null | undefined, customerId: string) => {
-	const [listedData, setListedData] = useState<IListing[]>([]);
+    const [listedData, setListedData] = useState<IEbayInventoryItem[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const cacheKey = `listedData-${customerId}`; // Cache key based on customerId

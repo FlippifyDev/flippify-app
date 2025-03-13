@@ -3,7 +3,7 @@ import { getSession } from 'next-auth/react';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 // Local Imports
-import { IEbayTokenData } from '@/models/firebase';
+import { IEbay } from '@/models/user';
 import { createEbayToken } from '@/services/ebay/create-token';
 import { addEbayTokens } from '@/services/ebay/add-token';
 
@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	try {
 		// Create the users tokens
-		const tokenData: IEbayTokenData = await createEbayToken(code)
+        const tokenData: IEbay = await createEbayToken(code)
 		if (tokenData.error) {
 			return res.status(400).json({ error: tokenData.error_description });
 		}

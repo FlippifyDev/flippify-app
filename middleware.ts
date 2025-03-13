@@ -1,10 +1,7 @@
 // Local Imports
-//import { linkTracker } from './src/services/firebase/link-tracker';
-import { auth } from '@/lib/firebase/config';
-import { signOut as firebaseSignOut } from 'firebase/auth';
+import { linkTracker } from '@/services/firebase/link-tracker';
 
 // External Imports
-import { signOut as nextSignOut } from 'next-auth/react';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
@@ -14,10 +11,7 @@ export async function middleware(request: NextRequest) {
 
     if (ref) {
         try {
-            //await signInUser()
-            //await linkTracker(ref);
-            //await nextSignOut()
-            //await firebaseSignOut(auth);
+            await linkTracker(ref);
         } catch (error) {
             console.error('Error while updating link count:', error);
         }

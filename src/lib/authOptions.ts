@@ -2,7 +2,8 @@
 import { auth } from "@/lib/firebase/config";
 import { IUser } from "@/models/user";
 import { IJwtToken } from "@/models/jwt-token";
-import { retrieveUser } from "@/services/firebase/retrieve";
+import { firestoreAdmin } from "./firebase/config-admin";
+import { retrieveUserAndCreate } from "@/services/firebase/retrieve";
 
 // External Imports
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -34,10 +35,9 @@ export const authOptions: NextAuthOptions = {
                         email: userCredential.user.email,
                     };
 
-                    // Return the user object if authentication is successful
                     return user;
                 } catch (error) {
-                    throw new Error(`Invalid credentials: ${error}`);  // Throw error if authentication fails
+                    throw new Error(`Invalid credentials: ${error}`);
                 }
             },
         }),
@@ -47,9 +47,8 @@ export const authOptions: NextAuthOptions = {
             if (user) {
                 token.id = user.id;
                 token.email = user.email;
-
                 try {
-                    const userDoc: IUser = await retrieveUser(user.id, user.email) ?? {} as IUser;
+                    const userDoc: IUser = (await retrieveUserAndCreate(user.id, user.email) ?? {}) as IUser;
                     token.user = userDoc;
                 } catch (error) {
                     console.error('Error retrieving user:', error);
@@ -59,8 +58,15 @@ export const authOptions: NextAuthOptions = {
         },
         async session({ session, token }) {
             const { user } = token as IJwtToken;
-            if (user) {
-                session.user = user; 
+            try {
+                const userDocSnapshot = await firestoreAdmin.collection('users').doc(user.id).get();
+                if (userDocSnapshot.exists) {
+                    session.user = userDocSnapshot.data() as IUser;
+                } else {
+                    console.error('User document not found.');
+                }
+            } catch (error) {
+                console.error('Error retrieving user:', error);
             }
             return session;
         },

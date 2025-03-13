@@ -57,6 +57,7 @@ const config: Config = {
 			colors: {
 				primary: '#5865F2',
 				white: '#ffffff',
+                darkGrey: "#1c1c1c",
 				orderPageText: '#17192c',
 				lightGreyBackground: '#F1F1F1',
 				userBackground: '#f2f6fa',

@@ -45,6 +45,7 @@ export async function createUser(uid: string, email: string): Promise<IUser | vo
                 notificationsEnabled: false,
                 preferredEmail: email,
                 locale: 'GB', 
+                currency: 'USD',
             },
             authentication: {
                 emailVerified: 'verified'

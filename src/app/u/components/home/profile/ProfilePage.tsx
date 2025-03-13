@@ -1,9 +1,9 @@
-import React from 'react';
+// Local Imports
 import ProfileOverview from './ProfileOverview';
-import ProfileReferralData from './ReferralProgram/ProfileReferralData';
 import ProfileSettings from './ProfileSettings/ProfileSettings';
-import ProfileMarketplaceConnect from './ConnectAccounts/ProfileMarketplaceConnect';
+import ProfileReferralData from './ReferralProgram/ProfileReferralData';
 import UpdateAccountDetails from './UpdateAccountDetails';
+import ProfileMarketplaceConnect from './ConnectAccounts/ProfileMarketplaceConnect';
 
 const ProfileContent = () => {
     return (

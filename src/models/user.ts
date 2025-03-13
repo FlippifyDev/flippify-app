@@ -1,5 +1,6 @@
-type RecordType = "automatic" | "manual";
-type EmailVerification = "unverified" | "verifying" | "verified";
+export type RecordType = "automatic" | "manual";
+export type EmailVerification = "unverified" | "verifying" | "verified";
+export type CurrencyType = "USD" | "GBP" | "EUR" | "AUD" | "CAD";
 
 interface IUser {
     id: string;
@@ -9,8 +10,8 @@ interface IUser {
     stripeCustomerId: string;
     subscriptions: ISubscription[] | null;
     referral: IReferral;
-    inventory: { ebay: IEbayInventory | null };
-    orders: { ebay: IEbayOrders | null };
+    inventory: { ebay: IEbayInventoryItem | null };
+    orders: { ebay: IEbayOrder | null };
     numListings: { automatic: number, manual: number } | null;
     numOrders: { automatic: number, manual: number } | null;
     lastFetchedDate: { inventory: string, orders: string } | null;
@@ -37,6 +38,7 @@ interface ISubscription {
     id: string;
     name: string;
     override: boolean;
+    createdAt: string;
 }
 
 interface IDiscord {
@@ -47,6 +49,8 @@ interface IEbay {
     ebayAccessToken: string;
     ebayRefreshToken: string;
     ebayTokenExpiry: string;
+    error?: string;
+    error_description?: string;
 }
 
 interface IReferral {
@@ -56,7 +60,7 @@ interface IReferral {
     rewardsClaimed: number;
 }
 
-interface IEbayInventory {
+interface IEbayInventoryItem {
     itemId: string;
     itemName: string;
     price: number;
@@ -66,7 +70,7 @@ interface IEbayInventory {
     recordType: RecordType;
 }
 
-interface IEbayOrders {
+interface IEbayOrder {
     additionalFees: number;
     buyerUsername: string;
     customTag: string;
@@ -90,6 +94,7 @@ interface IPreferences {
     notificationsEnabled: boolean;
     preferredEmail: string;
     locale: string;
+    currency: CurrencyType;
 }
 
-export type { IUser, ISubscription, IEbay, IReferral, IEbayInventory, IEbayOrders, IPreferences, RecordType, IConnectedAccounts };
+export type { IUser, ISubscription, IEbay, IReferral, IEbayInventoryItem, IEbayOrder, IPreferences, IConnectedAccounts };

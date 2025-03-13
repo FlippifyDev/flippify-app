@@ -13,12 +13,12 @@ import DashboardOverviewCard from "./DashboardOverviewCard";
 import DashboardProfitsGraph from "./DashboardProfitsGraph";
 import DashboardShowcase from "./DashboardShowcase";
 import { useSalesData } from "@/hooks/useSalesData";
-import { signInUser } from "@/lib/firebase/client";
 import OnboardingFlow from "./OnboardingFlow";
 
 
 const DashboardPage: React.FC = () => {
 	const { data: session } = useSession();
+    console.log(session)
 	const customerId = session?.user.stripeCustomerId as string;
 	const ebayAccessToken = session?.user.connectedAccounts.ebay?.ebayAccessToken as string;
 	const currency = session?.user.preferences.locale as string;
@@ -45,20 +45,6 @@ const DashboardPage: React.FC = () => {
 		new Set(salesData.map((order) => order.customTag))
 	).filter((tag) => tag);
 
-	/*
-	useEffect(() => {
-		if (session && session.user && session.user.customerId) {
-			const fetchUserData = async () => {
-				try {
-					await signInUser();
-				} catch (error) {
-					console.error("Error handling user:", error);
-				}
-			};
-			fetchUserData();
-		}
-	}, [session]);
-	*/
 
 	// Close dropdowns if clicked outside
 	useEffect(() => {

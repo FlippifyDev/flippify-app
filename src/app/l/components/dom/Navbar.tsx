@@ -3,7 +3,6 @@ import { Lato } from 'next/font/google';
 import { IoMenu } from 'react-icons/io5';
 import { FaHouse } from 'react-icons/fa6';
 import { FaSearch, FaBook, FaDiscord, FaSignInAlt } from "react-icons/fa";
-import { MdGroups } from 'react-icons/md';
 import Link from 'next/link';
 import AnimationArrow from '@/app/components/AnimationArrow';
 import { useRouter } from 'next/navigation';
@@ -88,9 +87,9 @@ const Navbar = () => {
 			</ul>
 
 			<div className="hidden md:flex items-center col-span-2 justify-end">
-                <div className='transition duration-100 hover:scale-105 rounded-btn p-1'>
+                <div className='transition duration-100 hover:scale-100 rounded-btn p-1'>
                     <a className="text-white group flex flex-row" onClick={() => router.push('/l/login')}>
-                        <span className='text-md select-none'>Sign in</span>
+                        <span className='text-md select-none'>Login</span>
                         <span className='pt-[2px] pl-1'><AnimationArrow /></span>
                     </a>
                 </div>

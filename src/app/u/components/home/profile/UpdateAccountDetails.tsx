@@ -2,6 +2,7 @@
 
 // Local Imports
 import { IUser } from "@/models/user";
+import HouseButton from "../../dom/ui/HouseButton";
 import UnderlineInput from "@/app/components/UnderlineInput";
 import { auth, firestore } from "@/lib/firebase/config";
 
@@ -10,7 +11,6 @@ import { updatePassword, EmailAuthProvider, reauthenticateWithCredential, verify
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { Lock, Mail } from "lucide-react";
 import { useState } from "react";
-import HouseButton from "../../dom/ui/HouseButton";
 
 
 async function updateUserEmail(newEmail: string, currentPassword: string, setNewEmailMessage: (value: string) => void, setEmailSuccessfullyUpdated: (value: boolean) => void): Promise<{ success: boolean, error?: string }> {

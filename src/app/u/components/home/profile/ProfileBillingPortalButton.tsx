@@ -2,7 +2,7 @@
 
 // Local Imports
 import { IUser } from '@/models/user';
-import createBillingPortalUrl from '@/services/stripe/create-billing-portal';
+import { createBillingPortalUrl } from '@/services/stripe/create';
 
 // External Imports
 import React, { useEffect, useState, useRef } from 'react';

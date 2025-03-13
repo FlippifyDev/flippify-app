@@ -6,10 +6,3 @@ export const countryToAbbreviation: Record<string, string> = {
 	Asia: "AS",
 	Australia: "AU",
 };
-
-
-export const collectionToType: Record<string, string> = {
-	Electronics: "Electronics",
-	SneakerReleaseInfo: "Sneaker-Release-Info",
-	RetiringSet: "Retiring-Sets-Deals"
-}

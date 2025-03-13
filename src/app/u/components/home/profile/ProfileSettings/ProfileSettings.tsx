@@ -1,29 +1,28 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
-import { updateUserPreferences, fetchUserData, updateNotificationPreference } from '@/services/firebase/users';
-import Toggle from '@/app/components/Toggle';
+// Local Imports
 import UnderlineInput from '@/app/components/UnderlineInput';
 import UnderlineSelect from '@/app/components/UnderlineSelect';
+import { CurrencyType } from '@/models/user';
+import { updateUserPreferences } from '@/services/firebase/update';
+
+// External Imports
+import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 
 const ProfileSettings = () => {
     const { data: session } = useSession();
     const [email, setEmail] = useState('');
     const [originalEmail, setOriginalEmail] = useState('');
-    const [currency, setCurrency] = useState<string>('GBP');
-    const [originalCurrency, setOriginalCurrency] = useState<string>('GBP');
+    const [currency, setCurrency] = useState<CurrencyType>(session?.user.preferences.currency ?? "USD");
+    const [originalCurrency, setOriginalCurrency] = useState<CurrencyType>('GBP');
     const [feedback, setFeedback] = useState('');
     const [isChanged, setIsChanged] = useState(false);
-    const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
     useEffect(() => {
         const loadUserData = async () => {
             if (session && session.user) {
-                const customerId = session.user.stripeCustomerId as string;
-
                 try {
-
                     if (session.user.preferences.preferredEmail) {
                         setEmail(session.user.preferences.preferredEmail);
                         setOriginalEmail(session.user.preferences.preferredEmail);
@@ -32,22 +31,16 @@ const ProfileSettings = () => {
                         setOriginalEmail(session.user.email || '');
                     }
 
-                    const userCurrency = session.user?.preferences.locale || session.user.preferences.locale || 'GBP';
+                    const userCurrency = session.user?.preferences.currency || "USD";
                     setCurrency(userCurrency);
                     setOriginalCurrency(userCurrency);
 
-                    // Load notification preference
-                    if (typeof session.user?.preferences.notificationsEnabled === 'boolean') {
-                        setNotificationsEnabled(session.user.preferences.notificationsEnabled);
-                    } else {
-                        setNotificationsEnabled(true); // Default to true if not set
-                    }
                 } catch (error) {
                     console.error('Error loading user data:', error);
                     setEmail(session.user.email || '');
                     setOriginalEmail(session.user.email || '');
-                    setCurrency(session?.user.preferences.locale || 'GBP');
-                    setOriginalCurrency(session?.user.preferences.locale || 'GBP');
+                    setCurrency(session?.user.preferences.currency || 'USD');
+                    setOriginalCurrency(session?.user.preferences.currency || 'USD');
                 }
             }
         };
@@ -57,18 +50,13 @@ const ProfileSettings = () => {
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
-        setIsChanged(e.target.value !== originalEmail || currency !== originalCurrency || notificationsEnabled !== true);
+        setIsChanged(e.target.value !== originalEmail || currency !== originalCurrency);
     };
 
     const handleCurrencyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const newCurrency = e.target.value as string;
+        const newCurrency = e.target.value as CurrencyType;
         setCurrency(newCurrency);
-        setIsChanged(newCurrency !== originalCurrency || email !== originalEmail || notificationsEnabled !== true);
-    };
-
-    const handleToggleNotifications = () => {
-        setNotificationsEnabled(!notificationsEnabled);
-        setIsChanged(true); // Mark as changed when toggling notifications
+        setIsChanged(newCurrency !== originalCurrency || email !== originalEmail);
     };
 
     const handleSaveChanges = async () => {
@@ -86,7 +74,6 @@ const ProfileSettings = () => {
         try {
             // Update user preferences
             await updateUserPreferences(customerId, email, currency);
-            await updateNotificationPreference(customerId, notificationsEnabled);
 
             setFeedback('Settings updated successfully.');
             setOriginalEmail(email);
@@ -122,9 +109,6 @@ const ProfileSettings = () => {
                         Preferred Currency
                     </label>
                     <UnderlineSelect id="currency" value={currency} options={currencyOptions} onChange={handleCurrencyChange} />
-                </div>
-                <div className="mt-4">
-                    <Toggle text_left="Notifications" checked={session?.user.preferences.notificationsEnabled} onChange={handleToggleNotifications} />
                 </div>
             </div>
 

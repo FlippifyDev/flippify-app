@@ -1,11 +1,13 @@
 'use client';
 
-import React from "react";
-import { useSession } from "next-auth/react";
-import ProfileBillingPortalButton from "./ProfileBillingPortalButton";
-import ProfileSupportButton from "./ProfileSupportButton";
-import { currencySymbols } from "@/config/currency-config";
+// Local Imports
 import ImageModal from '@/app/components/ImageModal';
+import { currencySymbols } from "@/config/currency-config";
+import ProfileSupportButton from "./ProfileSupportButton";
+import ProfileBillingPortalButton from "./ProfileBillingPortalButton";
+
+// External Imports
+import { useSession } from "next-auth/react";
 
 
 const ProfileOverview = () => {

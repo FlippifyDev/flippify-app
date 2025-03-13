@@ -1,8 +1,7 @@
 "use client";
 
 import EBayServices from "./ServicesTabEBay";
-import AmazonServices from "./ServicesTabAmazon";
-import ShopifyServices from "./ServicesTabShopify";
+import ComingSoonServices from "./ServicesTabComingSoon";
 import { useState, ChangeEvent } from "react";
 import React from "react";
 import "@/styles/services-slider.css"
@@ -35,35 +34,22 @@ const ServicesPage = () => {
 					/>
 					<span className="text-white text-lg font-medium tab-active-indicator">eBay</span>
 				</label>
-				<label className={`tab w-28 flex items-center justify-center relative ${activeTab === 'shopify' ? 'tab-active' : 'tab-inactive'}`}>
+				<label className={`tab w-full flex items-center justify-center relative ${activeTab === 'comingSoon' ? 'tab-active' : 'tab-inactive'}`}>
 					<input
 						type="radio"
 						name="tabs"
-						value="shopify"
+						value="comingSoon"
 						checked={activeTab === 'shopify'}
 						onChange={handleTabChange}
 						className="hidden"
 					/>
-					<span className="text-white text-lg font-medium tab-active-indicator">Shopify</span>
-				</label>
-				<label className={`tab w-28 flex items-center justify-center relative ${activeTab === 'amazon' ? 'tab-active' : 'tab-inactive'}`}>
-					<input
-						type="radio"
-						name="tabs"
-						value="amazon"
-						checked={activeTab === 'amazon'}
-						onChange={handleTabChange}
-						className="hidden"
-					/>
-					<span className="text-white text-lg font-medium tab-active-indicator">Amazon</span>
+					<span className="text-white text-lg font-medium tab-active-indicator">Coming Soon</span>
 				</label>
 			</div>
 
-			{/* Sliding Content with Fade Transition */}
 			<div className={`w-full flex justify-center transition-opacity duration-300 ${fadeIn ? 'opacity-100' : 'opacity-0'}`}>
-				{activeTab === 'eBay' && <EBayServices />}
-				{activeTab === 'shopify' && <ShopifyServices />}
-				{activeTab === 'amazon' && <AmazonServices />}
+					{activeTab === 'eBay' ? <EBayServices /> : null}
+					{activeTab === 'comingSoon' ? <ComingSoonServices /> : null}
 			</div>
 		</div>
 	);

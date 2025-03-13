@@ -7,13 +7,12 @@ import { useRouter } from 'next/navigation';
 
 
 
-const HomeGetEarlyAccess = () => {
+const HomeGetAccess = () => {
 	const { data: session } = useSession();
 	const router = useRouter();
 
 	useEffect(() => {
 		if (session) {
-			// Redirect to the username-specific URL
 			{
 				session.user?.username ? (
 					router.push(`/u/${session.user.username}/dashboard`)
@@ -29,8 +28,8 @@ const HomeGetEarlyAccess = () => {
 	};
 
 	return (
-		<button className="btn bg-white text-black rounded-lg mr-1 hover:text-white hover:bg-houseHoverBlue hover:shadow-lg hover:pb-[2px] border-none transform-duration-400 transition-duration-400" onClick={handleSignIn}>Get Access Now</button>
+		<button className="btn bg-white text-black rounded-lg mr-1 hover:text-white hover:bg-houseHoverBlue hover:shadow-lg hover:pb-[2px] border-none transform-duration-400 transition-duration-400 animate-fadeInBounce" onClick={handleSignIn}>Get Access Now</button>
 	)
 }
 
-export default HomeGetEarlyAccess
+export default HomeGetAccess

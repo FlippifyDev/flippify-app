@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Lato, Inter } from 'next/font/google';
-import HomeGetEarlyAccess from "./HomeGetEarlyAccess";
+import HomeGetEarlyAccess from "./HomeGetAccess";
 
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });

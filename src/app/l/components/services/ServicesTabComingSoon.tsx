@@ -5,7 +5,7 @@ import React from "react";
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
 
-const AmazonServices: React.FC = () => {
+const ComingSoonServices: React.FC = () => {
 	return (
 		<div className="flex flex-col justify-center xl:w-11/12 h-full mb-5 mt-5">
 			<div className="flex flex-col items-center space-y-3 text-center mb-5">
@@ -16,15 +16,14 @@ const AmazonServices: React.FC = () => {
 						<a
 							className={`${inter.className} mb-8 text-white text-5xl font-bold`}
 						>
-							Amazon Automation
+							Platforms Coming
 						</a>
-						{/* This is a space */} Services
+						{/* This is a space */} Soon
 					</p>
 				</div>
 				<div className="flex justify-center max-w-2xl animate-fadeInSecondary">
 					<p className="mx-4 sm:mx-2 text-white text-md sm:text-lg text-center">
-					Streamline your Amazon selling process with AI-powered automation, from product sourcing and FBA management to inventory tracking, pricing optimization, and sales insights.
-
+					We’re building the future of reselling automation. Flippify will soon support Amazon, Shopify, and other major platforms, giving you the ability to manage all your selling channels in one place.
 					</p>
 				</div>
 			</div>
@@ -90,4 +89,4 @@ const AmazonServices: React.FC = () => {
 	);
 };
 
-export default AmazonServices;
+export default ComingSoonServices;

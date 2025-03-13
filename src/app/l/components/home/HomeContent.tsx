@@ -1,5 +1,5 @@
 import { Lato, Inter } from 'next/font/google';
-import HomeGetEarlyAccess from './HomeGetEarlyAccess';
+import HomeGetAccess from './HomeGetAccess';
 import HomeAbout from './HomeAbout';
 import HomeMockupPhone from './HomeMockupPhone';
 import HomeMockupBrowser from './HomeMockupBrowser';
@@ -18,13 +18,13 @@ const HomeContent = ({ className = '' }) => {
 					</p>
 				</div>
 				<p className='w-11/12 sm:w-full mt-3 mb-8 pb-1 pt-2 text-gray-300 text-lg text-center animate-fadeInSecondary'>
-					Handling everything so you don&apos;t have to, eBay & Amazon store automation & tracking in all areas.
+					AI automates your eBay business - from listing to shipping, so you don&apos;t have to.
 				</p>
 
-				<HomeGetEarlyAccess />
+				<HomeGetAccess />
 
 				<div className="pt-[90px] lg:pt-[150px]" />
-				<div className="flex flex-col lg:flex-row my-4 md:my-11 mx-2 md:mx-6 py-8 sm:py-2 md:py-0 md:pl-4 bg-white bg-opacity-85 border border-gray-300 rounded-3xl shadow-md overflow-hidden">
+				<div className="flex flex-col lg:flex-row my-4 md:my-11 mx-2 md:mx-6 py-8 sm:py-2 md:py-0 md:pl-4 bg-white bg-opacity-85 border border-gray-300 rounded-3xl shadow-md overflow-hidden animate-fadeInPrimary">
 					<div className="lg:w-1/3">
 						<HomeAbout />
 					</div>

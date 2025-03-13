@@ -45,12 +45,10 @@ export default function Home() {
 	const { data: session, status } = useSession();
 
 	useEffect(() => {
-			if (status === 'loading') return; // Do nothing while loading
+			if (status === 'loading') return;
 			if (!session) {
-					// Not logged in, stay on the home page
 					return;
 			}
-			// Logged in, redirect to the dashboard
 			router.push(`/u/${session.user.id}/dashboard`);
 	}, [router, session, status]);
 	

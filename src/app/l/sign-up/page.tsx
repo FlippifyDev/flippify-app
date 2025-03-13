@@ -1,9 +1,6 @@
 "use client";
 
-// Local Imports
 import { auth, firestore } from '@/lib/firebase/config';
-
-// External Imports
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { useState, useEffect, useRef } from 'react';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
@@ -22,8 +19,7 @@ const SignUp = () => {
     const [emailVerified, setEmailVerified] = useState(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
-
-    // Persist email and password using useRef=
+    
     const usernameRef = useRef<string | null>(null);
     const emailRef = useRef<string | null>(null);
     const passwordRef = useRef<string | null>(null);

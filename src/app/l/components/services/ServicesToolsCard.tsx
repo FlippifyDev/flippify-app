@@ -10,7 +10,7 @@ interface ServicesToolsCardProps {
   description: string;
   disclaimer: string | null;
   image: string;
-  comingSoon?: boolean; // New optional prop
+  comingSoon?: boolean;
 }
 
 const ServicesToolsCard: React.FC<ServicesToolsCardProps> = ({

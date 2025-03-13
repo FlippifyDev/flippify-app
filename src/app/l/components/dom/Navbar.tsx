@@ -63,7 +63,7 @@ const Navbar = () => {
 						<li className="transition duration-100 active:bg-gray-700 rounded-btn grid grid-cols-12 gap-8 items-center mx-2 text-white text-lg font-medium">
 							<span><FaSignInAlt className="col-span-1 text-lg" /></span>
 							<span className="col-span-11 text-left">
-								<Link href="/l/login">Login</Link>
+								<Link href="/l/coming-soon">Login</Link>
 							</span>
 						</li>
 					</ul>
@@ -88,7 +88,7 @@ const Navbar = () => {
 
 			<div className="hidden md:flex items-center col-span-2 justify-end">
                 <div className='transition duration-100 hover:scale-100 rounded-btn p-1'>
-                    <a className="text-white group flex flex-row" onClick={() => router.push('/l/login')}>
+                    <a className="text-white group flex flex-row" onClick={() => router.push('/l/coming-soon')}>
                         <span className='text-md select-none'>Login</span>
                         <span className='pt-[2px] pl-1'><AnimationArrow /></span>
                     </a>

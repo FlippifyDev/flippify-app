@@ -1,7 +1,10 @@
 'use client';
 
-import createCheckoutSession from '@/src/services/stripe/create-checkout-session';
-import React, { useEffect, useState, useRef } from 'react';
+// Local Imports
+import { createCheckoutSession } from '@/services/stripe/create';
+
+// External Imports
+import { useEffect, useState, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 
 interface PlansSubscribeNowProps {
@@ -23,9 +26,9 @@ const PlansSubscribeNow: React.FC<PlansSubscribeNowProps> = ({ priceId, specialP
 		const fetchCheckoutUrl = async () => {
 			if (session?.user) {
 				const user = session.user;
-				customerIdRef.current = user.customerId || null;
-				usernameRef.current = user.name;
-				const referred_by = user.referral?.referred_by;
+				customerIdRef.current = user.stripeCustomerId || null;
+				usernameRef.current = user.username;
+				const referred_by = user.referral?.referredBy;
 
 				if (customerIdRef.current && usernameRef.current) {
 					try {

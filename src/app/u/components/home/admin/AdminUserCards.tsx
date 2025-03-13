@@ -1,8 +1,8 @@
 import React, { useState, ChangeEvent, FocusEvent, useRef, useEffect } from 'react';
-import { IUser, ISubscription } from '@/src/models/mongodb/users';
-import Alert from '@/src/app/components/Alert';
-import createCheckoutSession from '@/src/services/stripe/create-checkout-session';
-import fetchProducts from '@/src/services/mongodb/fetch-products';
+import { IUser, ISubscription } from '@/models/mongodb/users';
+import Alert from '@/app/components/Alert';
+import createCheckoutSession from '@/services/stripe/create-checkout-session';
+import fetchProducts from '@/services/mongodb/fetch-products';
 
 interface CardProps {
 	user: IUser;

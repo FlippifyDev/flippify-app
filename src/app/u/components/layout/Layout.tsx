@@ -4,12 +4,12 @@ import React, { Suspense, useState, useEffect } from "react";
 
 import LayoutSubscriptionWrapper from "./LayoutSubscriptionWrapper";
 import LayoutLoadingSkeleton from "./LayoutLoadingSkeleton";
-import LightHamburgerButton from "@/src/app/components/LightHamburgerButton";
+import LightHamburgerButton from "@/app/components/LightHamburgerButton";
 import LayoutNoAccess from "./LayoutNoAccess";
 import Sidebar from "../dom/sidebar/Sidebar";
 import Navbar from "../dom/navbar/Navbar";
 
-import "@/src/styles/hide-scrollbar.css";
+import "@/styles/hide-scrollbar.css";
 
 
 interface LayoutProps {
@@ -60,7 +60,7 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
 
 
 const Layout: React.FC<LayoutProps> = ({ children, requiredSubscriptions, anySubscriptions, pagePath }) => {
-	// The following negates the required and any subscription so if the user has none of the subscriptions, then the LayoutNoAccess is displayed.
+    // The following negates the required and any subscription so if the user has none of the subscriptions, then the LayoutNoAccess is displayed.
 	let notRequiredSubscriptions: string[] = [];
 	let notAnySubscriptions: string[] = [];
 

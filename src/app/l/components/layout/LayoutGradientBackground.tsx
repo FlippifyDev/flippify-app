@@ -26,7 +26,7 @@ const LayoutGradientBackground = () => {
 							ease: 'linear',
 						},
 					});
-					await new Promise((resolve) => setTimeout(resolve, 50)); // Wait for 50 milliseconds before starting the next animation
+					await new Promise((resolve) => setTimeout(resolve, 50));
 				} catch (error) {
 					console.error('Error starting animation:', error);
 					break;
@@ -43,7 +43,11 @@ const LayoutGradientBackground = () => {
 
 	return (
 		<div>
-			<motion.div className='absolute inset-0' animate={controls} />
+			<motion.div
+				className="absolute inset-0"
+				initial={{ background: 'linear-gradient(120deg, #17529C 0%, #7caed0 100%)' }}
+				animate={controls}
+			/>
 		</div>
 	);
 };

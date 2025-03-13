@@ -57,6 +57,7 @@ const config: Config = {
 			colors: {
 				primary: '#5865F2',
 				white: '#ffffff',
+                darkGrey: "#1c1c1c",
 				orderPageText: '#17192c',
 				lightGreyBackground: '#F1F1F1',
 				userBackground: '#f2f6fa',
@@ -65,6 +66,7 @@ const config: Config = {
 				greyText: '#dedede',
 				slightlyDarkerGreyText: '#9A9A9A',
 				darkBackground: '#090a25',
+				deepBlue: '#000011',
 				greyStroke: '#A9A9A9',
 				darkGreyText: '#222222',
 				houseBlue: '#1a73e8',
@@ -122,11 +124,23 @@ const config: Config = {
 					from: { height: "var(--radix-accordion-content-height)" },
 					to: { height: "0" },
 				},
-
+				"fade-in-settings": {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+				"fade-in-bounce": {
+					"0%": { opacity: "0", transform: "translateY(20px)" },
+					"60%": { opacity: "1", transform: "translateY(-10px)" },
+					"80%": { transform: "translateY(5px)" },
+					"100%": { transform: "translateY(0)" },
+				},
 			},
 			animation: {
 				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
+				"fadeInPrimary": "fade-in-settings 0.8s ease-out forwards",
+				"fadeInSecondary": "fade-in-settings 1.1s ease-out forwards",
+				"fadeInBounce": "fade-in-bounce 1s ease-out forwards",
 			},
 			fontFamily: {
 				sans: ['Rubik', 'sans-serif'],

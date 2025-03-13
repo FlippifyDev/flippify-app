@@ -1,39 +1,39 @@
+// Local Imports
+import { IUser } from '@/models/user';
+import { updateUser } from '@/services/firebase/update';
+import { retrieveUserSnapshot } from '@/services/firebase/retrieve';
+
+// External Imports
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 import nookies from 'nookies';
-
-import connectToMongoDB from '@/src/lib/mongo/client';
-import { User } from '@/src/models/mongodb/users';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	try {
 		const session = await getSession({ req });
 
-		if (!session || !session.user?.customerId) {
+		if (!session || !session.user?.stripeCustomerId) {
 			return res.status(401).json({ error: 'User not authenticated' });
 		}
 
-		const customerId = session.user.customerId;
-
-		await connectToMongoDB();
-
-		const user = await User.findOne({ stripe_customer_id: customerId });
-		if (!user) {
+        const userSnapshot = await retrieveUserSnapshot("id", session.user.id);
+        if (!userSnapshot) {
 			return res.status(404).json({ error: 'User not found' });
 		}
 
+        const user = userSnapshot.data() as IUser;
+
 		// Ensure eBay data exists
-		if (!user.ebay) {
+		if (!user.connectedAccounts.ebay) {
 			return res.status(400).json({ error: 'No eBay data found for this user' });
-		}
+        }
 
 		// Remove the eBay tokens from the user object
-		user.ebay.ebayAccessToken = undefined;
-		user.ebay.ebayRefreshToken = undefined;
-		user.ebay.ebayTokenExpiry = undefined;
+		user.connectedAccounts.ebay = null;
 
-		await user.save();
+        // Update the Firestore user document to remove eBay account data
+        await updateUser("id", session.user.id, { connectedAccounts: user.connectedAccounts });
 
 		// Clear the cookies to avoid auto-login on next connect
 		nookies.destroy({ res }, 'ebay_oauth_state', { path: '/' });

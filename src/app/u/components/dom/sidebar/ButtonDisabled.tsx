@@ -24,7 +24,7 @@ const DisabledSideBarButton: React.FC<DisabledSideBarButtonProps> = ({
   const { data: session } = useSession();
   const pathname = usePathname();
 
-  const basePath = `/u/${session?.user?.name}`;
+  const basePath = `/u/${session?.user?.username}`;
   const isActive = pathname === `${basePath}/${redirect}`;
 
   const handleButtonClick = () => {

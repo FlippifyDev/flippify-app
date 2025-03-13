@@ -1,5 +1,8 @@
 import HomePage from './l/home/page';
 import Loading from './components/Loading';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 
 import { Suspense } from 'react';
 import { Metadata } from 'next';
@@ -38,6 +41,17 @@ export const metadata: Metadata = {
 }
 
 export default function Home() {
+	const router = useRouter();
+	const { data: session, status } = useSession();
+
+	useEffect(() => {
+			if (status === 'loading') return;
+			if (!session) {
+					return;
+			}
+			router.push(`/u/${session.user.id}/dashboard`);
+	}, [router, session, status]);
+	
 	return (
 		<Suspense fallback={<Loading />}>
 			<HomePage />

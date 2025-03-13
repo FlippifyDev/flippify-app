@@ -1,16 +1,15 @@
-import SidebarMonitorButtons from './MonitorButtons';
 import SidebarSignOutButton from './ButtonSignout';
 import SidebarHomeButtons from './HomeButtons';
 import SidebarToolButtons from './ToolButtons';
 import SidebarButton from './Button';
 import ButtonFeedback from './ButtonFeedback';
-import Alert from '@/src/app/components/Alert';
+import Alert from '@/app/components/Alert';
 import React, { useState, useEffect } from 'react';
 
 import { BsClipboard2Fill } from 'react-icons/bs';
-import "@/src/styles/hide-scrollbar.css";
+import "@/styles/hide-scrollbar.css";
 
-import MenuButton from '@/src/app/components/MenuButton';
+import MenuButton from '@/app/components/MenuButton';
 
 
 interface SidebarProps {
@@ -55,12 +54,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, setIsSidebarOpen }) =>
 							Home
 						</h2>
 						<SidebarHomeButtons showAlert={showAlert} isSidebarOpen={isSidebarOpen} />
-					</div>
-					<div>
-						<h2 className={`text-white text-lg font-bold px-2 ${isSidebarOpen ? 'block' : 'hidden'}`} style={{ overflow: 'hidden' }}>
-							Monitors
-						</h2>
-						<SidebarMonitorButtons showAlert={showAlert} isSidebarOpen={isSidebarOpen} />
 					</div>
 					<div>
 						<h2 className={`text-white text-lg font-bold px-2 ${isSidebarOpen ? 'block' : 'hidden'}`} style={{ overflow: 'hidden' }}>

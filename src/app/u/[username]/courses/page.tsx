@@ -1,7 +1,7 @@
 import React from 'react';
 import Layout from '../../components/layout/Layout';
 import CoursesPageContent from '../../components/home/courses/CoursesPage';
-import ThemeSetter from '@/src/app/components/ThemeSetter';
+import ThemeSetter from '@/app/components/ThemeSetter';
 
 export const metadata = {
 	title: 'Courses - Flippify',

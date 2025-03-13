@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Lato, Inter } from 'next/font/google';
-import HomeGetEarlyAccess from "./HomeGetEarlyAccess";
+import HomeGetEarlyAccess from "./HomeGetAccess";
 
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
@@ -17,20 +17,20 @@ const HomeMockupBrowser = () => {
 					<a href="#" className={`${inter.className} mb-8 text-lightModeText text-4xl font-bold`}>{" "}Every Step.</a>
 				</p>
 				<p className="pt-4 text-darkGreyText text-center font-semibold">
-					Connect your eBay and Amazon accounts for automatic listings, inventory management, track orders, and get detailed financial and tax reports. We handle everything — you just buy, ship and print profits.
+					Connect your eBay account for automatic listings, inventory management, order tracking, and detailed finance & tax reports. We handle everything — you just buy, ship and print profits.
 				</p>
 				<div className="flex justify-center pt-6">
 					<HomeGetEarlyAccess />
 				</div>
 			</div>
-			<div className="mockup-browser order-1 bg-gray-100 md:order-2 w-full md:w-auto mockup-shadow">
-				<div className="mockup-browser-toolbar bg-gray-100">
-					<div className="input !bg-gray-200 text-black border-2 border-gray-300">{root}</div>
+			<div className="mockup-browser order-1 bg-[#222222] md:order-2 w-full md:w-auto mockup-shadow">
+				<div className="mockup-browser-toolbar bg-[#222222]">
+					<div className="input !bg-[#121212] text-white border-2 border-[#121212]">{root}</div>
 				</div>
-				<div className="bg-white flex justify-center px-1 py-1">
+				<div className="bg-[#222222] flex justify-center px-1 py-1">
 					<figure>
 						<Image
-							src="https://i.imgur.com/9it15G1.png"
+							src="https://i.imgur.com/kZRQzCq.png"
 							alt="Browser Mockup"
 							width={2448}
 							height={1336}

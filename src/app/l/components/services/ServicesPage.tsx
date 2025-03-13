@@ -1,55 +1,55 @@
 "use client";
 
-import ProductList from "./ServicesTabBots";
-import ToolList from "./ServicesTabTools";
+import EBayServices from "./ServicesTabEBay";
+import ComingSoonServices from "./ServicesTabComingSoon";
 import { useState, ChangeEvent } from "react";
 import React from "react";
-import "@/src/styles/services-slider.css"
+import "@/styles/services-slider.css"
 
 
 const ServicesPage = () => {
-	const [activeTab, setActiveTab] = useState("monitors");
-	const [fadeIn, setFadeIn] = useState(true); // To control fade effect
+	const [activeTab, setActiveTab] = useState("eBay");
+	const [fadeIn, setFadeIn] = useState(true); 
 
 	const handleTabChange = (event: ChangeEvent<HTMLInputElement>) => {
-		setFadeIn(false); // Start fading out the current content
+		setFadeIn(false); 
 		setTimeout(() => {
-			setActiveTab(event.target.value); // Change the tab after fade out is complete
-			setFadeIn(true); // Start fading in the new content
-		}, 300); // 300ms matches the fade-out transition
+			setActiveTab(event.target.value); 
+			setFadeIn(true); 
+		}, 300); 
 	};
 
 	return (
 		<div className="w-full flex flex-col items-center">
 			{/* Tab Buttons with Sliding Indicator */}
 			<div role="tablist" className="tabs w-auto flex justify-center mb-4 relative">
-				<label className={`tab w-28 flex items-center justify-center relative ${activeTab === 'monitors' ? 'tab-active' : 'tab-inactive'}`}>
+				<label className={`tab w-28 flex items-center justify-center relative ${activeTab === 'eBay' ? 'tab-active' : 'tab-inactive'}`}>
 					<input
 						type="radio"
 						name="tabs"
-						value="monitors"
-						checked={activeTab === 'monitors'}
+						value="eBay"
+						checked={activeTab === 'eBay'}
 						onChange={handleTabChange}
 						className="hidden"
 					/>
-					<span className="text-white text-lg font-medium tab-active-indicator">Monitors</span>
+					<span className="text-white text-lg font-medium tab-active-indicator">eBay</span>
 				</label>
-				<label className={`tab w-28 flex items-center justify-center relative ${activeTab === 'tools' ? 'tab-active' : 'tab-inactive'}`}>
+				<label className={`tab w-full flex items-center justify-center relative ${activeTab === 'comingSoon' ? 'tab-active' : 'tab-inactive'}`}>
 					<input
 						type="radio"
 						name="tabs"
-						value="tools"
-						checked={activeTab === 'tools'}
+						value="comingSoon"
+						checked={activeTab === 'shopify'}
 						onChange={handleTabChange}
 						className="hidden"
 					/>
-					<span className="text-white text-lg font-medium tab-active-indicator">Tools</span>
+					<span className="text-white text-lg font-medium tab-active-indicator">Coming Soon</span>
 				</label>
 			</div>
 
-			{/* Sliding Content with Fade Transition */}
 			<div className={`w-full flex justify-center transition-opacity duration-300 ${fadeIn ? 'opacity-100' : 'opacity-0'}`}>
-				{activeTab === "monitors" ? <ProductList /> : <ToolList />}
+					{activeTab === 'eBay' ? <EBayServices /> : null}
+					{activeTab === 'comingSoon' ? <ComingSoonServices /> : null}
 			</div>
 		</div>
 	);

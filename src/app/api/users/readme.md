@@ -1,1 +1,0 @@
-this dir is for the admin panel API requests to get users and use other REST functionality, please lmk if you change the location of this

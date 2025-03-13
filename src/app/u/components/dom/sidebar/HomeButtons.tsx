@@ -1,15 +1,12 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { ref, get } from 'firebase/database';
-import { database } from '@/src/lib/firebase/client';
 import DisabledSideBarButton from './ButtonDisabled';
 import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
 import SidebarButton from './Button';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import { MdGroups } from 'react-icons/md';
 import { FaHouse } from 'react-icons/fa6';
 import { FaBook, FaBell } from "react-icons/fa";
 import { FaRegNewspaper } from "react-icons/fa6";
@@ -23,52 +20,10 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
 	const { data: session } = useSession();
 	const [unreadCount, setUnreadCount] = useState(0);
 
-	useEffect(() => {
-		if (!session?.user?.customerId) return;
-
-		const sanitizedCustomerId = session.user.customerId.replace(/[.#$[\]]/g, '_');
-		const notificationsRef = ref(database, 'notifications');
-
-		const fetchNotifications = async () => {
-			try {
-				const snapshot = await get(notificationsRef);
-				let unreadNotifications = 0;
-				snapshot.forEach((childSnapshot) => {
-					const notification = childSnapshot.val();
-					if (!notification.readBy || !notification.readBy[sanitizedCustomerId]) {
-						unreadNotifications++;
-					}
-				});
-				setUnreadCount(unreadNotifications);
-			} catch (error) {
-				console.error("Error fetching notifications:", error);
-			}
-		};
-
-		fetchNotifications();
-	}, [session?.user?.customerId]);
-
 	return (
 		<div className='w-full flex flex-col'>
 			{/* Dashboard Button */}
 			<SidebarButton text="Dashboard" redirect="dashboard" isSidebarOpen={isSidebarOpen} symbol={<FaHouse className="text-lg" />} />
-
-			{/* Notifications Button with unread count */}
-			<SidebarButton
-				text="Notifications"
-				redirect="notifications"
-				isSidebarOpen={isSidebarOpen}
-				symbol={
-					<div className="relative">
-						<FaBell className="text-lg" />
-						{unreadCount > 0 && (
-							<span className="absolute top-[-5px] right-[6px] lg:right-[8px] xl:right-[10px] text-xs text-white bg-houseBlue rounded-full h-4 w-4 flex items-center justify-center">
-								{unreadCount}
-							</span>
-						)}
-					</div>
-				}
-			/>
 
 			{/* Reseller News Tab - for members/admin */}
 			<LayoutSubscriptionWrapper anySubscriptions={["member", "admin"]}>
@@ -93,9 +48,6 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
 
 			{/* Plans Button */}
 			<SidebarButton text="Plans" redirect="plans" isSidebarOpen={isSidebarOpen} symbol={<FaSearch className="text-lg" />} />
-
-			{/* Server Plans Button */}
-			<SidebarButton text="Server Plans" redirect="server-plans" isSidebarOpen={isSidebarOpen} symbol={<MdGroups className="text-xl" />} />
 
 			{/* Courses Button - for admin only */}
 			<LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>

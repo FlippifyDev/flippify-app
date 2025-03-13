@@ -1,10 +1,5 @@
-"use client";
-
-import React, { useState, useEffect } from "react";
 import CourseCard from "./CourseCard";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
-import { database } from "@/src/lib/firebase/client";
-import { onValue, ref } from "firebase/database";
 
 const coursesData = {
 	flippifyFundamentals: {
@@ -34,20 +29,6 @@ const coursesData = {
 };
 
 const CoursesPageContent = () => {
-	const [events, setEvents] = useState<any[]>([]);
-
-	useEffect(() => {
-		const eventsRef = ref(database, "events");
-		onValue(eventsRef, (snapshot) => {
-			const eventList: any[] = [];
-			snapshot.forEach((childSnapshot) => {
-				const event = childSnapshot.val();
-				eventList.push(event);
-			});
-			setEvents(eventList);
-		});
-	}, []);
-
 	return (
 		<div className="w-full h-full mb-2 flex flex-col lg:flex-row lg:space-x-2 px-2">
 			{/* Left Section: Courses */}
@@ -103,24 +84,6 @@ const CoursesPageContent = () => {
 					<button className="btn-disabled bg-gray-300 text-gray-400 opacity-90 py-2 px-4 rounded-lg transition duration-200">
 						Coming Soon
 					</button>
-				</div>
-
-				<h3 className="text-xl font-bold mb-4 mt-10 text-center lg:text-left">Upcoming Events</h3>
-				<div className="bg-gray-200 p-4 rounded-lg overflow-y-auto">
-					{events.length > 0 ? (
-						events.map((event, index) => (
-							<div key={index} className="mb-4 p-4 bg-white rounded-lg shadow-md">
-								<h4 className="text-lg font-semibold">{event.title}</h4>
-								<p>{event.description}</p>
-								<p>Date: {new Date(event.date).toLocaleString()}</p>
-								<a href={event.link} target="_blank" rel="noopener noreferrer" className="text-blue-600">
-									Join on Discord
-								</a>
-							</div>
-						))
-					) : (
-						<p className="text-gray-600">No Upcoming Events.</p>
-					)}
 				</div>
 			</div>
 		</div>

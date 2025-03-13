@@ -3,9 +3,9 @@ import { getSession } from 'next-auth/react';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 // Local Imports
-import { IEbayTokenData } from '@/src/models/firebase';
-import { createEbayToken } from '@/src/services/ebay/create-token';
-import { addEbayTokens } from '@/src/services/ebay/add-token';
+import { IEbay } from '@/models/user';
+import { createEbayToken } from '@/services/ebay/create-token';
+import { addEbayTokens } from '@/services/ebay/add-token';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -17,14 +17,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	try {
 		// Create the users tokens
-		const tokenData: IEbayTokenData = await createEbayToken(code)
+        const tokenData: IEbay = await createEbayToken(code)
 		if (tokenData.error) {
 			return res.status(400).json({ error: tokenData.error_description });
 		}
 
 		// Fetch the users session data
 		const session = await getSession({ req });
-		if (!session || !session.user?.customerId) {
+		if (!session || !session.user?.stripeCustomerId) {
 			return res.status(401).json({ error: 'User not authenticated' });
 		}
 

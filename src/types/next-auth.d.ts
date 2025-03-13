@@ -1,45 +1,22 @@
-import NextAuth, { DefaultSession, DefaultJWT } from 'next-auth';
+import { IUser } from '@/models/user';
+import { DefaultSession, DefaultJWT } from 'next-auth';
 import { User as NextAuthUser } from 'next-auth';
-import { ISubscription } from '../userModel';
 
-
-interface SessionUser extends NextAuthUser {
-	name: string;
-	email: string;
-	image: string;
-	discordId: string;
-	customerId?: string;
-	subscriptions: ISubscription[];
-	referral?: {
-		referral_code: string | null;
-		referred_by: string | null;
-		valid_referrals: string[];
-		referral_count: number;
-		rewards_claimed: number;
-	};
-	accessGranted?: boolean;
-	username: string;
-	currency?: string;
-	ebay?: {
-		ebayAccessToken: string | null;
-		ebayRefreshToken: string | null;
-		ebayTokenExpiry: number | null;
-	};
+interface UserSession extends NextAuthUser {
+    id: string;
+    email: string;
 }
 
-declare module 'next-auth' {
-	interface Session extends DefaultSession {
-		accessToken?: string;
-		user: SessionUser;
-	}
+declare module "next-auth" {
+    interface Session extends DefaultSession {
+        id: string;
+        email: string;
+        user: IUser;
+    }
 
-	interface JWT extends DefaultJWT {
-		accessToken?: string;
-		username?: string;
-		currency?: string;
-	}
-
-	interface NextApiRequest {
-		session: Session;
-	}
+    interface JWT extends DefaultJWT {
+        id: string;
+        email: string;
+        user: IUser;
+    }
 }

@@ -24,7 +24,7 @@ const SidebarButton: React.FC<SidebarButtonProps> = ({
 	const pathname = usePathname();
 
 	// Extract the base path without the username prefix
-	const basePath = `/u/${session?.user?.name}`;
+	const basePath = `/u/${session?.user?.username}`;
 
 	// Determine if the button should be active
 	const isActive = pathname === `${basePath}/${redirect}`;
@@ -32,7 +32,7 @@ const SidebarButton: React.FC<SidebarButtonProps> = ({
 	const handleClick = () => {
 		if (!onClick) {
 			if (session) {
-				if (session.user?.name) {
+				if (session.user?.username) {
 					router.push(`${basePath}/${redirect}`);
 				} else {
 					router.push(`/u/loading`);

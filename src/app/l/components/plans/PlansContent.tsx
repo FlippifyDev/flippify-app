@@ -6,7 +6,7 @@ import PlansCardEliteWhatsIncluded from "./PlansCardEliteWhatsIncluded";
 import PlansCardBasicWhatsIncluded from "./PlansCardStandardWhatsIncluded";
 import React, { useState, useEffect } from "react";
 import { Lato, Inter } from "next/font/google";
-import { fetchConversionRatesFromFirebase } from "@/src/utils/currency-api"; // Using Firebase fetch
+import { fetchConversionRatesFromFirebase } from "@/utils/currency-api"; // Using Firebase fetch
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
@@ -42,7 +42,7 @@ const PlansContent = () => {
 	return (
 		<div className="w-full h-full flex flex-col justify-center items-center mb-2 relative">
 			<div className="flex flex-col items-center space-y-5 text-center mt-2 md:mt-6">
-				<div className="flex flex-wrap justify-center">
+				<div className="flex flex-wrap justify-center animate-fadeInPrimary">
 					<p
 						className={`${lato.className} text-5xl w-4/5 sm:w-full text-gradient bg-gradient-to-tr from-textGradStart to-textGradEnd bg-clip-text text-transparent py-1`}
 					>
@@ -52,7 +52,7 @@ const PlansContent = () => {
 						</a>
 					</p>
 				</div>
-				<div className="flex justify-center w-4/5 sm:w-full">
+				<div className="flex justify-center w-4/5 sm:w-full animate-fadeInSecondary">
 					<p className="mx-4 mt-[-12px] mb-2 sm:mx-2 text-gray-300 text-md sm:text-lg text-center">
 						Flexible Plans for Every Reseller: From Beginners to Experts
 					</p>
@@ -80,7 +80,7 @@ const PlansContent = () => {
 			</div>
 
 			{/* Subscription Cards with equal heights */}
-			<div className="mt-10 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-8 w-full max-w-screen-xl mx-auto px-4">
+			<div className="mt-10 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-8 w-full max-w-screen-xl mx-auto px-4 animate-fadeInBounce">
 				<PlansCard
 					title="Standard"
 					description="For beginners"
@@ -94,7 +94,8 @@ const PlansContent = () => {
 					priceRange={selectedPlan}
 					currency={currency}
 					conversionRates={conversionRates}
-					specialPlan={true}
+					// specialPlan={true}
+					comingSoon={true}
 				/>
 				<PlansCard
 					title="Pro"

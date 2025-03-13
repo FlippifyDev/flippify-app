@@ -26,7 +26,6 @@ const LayoutSubscriptionWrapper: React.FC<LayoutSubscriptionWrapperProps> = ({
 	const { data: session } = useSession();
 	const router = useRouter();
 
-
 	useEffect(() => {
 		if (!session || !session.user) {
 			if (redirectPath) router.push(redirectPath);
@@ -35,7 +34,7 @@ const LayoutSubscriptionWrapper: React.FC<LayoutSubscriptionWrapperProps> = ({
 
 		const user = session.user;
 
-		if (!user.subscriptions) {
+		if (!user.subscriptions) {            
 			if (redirectPath) router.push(redirectPath);
 			return;
 		}

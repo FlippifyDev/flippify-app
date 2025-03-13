@@ -4,7 +4,7 @@ import React from "react";
 import Navbar from "../dom/Navbar";
 import LayoutGradientBackground from "./LayoutGradientBackground";
 import LayoutWhiteSection from "./LayoutWhiteSection";
-import LayoutFooter from "./LayoutFooter";
+import Footer from "./LayoutFooter";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
 	return (
@@ -22,7 +22,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 			</main>
 
 			<footer className="relative h-full w-full flex justify-end">
-				<LayoutFooter />
+				<Footer />
 			</footer>
 		</div>
 	);

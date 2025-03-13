@@ -1,7 +1,7 @@
 "use client";
 
-import { IOrder } from '@/src/models/firebase';
-import { IHistoryGrid } from '@/src/models/recent-sales';
+import { IOrder } from '@/models/firebase';
+import { IHistoryGrid } from '@/models/recent-sales';
 import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 

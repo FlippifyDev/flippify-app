@@ -12,7 +12,7 @@ import { FaShoppingCart } from 'react-icons/fa';
 import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
 import OrdersContent from './OrdersContent';
 import InventoryContent from './InventoryContent';
-import { refreshEbayToken } from '@/src/services/ebay/refresh-token';
+import { refreshEbayToken } from '@/services/ebay/refresh-token';
 
 
 const InventoryOrdersContent = () => {

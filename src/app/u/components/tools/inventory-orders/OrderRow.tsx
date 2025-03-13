@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image";
-import { currencySymbols } from "@/src/config/currency-config";
+import { currencySymbols } from "@/config/currency-config";
 
 import { useRouter } from "next/navigation";
 

@@ -1,6 +1,5 @@
 // Function argument types
 type SetConnected = React.Dispatch<React.SetStateAction<boolean>>;
-type SetLoading = React.Dispatch<React.SetStateAction<boolean>>;
 
 // OAuth scopes to give us permission to access users ebay information
 const SCOPES = [
@@ -56,44 +55,5 @@ const handleDisconnect = async (setConnected: SetConnected) => {
 };
 
 
-const fetchEbayStatus = async (setLoading: SetLoading, setConnected: SetConnected) => {
-	// Start loading while fetching status
-	setLoading(true);
 
-	try {
-		const response = await fetch("/api/ebay/status");
-		if (!response.ok) {
-			throw new Error(`Failed to fetch eBay status: ${response.status} ${response.statusText}`);
-		}
-		const data = await response.json();
-
-		// Access the ebay object from the response
-		const ebay = data.ebay || {};
-		if (ebay.ebayAccessToken) {
-			setConnected(true);
-		} else {
-			setConnected(false);
-		}
-	} catch (error) {
-		setConnected(false);
-	} finally {
-		setLoading(false);
-	}
-};
-
-
-const createWarehouse = async (customerId: string | undefined, accessToken: string, payload: any) => {
-	try {
-		const response = await fetch("/api/ebay/createWarehouse", { body: JSON.stringify({ customerId, accessToken, payload }) });
-
-		if (response.ok) {
-			return await response.json();
-		} else {
-			return await response.json();
-		}
-	} catch (error) {
-		return { "Error creating warehouse eBay:": error };
-	}
-};
-
-export { handleConnectEbay, handleDisconnect, fetchEbayStatus, createWarehouse };
+export { handleConnectEbay, handleDisconnect };

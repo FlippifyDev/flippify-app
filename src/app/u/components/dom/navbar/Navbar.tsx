@@ -3,12 +3,12 @@
 import React, { useState, useEffect } from "react";
 import NavbarProfileAvatar from "./NavbarProfileAvatar";
 import { useSession } from "next-auth/react";
-import { getProcessedTitle } from "@/src/utils/extract-final-url-name";
+import { getProcessedTitle } from "@/utils/extract-final-url-name";
 
 
 const Navbar = () => {
 	const { data: session } = useSession();
-	const customerId = session?.user.customerId;
+	const customerId = session?.user.stripeCustomerId;
 	const [title, setTitle] = useState(getProcessedTitle())
 
 	// Fetch unread notifications count from Firebase

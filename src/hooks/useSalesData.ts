@@ -1,13 +1,13 @@
 // hooks/useSalesData.ts
 import { useEffect, useState } from "react";
 
-import { IOrder } from "@/src/models/firebase";
+import { IEbayOrder } from "@/models/user";
 import { getCachedData, setCachedData } from "../utils/cache-helpers";
-import { sendApiRequest } from "@/src/services/api/request";
+import { sendApiRequest } from "@/services/api/request";
 
 
 export const useSalesData = (ebayAccessToken: string | null | undefined, customerId: string) => {
-	const [salesData, setSalesData] = useState<IOrder[]>([]);
+	const [salesData, setSalesData] = useState<IEbayOrder[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const cacheKey = `salesData-${customerId}`; // Cache key based on customerId

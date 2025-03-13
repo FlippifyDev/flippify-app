@@ -1,11 +1,11 @@
-import React from "react";
-import { AiOutlineTag } from "react-icons/ai"; // Icon for the discount tag
-import PlansGetAccessButton from "./PlansGetAccessButton";
+// Local Imports
+import { AiOutlineTag } from "react-icons/ai";
 import PlansSubscribeNow from "./PlansSubscribeNow";
+import { currencySymbols } from "@/config/currency-config";
+import PlansGetAccessButton from "./PlansGetAccessButton";
+import { BackgroundGradient } from "@/components/ui/background-gradient";
 import ManageMembershipsButton from "./PlansManageMembershipButton";
-import { BackgroundGradient } from "@/src/components/ui/background-gradient";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
-import { currencySymbols } from "@/src/config/currency-config";
 
 interface PlansCardProps {
 	title: string;

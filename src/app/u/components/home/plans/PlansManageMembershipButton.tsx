@@ -1,7 +1,9 @@
 'use client';
 
 // Local Imports
-import createBillingPortalUrl from '@/src/services/stripe/create-billing-portal';
+import { createBillingPortalUrl } from '@/services/stripe/create';
+
+// External Imports
 import React, { useEffect, useState, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 
@@ -20,11 +22,11 @@ const ManageMembershipsButton: React.FC<Props> = ({ specialPlan }) => {
 		const fetchBillingUrl = async () => {
 			if (session?.user) {
 				const user = session.user;
-				customerIdRef.current = user.customerId || null;
+				customerIdRef.current = user.stripeCustomerId || null;
 
 				if (customerIdRef.current) {
 					try {
-						const url = await createBillingPortalUrl(user.name, customerIdRef.current);
+						const url = await createBillingPortalUrl(user.username ?? "", customerIdRef.current);
 						setBillingUrl(url);
 					} catch (error) {
 						console.error('Failed to create billing portal:', error);

@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
-import { FaClipboard } from 'react-icons/fa';
-import ReferralRewardsTimeline from './ProfileReferralRewardsTimeline';
+// Local Imports
 import { ISubscription } from '@/models/user';
-import createAndApplyCoupon from '@/services/stripe/create-and-apply-coupon';
-import incrementRewardsClaimed from '@/services/mongodb/increment-rewards-claim';
-import checkForExistingDiscount from '@/services/stripe/check-for-existing-discount';
-import ProfileCashRewardModal from './ProfileCashRewardModel';
+import { createAndApplyCoupon } from '@/services/stripe/create';
+import { incrementRewardsClaimed } from '@/services/firebase/update';
+import { checkForExistingDiscount } from '@/services/stripe/retrieve';
+
+// External Imports
+import { useState, useEffect } from 'react';
+import { FaClipboard } from 'react-icons/fa';
+import { useSession } from 'next-auth/react';
 
 const ProfileReferralData: React.FC = () => {
     const { data: session } = useSession();

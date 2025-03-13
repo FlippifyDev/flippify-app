@@ -1,7 +1,10 @@
 'use client';
 
-import createCheckoutSession from '@/services/stripe/create-checkout-session';
-import React, { useEffect, useState, useRef } from 'react';
+// Local Imports
+import { createCheckoutSession } from '@/services/stripe/create';
+
+// External Imports
+import { useEffect, useState, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 
 interface PlansSubscribeNowProps {

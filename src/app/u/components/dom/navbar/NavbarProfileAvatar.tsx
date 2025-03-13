@@ -2,8 +2,8 @@
 
 // Local Imoports
 import { auth} from "@/lib/firebase/config";
-import createBillingPortalUrl from "@/services/stripe/create-billing-portal";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
+import { createBillingPortalUrl } from "@/services/stripe/create";
 
 // External Imports
 import { signOut as nextSignOut, useSession } from "next-auth/react";

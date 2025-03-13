@@ -1,5 +1,5 @@
 import React from "react";
-import PlansClickableBulletPoint from "./PlansClickableBulletPoint"; // Correct import path for ClickableBulletPoint
+import PlansClickableBulletPoint from "./PlansClickableBulletPoint"; 
 
 
 const PlansCardEliteWhatsIncluded = () => {

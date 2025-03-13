@@ -1,14 +1,14 @@
 "use client";
 
-import { IUser, ISubscription } from "@/models/mongodb/users";
-import PlansCardAdmin from "@/app/u/components/home/admin/AdminUserCards";
+// Local Imports
 import fetchProducts from "@/services/mongodb/fetch-products";
+import PlansCardAdmin from "@/app/u/components/home/admin/AdminUserCards";
 import LayoutProductsSkeleton from "../../layout/LayoutProductsSkeleton";
-import AdminEventManagement from "./AdminEventManagement";
-import AdminNotificationManagement from "./AdminNotificationManagement";
-import AdminResellerNewsManagement from "./AdminResellerNewsManagement";
-import { IoSearch } from "react-icons/io5";
+import { IUser, ISubscription } from "@/models/user";
+
+// External Imports
 import { useEffect, useState } from "react";
+import { IoSearch } from "react-icons/io5";
 
 const AdminContent = () => {
 	const [users, setUsers] = useState<IUser[]>([]);
@@ -38,15 +38,13 @@ const AdminContent = () => {
 		const lowercasedQuery = searchQuery.toLowerCase();
 		setFilteredUsers(
 			users.filter((user) => {
-				const username = user.username.toLowerCase();
-				const stripeCustomerId = user.stripe_customer_id.toLowerCase();
-				const discordId = user.discord_id.toLowerCase();
+				const username = user?.username?.toLowerCase() as string;
+				const stripeCustomerId = user?.stripeCustomerId.toLowerCase();
 				const email = user.email.toLowerCase();
 
 				return (
 					username.includes(lowercasedQuery) ||
 					stripeCustomerId.includes(lowercasedQuery) ||
-					discordId.includes(lowercasedQuery) ||
 					email.includes(lowercasedQuery)
 				);
 			})
@@ -100,7 +98,7 @@ const AdminContent = () => {
 					{filteredUsers.length > 0 ? (
 						<div className="flex flex-wrap gap-20 justify-center">
 							{filteredUsers.map((user) => (
-								<PlansCardAdmin key={user._id.toString()} user={user} unique_subscriptions={subscriptions} />
+								<PlansCardAdmin key={user.id.toString()} user={user} unique_subscriptions={subscriptions} />
 							))}
 						</div>
 					) : (

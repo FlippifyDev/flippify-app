@@ -25,23 +25,6 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
 			{/* Dashboard Button */}
 			<SidebarButton text="Dashboard" redirect="dashboard" isSidebarOpen={isSidebarOpen} symbol={<FaHouse className="text-lg" />} />
 
-			{/* Notifications Button with unread count */}
-			<SidebarButton
-				text="Notifications"
-				redirect="notifications"
-				isSidebarOpen={isSidebarOpen}
-				symbol={
-					<div className="relative">
-						<FaBell className="text-lg" />
-						{unreadCount > 0 && (
-							<span className="absolute top-[-5px] right-[6px] lg:right-[8px] xl:right-[10px] text-xs text-white bg-houseBlue rounded-full h-4 w-4 flex items-center justify-center">
-								{unreadCount}
-							</span>
-						)}
-					</div>
-				}
-			/>
-
 			{/* Reseller News Tab - for members/admin */}
 			<LayoutSubscriptionWrapper anySubscriptions={["member", "admin"]}>
 				<SidebarButton

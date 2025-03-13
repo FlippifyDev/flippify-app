@@ -1,12 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+// Local Imports
 import PlansCard from "./PlansCard";
-import PlansCardStandardWhatsIncluded from "./PlansCardStandardWhatsIncluded";
-import PlansCardEliteWhatsIncluded from "./PlansCardEliteWhatsIncluded";
 import PlansCardProWhatsIncluded from "./PlansCardProWhatsIncluded";
+import PlansCardEliteWhatsIncluded from "./PlansCardEliteWhatsIncluded";
+import PlansCardStandardWhatsIncluded from "./PlansCardStandardWhatsIncluded";
+
+// External Imports
 import { Lato, Inter } from "next/font/google";
 import { useSession } from "next-auth/react";
+import { useState } from "react";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });

@@ -1,6 +1,6 @@
 "use client";
 
-import { IOrder } from '@/models/firebase';
+import { IEbayOrder } from '@/models/user';
 import { IHistoryGrid } from '@/models/recent-sales';
 import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
@@ -12,7 +12,7 @@ const currencySymbols: Record<string, string> = {
 };
 
 interface DashboardRecentSalesCardProps {
-	salesData: IOrder[];
+    salesData: IEbayOrder[];
 	currency: string;
 }
 

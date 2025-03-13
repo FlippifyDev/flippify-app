@@ -140,8 +140,8 @@ async function retrieveUserRefById(uid: string): Promise<DocumentReference | nul
 
 
 async function retrieveProducts() {
-
+    return [];
 }
 
 
-export { retrieveUser, retrieveUserAndCreate, retrieveUserSnapshot, retrieveUserRef, retrieveUserRefById, };
+export { retrieveUser, retrieveUserAndCreate, retrieveUserSnapshot, retrieveUserRef, retrieveUserRefById, retrieveProducts };

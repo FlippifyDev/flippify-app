@@ -91,7 +91,6 @@ interface IEbayOrder {
 }
 
 interface IPreferences {
-    notificationsEnabled: boolean;
     preferredEmail: string;
     locale: string;
     currency: CurrencyType;

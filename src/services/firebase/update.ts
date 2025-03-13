@@ -3,7 +3,7 @@ import { IUser } from "@/models/user";
 import { retrieveUserRef, retrieveUserRefById } from "./retrieve";
 
 // External Imports
-import { doc, getDoc, increment, setDoc } from "firebase/firestore";
+import { getDoc, increment, setDoc } from "firebase/firestore";
 
 
 
@@ -19,19 +19,26 @@ import { doc, getDoc, increment, setDoc } from "firebase/firestore";
  * @param {any} data - The data to update in the user's document.
  * @returns {Promise<void>} A promise that resolves when the document update is complete.
  */
-async function updateUser(filter_key: string, filter_value: string, data: any) {
+async function updateUser(uid: string, data: any): Promise<boolean> {
     try {
-        const userRef = await retrieveUserRef(filter_key, filter_value);
-        if (userRef) {
-            await setDoc(userRef, data, { merge: true });
-        } else {
-            console.log(`No user found with ${filter_key}: ${filter_value}`);
+        const userRef = await retrieveUserRefById(uid);
+
+        if (!userRef) {
+            console.error(`No user found with uid: ${uid}`);
+            return false;
         }
+
+        console.log("Updating user document with:", data);
+
+        await setDoc(userRef, data, { merge: true });
+
+        console.log("User document updated successfully.");
+        return true;
     } catch (error) {
         console.error("Error updating user in Firestore:", error);
+        return false;
     }
 }
-
 
 /**
  * Updates a user's preferences in Firestore based on their Stripe customer ID.
@@ -45,18 +52,26 @@ async function updateUser(filter_key: string, filter_value: string, data: any) {
  * @param {string} currency - The currency to set for the user.
  * @returns {Promise<void>} A promise that resolves when the document update is complete.
  */
-async function updateUserPreferences(customerId: string, email: string, currency: string) {
+async function updateUserPreferences(uid: string, preferredEmail: string, currency: string) {
     try {
-        const userRef = await retrieveUserRef("stripeCustomerId", customerId);
+        const userRef = await retrieveUserRefById(uid);
         if (userRef) {
-            await setDoc(userRef, { ["preferredEmail"]: email, currency }, { merge: true });
+            await setDoc(
+                userRef,
+                {
+                    preferences: {
+                        preferredEmail,
+                        currency
+                    }
+                },
+                { merge: true }
+            );
         }
     } catch (error) {
         console.error("Error updating Firestore user:", error);
         throw error;
     }
-};
-
+}
 
 /**
  * Completes the onboarding process for a user, optionally handling referrals.
@@ -65,25 +80,22 @@ async function updateUserPreferences(customerId: string, email: string, currency
  * @param {string | null} referralCode - The referral code used during signup, if any.
  * @returns {Promise<void>} Resolves when the onboarding is complete.
  */
-async function completeOnboarding(uid: string, referralCode: string | null): Promise<void> {
+async function completeOnboarding(uid: string, referralCode: string | null): Promise<IUser | null> {
     try {
         const userRef = await retrieveUserRefById(uid);
-        if (!userRef) return;
+        if (!userRef) return null;
 
         // Step 1: Handle referral if a referral code is provided
         if (referralCode) {
             const referralUserRef = await retrieveUserRef("referral.referralCode", referralCode);
             if (referralUserRef) {
-                // Check if the user has already been referred by someone
                 const referralSnap = await getDoc(referralUserRef);
                 if (referralSnap.exists()) {
                     const referralData = referralSnap.data() as IUser;
                     if (!referralData.referral.validReferrals.includes(uid)) {
-                        // Increment referral count only if the user has not been referred already
                         await setDoc(referralUserRef, { ["referral.referralCount"]: increment(1) }, { merge: true });
                         await setDoc(userRef, { ["referral.referredBy"]: referralCode }, { merge: true });
 
-                        // Add the current user to the list of valid referrals for the referrer
                         const updatedReferrals = [...referralData.referral.validReferrals, uid];
                         await setDoc(referralUserRef, { ["referral.validReferrals"]: updatedReferrals }, { merge: true });
                     }
@@ -95,17 +107,27 @@ async function completeOnboarding(uid: string, referralCode: string | null): Pro
         const userSnap = await getDoc(userRef);
         if (userSnap.exists()) {
             const userData = userSnap.data() as IUser;
-
-            // Ensure the subscription isn't duplicated
             const existingSubscriptions = userData.subscriptions || [];
             const subscriptionExists = existingSubscriptions.some(sub => sub.name === "accessGranted");
+
             if (!subscriptionExists) {
                 existingSubscriptions.push({ name: "accessGranted", id: "0", override: true, createdAt: new Date().toString() });
                 await setDoc(userRef, { subscriptions: existingSubscriptions }, { merge: true });
             }
         }
+
+        // 🔄 Fetch and return the updated user document
+        const updatedUserSnap = await getDoc(userRef);
+        if (updatedUserSnap.exists()) {
+            return updatedUserSnap.data() as IUser;
+        } else {
+            console.error("User document not found after updating.");
+            return null;
+        }
+        
     } catch (error) {
         console.error("Error completing onboarding:", error);
+        return null;
     }
 }
 

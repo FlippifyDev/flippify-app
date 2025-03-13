@@ -13,7 +13,7 @@ import { CurrencyType } from '@/models/user';
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
 const OnboardingFlow: React.FC = () => {
-    const { data: session } = useSession();
+    const { data: session, update: setSession } = useSession();
 
     const [step, setStep] = useState(1);
     const [referralCode, setReferralCode] = useState<string>("");
@@ -56,11 +56,10 @@ const OnboardingFlow: React.FC = () => {
             await updateUserPreferences(customerId, email, currency);
 
             // Complete the onboarding with the referral code
-            await completeOnboarding(session.user.id, validReferralCode);
+            const user = await completeOnboarding(session.user.id, validReferralCode);
 
-            // Refresh the page to reflect any role updates
-            if (typeof window !== 'undefined') {
-                window.location.reload(); // Reloads the page to ensure roles are updated in the session
+            if (user) {
+                setSession({ ...session, user: user });
             }
         }
     };

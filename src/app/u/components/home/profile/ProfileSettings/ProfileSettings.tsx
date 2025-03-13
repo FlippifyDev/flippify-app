@@ -11,14 +11,14 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 
 const ProfileSettings = () => {
-    const { data: session } = useSession();
+    const { data: session, update: setSession } = useSession();
     const [email, setEmail] = useState('');
     const [originalEmail, setOriginalEmail] = useState('');
     const [currency, setCurrency] = useState<CurrencyType>(session?.user.preferences.currency ?? "USD");
-    const [originalCurrency, setOriginalCurrency] = useState<CurrencyType>('GBP');
+    const [originalCurrency, setOriginalCurrency] = useState<CurrencyType>(session?.user.preferences.currency ?? "USD");
     const [feedback, setFeedback] = useState('');
     const [isChanged, setIsChanged] = useState(false);
-
+    console.log(session)
     useEffect(() => {
         const loadUserData = async () => {
             if (session && session.user) {
@@ -65,15 +65,9 @@ const ProfileSettings = () => {
             return;
         }
 
-        const customerId = session.user.stripeCustomerId as string;
-
-        if (!customerId) {
-            throw new Error('Customer ID is missing');
-        }
-
         try {
             // Update user preferences
-            await updateUserPreferences(customerId, email, currency);
+            await updateUserPreferences(session.user.id, email, currency);
 
             setFeedback('Settings updated successfully.');
             setOriginalEmail(email);
@@ -81,7 +75,7 @@ const ProfileSettings = () => {
             setIsChanged(false);
 
             // Refresh the page after successful save
-            window.location.reload();
+            setSession({ ...session, user: { ...session.user, preferences: { ...session.user.preferences, preferredEmail: email, currency } } });
         } catch (error) {
             console.error('Error updating settings:', error);
             setFeedback('Failed to update settings.');

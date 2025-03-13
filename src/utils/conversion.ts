@@ -17,3 +17,14 @@ export function base64ToBlob(b64Data: string, contentType = '', sliceSize = 512)
     const blob = new Blob(byteArrays, { type: contentType });
     return blob;
 }
+
+
+export function base64ToString(base64String: string): string {
+    // Decode the base64 string into a byte array
+    const decodedBytes = Buffer.from(base64String, 'base64');
+
+    // Convert the byte array to a string assuming it's UTF-8 encoded
+    const decodedString = decodedBytes.toString('utf-8');
+
+    return decodedString;
+}

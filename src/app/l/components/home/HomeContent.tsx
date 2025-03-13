@@ -6,7 +6,6 @@ import HomeMockupBrowser from './HomeMockupBrowser';
 import HomeShowcase from './HomeShowcase';
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
-const inter = Inter({ subsets: ['latin'] });
 
 const HomeContent = ({ className = '' }) => {
 	return (

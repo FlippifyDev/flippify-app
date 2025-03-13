@@ -28,7 +28,7 @@ const HomeGetAccess = () => {
 	};
 
 	return (
-		<button className="btn bg-white text-black rounded-lg mr-1 hover:text-white hover:bg-houseHoverBlue hover:shadow-lg hover:pb-[2px] border-none transform-duration-400 transition-duration-400 animate-fadeInBounce" onClick={handleSignIn}>Get Access Now</button>
+		<button className="btn bg-white text-black rounded-lg mr-1 hover:text-white hover:bg-houseHoverBlue hover:shadow-lg hover:pb-[2px] border-none transform-duration-400 transition-duration-400 animate-fadeInBounce" onClick={() => router.push('/l/coming-soon')}>Get Access Now</button>
 	)
 }
 

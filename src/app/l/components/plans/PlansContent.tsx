@@ -94,7 +94,8 @@ const PlansContent = () => {
 					priceRange={selectedPlan}
 					currency={currency}
 					conversionRates={conversionRates}
-					specialPlan={true}
+					// specialPlan={true}
+					comingSoon={true}
 				/>
 				<PlansCard
 					title="Pro"

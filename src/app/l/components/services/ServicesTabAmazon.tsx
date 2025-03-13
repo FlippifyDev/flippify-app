@@ -9,7 +9,7 @@ const AmazonServices: React.FC = () => {
 	return (
 		<div className="flex flex-col justify-center xl:w-11/12 h-full mb-5 mt-5">
 			<div className="flex flex-col items-center space-y-3 text-center mb-5">
-				<div className="flex justify-center mx-2">
+				<div className="flex justify-center mx-2 animate-fadeInPrimary">
 					<p
 						className={`${lato.className} text-5xl from-textGradStart to-textGradEnd to-60% bg-gradient-to-tr bg-clip-text text-transparent py-1`}
 					>
@@ -21,7 +21,7 @@ const AmazonServices: React.FC = () => {
 						{/* This is a space */} Services
 					</p>
 				</div>
-				<div className="flex justify-center max-w-2xl">
+				<div className="flex justify-center max-w-2xl animate-fadeInSecondary">
 					<p className="mx-4 sm:mx-2 text-white text-md sm:text-lg text-center">
 					Streamline your Amazon selling process with AI-powered automation, from product sourcing and FBA management to inventory tracking, pricing optimization, and sales insights.
 

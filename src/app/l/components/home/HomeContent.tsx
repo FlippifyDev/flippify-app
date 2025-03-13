@@ -12,12 +12,12 @@ const HomeContent = ({ className = '' }) => {
 	return (
 		<div className={`home-details-container ${className}`}>
 			<div className='flex flex-col items-center'>
-				<div className="w-[90%] mt-3 lg:mt-10 md:w-[80%] lg:w-[60%] xl:w-[30%]">
+				<div className="w-[90%] mt-3 lg:mt-10 md:w-[80%] lg:w-[60%] xl:w-[30%] animate-fadeInPrimary">
 					<p className={`${lato.className} text-6xl text-white text-center`}>
 						Automated Reselling using <span className="bg-gradient-to-tr pb-1 pl-1 from-textGradStart to-textGradEnd bg-clip-text text-transparent">AI</span>
 					</p>
 				</div>
-				<p className='w-11/12 sm:w-full mt-3 mb-8 pb-1 pt-2 text-gray-300 text-lg text-center'>
+				<p className='w-11/12 sm:w-full mt-3 mb-8 pb-1 pt-2 text-gray-300 text-lg text-center animate-fadeInSecondary'>
 					Handling everything so you don&apos;t have to, eBay & Amazon store automation & tracking in all areas.
 				</p>
 

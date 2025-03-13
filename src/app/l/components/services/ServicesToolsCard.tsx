@@ -27,7 +27,7 @@ const ServicesToolsCard: React.FC<ServicesToolsCardProps> = ({
   };
 
   return (
-    <div className="card card-compact m-2 p-2 bg-white w-72 sm:w-80 shadow-lg h-[500px] mt-6 relative rounded-2xl overflow-hidden animate-floatUp">
+    <div className="card card-compact m-2 p-2 bg-white w-72 sm:w-80 shadow-lg h-[500px] mt-6 relative rounded-2xl overflow-hidden animate-fadeInBounce">
       <figure className="h-62">
         <div className="relative w-full h-full">
           <Image

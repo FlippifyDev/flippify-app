@@ -1,3 +1,5 @@
+"use client";
+
 // Local Imports
 import { IUser } from "@/models/user";
 import { firestore } from "@/lib/firebase/config";
@@ -5,7 +7,6 @@ import { createUser } from "./create";
 
 // External Imports
 import { collection, doc, DocumentData, DocumentReference, getDoc, getDocs, query, QueryDocumentSnapshot, where } from 'firebase/firestore';
-import { firestoreAdmin } from "@/lib/firebase/config-admin";
 
 
 /**
@@ -98,13 +99,15 @@ async function retrieveUserSnapshot(filter_key: string, filter_value: string): P
  */
 async function retrieveUserRef(filterKey: string, filterValue: string): Promise<DocumentReference | null> {
     try {
-        const userSnapshot = await retrieveUserSnapshot(filterKey, filterValue);
-        if (userSnapshot) {
-            return doc(firestore, "users", userSnapshot.id);
-        } else {
-            console.log(`No user found with ${filterKey}: ${filterValue}`);
-            return null;
+        const usersCollection = collection(firestore, "users");
+        const q = query(usersCollection, where(filterKey, "==", filterValue));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+            return doc(firestore, "users", querySnapshot.docs[0].id);
         }
+        console.log(`No user found with ${filterKey}: ${filterValue}`);
+        return null;
     } catch (error) {
         console.error(`Error retrieving user reference with ${filterKey}=${filterValue}:`, error);
         return null;

@@ -87,7 +87,7 @@ const ProfileReferralData: React.FC = () => {
     return (
         <div className="relative group w-full h-full">
             {!isMember && (
-                <div className="absolute inset-0 bg-gray-100 bg-opacity-90 z-40 flex items-center justify-center rounded-xl">
+                <div className="absolute inset-0 bg-gray-100 bg-opacity-90 z-10 flex items-center justify-center rounded-xl">
                     <div className="bg-white font-semibold text-black py-2 px-4 rounded-lg shadow-xl">
                         Membership Required
                     </div>

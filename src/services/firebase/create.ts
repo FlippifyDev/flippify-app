@@ -42,7 +42,6 @@ export async function createUser(uid: string, email: string): Promise<IUser | vo
             },
             lastFetchedDate: null,  
             preferences: {
-                notificationsEnabled: false,
                 preferredEmail: email,
                 locale: 'GB', 
                 currency: 'USD',

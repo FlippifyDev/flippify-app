@@ -7,14 +7,14 @@ import React, { useState } from "react";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 
-interface ProductsCardProps {
+interface ServicesToolsCardProps {
 	title: string;
 	description: string;
 	disclaimer: string | null;
 	image: string;
 }
 
-const ProductsCard: React.FC<ProductsCardProps> = ({
+const ServicesToolsCard: React.FC<ServicesToolsCardProps> = ({
 	title,
 	description,
 	disclaimer,
@@ -27,7 +27,7 @@ const ProductsCard: React.FC<ProductsCardProps> = ({
 	};
 
 	return (
-		<div className="card card-compact m-2 p-2 bg-white w-72 sm:w-80 shadow-lg h-[30rem] mt-6">
+		<div className="card card-compact m-2 p-2 bg-white w-72 sm:w-80 shadow-lg h-[500px] mt-6">
 			<figure className="h-62">
 				<div className="relative w-full h-full">
 					<Image
@@ -76,4 +76,4 @@ const ProductsCard: React.FC<ProductsCardProps> = ({
 	);
 };
 
-export default ProductsCard;
+export default ServicesToolsCard;

@@ -33,7 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		user.connectedAccounts.ebay = null;
 
         // Update the Firestore user document to remove eBay account data
-        await updateUser("id", session.user.id, { connectedAccounts: user.connectedAccounts });
+        await updateUser(session.user.id, { connectedAccounts: user.connectedAccounts });
 
 		// Clear the cookies to avoid auto-login on next connect
 		nookies.destroy({ res }, 'ebay_oauth_state', { path: '/' });

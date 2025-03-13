@@ -1,8 +1,8 @@
 import React, { useState, ChangeEvent, FocusEvent, useRef, useEffect } from 'react';
-import { IUser, ISubscription } from '@/models/mongodb/users';
+import { IUser, ISubscription } from '@/models/user';
 import Alert from '@/app/components/Alert';
-import createCheckoutSession from '@/services/stripe/create-checkout-session';
-import fetchProducts from '@/services/mongodb/fetch-products';
+import { createCheckoutSession } from '@/services/stripe/create';
+
 
 interface CardProps {
 	user: IUser;
@@ -12,10 +12,9 @@ interface CardProps {
 const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => {
 	const username = user.username;
 	const email = user.email;
-	const discordId = user.discord_id;
-	const stripeCustomerId = user.stripe_customer_id;
+	const stripeCustomerId = user.stripeCustomerId;
 	const subscriptions = user.subscriptions;
-	const _id = user._id;
+	const _id = user.id;
 
 	const referral = user.referral || {
 		referral_code: '',
@@ -26,11 +25,11 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
 
 	const [newEmail, setNewEmail] = useState(email);
 	const [selectedRoles, setSelectedRoles] = useState<ISubscription[]>(
-		subscriptions.map(sub => ({
+		(subscriptions ?? []).map(sub => ({
 			name: sub.name,
-			role_id: sub.role_id.toString(),
+			id: sub.id,
 			override: sub.override,
-			server_subscription: sub.server_subscription,
+            createdAt: sub.createdAt,
 		}))
 	);
 	const [selectedCheckoutRole, setCheckoutSelectedRole] = useState<ISubscription | null>(null);
@@ -46,8 +45,8 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
 	const checkoutInputRef = useRef<HTMLInputElement>(null); // Ref for input
 
 	// Referral state
-	const [referralCode, setReferralCode] = useState(referral.referral_code);
-	const [rewardsClaimed, setRewardsClaimed] = useState(referral.rewards_claimed);
+	const [referralCode, setReferralCode] = useState(referral.referralCode);
+	const [rewardsClaimed, setRewardsClaimed] = useState(referral.rewardsClaimed);
 
 	const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => setNewEmail(e.target.value);
 
@@ -157,7 +156,7 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
 
 		try {
 			const sessionUrl = await createCheckoutSession(
-				username,
+				username ?? "",
 				stripeCustomerId,
 				manualPriceId, // Use the manually entered price ID
 				null // This param is for coupons, however no coupons apply to server subscriptions
@@ -185,10 +184,6 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
 				<p className="grid grid-cols-12">
 					<span className="col-span-4">Email: </span>
 					<span className="col-span-8">{email}</span>
-				</p>
-				<p className="grid grid-cols-12">
-					<span className="col-span-4">Discord ID: </span>
-					<span className="col-span-8">{discordId}</span>
 				</p>
 				<p className="grid grid-cols-12">
 					<span className="col-span-4">Stripe ID: </span>

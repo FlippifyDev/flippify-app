@@ -2,20 +2,20 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { IOrder } from "@/models/firebase";
+import { IEbayOrder } from "@/models/user";
 import { useSalesData } from "@/hooks/useSalesData";
 import { currencySymbols } from "@/config/currency-config";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import OrderInfoCard from "./OrderInfoCard";
 import { formatTableDate } from "@/utils/format-dates";
-import { database } from "@/lib/firebase/client";
 import { get, ref, update } from "firebase/database"
 import UpdateFields from "./UpdateFields";
 import { setCachedData } from "@/utils/cache-helpers";
 import Alert from "@/app/components/Alert";
 
 const OrderDetails = () => {
+    /** 
 	const params = useParams();
 	const orderId = params?.["order-id"];
 	const [orders, setOrders] = useState<IOrder[]>([]);
@@ -286,7 +286,6 @@ const OrderDetails = () => {
 			</div>
 			<div className="bg-white rounded-lg">
 				<h1 className="p-4 font-semibold">Product Data</h1>
-				{/* Table for Order Details */}
 				<table className="table bg-white">
 					<thead>
 						<tr className="text-left bg-tableHeaderBackground shadow-sm">
@@ -344,7 +343,6 @@ const OrderDetails = () => {
 				</table>
 			</div>
 
-			{/* Input fields for updating selected orders */}
 			{selectedOrders.length > 0 && (
 				<UpdateFields
 					fadeIn={fadeIn}
@@ -360,7 +358,12 @@ const OrderDetails = () => {
 				/>
 			)}
 		</div>
+
 	);
+    */
+
+    return (
+        <div>Test</div>)
 };
 
 export default OrderDetails;

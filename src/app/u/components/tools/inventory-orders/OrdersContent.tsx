@@ -2,7 +2,7 @@
 
 import OrderRow from "./OrderRow";
 import { useSalesData } from '@/hooks/useSalesData';
-import { IOrder } from "@/models/firebase";
+import { IEbayOrder } from "@/models/user";
 
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
@@ -15,7 +15,7 @@ interface CombinedOrder {
 	totalPurchasePrice: number | null;
 	totalShippingFees: number;
 	totalOtherFees: number;
-	orders: Array<IOrder>;
+    orders: Array<IEbayOrder>;
 }
 
 const OrdersContent: React.FC = () => {
@@ -23,10 +23,10 @@ const OrdersContent: React.FC = () => {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const { data: session } = useSession();
-	const customerId = session?.user.customerId as string;
+	const customerId = session?.user.stripeCustomerId as string;
 	const username = session?.user.username as string;
-	const ebayAccessToken = session?.user.ebay?.ebayAccessToken;
-	const currency = session?.user.currency || "GBP";
+	const ebayAccessToken = session?.user.connectedAccounts.ebay?.ebayAccessToken;
+	const currency = session?.user.preferences.currency || "GBP";
 
 	// Use the custom hook to get sales data
 	const { salesData } = useSalesData(ebayAccessToken, customerId);
@@ -37,7 +37,7 @@ const OrdersContent: React.FC = () => {
 		}
 	}, [salesData]);
 
-	const formatOrderData = (unformattedOrderData: IOrder[]) => {
+    const formatOrderData = (unformattedOrderData: IEbayOrder[]) => {
 		const combinedOrders: { [key: string]: CombinedOrder } = {};
 
 		unformattedOrderData.forEach(order => {
@@ -45,7 +45,7 @@ const OrdersContent: React.FC = () => {
 
 			if (!combinedOrders[legacyItemId]) {
 				combinedOrders[legacyItemId] = {
-					image: order.image,
+					image: order.images[0],
 					itemName: order.itemName,
 					quantitySold: order.quantitySold,
 					totalSalePrice: order.salePrice,

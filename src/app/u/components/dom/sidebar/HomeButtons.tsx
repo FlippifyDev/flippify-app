@@ -25,27 +25,6 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
 			{/* Dashboard Button */}
 			<SidebarButton text="Dashboard" redirect="dashboard" isSidebarOpen={isSidebarOpen} symbol={<FaHouse className="text-lg" />} />
 
-			{/* Reseller News Tab - for members/admin */}
-			<LayoutSubscriptionWrapper anySubscriptions={["member", "admin"]}>
-				<SidebarButton
-					text="Reseller News"
-					redirect="reseller-news"
-					isSidebarOpen={isSidebarOpen}
-					symbol={<FaRegNewspaper className="text-lg" />}
-				/>
-			</LayoutSubscriptionWrapper>
-
-			{/* Reseller News Tab - for non-members */}
-			<LayoutSubscriptionWrapper anySubscriptions={["!member", "!admin"]}>
-				<DisabledSideBarButton
-					text="Reseller News"
-					redirect="reseller-news"
-					isSidebarOpen={isSidebarOpen}
-					symbol={<FaRegNewspaper className="text-lg" />}
-					tooltip="Coming Soon"
-				/>
-			</LayoutSubscriptionWrapper>
-
 			{/* Plans Button */}
 			<SidebarButton text="Plans" redirect="plans" isSidebarOpen={isSidebarOpen} symbol={<FaSearch className="text-lg" />} />
 

@@ -30,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 		// Add the new tokens to the users doc in the database
 		const tokenAdditionResponse = await addEbayTokens(tokenData, session);
-		if (tokenAdditionResponse.error) {
+        if (tokenAdditionResponse && tokenAdditionResponse.error) {
 			return res.status(404).json({ "Error": tokenAdditionResponse.error });
 		}
 

@@ -7,7 +7,7 @@ export async function refreshFlippifyAPITokens(
 	}
 
 	try {
-		const response = await fetch(`https://api.flippify.co.uk/refresh`, {
+		const response = await fetch(`https://api.flippify.io/refresh`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",

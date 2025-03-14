@@ -18,6 +18,7 @@ import OnboardingFlow from "./OnboardingFlow";
 
 const DashboardPage: React.FC = () => {
 	const { data: session } = useSession();
+    console.log("Dashboard", session)
 	const customerId = session?.user.stripeCustomerId as string;
 	const ebayAccessToken = session?.user.connectedAccounts.ebay?.ebayAccessToken as string;
 	const currency = session?.user.preferences.locale as string;

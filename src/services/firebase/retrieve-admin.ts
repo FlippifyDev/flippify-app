@@ -6,8 +6,6 @@ import { firestoreAdmin } from "@/lib/firebase/config-admin";
 async function retrieveUserAdmin(uid: string): Promise<IUser | void> {
     const userDocRef = firestoreAdmin.collection('users').doc(uid)
     const userDocSnapshot = await userDocRef.get();
-
-    console.log(userDocSnapshot.data())
     
     if (userDocSnapshot.exists) {
         return userDocSnapshot.data() as IUser;

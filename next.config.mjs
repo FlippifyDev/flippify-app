@@ -22,7 +22,6 @@ const nextConfig = {
   },
   env: {
     ROOT: process.env.ROOT,
-    LIVE_STRIPE_SECRET_KEY: process.env.LIVE_STRIPE_SECRET_KEY,
     NEXT_PUBLIC_FIREBASE_API_KEY: "AIzaSyALlnrwPeEFtu7dXTAFvG4d9OUL-XiY2ao",
     NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: "flippify-3ffff.firebaseapp.com",
     NEXT_PUBLIC_FIREBASE_DATABASE_URL:

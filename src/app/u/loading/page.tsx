@@ -19,8 +19,8 @@ export default function LoadingPage() {
     }
 
 	return (
-        <Layout>
+        <div>
             <SignOutButton />
-        </Layout>
+        </div>
 	);
 }

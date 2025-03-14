@@ -1,5 +1,3 @@
-"use client";
-
 // Local Imports
 import { IUser } from "@/models/user";
 import { firestore } from "@/lib/firebase/config";
@@ -144,4 +142,4 @@ async function retrieveProducts() {
 }
 
 
-export { retrieveUser, retrieveUserAndCreate, retrieveUserSnapshot, retrieveUserRef, retrieveUserRefById, retrieveProducts };
+export { retrieveUserAndCreate, retrieveUser, retrieveUserSnapshot, retrieveUserRef, retrieveUserRefById, retrieveProducts };

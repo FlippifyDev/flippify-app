@@ -1,13 +1,13 @@
 // Local Imports
+import { CurrencyType } from '@/models/user';
 import { completeOnboarding } from '@/services/firebase/update';
 import { updateUserPreferences } from '@/services/firebase/update';
 
 // External Imports
-import { retrieveUser, retrieveUserRef } from '@/services/firebase/retrieve';
-import { useSession, getSession } from 'next-auth/react';
+import { retrieveUserRef } from '@/services/firebase/retrieve';
+import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { Lato } from 'next/font/google';
-import { CurrencyType } from '@/models/user';
 
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });

@@ -1,6 +1,6 @@
 export type RecordType = "automatic" | "manual";
-export type EmailVerification = "unverified" | "verifying" | "verified";
 export type CurrencyType = "USD" | "GBP" | "EUR" | "AUD" | "CAD";
+export type EmailVerification = "unverified" | "verifying" | "verified";
 
 interface IUser {
     id: string;
@@ -48,7 +48,7 @@ interface IDiscord {
 interface IEbay {
     ebayAccessToken: string;
     ebayRefreshToken: string;
-    ebayTokenExpiry: string;
+    ebayTokenExpiry: number;
     error?: string;
     error_description?: string;
 }

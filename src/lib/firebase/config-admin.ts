@@ -7,7 +7,6 @@ const serviceAccount = {
 };
 
 if (!admin.apps.length) {
-    // Initialize Firebase Admin SDK with the service account credentials from environment variables
     admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
     });

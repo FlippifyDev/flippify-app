@@ -1,15 +1,15 @@
-//import { IEbayTokenData } from '@/models/firebase';
+import { IEbay } from '@/models/user';
 
-async function createEbayToken(code: string): Promise<any> {
+async function createEbayToken(code: string): Promise<IEbay> {
 	const CLIENT_ID = process.env.NEXT_PUBLIC_EBAY_CLIENT_ID;
 	const CLIENT_SECRET = process.env.EBAY_CLIENT_SECRET;
 	const REDIRECT_URI = process.env.NEXT_PUBLIC_EBAY_REDIRECT_URI;
 
 	if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI) {
 		return {
-			access_token: "",
-			refresh_token: "",
-			expires_in: 0,
+            ebayAccessToken: "",
+            ebayRefreshToken: "",
+            ebayTokenExpiry: 0,
 			error: "Missing client credentials.",
 			error_description: "Could not find client credentials."
 		};
@@ -31,9 +31,9 @@ async function createEbayToken(code: string): Promise<any> {
 		if (!tokenResponse.ok) {
 			const errorData = await tokenResponse.json();
 			return {
-				access_token: "",
-				refresh_token: "",
-				expires_in: 0,
+                ebayAccessToken: "",
+                ebayRefreshToken: "",
+                ebayTokenExpiry: 0,
 				error: errorData.error || "Unknown error",
 				error_description: errorData.error_description || "Failed to fetch token from eBay."
 			};
@@ -41,14 +41,14 @@ async function createEbayToken(code: string): Promise<any> {
 
 		// Assuming the response is in the correct format
 		const tokenData = await tokenResponse.json();
-		return tokenData as any;
+        return tokenData as IEbay;
 
 	} catch (error) {
 		console.error('Error while creating eBay token:', error);
 		return {
-			access_token: "",
-			refresh_token: "",
-			expires_in: 0,
+            ebayAccessToken: "",
+            ebayRefreshToken: "",
+            ebayTokenExpiry: 0,
 			error: "An error occurred while requesting the eBay token.",
 			error_description: error instanceof Error ? error.message : "Unknown error"
 		};

@@ -1,43 +1,33 @@
+import { firestoreAdmin } from '@/lib/firebase/config-admin';
+import { IEbay } from '@/models/user';
+
 import { Session } from 'next-auth';
 
+async function addEbayTokens(tokenData: IEbay, session: Session) {
+    try {
+        if (!session?.user?.id) {
+            throw new Error("User is not authenticated");
+        }
 
-async function addEbayTokens(tokenData: any, session: Session) {
-	try {
-        /** 
-		const customerId = session.user.stripeCustomerId;
+        const userDocRef = firestoreAdmin.collection('users').doc(session.user.id);
 
-		// Check if the customerId exists
-		if (!customerId) {
-			return { error: 'Customer ID is missing from the session' };
-		}
+        await userDocRef.update({
+            connectedAccounts: {
+                ebay: {
+                    accessToken: tokenData.ebayAccessToken,
+                    refreshToken: tokenData.ebayRefreshToken,
+                    tokenExpiry: Date.now() + tokenData.ebayTokenExpiry * 1000
+                }
+            }
+        });
 
-		// Find the user based on stripe_customer_id
-		const user = await User.findOne({ stripe_customer_id: customerId });
+        return { success: true };
 
-		if (!user) {
-			return { error: 'User not found' };
-		}
-
-		if (!user.ebay) {
-			// Initialize ebay object if it doesn't exist
-			user.ebay = {};
-		}
-
-		// Update the eBay tokens in the user object
-		user.ebay.ebayAccessToken = tokenData.access_token;
-		user.ebay.ebayTokenExpiry = Date.now() + tokenData.expires_in * 1000; // Convert seconds to milliseconds
-		user.ebay.ebayRefreshToken = tokenData.refresh_token;
-
-		// Save the user with updated eBay tokens
-		await user.save();
-
-		return { error: null };
-        */
-
-	} catch (error) {
-		console.error('Error adding eBay tokens:', error);
-		return { error: 'An error occurred while adding eBay tokens' };
-	}
+    } catch (error) {
+        console.error('Error adding eBay tokens:', error);
+        return { error: 'An error occurred while adding eBay tokens' };
+    }
 }
 
 export { addEbayTokens };
+

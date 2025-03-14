@@ -50,10 +50,8 @@ const OnboardingFlow: React.FC = () => {
 
     const handleCompleteOnboarding = async () => {
         if (session?.user) {
-            const customerId = session.user.stripeCustomerId as string;
-
             // Update the user in Firebase with preferred email and currency
-            await updateUserPreferences(customerId, email, currency);
+            await updateUserPreferences(session.user.id, email, currency);
 
             // Complete the onboarding with the referral code
             const user = await completeOnboarding(session.user.id, validReferralCode);

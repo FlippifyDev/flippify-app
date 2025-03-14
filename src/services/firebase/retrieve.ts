@@ -19,7 +19,6 @@ async function retrieveUserAndCreate(uid: string, email?: string | null): Promis
     try {
         // Retrieve the user document from Firestore using the UID
         const userRef = doc(firestore, 'users', uid);
-        console.log('userRef:', userRef);
         const userDoc = await getDoc(userRef);
 
         // Check if the user document exists

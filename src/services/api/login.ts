@@ -3,7 +3,7 @@ export async function loginToFlippifyAPI(
 	customerId: string
 ) {
 	try {
-		const response = await fetch(`https://api.flippify.co.uk/login`, {
+		const response = await fetch(`https://api.flippify.io/login`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",

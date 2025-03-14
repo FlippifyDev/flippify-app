@@ -20,6 +20,7 @@ async function retrieveUserAndCreate(uid: string, email?: string | null): Promis
         // Retrieve the user document from Firestore using the UID
         const userRef = doc(firestore, 'users', uid);
         const userDoc = await getDoc(userRef);
+        console.log("RetrieveUserAndCreate", userDoc);
 
         // Check if the user document exists
         if (userDoc.exists()) {
@@ -49,6 +50,7 @@ async function retrieveUserAndCreate(uid: string, email?: string | null): Promis
 async function retrieveUser(filter_key: string, filter_value: string): Promise<IUser | null> {
     try {
         const userDoc = await retrieveUserSnapshot(filter_key, filter_value);
+        console.log("retrieveUser", userDoc);
         if (userDoc) {
             return userDoc.data() as IUser;
         }
@@ -76,6 +78,7 @@ async function retrieveUserSnapshot(filter_key: string, filter_value: string): P
         const querySnapshot = await getDocs(q);
 
         if (!querySnapshot.empty) {
+            console.log("retrieveUserSnapshot", querySnapshot.docs[0]);
             return querySnapshot.docs[0];
         } else {
             console.log(`No user doc found with ${filter_key}: ${filter_value}`);
@@ -102,7 +105,9 @@ async function retrieveUserRef(filterKey: string, filterValue: string): Promise<
         const querySnapshot = await getDocs(q);
 
         if (!querySnapshot.empty) {
-            return doc(firestore, "users", querySnapshot.docs[0].id);
+            const userRef = doc(firestore, "users", querySnapshot.docs[0].id);
+            console.log("retrieveUserRef", userRef);
+            return userRef;
         }
         console.log(`No user found with ${filterKey}: ${filterValue}`);
         return null;
@@ -125,6 +130,7 @@ async function retrieveUserRef(filterKey: string, filterValue: string): Promise<
 async function retrieveUserRefById(uid: string): Promise<DocumentReference | null> {
     try {
         const userRef = doc(firestore, 'users', uid);
+        console.log("retrieveUserRefById", userRef);
         if (!userRef) {
             console.log(`No user found with id=${uid}`);
             return null;

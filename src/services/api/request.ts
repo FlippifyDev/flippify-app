@@ -15,7 +15,7 @@ export async function sendApiRequest(endpoint: string, ebayAccessToken: string |
 	};
 
 	try {
-		const response = await fetch(`https://api.flippify.co.uk/${endpoint}`, {
+		const response = await fetch(`https://api.flippify.io/${endpoint}`, {
 			method: "GET",
 			headers: headers,
 		});

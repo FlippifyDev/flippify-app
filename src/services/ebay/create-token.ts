@@ -1,17 +1,19 @@
 "use server";
 
-import { IEbay } from '@/models/user';
+import dotenv from 'dotenv';
 
-async function createEbayToken(code: string): Promise<IEbay> {
+dotenv.config();
+
+async function createEbayToken(code: string): Promise<{ access_token: string, refresh_token: string, expires_in: number, error?: string, error_description?: string }> {
 	const CLIENT_ID = process.env.NEXT_PUBLIC_EBAY_CLIENT_ID;
 	const CLIENT_SECRET = process.env.EBAY_CLIENT_SECRET;
 	const REDIRECT_URI = process.env.NEXT_PUBLIC_EBAY_REDIRECT_URI;
 
 	if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI) {
 		return {
-            ebayAccessToken: "",
-            ebayRefreshToken: "",
-            ebayTokenExpiry: 0,
+            access_token: "",
+            refresh_token: "",
+            expires_in: 0,
 			error: "Missing client credentials.",
 			error_description: "Could not find client credentials."
 		};
@@ -33,9 +35,9 @@ async function createEbayToken(code: string): Promise<IEbay> {
 		if (!tokenResponse.ok) {
 			const errorData = await tokenResponse.json();
 			return {
-                ebayAccessToken: "",
-                ebayRefreshToken: "",
-                ebayTokenExpiry: 0,
+                access_token: "",
+                refresh_token: "",
+                expires_in: 0,
 				error: errorData.error || "Unknown error",
 				error_description: errorData.error_description || "Failed to fetch token from eBay."
 			};
@@ -43,14 +45,14 @@ async function createEbayToken(code: string): Promise<IEbay> {
 
 		// Assuming the response is in the correct format
 		const tokenData = await tokenResponse.json();
-        return tokenData as IEbay;
+        return tokenData as { access_token: string, refresh_token: string, expires_in: number };
 
 	} catch (error) {
 		console.error('Error while creating eBay token:', error);
 		return {
-            ebayAccessToken: "",
-            ebayRefreshToken: "",
-            ebayTokenExpiry: 0,
+            access_token: "",
+            refresh_token: "",
+            expires_in: 0,
 			error: "An error occurred while requesting the eBay token.",
 			error_description: error instanceof Error ? error.message : "Unknown error"
 		};

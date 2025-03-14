@@ -18,6 +18,7 @@ type Currency = "GBP" | "USD" | "EUR" | "AUD" | "CAD" | "JPY" | "NZD";
 const PlansContent = () => {
   const [selectedPlan, setSelectedPlan] = useState<number>(0);
   const [currency, setCurrency] = useState<Currency>("GBP");
+  const [enterpriseListings, setEnterpriseListings] = useState<number>(200);
   const [conversionRates, setConversionRates] = useState<Record<string, number>>({
     GBP: 1,
     USD: 1.29,
@@ -126,6 +127,10 @@ const PlansContent = () => {
           priceRange={selectedPlan}
           currency={currency}
           conversionRates={conversionRates}
+          isEnterprise={true}
+          enterpriseListings={enterpriseListings}
+          setEnterpriseListings={setEnterpriseListings}
+          enterpriseContactUrl="/contact"
         />
       </div>
 

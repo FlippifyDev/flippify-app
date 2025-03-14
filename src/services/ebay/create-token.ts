@@ -1,3 +1,5 @@
+"use server";
+
 import { IEbay } from '@/models/user';
 
 async function createEbayToken(code: string): Promise<IEbay> {

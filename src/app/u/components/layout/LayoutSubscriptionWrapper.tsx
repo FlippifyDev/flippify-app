@@ -24,6 +24,7 @@ const LayoutSubscriptionWrapper: React.FC<LayoutSubscriptionWrapperProps> = ({
 	pagePath
 }) => {
 	const { data: session } = useSession();
+    console.log("LayoutSubscriptionWrapper", session)
 	const router = useRouter();
 
 	useEffect(() => {

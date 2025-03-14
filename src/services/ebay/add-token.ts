@@ -1,7 +1,7 @@
-import { firestoreAdmin } from '@/lib/firebase/config-admin';
+import { firestore } from '@/lib/firebase/config';
 import { IEbay } from '@/models/user';
-
 import { Session } from 'next-auth';
+import { doc, updateDoc } from 'firebase/firestore';
 
 async function addEbayTokens(tokenData: IEbay, session: Session) {
     try {
@@ -9,9 +9,9 @@ async function addEbayTokens(tokenData: IEbay, session: Session) {
             throw new Error("User is not authenticated");
         }
 
-        const userDocRef = firestoreAdmin.collection('users').doc(session.user.id);
+        const userDocRef = doc(firestore, 'users', session.user.id);
 
-        await userDocRef.update({
+        await updateDoc(userDocRef, {
             connectedAccounts: {
                 ebay: {
                     accessToken: tokenData.ebayAccessToken,
@@ -25,7 +25,7 @@ async function addEbayTokens(tokenData: IEbay, session: Session) {
 
     } catch (error) {
         console.error('Error adding eBay tokens:', error);
-        return { error: 'An error occurred while adding eBay tokens' };
+        return { error: `An error occurred while adding eBay tokens, ${error}` };
     }
 }
 

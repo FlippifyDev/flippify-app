@@ -3,6 +3,7 @@
 import { IUser } from "@/models/user";
 import { firestoreAdmin } from "@/lib/firebase/config-admin";
 
+
 export async function updateReferreeUser(referredUserId: string, referreeCode: string): Promise<{ success: boolean }> {
     try {
         const referreeUserQuery = firestoreAdmin.collection('users').where('referral.referralCode', '==', referreeCode);

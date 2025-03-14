@@ -5,7 +5,6 @@ import { NextApiRequest, NextApiResponse } from 'next';
 // Local Imports
 import { createEbayToken } from '@/services/ebay/create-token';
 import { addEbayTokens } from '@/services/ebay/add-token';
-import { IEbay } from '@/models/user';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -17,22 +16,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	try {
 		// Create the users tokens
-        const tokenData: IEbay = await createEbayToken(code);
-        console.log("TokenData", tokenData);
-		if (tokenData.error) {
-			return res.status(400).json({ error: tokenData.error_description });
+        const tokenData = await createEbayToken(code);
+		if (tokenData.error || !tokenData.access_token) {
+			return res.status(400).json({ error: `${tokenData.error_description} No Token Data found. Code: ${code}` });
 		}
 
 		// Fetch the users session data
 		const session = await getSession({ req });
-        console.log("Session", session);
 		if (!session || !session.user?.id) {
 			return res.status(401).json({ error: 'User not authenticated' });
 		}
 
 		// Add the new tokens to the users doc in the database
 		const tokenAdditionResponse = await addEbayTokens(tokenData, session);
-        console.log("TokenAdditionResponse", tokenAdditionResponse);
         if (tokenAdditionResponse && tokenAdditionResponse.error) {
 			return res.status(404).json({ "Error": tokenAdditionResponse.error });
 		}

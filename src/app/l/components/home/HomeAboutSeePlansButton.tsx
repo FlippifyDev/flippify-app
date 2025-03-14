@@ -5,7 +5,7 @@ const HomeAboutSeePlansButton = () => {
 	const router = useRouter();
 
 	const handleClick = () => {
-		router.push('/l/pricing');
+		router.push('/l/plans');
 	};
 
 	return (

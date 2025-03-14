@@ -2,6 +2,7 @@
 
 import { currencySymbols } from '@/config/currency-config';
 import { useListedData } from '@/hooks/useListedData';
+import { IEbayInventoryItem } from '@/models/user';
 import { formatTableDate } from '@/utils/format-dates';
 
 import { useSession } from "next-auth/react";
@@ -9,11 +10,11 @@ import Image from 'next/image';
 
 const InventoryContent = () => {
 	const { data: session } = useSession();
-	const customerId = session?.user.customerId as string;
-	const ebayAccessToken = session?.user.ebay?.ebayAccessToken;
-	const currency = session?.user.currency || "GBP";
+	const customerId = session?.user.stripeCustomerId as string;
+	const ebayAccessToken = session?.user.connectedAccounts.ebay?.ebayAccessToken;
+	const currency = session?.user.preferences.currency || "GBP";
 
-	const { listedData } = useListedData(ebayAccessToken, customerId);
+	const listedData = [] as IEbayInventoryItem[]//useListedData(ebayAccessToken, customerId);
 
 	return (
 		<div className="w-full h-full overflow-x-auto">
@@ -34,7 +35,7 @@ const InventoryContent = () => {
 							return (
 								<tr key={index} className="hover:bg-gray-100 cursor-pointer transition duration-100">
 									<td>
-										<Image src={item.image} width={100} height={100} alt={"image"} loading="lazy" className="rounded-full w-12 h-12" style={{ objectFit: 'cover' }} />
+										<Image src={item.images[0]} width={100} height={100} alt={"image"} loading="lazy" className="rounded-full w-12 h-12" style={{ objectFit: 'cover' }} />
 									</td>
 									<td>{item.itemName}</td>
 									<td>{item.quantity}</td>

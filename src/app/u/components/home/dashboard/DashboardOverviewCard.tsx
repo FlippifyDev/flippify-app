@@ -1,5 +1,5 @@
 import "@/styles/overview-cards.css"
-import { IOrder } from '@/models/firebase';
+import { IEbayOrder } from '@/models/user';
 
 import React, { useEffect, useState } from 'react';
 
@@ -10,7 +10,7 @@ const currencySymbols: Record<string, string> = {
 };
 
 interface DashboardOverviewCardProps {
-	salesData: IOrder[];
+    salesData: IEbayOrder[];
 	currency: string;
 	selectedRange: number;
 }
@@ -54,7 +54,7 @@ const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ salesData
 		let totalSales = 0;
 		let costsMissing = false;
 
-		salesData.forEach((sale: IOrder) => {
+        salesData.forEach((sale: IEbayOrder) => {
 			const saleDate = new Date(sale.saleDate);
 
 			// Only include sales within the calculated range

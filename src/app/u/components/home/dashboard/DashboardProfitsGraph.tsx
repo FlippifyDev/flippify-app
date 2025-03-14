@@ -1,6 +1,6 @@
 "use client";
 
-import { IOrder } from "@/models/firebase";
+import { IEbayOrder } from "@/models/user";
 import { currencySymbols } from "@/config/currency-config";
 import {
 	startOfDay,
@@ -26,7 +26,7 @@ interface ChartData {
 }
 
 interface DashboardProfitsGraphProps {
-	salesData: IOrder[];
+    salesData: IEbayOrder[];
 	currency: string;
 	selectedRange: number;
 }

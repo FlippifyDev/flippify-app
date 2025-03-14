@@ -1,15 +1,10 @@
 import { Session } from 'next-auth';
 
-import { User } from '@/models/mongodb/users';
-import { IEbayTokenData } from '@/models/firebase';
-import connectToMongoDB from '@/lib/mongo/client';
 
-async function addEbayTokens(tokenData: IEbayTokenData, session: Session) {
+async function addEbayTokens(tokenData: any, session: Session) {
 	try {
-		// Ensure database connection 
-		await connectToMongoDB();
-
-		const customerId = session.user.customerId;
+        /** 
+		const customerId = session.user.stripeCustomerId;
 
 		// Check if the customerId exists
 		if (!customerId) {
@@ -37,6 +32,7 @@ async function addEbayTokens(tokenData: IEbayTokenData, session: Session) {
 		await user.save();
 
 		return { error: null };
+        */
 
 	} catch (error) {
 		console.error('Error adding eBay tokens:', error);

@@ -1,6 +1,6 @@
-import { IEbayTokenData } from '@/models/firebase';
+//import { IEbayTokenData } from '@/models/firebase';
 
-async function createEbayToken(code: string): Promise<IEbayTokenData> {
+async function createEbayToken(code: string): Promise<any> {
 	const CLIENT_ID = process.env.NEXT_PUBLIC_EBAY_CLIENT_ID;
 	const CLIENT_SECRET = process.env.EBAY_CLIENT_SECRET;
 	const REDIRECT_URI = process.env.NEXT_PUBLIC_EBAY_REDIRECT_URI;
@@ -41,7 +41,7 @@ async function createEbayToken(code: string): Promise<IEbayTokenData> {
 
 		// Assuming the response is in the correct format
 		const tokenData = await tokenResponse.json();
-		return tokenData as IEbayTokenData;
+		return tokenData as any;
 
 	} catch (error) {
 		console.error('Error while creating eBay token:', error);

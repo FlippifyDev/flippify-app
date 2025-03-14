@@ -27,8 +27,8 @@ const InventoryOrdersContent = () => {
     const [isOpen, setIsOpen] = useState(false); // Manage dropdown state
 
     const dropdownRef = useRef<HTMLDivElement>(null); // Reference for dropdown
-    const customerId = session?.user.customerId;
-    const ebayTokenExpiry = session?.user.ebay?.ebayTokenExpiry;
+    const customerId = session?.user.stripeCustomerId;
+    const ebayTokenExpiry = session?.user.connectedAccounts.ebay?.ebayTokenExpiry;
 
     useEffect(() => {
         // Close dropdown if clicked outside
@@ -53,7 +53,7 @@ const InventoryOrdersContent = () => {
             }
 
             // Check if the token needs to be refreshed
-            if (Date.now() >= ebayTokenExpiry) {
+            if (Date.now() >= Number(ebayTokenExpiry)) {
                 await refreshEbayToken(customerId);
             }
         };

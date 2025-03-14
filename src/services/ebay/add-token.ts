@@ -48,7 +48,7 @@ async function addEbayTokens(tokenData: IEbay, session: Session) {
 
     } catch (error) {
         console.error('Error adding eBay tokens:', error);
-        return { error: `An error occurred while adding eBay tokens: ${error}, Token Data: ${tokenData}` };
+        return { error: `An error occurred while adding eBay tokens: ${error}, Token Data: ${tokenData}, ${tokenData.ebayAccessToken} ${tokenData.ebayRefreshToken} ${tokenData.ebayTokenExpiry} ${tokenData.error} ${tokenData.error_description}` };
     }
 }
 

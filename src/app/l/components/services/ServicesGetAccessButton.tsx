@@ -12,8 +12,7 @@ interface PlansGetAccessButtonProps {
 const ServicesGetAccessButton = () => {
 	const { data: session } = useSession();
 	const router = useRouter();
-
-	// Handle redirect or sign-in
+	
 	const handleRedirect = () => {
 		if (session) {
 			if (session.user?.username) {
@@ -22,7 +21,7 @@ const ServicesGetAccessButton = () => {
 				router.push(`/u/loading`);
 			}
 		} else {
-			signIn('discord'); // Sign in via Discord if not logged in
+			signIn('discord'); 
 		}
 	};
 

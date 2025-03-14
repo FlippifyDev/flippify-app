@@ -53,7 +53,7 @@ const Navbar = () => {
 						</li>
 						<li className="transition duration-100 active:bg-gray-700 rounded-btn grid grid-cols-12 gap-8 items-center mx-2 text-white text-lg font-medium">
 							<span className='col-span-1 rounded-none'><FaSearch className="text-lg" /></span>
-							<span className='col-span-11 rounded-none'><Link href="/l/plans" className="col-span-10 text-left">Plans</Link></span>
+							<span className='col-span-11 rounded-none'><Link href="/l/pricing" className="col-span-10 text-left">Plans</Link></span>
 						</li>
 						<li className="transition duration-100 active:bg-gray-700 rounded-btn grid grid-cols-12 gap-8 items-center mx-2 text-white text-lg font-medium">
 							<span className='col-span-1 rounded-none'><FaDiscord className="text-lg" /></span>
@@ -79,7 +79,7 @@ const Navbar = () => {
 					<Link href="/l/services">Services</Link>
 				</li>
 				<li className="transition duration-100 hover:scale-105 rounded-btn p-1">
-					<Link href="/l/plans">Plans</Link>
+					<Link href="/l/pricing">Plans</Link>
 				</li>
 				<li className="transition duration-100 hover:scale-105 rounded-btn p-1">
 					<Link href="https://discord.gg/gNPYfe7YFm" target="_blank">Discord</Link>

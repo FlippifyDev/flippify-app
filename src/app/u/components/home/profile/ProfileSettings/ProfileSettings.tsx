@@ -8,14 +8,12 @@ import CurrencySelector from './ProfileCurrencySelector';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 
-// Update the currency type here to match your dropdown:
 type Currency = "GBP" | "USD" | "EUR" | "AUD" | "CAD" | "JPY" | "NZD";
 
 const ProfileSettings = () => {
   const { data: session, update: setSession } = useSession();
   const [email, setEmail] = useState('');
   const [originalEmail, setOriginalEmail] = useState('');
-  // Cast the currency from the session to the new Currency union
   const [currency, setCurrency] = useState<Currency>(
     (session?.user.preferences.currency as Currency) ?? "USD"
   );
@@ -57,7 +55,6 @@ const ProfileSettings = () => {
     setIsChanged(e.target.value !== originalEmail || currency !== originalCurrency);
   };
 
-  // Updated handler now accepts a value of type Currency
   const handleCurrencyChange = (newCurrency: Currency) => {
     setCurrency(newCurrency);
     setIsChanged(newCurrency !== originalCurrency || email !== originalEmail);
@@ -70,7 +67,6 @@ const ProfileSettings = () => {
     }
 
     try {
-      // Update user preferences
       await updateUserPreferences(session.user.id, email, currency);
 
       setFeedback('Settings updated successfully.');
@@ -78,7 +74,6 @@ const ProfileSettings = () => {
       setOriginalCurrency(currency);
       setIsChanged(false);
 
-      // Refresh the session
       setSession({
         ...session,
         user: {
@@ -104,7 +99,13 @@ const ProfileSettings = () => {
           <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2" htmlFor="email">
             Contact Email
           </label>
-          <UnderlineInput type="email" id="email" value={email} onChange={handleEmailChange} />
+          <input
+            type="email"
+            placeholder="Email Address"
+            value={email}
+            onChange={handleEmailChange}
+            className="w-full p-3 bg-gray-50 rounded-xl outline-none placeholder-gray-400"
+          />
         </div>
         <div>
           <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2" htmlFor="currency">

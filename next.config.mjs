@@ -4,8 +4,8 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: '/',
-        destination: '/l/home',
+        source: "/",
+        destination: "/l/home",
         permanent: false,
       },
     ];
@@ -15,17 +15,24 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "**",
-        port: '',
-        pathname: '**',
+        port: "",
+        pathname: "**",
       },
     ],
   },
   env: {
     ROOT: process.env.ROOT,
-    MONGO_URL: process.env.MONGO_URL,
     LIVE_STRIPE_SECRET_KEY: process.env.LIVE_STRIPE_SECRET_KEY,
-  }
+    NEXT_PUBLIC_FIREBASE_API_KEY: "AIzaSyALlnrwPeEFtu7dXTAFvG4d9OUL-XiY2ao",
+    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: "flippify-3ffff.firebaseapp.com",
+    NEXT_PUBLIC_FIREBASE_DATABASE_URL:
+      "https://flippify-3ffff-default-rtdb.europe-west1.firebasedatabase.app/",
+    NEXT_PUBLIC_FIREBASE_PROJECT_ID: "flippify-3ffff",
+    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: "flippify-3ffff.appspot.com",
+    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: "238475908658",
+    NEXT_PUBLIC_FIREBASE_APP_ID: "1:238475908658:web:445ef3455401e1e1ecce2b",
+    NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: "G-CP0595TPX9",
+  },
 };
-
 
 export default nextConfig;

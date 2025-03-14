@@ -18,7 +18,7 @@ const ProfileSettings = () => {
     const [originalCurrency, setOriginalCurrency] = useState<CurrencyType>(session?.user.preferences.currency ?? "USD");
     const [feedback, setFeedback] = useState('');
     const [isChanged, setIsChanged] = useState(false);
-    console.log(session)
+
     useEffect(() => {
         const loadUserData = async () => {
             if (session && session.user) {

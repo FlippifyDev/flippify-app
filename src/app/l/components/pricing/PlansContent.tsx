@@ -4,6 +4,7 @@ import PlansCard from "./PlansCard";
 import PlansCardStandardWhatsIncluded from "./PlansCardProWhatsIncluded";
 import PlansCardEliteWhatsIncluded from "./PlansCardEliteWhatsIncluded";
 import PlansCardBasicWhatsIncluded from "./PlansCardStandardWhatsIncluded";
+import PlansCardEnterpriseWhatsIncluded from "./PlansCardEnterpriseWhatsIncluded";
 import React, { useState, useEffect, useCallback } from "react";
 import { Lato, Inter } from "next/font/google";
 import { fetchConversionRatesFromFirebase } from "@/utils/currency-api";
@@ -48,13 +49,9 @@ const PlansContent = () => {
     <div className="w-full h-full flex flex-col justify-center items-center mb-12 relative pb-20">
       <div className="flex flex-col items-center space-y-5 text-center mt-2 md:mt-6">
         <div className="flex flex-wrap justify-center animate-fadeInPrimary">
-          <p
-            className={`${lato.className} text-5xl w-4/5 sm:w-full text-gradient bg-gradient-to-tr from-textGradStart to-textGradEnd bg-clip-text text-transparent py-1`}
-          >
+          <p className={`${lato.className} text-5xl w-4/5 sm:w-full text-gradient bg-gradient-to-tr from-textGradStart to-textGradEnd bg-clip-text text-transparent py-1`}>
             Pricing
-            <a className={`${inter.className} text-white text-5xl font-bold`}>
-              {" "}Made Easy
-            </a>
+            <a className={`${inter.className} text-white text-5xl font-bold`}> Made Easy</a>
           </p>
         </div>
         <div className="flex justify-center w-4/5 sm:w-full animate-fadeInSecondary">
@@ -83,52 +80,52 @@ const PlansContent = () => {
         </div>
       </div>
 
-      {/* Subscription Cards with equal heights */}
-      <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-8 w-full max-w-screen-xl mx-auto px-4 animate-fadeInBounce">
+      {/* Subscription Cards Grid */}
+      <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-4 gap-10 md:px-[60px] w-full animate-fadeInBounce">
         <PlansCard
           title="Standard"
           description="For beginners"
-          prices={{ monthly: 9.99, yearly: 119.99 }}
-          discountedPrices={{ monthly: 4.99, yearly: 49.99 }}
-          priceIds={{
-            monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
-            yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
-          }}
+          prices={{ monthly: 0, yearly: 0 }}
+          discountedPrices={{ monthly: 0.00, yearly: 0.00 }}
+          priceIds={{ monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba", yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6" }}
           whatsIncludedComponent={<PlansCardBasicWhatsIncluded />}
           priceRange={selectedPlan}
           currency={currency}
           conversionRates={conversionRates}
-          comingSoon={true}
         />
         <PlansCard
           title="Pro"
           description="For growing resellers"
-          prices={{ monthly: 19.99, yearly: 239.99 }}
+          prices={{ monthly: 19.99, yearly: 199.99 }}
           discountedPrices={{ monthly: 9.99, yearly: 99.99 }}
-          priceIds={{
-            monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
-            yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
-          }}
+          priceIds={{ monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba", yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6" }}
           whatsIncludedComponent={<PlansCardStandardWhatsIncluded />}
           priceRange={selectedPlan}
           currency={currency}
           conversionRates={conversionRates}
-          comingSoon={true}
         />
         <PlansCard
           title="Elite"
           description="For experts"
-          prices={{ monthly: 29.99, yearly: 359.99 }}
+          prices={{ monthly: 29.99, yearly: 299.99 }}
           discountedPrices={{ monthly: 19.99, yearly: 199.99 }}
-          priceIds={{
-            monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
-            yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
-          }}
+          priceIds={{ monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba", yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6" }}
           whatsIncludedComponent={<PlansCardEliteWhatsIncluded />}
           priceRange={selectedPlan}
           currency={currency}
           conversionRates={conversionRates}
-          comingSoon={true}
+          specialPlan={true}
+        />
+        <PlansCard
+          title="Enterprise"
+          description="For Large Scale Operations"
+          prices={{ monthly: 199.99, yearly: 1999.99 }}
+          discountedPrices={{ monthly: 99.99, yearly: 999.99 }}
+          priceIds={{ monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba", yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6" }}
+          whatsIncludedComponent={<PlansCardEnterpriseWhatsIncluded />}
+          priceRange={selectedPlan}
+          currency={currency}
+          conversionRates={conversionRates}
         />
       </div>
 

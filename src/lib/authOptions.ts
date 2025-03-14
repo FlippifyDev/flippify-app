@@ -2,7 +2,7 @@
 import { auth } from "@/lib/firebase/config";
 import { IUser } from "@/models/user";
 import { IJwtToken } from "@/models/jwt-token";
-import { firestoreAdmin } from "./firebase/config-admin";
+import { retrieveUserAdmin } from "@/services/firebase/retrieve-admin";
 import { retrieveUserAndCreate } from "@/services/firebase/retrieve";
 
 // External Imports
@@ -59,11 +59,9 @@ export const authOptions: NextAuthOptions = {
         async session({ session, token }) {
             const { user } = token as IJwtToken;
             try {
-                const userDocSnapshot = await firestoreAdmin.collection('users').doc(user.id).get();
-                if (userDocSnapshot.exists) {
-                    session.user = userDocSnapshot.data() as IUser;
-                } else {
-                    console.error('User document not found.');
+                const userDoc = await retrieveUserAdmin(user.id);
+                if (userDoc) {
+                    session.user = userDoc;
                 }
             } catch (error) {
                 console.error('Error retrieving user:', error);

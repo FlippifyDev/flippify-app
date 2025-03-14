@@ -1,9 +1,10 @@
 // Local Imports
 import { IUser } from "@/models/user";
-import { retrieveUserRef, retrieveUserRefById } from "./retrieve";
+import { updateReferreeUser } from "./update-admin";
+import { retrieveUserRefById } from "./retrieve";
 
 // External Imports
-import { getDoc, increment, setDoc } from "firebase/firestore";
+import { getDoc, setDoc } from "firebase/firestore";
 
 
 
@@ -87,19 +88,9 @@ async function completeOnboarding(uid: string, referralCode: string | null): Pro
 
         // Step 1: Handle referral if a referral code is provided
         if (referralCode) {
-            const referralUserRef = await retrieveUserRef("referral.referralCode", referralCode);
-            if (referralUserRef) {
-                const referralSnap = await getDoc(referralUserRef);
-                if (referralSnap.exists()) {
-                    const referralData = referralSnap.data() as IUser;
-                    if (!referralData.referral.validReferrals.includes(uid)) {
-                        await setDoc(referralUserRef, { ["referral.referralCount"]: increment(1) }, { merge: true });
-                        await setDoc(userRef, { ["referral.referredBy"]: referralCode }, { merge: true });
-
-                        const updatedReferrals = [...referralData.referral.validReferrals, uid];
-                        await setDoc(referralUserRef, { ["referral.validReferrals"]: updatedReferrals }, { merge: true });
-                    }
-                }
+            const { success } = await updateReferreeUser(uid, referralCode);
+            if (success) {
+                await setDoc(userRef, { referral: { referredBy: referralCode } }, { merge: true });
             }
         }
 
@@ -124,7 +115,7 @@ async function completeOnboarding(uid: string, referralCode: string | null): Pro
             console.error("User document not found after updating.");
             return null;
         }
-        
+
     } catch (error) {
         console.error("Error completing onboarding:", error);
         return null;

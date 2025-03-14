@@ -22,7 +22,7 @@ const ComingSoon = () => {
             </p>
             </div>
             <p className={`w-full mt-3 mb-8 pb-1 pt-2 text-gray-300 text-lg text-center animate-fadeInSecondary font-medium ${inter.className}`}>
-              Currently Under Heavy Development - Stay Tuned!
+              Currently Re-Building & Under Development - Stay Tuned!
             </p>
           </div>
         </Layout>

@@ -19,7 +19,6 @@ import { doc, getDoc } from "firebase/firestore";
 import { IUser } from "@/models/user";
 import { signIn } from "next-auth/react";
 
-// Create provider instances for Google and Twitter
 const googleProvider = new GoogleAuthProvider();
 const twitterProvider = new TwitterAuthProvider();
 
@@ -31,11 +30,9 @@ const Login = () => {
 
   const router = useRouter();
 
-  // -- Email/Password Login
   const handleLogin = async () => {
     try {
       setLoading(true);
-      // Attempt Next-Auth credentials login
       const result = await signIn("credentials", {
         email,
         password,
@@ -45,13 +42,10 @@ const Login = () => {
       if (result?.error) {
         setErrorMessage("Invalid email or password");
       } else {
-        // Also sign in with Firebase Auth
         await firebaseSignIn(auth, email, password);
-        // Fetch user document from Firestore
         const userRef = doc(firestore, "users", auth.currentUser?.uid ?? "");
         const userDoc = await getDoc(userRef);
         const userData = userDoc.data() as IUser;
-        // Redirect on successful sign-in
         router.push(`/u/${userData.username}/dashboard`);
       }
     } catch (e) {
@@ -64,7 +58,6 @@ const Login = () => {
     }
   };
 
-  // -- Google Login
   const handleGoogleLogin = async () => {
     try {
       setLoading(true);
@@ -87,7 +80,6 @@ const Login = () => {
     }
   };
 
-  // -- Twitter Login
   const handleTwitterLogin = async () => {
     try {
       setLoading(true);

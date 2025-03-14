@@ -7,6 +7,10 @@ import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { Suspense } from "react";
+import Layout from "../components/layout/Layout";
+import ThemeSetter from "@/app/components/ThemeSetter";
+import Loading from "@/app/components/Loading";
 
 const SignUp = () => {
   const { data: session } = useSession();
@@ -79,25 +83,32 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      {!emailVerifying ? (
-        <SignUpForm
-          username={username}
-          email={email}
-          password={password}
-          setUsername={setUsername}
-          setEmail={setEmail}
-          setPassword={setPassword}
-          handleSignUp={handleSignUp}
-          router={router}
-          loading={loading}
-        />
-      ) : emailVerified ? (
-        <EmailVerified />
-      ) : (
-        <EmailVerifying />
-      )}
-    </div>
+    <>
+      <ThemeSetter theme="dark" />
+      <Suspense fallback={<Loading />}>
+        <Layout>
+          <div className="min-h-screen flex items-center justify-center mt-[-64px]">
+            {!emailVerifying ? (
+              <SignUpForm
+                username={username}
+                email={email}
+                password={password}
+                setUsername={setUsername}
+                setEmail={setEmail}
+                setPassword={setPassword}
+                handleSignUp={handleSignUp}
+                router={router}
+                loading={loading}
+              />
+            ) : emailVerified ? (
+              <EmailVerified />
+            ) : (
+              <EmailVerifying />
+            )}
+          </div>
+        </Layout>
+      </Suspense>
+    </>
   );
 };
 
@@ -212,7 +223,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
       <div className="flex flex-row gap-1 mt-5 justify-center">
         <p>Already have an account?</p>
         <button
-          onClick={() => router.push("/login")}
+          onClick={() => router.push("/l/login")}
           className="text-houseBlue hover:underline"
         >
           Login

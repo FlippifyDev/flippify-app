@@ -1,5 +1,3 @@
-"use client";
-
 // Local Imports
 import { IUser } from "@/models/user";
 import { firestore } from "@/lib/firebase/config";
@@ -21,6 +19,7 @@ async function retrieveUserAndCreate(uid: string, email?: string | null): Promis
     try {
         // Retrieve the user document from Firestore using the UID
         const userRef = doc(firestore, 'users', uid);
+        console.log('userRef:', userRef);
         const userDoc = await getDoc(userRef);
 
         // Check if the user document exists
@@ -144,4 +143,4 @@ async function retrieveProducts() {
 }
 
 
-export { retrieveUser, retrieveUserAndCreate, retrieveUserSnapshot, retrieveUserRef, retrieveUserRefById, retrieveProducts };
+export { retrieveUserAndCreate, retrieveUser, retrieveUserSnapshot, retrieveUserRef, retrieveUserRefById, retrieveProducts };

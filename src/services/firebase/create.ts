@@ -5,7 +5,7 @@ import retrieveStripeCustomer from '@/lib/stripe/retrieve';
 import { generateReferralCode } from '@/utils/generate-referral-code';
 
 // External Imports
-import { doc, setDoc} from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 
 // This function will run when a new user signs up using Firebase Auth
 export async function createUser(uid: string, email: string): Promise<IUser | void> {
@@ -19,10 +19,10 @@ export async function createUser(uid: string, email: string): Promise<IUser | vo
             connectedAccounts: {
                 discord: null,
                 ebay: null,
-            }, 
+            },
             username: null,
             email: email,
-            stripeCustomerId: customer.id,  
+            stripeCustomerId: customer.id,
             subscriptions: null,
             referral: {
                 referralCode: referralCode,
@@ -40,10 +40,10 @@ export async function createUser(uid: string, email: string): Promise<IUser | vo
                 automatic: 0,
                 manual: 0,
             },
-            lastFetchedDate: null,  
+            lastFetchedDate: null,
             preferences: {
                 preferredEmail: email,
-                locale: 'GB', 
+                locale: 'GB',
                 currency: 'USD',
             },
             authentication: {

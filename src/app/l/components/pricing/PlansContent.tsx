@@ -19,7 +19,9 @@ const PlansContent = () => {
   const [selectedPlan, setSelectedPlan] = useState<number>(0);
   const [currency, setCurrency] = useState<Currency>("GBP");
   const [enterpriseListings, setEnterpriseListings] = useState<number>(200);
-  const [conversionRates, setConversionRates] = useState<Record<string, number>>({
+  const [conversionRates, setConversionRates] = useState<
+    Record<string, number>
+  >({
     GBP: 1,
     USD: 1.29,
     EUR: 1.19,
@@ -50,9 +52,14 @@ const PlansContent = () => {
     <div className="w-full h-full flex flex-col justify-center items-center mb-12 relative pb-20">
       <div className="flex flex-col items-center space-y-5 text-center mt-2 md:mt-6">
         <div className="flex flex-wrap justify-center animate-fadeInPrimary">
-          <p className={`${lato.className} text-5xl w-4/5 sm:w-full text-gradient bg-gradient-to-tr from-textGradStart to-textGradEnd bg-clip-text text-transparent py-1`}>
+          <p
+            className={`${lato.className} text-5xl w-4/5 sm:w-full text-gradient bg-gradient-to-tr from-textGradStart to-textGradEnd bg-clip-text text-transparent py-1`}
+          >
             Pricing
-            <a className={`${inter.className} text-white text-5xl font-bold`}> Made Easy</a>
+            <a className={`${inter.className} text-white text-5xl font-bold`}>
+              {" "}
+              Made Easy
+            </a>
           </p>
         </div>
         <div className="flex justify-center w-4/5 sm:w-full animate-fadeInSecondary">
@@ -87,8 +94,11 @@ const PlansContent = () => {
           title="Standard"
           description="For beginners"
           prices={{ monthly: 0, yearly: 0 }}
-          discountedPrices={{ monthly: 0.00, yearly: 0.00 }}
-          priceIds={{ monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba", yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6" }}
+          discountedPrices={{ monthly: 0.0, yearly: 0.0 }}
+          priceIds={{
+            monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
+            yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
+          }}
           whatsIncludedComponent={<PlansCardBasicWhatsIncluded />}
           priceRange={selectedPlan}
           currency={currency}
@@ -99,7 +109,10 @@ const PlansContent = () => {
           description="For growing resellers"
           prices={{ monthly: 19.99, yearly: 199.99 }}
           discountedPrices={{ monthly: 9.99, yearly: 99.99 }}
-          priceIds={{ monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba", yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6" }}
+          priceIds={{
+            monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
+            yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
+          }}
           whatsIncludedComponent={<PlansCardStandardWhatsIncluded />}
           priceRange={selectedPlan}
           currency={currency}
@@ -110,7 +123,10 @@ const PlansContent = () => {
           description="For experts"
           prices={{ monthly: 29.99, yearly: 299.99 }}
           discountedPrices={{ monthly: 19.99, yearly: 199.99 }}
-          priceIds={{ monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba", yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6" }}
+          priceIds={{
+            monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
+            yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
+          }}
           whatsIncludedComponent={<PlansCardEliteWhatsIncluded />}
           priceRange={selectedPlan}
           currency={currency}
@@ -122,7 +138,10 @@ const PlansContent = () => {
           description="For Large Scale Operations"
           prices={{ monthly: 199.99, yearly: 1999.99 }}
           discountedPrices={{ monthly: 99.99, yearly: 999.99 }}
-          priceIds={{ monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba", yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6" }}
+          priceIds={{
+            monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
+            yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
+          }}
           whatsIncludedComponent={<PlansCardEnterpriseWhatsIncluded />}
           priceRange={selectedPlan}
           currency={currency}

@@ -1,10 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
 
-// Connection buttons
 import AmazonConnectButton from "./AmazonConnectButton";
 import EbayConnectButton from "./EbayConnectButton";
-
+import ShopifyConnectButton from "./ShopifyConnectButton";
 
 interface ConnectAccountProps {
     name: string;
@@ -26,6 +25,7 @@ const ConnectAccount: React.FC<ConnectAccountProps> = ({ name, image }) => {
                 {/* Connect/Disconnect Button */}
                 {name === "eBay" && <EbayConnectButton />}
                 {name === "Amazon" && <AmazonConnectButton />}
+                {name === "Shopify" && <ShopifyConnectButton />}
             </div>
         </div>
     );

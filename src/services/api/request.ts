@@ -1,9 +1,9 @@
 import { getTokensForApi } from "./tokens";
 
 // Function to send request and handle token refresh if necessary
-export async function sendApiRequest(endpoint: string, ebayAccessToken: string | null | undefined, customerId: string, requestNewTokens = false) {
+export async function sendApiRequest(endpoint: string, ebayAccessToken: string | null | undefined, uid: string, requestNewTokens = false) {
 	// Fetch the tokens (either from localStorage or by refreshing if specified)
-	const apiAccessTokens = await getTokensForApi(ebayAccessToken, customerId, requestNewTokens);
+    const apiAccessTokens = await getTokensForApi(ebayAccessToken, uid, requestNewTokens);
 
 	if (!apiAccessTokens) {
 		throw new Error("User is not authenticated");

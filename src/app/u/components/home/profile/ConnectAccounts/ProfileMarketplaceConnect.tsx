@@ -14,13 +14,19 @@ const ProfileMarketplaceConnect = () => {
                 {/* eBay Connect Account Card */}
                 <ConnectAccount
                     name="eBay"
-                    image="https://i.imgur.com/neFciQD.png"
+                    image="/ebayLogo.png"
                 />
 
                 {/* Amazon Connect Account Card */}
                 <ConnectAccount
                     name="Amazon"
-                    image="https://i.imgur.com/dVsl6w5.png"
+                    image="/AmazonLogo.png"
+                />
+
+                {/* Shopify Connect Account Card */}
+                <ConnectAccount
+                    name="Shopify"
+                    image="/ShopifyLogo.png"
                 />
             </div>
         </div>

@@ -48,10 +48,10 @@ const OrderRow: React.FC<OrderRowProps> = ({
 			</td>
 			<td>{itemName}</td>
 			<td>{quantitySold}</td>
-			<td>{currencySymbols[currency]}{totalPurchasePrice?.toFixed(2) || 'N/A'}</td>
+            <td>{totalPurchasePrice ? currencySymbols[currency]: ""}{totalPurchasePrice?.toFixed(2) || 'N/A'}</td>
 			<td>{currencySymbols[currency]}{totalSalePrice.toFixed(2)}</td>
 			<td>{currencySymbols[currency]}{profit.toFixed(2)}</td>
-			<td>{roi}%</td>
+            <td>{totalPurchasePrice ? `${roi}%`: "N/A"}</td>
 		</tr>
 	);
 };

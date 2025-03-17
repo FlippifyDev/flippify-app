@@ -33,8 +33,6 @@ const UpdateFields: React.FC<UpdateFieldsProps> = (
 ) => {
 	const updateInputClass = "text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base transition duration-200 ease-in-out transform border-transparent rounded-lg bg-gray-200 focus:border-blueGray-500 focus:bg-white focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400"
 
-
-
 	return (
 		<div className={`transition-opacity duration-500 rounded-lg bg-white p-4 space-y-6 ${fadeIn ? 'opacity-100 ease-in' : 'opacity-0 ease-out'}`}>
 			<h3 className="text-lg font-semibold">

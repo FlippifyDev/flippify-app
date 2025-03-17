@@ -1,12 +1,10 @@
 "use client";
 
-// Local Imports
 import { IUser } from "@/models/user";
 import HouseButton from "../../dom/ui/HouseButton";
 import UnderlineInput from "@/app/components/UnderlineInput";
 import { auth, firestore } from "@/lib/firebase/config";
 
-// External Imports
 import { updatePassword, EmailAuthProvider, reauthenticateWithCredential, verifyBeforeUpdateEmail } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { Lock, Mail } from "lucide-react";
@@ -106,6 +104,7 @@ const UpdateEmail = () => {
     const [message, setMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [password, setPassword] = useState("")
+    const [isChanged, setIsChanged] = useState(false);
 
     const handleUpdate = async () => {
         if (!newEmail || !password) {
@@ -126,40 +125,60 @@ const UpdateEmail = () => {
                 <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2" htmlFor="email">
                     Current Password
                 </label>
-                <UnderlineInput id="email-password" type="password" placeholder="********" value={password} onChange={(e) => setPassword(e.target.value)} />
-
-                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2" htmlFor="email">
+                <input
+                    type="password"
+                    placeholder="Current Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full p-3 bg-gray-50 rounded-xl outline-none border  border-gray-500 placeholder-gray-400"
+                />
+                
+                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2 mt-2" htmlFor="email">
                     New Email
                 </label>
-                <UnderlineInput id="new-email" type="email" placeholder="Email Address" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} />
+                <input
+                    type="email"
+                    placeholder="Email Address"
+                    value={newEmail}
+                    onChange={(e) => setNewEmail(e.target.value)}
+                    className="w-full p-3 bg-gray-50 rounded-xl outline-none border border-gray-500 placeholder-gray-400"
+                />
 
                 <span className="text-sm">{message}</span>
                 <span className="text-green-500 text-sm">{updated ? "Email Successfully Updated" : ""}</span>
                 <span className="text-red-500 text-sm">{errorMessage}</span>
             </div>
-            <div className="w-full flex items-end">
-                <HouseButton text="Update Email" icon={<Mail className="mr-2 h-4 w-4" />} onClick={handleUpdate} />
-            </div>
+            <button
+                type="button"
+                onClick={handleUpdate}
+                disabled={!isChanged}
+                className={`mt-4 w-full inline-block text-white py-2 rounded-md transition duration-200 ${
+                    isChanged ? 'bg-houseBlue hover:bg-houseHoverBlue' : 'bg-gray-300 cursor-not-allowed'
+                }`}
+            >
+                Update Email
+            </button>
         </div>
     )
 }
 
 
 const UpdatePassword = () => {
-    const [currrentPassword, setCurrentPassword] = useState("");
+    const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmedPassword, setConfirmedPassword] = useState("");
     const [updated, setUpdated] = useState(false);
 
     const [message, setMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const [isChanged, setIsChanged] = useState(false);
 
     const handleUpdate = async () => {
-        if (!newPassword || !currrentPassword || (newPassword !== confirmedPassword)) {
+        if (!newPassword || !currentPassword || (newPassword !== confirmedPassword)) {
             setErrorMessage("Please provide the new password and current password.");
             return;
         }
-        const { success, error } = await updateUserPassword(newPassword, currrentPassword, setMessage, setUpdated);
+        const { success, error } = await updateUserPassword(newPassword, currentPassword, setMessage, setUpdated);
         if (!success) {
             setErrorMessage(error ?? "An unknown error occurred while updating your password.");
         } else {
@@ -174,25 +193,50 @@ const UpdatePassword = () => {
                 <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2" htmlFor="email">
                     Current Password
                 </label>
-                <UnderlineInput id="current-password" type="password" placeholder="********" value={currrentPassword} onChange={(e) => setCurrentPassword(e.target.value)} />
+                <input
+                    type="password"
+                    placeholder="Current Password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    className="w-full p-3 bg-gray-50 rounded-xl outline-none border border-gray-500 placeholder-gray-400"
+                />
 
                 <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2" htmlFor="email">
                     New Password
                 </label>
-                <UnderlineInput id="new-password" type="password" placeholder="********" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+                <input
+                    type="password"
+                    placeholder="New Password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className="w-full p-3 bg-gray-50 rounded-xl outline-none border border-gray-500 placeholder-gray-400"
+                />
 
                 <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2" htmlFor="email">
                     Confirm Password
                 </label>
-                <UnderlineInput id="confirm-password" type="password" placeholder="Email Address" value={confirmedPassword} onChange={(e) => setConfirmedPassword(e.target.value)} />
+                <input
+                    type="password"
+                    placeholder="Confirm Password"
+                    value={confirmedPassword}
+                    onChange={(e) => setConfirmedPassword(e.target.value)}
+                    className="w-full p-3 bg-gray-50 rounded-xl outline-none border border-gray-500 placeholder-gray-400"
+                />
 
                 <span className="text-sm">{message}</span>
                 <span className="text-green-500 text-sm">{updated ? "Password Successfully Updated" : ""}</span>
                 <span className="text-red-500 text-sm">{errorMessage}</span>
             </div>
-            <div className="w-full flex items-end">
-                <HouseButton text="Update Password" icon={<Lock className="mr-2 h-4 w-4" />} onClick={handleUpdate} />
-            </div>
+            <button
+                type="button"
+                onClick={handleUpdate}
+                disabled={!isChanged}
+                className={`mt-4 w-full inline-block text-white py-2 rounded-md transition duration-200 ${
+                    isChanged ? 'bg-houseBlue hover:bg-houseHoverBlue' : 'bg-gray-300 cursor-not-allowed'
+                }`}
+            >
+                Update Password
+            </button>
         </div>
     )
 }

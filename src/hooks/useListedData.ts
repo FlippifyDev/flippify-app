@@ -6,11 +6,11 @@ import { getCachedData, setCachedData } from "../utils/cache-helpers";
 // External Imports
 import { useEffect, useState } from "react";
 
-export const useListedData = (ebayAccessToken: string | null | undefined, customerId: string) => {
+export const useListedData = (ebayAccessToken: string | null | undefined, uid: string) => {
     const [listedData, setListedData] = useState<IEbayInventoryItem[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-	const cacheKey = `listedData-${customerId}`; // Cache key based on customerId
+	const cacheKey = `listedData-${uid}`; // Cache key based on uid
 	const cacheExpirationTime = 1000 * 60 * 10; // Cache expiration time (10 minutes)
 
 	useEffect(() => {
@@ -29,10 +29,10 @@ export const useListedData = (ebayAccessToken: string | null | undefined, custom
 
 			try {
 				// Attempt initial request without refreshing tokens
-				const response = await sendApiRequest("active-listings", ebayAccessToken, customerId);
+				const response = await sendApiRequest("active-listings", ebayAccessToken, uid);
 
 				if (response.status === 401 || response.status === 400) { // If unauthorized, try refreshing tokens
-					const refreshedResponse = await sendApiRequest("active-listings", ebayAccessToken, customerId, true);
+					const refreshedResponse = await sendApiRequest("active-listings", ebayAccessToken, uid, true);
 					const data = await refreshedResponse.json();
 					setListedData(data.content);
 					setCachedData(cacheKey, data.content);
@@ -50,7 +50,7 @@ export const useListedData = (ebayAccessToken: string | null | undefined, custom
 		};
 
 		fetchSalesData();
-	}, [cacheKey, cacheExpirationTime, customerId, ebayAccessToken]);
+	}, [cacheKey, cacheExpirationTime, uid, ebayAccessToken]);
 
 	return { listedData, loading, error };
 };

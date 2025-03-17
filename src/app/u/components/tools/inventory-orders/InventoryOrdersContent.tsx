@@ -16,7 +16,6 @@ import { refreshEbayToken } from '@/services/ebay/refresh-token';
 
 
 const InventoryOrdersContent = () => {
-    const { data: session } = useSession();
     const searchParams = useSearchParams();
 
     // Determine initial tab based on the URL parameter
@@ -27,8 +26,6 @@ const InventoryOrdersContent = () => {
     const [isOpen, setIsOpen] = useState(false); // Manage dropdown state
 
     const dropdownRef = useRef<HTMLDivElement>(null); // Reference for dropdown
-    const customerId = session?.user.stripeCustomerId;
-    const ebayTokenExpiry = session?.user.connectedAccounts.ebay?.ebayTokenExpiry;
 
     useEffect(() => {
         // Close dropdown if clicked outside
@@ -46,20 +43,6 @@ const InventoryOrdersContent = () => {
         };
     }, []);
 
-    useEffect(() => {
-        const checkRefreshToken = async () => {
-            if (!session || !customerId || !ebayTokenExpiry) {
-                return null;
-            }
-
-            // Check if the token needs to be refreshed
-            if (Date.now() >= Number(ebayTokenExpiry)) {
-                await refreshEbayToken(customerId);
-            }
-        };
-
-        checkRefreshToken();
-    }, [session, ebayTokenExpiry, customerId]);
 
     // Function to handle tab switching
     const handleTabChange = (tab: string) => {
@@ -97,7 +80,7 @@ const InventoryOrdersContent = () => {
                         <ul className="absolute left-0 ml-6 z-10 w-48 bg-white shadow-lg rounded-md ring-1 ring-black ring-opacity-5">
                             <li>
                                 <a
-                                    href="#"
+                                    href="#inventory"
                                     onClick={() => handleTabChange('inventory')}
                                     className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 rounded-t"
                                 >
@@ -107,7 +90,7 @@ const InventoryOrdersContent = () => {
                             </li>
                             <li>
                                 <a
-                                    href="#"
+                                    href="#orders"
                                     onClick={() => handleTabChange('orders')}
                                     className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
                                 >

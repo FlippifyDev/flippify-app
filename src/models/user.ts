@@ -5,19 +5,25 @@ export type EmailVerification = "unverified" | "verifying" | "verified";
 interface IUser {
     id: string;
     connectedAccounts: IConnectedAccounts;
-    email: string; 
+    email: string;
     username: string | null;
     stripeCustomerId: string;
     subscriptions: ISubscription[] | null;
     referral: IReferral;
-    inventory: { ebay: IEbayInventoryItem | null };
-    orders: { ebay: IEbayOrder | null };
+    inventory: { ebay: Record<string, IEbayInventoryItem> | null };
+    orders: { ebay: Record<string, IEbayOrder> | null }; 
     numListings: { automatic: number, manual: number } | null;
     numOrders: { automatic: number, manual: number } | null;
-    lastFetchedDate: { inventory: string, orders: string } | null;
+    lastFetchedDate: { ebay: ILastFetchedDate } | null;
     preferences: IPreferences;
     authentication: IAuthentication;
     metaData: IMetaData;
+}
+
+
+interface ILastFetchedDate {
+    inventory: string;
+    orders: string;
 }
 
 interface IAuthentication {
@@ -66,7 +72,7 @@ interface IEbayInventoryItem {
     price: number;
     quantity: number;
     dateListed: string;
-    images: string[];
+    image: string[];
     recordType: RecordType;
 }
 
@@ -74,7 +80,7 @@ interface IEbayOrder {
     additionalFees: number;
     buyerUsername: string;
     customTag: string;
-    images: string[];
+    image: string[];
     itemName: string;
     legacyItemId: string;
     listingDate: string;

@@ -1,7 +1,6 @@
 "use client";
 
 import OrderRow from "./OrderRow";
-import { useSalesData } from '@/hooks/useSalesData';
 import { IEbayOrder } from "@/models/user";
 
 import React, { useEffect, useState } from "react";
@@ -23,13 +22,11 @@ const OrdersContent: React.FC = () => {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const { data: session } = useSession();
-	const customerId = session?.user.stripeCustomerId as string;
 	const username = session?.user.username as string;
-	const ebayAccessToken = session?.user.connectedAccounts.ebay?.ebayAccessToken;
 	const currency = session?.user.preferences.currency || "GBP";
 
 	// Use the custom hook to get sales data
-	const { salesData } = useSalesData(ebayAccessToken, customerId);
+	const salesData = Object.values(session?.user.orders.ebay ?? {})
 
 	useEffect(() => {
 		if (salesData) {
@@ -45,7 +42,7 @@ const OrdersContent: React.FC = () => {
 
 			if (!combinedOrders[legacyItemId]) {
 				combinedOrders[legacyItemId] = {
-					image: order.images[0],
+					image: order.image[0],
 					itemName: order.itemName,
 					quantitySold: order.quantitySold,
 					totalSalePrice: order.salePrice,
@@ -69,7 +66,13 @@ const OrdersContent: React.FC = () => {
 			}
 		});
 
-		setCombinedOrderData(combinedOrders);
+        setCombinedOrderData((prevData) => {
+            if (JSON.stringify(prevData) !== JSON.stringify(combinedOrders)) {
+                setLoading(false);
+                return combinedOrders;
+            }
+            return prevData;
+        });
 		setLoading(false);
 	};
 

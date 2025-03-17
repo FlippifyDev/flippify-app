@@ -6,11 +6,11 @@ import { getCachedData, setCachedData } from "../utils/cache-helpers";
 import { sendApiRequest } from "@/services/api/request";
 
 
-export const useSalesData = (ebayAccessToken: string | null | undefined, customerId: string) => {
+export const useSalesData = (ebayAccessToken: string | null | undefined, uid: string) => {
 	const [salesData, setSalesData] = useState<IEbayOrder[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-	const cacheKey = `salesData-${customerId}`; // Cache key based on customerId
+    const cacheKey = `salesData-${uid}`; // Cache key based on customerId
 	const cacheExpirationTime = 1000 * 60 * 10; // Cache expiration time (10 minutes)
 
 
@@ -30,10 +30,11 @@ export const useSalesData = (ebayAccessToken: string | null | undefined, custome
 
 			try {
 				// Attempt initial request without refreshing tokens
-				const response = await sendApiRequest("orders", ebayAccessToken, customerId);
+                const response = await sendApiRequest("orders", ebayAccessToken, uid);
+                console.log(response)
 
 				if (response.status === 401 || response.status === 400) { // If unauthorized, try refreshing tokens
-					const refreshedResponse = await sendApiRequest("orders", ebayAccessToken, customerId, true);
+                    const refreshedResponse = await sendApiRequest("orders", ebayAccessToken, uid, true);
 					const data = await refreshedResponse.json();
 					setSalesData(data.content);
 					setCachedData(cacheKey, data.content);
@@ -51,7 +52,7 @@ export const useSalesData = (ebayAccessToken: string | null | undefined, custome
 		};
 
 		fetchSalesData();
-	}, [cacheKey, cacheExpirationTime, customerId, ebayAccessToken]);
+    }, [cacheKey, cacheExpirationTime, uid, ebayAccessToken]);
 
 	return { salesData, loading, error };
 };

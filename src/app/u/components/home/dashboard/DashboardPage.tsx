@@ -18,11 +18,8 @@ import OnboardingFlow from "./OnboardingFlow";
 
 const DashboardPage: React.FC = () => {
 	const { data: session } = useSession();
-    console.log("Dashboard", session)
-	const customerId = session?.user.stripeCustomerId as string;
-	const ebayAccessToken = session?.user.connectedAccounts.ebay?.ebayAccessToken as string;
-	const currency = session?.user.preferences.locale as string;
-	const { salesData, loading, error } = useSalesData(ebayAccessToken, customerId);
+	const currency = session?.user.preferences.currency as string;
+    const salesData = Object.values(session?.user.orders.ebay ?? {});
 	const [selectedRange, setSelectedRange] = useState<number>(30);
 	const [selectedLabel, setSelectedLabel] = useState<string>("This Month");
 	const [rangeDropdownOpen, setRangeDropdownOpen] = useState(false);

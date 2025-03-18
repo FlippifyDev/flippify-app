@@ -1,18 +1,15 @@
 "use client"
 
 // External Imports
-import React, { useEffect, useState, useRef } from 'react'
-import { useSession } from 'next-auth/react';
-import { useSearchParams } from "next/navigation";
-
 import { FaBox } from "react-icons/fa";
 import { FaShoppingCart } from 'react-icons/fa';
+import { useSearchParams } from "next/navigation";
+import React, { useEffect, useState, useRef } from 'react'
 
 // Local Imports
 import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
-import OrdersContent from './OrdersContent';
 import InventoryContent from './InventoryContent';
-import { refreshEbayToken } from '@/services/ebay/refresh-token';
+import OrdersContent from './OrdersContent';
 
 
 const InventoryOrdersContent = () => {

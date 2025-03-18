@@ -7,132 +7,145 @@ import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import DashboardRecentSalesCard from "./DashboardRecentSalesCard";
 import DashboardNoSubscription from "./DashboardNoSubscription";
 import ProfitsGraphDateFilter from "./ProfitsGraphDateFilter";
+import { retrieveUserOrders } from "@/services/firebase/retrieve";
 import LayoutLoadingSkeleton from "../../layout/LayoutLoadingSkeleton";
 import ProfitsGraphTagFilter from "./ProfitsGraphTagFilter";
 import DashboardOverviewCard from "./DashboardOverviewCard";
 import DashboardProfitsGraph from "./DashboardProfitsGraph";
 import DashboardShowcase from "./DashboardShowcase";
-import { useSalesData } from "@/hooks/useSalesData";
 import OnboardingFlow from "./OnboardingFlow";
+import { IEbayOrder } from "@/models/store-data";
 
 
 const DashboardPage: React.FC = () => {
-	const { data: session } = useSession();
-	const currency = session?.user.preferences.currency as string;
-    const salesData = Object.values(session?.user.orders.ebay ?? {});
-	const [selectedRange, setSelectedRange] = useState<number>(30);
-	const [selectedLabel, setSelectedLabel] = useState<string>("This Month");
-	const [rangeDropdownOpen, setRangeDropdownOpen] = useState(false);
-	const [tagDropdownOpen, setTagDropdownOpen] = useState(false);
+    const { data: session } = useSession();
+    const currency = session?.user.preferences.currency as string;
+    const [salesData, setSalesData] = useState<IEbayOrder[]>([]);
+    const [selectedRange, setSelectedRange] = useState<number>(30);
+    const [selectedLabel, setSelectedLabel] = useState<string>("This Month");
+    const [rangeDropdownOpen, setRangeDropdownOpen] = useState(false);
+    const [tagDropdownOpen, setTagDropdownOpen] = useState(false);
 
-	const rangeDropdownRef = useRef<HTMLDivElement | null>(null);
-	const tagDropdownRef = useRef<HTMLDivElement | null>(null);
+    const rangeDropdownRef = useRef<HTMLDivElement | null>(null);
+    const tagDropdownRef = useRef<HTMLDivElement | null>(null);
 
-	// State for the selected custom tag
-	const [selectedTag, setSelectedTag] = useState<string | null>(null);
+    // State for the selected custom tag
+    const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
-	const handleRangeChange = (range: string, label: string) => {
-		setSelectedLabel(label)
-		setSelectedRange(Number(range));
-		setRangeDropdownOpen(false);
-	};
+    const handleRangeChange = (range: string, label: string) => {
+        setSelectedLabel(label)
+        setSelectedRange(Number(range));
+        setRangeDropdownOpen(false);
+    };
 
-	// Extract unique custom tags from sales data for filtering
-	const uniqueTags = Array.from(
-		new Set(salesData.map((order) => order.customTag))
-	).filter((tag) => tag);
+    // Extract unique custom tags from sales data for filtering
+    const uniqueTags = Array.from(
+        new Set(salesData.map((order) => order.customTag))
+    ).filter((tag) => tag);
 
+    useEffect(() => {
+        const fetchSalesData = async () => {
+            const orders = await retrieveUserOrders(session?.user.id as string, "2023-01-01T00:00:00Z", session?.user.connectedAccounts.ebay?.ebayAccessToken as string);
+            if (orders) {
+                setSalesData(orders);
+            }
+        };
 
-	// Close dropdowns if clicked outside
-	useEffect(() => {
-		const handleClickOutside = (event: MouseEvent) => {
-			if (
-				rangeDropdownRef.current &&
-				!rangeDropdownRef.current.contains(event.target as Node) &&
-				tagDropdownRef.current &&
-				!tagDropdownRef.current.contains(event.target as Node)
-			) {
-				setRangeDropdownOpen(false);
-				setTagDropdownOpen(false);
-			}
-		};
+        if (session?.user) {
+            fetchSalesData();
+        }
+    }, [session?.user]);
 
-		document.addEventListener("mousedown", handleClickOutside);
+    // Close dropdowns if clicked outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                rangeDropdownRef.current &&
+                !rangeDropdownRef.current.contains(event.target as Node) &&
+                tagDropdownRef.current &&
+                !tagDropdownRef.current.contains(event.target as Node)
+            ) {
+                setRangeDropdownOpen(false);
+                setTagDropdownOpen(false);
+            }
+        };
 
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside);
-		};
-	}, []);
+        document.addEventListener("mousedown", handleClickOutside);
 
-	if (!session || !session.user || !session.user.stripeCustomerId) {
-		return <LayoutLoadingSkeleton />;
-	}
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
-	// Filter sales data based on the selected tag
-	const filteredSalesData = selectedTag
-		? salesData.filter((order) => order.customTag === selectedTag)
-		: salesData;
+    if (!session || !session.user || !session.user.stripeCustomerId) {
+        return <LayoutLoadingSkeleton />;
+    }
 
-	return (
-		<div className="relative flex flex-col w-full h-full">
-			{/* If They Do NOT Have Access */}
-			<LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
-				<div className="h-full">
-					<OnboardingFlow />
-				</div>
-			</LayoutSubscriptionWrapper>
+    // Filter sales data based on the selected tag
+    const filteredSalesData = selectedTag
+        ? salesData.filter((order) => order.customTag === selectedTag)
+        : salesData;
 
-			{/* If They Have Access but NO Subscription*/}
-			<LayoutSubscriptionWrapper
-				requiredSubscriptions={["accessGranted", "!standard"]}
-			>
-				<div className="w-full h-full overflow-y-auto">
-					<div className="flex flex-col lg:flex-row py-2 px-2 bg-white rounded-lg overflow-hidden w-full">
-						<div className="lg:w-1/3">
-							<DashboardNoSubscription username={session.user.username ?? ""} />
-						</div>
-						<div className="lg:w-2/3">
-							<DashboardShowcase />
-						</div>
-					</div>
-				</div>
-			</LayoutSubscriptionWrapper>
+    return (
+        <div className="relative flex flex-col w-full h-full">
+            {/* If They Do NOT Have Access */}
+            <LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
+                <div className="h-full">
+                    <OnboardingFlow />
+                </div>
+            </LayoutSubscriptionWrapper>
 
-			{/* If They Have Subscription */}
-			<LayoutSubscriptionWrapper requiredSubscriptions={["admin", "standard"]}>
-				<div className="h-full w-full flex flex-col gap-2 sm:gap-4">
-					<div className="w-full">
-						<DashboardOverviewCard
-							salesData={filteredSalesData}
-							currency={currency}
-							selectedRange={selectedRange}
-						/>
-					</div>
-					<div className="w-full bg-white rounded-lg dark:bg-gray-800 p-4 md:p-6">
-						<DashboardProfitsGraph
-							salesData={filteredSalesData}
-							currency={currency}
-							selectedRange={selectedRange}
-						/>
-						{/* Dropdown for selecting tags */}
-						<div className="flex flex-row w-full gap-4">
-							{/* Dropdown for selecting date range */}
-							<ProfitsGraphDateFilter ref={rangeDropdownRef} rangeDropdownOpen={rangeDropdownOpen} selectedLabel={selectedLabel} selectedRange={selectedRange} setRangeDropdownOpen={setRangeDropdownOpen} handleRangeChange={handleRangeChange} />
+            {/* If They Have Access but NO Subscription*/}
+            <LayoutSubscriptionWrapper
+                requiredSubscriptions={["accessGranted", "!standard"]}
+            >
+                <div className="w-full h-full overflow-y-auto">
+                    <div className="flex flex-col lg:flex-row py-2 px-2 bg-white rounded-lg overflow-hidden w-full">
+                        <div className="lg:w-1/3">
+                            <DashboardNoSubscription username={session.user.username ?? ""} />
+                        </div>
+                        <div className="lg:w-2/3">
+                            <DashboardShowcase />
+                        </div>
+                    </div>
+                </div>
+            </LayoutSubscriptionWrapper>
 
-							{/* Dropdown for selecting custom tag */}
-							<ProfitsGraphTagFilter ref={tagDropdownRef} tagDropdownOpen={tagDropdownOpen} selectedTag={selectedTag} uniqueTags={uniqueTags} setTagDropdownOpen={setTagDropdownOpen} setSelectedTag={setSelectedTag} />
-						</div>
-					</div>
-					<div className="w-full">
-						<DashboardRecentSalesCard
-							salesData={filteredSalesData}
-							currency={currency}
-						/>
-					</div>
-				</div>
-			</LayoutSubscriptionWrapper>
-		</div>
-	);
+            {/* If They Have Subscription */}
+            <LayoutSubscriptionWrapper requiredSubscriptions={["admin", "standard"]}>
+                <div className="h-full w-full flex flex-col gap-2 sm:gap-4">
+                    <div className="w-full">
+                        <DashboardOverviewCard
+                            salesData={filteredSalesData}
+                            currency={currency}
+                            selectedRange={selectedRange}
+                        />
+                    </div>
+                    <div className="w-full bg-white rounded-lg dark:bg-gray-800 p-4 md:p-6">
+                        <DashboardProfitsGraph
+                            salesData={filteredSalesData}
+                            currency={currency}
+                            selectedRange={selectedRange}
+                        />
+                        {/* Dropdown for selecting tags */}
+                        <div className="flex flex-row w-full gap-4">
+                            {/* Dropdown for selecting date range */}
+                            <ProfitsGraphDateFilter ref={rangeDropdownRef} rangeDropdownOpen={rangeDropdownOpen} selectedLabel={selectedLabel} selectedRange={selectedRange} setRangeDropdownOpen={setRangeDropdownOpen} handleRangeChange={handleRangeChange} />
+
+                            {/* Dropdown for selecting custom tag */}
+                            <ProfitsGraphTagFilter ref={tagDropdownRef} tagDropdownOpen={tagDropdownOpen} selectedTag={selectedTag} uniqueTags={uniqueTags} setTagDropdownOpen={setTagDropdownOpen} setSelectedTag={setSelectedTag} />
+                        </div>
+                    </div>
+                    <div className="w-full">
+                        <DashboardRecentSalesCard
+                            salesData={filteredSalesData}
+                            currency={currency}
+                        />
+                    </div>
+                </div>
+            </LayoutSubscriptionWrapper>
+        </div>
+    );
 };
 
 export default DashboardPage;

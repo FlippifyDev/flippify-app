@@ -10,8 +10,6 @@ interface IUser {
     stripeCustomerId: string;
     subscriptions: ISubscription[] | null;
     referral: IReferral;
-    inventory: { ebay: Record<string, IEbayInventoryItem> | null };
-    orders: { ebay: Record<string, IEbayOrder> | null }; 
     numListings: { automatic: number, manual: number } | null;
     numOrders: { automatic: number, manual: number } | null;
     lastFetchedDate: { ebay: ILastFetchedDate } | null;
@@ -66,40 +64,10 @@ interface IReferral {
     rewardsClaimed: number;
 }
 
-interface IEbayInventoryItem {
-    itemId: string;
-    itemName: string;
-    price: number;
-    quantity: number;
-    dateListed: string;
-    image: string[];
-    recordType: RecordType;
-}
-
-interface IEbayOrder {
-    additionalFees: number;
-    buyerUsername: string;
-    customTag: string;
-    image: string[];
-    itemName: string;
-    legacyItemId: string;
-    listingDate: string;
-    orderId: string;
-    purchaseDate: string;
-    purchasePlatform: string;
-    purchasePrice: number;
-    quantitySold: number;
-    recordType: RecordType;
-    saleDate: string;
-    salePlatform: string;
-    salePrice: number;
-    shippingFees: number;
-}
-
 interface IPreferences {
     preferredEmail: string;
     locale: string;
     currency: CurrencyType;
 }
 
-export type { IUser, ISubscription, IEbay, IReferral, IEbayInventoryItem, IEbayOrder, IPreferences, IConnectedAccounts };
+export type { IUser, ISubscription, IEbay, IReferral, IPreferences, IConnectedAccounts };

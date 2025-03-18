@@ -1,7 +1,8 @@
 "use client";
 
 import OrderRow from "./OrderRow";
-import { IEbayOrder } from "@/models/user";
+import { IEbayOrder } from "@/models/store-data";
+import { retrieveUserOrders } from "@/services/firebase/retrieve";
 
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
@@ -26,13 +27,26 @@ const OrdersContent: React.FC = () => {
 	const currency = session?.user.preferences.currency || "GBP";
 
 	// Use the custom hook to get sales data
-	const salesData = Object.values(session?.user.orders.ebay ?? {})
+	const [salesData, setSalesData] = useState<IEbayOrder[]>([]);
 
-	useEffect(() => {
-		if (salesData) {
-			formatOrderData(salesData);
-		}
-	}, [salesData]);
+    useEffect(() => {
+        const fetchOrderData = async () => {
+            const orders = await retrieveUserOrders(session?.user.id as string, "2023-01-01T00:00:00Z", session?.user.connectedAccounts.ebay?.ebayAccessToken as string);
+            if (orders) {
+                setSalesData(orders);
+            }
+        };
+
+        if (session?.user) {
+            fetchOrderData();
+        }
+    }, [session?.user]);
+
+    useEffect(() => {
+        if (salesData.length > 0) {
+            formatOrderData(salesData);
+        }
+    }, [salesData]);
 
     const formatOrderData = (unformattedOrderData: IEbayOrder[]) => {
 		const combinedOrders: { [key: string]: CombinedOrder } = {};

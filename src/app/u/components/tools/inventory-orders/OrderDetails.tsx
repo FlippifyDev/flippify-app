@@ -1,27 +1,29 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { IEbayOrder } from "@/models/user";
+// Local Imports
+import Alert from "@/app/components/Alert";
+import UpdateFields from "./UpdateFields";
+import OrderInfoCard from "./OrderInfoCard";
+import { firestore } from "@/lib/firebase/config";
+import { IEbayOrder } from "@/models/store-data";
+import { setCachedData } from "@/utils/cache-helpers";
+import { formatTableDate } from "@/utils/format-dates";
 import { currencySymbols } from "@/config/currency-config";
+import { retrieveUserOrders } from "@/services/firebase/retrieve";
+
+// External Imports
+import { useParams, useRouter } from "next/navigation";
+import { use, useEffect, useState } from "react";
+import { collection, doc, updateDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import OrderInfoCard from "./OrderInfoCard";
-import { formatTableDate } from "@/utils/format-dates";
-import { get, ref, update } from "firebase/database"
-import UpdateFields from "./UpdateFields";
-import { setCachedData } from "@/utils/cache-helpers";
-import Alert from "@/app/components/Alert";
-import { firestore } from "@/lib/firebase/config";
-import { retrieveUserRefById } from "@/services/firebase/retrieve";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 const OrderDetails = () => {
     const { data: session } = useSession();
     const params = useParams();
     const orderId = params?.["order-id"];
     const [orders, setOrders] = useState<IEbayOrder[]>([]);
-    const salesData = Object.values(session?.user.orders.ebay ?? {}).filter((o) => o.legacyItemId === orderId);
+    const [salesData, setSalesData] = useState<IEbayOrder[]>([]);
     const username = session?.user.username as string;
     const currency = session?.user.preferences.currency || "GBP";
     const currencySymbol = currencySymbols[currency];
@@ -45,6 +47,19 @@ const OrderDetails = () => {
             setFadeIn(false); // Trigger fade-out effect when selectedOrders is empty
         }
     }, [selectedOrders.length]);
+
+    useEffect(() => {
+        const fetchOrderData = async () => {
+            const orders = await retrieveUserOrders(session?.user.id as string, "2023-01-01T00:00:00Z", session?.user.connectedAccounts.ebay?.ebayAccessToken as string);
+            if (orders) {
+                setSalesData(orders);
+            }
+        };
+
+        if (session?.user) {
+            fetchOrderData();
+        }
+    }, [session?.user]);
 
     useEffect(() => {
         if (salesData && orderId && orders.length === 0) {
@@ -154,6 +169,9 @@ const OrderDetails = () => {
             return;
         }
 
+        const cacheKey = `salesData-${session?.user.id}`; // Define cache key
+        const cacheExpirationTime = 1000 * 60 * 5; // 5 minutes cache expiration
+
         let updatedOrders: IEbayOrder[] = [...orders]; // Copy the current orders to modify them
         const previousOrdersState: IEbayOrder[] = [...orders]; // Store previous state for rollback in case of failure
 
@@ -171,12 +189,8 @@ const OrderDetails = () => {
             return order;
         });
 
-        const userDocRef = doc(firestore, 'users', session?.user.id ?? "");
 
         try {
-            // Get the user's current orders
-            const currentOrders = session?.user.orders.ebay ?? {};
-
             // Prepare the update object for Firestore
             const updates: { [key: string]: any } = {};
 
@@ -196,11 +210,27 @@ const OrderDetails = () => {
 
             // Check if there are any updates
             if (Object.keys(updates).length > 0) {
-                // Update the Firestore document with the new orders data
-                await updateDoc(userDocRef, updates);
+                const ordersCollectionRef = collection(firestore, 'orders', session?.user.id as string, 'ebay');
+
+                // Loop through selected orders and update each document individually
+                const updatePromises = selectedOrders.map(async (orderId) => {
+                    const orderToUpdate = updatedOrders.find((order) => order.orderId === orderId);
+                    if (orderToUpdate) {
+                        const orderDocRef = doc(ordersCollectionRef, orderToUpdate.orderId); // Reference to individual order
+                        await updateDoc(orderDocRef, {
+                            purchaseDate: new Date(orderToUpdate.purchaseDate).toISOString(),
+                            purchasePrice: orderToUpdate.purchasePrice,
+                            purchasePlatform: orderToUpdate.purchasePlatform,
+                            customTag: orderToUpdate.customTag,
+                        });
+                    }
+                });
+
+                // Wait for all updates to complete
+                await Promise.all(updatePromises);
 
                 // After successful Firestore update, update the cache
-                setCachedData(`salesData-${session?.user.id}`, updatedOrders);
+                setCachedData(cacheKey, updatedOrders, cacheExpirationTime);
 
                 setAlertMessage("Orders successfully updated.");
                 setIsAlertVisible(true);

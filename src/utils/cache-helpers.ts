@@ -1,24 +1,22 @@
 // Function to check if cached data is still valid
-export const getCachedData = (key: string, expirationTime: number) => {
-	const cachedData = localStorage.getItem(key);
-	if (cachedData) {
-		const parsedData = JSON.parse(cachedData);
-		// Check if the cached data is still valid based on expiration time
-		if (Date.now() - parsedData.timestamp < expirationTime) {
-			return parsedData.data;
-		}
-	}
-	return null;
+export function getCachedData(key: string, expirationTime: number) {
+    const cachedData = localStorage.getItem(key);
+    if (cachedData) {
+        const parsedData = JSON.parse(cachedData);
+        // Check if the cached data is still valid based on expiration time
+        if (Date.now() - parsedData.timestamp < expirationTime) {
+            return parsedData.data;
+        }
+    }
+    return null;
 };
 
 // Function to store data in localStorage with a timestamp
-export const setCachedData = (key: string, data: any) => {
-	const currentCache = getCachedData(key, 0); // Get current cache, but don't check expiration
-	const newCache = {
-		...currentCache, // Preserve other data
-		...data, // Update with new data (e.g., updated salesData)
-		timestamp: Date.now(),
-	};
+export function setCachedData(key: string, data: any, expirationTime: number) {
+    const newCache = {
+        data, // Store only the data (no need to preserve previous cache)
+        timestamp: Date.now(), // Add a timestamp for expiration check
+    };
 
-	localStorage.setItem(key, JSON.stringify(newCache)); // Save the updated cache
+    localStorage.setItem(key, JSON.stringify(newCache)); // Save the updated cache
 };

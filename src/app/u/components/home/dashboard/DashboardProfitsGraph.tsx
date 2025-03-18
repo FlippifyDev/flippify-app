@@ -1,6 +1,6 @@
 "use client";
 
-import { IEbayOrder } from "@/models/user";
+import { IEbayOrder } from "@/models/store-data";
 import { currencySymbols } from "@/config/currency-config";
 import {
 	startOfDay,

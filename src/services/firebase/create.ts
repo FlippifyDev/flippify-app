@@ -30,8 +30,6 @@ export async function createUser(uid: string, email: string): Promise<IUser | vo
                 validReferrals: [],
                 rewardsClaimed: 0,
             },
-            inventory: { ebay: null },
-            orders: { ebay: null },
             numListings: {
                 automatic: 0,
                 manual: 0,

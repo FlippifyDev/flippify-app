@@ -1,5 +1,5 @@
 import "@/styles/overview-cards.css"
-import { IEbayOrder } from '@/models/user';
+import { IEbayOrder } from '@/models/store-data';
 
 import React, { useEffect, useState } from 'react';
 

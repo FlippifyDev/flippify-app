@@ -1,6 +1,6 @@
 "use client";
 
-import { IEbayOrder } from '@/models/user';
+import { IEbayOrder } from '@/models/store-data';
 import { IHistoryGrid } from '@/models/recent-sales';
 import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';

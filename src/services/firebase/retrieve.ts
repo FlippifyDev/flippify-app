@@ -5,6 +5,9 @@ import { createUser } from "./create";
 
 // External Imports
 import { collection, doc, DocumentData, DocumentReference, getDoc, getDocs, query, QueryDocumentSnapshot, where } from 'firebase/firestore';
+import { IEbayInventoryItem, IEbayOrder } from "@/models/store-data";
+import { getCachedData, setCachedData } from "@/utils/cache-helpers";
+import { updateStoreInfo } from "../api/request";
 
 
 /**
@@ -142,9 +145,162 @@ async function retrieveUserRefById(uid: string): Promise<DocumentReference | nul
 }
 
 
+/**
+ * Retrieves a list of orders from Firestore for a specific user based on their UID.
+ * 
+ * @param {string} uid - The unique identifier of the user.
+ *  * @param {string | null} timeFrom - The start date (in ISO format) to filter the orders by. If null, no filter is applied.
+ * @returns {Promise<IEbayOrder[]>} - An array of user's orders, or an empty array if no orders are found.
+ * @throws {Error} - Logs and handles errors if Firestore retrieval fails.
+ */
+async function retrieveUserOrdersFromDB(uid: string, timeFrom: string | null): Promise<IEbayOrder[]> {
+    try {
+        // Reference to the user's orders collection
+        const ordersCollectionRef = collection(firestore, 'orders', uid, 'ebay');
+
+        // Base query to get all orders for the user
+        let q = query(ordersCollectionRef);
+
+        // If timeFrom is provided, filter orders based on saleDate
+        if (timeFrom) {
+            const timeFromDate = new Date(timeFrom).toISOString();;
+            if (timeFromDate.toString() === "Invalid Date") {
+                throw new Error("Invalid timeFrom date format. Please provide a valid ISO date.");
+            }
+            q = query(ordersCollectionRef, where("saleDate", ">=", timeFromDate));
+        }
+
+        // Query to get orders based on the above filters
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+            console.log(`No orders found for user with UID: ${uid}`);
+            return []; // Return empty array if no orders found
+        }
+
+        // Map over the documents and extract order data to match the IEbayOrder interface
+        const orders: IEbayOrder[] = querySnapshot.docs.map((doc) => {
+            const data = doc.data();
+            return data as IEbayOrder;
+        });
+
+        return orders;
+    } catch (error) {
+        console.error(`Error retrieving orders for user with UID=${uid}:`, error);
+        throw new Error('Failed to retrieve user orders');
+    }
+}
+
+
+async function retrieveUserOrders(uid: string, timeFrom: string, ebayAccessToken: string, update?: boolean): Promise<IEbayOrder[]> {
+    const cacheKey = `salesData-${uid}`; // Cache key based on user ID and time filter
+    const cacheExpirationTime = 1000 * 60 * 5; // Cache expiration time (10 minutes)
+    
+    // Try get the cached data first
+    try {
+        const cachedData = getCachedData(cacheKey, cacheExpirationTime);
+        if (cachedData.length > 0 && !update) {
+            return cachedData;
+        } else if (update) {
+            await updateStoreInfo("update-orders", ebayAccessToken, uid);
+        }
+    } catch (error) {
+        console.error(`Error retrieving cached orders for user with UID=${uid}:`, error);
+    }
+
+    // If no cached data or update is required, fetch from Firestore
+    try {
+        // Update store info before fetching sales data
+        const data = await retrieveUserOrdersFromDB(uid, timeFrom); // Fetch sales data from Firestore
+        setCachedData(cacheKey, data, cacheExpirationTime); // Cache the data
+        return data;
+    } catch (error) {
+        console.error(`Error fetching orders for user with UID=${uid}:`, error);
+        return [];
+    }
+}
+
+
+/**
+ * Retrieves a list of inventory items from Firestore for a specific user based on their UID.
+ * Filters inventory based on a time range provided by the `timeFrom` parameter.
+ * 
+ * @param {string} uid - The unique identifier of the user.
+ * @param {string | null} timeFrom - The start date (in ISO format) to filter the inventory by. If null, no filter is applied.
+ * @returns {Promise<IEbayInventoryItem[]>} - An array of user's inventory items, or an empty array if no items are found.
+ * @throws {Error} - Logs and handles errors if Firestore retrieval fails.
+ */
+async function retrieveUserInventoryFromDB(uid: string, timeFrom: string | null): Promise<IEbayInventoryItem[]> {
+    try {
+        // Reference to the user's inventory collection
+        const inventoryCollectionRef = collection(firestore, 'inventory', uid, 'ebay');
+
+        // Base query
+        let q = query(inventoryCollectionRef);
+
+        // If timeFrom is provided, filter by dateListed field
+        if (timeFrom) {
+            const timeFromDate = new Date(timeFrom).toISOString();;
+            if (timeFromDate.toString() === "Invalid Date") {
+                throw new Error("Invalid timeFrom date format. Please provide a valid ISO date.");
+            }
+            q = query(inventoryCollectionRef, where("dateListed", ">=", timeFromDate));
+        }
+
+        // Query to get all inventory items for the user, possibly filtered by time
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+            console.log(`No inventory items found for user with UID: ${uid}`);
+            return []; // Return empty array if no inventory items found
+        }
+
+        // Map over the documents and extract inventory data to match the IEbayInventoryItem interface
+        const inventory: IEbayInventoryItem[] = querySnapshot.docs.map((doc) => {
+            const data = doc.data();
+            return data as IEbayInventoryItem;
+        });
+
+        return inventory;
+    } catch (error) {
+        console.error(`Error retrieving inventory for user with UID=${uid}:`, error);
+        throw new Error('Failed to retrieve user inventory');
+    }
+}
+
+
+async function retrieveUserInventory(uid: string, timeFrom: string, ebayAccessToken: string, update?: boolean): Promise<IEbayInventoryItem[]> {
+    const cacheKey = `inventoryData-${uid}`; // Cache key based on user ID and time filter
+    const cacheExpirationTime = 1000 * 60 * 10; // Cache expiration time (10 minutes)
+    
+    // Try get the cached data first
+    try {
+        const cachedData = getCachedData(cacheKey, cacheExpirationTime);
+        if (cachedData && !update) {
+            return cachedData;
+        } else if (update) {
+            await updateStoreInfo("update-inventory", ebayAccessToken, uid);
+        }
+    } catch (error) {
+        console.error(`Error retrieving cached inventory for user with UID=${uid}:`, error);
+    }
+
+    // If no cached data or update is required, fetch from Firestore
+    try {
+        // Update store info before fetching inventory data
+        const data = await retrieveUserInventoryFromDB(uid, timeFrom); // Fetch inventory data from Firestore
+        setCachedData(cacheKey, data, cacheExpirationTime); // Cache the data
+        return data;
+    } catch (error) {
+        console.error(`Error fetching inventory for user with UID=${uid}:`, error);
+        return [];
+    }
+}
+
+
 async function retrieveProducts() {
     return [];
 }
 
 
-export { retrieveUserAndCreate, retrieveUser, retrieveUserSnapshot, retrieveUserRef, retrieveUserRefById, retrieveProducts };
+export { retrieveUserAndCreate, retrieveUser, retrieveUserSnapshot, retrieveUserRef, retrieveUserRefById, retrieveProducts, retrieveUserOrders, retrieveUserInventory };

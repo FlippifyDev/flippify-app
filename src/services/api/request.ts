@@ -1,27 +1,23 @@
-import { getTokensForApi } from "./tokens";
-
 // Function to send request and handle token refresh if necessary
-export async function sendApiRequest(endpoint: string, ebayAccessToken: string | null | undefined, uid: string, requestNewTokens = false) {
-	// Fetch the tokens (either from localStorage or by refreshing if specified)
-    const apiAccessTokens = await getTokensForApi(ebayAccessToken, uid, requestNewTokens);
-
-	if (!apiAccessTokens) {
-		throw new Error("User is not authenticated");
-	}
-
+export async function updateStoreInfo(endpoint: string, ebayAccessToken: string, uid: string): Promise<void> {
 	// Set up headers with the access token
 	const headers = {
-		Authorization: `Bearer ${apiAccessTokens.access_token}`,
+        Authorization: `Bearer ${ebayAccessToken}`,
 	};
 
+    const url = new URL(`https://api.flippify.io/${endpoint}`);
+    url.searchParams.append("uid", uid);
+
 	try {
-		const response = await fetch(`https://api.flippify.io/${endpoint}`, {
+        const response = await fetch(url, {
 			method: "GET",
-			headers: headers,
+			headers: headers
 		});
 
-		return response;
+        if (!response.ok) {
+            throw new Error(`Failed to update store info | ${response.status} - ${response.statusText}`);
+        }
 	} catch (error) {
-		throw error;
+		console.error(error)
 	}
 }

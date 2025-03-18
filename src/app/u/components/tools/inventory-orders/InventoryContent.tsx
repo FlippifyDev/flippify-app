@@ -1,17 +1,32 @@
 "use client"
 
-import { currencySymbols } from '@/config/currency-config';
-import { IEbayInventoryItem } from '@/models/user';
+import { retrieveUserInventory } from '@/services/firebase/retrieve';
 import { formatTableDate } from '@/utils/format-dates';
+import { currencySymbols } from '@/config/currency-config';
 
+import { useEffect, useState } from 'react';
 import { useSession } from "next-auth/react";
 import Image from 'next/image';
+
 
 const InventoryContent = () => {
 	const { data: session } = useSession();
 	const currency = session?.user.preferences.currency || "GBP";
 
-	const listedData = Object.values(session?.user.inventory.ebay ?? {}) as IEbayInventoryItem[];
+	const [listedData, setListedData] = useState<any[]>([]);
+
+    useEffect(() => {
+        const fetchInventoryData = async () => {
+            const inventory = await retrieveUserInventory(session?.user.id as string, "2023-01-01T00:00:00Z", session?.user.connectedAccounts.ebay?.ebayAccessToken as string);
+            if (inventory) {
+                setListedData(inventory);
+            }
+        };
+
+        if (session?.user) {
+            fetchInventoryData();
+        }
+    }, [session?.user]);
 
 	return (
 		<div className="w-full h-full overflow-x-auto">

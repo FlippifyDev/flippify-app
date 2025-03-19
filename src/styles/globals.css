@@ -70,6 +70,15 @@
   }
 }
 
+/* Hide scrollbars but still allow scrolling */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+}
+
 .w-full.md\:w-auto.lg\:w-full {
   width: 100%;
 }
@@ -124,6 +133,7 @@ input[type="range"].slider-custom-thumb::-webkit-slider-thumb {
   background: var(--houseBlue); /* Make sure this variable is defined */
   cursor: pointer;
 }
+
 input[type="range"].slider-custom-thumb::-moz-range-thumb {
   height: 20px;
   width: 20px;

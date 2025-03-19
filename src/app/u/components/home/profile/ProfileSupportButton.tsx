@@ -15,8 +15,8 @@ const ProfileSupportButton = () => {
             onClick={handleSupportButtonClick}
         >
             <span className="flex items-center gap-2">
-                <BiSupport className="text-lg" />
-                <span className="text-base text-left">Support Channel</span>
+                <BiSupport className="text-md sm:text-lg" />
+                <span className="text-sm sm:text-md text-left">Support Channel</span>
             </span>
         </button>
     );

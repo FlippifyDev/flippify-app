@@ -6,15 +6,15 @@ import UpdateFields from "./UpdateFields";
 import OrderInfoCard from "./OrderInfoCard";
 import { firestore } from "@/lib/firebase/config";
 import { IEbayOrder } from "@/models/store-data";
-import { setCachedData } from "@/utils/cache-helpers";
+import { getCachedData, setCachedData } from "@/utils/cache-helpers";
 import { formatTableDate } from "@/utils/format-dates";
 import { currencySymbols } from "@/config/currency-config";
 import { retrieveUserOrders } from "@/services/firebase/retrieve";
 
 // External Imports
-import { useParams, useRouter } from "next/navigation";
-import { use, useEffect, useState } from "react";
 import { collection, doc, updateDoc } from "firebase/firestore";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 
@@ -74,7 +74,7 @@ const OrderDetails = () => {
 
     // Handle orders click
     const handleOrdersClick = () => {
-        router.push(`/u/${username}/inventory-orders?display=orders`);
+        router.push(`/u/${username}/inventory-orders#orders`);
     };
 
     // Handle checkbox selection
@@ -173,7 +173,6 @@ const OrderDetails = () => {
         const cacheExpirationTime = 1000 * 60 * 5; // 5 minutes cache expiration
 
         let updatedOrders: IEbayOrder[] = [...orders]; // Copy the current orders to modify them
-        const previousOrdersState: IEbayOrder[] = [...orders]; // Store previous state for rollback in case of failure
 
         // Optimistically update the UI by directly modifying the orders state
         updatedOrders = updatedOrders.map((order) => {
@@ -229,25 +228,44 @@ const OrderDetails = () => {
                 // Wait for all updates to complete
                 await Promise.all(updatePromises);
 
-                // After successful Firestore update, update the cache
-                setCachedData(cacheKey, updatedOrders, cacheExpirationTime);
+                // Retrieve the current cache data
+                const currentCache = getCachedData(cacheKey, cacheExpirationTime);
+
+                // Merge updated orders with the current cache, preserving the existing ones
+                const mergedOrders = currentCache.map((cachedOrder: any) => {
+                    const updatedOrder = updatedOrders.find((order) => order.orderId === cachedOrder.orderId);
+                    if (updatedOrder) {
+                        // If the order exists in the updated orders, merge the updated data with the cached order
+                        return { ...cachedOrder, ...updatedOrder };
+                    }
+                    return cachedOrder; // Keep unchanged orders intact
+                });
+
+                // Add any new updated orders that aren't in the cache yet
+                updatedOrders.forEach((updatedOrder) => {
+                    const isOrderInCache = currentCache.some((cachedOrder: any) => cachedOrder.orderId === updatedOrder.orderId);
+                    if (!isOrderInCache) {
+                        // If the updated order is not in the cache, add it to the mergedOrders
+                        mergedOrders.push(updatedOrder);
+                    }
+                });
+
+                // After successful Firestore update, update the cache with the merged data
+                setCachedData(cacheKey, mergedOrders, cacheExpirationTime);
 
                 setAlertMessage("Orders successfully updated.");
                 setIsAlertVisible(true);
 
                 // Clear the selected orders to uncheck all checkboxes
                 setSelectedOrders([]);
-                setOrders(updatedOrders); // Update the UI with the modified orders
+                setOrders(updatedOrders); // Update the UI with the merged orders
             } else {
                 throw new Error("No updates to be made.");
             }
         } catch (error) {
-            console.error("Error updating orders in Firestore:", error);
-            setAlertMessage("Error updating orders. Please try again later.");
+            console.error("Error updating orders:", error);
+            setAlertMessage("Error updating orders.");
             setIsAlertVisible(true);
-
-            // Revert the UI to the previous state in case of failure
-            setOrders(previousOrdersState);
         }
     };
 

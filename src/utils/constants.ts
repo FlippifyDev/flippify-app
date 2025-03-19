@@ -1,0 +1,11 @@
+// Free
+export const FREE_MAX_AUTOMATIC_LISTINGS = 5;
+export const FREE_MAX_MANUAL_LISTINGS = 10;
+
+// Standard
+export const STANDARD_MAX_AUTOMATIC_LISTINGS = 25;
+export const STANDARD_MAX_MANUAL_LISTINGS = 100;
+
+// Premium
+export const PREMIUM_MAX_AUTOMATIC_LISTINGS = 100;
+export const PREMIUM_MAX_MANUAL_LISTINGS = 500;

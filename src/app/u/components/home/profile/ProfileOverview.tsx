@@ -91,10 +91,10 @@ const ProfileOverview = () => {
     }
 
     return (
-        <div className="w-full bg-white rounded-xl dark:bg-gray-800 p-4 md:p-6 flex flex-col md:flex-row justify-start items-start">
-            <div className="flex items-center">
-                <div className='relative'>
-                    <ImageModal src={avatar} alt={"Avatar"} width={80} height={80} className="rounded-full hidden sm:block" />
+        <div className="w-full bg-white rounded-xl p-4 md:p-6 justify-start items-start">
+            <div className="w-full flex flex-row items-center gap-2 sm:gap-4">
+                <div className='w-28 h-full relative'>
+                    <ImageModal src={avatar} alt={"Avatar"} width={80} height={80} className="rounded-full" />
                     <div
                         className='absolute bottom-1 right-1 h-7 w-7 rounded-full bg-gray-500 bg-opacity-50 flex items-center justify-center cursor-pointer z-10'
                         onClick={handleCameraClick} // Open the modal when clicked
@@ -102,11 +102,11 @@ const ProfileOverview = () => {
                         <FaCamera className="text-white" />
                     </div>
                 </div>
-                <div className="ml-4">
-                    <h2 className="text-2xl font-bold text-gray-900">
+                <div className="h-full">
+                    <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
                         {username}
                     </h2>
-                    <p className="text-gray-500">
+                    <p className="text-sm sm:text-lg text-gray-500">
                         {email}
                     </p>
                     <div>
@@ -119,7 +119,7 @@ const ProfileOverview = () => {
             {/* Modal for uploading the image */}
             {isModalOpen && (
                 <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-40">
-                    <div className="relative bg-white p-6 rounded-lg shadow-lg w-96">
+                    <div className="relative bg-white p-6 rounded-lg shadow-lg w-80 sm:w-96">
                         {/* Close Button (Cross Icon) */}
                         <button
                             className="absolute -top-5 -right-5 text-white rounded-full bg-[#3c424b] p-2 shadow-gray-700 shadow-[rgba(0,0,0,0.2)_-2px_2px_8px] z-50"

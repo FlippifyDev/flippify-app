@@ -89,7 +89,7 @@ const PlansContent = () => {
       </div>
 
       {/* Subscription Cards Grid */}
-      <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-4 gap-10 md:px-[60px] w-full animate-fadeInBounce">
+      <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-4 gap-10 md:px-[60px] w-full animate-fadeInBounce p-4">
         <PlansCard
           title="Standard"
           description="For beginners"

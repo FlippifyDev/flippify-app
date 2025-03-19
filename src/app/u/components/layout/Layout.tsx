@@ -9,8 +9,6 @@ import LayoutNoAccess from "./LayoutNoAccess";
 import Sidebar from "../dom/sidebar/Sidebar";
 import Navbar from "../dom/navbar/Navbar";
 
-import "@/styles/hide-scrollbar.css";
-
 
 interface LayoutProps {
 	children: React.ReactNode;

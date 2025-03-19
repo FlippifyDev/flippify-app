@@ -49,8 +49,8 @@ const ProfileBillingPortalButton = () => {
             onClick={handleBillingPortalButtonClick}
         >
             <span className="flex items-center gap-2">
-                <TbReportMoney className="text-lg" />
-                <span className="text-base text-left">Billing Portal</span>
+                <TbReportMoney className="text-md sm:text-lg" />
+                <span className="text-sm sm:text-md text-left">Billing Portal</span>
             </span>
         </button>
     );

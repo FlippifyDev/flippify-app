@@ -2,12 +2,13 @@
 import { IUser } from "@/models/user";
 import { firestore } from "@/lib/firebase/config";
 import { createUser } from "./create";
+import { updateStoreInfo } from "../api/request";
+import { filterInventoryByTime, filterOrdersByTime } from "@/utils/filters";
 
 // External Imports
 import { collection, doc, DocumentData, DocumentReference, getDoc, getDocs, query, QueryDocumentSnapshot, where } from 'firebase/firestore';
 import { IEbayInventoryItem, IEbayOrder } from "@/models/store-data";
 import { getCachedData, setCachedData } from "@/utils/cache-helpers";
-import { updateStoreInfo } from "../api/request";
 
 
 /**
@@ -192,28 +193,40 @@ async function retrieveUserOrdersFromDB(uid: string, timeFrom: string | null): P
 }
 
 
+/**
+ * Retrieves user orders from cache or Firestore, optionally updating the data if requested.
+ *
+ * @param {string} uid - The user ID to identify and fetch the relevant orders.
+ * @param {string} timeFrom - The starting date (in ISO format) to filter orders from.
+ * @param {string} ebayAccessToken - The eBay access token used for updating store info if necessary.
+ * @param {boolean} [update=false] - If `true`, updates the orders by fetching the latest data.
+ * 
+ * @returns {Promise<IEbayOrder[]>} A promise that resolves to an array of orders filtered by the specified time.
+ * 
+ * @throws Will log an error and return an empty array if an error occurs while retrieving or fetching the data.
+ */
 async function retrieveUserOrders(uid: string, timeFrom: string, ebayAccessToken: string, update?: boolean): Promise<IEbayOrder[]> {
-    const cacheKey = `salesData-${uid}`; // Cache key based on user ID and time filter
-    const cacheExpirationTime = 1000 * 60 * 5; // Cache expiration time (10 minutes)
-    
-    // Try get the cached data first
+    const cacheKey = `salesData-${uid}`; // No need to include timeFrom in cache key since we are filtering later
+    const cacheExpirationTime = 1000 * 60 * 5; // Cache expiration time (5 minutes)
+
+    // Try to get the cached data first
     try {
         const cachedData = getCachedData(cacheKey, cacheExpirationTime);
         if (cachedData.length > 0 && !update) {
-            return cachedData;
+            return filterOrdersByTime(cachedData, timeFrom); // Return filtered cached data
         } else if (update) {
+            // If update is requested, update store info before fetching
             await updateStoreInfo("update-orders", ebayAccessToken, uid);
         }
     } catch (error) {
         console.error(`Error retrieving cached orders for user with UID=${uid}:`, error);
     }
 
-    // If no cached data or update is required, fetch from Firestore
+    // Fetch from Firestore if no cache or update is required
     try {
-        // Update store info before fetching sales data
         const data = await retrieveUserOrdersFromDB(uid, timeFrom); // Fetch sales data from Firestore
-        setCachedData(cacheKey, data, cacheExpirationTime); // Cache the data
-        return data;
+        setCachedData(cacheKey, data, cacheExpirationTime); // Cache the fresh data
+        return filterOrdersByTime(data, timeFrom); // Return filtered data
     } catch (error) {
         console.error(`Error fetching orders for user with UID=${uid}:`, error);
         return [];
@@ -269,15 +282,30 @@ async function retrieveUserInventoryFromDB(uid: string, timeFrom: string | null)
 }
 
 
+/**
+ * Retrieves user inventory from cache or Firestore, optionally updating the data if requested.
+ * It also filters the inventory based on the specified `timeFrom` parameter.
+ *
+ * @param {string} uid - The user ID to identify and fetch the relevant inventory.
+ * @param {string} timeFrom - The starting date (in ISO format) to filter inventory items from.
+ * @param {string} ebayAccessToken - The eBay access token used for updating store info if necessary.
+ * @param {boolean} [update=false] - If `true`, updates the inventory by fetching the latest data.
+ * 
+ * @returns {Promise<IEbayInventoryItem[]>} A promise that resolves to an array of inventory items filtered by the specified time.
+ * 
+ * @throws Will log an error and return an empty array if an error occurs while retrieving or fetching the data.
+ */
 async function retrieveUserInventory(uid: string, timeFrom: string, ebayAccessToken: string, update?: boolean): Promise<IEbayInventoryItem[]> {
     const cacheKey = `inventoryData-${uid}`; // Cache key based on user ID and time filter
     const cacheExpirationTime = 1000 * 60 * 10; // Cache expiration time (10 minutes)
-    
+
     // Try get the cached data first
     try {
         const cachedData = getCachedData(cacheKey, cacheExpirationTime);
         if (cachedData && !update) {
-            return cachedData;
+            // Filter cached inventory based on timeFrom before returning
+            const filteredData = filterInventoryByTime(cachedData, timeFrom);
+            return filteredData;
         } else if (update) {
             await updateStoreInfo("update-inventory", ebayAccessToken, uid);
         }
@@ -287,7 +315,7 @@ async function retrieveUserInventory(uid: string, timeFrom: string, ebayAccessTo
 
     // If no cached data or update is required, fetch from Firestore
     try {
-        // Update store info before fetching inventory data
+        // Fetch inventory data from Firestore with timeFrom applied
         const data = await retrieveUserInventoryFromDB(uid, timeFrom); // Fetch inventory data from Firestore
         setCachedData(cacheKey, data, cacheExpirationTime); // Cache the data
         return data;

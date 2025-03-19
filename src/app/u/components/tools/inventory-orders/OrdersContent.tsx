@@ -32,6 +32,7 @@ const OrdersContent: React.FC = () => {
     useEffect(() => {
         const fetchOrderData = async () => {
             const orders = await retrieveUserOrders(session?.user.id as string, "2023-01-01T00:00:00Z", session?.user.connectedAccounts.ebay?.ebayAccessToken as string);
+            console.log(orders)
             if (orders) {
                 setSalesData(orders);
             }

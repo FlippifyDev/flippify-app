@@ -10,11 +10,11 @@ import ThemeSetter from '../../components/ThemeSetter';
 const root = process.env.ROOT as string;
 
 export const metadata = {
-	title: 'Flippify - Deal Finding Bots and Tools for Resellers',
-	description: 'The Ultimate platform for resellers to accelerate their profits. Earn more using our top of the range deal finding bots and tools to automate every step of the way, making you more money and finding more deals, quicker.',
+    title: 'Flippify - Automate Your eBay Business and Boost Profits',
+    description: 'Flippify is the ultimate platform for eBay resellers. Use advanced tools to automate inventory management, listings, and order fulfillment, accelerating your profits and scaling your business effortlessly.',
 	openGraph: {
-		title: 'Flippify - Deal Finding Bots and Tools for Resellers',
-		description: 'The Ultimate platform for resellers to accelerate their profits. Earn more using our top of the range deal finding bots and tools to automate every step of the way, making you more money and finding more deals, quicker.',
+        title: 'Flippify - Automate Your eBay Business and Boost Profits',
+        description: 'Flippify is the ultimate platform for eBay resellers. Use advanced tools to automate inventory management, listings, and order fulfillment, accelerating your profits and scaling your business effortlessly.',
 		url: root.concat('/l/home'),
 		images: [
 			{

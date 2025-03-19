@@ -19,28 +19,6 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 }) => {
 	return (
 		<div className='w-full flex flex-col gap-1'>
-			{/* Manage Servers Tab */}
-			<LayoutSubscriptionWrapper anySubscriptions={["server", "admin"]}>
-				<SidebarButton
-					text="Server Management"
-					redirect="manage-servers"
-					isSidebarOpen={isSidebarOpen}
-					symbol={<FaServer className="text-base" />}
-				/>
-			</LayoutSubscriptionWrapper>
-
-			{/* Manage Servers Tab */}
-			<LayoutSubscriptionWrapper requiredSubscriptions={["!server", "!admin"]}>
-				<DisabledSideBarButton
-					text="Server Management"
-					redirect="manage-servers"
-					isSidebarOpen={isSidebarOpen}
-					symbol={<FaServer className="text-base" />}
-					showAlert={showAlert}
-				/>
-			</LayoutSubscriptionWrapper>
-
-
 			{/* Disabled Financial Hub */}
 			<LayoutSubscriptionWrapper requiredSubscriptions={["!admin"]}>
 				<DisabledSideBarButton

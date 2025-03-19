@@ -16,7 +16,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 const PlansPage = () => {
 	const { data: session } = useSession();
-	const currency = session?.user.preferences.locale as string;
+	const currency = session?.user.preferences.currency as string;
 	const [selectedPlan, setSelectedPlan] = useState<number>(0);
 	const conversionRates = { GBP: 1, USD: 1.33, EUR: 1.19, AUD: 1.95, CAD: 1.8 };
 

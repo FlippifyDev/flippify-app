@@ -31,13 +31,13 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
 		<main className="flex flex-row min-h-screen overflow-x-hidden bg-userBackground">
 			{/* Sidebar */}
 			<section
-				className={`fixed top-0 left-0 h-full transition-all duration-300 ease-in-out bg-darkBackground ${isSidebarOpen ? 'w-full sm:w-72 2xl:w-80' : 'hidden sm:block w-16'} z-50`}
+                className={`fixed top-0 left-0 h-full transition-all duration-300 ease-in-out bg-white ${isSidebarOpen ? 'w-full sm:w-72 2xl:w-80' : 'hidden sm:block w-16'} z-50`}
 			>
 				<Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 			</section>
 
 			{/* Content area */}
-			<section className={`flex flex-col flex-grow w-full h-screen ${isSidebarOpen ? 'sm:pl-72 2xl:pl-80' : 'sm:pl-16'}`}>
+            <section className={`flex flex-col flex-grow transition-all duration-300 w-full h-screen ${isSidebarOpen ? 'sm:pl-72 2xl:pl-80' : 'sm:pl-16'}`}>
 				{/* Navbar */}
 				<div className="w-full h-14 bg-white z-30 sticky top-0 flex flex-row">
 					{/* Hamburger Icon for Mobile */}

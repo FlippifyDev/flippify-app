@@ -105,7 +105,7 @@ const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ salesData
 						</div>
 					</div>
 				</div>
-				<div className="stats bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2 rounded-lg">
+                <div className="stats shadow-sm bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2 rounded-lg">
 					<div className="stat">
 						<div className="stat-title text-sm sm:text-base text-houseBlue">Total Costs</div>
 						<div className="stat-value font-bold text-xl sm:text-2xl text-black">
@@ -113,7 +113,7 @@ const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ salesData
 						</div>
 					</div>
 				</div>
-				<div className="stats bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2 rounded-lg">
+                <div className="stats shadow-sm bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2 rounded-lg">
 					<div className="stat">
 						<div className="stat-title text-sm sm:text-base text-houseBlue">No. Sales</div>
 						<div className="stat-value font-bold text-xl sm:text-2xl text-black">
@@ -121,7 +121,7 @@ const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ salesData
 						</div>
 					</div>
 				</div>
-				<div className="stats bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2 rounded-lg">
+                <div className="stats shadow-sm bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2 rounded-lg">
 					<div className="stat">
 						<div className="stat-title text-sm sm:text-base text-houseBlue">ROI</div>
 						<div className="stat-value font-bold text-xl sm:text-2xl text-black">{roi}%</div>

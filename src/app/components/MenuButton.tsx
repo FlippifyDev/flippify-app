@@ -7,22 +7,22 @@ const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
 
 interface MenuButtonProps {
-	isSidebarOpen: boolean,
-	onClick: () => void;
+    isSidebarOpen: boolean,
+    onClick: () => void;
 }
 
 const MenuButton: React.FC<MenuButtonProps> = ({ isSidebarOpen, onClick }) => {
-	return (
-		<div className={`w-full h-full transition-all duration-500 ${isSidebarOpen ? 'grid grid-cols-12 pr-4 pl-2' : 'sm:flex sm:justify-center hidden'}`}>
-			<Link
-				href="/"
-				className={`text-white text-3xl ${isSidebarOpen ? 'col-span-11 block' : 'hidden'} ${lato.className}`}
-			>
-				flippify
-			</Link>
-			<DarkHamburgerButton isActive={isSidebarOpen} onClick={onClick} />
-		</div>
-	);
+    return (
+        <div className={`relative w-full h-full transition-all duration-500 ${isSidebarOpen ? 'pl-2' : 'sm:flex sm:justify-center hidden'}`}>
+            <Link
+                href="/"
+                className={`absolute text-white text-3xl ease-in ${isSidebarOpen ? 'opacity-100 delay-100 transition-all duration-500' : 'opacity-0'} ${lato.className}`}
+            >
+                flippify
+            </Link>
+            <DarkHamburgerButton isActive={isSidebarOpen} onClick={onClick} />
+        </div>
+    );
 };
 
 export default MenuButton;

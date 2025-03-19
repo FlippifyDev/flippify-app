@@ -42,7 +42,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, setIsSidebarOpen }) =>
 			<Alert message="Membership Required." visible={alertVisible} onClose={hideAlert} />
 
 			{/* Toggle Button */}
-			<div className="p-2 border-b border-gray-500 flex justify-center items-center">
+            <div className="p-2 border-b border-gray-500 flex justify-center items-center">
 				<MenuButton isSidebarOpen={isSidebarOpen} onClick={() => setIsSidebarOpen(!isSidebarOpen)} />
 			</div>
 
@@ -50,13 +50,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, setIsSidebarOpen }) =>
 			<div className="p-2 h-full flex flex-col justify-between gap-4 overflow-y-auto scrollbar-hide pb-16">
 				<div className="flex flex-col gap-4">
 					<div>
-						<h2 className={`text-white text-lg font-bold px-2 ${isSidebarOpen ? 'block' : 'hidden'}`} style={{ overflow: 'hidden' }}>
+                        <h2 className={`text-white text-lg font-bold px-2 transition-all duration-150 ${isSidebarOpen ? 'opacity-100 delay-100' : 'opacity-0'}`} style={{ overflow: 'hidden' }}>
 							Home
 						</h2>
 						<SidebarHomeButtons showAlert={showAlert} isSidebarOpen={isSidebarOpen} />
 					</div>
 					<div>
-						<h2 className={`text-white text-lg font-bold px-2 ${isSidebarOpen ? 'block' : 'hidden'}`} style={{ overflow: 'hidden' }}>
+                        <h2 className={`text-white text-lg font-bold px-2 transition-all duration-150 ${isSidebarOpen ? 'opacity-100 delay-100' : 'opacity-0'}`} style={{ overflow: 'hidden' }}>
 							Tools
 						</h2>
 						<SidebarToolButtons showAlert={showAlert} isSidebarOpen={isSidebarOpen} />

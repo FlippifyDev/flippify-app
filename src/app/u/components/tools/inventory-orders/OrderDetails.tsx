@@ -182,7 +182,7 @@ const OrderDetails = () => {
                     purchaseDate: purchaseDate || order.purchaseDate,
                     purchasePrice: purchasePrice !== null ? +purchasePrice : order.purchasePrice, // Ensure purchasePrice is a number
                     purchasePlatform: purchasePlatform || order.purchasePlatform,
-                    customTag: customTag || order.customTag,
+                    customTag: customTag || order.customTag || null,
                 };
             }
             return order;
@@ -202,7 +202,7 @@ const OrderDetails = () => {
                         purchaseDate: orderToUpdate.purchaseDate,
                         purchasePrice: orderToUpdate.purchasePrice,
                         purchasePlatform: orderToUpdate.purchasePlatform,
-                        customTag: orderToUpdate.customTag,
+                        customTag: orderToUpdate.customTag ?? null,
                     };
                 }
             });
@@ -217,7 +217,7 @@ const OrderDetails = () => {
                     if (orderToUpdate) {
                         const orderDocRef = doc(ordersCollectionRef, orderToUpdate.orderId); // Reference to individual order
                         await updateDoc(orderDocRef, {
-                            purchaseDate: new Date(orderToUpdate.purchaseDate).toISOString(),
+                            purchaseDate: new Date(orderToUpdate.purchaseDate ?? "").toISOString(),
                             purchasePrice: orderToUpdate.purchasePrice,
                             purchasePlatform: orderToUpdate.purchasePlatform,
                             customTag: orderToUpdate.customTag,

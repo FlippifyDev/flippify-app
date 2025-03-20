@@ -1,9 +1,9 @@
 "use server"
 
-import { firestoreAdmin } from '@/lib/firebase/config-admin';
-import { Session } from 'next-auth';
-import { doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
 import { IUser } from '@/models/user';
+import { firestoreAdmin } from '@/lib/firebase/config-admin';
+
+import { Session } from 'next-auth';
 
 async function addEbayTokens(tokenData: { access_token: string, refresh_token: string, expires_in: number, error?: string, error_description?: string }, session: Session) {
     try {

@@ -41,7 +41,7 @@ const DashboardPage: React.FC = () => {
     // Extract unique custom tags from sales data for filtering
     const uniqueTags = Array.from(
         new Set(salesData.map((order) => order.customTag))
-    ).filter((tag) => tag);
+    ).filter((tag) => tag != null);
 
     useEffect(() => {
         const fetchSalesData = async () => {
@@ -87,7 +87,7 @@ const DashboardPage: React.FC = () => {
         : salesData;
 
     return (
-        <div className="relative flex flex-col w-full h-full">
+        <div className="relative flex flex-col w-full min-h-full">
             {/* If They Do NOT Have Access */}
             <LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
                 <div className="h-full">

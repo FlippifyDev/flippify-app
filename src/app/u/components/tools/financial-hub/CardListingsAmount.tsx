@@ -12,8 +12,11 @@ import React from 'react'
 
 const CardListingsAmount = () => {
     const { data: session } = useSession();
-    const automaticListings = session?.user.numListings?.automatic ?? 0;
-    const manualListings = session?.user.numListings?.manual ?? 0;
+    const store = session?.user.store;
+    if (!store) return null;
+
+    const automaticListings = store.ebay.numListings?.automatic ?? 0;
+    const manualListings = store.ebay.numListings?.manual ?? 0;
 
     const userSubscription = fetchUserSubscription(session?.user.subscriptions ?? []);
     if (!userSubscription) return null;

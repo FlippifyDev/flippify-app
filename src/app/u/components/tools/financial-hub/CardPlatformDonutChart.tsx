@@ -50,7 +50,7 @@ const CardPlatformPieChart = () => {
         }
 
         fetchData();
-    }, [session]);
+    }, [session, timeFrom]);
 
     useEffect(() => {
         if (orders.length > 0) {
@@ -92,7 +92,7 @@ const CardPlatformPieChart = () => {
         setSelectedTags(updatedTags);
 
         // If no tags are selected, use all orders
-        const filteredOrders = updatedTags.length === 0 ? orders : orders.filter(order => updatedTags.includes(order.customTag));
+        const filteredOrders = updatedTags.length === 0 ? orders : orders.filter(order => order.customTag !== null && updatedTags.includes(order.customTag));
 
         // Aggregate and update chart data
         const chartOptions = fetchChartOptions(filteredOrders);
@@ -177,13 +177,13 @@ const CardPlatformPieChart = () => {
                 ).map(tag => (
                     <div className="flex items-center me-4 h-6" key={tag}>
                         <input
-                            id={tag}
+                            id={tag as string}
                             type="checkbox"
                             onChange={handleCheckboxChange}
-                            value={tag}
+                            value={tag as string}
                             className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                         />
-                        <label htmlFor={tag} className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                        <label htmlFor={tag as string} className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                             {tag}
                         </label>
                     </div>

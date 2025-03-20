@@ -24,7 +24,7 @@ export function fetchChartOptions(orders: IEbayOrder[]) {
 
     return {
         series: series,
-        colors: ["#1C64F2", "#16BDCA", "#FDBA8C", "#E74694"], 
+        colors: ["#0b5339", "#cc0086", "#fc5007", "#000000", "#81ac6f", "#410c1c", "#f8e8d0", "#c99a3c"], 
         chart: {
             height: 320,
             type: "donut",

@@ -1,6 +1,7 @@
 export type RecordType = "automatic" | "manual";
 export type CurrencyType = "USD" | "GBP" | "EUR" | "AUD" | "CAD";
 export type EmailVerification = "unverified" | "verifying" | "verified";
+export type StoreType = "ebay" | "amazon" | "shopify";
 
 interface IUser {
     id: string;
@@ -9,13 +10,31 @@ interface IUser {
     username: string | null;
     stripeCustomerId: string;
     subscriptions: ISubscription[] | null;
+    store: Record<StoreType, IStore> | null;
     referral: IReferral;
-    numListings: { automatic: number, manual: number } | null;
-    numOrders: { automatic: number, manual: number } | null;
-    lastFetchedDate: { ebay: ILastFetchedDate } | null;
     preferences: IPreferences;
     authentication: IAuthentication;
     metaData: IMetaData;
+}
+
+
+interface INumListings {
+    automatic: number;
+    manual: number;
+}
+
+interface INumOrders {
+    resetDate: string;
+    automatic: number;
+    manual: number;
+    totalAutomatic: number;
+    totalManual: number;
+}
+
+interface IStore {
+    numListings: INumListings;
+    numOrders: INumOrders;
+    lastFetchedDate: ILastFetchedDate | null;
 }
 
 

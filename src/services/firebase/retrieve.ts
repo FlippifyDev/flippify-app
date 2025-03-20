@@ -53,7 +53,6 @@ async function retrieveUserAndCreate(uid: string, email?: string | null): Promis
 async function retrieveUser(filter_key: string, filter_value: string): Promise<IUser | null> {
     try {
         const userDoc = await retrieveUserSnapshot(filter_key, filter_value);
-        console.log("retrieveUser", userDoc);
         if (userDoc) {
             return userDoc.data() as IUser;
         }
@@ -81,7 +80,6 @@ async function retrieveUserSnapshot(filter_key: string, filter_value: string): P
         const querySnapshot = await getDocs(q);
 
         if (!querySnapshot.empty) {
-            console.log("retrieveUserSnapshot", querySnapshot.docs[0]);
             return querySnapshot.docs[0];
         } else {
             console.log(`No user doc found with ${filter_key}: ${filter_value}`);
@@ -109,7 +107,6 @@ async function retrieveUserRef(filterKey: string, filterValue: string): Promise<
 
         if (!querySnapshot.empty) {
             const userRef = doc(firestore, "users", querySnapshot.docs[0].id);
-            console.log("retrieveUserRef", userRef);
             return userRef;
         }
         console.log(`No user found with ${filterKey}: ${filterValue}`);
@@ -133,7 +130,6 @@ async function retrieveUserRef(filterKey: string, filterValue: string): Promise<
 async function retrieveUserRefById(uid: string): Promise<DocumentReference | null> {
     try {
         const userRef = doc(firestore, 'users', uid);
-        console.log("retrieveUserRefById", userRef);
         if (!userRef) {
             console.log(`No user found with id=${uid}`);
             return null;
@@ -214,7 +210,7 @@ async function retrieveUserOrders(uid: string, timeFrom: string, ebayAccessToken
         const cachedData = getCachedData(cacheKey, cacheExpirationTime);
         if (cachedData.length > 0 && !update) {
             return filterOrdersByTime(cachedData, timeFrom); // Return filtered cached data
-        } else if (update) {
+        } else if (update || cachedData.length === 0) {
             // If update is requested, update store info before fetching
             await updateStoreInfo("update-orders", ebayAccessToken, uid);
         }
@@ -297,16 +293,16 @@ async function retrieveUserInventoryFromDB(uid: string, timeFrom: string | null)
  */
 async function retrieveUserInventory(uid: string, timeFrom: string, ebayAccessToken: string, update?: boolean): Promise<IEbayInventoryItem[]> {
     const cacheKey = `inventoryData-${uid}`; // Cache key based on user ID and time filter
-    const cacheExpirationTime = 1000 * 60 * 10; // Cache expiration time (10 minutes)
+    const cacheExpirationTime = 1000 * 60 * 5; // Cache expiration time (10 minutes)
 
     // Try get the cached data first
     try {
         const cachedData = getCachedData(cacheKey, cacheExpirationTime);
-        if (cachedData && !update) {
+        if (cachedData > 0 && !update) {
             // Filter cached inventory based on timeFrom before returning
             const filteredData = filterInventoryByTime(cachedData, timeFrom);
             return filteredData;
-        } else if (update) {
+        } else if (update || cachedData.length === 0) {
             await updateStoreInfo("update-inventory", ebayAccessToken, uid);
         }
     } catch (error) {

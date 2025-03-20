@@ -13,15 +13,15 @@ interface IEbayInventoryItem {
 interface IEbayOrder {
     additionalFees: number;
     buyerUsername: string;
-    customTag: string;
+    customTag: string | null;
     image: string[];
     itemName: string;
     legacyItemId: string;
     listingDate: string;
     orderId: string;
-    purchaseDate: string;
-    purchasePlatform: string;
-    purchasePrice: number;
+    purchaseDate: string | null;
+    purchasePlatform: string | null;
+    purchasePrice: number | null;
     quantitySold: number;
     recordType: RecordType;
     saleDate: string;

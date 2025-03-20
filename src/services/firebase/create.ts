@@ -30,15 +30,7 @@ export async function createUser(uid: string, email: string): Promise<IUser | vo
                 validReferrals: [],
                 rewardsClaimed: 0,
             },
-            numListings: {
-                automatic: 0,
-                manual: 0,
-            },
-            numOrders: {
-                automatic: 0,
-                manual: 0,
-            },
-            lastFetchedDate: null,
+            store: null,
             preferences: {
                 preferredEmail: email,
                 locale: 'GB',

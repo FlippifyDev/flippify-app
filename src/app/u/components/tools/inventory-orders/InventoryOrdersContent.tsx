@@ -13,10 +13,15 @@ import OrdersContent from './OrdersContent';
 
 
 const InventoryOrdersContent = () => {
-    const searchParams = useSearchParams();
+    const [initialTab, setInitialTab] = useState("inventory"); 
 
     // Determine initial tab based on the URL parameter
-    const initialTab = searchParams?.get("display") === "orders" ? "orders" : "inventory";
+    useEffect(() => {
+        const hash = window.location.hash;
+        const tab = hash === "#orders" ? "orders" : hash === "#inventory" ? "inventory" : "inventory";
+        setInitialTab(tab);
+        setActiveTab(tab);
+    }, []);
 
     const [activeTab, setActiveTab] = useState(initialTab);
     const [fadeIn, setFadeIn] = useState(true);

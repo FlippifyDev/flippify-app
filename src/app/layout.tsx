@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google';
 import Providers from './providers';
 import ServiceWorkerRegister from '@/components/ServiceWorkerRegister';
 import { Metadata } from 'next';
-import Script from "next/script";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -50,15 +49,7 @@ export default function RootLayout({
 		<html lang="en" className="!scroll-smooth">
 			<head>
 				{/* Google Site Verification Meta Tag */}
-				<meta name="google-adsense-account" content="ca-pub-6066589868368367" />
-
-				{/* Google AdSense Script */}
-				<Script
-					async
-					src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6066589868368367"
-					crossOrigin="anonymous"
-					strategy="lazyOnload"
-				/>
+                <meta name="google-site-verification" content="qTJ7i7h8-QZNpcGtA9piO5KO4Q-1xdjHsqjLpIslIxo" />
 			</head>
 			<body className={`${inter.className}`}>
 				{/* Providers component */}

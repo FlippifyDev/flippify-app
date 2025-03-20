@@ -1,14 +1,13 @@
 "use client";
 
 import { IUser } from "@/models/user";
-import HouseButton from "../../dom/ui/HouseButton";
-import UnderlineInput from "@/app/components/UnderlineInput";
 import { auth, firestore } from "@/lib/firebase/config";
 
 import { updatePassword, EmailAuthProvider, reauthenticateWithCredential, verifyBeforeUpdateEmail } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { Lock, Mail } from "lucide-react";
 import { useState } from "react";
+import { updateStripeCustomerEmail } from "@/services/stripe/update";
 
 
 async function updateUserEmail(newEmail: string, currentPassword: string, setNewEmailMessage: (value: string) => void, setEmailSuccessfullyUpdated: (value: boolean) => void): Promise<{ success: boolean, error?: string }> {
@@ -39,6 +38,8 @@ async function updateUserEmail(newEmail: string, currentPassword: string, setNew
                 const userDoc = await getDoc(userRef);
                 const user = userDoc.data() as IUser;
                 const userHasAPreferredEmail = user.preferences.preferredEmail !== user.email;
+
+                await updateStripeCustomerEmail(user.stripeCustomerId, newEmail);
                 await updateDoc(userRef, {
                     email: newEmail,
                     "preferences.preferredEmail": userHasAPreferredEmail ? user.preferences.preferredEmail : newEmail

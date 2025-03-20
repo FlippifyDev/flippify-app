@@ -107,8 +107,8 @@ const OrderDetails = () => {
             const { quantitySold, salePrice, purchasePrice, shippingFees, additionalFees, purchaseDate, saleDate } = order;
 
             totalQuantitySold += quantitySold;
-            totalSalePrice += salePrice;
             totalShippingFees += shippingFees;
+            totalSalePrice += salePrice + shippingFees;
             totalAdditionalFees += additionalFees;
 
             // Check if purchase price is valid before adding it to total
@@ -323,7 +323,7 @@ const OrderDetails = () => {
                     <tbody>
                         {orders.map((order, index) => {
                             const { orderId, quantitySold, salePrice, purchasePrice, shippingFees, additionalFees } = order;
-                            const profit = salePrice - (purchasePrice || 0) - shippingFees - additionalFees;
+                            const profit = (salePrice + shippingFees) - (purchasePrice || 0) - shippingFees - additionalFees;
                             const roi = purchasePrice && purchasePrice > 0 ? ((profit / purchasePrice) * 100).toFixed(2) : "0";
                             return (
                                 <tr key={index} className="cursor-pointer hover:bg-gray-100">
@@ -345,7 +345,7 @@ const OrderDetails = () => {
                                     <td>{currencySymbols[currency]}{additionalFees.toFixed(2)}</td>
                                     <td>{currencySymbols[currency]}{shippingFees.toFixed(2)}</td>
                                     <td>{currencySymbols[currency]}{purchasePrice?.toFixed(2) || "N/A"}</td>
-                                    <td>{currencySymbols[currency]}{salePrice.toFixed(2)}</td>
+                                    <td>{currencySymbols[currency]}{(salePrice + shippingFees).toFixed(2)}</td>
                                     <td>{currencySymbols[currency]}{profit.toFixed(2)}</td>
                                     <td>{roi}%</td>
                                     <td>{order.purchasePlatform}</td>

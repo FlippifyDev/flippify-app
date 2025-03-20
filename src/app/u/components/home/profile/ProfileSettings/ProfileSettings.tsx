@@ -1,7 +1,5 @@
 "use client";
 
-import UnderlineInput from '@/app/components/UnderlineInput';
-import UnderlineSelect from '@/app/components/UnderlineSelect';
 import { updateUserPreferences } from '@/services/firebase/update';
 import CurrencySelector from './ProfileCurrencySelector';
 

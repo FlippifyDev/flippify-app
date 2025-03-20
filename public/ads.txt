@@ -1,5 +1,0 @@
-# Ads.txt file for your website
-
-# Google AdSense / Google Ad Exchange
-
-google.com, pub-6066589868368367, DIRECT

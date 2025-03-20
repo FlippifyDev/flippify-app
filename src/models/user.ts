@@ -7,7 +7,7 @@ interface IUser {
     id: string;
     connectedAccounts: IConnectedAccounts;
     email: string;
-    username: string | null;
+    username: string;
     stripeCustomerId: string;
     subscriptions: ISubscription[] | null;
     store: Record<StoreType, IStore> | null;

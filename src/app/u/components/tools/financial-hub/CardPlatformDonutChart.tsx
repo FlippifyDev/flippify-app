@@ -175,7 +175,7 @@ const CardPlatformPieChart = () => {
                             .filter(tag => tag !== null && tag !== undefined && tag !== "")
                     )
                 ).map(tag => (
-                    <div className="flex items-center me-4 h-6" key={tag}>
+                    <div className="flex items-center me-4 h-6 ml-1" key={tag}>
                         <input
                             id={tag as string}
                             type="checkbox"

@@ -18,7 +18,7 @@ const ButtonFeedback:React.FC<ButtonFeedbackProps> = ({ isSidebarOpen }) => {
 	  };
 
 	return (
-		<SidebarButton text="Feedback" isSidebarOpen={isSidebarOpen} symbol={<MdFeedback className='text-lg'/>} onClick={handleClick}/>
+		<SidebarButton text="Feedback" isSidebarOpen={isSidebarOpen} symbol={<MdFeedback className='text-xl'/>} onClick={handleClick}/>
 	)
 }
 

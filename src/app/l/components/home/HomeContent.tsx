@@ -13,7 +13,7 @@ const HomeContent = ({ className = '' }) => {
 			<div className='flex flex-col items-center'>
 				<div className="w-[90%] mt-3 lg:mt-10 md:w-[80%] lg:w-[60%] xl:w-[30%] animate-fadeInPrimary">
 					<p className={`${lato.className} text-6xl text-white text-center`}>
-                        Financial tracking and  <span className="bg-gradient-to-tr pb-1 pl-1 from-textGradStart to-textGradEnd bg-clip-text text-transparent">analytics</span>
+						<span className="bg-gradient-to-tr pb-1 pl-1 from-textGradStart to-textGradEnd bg-clip-text text-transparent">Automated </span>Inventory & Financial Tracking
 					</p>
 				</div>
 				<p className='w-11/12 sm:w-full mt-3 mb-8 pb-1 pt-2 text-gray-300 text-lg text-center animate-fadeInSecondary'>

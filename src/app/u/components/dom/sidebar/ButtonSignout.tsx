@@ -34,7 +34,7 @@ const SidebarSignOutButton:React.FC<SidebarSignOutButtonProps> = ({ isSidebarOpe
 	};
 
 	return (
-		<SidebarButton text="Sign Out" isSidebarOpen={isSidebarOpen} symbol={<FaSignOutAlt className='text-lg'/>} onClick={handleSignOut} />
+		<SidebarButton text="Sign Out" isSidebarOpen={isSidebarOpen} symbol={<FaSignOutAlt className='text-xl'/>} onClick={handleSignOut} />
 	);
 };
 

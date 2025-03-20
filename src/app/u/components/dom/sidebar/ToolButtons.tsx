@@ -3,10 +3,12 @@
 import DisabledSideBarButton from "./ButtonDisabled";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import SidebarButton from "./Button";
-
-import React from "react";
-import { AiOutlineStock } from "react-icons/ai";
-import { FaServer, FaBoxOpen } from "react-icons/fa6";
+import React, { useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { AiFillProduct } from "react-icons/ai";
+import { FaBoxOpen } from "react-icons/fa6";
+import { FaStore, FaChartPie } from "react-icons/fa";
+import { MdLocalShipping } from "react-icons/md";
 
 interface SidebarToolButtonsProps {
 	isSidebarOpen: boolean;
@@ -19,47 +21,110 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 }) => {
 	return (
 		<div className='w-full flex flex-col gap-1'>
-			{/* Disabled Financial Hub */}
+			{/* Financial Hub Button - Public */}
 			<LayoutSubscriptionWrapper requiredSubscriptions={["!admin"]}>
 				<DisabledSideBarButton
 					text="Financial Hub"
 					redirect="sales-tracker"
 					isSidebarOpen={isSidebarOpen}
-					symbol={<AiOutlineStock className="text-lg" />}
+					symbol={<FaChartPie className="text-lg" />}
 					tooltip="Coming Soon"
 				/>
 			</LayoutSubscriptionWrapper>
 
-			{/* Admin Access Financial Hub */}
+			{/* Financial Hub Button - Admin */}
 			<LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
 				<SidebarButton
 					text="Financial Hub"
 					redirect="financial-hub"
 					isSidebarOpen={isSidebarOpen}
-					symbol={<AiOutlineStock className="text-lg" />}
+					symbol={<FaChartPie className="text-lg" />}
 				/>
 			</LayoutSubscriptionWrapper>
 
 
 
-			{/* Disabled Inventory & Orders */}
+			{/* Inventory & Orders Button - Public */}
 			<LayoutSubscriptionWrapper requiredSubscriptions={["!admin"]}>
 				<DisabledSideBarButton
 					text="Inventory & Orders"
 					redirect="inventory-orders"
 					isSidebarOpen={isSidebarOpen}
-					symbol={<FaBoxOpen className="text-lg" />}
+					symbol={<FaBoxOpen className="text-xl" />}
 					tooltip="Coming Soon"
 				/>
 			</LayoutSubscriptionWrapper>
 
-			{/* Admin Access Inventory & Orders */}
+			{/* Inventory & Orders Button - Admin */}
 			<LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
 				<SidebarButton
 					text="Inventory & Orders"
 					redirect="inventory-orders"
 					isSidebarOpen={isSidebarOpen}
-					symbol={<FaBoxOpen className="text-lg" />}
+					symbol={<FaBoxOpen className="text-xl" />}
+				/>
+			</LayoutSubscriptionWrapper>
+
+			{/* Listings Manager Button - Public*/}
+			<LayoutSubscriptionWrapper requiredSubscriptions={["!admin"]}>
+				<DisabledSideBarButton
+					text="Listings Manager"
+					redirect="listings-manager"
+					isSidebarOpen={isSidebarOpen}
+					symbol={<AiFillProduct className="text-xl" />}
+					tooltip="Coming Soon"
+				/>
+			</LayoutSubscriptionWrapper>
+
+			{/* Listings Manager Button - Admin */}
+			<LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
+				<SidebarButton
+					text="Listings Manager"
+					redirect="listings-manager"
+					isSidebarOpen={isSidebarOpen}
+					symbol={<AiFillProduct className="text-xl" />}
+				/>
+			</LayoutSubscriptionWrapper>
+
+			{/* Shipping & Fulfillment Button - Public*/}
+			<LayoutSubscriptionWrapper requiredSubscriptions={["!admin"]}>
+				<DisabledSideBarButton
+					text="Shipping & Fulfillment"
+					redirect="shipping-fulfillment"
+					isSidebarOpen={isSidebarOpen}
+					symbol={<MdLocalShipping className="text-xl" />}
+					tooltip="Coming Soon"
+				/>
+			</LayoutSubscriptionWrapper>
+
+			{/* Shipping & Fulfillment Button - Admin */}
+			<LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
+				<SidebarButton
+					text="Shipping & Fulfillment"
+					redirect="shipping-fulfillment"
+					isSidebarOpen={isSidebarOpen}
+					symbol={<MdLocalShipping className="text-xl" />}
+				/>
+			</LayoutSubscriptionWrapper>
+
+			{/* Account Management Button - Public*/}
+			<LayoutSubscriptionWrapper requiredSubscriptions={["!admin"]}>
+				<DisabledSideBarButton
+					text="Account Management"
+					redirect="account-management"
+					isSidebarOpen={isSidebarOpen}
+					symbol={<FaStore className="text-xl" />}
+					tooltip="Coming Soon"
+				/>
+			</LayoutSubscriptionWrapper>
+
+			{/* Account Management Button - Admin */}
+			<LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
+				<SidebarButton
+					text="Account Management"
+					redirect="account-management"
+					isSidebarOpen={isSidebarOpen}
+					symbol={<FaStore className="text-xl" />}
 				/>
 			</LayoutSubscriptionWrapper>
 		</div>

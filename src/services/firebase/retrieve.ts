@@ -298,7 +298,7 @@ async function retrieveUserInventory(uid: string, timeFrom: string, ebayAccessTo
     // Try get the cached data first
     try {
         const cachedData = getCachedData(cacheKey, cacheExpirationTime);
-        if (cachedData && !update) {
+        if (cachedData > 0 && !update) {
             // Filter cached inventory based on timeFrom before returning
             const filteredData = filterInventoryByTime(cachedData, timeFrom);
             return filteredData;

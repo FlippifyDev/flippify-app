@@ -4,6 +4,7 @@ import Image from 'next/image';
 import AmazonConnectButton from "./AmazonConnectButton";
 import EbayConnectButton from "./EbayConnectButton";
 import ShopifyConnectButton from "./ShopifyConnectButton";
+import DiscordConnectButton from './DiscordConnectButton';
 
 interface ConnectAccountProps {
     name: string;
@@ -26,6 +27,7 @@ const ConnectAccount: React.FC<ConnectAccountProps> = ({ name, image }) => {
                 {name === "eBay" && <EbayConnectButton />}
                 {name === "Amazon" && <AmazonConnectButton />}
                 {name === "Shopify" && <ShopifyConnectButton />}
+                {name === "Discord" && <DiscordConnectButton />}
             </div>
         </div>
     );

@@ -9,13 +9,14 @@ import { doc, getDoc } from 'firebase/firestore';
 import Stripe from 'stripe';
 
 
-const stripeAPIKey = process.env.TEST_STRIPE_SECRET_KEY as string;
-const root = process.env.ROOT as string;
-
-
 const createBillingPortalUrl = async (username: string, customerId: string) => {
+    const stripeAPIKey = process.env.TEST_STRIPE_SECRET_KEY as string;
+    const root = process.env.ROOT as string;
+
+    console.log('stripeAPIKey:', stripeAPIKey);
+
     if (!stripeAPIKey) {
-        throw new Error('Stripe api key not found');
+        throw new Error('Stripe api key not found (createBillingPortalUrl)');
     }
 
     const stripe = new Stripe(stripeAPIKey);
@@ -40,8 +41,11 @@ const createCheckoutSession = async (
     priceId: string,
     referredBy: string | null | undefined
 ): Promise<string | null> => {
+    const stripeAPIKey = process.env.TEST_STRIPE_SECRET_KEY as string;
+    const root = process.env.ROOT as string;
+
     if (!stripeAPIKey) {
-        throw new Error('Stripe API key not found');
+        throw new Error('Stripe API key not found (createCheckoutSession)');
     }
 
     const stripe = new Stripe(stripeAPIKey);
@@ -97,8 +101,11 @@ const createCheckoutSession = async (
 
 
 const createAndApplyCoupon = async (subscriptionName: string | null, customerId: string, percentOff: number) => {
+    const stripeAPIKey = process.env.TEST_STRIPE_SECRET_KEY as string;
+    const root = process.env.ROOT as string;
+
     if (!stripeAPIKey) {
-        throw new Error('Stripe api key not found');
+        throw new Error('Stripe api key not found (createAndApplyCoupon)');
     }
 
     const stripe = new Stripe(stripeAPIKey);

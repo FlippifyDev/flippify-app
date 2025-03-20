@@ -2,10 +2,10 @@
 
 import Stripe from 'stripe';
 
-const stripeAPIKey = process.env.TEST_STRIPE_SECRET_KEY as string;
 
+const retrieveStripeCustomer = async (customerId: string | null, email: string, referralCode: string | null) => {
+    const stripeAPIKey = process.env.TEST_STRIPE_SECRET_KEY as string;
 
-const retrieveStripeCustomer = async (customerId: string | null, discordId: string, username: string, email: string) => {
     if (!stripeAPIKey) {
         throw new Error('Stripe API key not found');
     }
@@ -20,7 +20,7 @@ const retrieveStripeCustomer = async (customerId: string | null, discordId: stri
 
             // Ensure the customer exists before trying to use it
             if (customer && !customer.deleted) {
-                return customer;
+                return customer.id;
             }
         }
 
@@ -32,17 +32,16 @@ const retrieveStripeCustomer = async (customerId: string | null, discordId: stri
 
         if (customers.data.length > 0) {
             customer = customers.data[0];
-            return customer;
+            return customer.id;
         } else {
             // Create a new customer since one doesn't exist with the provided email
             customer = await stripe.customers.create({
                 email: email,
                 metadata: {
-                    discord_id: discordId,
-                    discord_username: username,
-                },
+                    referralCode: referralCode
+                }
             });
-            return customer;
+            return customer.id;
         }
     } catch (error) {
         console.error('Error retrieving customer:', error);
@@ -50,10 +49,11 @@ const retrieveStripeCustomer = async (customerId: string | null, discordId: stri
     }
 };
 
-
 const checkForExistingDiscount = async (customerId: string) => {
+    const stripeAPIKey = process.env.TEST_STRIPE_SECRET_KEY as string;
+
     if (!stripeAPIKey) {
-        throw new Error('Stripe API key not found');
+        throw new Error('Stripe API key not found (checkForExistingDiscount)');
     }
 
     const stripe = new Stripe(stripeAPIKey);

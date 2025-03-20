@@ -1,8 +1,8 @@
 // Local Imports
 import { IUser } from '@/models/user';
 import { firestore } from '@/lib/firebase/config';
-import retrieveStripeCustomer from '@/lib/stripe/retrieve';
-import { generateReferralCode } from '@/utils/generate-referral-code';
+import { retrieveStripeCustomer } from '@/services/stripe/retrieve';
+import { generateRandomChars } from '@/utils/generate-random';
 
 // External Imports
 import { doc, setDoc } from 'firebase/firestore';
@@ -10,8 +10,9 @@ import { doc, setDoc } from 'firebase/firestore';
 // This function will run when a new user signs up using Firebase Auth
 export async function createUser(uid: string, email: string): Promise<IUser | void> {
     try {
-        const referralCode = generateReferralCode();
-        const customer = await retrieveStripeCustomer(null, email, referralCode);
+        const referralCode = generateRandomChars(7);
+        const randomUsername = generateRandomChars(10);
+        const customerId = await retrieveStripeCustomer(null, email, referralCode);
         // Add the user to Firestore `users` collection
         const userRef = doc(firestore, 'users', uid);
         const emptyUser: IUser = {
@@ -20,9 +21,9 @@ export async function createUser(uid: string, email: string): Promise<IUser | vo
                 discord: null,
                 ebay: null,
             },
-            username: null,
+            username: randomUsername,
             email: email,
-            stripeCustomerId: customer.id,
+            stripeCustomerId: customerId,
             subscriptions: null,
             referral: {
                 referralCode: referralCode,

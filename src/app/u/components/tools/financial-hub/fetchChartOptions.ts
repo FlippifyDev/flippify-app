@@ -1,6 +1,6 @@
 import { IEbayOrder } from "@/models/store-data";
 
-export function fetchChartOptions(orders: IEbayOrder[]) {
+export function fetchChartOptions(orders: IEbayOrder[], currencySymbol: string) {
     // Initialize a map to hold total sales for each platform
     const platformSales = new Map<string, number>();
 
@@ -25,7 +25,7 @@ export function fetchChartOptions(orders: IEbayOrder[]) {
 
     return {
         series: series,
-        colors: ["#0b5339", "#cc0086", "#fc5007", "#000000", "#81ac6f", "#410c1c", "#f8e8d0", "#c99a3c"], 
+        colors: ["#0b5339", "#cc0086", "#fc5007", "#000000", "#81ac6f", "#410c1c", "#f8e8d0", "#c99a3c"],
         chart: {
             height: 320,
             type: "donut",
@@ -50,14 +50,22 @@ export function fetchChartOptions(orders: IEbayOrder[]) {
                             fontFamily: "Inter, sans-serif",
                             formatter: function (w: { globals: { seriesTotals: number[] } }) {
                                 const sum = w.globals.seriesTotals.reduce((a: number, b: number) => a + b, 0);
-                                return "$" + sum.toFixed(2);  // Fixed to 2 decimals
-                            },
+                                if (isNaN(sum)) {
+                                    return currencySymbol + "0.00";  // Fallback to "0.00" if sum is not a valid number
+                                }
+                                return currencySymbol + sum.toFixed(2);  // Fixed to 2 decimals
+                            }
                         },
                         value: {
                             show: true,
                             fontFamily: "Inter, sans-serif",
                             offsetY: -20,
-                            formatter: (value: number) => "$" + value.toFixed(2) + "k",  // Fixed to 2 decimals
+                            formatter: (value: number) => {
+                                if (isNaN(value)) {
+                                    return currencySymbol + "0.00";  // Fallback to "0.00" if value is not a valid number
+                                }
+                                return currencySymbol + value.toFixed(2);  // Fixed to 2 decimals
+                            },
                         },
                     },
                     size: "80%",
@@ -74,7 +82,12 @@ export function fetchChartOptions(orders: IEbayOrder[]) {
         },
         yaxis: {
             labels: {
-                formatter: (value: number) => "$" + value.toFixed(2),  // Fixed to 2 decimals
+                formatter: (value: number) => {
+                    if (isNaN(value)) {
+                        return currencySymbol + "0.00";  // Fallback to "0.00" if value is not a valid number
+                    }
+                    return currencySymbol + value.toFixed(2);  // Fixed to 2 decimals
+                },
             },
         },
         xaxis: {
@@ -83,7 +96,7 @@ export function fetchChartOptions(orders: IEbayOrder[]) {
                 if (isNaN(numericValue)) {
                     return value; // Return original value if it's not a valid number
                 }
-                return "$" + numericValue.toFixed(2); // Format as 2 decimal places
+                return currencySymbol + numericValue.toFixed(2); // Format as 2 decimal places
             },
             axisTicks: {
                 show: false,

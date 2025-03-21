@@ -7,11 +7,11 @@ import { parseISO, differenceInDays, isValid } from "date-fns";
 import { useEffect, useState } from "react";
 
 
-interface ICardSellRateProps {
+interface ICardAvgTimeToSellProps {
     orders: IEbayOrder[];
 }
 
-const CardSellRate: React.FC<ICardSellRateProps> = ({ orders }) => {
+const CardAvgTimeToSell: React.FC<ICardAvgTimeToSellProps> = ({ orders }) => {
     const [avgDaysToSell, setAvgDaysToSell] = useState<number>(0);
 
     useEffect(() => {
@@ -47,15 +47,14 @@ const CardSellRate: React.FC<ICardSellRateProps> = ({ orders }) => {
     }, [orders]);
 
     return (
-        <Card title="Average Time to Sell">
+        <Card title="Avg Time to Sell">
             <div className="w-full flex flex-col items-center justify-center p-4">
-                <h3 className="text-lg font-semibold">Average Time to Sell</h3>
-                <p className="text-2xl font-bold text-houseBlue">
-                    {avgDaysToSell.toFixed(2)} days
+                <p className="text-2xl font-bold text-houseBlue text-center">
+                    {avgDaysToSell.toFixed(0)} days
                 </p>
             </div>
         </Card>
     );
 };
 
-export default CardSellRate;
+export default CardAvgTimeToSell;

@@ -150,21 +150,34 @@ async function retrieveUserRefById(uid: string): Promise<DocumentReference | nul
  * @returns {Promise<IEbayOrder[]>} - An array of user's orders, or an empty array if no orders are found.
  * @throws {Error} - Logs and handles errors if Firestore retrieval fails.
  */
-async function retrieveUserOrdersFromDB(uid: string, timeFrom: string | null): Promise<IEbayOrder[]> {
+async function retrieveUserOrdersFromDB(
+    uid: string,
+    timeFrom: string | null,
+    timeTo?: string | null
+): Promise<IEbayOrder[]> {
     try {
         // Reference to the user's orders collection
-        const ordersCollectionRef = collection(firestore, 'orders', uid, 'ebay');
+        const ordersCollectionRef = collection(firestore, "orders", uid, "ebay");
 
         // Base query to get all orders for the user
         let q = query(ordersCollectionRef);
 
-        // If timeFrom is provided, filter orders based on saleDate
+        // If timeFrom is provided, filter orders with saleDate >= timeFrom
         if (timeFrom) {
-            const timeFromDate = new Date(timeFrom).toISOString();;
+            const timeFromDate = new Date(timeFrom).toISOString();
             if (timeFromDate.toString() === "Invalid Date") {
                 throw new Error("Invalid timeFrom date format. Please provide a valid ISO date.");
             }
-            q = query(ordersCollectionRef, where("sale.date", ">=", timeFromDate));
+            q = query(q, where("sale.date", ">=", timeFromDate));
+        }
+
+        // If timeTo is provided, filter orders with saleDate <= timeTo
+        if (timeTo) {
+            const timeToDate = new Date(timeTo).toISOString();
+            if (timeToDate.toString() === "Invalid Date") {
+                throw new Error("Invalid timeTo date format. Please provide a valid ISO date.");
+            }
+            q = query(q, where("sale.date", "<=", timeToDate));
         }
 
         // Query to get orders based on the above filters
@@ -184,7 +197,7 @@ async function retrieveUserOrdersFromDB(uid: string, timeFrom: string | null): P
         return orders;
     } catch (error) {
         console.error(`Error retrieving orders for user with UID=${uid}:`, error);
-        throw new Error('Failed to retrieve user orders');
+        throw new Error("Failed to retrieve user orders");
     }
 }
 
@@ -201,15 +214,21 @@ async function retrieveUserOrdersFromDB(uid: string, timeFrom: string | null): P
  * 
  * @throws Will log an error and return an empty array if an error occurs while retrieving or fetching the data.
  */
-async function retrieveUserOrders(uid: string, timeFrom: string, ebayAccessToken: string, update?: boolean): Promise<IEbayOrder[]> {
-    const cacheKey = `salesData-${uid}`; // No need to include timeFrom in cache key since we are filtering later
-    const cacheExpirationTime = 1000 * 60 * 0.1; // Cache expiration time (5 minutes)
+async function retrieveUserOrders(
+    uid: string,
+    timeFrom: string,
+    ebayAccessToken: string,
+    timeTo?: string, // New optional parameter
+    update?: boolean
+): Promise<IEbayOrder[]> {
+    const cacheKey = `salesData-${uid}`; // No need to include timeFrom/timeTo in cache key since we are filtering later
+    const cacheExpirationTime = 1000 * 60 * 5; // Cache expiration time (5 minutes)
 
     // Try to get the cached data first
     try {
         const cachedData = getCachedData(cacheKey, cacheExpirationTime);
         if (cachedData.length > 0 && !update) {
-            return filterOrdersByTime(cachedData, timeFrom); // Return filtered cached data
+            return filterOrdersByTime(cachedData, timeFrom, timeTo); // Return filtered cached data
         } else if (update || cachedData.length === 0) {
             // If update is requested, update store info before fetching
             await updateStoreInfo("update-orders", ebayAccessToken, uid);
@@ -220,9 +239,9 @@ async function retrieveUserOrders(uid: string, timeFrom: string, ebayAccessToken
 
     // Fetch from Firestore if no cache or update is required
     try {
-        const data = await retrieveUserOrdersFromDB(uid, timeFrom); // Fetch sales data from Firestore
+        const data = await retrieveUserOrdersFromDB(uid, timeFrom, timeTo); // Fetch sales data from Firestore
         setCachedData(cacheKey, data, cacheExpirationTime); // Cache the fresh data
-        return filterOrdersByTime(data, timeFrom); // Return filtered data
+        return filterOrdersByTime(data, timeFrom, timeTo); // Return filtered data
     } catch (error) {
         console.error(`Error fetching orders for user with UID=${uid}:`, error);
         return [];
@@ -231,32 +250,45 @@ async function retrieveUserOrders(uid: string, timeFrom: string, ebayAccessToken
 
 
 /**
- * Retrieves a list of inventory items from Firestore for a specific user based on their UID.
- * Filters inventory based on a time range provided by the `timeFrom` parameter.
+ * Retrieves user inventory from Firestore with optional time filtering.
+ *
+ * @param {string} uid - The user ID to identify and fetch relevant inventory.
+ * @param {string | null} timeFrom - The starting date (in ISO format) to filter inventory items.
+ * @param {string | null} [timeTo=null] - The end date (in ISO format) to filter inventory items.
  * 
- * @param {string} uid - The unique identifier of the user.
- * @param {string | null} timeFrom - The start date (in ISO format) to filter the inventory by. If null, no filter is applied.
- * @returns {Promise<IEbayInventoryItem[]>} - An array of user's inventory items, or an empty array if no items are found.
- * @throws {Error} - Logs and handles errors if Firestore retrieval fails.
+ * @returns {Promise<IEbayInventoryItem[]>} A promise that resolves to an array of filtered inventory items.
  */
-async function retrieveUserInventoryFromDB(uid: string, timeFrom: string | null): Promise<IEbayInventoryItem[]> {
+async function retrieveUserInventoryFromDB(
+    uid: string,
+    timeFrom: string | null,
+    timeTo?: string
+): Promise<IEbayInventoryItem[]> {
     try {
         // Reference to the user's inventory collection
-        const inventoryCollectionRef = collection(firestore, 'inventory', uid, 'ebay');
+        const inventoryCollectionRef = collection(firestore, "inventory", uid, "ebay");
 
-        // Base query
+        // Base query to get all inventory items for the user
         let q = query(inventoryCollectionRef);
 
-        // If timeFrom is provided, filter by dateListed field
+        // Apply timeFrom filter if provided
         if (timeFrom) {
-            const timeFromDate = new Date(timeFrom).toISOString();;
+            const timeFromDate = new Date(timeFrom).toISOString();
             if (timeFromDate.toString() === "Invalid Date") {
                 throw new Error("Invalid timeFrom date format. Please provide a valid ISO date.");
             }
-            q = query(inventoryCollectionRef, where("dateListed", ">=", timeFromDate));
+            q = query(q, where("dateListed", ">=", timeFromDate));
         }
 
-        // Query to get all inventory items for the user, possibly filtered by time
+        // Apply timeTo filter if provided
+        if (timeTo) {
+            const timeToDate = new Date(timeTo).toISOString();
+            if (timeToDate.toString() === "Invalid Date") {
+                throw new Error("Invalid timeTo date format. Please provide a valid ISO date.");
+            }
+            q = query(q, where("dateListed", "<=", timeToDate));
+        }
+
+        // Query Firestore with filters applied
         const querySnapshot = await getDocs(q);
 
         if (querySnapshot.empty) {
@@ -264,7 +296,7 @@ async function retrieveUserInventoryFromDB(uid: string, timeFrom: string | null)
             return []; // Return empty array if no inventory items found
         }
 
-        // Map over the documents and extract inventory data to match the IEbayInventoryItem interface
+        // Map over the documents and extract inventory data matching IEbayInventoryItem interface
         const inventory: IEbayInventoryItem[] = querySnapshot.docs.map((doc) => {
             const data = doc.data();
             return data as IEbayInventoryItem;
@@ -273,36 +305,41 @@ async function retrieveUserInventoryFromDB(uid: string, timeFrom: string | null)
         return inventory;
     } catch (error) {
         console.error(`Error retrieving inventory for user with UID=${uid}:`, error);
-        throw new Error('Failed to retrieve user inventory');
+        throw new Error("Failed to retrieve user inventory");
     }
 }
 
 
 /**
  * Retrieves user inventory from cache or Firestore, optionally updating the data if requested.
- * It also filters the inventory based on the specified `timeFrom` parameter.
  *
  * @param {string} uid - The user ID to identify and fetch the relevant inventory.
- * @param {string} timeFrom - The starting date (in ISO format) to filter inventory items from.
+ * @param {string} timeFrom - The starting date (in ISO format) to filter inventory items.
  * @param {string} ebayAccessToken - The eBay access token used for updating store info if necessary.
  * @param {boolean} [update=false] - If `true`, updates the inventory by fetching the latest data.
+ * @param {string | null} [timeTo=null] - The end date (in ISO format) to filter inventory items.
  * 
  * @returns {Promise<IEbayInventoryItem[]>} A promise that resolves to an array of inventory items filtered by the specified time.
- * 
- * @throws Will log an error and return an empty array if an error occurs while retrieving or fetching the data.
  */
-async function retrieveUserInventory(uid: string, timeFrom: string, ebayAccessToken: string, update?: boolean): Promise<IEbayInventoryItem[]> {
-    const cacheKey = `inventoryData-${uid}`; // Cache key based on user ID and time filter
-    const cacheExpirationTime = 1000 * 60 * 5; // Cache expiration time (10 minutes)
+async function retrieveUserInventory(
+    uid: string,
+    timeFrom: string,
+    ebayAccessToken: string,
+    update: boolean = false,
+    timeTo?: string
+): Promise<IEbayInventoryItem[]> {
+    const cacheKey = `inventoryData-${uid}`; // Cache key based on user ID
+    const cacheExpirationTime = 1000 * 60 * 10; // Cache expiration time (10 minutes)
 
-    // Try get the cached data first
+    // Try to get the cached data first
     try {
         const cachedData = getCachedData(cacheKey, cacheExpirationTime);
-        if (cachedData > 0 && !update) {
-            // Filter cached inventory based on timeFrom before returning
-            const filteredData = filterInventoryByTime(cachedData, timeFrom);
+        if (cachedData.length > 0 && !update) {
+            // Filter cached inventory based on timeFrom and timeTo before returning
+            const filteredData = filterInventoryByTime(cachedData, timeFrom, timeTo);
             return filteredData;
         } else if (update || cachedData.length === 0) {
+            // Update store info if requested
             await updateStoreInfo("update-inventory", ebayAccessToken, uid);
         }
     } catch (error) {
@@ -311,8 +348,7 @@ async function retrieveUserInventory(uid: string, timeFrom: string, ebayAccessTo
 
     // If no cached data or update is required, fetch from Firestore
     try {
-        // Fetch inventory data from Firestore with timeFrom applied
-        const data = await retrieveUserInventoryFromDB(uid, timeFrom); // Fetch inventory data from Firestore
+        const data = await retrieveUserInventoryFromDB(uid, timeFrom, timeTo); // Fetch inventory data
         setCachedData(cacheKey, data, cacheExpirationTime); // Cache the data
         return data;
     } catch (error) {
@@ -320,7 +356,6 @@ async function retrieveUserInventory(uid: string, timeFrom: string, ebayAccessTo
         return [];
     }
 }
-
 
 async function retrieveProducts() {
     return [];

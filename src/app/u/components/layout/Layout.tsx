@@ -11,92 +11,95 @@ import Navbar from "../dom/navbar/Navbar";
 
 
 interface LayoutProps {
-	children: React.ReactNode;
-	requiredSubscriptions?: string[];
-	anySubscriptions?: string[];
-	pagePath?: string;
+    children: React.ReactNode;
+    requiredSubscriptions?: string[];
+    anySubscriptions?: string[];
+    pagePath?: string;
+    removePadding?: boolean;
 }
 
-const LayoutContent = ({ children }: { children: React.ReactNode }) => {
-	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+const LayoutContent = ({ removePadding, children }: { removePadding?: boolean, children: React.ReactNode }) => {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-	useEffect(() => {
-		document.body.classList.remove('overflow-hidden');
-		document.body.classList.remove('overflow-auto');
-	}, []);
+    useEffect(() => {
+        document.body.classList.remove('overflow-hidden');
+        document.body.classList.remove('overflow-auto');
+    }, []);
 
-	return (
-		<main className="flex flex-row min-h-screen overflow-x-hidden bg-userBackground">
-			{/* Sidebar */}
-			<section
+    return (
+        <main className="flex flex-row min-h-screen overflow-x-hidden bg-userBackground">
+            {/* Sidebar */}
+            <section
                 className={`fixed top-0 left-0 h-full transition-all duration-300 ease-in-out bg-white ${isSidebarOpen ? 'w-full sm:w-72 2xl:w-80' : 'hidden sm:block w-16'} z-50`}
-			>
-				<Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
-			</section>
+            >
+                <Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+            </section>
 
-			{/* Content area */}
+            {/* Content area */}
             <section className={`flex flex-col flex-grow transition-all duration-300 w-full h-screen ${isSidebarOpen ? 'sm:pl-72 2xl:pl-80' : 'sm:pl-16'}`}>
-				{/* Navbar */}
-				<div className="w-full h-14 bg-white z-30 sticky top-0 flex flex-row">
-					{/* Hamburger Icon for Mobile */}
-					<div className={`sm:hidden transition-all duration-500 ${isSidebarOpen ? 'hidden' : 'block px-1'}`}>
-						<LightHamburgerButton isActive={isSidebarOpen} onClick={() => setIsSidebarOpen(!isSidebarOpen)} />
-					</div>
-					<Navbar />
-				</div>
+                {/* Navbar */}
+                <div className="w-full h-14 bg-white z-30 sticky top-0 flex flex-row">
+                    {/* Hamburger Icon for Mobile */}
+                    <div className={`sm:hidden transition-all duration-500 ${isSidebarOpen ? 'hidden' : 'block px-1'}`}>
+                        <LightHamburgerButton isActive={isSidebarOpen} onClick={() => setIsSidebarOpen(!isSidebarOpen)} />
+                    </div>
+                    <Navbar />
+                </div>
 
-				{/* Scrollable main content */}
-				<div className="flex-grow overflow-y-auto p-2 sm:p-4 scrollbar-hide z-20">
-					<Suspense fallback={<LayoutLoadingSkeleton />}>
-						{children}
-					</Suspense>
-				</div>
-			</section>
-		</main>
-	);
+                {/* Scrollable main content */}
+                <div className={`flex-grow overflow-y-auto scrollbar-hide z-20 ${removePadding ? '' : 'p-2 sm:p-4'}`}>
+                    <Suspense fallback={<LayoutLoadingSkeleton />}>
+                        {children}
+                    </Suspense>
+                </div>
+            </section>
+        </main>
+    );
 };
 
 
-const Layout: React.FC<LayoutProps> = ({ children, requiredSubscriptions, anySubscriptions, pagePath }) => {
+const Layout: React.FC<LayoutProps> = ({ children, requiredSubscriptions, anySubscriptions, pagePath, removePadding }) => {
     // The following negates the required and any subscription so if the user has none of the subscriptions, then the LayoutNoAccess is displayed.
-	let notRequiredSubscriptions: string[] = [];
-	let notAnySubscriptions: string[] = [];
+    let notRequiredSubscriptions: string[] = [];
+    let notAnySubscriptions: string[] = [];
 
-	if (requiredSubscriptions) {
-		if (requiredSubscriptions[0] === "") {
-			notRequiredSubscriptions = ["no access"];
-		} else {
-			requiredSubscriptions.forEach((sub) => {
-				notRequiredSubscriptions.push(`!${sub}`);
-			});
-		}
-	}
+    if (requiredSubscriptions) {
+        if (requiredSubscriptions[0] === "") {
+            notRequiredSubscriptions = ["no access"];
+        } else {
+            requiredSubscriptions.forEach((sub) => {
+                notRequiredSubscriptions.push(`!${sub}`);
+            });
+        }
+    }
 
-	if (anySubscriptions) {
-		if (anySubscriptions[0] === "") {
-			notAnySubscriptions = ["no access"];
-		} else {
-			anySubscriptions.forEach((sub) => {
-				notAnySubscriptions.push(`!${sub}`);
-			});
-		}
-	}
+    if (anySubscriptions) {
+        if (anySubscriptions[0] === "") {
+            notAnySubscriptions = ["no access"];
+        } else {
+            anySubscriptions.forEach((sub) => {
+                notAnySubscriptions.push(`!${sub}`);
+            });
+        }
+    }
 
-	return (
-		<>
-			{/* Check if the user does NOT have access, and display the LayoutNoAccess if true */}
-			<LayoutSubscriptionWrapper requiredSubscriptions={notRequiredSubscriptions} anySubscriptions={notAnySubscriptions} pagePath={pagePath}>
-				<LayoutContent>
-					<LayoutNoAccess />
-				</LayoutContent>
-			</LayoutSubscriptionWrapper>
+    return (
+        <>
+            {/* Check if the user does NOT have access, and display the LayoutNoAccess if true */}
+            <LayoutSubscriptionWrapper requiredSubscriptions={notRequiredSubscriptions} anySubscriptions={notAnySubscriptions} pagePath={pagePath}>
+                <LayoutContent removePadding={removePadding}>
+                    <LayoutNoAccess />
+                </LayoutContent>
+            </LayoutSubscriptionWrapper>
 
-			{/* Render the actual content if the user has the required subscriptions */}
-			<LayoutSubscriptionWrapper requiredSubscriptions={requiredSubscriptions} anySubscriptions={anySubscriptions}>
-				<LayoutContent>{children}</LayoutContent>
-			</LayoutSubscriptionWrapper>
-		</>
-	);
+            {/* Render the actual content if the user has the required subscriptions */}
+            <LayoutSubscriptionWrapper requiredSubscriptions={requiredSubscriptions} anySubscriptions={anySubscriptions}>
+                <LayoutContent removePadding={removePadding}>
+                    {children}
+                </LayoutContent>
+            </LayoutSubscriptionWrapper>
+        </>
+    );
 };
 
 export default Layout;

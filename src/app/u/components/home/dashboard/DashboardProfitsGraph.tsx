@@ -40,9 +40,18 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({
 		categories: [],
 		series: [],
 	});
+
+    // Revenue
+    const [revenue, setRevenue] = useState(0);
+    const [previousRevenue, setPreviousRevenue] = useState(0);
+
+    // Profits
 	const [netProfit, setNetProfit] = useState(0);
 	const [previousNetProfit, setPreviousNetProfit] = useState(0);
 
+    // Costs
+    const [costs, setCosts] = useState(0);
+    const [previousCosts, setPreviousCosts] = useState(0);
 
 	// Calculate percentage change based on previous net profit
 	const percentageChange =
@@ -52,7 +61,7 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({
 
 
 	useEffect(() => {
-		const calculateProfits = () => {
+		const calculateRevenueProfitsAndCosts = () => {
 			const today = startOfDay(new Date());
 
 			let currentRangeStartDate: Date;
@@ -120,100 +129,103 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({
 					previousRangeEndDate = new Date(0);
 			}
 
-			let currentRangeNetProfit = 0;
-			let previousRangeNetProfit = 0;
+            let currentRangeRevenue = 0;
+            let previousRangeRevenue = 0;
+
+            let currentRangeNetProfit = 0;
+            let previousRangeNetProfit = 0;
+
+            let currentRangeCosts = 0;
+            let previousRangeCosts = 0;
+
 
 			// Prepare arrays for profit calculations
 			const seriesData = [];
 			const categories: string[] = [];
 
-			// Create a temporary object to accumulate profits by date
+            const revenueByDate = new Map<string, number>();
+            const revenueByMonth = new Map<string, number>();
+
 			const profitByDate = new Map<string, number>();
 			const profitByMonth = new Map<string, number>();
-
-			for (const sale of salesData) {
-				// Parse the sale date
-				const saleDate = new Date(sale.saleDate);
-
-				// Ensure sale has a profit field (if not, default to 0)
-				if (!sale.purchasePrice) {
-					continue
-				}
-				const saleProfit = ((sale.salePrice - sale.purchasePrice) * sale.quantitySold) - sale.shippingFees - sale.additionalFees;
-
-				// Check if sale falls within the current range
-				if (isWithinInterval(saleDate, { start: currentRangeStartDate, end: currentRangeEndDate })) {
-					// Add to current range net profit
-					currentRangeNetProfit += saleProfit;
-
-					if (selectedRange !== 365 && selectedRange !== 180 && selectedRange !== 730) {
-						// Convert the sale date to a formatted string for Map key
-						const saleDateKey = format(saleDate, 'dd MM yyyy', { locale: enGB });
-						// Accumulate profit by date for daily and monthly range
-						profitByDate.set(saleDateKey, (profitByDate.get(saleDateKey) || 0) + saleProfit);
-					} else {
-						// Convert the sale date to a formatted string for Map key
-						const saleMonthKey = format(saleDate, 'MM yyyy', { locale: enGB });
-						// Accumulate profit by date for daily and monthly range
-						profitByMonth.set(saleMonthKey, (profitByMonth.get(saleMonthKey) || 0) + saleProfit);
-					}
+            
+            const costsByDate = new Map<string, number>();
+            const costsByMonth = new Map<string, number>();
 
 
+            // Iterate over sales data
+            for (const order of salesData) {
+                // Parse the order date
+                const saleDate = new Date(order.sale.date);
 
-				} else if (isWithinInterval(saleDate, { start: previousRangeStartDate, end: previousRangeEndDate })) {
-					// Add to previous range net profit if within previous range
-					previousRangeNetProfit += saleProfit;
-				}
-			}
+                // Ensure order has a purchase price and order price
+                if (!order.purchase.price || !order.sale.price) continue;
 
-			let rangeDate = currentRangeStartDate;
-			if (selectedRange === 1 || selectedRange === 7 || selectedRange === 30 || selectedRange === 90) {
-				for (let i = 0; i < selectedRange; i++) {
-					const rangeDateKey = format(rangeDate, 'dd MM yyyy', { locale: enGB });
+                // Calculate revenue for the order
+                const saleRevenue = order.sale.price * order.sale.quantity;
 
-					// Use the profitByDate map to get profit for each day in the range
-					seriesData[i] = profitByDate.get(rangeDateKey) || 0;
+                // Calculate costs for the order
+                const saleCost = (order.purchase.price * order.sale.quantity) + order.shipping.fees + order.additionalFees;
 
-					// Add formatted date to categories array for display on the graph
-					categories.push(format(rangeDate, 'dd MM yyyy', { locale: enGB }));
-					// Move to the next day in the range
-					rangeDate = addDays(rangeDate, 1);
-				}
-			} else {
-				const monthCount = selectedRange === 180 ? 6 : selectedRange*12/365;
+                // Calculate profit for the order
+                const saleProfit = saleRevenue - saleCost;
 
-				for (let i = 0; i < monthCount; i++) {
-					const rangeMonthKey = format(rangeDate, 'MM yyyy', { locale: enGB });
+                // Check if order falls within the current range
+                if (isWithinInterval(saleDate, { start: currentRangeStartDate, end: currentRangeEndDate })) {
+                    currentRangeRevenue += saleRevenue;
+                    currentRangeCosts += saleCost;
+                    currentRangeNetProfit += saleProfit;
 
-					// Check for profit by month
-					seriesData[i] = profitByMonth.get(rangeMonthKey) || 0;
+                    if (selectedRange !== 365 && selectedRange !== 180 && selectedRange !== 730) {
+                        // Accumulate revenue and cost by date for daily and monthly range
+                        const saleDateKey = format(saleDate, 'dd MM yyyy', { locale: enGB });
+                        revenueByDate.set(saleDateKey, (revenueByDate.get(saleDateKey) || 0) + saleRevenue);
+                        costsByDate.set(saleDateKey, (costsByDate.get(saleDateKey) || 0) + saleCost);
+                        profitByDate.set(saleDateKey, (profitByDate.get(saleDateKey) || 0) + saleProfit);
+                    } else {
+                        const saleMonthKey = format(saleDate, 'MM yyyy', { locale: enGB });
+                        revenueByMonth.set(saleMonthKey, (revenueByMonth.get(saleMonthKey) || 0) + saleRevenue);
+                        costsByMonth.set(saleMonthKey, (costsByMonth.get(saleMonthKey) || 0) + saleCost);
+                        profitByMonth.set(saleMonthKey, (profitByMonth.get(saleMonthKey) || 0) + saleProfit);
+                    }
+                } else if (isWithinInterval(saleDate, { start: previousRangeStartDate, end: previousRangeEndDate })) {
+                    previousRangeRevenue += saleRevenue;
+                    previousRangeCosts += saleCost;
+                    previousRangeNetProfit += saleProfit;
+                }
+            }
 
-					// Add formatted date to categories array for display on the graph
-					categories.push(rangeMonthKey); // Push month-year format for x-axis
-					// Move to the next month in the range
-					rangeDate = addMonths(rangeDate, 1);
-				}
-			}
+            // Set the calculated values for Revenue, Costs, and Net Profit
+            setRevenue(currentRangeRevenue);
+            setCosts(currentRangeCosts);
+            setNetProfit(currentRangeNetProfit);
+            setPreviousRevenue(previousRangeRevenue);
+            setPreviousCosts(previousRangeCosts);
+            setPreviousNetProfit(previousRangeNetProfit);
 
+            // Set chart data
+            setChartData({
+                categories,
+                series: [
+                    {
+                        name: "Revenue",
+                        data: Array.from(revenueByDate.values()).length === 0 ? Array.from(revenueByMonth.values()) : Array.from(revenueByDate.values()),
+                    },
+                    {
+                        name: "Costs",
+                        data: Array.from(costsByDate.values()).length === 0 ? Array.from(costsByMonth.values()) : Array.from(costsByDate.values()),
+                    },
+                    {
+                        name: "Profit",
+                        data: Array.from(profitByDate.values()).length === 0 ? Array.from(profitByMonth.values()) : Array.from(profitByDate.values()),
+                    },
+                ],
+            });
+        };
 
-			// Set net profits
-			setNetProfit(currentRangeNetProfit);
-			setPreviousNetProfit(previousRangeNetProfit);
+        calculateRevenueProfitsAndCosts();
+    }, [salesData, selectedRange]);
 
-			// Set chart data
-			setChartData({
-				categories,
-				series: [
-					{
-						name: "Profit",
-						data: seriesData,
-					},
-				],
-			});
-		};
-
-		calculateProfits();
-	}, [salesData, currency, selectedRange]);
 
 	return (
 		<div className="w-full">

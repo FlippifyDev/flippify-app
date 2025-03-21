@@ -126,6 +126,7 @@ const DashboardProfitsChart: React.FC<DashboardProfitsChartProps> = ({
 					},
 				},
 			},
+            colors: ["#008ffb", "#ffc107", "#00ff00"] // (revenue, costs, and profits)
 		};
 
 		const chart = new ApexCharts(

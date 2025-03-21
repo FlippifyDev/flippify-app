@@ -110,8 +110,8 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 			{/* Account Management Button - Public*/}
 			<LayoutSubscriptionWrapper requiredSubscriptions={["!admin"]}>
 				<DisabledSideBarButton
-					text="Account Management"
-					redirect="account-management"
+					text="Account Center"
+					redirect="account-center"
 					isSidebarOpen={isSidebarOpen}
 					symbol={<FaStore className="text-xl" />}
 					tooltip="Coming Soon"
@@ -121,8 +121,8 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 			{/* Account Management Button - Admin */}
 			<LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
 				<SidebarButton
-					text="Account Management"
-					redirect="account-management"
+					text="Account Center"
+					redirect="account-center"
 					isSidebarOpen={isSidebarOpen}
 					symbol={<FaStore className="text-xl" />}
 				/>

@@ -24,9 +24,9 @@ const CardListingsAmount = () => {
     const { manual: maxManualListings, automatic: maxAutomaticListings } = fetchSubscriptionMaxListings(userSubscription);
 
     return (
-        <Card>
+        <Card title="Listings Remaining">
             <div>
-                <span>Automatic Listings</span>
+                <span>Automatic</span>
                 <div className='grid grid-cols-12 items-center'>
                     <div className="col-span-11 w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700 flex flex-row items-center">
                         <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${((automaticListings * 100) / maxAutomaticListings).toFixed(0)}%` }}></div>
@@ -36,7 +36,7 @@ const CardListingsAmount = () => {
                 </div>
             </div>
             <div>
-                <span>Manual Listings</span>
+                <span>Manual</span>
                 <div className='grid grid-cols-12 items-center'>
                     <div className="col-span-11 w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700 flex flex-row items-center">
                         <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${((manualListings * 100) / maxManualListings).toFixed(0)}%` }}></div>

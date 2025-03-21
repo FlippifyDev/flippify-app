@@ -63,7 +63,7 @@ export default function CurrencySelector({
             </button>
             <div
                 id="dropdownCurrency"
-                className={`absolute z-10 mt-1 w-full bg-white rounded-md shadow-lg overflow-y-auto transition-all duration-300 origin-top ${isOpen ? "opacity-100 scale-y-100 max-h-32" : "opacity-0 scale-y-0 max-h-0"
+                className={`absolute z-20 mt-1 w-full bg-white rounded-md shadow-lg overflow-y-auto transition-all duration-300 origin-top ${isOpen ? "opacity-100 scale-y-100 max-h-32" : "opacity-0 scale-y-0 max-h-0"
                     }`}
             >
                 <ul className="py-1" role="listbox">

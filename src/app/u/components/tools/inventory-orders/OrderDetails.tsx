@@ -30,7 +30,7 @@ const OrderDetails = () => {
     const [customTag, setCustomTag] = useState<string>("");
     const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
     const [purchaseDate, setPurchaseDate] = useState<string>("");
-    const [purchasePrice, setPurchasePrice] = useState<number | string>("");
+    const [purchasePrice, setPurchasePrice] = useState<string>("");
     const [purchasePlatform, setPurchasePlatform] = useState<string>("");
     const router = useRouter();
     const [fadeIn, setFadeIn] = useState(false);
@@ -104,32 +104,32 @@ const OrderDetails = () => {
 
         // Loop through each order to accumulate totals
         orders.forEach((order) => {
-            const { quantitySold, salePrice, purchasePrice, shippingFees, additionalFees, purchaseDate, saleDate } = order;
+            const { sale, additionalFees, purchase, shipping } = order;
 
-            totalQuantitySold += quantitySold;
-            totalShippingFees += shippingFees;
-            totalSalePrice += salePrice + shippingFees;
+            totalQuantitySold += sale.quantity;
+            totalShippingFees += shipping.fees;
+            totalSalePrice += sale.price + shipping.fees;
             totalAdditionalFees += additionalFees;
 
             // Check if purchase price is valid before adding it to total
             if (purchasePrice) {
-                totalPurchasePrice += purchasePrice;
+                totalPurchasePrice += purchase.price;
                 purchaseCount += 1;
             }
 
             // Calculate profit for each order and accumulate
-            const profit = salePrice - (purchasePrice || 0) - shippingFees - additionalFees;
+            const profit = sale.price - (purchase.price || 0) - shipping.fees - additionalFees;
             totalProfit += profit;
 
             // Calculate ROI for each order if purchase price exists and accumulate
-            if (purchasePrice && purchasePrice > 0) {
-                totalROI += (profit / purchasePrice) * 100;
+            if (purchasePrice && purchase.price > 0) {
+                totalROI += (profit / purchase.price) * 100;
             }
 
             // Calculate time to sell (in days) if both purchaseDate and saleDate exist
-            if (purchaseDate && saleDate) {
+            if (purchaseDate && sale.date) {
                 const purchaseDateObj = new Date(purchaseDate);
-                const saleDateObj = new Date(saleDate);
+                const saleDateObj = new Date(sale.date);
                 const timeToSell = (saleDateObj.getTime() - purchaseDateObj.getTime()) / (1000 * 3600 * 24); // Difference in days
 
                 if (!isNaN(timeToSell)) {
@@ -179,9 +179,9 @@ const OrderDetails = () => {
             if (selectedOrders.includes(order.orderId)) {
                 return {
                     ...order,
-                    purchaseDate: purchaseDate || order.purchaseDate,
-                    purchasePrice: purchasePrice !== null ? +purchasePrice : order.purchasePrice, // Ensure purchasePrice is a number
-                    purchasePlatform: purchasePlatform || order.purchasePlatform,
+                    purchaseDate: purchaseDate || order.purchase.date,
+                    purchasePrice: purchasePrice ? +purchasePrice : order.purchase.price, // Ensure purchasePrice is a number
+                    purchasePlatform: purchasePlatform || order.purchase.platform,
                     customTag: customTag || order.customTag || null,
                 };
             }
@@ -199,9 +199,9 @@ const OrderDetails = () => {
                 if (orderToUpdate) {
                     updates[`orders.ebay.${orderToUpdate.orderId}`] = {
                         ...orderToUpdate,
-                        purchaseDate: orderToUpdate.purchaseDate,
-                        purchasePrice: orderToUpdate.purchasePrice,
-                        purchasePlatform: orderToUpdate.purchasePlatform,
+                        purchaseDate: orderToUpdate.purchase.platform,
+                        purchasePrice: orderToUpdate.purchase.price,
+                        purchasePlatform: orderToUpdate.purchase.platform,
                         customTag: orderToUpdate.customTag ?? null,
                     };
                 }
@@ -217,9 +217,9 @@ const OrderDetails = () => {
                     if (orderToUpdate) {
                         const orderDocRef = doc(ordersCollectionRef, orderToUpdate.orderId); // Reference to individual order
                         await updateDoc(orderDocRef, {
-                            purchaseDate: new Date(orderToUpdate.purchaseDate ?? "").toISOString(),
-                            purchasePrice: orderToUpdate.purchasePrice,
-                            purchasePlatform: orderToUpdate.purchasePlatform,
+                            purchaseDate: new Date(orderToUpdate.purchase.date ?? "").toISOString(),
+                            purchasePrice: orderToUpdate.purchase.price,
+                            purchasePlatform: orderToUpdate.purchase.platform,
                             customTag: orderToUpdate.customTag,
                         });
                     }
@@ -322,9 +322,9 @@ const OrderDetails = () => {
                     </thead>
                     <tbody>
                         {orders.map((order, index) => {
-                            const { orderId, quantitySold, salePrice, purchasePrice, shippingFees, additionalFees } = order;
-                            const profit = (salePrice + shippingFees) - (purchasePrice || 0) - shippingFees - additionalFees;
-                            const roi = purchasePrice && purchasePrice > 0 ? ((profit / purchasePrice) * 100).toFixed(2) : "0";
+                            const { orderId, sale, purchase, shipping, additionalFees } = order;
+                            const profit = (sale.price + shipping.fees) - (purchase.price || 0) - shipping.fees - additionalFees;
+                            const roi = purchasePrice && purchase.price > 0 ? ((profit / purchase.price) * 100).toFixed(2) : "0";
                             return (
                                 <tr key={index} className="cursor-pointer hover:bg-gray-100">
                                     <td>
@@ -339,17 +339,17 @@ const OrderDetails = () => {
                                         </label>
                                     </td>
                                     <td>{orderId}</td>
-                                    <td>{formatTableDate(order.purchaseDate)}</td>
-                                    <td>{formatTableDate(order.saleDate)}</td>
-                                    <td>{quantitySold}</td>
+                                    <td>{formatTableDate(order.purchase.date)}</td>
+                                    <td>{formatTableDate(order.sale.date)}</td>
+                                    <td>{sale.quantity}</td>
                                     <td>{currencySymbols[currency]}{additionalFees.toFixed(2)}</td>
-                                    <td>{currencySymbols[currency]}{shippingFees.toFixed(2)}</td>
-                                    <td>{currencySymbols[currency]}{purchasePrice?.toFixed(2) || "N/A"}</td>
-                                    <td>{currencySymbols[currency]}{(salePrice + shippingFees).toFixed(2)}</td>
+                                    <td>{currencySymbols[currency]}{shipping.fees.toFixed(2)}</td>
+                                    <td>{currencySymbols[currency]}{!purchasePrice ? "N/A" : purchasePrice}</td>
+                                    <td>{currencySymbols[currency]}{(sale.price + shipping.fees).toFixed(2)}</td>
                                     <td>{currencySymbols[currency]}{profit.toFixed(2)}</td>
                                     <td>{roi}%</td>
-                                    <td>{order.purchasePlatform}</td>
-                                    <td>{order.buyerUsername}</td>
+                                    <td>{order.purchase.platform}</td>
+                                    <td>{order.sale.buyerUsername}</td>
                                     <td>{order.customTag}</td>
                                 </tr>
                             );

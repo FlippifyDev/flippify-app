@@ -7,8 +7,8 @@ interface UpdateFieldsProps {
 	fadeIn: boolean;
 	purchaseDate: string;
 	setPurchaseDate: (value: string) => void;
-	purchasePrice: number | string;
-	setPurchasePrice: (value: string | number) => void;
+	purchasePrice: string | undefined;
+	setPurchasePrice: (value: string) => void;
 	purchasePlatform: string;
 	setPurchasePlatform: (value: string) => void;
 	customTag: string;
@@ -48,10 +48,10 @@ const UpdateFields: React.FC<UpdateFieldsProps> = (
 						onChange={(e) => validatePriceInput(e.target.value, setPurchasePrice)}
 						onBlur={() => {
 							// Convert to number and handle edge cases
-							if (typeof purchasePrice === "string" && purchasePrice.endsWith(".")) {
-								setPurchasePrice(parseFloat(purchasePrice.slice(0, -1)));
+                            if (purchasePrice && purchasePrice.endsWith(".")) {
+                                setPurchasePrice(purchasePrice.slice(0, -1));
 							} else if (typeof purchasePrice === "string") {
-								setPurchasePrice(parseFloat(purchasePrice));
+								setPurchasePrice(purchasePrice);
 							}
 						}}
 						placeholder="Purchase Price"

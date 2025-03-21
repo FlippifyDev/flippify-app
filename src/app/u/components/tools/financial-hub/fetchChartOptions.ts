@@ -6,6 +6,7 @@ export function fetchChartOptions(orders: IEbayOrder[]) {
 
     // Iterate over orders and accumulate the sales by platform
     orders.forEach(order => {
+        if (order.status !== "Completed") return;  // Skip if order is not completed
         const platform = order.purchase.platform;
         if (!platform) return;  // Skip if platform is not defined
         const saleAmount = order.sale.price * order.sale.quantity;

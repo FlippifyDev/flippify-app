@@ -203,7 +203,7 @@ async function retrieveUserOrdersFromDB(uid: string, timeFrom: string | null): P
  */
 async function retrieveUserOrders(uid: string, timeFrom: string, ebayAccessToken: string, update?: boolean): Promise<IEbayOrder[]> {
     const cacheKey = `salesData-${uid}`; // No need to include timeFrom in cache key since we are filtering later
-    const cacheExpirationTime = 1000 * 60 * 5; // Cache expiration time (5 minutes)
+    const cacheExpirationTime = 1000 * 60 * 0.1; // Cache expiration time (5 minutes)
 
     // Try to get the cached data first
     try {

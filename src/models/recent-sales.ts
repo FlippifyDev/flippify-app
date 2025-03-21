@@ -1,3 +1,5 @@
+import { OrderStatus } from "./store-data";
+
 interface IHistoryGrid {
 	itemName: string;
 	purchaseDate: string;
@@ -11,6 +13,7 @@ interface IHistoryGrid {
 	salePlatform: string;
 	purchasePlatform: string;
 	totalCosts: number;
+    status: OrderStatus;
 }
 
 

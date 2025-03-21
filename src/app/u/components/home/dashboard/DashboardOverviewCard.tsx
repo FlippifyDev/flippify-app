@@ -55,20 +55,19 @@ const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ salesData
 		let costsMissing = false;
 
         salesData.forEach((order: IEbayOrder) => {
+            if (order.status !== 'Completed') return;
             const saleDate = new Date(order.sale.date);
 
 			// Only include sales within the calculated range
 			if (saleDate >= rangeStartDate && saleDate <= currentDate) {
                 const salePrice = order.sale.price || 0;
-				const purchasePricePerUnit = order.purchase.price || null;
+				const purchasePrice = order.purchase.price || null;
                 const shippingFees = order.shipping.fees || 0;
                 const additionalFees = order.additionalFees || 0;
 
-                const totalSaleRevenue = order.sale.quantity * salePrice;
-
-				if (purchasePricePerUnit) {
-                    const totalPurchaseCost = order.sale.quantity * purchasePricePerUnit;
-					totalRevenue += totalSaleRevenue;
+                if (purchasePrice) {
+                    const totalPurchaseCost = purchasePrice;
+                    totalRevenue += salePrice;
 					totalCosts += totalPurchaseCost + shippingFees + additionalFees;
 				} else {
 					costsMissing = true;

@@ -3,7 +3,7 @@
 // Local Imports
 import { IEbayOrder } from "@/models/store-data";
 import { formatTimeFrom } from "@/utils/format-dates";
-import CardListingsAmount from "./CardListingsAmount";
+import CardListingsAmount from "./CardListingsAndOrdersAmount";
 import CardPlatformPieChart from "./CardPlatformDonutChart";
 import { retrieveUserOrders } from "@/services/firebase/retrieve";
 

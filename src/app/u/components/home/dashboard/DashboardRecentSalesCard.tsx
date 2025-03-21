@@ -24,29 +24,27 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ sal
 	useEffect(() => {
 		const salesArray: IHistoryGrid[] = salesData.map((order) => {
 			const salePrice = order.sale.price || 0;
-			const purchasePricePerUnit = order.purchase.price || 0;
+			const purchasePrice = order.purchase.price || 0;
 			const shippingCost = order.shipping.fees || 0;
 			const otherCosts = order.additionalFees || 0;
 
-			const totalSaleRevenue = order.sale.quantity * salePrice;
-			const totalPurchaseCost = order.sale.quantity * purchasePricePerUnit;
-
-			const totalCosts = totalPurchaseCost + shippingCost + otherCosts;
-			const estimatedProfit = totalSaleRevenue - totalCosts;
+            const totalCosts = purchasePrice + shippingCost + otherCosts;
+            const estimatedProfit = salePrice - totalCosts;
 
 			return {
 				itemName: order.itemName,
 				purchaseDate: order.purchase.date ? format(new Date(order.purchase.date), 'dd MMM yyyy') : 'N/A',
 				saleDate: order.sale.date ? format(new Date(order.sale.date), 'dd MMM yyyy') : 'N/A',
 				quantitySold: order.sale.quantity,
-				purchasePricePerUnit: purchasePricePerUnit,
+                purchasePricePerUnit: purchasePrice / order.sale.quantity,
 				salePrice: salePrice,
 				totalCosts: totalCosts,
 				estimatedProfit: estimatedProfit,
 				salePlatform: order.sale.platform || 'N/A',
 				purchasePlatform: order.purchase.platform || 'N/A',
 				shippingCost: shippingCost,
-				otherCosts: otherCosts
+				otherCosts: otherCosts,
+                status: order.status || 'N/A',
 			};
 		});
 
@@ -68,12 +66,13 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ sal
 					<thead>
 						<tr className="text-lightModeText">
 							<th colSpan={2}>Date</th>
-							<th colSpan={4}>Product Name</th>
+							<th colSpan={3}>Product Name</th>
 							<th colSpan={1}>Quantity Sold</th>
 							<th colSpan={1}>Cost</th>
 							<th colSpan={1}>Sold For</th>
 							<th colSpan={1}>Profit</th>
 							<th colSpan={2}>Purchase Platform</th>
+                            <th colSpan={1}>Status</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -81,12 +80,13 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ sal
 							sales.map((order, index) => (
 								<tr key={index}>
 									<td colSpan={2}>{order.saleDate}</td>
-									<td colSpan={4}>{order.itemName}</td>
+									<td colSpan={3}>{order.itemName}</td>
 									<td colSpan={1}>{order.quantitySold}</td>
 									<td colSpan={1}>{currencySymbol}{order.totalCosts.toFixed(2)}</td>
 									<td colSpan={1}>{currencySymbol}{order.salePrice.toFixed(2)}</td>
 									<td colSpan={1}>{currencySymbol}{order.estimatedProfit.toFixed(2)}</td>
-									<td colSpan={2}>{order.purchasePlatform}</td>
+                                    <td className="" colSpan={2}>{order.purchasePlatform}</td>
+                                    <td className={`${order.status === 'Completed' ? "text-green-500 font-[500]": ""}`} colSpan={1}>{order.status}</td>
 								</tr>
 							))
 						) : (

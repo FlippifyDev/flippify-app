@@ -28,6 +28,12 @@ const ProfileMarketplaceConnect = () => {
                     name="Shopify"
                     image="/ShopifyLogo.png"
                 />
+
+                {/* Discord Connect Account Card */}
+                <ConnectAccount
+                    name="Discord"
+                    image="/DiscordLogo.png"
+                />
             </div>
         </div>
     );

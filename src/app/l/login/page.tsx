@@ -58,6 +58,14 @@ const Login = () => {
     }
   };
 
+  // This function will be triggered when the user presses Enter in the form.
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (email && password) {
+      handleLogin();
+    }
+  };
+
   const handleGoogleLogin = async () => {
     try {
       setLoading(true);
@@ -128,7 +136,6 @@ const Login = () => {
 
               {/* Social Login Buttons */}
               <div className="flex space-x-4 justify-center mb-6">
-                {/* Google Login */}
                 <button
                   className="border rounded-lg px-[40px] sm:px-[60px] py-[10px] flex items-center gap-2 hover:bg-gray-50"
                   onClick={handleGoogleLogin}
@@ -139,8 +146,6 @@ const Login = () => {
                     className="w-6 h-6"
                   />
                 </button>
-
-                {/* Twitter Login */}
                 <button
                   className="border rounded-lg px-[40px] sm:px-[60px] py-[10px] flex items-center gap-2 hover:bg-gray-50"
                   onClick={handleTwitterLogin}
@@ -160,8 +165,8 @@ const Login = () => {
                 <hr className="flex-grow border-gray-300" />
               </div>
 
-              {/* Email/Password Inputs */}
-              <div className="space-y-4">
+              {/* Wrap inputs and button in a form */}
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <input
                   type="email"
                   placeholder="Email Address"
@@ -176,18 +181,16 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full p-3 bg-gray-100 rounded-xl outline-none placeholder-gray-400"
                 />
-              </div>
-
-              {errorMessage && (
-                <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
-              )}
-
-              <button
-                onClick={handleLogin}
-                className="w-full mt-4 p-3 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 rounded-lg shadow-lg"
-              >
-                {loading ? "Processing..." : "Login"}
-              </button>
+                {errorMessage && (
+                  <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
+                )}
+                <button
+                  type="submit"
+                  className="w-full mt-4 p-3 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 rounded-lg shadow-lg"
+                >
+                  {loading ? "Processing..." : "Login"}
+                </button>
+              </form>
 
               {/* Sign Up Link */}
               <div className="flex flex-row gap-1 mt-5 justify-center">

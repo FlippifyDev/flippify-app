@@ -38,7 +38,6 @@ const SignUp = () => {
       await auth.currentUser.reload();
       if (auth.currentUser.emailVerified) {
         setEmailVerified(true);
-        // Sign in with credentials (using NextAuth)
         const result = await signIn("credentials", {
           email: emailRef.current,
           password: passwordRef.current,
@@ -48,7 +47,6 @@ const SignUp = () => {
           console.error("Error during sign-in:", result.error);
           return;
         }
-        // Update Firestore user document with username and subscription info
         await updateDoc(doc(firestore, "users", auth.currentUser.uid), {
           username: usernameRef.current,
           subscriptions: [
@@ -82,6 +80,13 @@ const SignUp = () => {
     }
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (username && email && password) {
+      handleSignUp();
+    }
+  };
+
   return (
     <>
       <ThemeSetter theme="dark" />
@@ -97,6 +102,7 @@ const SignUp = () => {
                 setEmail={setEmail}
                 setPassword={setPassword}
                 handleSignUp={handleSignUp}
+                handleSubmit={handleSubmit}
                 router={router}
                 loading={loading}
               />
@@ -138,6 +144,7 @@ interface SignUpFormProps {
   setEmail: (email: string) => void;
   setPassword: (password: string) => void;
   handleSignUp: () => void;
+  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   router: any;
   loading: boolean;
 }
@@ -150,6 +157,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
   setEmail,
   setPassword,
   handleSignUp,
+  handleSubmit,
   router,
   loading,
 }) => {
@@ -189,8 +197,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
         <span className="mx-2 text-gray-400">OR</span>
         <hr className="flex-grow border-gray-300" />
       </div>
-      {/* Input Fields */}
-      <div className="space-y-4">
+      {/* Wrap Input Fields in a Form */}
+      <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
           placeholder="Username"
@@ -212,13 +220,13 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
           onChange={(e) => setPassword(e.target.value)}
           className="w-full p-3 bg-gray-100 rounded-xl outline-none placeholder-gray-400"
         />
-      </div>
-      <button
-        onClick={handleSignUp}
-        className="w-full mt-4 p-3 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 rounded-lg shadow-lg"
-      >
-        {loading ? "Processing..." : "Sign Up"}
-      </button>
+        <button
+          type="submit"
+          className="w-full mt-4 p-3 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 rounded-lg shadow-lg"
+        >
+          {loading ? "Processing..." : "Sign Up"}
+        </button>
+      </form>
       {/* Login Link */}
       <div className="flex flex-row gap-1 mt-5 justify-center">
         <p>Already have an account?</p>

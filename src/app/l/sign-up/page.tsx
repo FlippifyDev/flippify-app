@@ -1,7 +1,7 @@
 "use client";
 
 import { auth, firestore } from "@/lib/firebase/config";
-import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, GoogleAuthProvider, TwitterAuthProvider, signInWithPopup } from "firebase/auth";
 import { useState, useEffect, useRef } from "react";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
@@ -12,16 +12,23 @@ import Layout from "../components/layout/Layout";
 import ThemeSetter from "@/app/components/ThemeSetter";
 import Loading from "@/app/components/Loading";
 
+// Create provider instances for social sign-up
+const googleProvider = new GoogleAuthProvider();
+const twitterProvider = new TwitterAuthProvider();
+
 const SignUp = () => {
-  const { data: session } = useSession();
+  const { data: session, update: setSession } = useSession();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailVerifying, setEmailVerifying] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const router = useRouter();
 
+  // Refs to persist values for email verification polling
   const usernameRef = useRef<string | null>(null);
   const emailRef = useRef<string | null>(null);
   const passwordRef = useRef<string | null>(null);
@@ -32,12 +39,14 @@ const SignUp = () => {
     }
   }, [session, router]);
 
+  // Poll for email verification (for email/password sign‑up)
   useEffect(() => {
     const checkVerificationInterval = setInterval(async () => {
       if (!auth.currentUser) return;
       await auth.currentUser.reload();
       if (auth.currentUser.emailVerified) {
         setEmailVerified(true);
+        // Sign in with NextAuth credentials
         const result = await signIn("credentials", {
           email: emailRef.current,
           password: passwordRef.current,
@@ -47,6 +56,7 @@ const SignUp = () => {
           console.error("Error during sign-in:", result.error);
           return;
         }
+        // Update user document with username and subscription info
         await updateDoc(doc(firestore, "users", auth.currentUser.uid), {
           username: usernameRef.current,
           subscriptions: [
@@ -67,14 +77,44 @@ const SignUp = () => {
   const handleSignUp = async () => {
     try {
       setLoading(true);
+      setErrorMessage("");
       const { user } = await createUserWithEmailAndPassword(auth, email, password);
       usernameRef.current = username;
       emailRef.current = email;
       passwordRef.current = password;
       await sendEmailVerification(user);
       setEmailVerifying(true);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
+      setErrorMessage("Sign up failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  const handleGoogleSignUp = async () => {
+    try {
+      setLoading(true);
+      setErrorMessage("");
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      const userRef = doc(firestore, "users", user.uid);
+      const userDoc = await getDoc(userRef);
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        // Check if username is set and not empty
+        if (!userData.username || userData.username.trim() === "") {
+          router.push("/u/account-setup");
+        } else {
+          router.push(`/u/${userData.username}/dashboard`);
+        }
+      } else {
+        router.push("/u/account-setup");
+      }
+    } catch (e: any) {
+      console.error("Google sign-up error:", e);
+      setErrorMessage("Google sign-up failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -105,6 +145,8 @@ const SignUp = () => {
                 handleSubmit={handleSubmit}
                 router={router}
                 loading={loading}
+                handleGoogleSignUp={handleGoogleSignUp}
+                errorMessage={errorMessage}
               />
             ) : emailVerified ? (
               <EmailVerified />
@@ -147,6 +189,8 @@ interface SignUpFormProps {
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   router: any;
   loading: boolean;
+  handleGoogleSignUp: () => void;
+  errorMessage: string;
 }
 
 const SignUpForm: React.FC<SignUpFormProps> = ({
@@ -160,6 +204,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
   handleSubmit,
   router,
   loading,
+  handleGoogleSignUp,
+  errorMessage,
 }) => {
   return (
     <div className="bg-white rounded-3xl shadow-lg w-full max-w-md p-8">
@@ -169,26 +215,19 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
       </div>
       {/* Title & Subtitle */}
       <h1 className="text-2xl font-semibold text-center mb-2">Create your account</h1>
-      <p className="text-center text-gray-500 mb-6">
-        Sign up to get started.
-      </p>
+      <p className="text-center text-gray-500 mb-6">Sign up to get started.</p>
       {/* Social Login Buttons */}
-      <div className="flex space-x-4 justify-center mb-6">
+      <div className="flex justify-center mb-6">
         <button
-          className="border rounded-lg px-[40px] sm:px-[60px] py-[10px] flex items-center gap-2 hover:bg-gray-50"
-          onClick={() =>
-            alert("Google sign-up not implemented via popup. Please use email sign up.")
-          }
+          className="border rounded-lg w-full py-[10px] flex justify-center items-center gap-2 hover:bg-gray-50"
+          onClick={handleGoogleSignUp}
         >
-          <img src="/GoogleLogo.png" alt="Google Logo" className="w-6 h-6" />
-        </button>
-        <button
-          className="border rounded-lg px-[40px] sm:px-[60px] py-[10px] flex items-center gap-2 hover:bg-gray-50"
-          onClick={() =>
-            alert("Twitter sign-up not implemented via popup. Please use email sign up.")
-          }
-        >
-          <img src="/XLogo.png" alt="Twitter Logo" className="w-6 h-6" />
+          <img
+            src="/GoogleLogo.png"
+            alt="Google Logo"
+            className="w-6 h-6"
+          />
+          <span className="font-medium">Sign in with Google</span>
         </button>
       </div>
       {/* OR Divider */}
@@ -220,6 +259,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
           onChange={(e) => setPassword(e.target.value)}
           className="w-full p-3 bg-gray-100 rounded-xl outline-none placeholder-gray-400"
         />
+        {errorMessage && (
+          <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
+        )}
         <button
           type="submit"
           className="w-full mt-4 p-3 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 rounded-lg shadow-lg"

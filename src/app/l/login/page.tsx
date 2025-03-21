@@ -10,17 +10,24 @@ import Loading from "@/app/components/Loading";
 import { auth, firestore } from "@/lib/firebase/config";
 import {
   GoogleAuthProvider,
-  TwitterAuthProvider,
   signInWithPopup,
   signInWithEmailAndPassword as firebaseSignIn,
 } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 import { IUser } from "@/models/user";
 import { signIn } from "next-auth/react";
 
 const googleProvider = new GoogleAuthProvider();
-const twitterProvider = new TwitterAuthProvider();
+
+const generateRandomUsername = (): string => {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  for (let i = 0; i < 16; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+};
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -58,55 +65,24 @@ const Login = () => {
     }
   };
 
+  const handleGoogleSignUp = async () => {
+    try {
+      setLoading(true);
+      setErrorMessage("");
+      await signIn("google", { callbackUrl: "/u/account-setup" });
+    } catch (e: any) {
+      console.error("Google sign-in error:", e);
+      setErrorMessage("Google sign-in failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };  
+
   // This function will be triggered when the user presses Enter in the form.
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (email && password) {
       handleLogin();
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    try {
-      setLoading(true);
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-      console.log("Google user:", user);
-      const userRef = doc(firestore, "users", user.uid);
-      const userDoc = await getDoc(userRef);
-      if (userDoc.exists()) {
-        const userData = userDoc.data() as IUser;
-        router.push(`/u/${userData.username}/dashboard`);
-      } else {
-        router.push("/u/new-user-setup");
-      }
-    } catch (e) {
-      console.error("Google login error:", e);
-      setErrorMessage("Google login failed. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleTwitterLogin = async () => {
-    try {
-      setLoading(true);
-      const result = await signInWithPopup(auth, twitterProvider);
-      const user = result.user;
-      console.log("Twitter user:", user);
-      const userRef = doc(firestore, "users", user.uid);
-      const userDoc = await getDoc(userRef);
-      if (userDoc.exists()) {
-        const userData = userDoc.data() as IUser;
-        router.push(`/u/${userData.username}/dashboard`);
-      } else {
-        router.push("/u/new-user-setup");
-      }
-    } catch (e) {
-      console.error("Twitter login error:", e);
-      setErrorMessage("Twitter login failed. Please try again.");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -135,26 +111,17 @@ const Login = () => {
               </p>
 
               {/* Social Login Buttons */}
-              <div className="flex space-x-4 justify-center mb-6">
+              <div className="flex justify-center mb-6">
                 <button
-                  className="border rounded-lg px-[40px] sm:px-[60px] py-[10px] flex items-center gap-2 hover:bg-gray-50"
-                  onClick={handleGoogleLogin}
+                  className="border rounded-lg w-full py-[10px] flex justify-center items-center gap-2 hover:bg-gray-50"
+                  onClick={handleGoogleSignUp}
                 >
                   <img
                     src="/GoogleLogo.png"
                     alt="Google Logo"
                     className="w-6 h-6"
                   />
-                </button>
-                <button
-                  className="border rounded-lg px-[40px] sm:px-[60px] py-[10px] flex items-center gap-2 hover:bg-gray-50"
-                  onClick={handleTwitterLogin}
-                >
-                  <img
-                    src="/XLogo.png"
-                    alt="Twitter Logo"
-                    className="w-6 h-6"
-                  />
+                  <span className="font-medium">Sign in with Google</span>
                 </button>
               </div>
 
@@ -165,7 +132,7 @@ const Login = () => {
                 <hr className="flex-grow border-gray-300" />
               </div>
 
-              {/* Wrap inputs and button in a form */}
+              {/* Email/Password Form */}
               <form onSubmit={handleSubmit} className="space-y-4">
                 <input
                   type="email"

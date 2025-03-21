@@ -5,7 +5,7 @@ export function filterOrdersByTime(orders: IEbayOrder[], timeFrom: string): IEba
     const startDate = parseISO(timeFrom);
 
     return orders.filter(order => {
-        const orderDate = parseISO(order.saleDate); // Assuming `order.date` is in ISO format
+        const orderDate = parseISO(order.sale.date); // Assuming `order.date` is in ISO format
         return isAfter(orderDate, startDate) || orderDate.getTime() === startDate.getTime();
     });
 }

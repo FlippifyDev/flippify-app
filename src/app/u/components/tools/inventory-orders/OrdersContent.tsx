@@ -58,22 +58,22 @@ const OrdersContent: React.FC = () => {
 				combinedOrders[legacyItemId] = {
 					image: order.image[0],
 					itemName: order.itemName,
-					quantitySold: order.quantitySold,
-					totalSalePrice: order.salePrice,
-					totalPurchasePrice: order.purchasePrice,
-					totalShippingFees: order.shippingFees,
+					quantitySold: order.sale.quantity,
+                    totalSalePrice: order.sale.price,
+					totalPurchasePrice: order.purchase.price,
+					totalShippingFees: order.shipping.fees,
 					totalOtherFees: order.additionalFees,
 					orders: [order],
 				};
 			} else {
-				combinedOrders[legacyItemId].quantitySold += order.quantitySold;
-				combinedOrders[legacyItemId].totalSalePrice += order.salePrice;
-				combinedOrders[legacyItemId].totalShippingFees += order.shippingFees;
+                combinedOrders[legacyItemId].quantitySold += order.sale.quantity;
+                combinedOrders[legacyItemId].totalSalePrice += order.sale.price;
+				combinedOrders[legacyItemId].totalShippingFees += order.shipping.fees;
 				combinedOrders[legacyItemId].totalOtherFees += order.additionalFees;
 
-				if (order.purchasePrice !== null) {
+                if (order.purchase.price !== null) {
 					combinedOrders[legacyItemId].totalPurchasePrice =
-						(combinedOrders[legacyItemId].totalPurchasePrice || 0) + (order.purchasePrice || 0);
+                        (combinedOrders[legacyItemId].totalPurchasePrice || 0) + (order.purchase.price || 0);
 				}
 
 				combinedOrders[legacyItemId].orders.push(order);

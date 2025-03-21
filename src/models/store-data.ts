@@ -1,6 +1,8 @@
 export type RecordType = "automatic" | "manual";
+export type OrderStatus = "Active" | "Completed" | "Cencelled" | "Inactive" | "Shipped" | "InProcess" | "Invalid";
 
 interface IEbayInventoryItem {
+    initialQuantity: number;
     itemId: string;
     itemName: string;
     price: number;
@@ -10,24 +12,42 @@ interface IEbayInventoryItem {
     recordType: RecordType;
 }
 
+interface IShipping {
+    fees: number;
+    paymentToShippied: number;
+    service: string;
+    timeDays: number;
+    trackingNumber: string;
+}
+
+interface IPurchase {
+    date: string;
+    platform: string;
+    price: number;
+    quantity: number;
+}
+
+interface ISale {
+    buyerUsername: string;
+    date: string;
+    platform: string;
+    price: number;
+    quantity: number;
+}
+
 interface IEbayOrder {
     additionalFees: number;
-    buyerUsername: string;
     customTag: string | null;
     image: string[];
     itemName: string;
     legacyItemId: string;
     listingDate: string;
     orderId: string;
-    purchaseDate: string | null;
-    purchasePlatform: string | null;
-    purchasePrice: number | null;
-    quantitySold: number;
+    purchase: IPurchase;
     recordType: RecordType;
-    saleDate: string;
-    salePlatform: string;
-    salePrice: number;
-    shippingFees: number;
+    sale: ISale;
+    shipping: IShipping;
+    status: OrderStatus;
 }
 
 

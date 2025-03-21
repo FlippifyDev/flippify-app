@@ -22,29 +22,29 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ sal
 	const currencySymbol = currencySymbols[currency] || '£'; // Get the currency symbol based on the currency
 
 	useEffect(() => {
-		const salesArray: IHistoryGrid[] = salesData.map((sale) => {
-			const salePrice = sale.salePrice || 0;
-			const purchasePricePerUnit = sale.purchasePrice || 0;
-			const shippingCost = sale.shippingFees || 0;
-			const otherCosts = sale.additionalFees || 0;
+		const salesArray: IHistoryGrid[] = salesData.map((order) => {
+			const salePrice = order.sale.price || 0;
+			const purchasePricePerUnit = order.purchase.price || 0;
+			const shippingCost = order.shipping.fees || 0;
+			const otherCosts = order.additionalFees || 0;
 
-			const totalSaleRevenue = sale.quantitySold * salePrice;
-			const totalPurchaseCost = sale.quantitySold * purchasePricePerUnit;
+			const totalSaleRevenue = order.sale.quantity * salePrice;
+			const totalPurchaseCost = order.sale.quantity * purchasePricePerUnit;
 
 			const totalCosts = totalPurchaseCost + shippingCost + otherCosts;
 			const estimatedProfit = totalSaleRevenue - totalCosts;
 
 			return {
-				itemName: sale.itemName,
-				purchaseDate: sale.purchaseDate ? format(new Date(sale.purchaseDate), 'dd MMM yyyy') : 'N/A',
-				saleDate: sale.saleDate ? format(new Date(sale.saleDate), 'dd MMM yyyy') : 'N/A',
-				quantitySold: sale.quantitySold,
+				itemName: order.itemName,
+				purchaseDate: order.purchase.date ? format(new Date(order.purchase.date), 'dd MMM yyyy') : 'N/A',
+				saleDate: order.sale.date ? format(new Date(order.sale.date), 'dd MMM yyyy') : 'N/A',
+				quantitySold: order.sale.quantity,
 				purchasePricePerUnit: purchasePricePerUnit,
 				salePrice: salePrice,
 				totalCosts: totalCosts,
 				estimatedProfit: estimatedProfit,
-				salePlatform: sale.salePlatform || 'N/A',
-				purchasePlatform: sale.purchasePlatform || 'N/A',
+				salePlatform: order.sale.platform || 'N/A',
+				purchasePlatform: order.purchase.platform || 'N/A',
 				shippingCost: shippingCost,
 				otherCosts: otherCosts
 			};
@@ -78,15 +78,15 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ sal
 					</thead>
 					<tbody>
 						{sales.length > 0 ? (
-							sales.map((sale, index) => (
+							sales.map((order, index) => (
 								<tr key={index}>
-									<td colSpan={2}>{sale.saleDate}</td>
-									<td colSpan={4}>{sale.itemName}</td>
-									<td colSpan={1}>{sale.quantitySold}</td>
-									<td colSpan={1}>{currencySymbol}{sale.totalCosts.toFixed(2)}</td>
-									<td colSpan={1}>{currencySymbol}{sale.salePrice.toFixed(2)}</td>
-									<td colSpan={1}>{currencySymbol}{sale.estimatedProfit.toFixed(2)}</td>
-									<td colSpan={2}>{sale.purchasePlatform}</td>
+									<td colSpan={2}>{order.saleDate}</td>
+									<td colSpan={4}>{order.itemName}</td>
+									<td colSpan={1}>{order.quantitySold}</td>
+									<td colSpan={1}>{currencySymbol}{order.totalCosts.toFixed(2)}</td>
+									<td colSpan={1}>{currencySymbol}{order.salePrice.toFixed(2)}</td>
+									<td colSpan={1}>{currencySymbol}{order.estimatedProfit.toFixed(2)}</td>
+									<td colSpan={2}>{order.purchasePlatform}</td>
 								</tr>
 							))
 						) : (

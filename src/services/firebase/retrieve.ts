@@ -164,7 +164,7 @@ async function retrieveUserOrdersFromDB(uid: string, timeFrom: string | null): P
             if (timeFromDate.toString() === "Invalid Date") {
                 throw new Error("Invalid timeFrom date format. Please provide a valid ISO date.");
             }
-            q = query(ordersCollectionRef, where("saleDate", ">=", timeFromDate));
+            q = query(ordersCollectionRef, where("sale.date", ">=", timeFromDate));
         }
 
         // Query to get orders based on the above filters

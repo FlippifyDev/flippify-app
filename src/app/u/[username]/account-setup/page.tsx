@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { doc, updateDoc } from "firebase/firestore";
 import { firestore } from "@/lib/firebase/config";
-import Layout from "../components/layout/Layout";
+import Layout from "../../components/layout/Layout";
 import ThemeSetter from "@/app/components/ThemeSetter";
 import Loading from "@/app/components/Loading";
 import { Suspense } from "react";
@@ -17,9 +17,8 @@ const AccountSetup = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // When the session is loaded, if the user already has a verified username, redirect to dashboard.
   useEffect(() => {
-    if (status === "loading") return; // Wait until session is ready
+    if (status === "loading") return;
     if (
       session &&
       session.user &&
@@ -41,17 +40,16 @@ const AccountSetup = () => {
     try {
       if (!session || !session.user || !session.user.id) {
         setErrorMessage("Session expired. Please log in again.");
+        router.push("/l/login");
         return;
       }
-      // Update the Firestore document with the new username and mark it as verified.
       const userRef = doc(firestore, "users", session.user.id);
       await updateDoc(userRef, {
         username: trimmedUsername,
         "authentication.usernameVerified": true,
       });
-      // Redirect to the dashboard using the new username.
       router.push(`/u/${trimmedUsername}/dashboard`);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error updating username:", error);
       setErrorMessage("Failed to update username. Please try again.");
     } finally {
@@ -61,6 +59,11 @@ const AccountSetup = () => {
 
   if (status === "loading") {
     return <Loading />;
+  }
+
+  if (!session) {
+    router.push("/l/login");
+    return null;
   }
 
   return (

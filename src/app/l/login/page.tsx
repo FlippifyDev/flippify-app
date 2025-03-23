@@ -2,39 +2,21 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Suspense } from "react";
+import { signIn } from "next-auth/react";
+import { auth } from "@/lib/firebase/config";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import Layout from "../components/layout/Layout";
 import ThemeSetter from "@/app/components/ThemeSetter";
 import Loading from "@/app/components/Loading";
-
-import { auth, firestore } from "@/lib/firebase/config";
-import {
-  GoogleAuthProvider,
-  signInWithPopup,
-  signInWithEmailAndPassword as firebaseSignIn,
-} from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-
-import { IUser } from "@/models/user";
-import { signIn } from "next-auth/react";
+import { Suspense } from "react";
 
 const googleProvider = new GoogleAuthProvider();
-
-const generateRandomUsername = (): string => {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let result = "";
-  for (let i = 0; i < 16; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
-};
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
-
   const router = useRouter();
 
   const handleLogin = async () => {
@@ -45,40 +27,41 @@ const Login = () => {
         password,
         redirect: false,
       });
-
       if (result?.error) {
         setErrorMessage("Invalid email or password");
       } else {
-        await firebaseSignIn(auth, email, password);
-        const userRef = doc(firestore, "users", auth.currentUser?.uid ?? "");
-        const userDoc = await getDoc(userRef);
-        const userData = userDoc.data() as IUser;
-        router.push(`/u/${userData.username}/dashboard`);
+        router.push("/auth/redirect");
       }
     } catch (e) {
-      console.error(e);
+      console.error("Login error:", e);
       setErrorMessage("Login failed. Please try again.");
     } finally {
       setLoading(false);
-      setEmail("");
-      setPassword("");
     }
   };
 
-  const handleGoogleSignUp = async () => {
+  const handleGoogleSignIn = async () => {
     try {
       setLoading(true);
-      setErrorMessage("");
-      await signIn("google", { callbackUrl: "/u/account-setup" });
-    } catch (e: any) {
-      console.error("Google sign-in error:", e);
+      const result = await signInWithPopup(auth, googleProvider);
+      const idToken = await result.user.getIdToken();
+      const signInResult = await signIn("credentials", {
+        idToken,
+        redirect: false,
+      });
+      if (signInResult?.error) {
+        setErrorMessage("Authentication failed. Please try again.");
+      } else {
+        router.push("/auth/redirect");
+      }
+    } catch (error) {
+      console.error("Google sign-in error:", error);
       setErrorMessage("Google sign-in failed. Please try again.");
     } finally {
       setLoading(false);
     }
-  };  
+  };
 
-  // This function will be triggered when the user presses Enter in the form.
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (email && password) {
@@ -114,7 +97,7 @@ const Login = () => {
               <div className="flex justify-center mb-6">
                 <button
                   className="border rounded-lg w-full py-[10px] flex justify-center items-center gap-2 hover:bg-gray-50"
-                  onClick={handleGoogleSignUp}
+                  onClick={handleGoogleSignIn}
                 >
                   <img
                     src="/GoogleLogo.png"
@@ -161,7 +144,7 @@ const Login = () => {
 
               {/* Sign Up Link */}
               <div className="flex flex-row gap-1 mt-5 justify-center">
-                <p>Don&apos;t have an account?</p>
+                <p>Don't have an account?</p>
                 <button
                   onClick={() => router.push("/l/sign-up")}
                   className="text-houseBlue hover:underline"

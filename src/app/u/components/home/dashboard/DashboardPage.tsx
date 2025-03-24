@@ -112,7 +112,7 @@ const DashboardPage: React.FC = () => {
             </LayoutSubscriptionWrapper>
 
             {/* If They Have Subscription */}
-            <LayoutSubscriptionWrapper requiredSubscriptions={["admin", "standard"]}>
+            <LayoutSubscriptionWrapper anySubscriptions={["admin", "standard"]}>
                 <div className="h-full w-full flex flex-col gap-2 sm:gap-4">
                     <div className="w-full">
                         <DashboardOverviewCard

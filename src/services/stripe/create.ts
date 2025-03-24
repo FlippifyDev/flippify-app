@@ -1,19 +1,16 @@
 "use server"
 
 // Local Imports
-import { firestore } from '@/lib/firebase/config';
-import { IUser } from '@/models/user';
+import { retrieveUserByKeyAndValueAdmin } from '../firebase/retrieve-admin';
+;
 
 // External Imports
-import { doc, getDoc } from 'firebase/firestore';
 import Stripe from 'stripe';
 
 
 const createBillingPortalUrl = async (username: string, customerId: string) => {
     const stripeAPIKey = process.env.TEST_STRIPE_SECRET_KEY as string;
     const root = process.env.ROOT as string;
-
-    console.log('stripeAPIKey:', stripeAPIKey);
 
     if (!stripeAPIKey) {
         throw new Error('Stripe api key not found (createBillingPortalUrl)');
@@ -57,11 +54,9 @@ const createCheckoutSession = async (
         let discounts: Stripe.Checkout.SessionCreateParams.Discount[] = [];
 
         if (referredBy) {
-            const userRef = doc(firestore, `users/${referredBy}`);
-            const userSnapshot = await getDoc(userRef);
+            const referredUser = await retrieveUserByKeyAndValueAdmin("referral.referralCode", referredBy);
 
-            if (userSnapshot.exists()) {
-                const referredUser = userSnapshot.data() as IUser;
+            if (referredUser) {
                 // Check if referredUser has any subscriptions with "member" in the name
                 const hasMemberSubscription = referredUser.subscriptions?.some(subscription =>
                     subscription.name.toLowerCase().includes('member')

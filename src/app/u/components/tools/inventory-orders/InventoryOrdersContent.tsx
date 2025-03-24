@@ -57,7 +57,7 @@ const InventoryOrdersContent = () => {
     };
 
     return (
-        <LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
+        <LayoutSubscriptionWrapper anySubscriptions={["admin", "member"]}>
             <main className="bg-white rounded-xl h-full">
                 {/* Dropdown for Tab Selection */}
                 <div ref={dropdownRef} className="relative inline-block text-left px-2 py-4">

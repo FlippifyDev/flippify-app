@@ -14,6 +14,7 @@ import { retrieveUserOrders } from "@/services/firebase/retrieve";
 // External Imports
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 
 
 
@@ -177,29 +178,31 @@ const FinancialHubContent = () => {
 
 
     return (
-        <div className="w-full flex flex-col">
-            <div className="w-full p-2 bg-white border-t flex items-center">
-                <div>
-                    <DateRangeSelector value={selectedTimeRange} onChange={handleTimeRangeChange} />
-                </div>
-            </div>
-            <div className="grid grid-cols-12 gap-4 p-2 sm:p-4">
-                <div className="col-span-12 sm:col-span-6 lg:col-span-4">
-                    <CardListingsAmount />
-                </div>
-                <div className="col-span-12 sm:col-span-6 lg:col-span-4">
-                    <CardPlatformPieChart orders={orders} loading={loading} currencySymbol={currencySymbols[userCurrency]}/>
-                </div>
-                <div className="col-span-12 sm:col-span-6 lg:col-span-4 grid grid-rows-12 grid-cols-12 gap-4">
-                    <div className="col-span-12 md:col-span-6">
-                        <CardAvgTimeToSell orders={orders} />
-                    </div>
-                    <div className="col-span-12 md:col-span-6">
-                        <CardAvgTimeToList orders={orders} />
+        <LayoutSubscriptionWrapper anySubscriptions={["admin", "member"]}>
+            <div className="w-full flex flex-col">
+                <div className="w-full p-2 bg-white border-t flex items-center">
+                    <div>
+                        <DateRangeSelector value={selectedTimeRange} onChange={handleTimeRangeChange} />
                     </div>
                 </div>
+                <div className="grid grid-cols-12 gap-4 p-2 sm:p-4">
+                    <div className="col-span-12 sm:col-span-6 lg:col-span-4">
+                        <CardListingsAmount />
+                    </div>
+                    <div className="col-span-12 sm:col-span-6 lg:col-span-4">
+                        <CardPlatformPieChart orders={orders} loading={loading} currencySymbol={currencySymbols[userCurrency]}/>
+                    </div>
+                    <div className="col-span-12 sm:col-span-6 lg:col-span-4 grid grid-rows-12 grid-cols-12 gap-4">
+                        <div className="col-span-12 md:col-span-6">
+                            <CardAvgTimeToSell orders={orders} />
+                        </div>
+                        <div className="col-span-12 md:col-span-6">
+                            <CardAvgTimeToList orders={orders} />
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </LayoutSubscriptionWrapper>
     );
 };
 

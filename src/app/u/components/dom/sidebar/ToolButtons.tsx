@@ -22,7 +22,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 	return (
 		<div className='w-full flex flex-col gap-1'>
 			{/* Financial Hub Button - Public */}
-			<LayoutSubscriptionWrapper requiredSubscriptions={["!admin"]}>
+			<LayoutSubscriptionWrapper anySubscriptions={["!admin", "!member"]}>
 				<DisabledSideBarButton
 					text="Financial Hub"
 					redirect="sales-tracker"
@@ -33,7 +33,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 			</LayoutSubscriptionWrapper>
 
 			{/* Financial Hub Button - Admin */}
-			<LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
+			<LayoutSubscriptionWrapper anySubscriptions={["admin", "member"]}>
 				<SidebarButton
 					text="Financial Hub"
 					redirect="financial-hub"
@@ -45,7 +45,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 
 
 			{/* Inventory & Orders Button - Public */}
-			<LayoutSubscriptionWrapper requiredSubscriptions={["!admin"]}>
+            <LayoutSubscriptionWrapper anySubscriptions={["!admin", "!member"]}>
 				<DisabledSideBarButton
 					text="Inventory & Orders"
 					redirect="inventory-orders"
@@ -56,7 +56,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 			</LayoutSubscriptionWrapper>
 
 			{/* Inventory & Orders Button - Admin */}
-			<LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
+			<LayoutSubscriptionWrapper anySubscriptions={["admin", "member"]}>
 				<SidebarButton
 					text="Inventory & Orders"
 					redirect="inventory-orders"

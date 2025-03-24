@@ -72,8 +72,8 @@ const PlansPage = () => {
 					prices={{ monthly: 24.99, yearly: 249.99 }}
 					discountedPrices={{ monthly: 19.99, yearly: 199.99 }}
 					priceIds={{
-						monthly: "price_1PxRRCJJRepiHZ8dXF4MyyCO",
-						yearly: "price_1PxRRMJJRepiHZ8duiGgCQI8",
+                        monthly: "price_1Q1qIlJJRepiHZ8d4KzSzGuX",
+                        yearly: "price_1Q1qIlJJRepiHZ8dQ0f3IqYY",
 					}}
 					whatsIncludedComponent={<PlansCardStandardWhatsIncluded />}
 					priceRange={selectedPlan}

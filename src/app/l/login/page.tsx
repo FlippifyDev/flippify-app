@@ -83,6 +83,8 @@ const Login = () => {
                                     src="/FlippifyLogoLongBlack.png"
                                     alt="Logo"
                                     className="w-1/3 h-1/3"
+                                    width={200}
+                                    height={200}
                                 />
                             </div>
 
@@ -104,6 +106,8 @@ const Login = () => {
                                         src="/GoogleLogo.png"
                                         alt="Google Logo"
                                         className="w-6 h-6"
+                                        width={200}
+                                        height={200}
                                     />
                                     <span className="font-medium">Sign in with Google</span>
                                 </button>

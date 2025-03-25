@@ -209,7 +209,6 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
     handleGoogleSignUp,
     errorMessage,
 }) => {
-    const maxUserCount = 100;
     return (
         <div className="bg-white rounded-3xl shadow-lg w-full max-w-md p-8">
             {/* Logo */}
@@ -229,6 +228,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                         src="/GoogleLogo.png"
                         alt="Google Logo"
                         className="w-6 h-6"
+                        width={200}
+                        height={200}
                     />
                     <span className="font-medium">Sign in with Google</span>
                 </button>

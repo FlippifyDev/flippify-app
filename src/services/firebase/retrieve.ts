@@ -1,6 +1,6 @@
 // Local Imports
 import { IUser } from "@/models/user";
-import { firestore } from "@/lib/firebase/config";
+import { firestore, auth } from "@/lib/firebase/config";
 import { createUser } from "./create";
 import { updateStoreInfo } from "../api/request";
 import { getCachedData, setCachedData } from "@/utils/cache-helpers";

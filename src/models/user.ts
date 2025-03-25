@@ -45,7 +45,7 @@ interface ILastFetchedDate {
 
 interface IAuthentication {
     emailVerified: EmailVerification;
-    usernameVerified: boolean;
+    onboarding?: boolean;
 }
 
 interface IMetaData {

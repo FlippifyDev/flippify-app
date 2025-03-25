@@ -1,6 +1,6 @@
 // Local Imports
 import { IUser } from "@/models/user";
-import { firestore, auth } from "@/lib/firebase/config";
+import { firestore } from "@/lib/firebase/config";
 import { createUser } from "./create";
 import { updateStoreInfo } from "../api/request";
 import { getCachedData, setCachedData } from "@/utils/cache-helpers";
@@ -219,19 +219,19 @@ async function retrieveUserOrders(
     uid: string,
     timeFrom: string,
     ebayAccessToken: string,
-    timeTo?: string, // New optional parameter
+    timeTo?: string,
     update?: boolean
 ): Promise<IEbayOrder[]> {
-    const cacheKey = `salesData-${uid}`; // No need to include timeFrom/timeTo in cache key since we are filtering later
+    const cacheKey = `salesData-${uid}-${timeFrom}`; // Include timeFrom in cache key
     const cacheExpirationTime = 1000 * 60 * 5; // Cache expiration time (5 minutes)
 
     // Try to get the cached data first
     try {
         const cachedData = getCachedData(cacheKey, cacheExpirationTime);
-        if (cachedData.length > 0 && !update) {
-            return filterOrdersByTime(cachedData, timeFrom, timeTo); // Return filtered cached data
-        } else if (update || cachedData.length === 0) {
-            // If update is requested, update store info before fetching
+        if (cachedData && cachedData.length > 0 && !update) {
+            return filterOrdersByTime(cachedData, timeFrom, timeTo);
+        } else if (update || !cachedData || cachedData.length === 0) {
+            // If update is requested or cache is empty, update store info before fetching
             await updateStoreInfo("update-orders", ebayAccessToken, uid);
         }
     } catch (error) {
@@ -240,9 +240,11 @@ async function retrieveUserOrders(
 
     // Fetch from Firestore if no cache or update is required
     try {
-        const data = await retrieveUserOrdersFromDB(uid, timeFrom, timeTo); // Fetch sales data from Firestore
-        setCachedData(cacheKey, data, cacheExpirationTime); // Cache the fresh data
-        return filterOrdersByTime(data, timeFrom, timeTo); // Return filtered data
+        const data = await retrieveUserOrdersFromDB(uid, timeFrom, timeTo);
+
+        // Cache the fetched data using the updated cacheKey
+        setCachedData(cacheKey, data, cacheExpirationTime);
+        return filterOrdersByTime(data, timeFrom, timeTo);
     } catch (error) {
         console.error(`Error fetching orders for user with UID=${uid}:`, error);
         return [];

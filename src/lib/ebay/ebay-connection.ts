@@ -38,7 +38,7 @@ const handleConnectEbay = () => {
 	)}&redirect_uri=${encodeURIComponent(
 		REDIRECT_URI
 	)}&response_type=code&scope=${encodeURIComponent(SCOPES.join(" "))}&prompt=login`; // Forces login screen
-
+    console.log()
 	window.location.href = ebayAuthUrl;
 };
 

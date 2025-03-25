@@ -27,48 +27,83 @@ const CardListingsAmount = () => {
     const { manual: maxManual, automatic: maxAutomatic } = fetchSubscriptionMaxListings(userSubscription);
 
     return (
-        <Card title="Listings Remaining">
+        <Card title="Listings Remaining" className='max-h-[30rem]'>
+            {/* Automatic Listings */}
             <div>
                 <span>Automatic Listings</span>
-                <div className='grid grid-cols-12 items-center'>
-                    <div className="col-span-11 w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700 flex flex-row items-center">
-                        <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${((automaticListings * 100) / maxAutomatic).toFixed(0)}%` }}></div>
-                        <span className={`ml-1 ${(automaticListings === maxAutomatic) || (automaticListings === 0) ? 'hidden': 'block'}`}>{automaticListings}</span>
+                <div className="grid grid-cols-12 items-center mt-5">
+                    <div className="col-span-11">
+                        <ProgressBar value={automaticListings} maxValue={maxAutomatic} />
                     </div>
-                    <span className='col-span-1 ml-1'>{maxAutomatic}</span>
+                    <span className="col-span-1 ml-1">{maxAutomatic}</span>
                 </div>
             </div>
+
+            {/* Manual Listings */}
             <div>
                 <span>Manual Listings</span>
-                <div className='grid grid-cols-12 items-center'>
-                    <div className="col-span-11 w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700 flex flex-row items-center">
-                        <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${((manualListings * 100) / maxManual).toFixed(0)}%` }}></div>
-                        <span className={`ml-1 ${(manualListings === maxManual) || (manualListings === 0) ? 'hidden' : 'block'}`}>{manualListings}</span>
+                <div className="grid grid-cols-12 items-center mt-5">
+                    <div className="col-span-11">
+                        <ProgressBar value={manualListings} maxValue={maxManual} />
                     </div>
-                    <span className='col-span-1 ml-1'>{maxManual}</span>
+                    <span className="col-span-1 ml-1">{maxManual}</span>
                 </div>
             </div>
+
+            {/* Automatic Orders */}
             <div>
                 <span>Automatic Orders</span>
-                <div className='grid grid-cols-12 items-center'>
-                    <div className="col-span-11 w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700 flex flex-row items-center">
-                        <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${((automaticOrders * 100) / maxAutomatic).toFixed(0)}%` }}></div>
-                        <span className={`ml-1 ${(automaticOrders === maxAutomatic) || (automaticOrders === 0) ? 'hidden' : 'block'}`}>{automaticOrders}</span>
+                <div className="grid grid-cols-12 items-center mt-5">
+                    <div className="col-span-11">
+                        <ProgressBar value={automaticOrders} maxValue={maxAutomatic} />
                     </div>
-                    <span className='col-span-1 ml-1'>{maxAutomatic}</span>
+                    <span className="col-span-1 ml-1">{maxAutomatic}</span>
                 </div>
             </div>
+
+            {/* Manual Orders */}
             <div>
-                <span>Manual Orders</span>
-                <div className='grid grid-cols-12 items-center'>
-                    <div className="col-span-11 w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700 flex flex-row items-center">
-                        <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${((manualOrders * 100) / maxManual).toFixed(0)}%` }}></div>
-                        <span className={`ml-1 ${(manualOrders === maxManual) || (manualOrders === 0) ? 'hidden' : 'block'}`}>{manualOrders}</span>
+                <span className=''>Manual Orders</span>
+                <div className="grid grid-cols-12 items-center mt-5">
+                    <div className="col-span-11">
+                        <ProgressBar value={manualOrders} maxValue={maxManual} />
                     </div>
-                    <span className='col-span-1 ml-1'>{maxManual}</span>
+                    <span className="col-span-1 ml-1">{maxManual}</span>
                 </div>
             </div>
         </Card>
+    )
+}
+
+
+const ProgressBar = ({ value, maxValue }: { value: number, maxValue: number }) => {
+    const percentage = ((value * 100) / maxValue).toFixed(0)
+
+    return (
+        <div className="relative w-full">
+            {/* Value label */}
+            <div
+                className="absolute left-0 -top-[26px] py-0.5 px-1.5 bg-blue-50 border border-blue-200 text-xs font-medium text-blue-600 rounded-lg dark:bg-blue-800/30 dark:border-blue-800 dark:text-blue-500"
+                style={{ left: `calc(${percentage}% - 12px)` }} 
+            >
+                {value}
+            </div>
+
+            {/* Progress bar container */}
+            <div
+                className="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-neutral-700"
+                role="progressbar"
+                aria-valuenow={Number(percentage)}
+                aria-valuemin={0}
+                aria-valuemax={100}
+            >
+                {/* Progress bar fill */}
+                <div
+                    className="flex flex-col justify-center rounded-full overflow-hidden bg-blue-600 text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-blue-500"
+                    style={{ width: `${percentage}%` }}
+                ></div>
+            </div>
+        </div>
     )
 }
 

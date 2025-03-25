@@ -77,40 +77,48 @@ const CardPlatformPieChart: React.FC<CardPlatformPieChartProps> = ({ orders, loa
 
     return (
         <Card title="Platform Revenue">
-            {/* Chart Options */}
-            {loading ? (
-                <div>Loading...</div>
-            ) : (
-                <div className="flex overflow-x-auto scrollbar-hide" id="devices" ref={scrollRef}>
-                    {Array.from(
-                        new Set(
-                            orders
-                                .map(order => order.customTag)
-                                .filter(tag => tag !== null && tag !== undefined && tag !== "")
-                        )
-                    ).map(tag => (
-                        <div className="flex items-center me-4 h-6 ml-1" key={tag}>
-                            <input
-                                id={tag as string}
-                                type="checkbox"
-                                onChange={handleCheckboxChange}
-                                value={tag as string}
-                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 focus:ring-2"
-                            />
-                            <label htmlFor={tag as string} className="ms-2 text-sm font-medium text-gray-900">
-                                {tag}
-                            </label>
-                        </div>
-                    ))}
-                </div>
-            )}
+            <div className="h-[500px]">
+                {/* Chart Options */}
+                {loading ? (
+                    <div>Loading...</div>
+                ) : (
+                    <div className="flex overflow-x-auto scrollbar-hide mb-5" id="devices" ref={scrollRef}>
+                        {Array.from(
+                            new Set(
+                                orders
+                                    .map(order => order.customTag)
+                                    .filter(tag => tag !== null && tag !== undefined && tag !== "")
+                            )
+                        ).map(tag => (
+                            <div className="flex items-center me-4 h-6 ml-1" key={tag}>
+                                <input
+                                    id={tag as string}
+                                    type="checkbox"
+                                    onChange={handleCheckboxChange}
+                                    value={tag as string}
+                                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 focus:ring-2"
+                                />
+                                <label htmlFor={tag as string} className="ms-2 text-sm font-medium text-gray-900">
+                                    {tag}
+                                </label>
+                            </div>
+                        ))}
+                    </div>
+                )}
 
-            {/* Chart */}
-            {orders.length > 0 ? (
-                <div ref={chartRef} className="py-6" id="donut-chart"></div>
-            ) : (
-                null
-            )}
+                {/* Chart */}
+                {orders.length > 0 ? (
+                    <div ref={chartRef} className="py-6" id="donut-chart"></div>
+                ) : (
+                    null
+                )}
+
+                {orders.length === 0 && (
+                    <div className="text-center">
+                        No orders found in this range
+                    </div>
+                )}
+            </div>
         </Card>
     )
 }

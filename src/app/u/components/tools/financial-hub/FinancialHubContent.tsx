@@ -2,6 +2,7 @@
 
 // Local Imports
 import { IEbayOrder } from "@/models/store-data";
+import LoadingAnimation from "../../dom/ui/LoadingAnimation";
 import CardAvgTimeToSell from "./CardAvgTimeToSell";
 import CardAvgTimeToList from "./CardAvgTimeToList";
 import DateRangeSelector from "./DateRangeSelector";
@@ -10,22 +11,36 @@ import CardListingsAmount from "./CardListingsAndOrdersAmount";
 import { currencySymbols } from "@/config/currency-config";
 import CardPlatformPieChart from "./CardPlatformDonutChart";
 import { retrieveUserOrders } from "@/services/firebase/retrieve";
+import formatOrdersForCSVExport from "@/utils/format";
+import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 
 // External Imports
 import { useEffect, useState } from "react";
+import { HiOutlineDownload } from "react-icons/hi";
 import { useSession } from "next-auth/react";
-import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
-
+import { IoClose } from "react-icons/io5";
+import Link from "next/link";
+import Card from "./Card";
+import CardProfitsBarChart from "./CardProfitsBarChart";
 
 
 const FinancialHubContent = () => {
-    const [timeFrom, setTimeFrom] = useState(formatTimeFrom(30));
-    const [timeTo, setTimeTo] = useState<string | undefined>(undefined);
     const { data: session } = useSession();
     const [orders, setOrders] = useState<IEbayOrder[]>([]);
-    const [selectedTimeRange, setSelectedTimeRange] = useState("Last 30 days");
     const [loading, setLoading] = useState(false);
+    
+    // General Filters
+    const [selectedTimeRange, setSelectedTimeRange] = useState("Last 30 days");
+    const [timeFrom, setTimeFrom] = useState(formatTimeFrom(30));
+    const [timeTo, setTimeTo] = useState<string | undefined>(undefined);
+    
     const userCurrency = session?.user.preferences.currency || "USD";
+
+    // Export CSV Modal
+    const [exportModalOpen, setExportModalOpen] = useState(false);
+    const [exportTimeFrom, setExportTimeFrom] = useState<string | undefined>(undefined);
+    const [exportTimeTo, setExportTimeTo] = useState<string | undefined>(undefined);
+    const [error, setError] = useState<string | undefined>(undefined);
 
     // Using useEffect to initialize the chart only once when the component is mounted
     useEffect(() => {
@@ -37,7 +52,7 @@ const FinancialHubContent = () => {
             setLoading(true);
             const orders = await retrieveUserOrders(session.user.id, timeFrom, session.user.connectedAccounts.ebay.ebayAccessToken, timeTo);
             setOrders(orders);  // Set the orders to state
-            setLoading(false); 
+            setLoading(false);
         }
 
         if (timeFrom) {
@@ -174,34 +189,171 @@ const FinancialHubContent = () => {
         setTimeTo(formattedToDate);
     };
 
-    console.log(orders)
+    // Handle the date change for 'timeFrom'
+    const handleTimeFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setExportTimeFrom(e.target.value);
+    };
 
+    // Handle the date change for 'timeTo'
+    const handleTimeToChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setExportTimeTo(e.target.value);
+    };
+
+
+    function handleExportCSV() {
+        setError(undefined);
+        // Get the CSV string from formatOrdersForCSVExport
+        const csvContent = formatOrdersForCSVExport(orders, exportTimeFrom ?? "", exportTimeTo ?? "");
+        if (!csvContent) {
+            setError("No orders found in the selected time range");
+            return;
+        }
+
+        // Create a Blob from the CSV content
+        const blob = new Blob([csvContent], { type: "text/csv" });
+        const url = window.URL.createObjectURL(blob);
+
+        // Create a temporary link element to trigger download
+        const link = document.createElement("a");
+        link.href = url;
+
+        // Set download file name with a timestamp
+        const fileName = `orders-${new Date().toISOString().split("T")[0]}.csv`;
+        link.setAttribute("download", fileName);
+
+        // Append link to body and trigger download
+        document.body.appendChild(link);
+        link.click();
+
+        // Clean up
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+    }
+
+    const handleCloseModal = () => {
+        setExportModalOpen(false);
+    };
+
+    console.log(orders)
 
     return (
         <LayoutSubscriptionWrapper anySubscriptions={["admin", "member"]}>
-            <div className="w-full flex flex-col">
-                <div className="w-full p-2 bg-white border-t flex items-center">
-                    <div>
-                        <DateRangeSelector value={selectedTimeRange} onChange={handleTimeRangeChange} />
-                    </div>
-                </div>
-                <div className="grid grid-cols-12 gap-4 p-2 sm:p-4">
-                    <div className="col-span-12 sm:col-span-6 lg:col-span-4">
-                        <CardListingsAmount />
-                    </div>
-                    <div className="col-span-12 sm:col-span-6 lg:col-span-4">
-                        <CardPlatformPieChart orders={orders} loading={loading} currencySymbol={currencySymbols[userCurrency]}/>
-                    </div>
-                    <div className="col-span-12 sm:col-span-6 lg:col-span-4 grid grid-rows-12 grid-cols-12 gap-4">
-                        <div className="col-span-12 md:col-span-6">
-                            <CardAvgTimeToSell orders={orders} />
-                        </div>
-                        <div className="col-span-12 md:col-span-6">
-                            <CardAvgTimeToList orders={orders} />
+            {session?.user.connectedAccounts.ebay ? (
+                <div className="relative w-full flex flex-col">
+                    <div className="w-full py-2 px-4 bg-white border-t flex items-center">
+                        <div className="w-full flex items-center justify-end gap-2">
+                            <div>
+                                <DateRangeSelector value={selectedTimeRange} onChange={handleTimeRangeChange} />
+                            </div>
+                            <button
+                                onClick={() => setExportModalOpen(true)}
+                                className="flex items-center justify-center text-black p-2 bg-gray-200 rounded-lg transition-colors duration-300 hover:bg-gray-300"
+                            >
+                                <HiOutlineDownload className="h-4 w-4" />
+                                <span className="ml-1 text-sm">Export</span>
+                            </button>
                         </div>
                     </div>
+
+                    {/* Export Modal */}
+                    {exportModalOpen && (
+                        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-40">
+                            <div className="relative bg-white p-6 rounded-lg shadow-lg w-80 sm:w-96">
+                                {/* Close Button (Cross Icon) */}
+                                <button
+                                    className="absolute -top-5 -right-5 text-white rounded-full bg-[#3c424b] p-2 shadow-gray-700 shadow-[rgba(0,0,0,0.2)_-2px_2px_8px] z-50"
+                                    onClick={handleCloseModal}
+                                >
+                                    <IoClose size={24} />
+                                </button>
+
+                                <div className="text-center">
+                                    <h2 className="text-lg font-semibold mb-4">Export Data</h2>
+                                    <p>You&apos;re about to export a CSV file containing your orders</p>
+                                    {/* Date Selectors */}
+                                    <div className="mt-4">
+                                        <div className="flex flex-col gap-2">
+                                            <div className="flex gap-2">
+                                                <div className="flex-1">
+                                                    <label htmlFor="timeFrom" className="block text-sm font-medium text-gray-700">Time From</label>
+                                                    <input
+                                                        type="date"
+                                                        id="timeFrom"
+                                                        value={timeFrom}
+                                                        onChange={handleTimeFromChange}
+                                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                    />
+                                                </div>
+                                                <div className="flex-1">
+                                                    <label htmlFor="timeTo" className="block text-sm font-medium text-gray-700">Time To</label>
+                                                    <input
+                                                        type="date"
+                                                        id="timeTo"
+                                                        value={timeTo}
+                                                        onChange={handleTimeToChange}
+                                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {error ? (
+                                        <p className="text-sm mt-6">{error}</p>
+                                    ) : (
+                                        null
+                                    )}
+                                    <div className="flex justify-center gap-4 mt-6">
+                                        <button
+                                            onClick={handleExportCSV}
+                                            className="flex items-center py-2 px-4 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition duraction-200"
+                                        >
+                                            <HiOutlineDownload className="h-4 w-4" />
+                                            <span className="ml-1 text-sm">Export CSV</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="grid grid-cols-12 gap-4 p-2 sm:p-4">
+                        <div className="col-span-12 lg:col-span-6">
+                            <div className="bg-white rounded-lg shadow-small p-4">test</div>
+                        </div>
+                        <div className="col-span-12 lg:col-span-6">
+                            <div className="bg-white rounded-lg shadow-small p-4">test</div>
+                        </div>
+                        <div className="col-span-12 sm:col-span-6 lg:col-span-4">
+                            <CardProfitsBarChart orders={orders} loading={loading} currencySymbol={currencySymbols[userCurrency]} />
+                        </div>
+                        <div className="col-span-12 sm:col-span-6 lg:col-span-4">
+                            <CardPlatformPieChart orders={orders} loading={loading} currencySymbol={currencySymbols[userCurrency]} />
+                        </div>
+                        <div className="col-span-12 sm:col-span-6 lg:col-span-4">
+                            <CardListingsAmount />
+                        </div>
+                        <div className="col-span-12 sm:col-span-6 lg:col-span-4 grid grid-rows-12 grid-cols-12 gap-4">
+                            <div className="col-span-12 md:col-span-6">
+                                <CardAvgTimeToSell orders={orders} />
+                            </div>
+                            <div className="col-span-12 md:col-span-6">
+                                <CardAvgTimeToList orders={orders} />
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            ) : (
+                <div className="relative flex flex-col w-full min-h-full">
+                    <div className="flex justify-center items-center flex-grow flex-col">
+                        <h1 className="text-lg font-semibold text-center mb-24">No account connected</h1>
+                        <LoadingAnimation text="Go to your profile to connect your eBay account" type="stack-loader" />
+                        <div className="w-full flex justify-center items-center mt-5">
+                            <Link href={`/u/${session?.user.username}/profile`} className="w-full text-center text-blue-600 hover:text-blue-700 hover:underline transition-all duration-200">Go to profile</Link>
+                        </div>
+                    </div >
+                </div>
+            )}
+
         </LayoutSubscriptionWrapper>
     );
 };

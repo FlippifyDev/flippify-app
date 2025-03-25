@@ -3,13 +3,15 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { auth } from "@/lib/firebase/config";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth, firestore } from "@/lib/firebase/config";
+import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword as firebaseSignIn } from "firebase/auth";
 import Layout from "../components/layout/Layout";
 import ThemeSetter from "@/app/components/ThemeSetter";
 import Loading from "@/app/components/Loading";
 import { Suspense } from "react";
 import Image from "next/image";
+import { doc, getDoc } from "firebase/firestore";
+import { IUser } from "@/models/user";
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -31,33 +33,15 @@ const Login = () => {
             if (result?.error) {
                 setErrorMessage("Invalid email or password");
             } else {
-                router.push("/auth/redirect");
+                await firebaseSignIn(auth, email, password);
+                const userRef = doc(firestore, "users", auth.currentUser?.uid ?? "");
+                const userDoc = await getDoc(userRef);
+                const userData = userDoc.data() as IUser;
+                router.push(`/u/${userData.username}/dashboard`);
             }
         } catch (e) {
             console.error("Login error:", e);
             setErrorMessage("Login failed. Please try again.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleGoogleSignIn = async () => {
-        try {
-            setLoading(true);
-            const result = await signInWithPopup(auth, googleProvider);
-            const idToken = await result.user.getIdToken();
-            const signInResult = await signIn("credentials", {
-                idToken,
-                redirect: false,
-            });
-            if (signInResult?.error) {
-                setErrorMessage("Authentication failed. Please try again.");
-            } else {
-                router.push("/auth/redirect");
-            }
-        } catch (error) {
-            console.error("Google sign-in error:", error);
-            setErrorMessage("Google sign-in failed. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -95,30 +79,6 @@ const Login = () => {
                             <p className="text-center text-gray-500 mb-6">
                                 Please enter your details to sign in.
                             </p>
-
-                            {/* Social Login Buttons */}
-                            <div className="flex justify-center mb-6">
-                                <button
-                                    className="border rounded-lg w-full py-[10px] flex justify-center items-center gap-2 hover:bg-gray-50"
-                                    onClick={handleGoogleSignIn}
-                                >
-                                    <Image
-                                        src="/GoogleLogo.png"
-                                        alt="Google Logo"
-                                        className="w-6 h-6"
-                                        width={200}
-                                        height={200}
-                                    />
-                                    <span className="font-medium">Sign in with Google</span>
-                                </button>
-                            </div>
-
-                            {/* OR Divider */}
-                            <div className="flex items-center my-4">
-                                <hr className="flex-grow border-gray-300" />
-                                <span className="mx-2 text-gray-400">OR</span>
-                                <hr className="flex-grow border-gray-300" />
-                            </div>
 
                             {/* Email/Password Form */}
                             <form onSubmit={handleSubmit} className="space-y-4">

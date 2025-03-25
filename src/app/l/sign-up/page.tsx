@@ -12,6 +12,7 @@ import Layout from "../components/layout/Layout";
 import ThemeSetter from "@/app/components/ThemeSetter";
 import Loading from "@/app/components/Loading";
 import Image from "next/image";
+import { formatDateToISO } from "@/utils/format-dates";
 
 // Create provider instances for social sign-up
 const googleProvider = new GoogleAuthProvider();
@@ -57,17 +58,10 @@ const SignUp = () => {
                     console.error("Error during sign-in:", result.error);
                     return;
                 }
-                // Update user document with username and subscription info
                 await updateDoc(doc(firestore, "users", auth.currentUser.uid), {
                     username: usernameRef.current,
-                    subscriptions: [
-                        {
-                            name: "accessGranted",
-                            id: "0",
-                            override: true,
-                            createdAt: new Date().toISOString(),
-                        },
-                    ],
+                    "authentication.onboarding": true,
+                    subscriptions: [{ name: "accessGranted", id: "0", override: true, createdAt: formatDateToISO(new Date()) }]
                 });
                 clearInterval(checkVerificationInterval);
                 router.push(`/u/${usernameRef.current}/dashboard`);
@@ -95,32 +89,6 @@ const SignUp = () => {
     };
 
 
-    const handleGoogleSignUp = async () => {
-        try {
-            setLoading(true);
-            setErrorMessage("");
-            const result = await signInWithPopup(auth, googleProvider);
-            const user = result.user;
-            const userRef = doc(firestore, "users", user.uid);
-            const userDoc = await getDoc(userRef);
-            if (userDoc.exists()) {
-                const userData = userDoc.data();
-                // Check if username is set and not empty
-                if (!userData.username || userData.username.trim() === "") {
-                    router.push("/u/account-setup");
-                } else {
-                    router.push(`/u/${userData.username}/dashboard`);
-                }
-            } else {
-                router.push("/u/account-setup");
-            }
-        } catch (e: any) {
-            console.error("Google sign-up error:", e);
-            setErrorMessage("Google sign-up failed. Please try again.");
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -147,7 +115,6 @@ const SignUp = () => {
                                 handleSubmit={handleSubmit}
                                 router={router}
                                 loading={loading}
-                                handleGoogleSignUp={handleGoogleSignUp}
                                 errorMessage={errorMessage}
                             />
                         ) : emailVerified ? (
@@ -191,7 +158,6 @@ interface SignUpFormProps {
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     router: any;
     loading: boolean;
-    handleGoogleSignUp: () => void;
     errorMessage: string;
 }
 
@@ -206,40 +172,24 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
     handleSubmit,
     router,
     loading,
-    handleGoogleSignUp,
     errorMessage,
 }) => {
     return (
         <div className="bg-white rounded-3xl shadow-lg w-full max-w-md p-8">
             {/* Logo */}
             <div className="flex justify-center mb-6">
-                <Image src="/FlippifyLogoLongBlack.png" alt="Logo" className="w-1/3 h-1/3" />
+                <Image
+                    src="/FlippifyLogoLongBlack.png"
+                    alt="Logo"
+                    className="w-1/3 h-1/3"
+                    width={200}
+                    height={200}
+                />
             </div>
             {/* Title & Subtitle */}
             <h1 className="text-2xl font-semibold text-center mb-2">Create your account</h1>
             <p className="text-center text-gray-500 mb-6">Sign up to get started.</p>
-            {/* Social Login Buttons */}
-            <div className="flex justify-center mb-6">
-                <button
-                    className="border rounded-lg w-full py-[10px] flex justify-center items-center gap-2 hover:bg-gray-50"
-                    onClick={handleGoogleSignUp}
-                >
-                    <Image
-                        src="/GoogleLogo.png"
-                        alt="Google Logo"
-                        className="w-6 h-6"
-                        width={200}
-                        height={200}
-                    />
-                    <span className="font-medium">Sign in with Google</span>
-                </button>
-            </div>
-            {/* OR Divider */}
-            <div className="flex items-center my-4">
-                <hr className="flex-grow border-gray-300" />
-                <span className="mx-2 text-gray-400">OR</span>
-                <hr className="flex-grow border-gray-300" />
-            </div>
+
             {/* Wrap Input Fields in a Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
                 <input

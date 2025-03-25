@@ -4,7 +4,8 @@ import { updateReferreeUser } from "./update-admin";
 import { retrieveUserRefById } from "./retrieve";
 
 // External Imports
-import { getDoc, setDoc } from "firebase/firestore";
+import { deleteField, getDoc, setDoc } from "firebase/firestore";
+import { formatDateToISO } from "@/utils/format-dates";
 
 
 
@@ -56,6 +57,7 @@ async function updateUser(uid: string, data: any): Promise<boolean> {
 async function updateUserPreferences(uid: string, preferredEmail: string, currency: string) {
     try {
         const userRef = await retrieveUserRefById(uid);
+        console.log("User ref:", userRef);
         if (userRef) {
             await setDoc(
                 userRef,
@@ -102,9 +104,19 @@ async function completeOnboarding(uid: string, referralCode: string | null): Pro
             const subscriptionExists = existingSubscriptions.some(sub => sub.name === "accessGranted");
 
             if (!subscriptionExists) {
-                existingSubscriptions.push({ name: "accessGranted", id: "0", override: true, createdAt: new Date().toString() });
+                existingSubscriptions.push({ name: "accessGranted", id: "0", override: true, createdAt: formatDateToISO(new Date()) });
                 await setDoc(userRef, { subscriptions: existingSubscriptions }, { merge: true });
             }
+
+            await setDoc(
+                userRef,
+                {
+                    authentication: {
+                        onboarding: deleteField()
+                    }
+                },
+                { merge: true }
+            );
         }
 
         // 🔄 Fetch and return the updated user document

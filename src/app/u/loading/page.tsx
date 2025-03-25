@@ -1,11 +1,8 @@
 "use client";
 
 // Local Imports
-import Layout from "../components/layout/Layout";
-import ThemeSetter from "@/app/components/ThemeSetter";
-import SignOutButton from "../../components/SignOutButton";
-import LayoutLoadingSkeleton from "../components/layout/LayoutLoadingSkeleton";
-import LayoutProductsSkeleton from "../components/layout/LayoutProductsSkeleton";
+import { SignOutLink } from "../../components/SignOutButton";
+import LoadingAnimation from "../components/dom/ui/LoadingAnimation";
 
 // External Imports
 import { useSession } from "next-auth/react";
@@ -18,9 +15,14 @@ export default function LoadingPage() {
         router.push(`/u/${session.user.username}/dashboard`);
     }
 
-	return (
-        <div>
-            <SignOutButton />
+    return (
+        <div className="w-full h-screen bg flex flex-col justify-center items-center">
+            <div className="">
+                <LoadingAnimation text="" type="stack-loader" />
+            </div>
+            <div className="mt-4">
+                <SignOutLink />
+            </div>
         </div>
-	);
+    );
 }

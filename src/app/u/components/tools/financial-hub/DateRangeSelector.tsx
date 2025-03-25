@@ -80,7 +80,7 @@ export default function DateRangeSelector({ value, onChange }: DateRangeSelector
                 id="dropdownTimeRangeButton"
                 data-dropdown-toggle="dropdownTimeRange"
                 data-dropdown-delay="500"
-                className="w-full py-2 px-4 rounded-lg bg-gray-50 border border-gray-500 text-sm flex items-center gap-2"
+                className="w-full py-2 px-4 rounded-lg bg-gray-200 text-sm flex items-center gap-2"
                 aria-haspopup="listbox"
                 aria-expanded={isOpen}
                 onClick={() => setIsOpen((prev) => !prev)}

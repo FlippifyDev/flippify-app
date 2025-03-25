@@ -70,6 +70,7 @@ const Layout: React.FC<LayoutProps> = ({ children, requiredSubscriptions, anySub
      */
     if (requiredSubscriptions) {
         if (requiredSubscriptions[0] === "") {
+            // This means that the user should have access to the main page but should be restricted from the no access page
             notRequiredSubscriptions = ["no access"];
         } else {
             if (requiredSubscriptions.length >= 2) {

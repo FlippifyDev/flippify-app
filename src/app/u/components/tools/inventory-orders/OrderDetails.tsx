@@ -127,8 +127,8 @@ const OrderDetails = () => {
             }
 
             // Calculate time to sell (in days) if both purchaseDate and saleDate exist
-            if (purchaseDate && sale.date) {
-                const purchaseDateObj = new Date(purchaseDate);
+            if (purchase.date && sale.date) {
+                const purchaseDateObj = new Date(purchase.date);
                 const saleDateObj = new Date(sale.date);
                 const timeToSell = (saleDateObj.getTime() - purchaseDateObj.getTime()) / (1000 * 3600 * 24); // Difference in days
 
@@ -324,7 +324,7 @@ const OrderDetails = () => {
                         {orders.map((order, index) => {
                             const { orderId, sale, purchase, shipping, additionalFees } = order;
                             const profit = (sale.price + shipping.fees) - (purchase.price || 0) - shipping.fees - additionalFees;
-                            const roi = purchasePrice && purchase.price > 0 ? ((profit / purchase.price) * 100).toFixed(2) : "0";
+                            const roi = purchase.price && purchase.price > 0 ? ((profit / purchase.price) * 100).toFixed(2) : "0";
                             return (
                                 <tr key={index} className="cursor-pointer hover:bg-gray-100">
                                     <td>
@@ -344,7 +344,7 @@ const OrderDetails = () => {
                                     <td>{sale.quantity}</td>
                                     <td>{currencySymbols[currency]}{additionalFees.toFixed(2)}</td>
                                     <td>{currencySymbols[currency]}{shipping.fees.toFixed(2)}</td>
-                                    <td>{currencySymbols[currency]}{!purchasePrice ? "N/A" : purchasePrice}</td>
+                                    <td>{currencySymbols[currency]}{!purchase.price ? "N/A" : purchase.price}</td>
                                     <td>{currencySymbols[currency]}{(sale.price + shipping.fees).toFixed(2)}</td>
                                     <td>{currencySymbols[currency]}{profit.toFixed(2)}</td>
                                     <td>{roi}%</td>

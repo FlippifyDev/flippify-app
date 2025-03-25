@@ -1,5 +1,4 @@
 import { IUser } from "./user";
-
 import { JWT } from "next-auth/jwt";
 
 interface IJwtToken extends JWT {

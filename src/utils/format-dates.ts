@@ -64,3 +64,19 @@ export const formatTimeFrom = (daysAgo: number): string => {
     date.setDate(date.getDate() - daysAgo);
     return date.toISOString().split("T")[0]; // Format as YYYY-MM-DD
 };
+
+/**
+ * Helper function to format dates to the required ISO 8601 format (e.g., 2024-11-01T17:12:26.000Z).
+ * @param date - The Date object to format.
+ * @returns A string formatted in ISO 8601 format with milliseconds.
+ */
+export function formatDateToISO(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.000Z`;
+}

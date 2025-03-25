@@ -1,7 +1,6 @@
-import React from 'react';
 import Layout from '../../components/layout/Layout';
+import PlansPage from '../../components/home/plans/PlansPage';
 import ThemeSetter from '@/app/components/ThemeSetter';
-import PlansPageContent from '../../components/home/plans/PlansPage';
 
 export const metadata = {
 	title: 'User Plans - Flippify',
@@ -13,7 +12,7 @@ export default function Plans() {
 		<>
 			<ThemeSetter theme="light" />
 			<Layout requiredSubscriptions={['accessGranted']}>
-				<PlansPageContent />
+                <PlansPage />
 			</Layout>
 		</>
 	);

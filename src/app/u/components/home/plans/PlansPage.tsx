@@ -3,7 +3,7 @@
 // Local Imports
 import PlansCard from "./PlansCard";
 import PlansCardProWhatsIncluded from "./PlansCardProWhatsIncluded";
-import PlansCardEliteWhatsIncluded from "./PlansCardEliteWhatsIncluded";
+import PlansCardFreeWhatsIncluded from "./PlansCardFreeWhatsIncluded";
 import PlansCardStandardWhatsIncluded from "./PlansCardStandardWhatsIncluded";
 
 // External Imports
@@ -18,7 +18,7 @@ const PlansPage = () => {
 	const { data: session } = useSession();
 	const currency = session?.user.preferences.currency as string;
 	const [selectedPlan, setSelectedPlan] = useState<number>(0);
-	const conversionRates = { GBP: 1, USD: 1.33, EUR: 1.19, AUD: 1.95, CAD: 1.8 };
+    const conversionRates = { GBP: 0.75, USD: 1, EUR: 0.89, AUD: 1.46, CAD: 1.35 };
 
 	const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setSelectedPlan(event.target.checked ? 1 : 0);
@@ -66,46 +66,45 @@ const PlansPage = () => {
 
 			{/* Subscription Cards */}
 			<div className="mt-10 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-8 w-full max-w-screen-xl mx-auto px-4 pb-2 sm:pb-4">
-				<PlansCard
+                <PlansCard
+                    title="Free"
+                    description="For beginners"
+                    prices={{ monthly: 0.00, yearly: 0.00 }}
+                    discountedPrices={{ monthly: 0.00, yearly: 0.00 }}
+                    priceIds={{
+                        monthly: "price_1R6XP9JJRepiHZ8dzkbyxDcp",
+                        yearly: "price_1R6XSpJJRepiHZ8dgGcDcL0L",
+                    }}
+                    whatsIncludedComponent={<PlansCardFreeWhatsIncluded />}
+                    priceRange={selectedPlan}
+                    currency={currency}  
+                    conversionRates={conversionRates} 
+                />
+                <PlansCard
 					title="Standard"
-					description="For beginners"
-					prices={{ monthly: 24.99, yearly: 249.99 }}
-					discountedPrices={{ monthly: 19.99, yearly: 199.99 }}
+					description="For intermediate resellers"
+					prices={{ monthly: 9.99, yearly: 99.90 }}
+					discountedPrices={{ monthly: 4.99, yearly: 49.90 }}
 					priceIds={{
-						monthly: "price_1PxRRCJJRepiHZ8dXF4MyyCO",
-						yearly: "price_1PxRRMJJRepiHZ8duiGgCQI8",
+                        monthly: "price_1R6XQMJJRepiHZ8d5Dpu85mA",
+                        yearly: "price_1R6XSPJJRepiHZ8d9I1fNhRo",
 					}}
 					whatsIncludedComponent={<PlansCardStandardWhatsIncluded />}
 					priceRange={selectedPlan}
-					currency={currency}  // Passing the currency prop
-					conversionRates={conversionRates} // Passing the conversionRates prop
+					currency={currency}  
+					conversionRates={conversionRates} 
 					specialPlan={true}
 				/>
 				<PlansCard
 					title="Pro"
 					description="For growing resellers"
-					prices={{ monthly: 49.99, yearly: 499.99 }}
-					discountedPrices={{ monthly: 29.99, yearly: 299.99 }}
+					prices={{ monthly: 14.99, yearly: 149.90 }}
+					discountedPrices={{ monthly: 9.99, yearly: 99.9 }}
 					priceIds={{
-						monthly: "price_1Px4KUJJRepiHZ8d1wnDMoUZ",
-						yearly: "price_1PxRQIJJRepiHZ8dGuGOAkE3",
+                        monthly: "price_1R6XQqJJRepiHZ8ddt9RMSoS",
+                        yearly: "price_1R6XRnJJRepiHZ8d42LxIC9l",
 					}}
 					whatsIncludedComponent={<PlansCardProWhatsIncluded />}
-					priceRange={selectedPlan}
-					currency={currency}
-					conversionRates={conversionRates}
-					comingSoon={true}
-				/>
-				<PlansCard
-					title="Elite"
-					description="For experts"
-					prices={{ monthly: 79.99, yearly: 799.99 }}
-					discountedPrices={{ monthly: 49.99, yearly: 499.99 }}
-					priceIds={{
-						monthly: "price_1Px4LdJJRepiHZ8dqBON3u0T",
-						yearly: "price_1PxRPnJJRepiHZ8dk2i4Yjql",
-					}}
-					whatsIncludedComponent={<PlansCardEliteWhatsIncluded />}
 					priceRange={selectedPlan}
 					currency={currency}
 					conversionRates={conversionRates}

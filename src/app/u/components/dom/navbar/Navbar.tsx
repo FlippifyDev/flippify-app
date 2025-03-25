@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import NavbarProfileAvatar from "./NavbarProfileAvatar";
 import { useSession } from "next-auth/react";
 import { getProcessedTitle } from "@/utils/extract-final-url-name";
-
+import NavbarAddListing from "./NavbarAddListing";
 
 const Navbar = () => {
 	const { data: session } = useSession();
@@ -22,9 +22,14 @@ const Navbar = () => {
 			<div className="w-full pl-4 sm:pl-12 font-semibold text-lg">
 				{title}
 			</div>
-			<div className="w-full flex justify-end pr-2">
-				<NavbarProfileAvatar />
-			</div>
+            <div className="w-full flex justify-end pr-2 items-center">
+                <div className="flex justify-end pr-2">
+                    <NavbarAddListing />
+                </div>
+                <div className="flex justify-end pr-2">
+                    <NavbarProfileAvatar />
+                </div>
+            </div>
 		</div>
 	);
 };

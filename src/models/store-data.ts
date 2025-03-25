@@ -1,5 +1,5 @@
 export type RecordType = "automatic" | "manual";
-export type OrderStatus = "Active" | "Completed" | "Cencelled" | "Inactive" | "Shipped" | "InProcess" | "Invalid";
+export type OrderStatus = "Active" | "Completed" | "Cancelled" | "Inactive" | "Shipped" | "InProcess" | "Invalid";
 
 interface IEbayInventoryItem {
     initialQuantity: number;

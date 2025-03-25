@@ -63,7 +63,7 @@ const InventoryOrdersContent = () => {
     return (
         <LayoutSubscriptionWrapper anySubscriptions={["admin", "member"]}>
             {session?.user.connectedAccounts.ebay ? (
-                <main className="bg-white rounded-xl h-full">
+                <main className="bg-white rounded-xl">
                     {/* Dropdown for Tab Selection */}
                     <div ref={dropdownRef} className="relative inline-block text-left px-2 py-4">
                         <div>
@@ -110,7 +110,7 @@ const InventoryOrdersContent = () => {
                     </div>
 
                     {/* Conditional Content Rendering with Fade Transition */}
-                    <div className={`transition-opacity duration-300 overflow-y-auto rounded-b-xl ${fadeIn ? 'opacity-100' : 'opacity-0'}`}>
+                    <div className={`transition-opacity duration-300 rounded-b-xl ${fadeIn ? 'opacity-100' : 'opacity-0'}`}>
                         {activeTab === "inventory" ? <InventoryContent /> : <OrdersContent />}
                     </div>
                 </main>

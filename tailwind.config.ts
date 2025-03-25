@@ -11,7 +11,8 @@ const config: Config = {
 		'./components/**/*.{ts,tsx,js,jsx,mdx}',
 		'./app/**/*.{ts,tsx,js,jsx,mdx}',
 		'./src/**/*.{ts,tsx,js,jsx,mdx}',
-	],
+    ],
+    safelist: [],
 	prefix: "",
 	theme: {
 		container: {

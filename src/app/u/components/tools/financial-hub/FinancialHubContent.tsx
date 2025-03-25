@@ -3,11 +3,12 @@
 // Local Imports
 import { IEbayOrder } from "@/models/store-data";
 import LoadingAnimation from "../../dom/ui/LoadingAnimation";
-import CardAvgTimeToSell from "./CardAvgTimeToSell";
-import CardAvgTimeToList from "./CardAvgTimeToList";
+import CardSaleAverages from "./CardSaleAverages";
+import CardCostAverages from "./CardCostAverages";
 import DateRangeSelector from "./DateRangeSelector";
 import { formatTimeFrom } from "@/utils/format-dates";
 import CardListingsAmount from "./CardListingsAndOrdersAmount";
+import CardProfitsBarChart from "./CardProfitsBarChart";
 import { currencySymbols } from "@/config/currency-config";
 import CardPlatformPieChart from "./CardPlatformDonutChart";
 import { retrieveUserOrders } from "@/services/firebase/retrieve";
@@ -20,8 +21,9 @@ import { HiOutlineDownload } from "react-icons/hi";
 import { useSession } from "next-auth/react";
 import { IoClose } from "react-icons/io5";
 import Link from "next/link";
-import Card from "./Card";
-import CardProfitsBarChart from "./CardProfitsBarChart";
+import CardShippingInfo from "./CardShippingInfo";
+
+
 
 
 const FinancialHubContent = () => {
@@ -185,6 +187,8 @@ const FinancialHubContent = () => {
         const formattedToDate = timeToDate.toISOString().split("T")[0];
 
         // Set new timeFrom and timeTo
+        setExportTimeFrom(timeFromDate.toLocaleDateString('en-CA'));
+        setExportTimeTo(timeToDate.toLocaleDateString('en-CA'));
         setTimeFrom(formattedFromDate);
         setTimeTo(formattedToDate);
     };
@@ -234,7 +238,6 @@ const FinancialHubContent = () => {
         setExportModalOpen(false);
     };
 
-    console.log(orders)
 
     return (
         <LayoutSubscriptionWrapper anySubscriptions={["admin", "member"]}>
@@ -317,12 +320,7 @@ const FinancialHubContent = () => {
                     )}
 
                     <div className="grid grid-cols-12 gap-4 p-2 sm:p-4">
-                        <div className="col-span-12 lg:col-span-6">
-                            <div className="bg-white rounded-lg shadow-small p-4">test</div>
-                        </div>
-                        <div className="col-span-12 lg:col-span-6">
-                            <div className="bg-white rounded-lg shadow-small p-4">test</div>
-                        </div>
+                        <CardSaleAverages orders={orders} loading={loading} currencySymbol={currencySymbols[userCurrency]} />
                         <div className="col-span-12 sm:col-span-6 lg:col-span-4">
                             <CardProfitsBarChart orders={orders} loading={loading} currencySymbol={currencySymbols[userCurrency]} />
                         </div>
@@ -332,14 +330,8 @@ const FinancialHubContent = () => {
                         <div className="col-span-12 sm:col-span-6 lg:col-span-4">
                             <CardListingsAmount />
                         </div>
-                        <div className="col-span-12 sm:col-span-6 lg:col-span-4 grid grid-rows-12 grid-cols-12 gap-4">
-                            <div className="col-span-12 md:col-span-6">
-                                <CardAvgTimeToSell orders={orders} />
-                            </div>
-                            <div className="col-span-12 md:col-span-6">
-                                <CardAvgTimeToList orders={orders} />
-                            </div>
-                        </div>
+                        <CardCostAverages orders={orders} loading={loading} currencySymbol={currencySymbols[userCurrency]} />
+                        <CardShippingInfo orders={orders} loading={loading} currencySymbol={currencySymbols[userCurrency]} />
                     </div>
                 </div>
             ) : (

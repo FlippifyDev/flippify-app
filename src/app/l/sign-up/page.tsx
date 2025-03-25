@@ -11,7 +11,7 @@ import { Suspense } from "react";
 import Layout from "../components/layout/Layout";
 import ThemeSetter from "@/app/components/ThemeSetter";
 import Loading from "@/app/components/Loading";
-import { retrieveAuthenticatedUserCount } from "@/services/firebase/retrieve-admin";
+import Image from "next/image";
 
 // Create provider instances for social sign-up
 const googleProvider = new GoogleAuthProvider();
@@ -26,7 +26,6 @@ const SignUp = () => {
     const [emailVerified, setEmailVerified] = useState(false);
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const [userCount, setUserCount] = useState(0);
 
     const router = useRouter();
 
@@ -40,19 +39,6 @@ const SignUp = () => {
             router.push(`/u/${session.user.username}/dashboard`);
         }
     }, [session, router]);
-
-    useEffect(() => {
-        const fetchUserCount = async () => {
-            try {
-                const userCount = await retrieveAuthenticatedUserCount();
-                setUserCount(userCount);
-                console.log("Authenticated user count:", userCount);
-            } catch (e: any) {
-                console.error("Error fetching user count:", e);
-            }
-        };
-        fetchUserCount();
-    }, []);
 
     // Poll for email verification (for email/password sign‑up)
     useEffect(() => {
@@ -163,7 +149,6 @@ const SignUp = () => {
                                 loading={loading}
                                 handleGoogleSignUp={handleGoogleSignUp}
                                 errorMessage={errorMessage}
-                                userCount={userCount}
                             />
                         ) : emailVerified ? (
                             <EmailVerified />
@@ -208,7 +193,6 @@ interface SignUpFormProps {
     loading: boolean;
     handleGoogleSignUp: () => void;
     errorMessage: string;
-    userCount: number;
 }
 
 const SignUpForm: React.FC<SignUpFormProps> = ({
@@ -224,24 +208,13 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
     loading,
     handleGoogleSignUp,
     errorMessage,
-    userCount
 }) => {
     const maxUserCount = 100;
     return (
         <div className="bg-white rounded-3xl shadow-lg w-full max-w-md p-8">
             {/* Logo */}
             <div className="flex justify-center mb-6">
-                <img src="/FlippifyLogoLongBlack.png" alt="Logo" className="w-1/3 h-1/3" />
-            </div>
-            <div className="flex flex-col mb-1">
-                <span className="w-full text-center">{userCount === maxUserCount ? "All spots have been taken!": "Spots remaining"}</span>
-                <div className='grid grid-cols-12 items-center'>
-                    <div className="col-span-11 w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700 flex flex-row items-center">
-                        <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${((userCount * 100) / maxUserCount).toFixed(0)}%` }}></div>
-                        <span className={`ml-1 ${(userCount === maxUserCount) || (userCount === 0) ? 'hidden' : 'block'}`}>{userCount}</span>
-                    </div>
-                    <span className='col-span-1 ml-1'>{maxUserCount}</span>
-                </div>
+                <Image src="/FlippifyLogoLongBlack.png" alt="Logo" className="w-1/3 h-1/3" />
             </div>
             {/* Title & Subtitle */}
             <h1 className="text-2xl font-semibold text-center mb-2">Create your account</h1>
@@ -252,7 +225,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                     className="border rounded-lg w-full py-[10px] flex justify-center items-center gap-2 hover:bg-gray-50"
                     onClick={handleGoogleSignUp}
                 >
-                    <img
+                    <Image
                         src="/GoogleLogo.png"
                         alt="Google Logo"
                         className="w-6 h-6"
@@ -295,7 +268,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
 
                 <button
                     type="submit"
-                    className={`${userCount === maxUserCount ? 'disabled cursor-not-allowed': ''} w-full mt-4 p-3 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 rounded-lg shadow-lg`}
+                    className="w-full mt-4 p-3 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 rounded-lg shadow-lg"
                 >
                     {loading ? "Processing..." : "Sign Up"}
                 </button>

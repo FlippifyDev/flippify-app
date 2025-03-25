@@ -12,7 +12,7 @@ export default function Dashboard() {
 	return (
 		<>
 			<ThemeSetter theme="light" />
-			<Layout requiredSubscriptions={['']}>
+            <Layout anySubscriptions={['admin', 'member']}>
 				<InventoryOrdersContent />
 			</Layout>
 		</>

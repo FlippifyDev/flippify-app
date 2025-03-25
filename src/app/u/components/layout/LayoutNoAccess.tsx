@@ -3,6 +3,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import LoadingAnimation from '../dom/ui/LoadingAnimation';
 
 const LayoutNoAccess = () => {
 	const router = useRouter();
@@ -16,13 +17,7 @@ const LayoutNoAccess = () => {
 	}, [session, router]);
 
 	return (
-		<div className="mt-10">
-			<div className="flex flex-col text-center">
-				<h1 className="text-4xl font-bold mb-4">Permission Denied</h1>
-				<p className="text-lg">You do not have the required permissions to access this page.</p>
-				<p className="text-lg">You will be redirect back to the dashboard shortly.</p>
-			</div>
-		</div>
+        <LoadingAnimation text="Permission Denied. You will be redirect back to the dashboard shortly." type="hover-box"/>
 	)
 }
 

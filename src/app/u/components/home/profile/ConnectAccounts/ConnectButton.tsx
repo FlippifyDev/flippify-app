@@ -51,7 +51,7 @@ const ConnectButton: React.FC<ConnectButtonProps> = ({
     return (
         <div className="flex flex-col gap-5">
             <div className="relative group">
-                <LayoutSubscriptionWrapper requiredSubscriptions={['admin']}>
+                <LayoutSubscriptionWrapper anySubscriptions={['member', 'admin']}>
                     {loading ? (
                         <SubConnectButton text="Loading..." loading={true} custom_class={loadingClass} />
                     ) : unavailable ? (
@@ -67,7 +67,7 @@ const ConnectButton: React.FC<ConnectButtonProps> = ({
                         <SubConnectButton text="Connect" custom_class={connectButtonClass} onClick={handleConnect} />
                     )}
                 </LayoutSubscriptionWrapper>
-                <LayoutSubscriptionWrapper requiredSubscriptions={['!admin']}>
+                <LayoutSubscriptionWrapper requiredSubscriptions={['!member']}>
                     <div className="relative group">
                         <SubConnectButton text="Connect" custom_class={unavailableClass} />
                         <div className="w-28 absolute pointer-events-none bottom-full mb-1 left-1/2 transform duration-500 -translate-x-1/2 p-2 bg-gray-800 text-white text-center text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity">

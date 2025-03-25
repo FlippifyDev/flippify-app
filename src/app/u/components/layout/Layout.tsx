@@ -60,16 +60,25 @@ const LayoutContent = ({ removePadding, children }: { removePadding?: boolean, c
 
 const Layout: React.FC<LayoutProps> = ({ children, requiredSubscriptions, anySubscriptions, pagePath, removePadding }) => {
     // The following negates the required and any subscription so if the user has none of the subscriptions, then the LayoutNoAccess is displayed.
-    let notRequiredSubscriptions: string[] = [];
-    let notAnySubscriptions: string[] = [];
+    let notRequiredSubscriptions: string[] | undefined = [];
+    let notAnySubscriptions: string[] | undefined = [];
 
+
+    /* We add to notRequiredSubscriptions because of De Morgan's Law (A or B) = !(A and B)
+     * Since requiredSubscriptions uses AND, when negating it we need to use 
+     * OR which is used by anySubscriptions and vice versa.
+     */
     if (requiredSubscriptions) {
         if (requiredSubscriptions[0] === "") {
             notRequiredSubscriptions = ["no access"];
         } else {
-            requiredSubscriptions.forEach((sub) => {
-                notRequiredSubscriptions.push(`!${sub}`);
-            });
+            if (requiredSubscriptions.length >= 2) {
+                requiredSubscriptions.forEach((sub) => {
+                    notAnySubscriptions?.push(`!${sub}`);
+                });
+            } else {
+                notRequiredSubscriptions.push(`!${requiredSubscriptions[0]}`)
+            }
         }
     }
 
@@ -77,10 +86,21 @@ const Layout: React.FC<LayoutProps> = ({ children, requiredSubscriptions, anySub
         if (anySubscriptions[0] === "") {
             notAnySubscriptions = ["no access"];
         } else {
-            anySubscriptions.forEach((sub) => {
-                notAnySubscriptions.push(`!${sub}`);
-            });
+            if (anySubscriptions.length >= 2) {
+                anySubscriptions.forEach((sub) => {
+                    notRequiredSubscriptions?.push(`!${sub}`);
+                });
+            } else {
+                notAnySubscriptions.push(`!${anySubscriptions[0]}`)
+            }
         }
+    }
+
+    if (notRequiredSubscriptions.length === 0) {
+        notRequiredSubscriptions = undefined;
+    }
+    if (notAnySubscriptions.length === 0) {
+        notAnySubscriptions = undefined;
     }
 
     return (

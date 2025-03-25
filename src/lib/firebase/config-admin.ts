@@ -11,7 +11,6 @@ if (!admin.apps.length) {
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
     });
-    console.log("Admin SDK initialized for project:", admin.app().options.projectId);
   } catch (error) {
     console.error("Error initializing Admin SDK:", error);
     throw error; // Stop execution if initialization fails

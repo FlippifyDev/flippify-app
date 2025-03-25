@@ -15,6 +15,7 @@ import DashboardProfitsGraph from "./DashboardProfitsGraph";
 import DashboardShowcase from "./DashboardShowcase";
 import OnboardingFlow from "./OnboardingFlow";
 import { IEbayOrder } from "@/models/store-data";
+import ConnectAnAccount from "./ConnectAnAccount";
 
 
 const DashboardPage: React.FC = () => {
@@ -99,15 +100,8 @@ const DashboardPage: React.FC = () => {
             <LayoutSubscriptionWrapper
                 requiredSubscriptions={["accessGranted", "!standard"]}
             >
-                <div className="w-full h-full overflow-y-auto">
-                    <div className="flex flex-col lg:flex-row py-2 px-2 bg-white rounded-lg overflow-hidden w-full">
-                        <div className="lg:w-1/3">
-                            <DashboardNoSubscription username={session.user.username ?? ""} />
-                        </div>
-                        <div className="lg:w-2/3">
-                            <DashboardShowcase />
-                        </div>
-                    </div>
+                <div className="flex justify-center items-center flex-grow">
+                    <ConnectAnAccount />
                 </div>
             </LayoutSubscriptionWrapper>
 

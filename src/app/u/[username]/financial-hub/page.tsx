@@ -12,7 +12,7 @@ export default function Dashboard() {
 	return (
 		<>
 			<ThemeSetter theme="light" />
-			<Layout requiredSubscriptions={['']} removePadding={true}>
+			<Layout anySubscriptions={['admin', 'member']} removePadding={true}>
 				<FinancialHubContent />
 			</Layout>
 		</>

@@ -22,7 +22,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 	return (
 		<div className='w-full flex flex-col gap-1'>
 			{/* Financial Hub Button - Public */}
-			<LayoutSubscriptionWrapper anySubscriptions={["!admin", "!member"]}>
+            <LayoutSubscriptionWrapper requiredSubscriptions={["!admin", "!member"]}>
 				<DisabledSideBarButton
 					text="Financial Hub"
 					redirect="sales-tracker"
@@ -42,10 +42,8 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 				/>
 			</LayoutSubscriptionWrapper>
 
-
-
 			{/* Inventory & Orders Button - Public */}
-            <LayoutSubscriptionWrapper anySubscriptions={["!admin", "!member"]}>
+            <LayoutSubscriptionWrapper requiredSubscriptions={["!admin", "!member"]}>
 				<DisabledSideBarButton
 					text="Inventory & Orders"
 					redirect="inventory-orders"
@@ -69,7 +67,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 			<LayoutSubscriptionWrapper requiredSubscriptions={["!admin"]}>
 				<DisabledSideBarButton
 					text="Listings Manager"
-					redirect="listings-manager"
+					redirect="listings"
 					isSidebarOpen={isSidebarOpen}
 					symbol={<AiFillProduct className="text-xl" />}
 					tooltip="Coming Soon"
@@ -80,7 +78,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 			<LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
 				<SidebarButton
 					text="Listings Manager"
-					redirect="listings-manager"
+					redirect="listings"
 					isSidebarOpen={isSidebarOpen}
 					symbol={<AiFillProduct className="text-xl" />}
 				/>

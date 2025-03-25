@@ -13,10 +13,9 @@ import ThemeSetter from "@/app/components/ThemeSetter";
 import Loading from "@/app/components/Loading";
 import Image from "next/image";
 import { formatDateToISO } from "@/utils/format-dates";
+import { Lato } from 'next/font/google';
 
-// Create provider instances for social sign-up
-const googleProvider = new GoogleAuthProvider();
-const twitterProvider = new TwitterAuthProvider();
+const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
 const SignUp = () => {
     const { data: session, update: setSession } = useSession();
@@ -132,6 +131,9 @@ const SignUp = () => {
 const EmailVerified = () => {
     return (
         <div className="bg-white rounded-3xl shadow-lg w-full max-w-md p-8 text-center">
+            <h2 className={`${lato.className} pb-1 text-[40px] flex justify-center font-bold mb-4 text-black`}>
+                flippify
+            </h2>
             <h1 className="text-gray-900 text-2xl mb-5">Your email has been verified</h1>
             <p className="text-gray-600">We are preparing your account...</p>
         </div>
@@ -141,8 +143,58 @@ const EmailVerified = () => {
 const EmailVerifying = () => {
     return (
         <div className="bg-white rounded-3xl shadow-lg w-full max-w-md p-8 text-center">
-            <h1 className="text-gray-900 text-2xl mb-5">Verifying Your Email</h1>
-            <p className="text-gray-600">Please check your inbox to verify your email.</p>
+            <h2 className={`${lato.className} pb-1 text-[40px] flex justify-center font-bold mb-4 text-black`}>
+                flippify
+            </h2>
+            <h1 className="text-gray-900 text-2xl mb-2">Verifying Your Email</h1>
+            <p className="text-gray-600 mb-6">Please check your inbox to verify your email.</p>
+
+            {/* Divider */}
+            <div className="flex items-center my-4">
+                <hr className="flex-grow border-gray-300" />
+                <span className="mx-2 text-gray-400">OPEN</span>
+                <hr className="flex-grow border-gray-300" />
+            </div>
+
+            {/* Email Provider Buttons */}
+            <div className="space-y-4">
+                <a
+                    href="https://mail.google.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="border rounded-lg w-full py-[10px] flex justify-center items-center gap-2 hover:bg-gray-50"
+                >
+                    <img src="/GoogleLogo.png" alt="Gmail Logo" className="w-6 h-6" />
+                    <span className="font-medium">Open Gmail</span>
+                </a>
+                <a
+                    href="https://outlook.live.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="border rounded-lg w-full py-[10px] flex justify-center items-center gap-2 hover:bg-gray-50"
+                >
+                    <img src="/OutlookLogo.png" alt="Outlook Logo" className="w-6 h-6" />
+                    <span className="font-medium">Open Outlook</span>
+                </a>
+                <a
+                    href="https://www.icloud.com/mail"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="border rounded-lg w-full py-[10px] flex justify-center items-center gap-2 hover:bg-gray-50"
+                >
+                    <img src="/iCloudLogo.png" alt="iCloud Logo" className="w-6 h-6" />
+                    <span className="font-medium">Open iCloud Mail</span>
+                </a>
+                <a
+                    href="https://mail.yahoo.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="border rounded-lg w-full py-[10px] flex justify-center items-center gap-2 hover:bg-gray-50"
+                >
+                    <img src="/YahooLogo.png" alt="Yahoo Logo" className="w-6 h-6" />
+                    <span className="font-medium">Open Yahoo Mail</span>
+                </a>
+            </div>
         </div>
     );
 };
@@ -177,15 +229,10 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
     return (
         <div className="bg-white rounded-3xl shadow-lg w-full max-w-md p-8">
             {/* Logo */}
-            <div className="flex justify-center mb-6">
-                <Image
-                    src="/FlippifyLogoLongBlack.png"
-                    alt="Logo"
-                    className="w-1/3 h-1/3"
-                    width={200}
-                    height={200}
-                />
-            </div>
+            <h2 className={`${lato.className} pb-1 text-[40px] flex justify-center font-bold mb-4 text-black`}>
+                flippify
+            </h2>
+            
             {/* Title & Subtitle */}
             <h1 className="text-2xl font-semibold text-center mb-2">Create your account</h1>
             <p className="text-center text-gray-500 mb-6">Sign up to get started.</p>

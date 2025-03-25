@@ -4,16 +4,16 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { auth, firestore } from "@/lib/firebase/config";
-import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword as firebaseSignIn } from "firebase/auth";
+import { signInWithEmailAndPassword as firebaseSignIn } from "firebase/auth";
 import Layout from "../components/layout/Layout";
 import ThemeSetter from "@/app/components/ThemeSetter";
 import Loading from "@/app/components/Loading";
 import { Suspense } from "react";
-import Image from "next/image";
 import { doc, getDoc } from "firebase/firestore";
 import { IUser } from "@/models/user";
+import { Lato } from 'next/font/google';
 
-const googleProvider = new GoogleAuthProvider();
+const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -62,15 +62,9 @@ const Login = () => {
                     <div className="min-h-screen flex items-center justify-center mt-[-64px] p-4">
                         <div className="bg-white rounded-3xl shadow-lg w-full max-w-md p-8">
                             {/* Logo */}
-                            <div className="flex justify-center mb-6">
-                                <Image
-                                    src="/FlippifyLogoLongBlack.png"
-                                    alt="Logo"
-                                    className="w-1/3 h-1/3"
-                                    width={200}
-                                    height={200}
-                                />
-                            </div>
+                            <h2 className={`${lato.className} pb-1 text-[40px] flex justify-center font-bold mb-4 text-black`}>
+                                flippify
+                            </h2>
 
                             {/* Title & Subtitle */}
                             <h2 className="text-2xl font-semibold text-center mb-2">

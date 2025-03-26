@@ -57,7 +57,7 @@ const CardProfitsBarChart: React.FC<CardProfitsBarChartProps> = ({ orders, loadi
                         </dd>
                     </dl>
                     <div>
-                        <span className="bg-green-100 text-green-800 text-xs font-medium inline-flex items-center px-2.5 py-1 rounded-md">
+                        <span className="bg-houseFinancialHub text-white text-xs font-medium inline-flex items-center px-2.5 py-1 rounded-md">
                             <svg
                                 className="w-2.5 h-2.5 mr-1.5"
                                 aria-hidden="true"
@@ -82,13 +82,13 @@ const CardProfitsBarChart: React.FC<CardProfitsBarChartProps> = ({ orders, loadi
                 <div className="grid grid-cols-2 py-3">
                     <dl>
                         <dt className="text-base font-normal text-gray-500 pb-1">Income</dt>
-                        <dd className="leading-none text-xl font-bold text-green-500">
+                        <dd className="leading-none text-xl font-bold text-[#0D3B66]">
                             {currencySymbol}{totalIncome}
                         </dd>
                     </dl>
                     <dl>
                         <dt className="text-base font-normal text-gray-500 pb-1">Expense</dt>
-                        <dd className="leading-none text-xl font-bold text-red-600">
+                        <dd className="leading-none text-xl font-bold text-[#89C2D9]">
                             -{currencySymbol}{totalExpense}
                         </dd>
                     </dl>

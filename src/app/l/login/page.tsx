@@ -1,118 +1,52 @@
-"use client";
-
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
-import { auth, firestore } from "@/lib/firebase/config";
-import { signInWithEmailAndPassword as firebaseSignIn } from "firebase/auth";
 import Layout from "../components/layout/Layout";
 import ThemeSetter from "@/app/components/ThemeSetter";
 import Loading from "@/app/components/Loading";
+import MetadataHead from "@/app/components/MetadataHead";
+import LoginContent from "../components/login/LoginContent";
 import { Suspense } from "react";
-import { doc, getDoc } from "firebase/firestore";
-import { IUser } from "@/models/user";
-import { Lato } from 'next/font/google';
 
-const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
+const root = process.env.ROOT as string;
+
+export const metadata = {
+    title: 'Login - Flippify',
+    description: 'Access your Flippify account to manage your listings, track your sales, and explore exclusive deals. Sign in securely and start flipping today!',
+    openGraph: {
+        title: 'Login - Flippify',
+        description: 'Access your Flippify account to manage your listings, track your sales, and explore exclusive deals. Sign in securely and start flipping today!',
+        url: root.concat('/l/login'),
+        images: [
+            {
+                url: "https://i.imgur.com/YpsQrYq.png",
+                width: 1908,
+                height: 1076,
+                alt: "Login Page Image"
+            }
+        ]
+    },
+    robots: {
+        index: true,
+        follow: true,
+        nocache: true,
+        googleBot: {
+            index: true,
+            follow: true,
+            noimageindex: true,
+            'max-video-preview': -1,
+            'max-image-preview': 'large',
+            'max-snippet': -1,
+        },
+    },
+};
+
 
 const Login = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
-    const [loading, setLoading] = useState(false);
-    const router = useRouter();
-
-    const handleLogin = async () => {
-        try {
-            setLoading(true);
-            const result = await signIn("credentials", {
-                email,
-                password,
-                redirect: false,
-            });
-            if (result?.error) {
-                setErrorMessage("Invalid email or password");
-            } else {
-                await firebaseSignIn(auth, email, password);
-                const userRef = doc(firestore, "users", auth.currentUser?.uid ?? "");
-                const userDoc = await getDoc(userRef);
-                const userData = userDoc.data() as IUser;
-                router.push(`/u/${userData.username}/dashboard`);
-            }
-        } catch (e) {
-            console.error("Login error:", e);
-            setErrorMessage("Login failed. Please try again.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (email && password) {
-            handleLogin();
-        }
-    };
-
     return (
         <>
+            <MetadataHead {...metadata} />
             <ThemeSetter theme="dark" />
             <Suspense fallback={<Loading />}>
                 <Layout>
-                    <div className="min-h-screen flex items-center justify-center mt-[-64px] p-4">
-                        <div className="bg-white rounded-3xl shadow-lg w-full max-w-md p-8">
-                            {/* Logo */}
-                            <h2 className={`${lato.className} pb-1 text-[40px] flex justify-center font-bold mb-4 text-black`}>
-                                flippify
-                            </h2>
-
-                            {/* Title & Subtitle */}
-                            <h2 className="text-2xl font-semibold text-center mb-2">
-                                Welcome back
-                            </h2>
-                            <p className="text-center text-gray-500 mb-6">
-                                Please enter your details to sign in.
-                            </p>
-
-                            {/* Email/Password Form */}
-                            <form onSubmit={handleSubmit} className="space-y-4">
-                                <input
-                                    type="email"
-                                    placeholder="Email Address"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full p-3 bg-gray-100 rounded-xl outline-none placeholder-gray-400"
-                                />
-                                <input
-                                    type="password"
-                                    placeholder="Password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full p-3 bg-gray-100 rounded-xl outline-none placeholder-gray-400"
-                                />
-                                {errorMessage && (
-                                    <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
-                                )}
-                                <button
-                                    type="submit"
-                                    className="w-full mt-4 p-3 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 rounded-lg shadow-lg"
-                                >
-                                    {loading ? "Processing..." : "Login"}
-                                </button>
-                            </form>
-
-                            {/* Sign Up Link */}
-                            <div className="flex flex-row gap-1 mt-5 justify-center">
-                                <p>Don&apos;t have an account?</p>
-                                <button
-                                    onClick={() => router.push("/l/sign-up")}
-                                    className="text-houseBlue hover:underline"
-                                >
-                                    Sign Up
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    <LoginContent />
                 </Layout>
             </Suspense>
         </>

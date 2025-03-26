@@ -63,6 +63,8 @@ const OrdersContent: React.FC = () => {
     useEffect(() => {
         if (salesData.length > 0) {
             formatOrderData(salesData);
+        } else {
+            setLoading(false);
         }
     }, [salesData]);
 

@@ -80,7 +80,7 @@ const OrderDetails = () => {
 
     // Handle orders click
     const handleOrdersClick = () => {
-        router.push(`/u/${username}/inventory-orders#orders`);
+        router.push(`/u/${username}/tools/inventory-orders#orders`);
     };
 
     // Handle checkbox selection
@@ -417,8 +417,8 @@ const OrderDetails = () => {
                                         >
                                             <input
                                                 type="text"
-                                                value={(editingIndex === index && editingType === "purchasePrice") ? `${editedPurchasePrice}` : `${currencySymbols[currency]}${order.purchase.price}`}
-                                                onChange={(e) => setEditedPurchasePrice(e.target.value)}
+                                                value={(editingIndex === index && editingType === "purchasePrice") ? `${editedPurchasePrice}` : `${currencySymbols[currency]}${order.purchase.price.toFixed(2)}`}
+                                                onChange={(e) => setEditedPurchasePrice(Number(e.target.value).toFixed(2))}
                                                 onBlur={() => saveChange(index, "purchasePrice")}
                                                 onKeyDown={(e) => handleKeyPress(e, index, "purchasePrice")}
                                                 className="focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"

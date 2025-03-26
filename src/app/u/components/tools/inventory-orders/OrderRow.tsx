@@ -38,7 +38,7 @@ const OrderRow: React.FC<OrderRowProps> = ({
 
 	// Handle row click
 	const handleRowClick = () => {
-		router.push(`/u/${username}/inventory-orders/${itemId}`);
+		router.push(`/u/${username}/tools/inventory-orders/${itemId}`);
 	};
 
 	return (

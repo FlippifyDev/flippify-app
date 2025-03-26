@@ -21,7 +21,7 @@ const ProfileOverview = () => {
     const [error, setError] = useState("");
 
     // Default avatar
-    let avatar = "https://i.imgur.com/pXG2DV3.jpeg";
+    let avatar = "https://i.imgur.com/uOCy7MN.jpeg";
     let username = "User";
     let email = "N/A";
 
@@ -33,7 +33,7 @@ const ProfileOverview = () => {
             username = session.user.username;
         }
         if (session.user?.email) {
-            email = session.user.email;
+            email = session.user.preferences.preferredEmail;
         }
     }
 

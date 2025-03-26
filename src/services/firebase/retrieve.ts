@@ -331,18 +331,19 @@ async function retrieveUserInventory(
     update: boolean = false,
     timeTo?: string
 ): Promise<IEbayInventoryItem[]> {
-    const cacheKey = `inventoryData-${uid}`; // Cache key based on user ID
+    // Cache key now includes timeFrom to cache different time-based data separately
+    const cacheKey = `inventoryData-${uid}-${timeFrom}`;
     const cacheExpirationTime = 1000 * 60 * 10; // Cache expiration time (10 minutes)
 
     // Try to get the cached data first
     try {
         const cachedData = getCachedData(cacheKey, cacheExpirationTime);
-        if (cachedData.length > 0 && !update) {
+        if (cachedData && cachedData.length > 0 && !update) {
             // Filter cached inventory based on timeFrom and timeTo before returning
             const filteredData = filterInventoryByTime(cachedData, timeFrom, timeTo);
             return filteredData;
-        } else if (update || cachedData.length === 0) {
-            // Update store info if requested
+        } else if (update || !cachedData || cachedData.length === 0) {
+            // Update store info if requested or no cache exists
             await updateStoreInfo("update-inventory", ebayAccessToken, uid);
         }
     } catch (error) {
@@ -352,13 +353,14 @@ async function retrieveUserInventory(
     // If no cached data or update is required, fetch from Firestore
     try {
         const data = await retrieveUserInventoryFromDB(uid, timeFrom, timeTo); // Fetch inventory data
-        setCachedData(cacheKey, data, cacheExpirationTime); // Cache the data
-        return data;
+        setCachedData(cacheKey, data, cacheExpirationTime); // Cache the fetched data
+        return filterInventoryByTime(data, timeFrom, timeTo); // Apply time filtering
     } catch (error) {
         console.error(`Error fetching inventory for user with UID=${uid}:`, error);
         return [];
     }
 }
+
 
 async function retrieveProducts() {
     return [];

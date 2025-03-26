@@ -18,7 +18,7 @@ export const metadata = {
 		url: root.concat('/l/home'),
 		images: [
 			{
-				url: "https://i.imgur.com/JzWi4ye.png",
+                url: "https://i.imgur.com/rivBjM6.png",
 				width: 1908,
 				height: 1076,
 				alt: "Home Page Image"

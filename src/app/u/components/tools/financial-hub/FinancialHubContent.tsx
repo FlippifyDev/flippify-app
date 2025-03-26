@@ -3,14 +3,14 @@
 // Local Imports
 import { IEbayOrder } from "@/models/store-data";
 import LoadingAnimation from "../../dom/ui/LoadingAnimation";
-import CardSaleAverages from "./CardSaleAverages";
-import CardCostAverages from "./CardCostAverages";
+import CardSaleAverages from "./SaleAverages";
+import CardCostAverages from "./CostAverages";
 import DateRangeSelector from "./DateRangeSelector";
 import { formatTimeFrom } from "@/utils/format-dates";
-import CardListingsAmount from "./CardListingsAndOrdersAmount";
-import CardProfitsBarChart from "./CardProfitsBarChart";
+import CardListingsAmount from "./ListingsAndOrdersAmount";
+import CardProfitsBarChart from "./ProfitsBarChart";
 import { currencySymbols } from "@/config/currency-config";
-import CardPlatformPieChart from "./CardPlatformDonutChart";
+import CardPlatformPieChart from "./PlatformDonutChart";
 import { retrieveUserOrders } from "@/services/firebase/retrieve";
 import formatOrdersForCSVExport from "@/utils/format";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
@@ -21,17 +21,22 @@ import { HiOutlineDownload } from "react-icons/hi";
 import { useSession } from "next-auth/react";
 import { IoClose } from "react-icons/io5";
 import Link from "next/link";
-import CardShippingInfo from "./CardShippingInfo";
+import CardShippingInfo from "./ShippingInfo";
+import { Filter } from "lucide-react";
+import FilterSelector from "./FilterSelector";
+import OrderInfo from "./OrderInfo";
 
 
 
 
 const FinancialHubContent = () => {
     const { data: session } = useSession();
+
     const [orders, setOrders] = useState<IEbayOrder[]>([]);
     const [loading, setLoading] = useState(false);
     
     // General Filters
+    const [selectedFilter, setSelectedFilter] = useState("General");
     const [selectedTimeRange, setSelectedTimeRange] = useState("Last 30 days");
     const [timeFrom, setTimeFrom] = useState(formatTimeFrom(30));
     const [timeTo, setTimeTo] = useState<string | undefined>(undefined);
@@ -204,6 +209,11 @@ const FinancialHubContent = () => {
     };
 
 
+    const handleFilterChange = (type: string) => {
+        setSelectedFilter(type);
+    }
+
+
     function handleExportCSV() {
         setError(undefined);
         // Get the CSV string from formatOrdersForCSVExport
@@ -244,16 +254,19 @@ const FinancialHubContent = () => {
             {session?.user.connectedAccounts.ebay ? (
                 <div className="relative w-full flex flex-col">
                     <div className="w-full py-2 px-4 bg-white border-t flex items-center">
+                        <div>
+                            <FilterSelector value={selectedFilter} onChange={handleFilterChange} />
+                        </div>
                         <div className="w-full flex items-center justify-end gap-2">
                             <div>
                                 <DateRangeSelector value={selectedTimeRange} onChange={handleTimeRangeChange} />
                             </div>
                             <button
                                 onClick={() => setExportModalOpen(true)}
-                                className="flex items-center justify-center text-black p-2 bg-gray-200 rounded-lg transition-colors duration-300 hover:bg-gray-300"
+                                className="flex items-center justify-center p-2 bg-houseFinancialHub text-white rounded-lg transition-colors duration-300 hover:bg-houseFinancialHubHover"
                             >
-                                <HiOutlineDownload className="h-4 w-4" />
-                                <span className="ml-1 text-sm">Export</span>
+                                <HiOutlineDownload className="h-5 w-5 sm:h-4 sm:w-4" />
+                                <span className="ml-1 text-sm hidden sm:block">Export</span>
                             </button>
                         </div>
                     </div>
@@ -276,7 +289,7 @@ const FinancialHubContent = () => {
                                     {/* Date Selectors */}
                                     <div className="mt-4">
                                         <div className="flex flex-col gap-2">
-                                            <div className="flex gap-2">
+                                            <div className="flex gap-2 flex-col sm:flex-row">
                                                 <div className="flex-1">
                                                     <label htmlFor="timeFrom" className="block text-sm font-medium text-gray-700">Time From</label>
                                                     <input
@@ -308,7 +321,7 @@ const FinancialHubContent = () => {
                                     <div className="flex justify-center gap-4 mt-6">
                                         <button
                                             onClick={handleExportCSV}
-                                            className="flex items-center py-2 px-4 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition duraction-200"
+                                            className="flex items-center py-2 px-4 bg-houseFinancialHub text-white rounded-md hover:bg-houseFinancialHubHover transition duraction-200"
                                         >
                                             <HiOutlineDownload className="h-4 w-4" />
                                             <span className="ml-1 text-sm">Export CSV</span>
@@ -327,8 +340,13 @@ const FinancialHubContent = () => {
                         <div className="col-span-12 sm:col-span-6 lg:col-span-4">
                             <CardPlatformPieChart orders={orders} loading={loading} currencySymbol={currencySymbols[userCurrency]} />
                         </div>
-                        <div className="col-span-12 sm:col-span-6 lg:col-span-4">
-                            <CardListingsAmount />
+                        <div className="col-span-12 lg:col-span-4 flex flex-col gap-4">
+                            <div className="sm:h-1/4">
+                                <OrderInfo orders={orders} loading={loading} />
+                            </div>
+                            <div className="sm:h-3/4">
+                                <CardListingsAmount />
+                            </div>
                         </div>
                         <CardCostAverages orders={orders} loading={loading} currencySymbol={currencySymbols[userCurrency]} />
                         <CardShippingInfo orders={orders} loading={loading} currencySymbol={currencySymbols[userCurrency]} />

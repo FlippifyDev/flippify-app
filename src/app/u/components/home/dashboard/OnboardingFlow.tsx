@@ -121,8 +121,8 @@ const OnboardingFlow: React.FC = () => {
                         <h2 className={`${lato.className} pb-1 text-[40px] font-bold mb-4 text-gradient bg-gradient-to-r from-houseBlue to-textGradEnd bg-clip-text text-transparent`}>
                             flippify
                         </h2>
-                        <h2 className="text-2xl font-semibold mb-2">Welcome, {username}</h2>
-                        <p className="text-gray-600 mb-8">
+                        <h2 className="text-2xl font-semibold mb-2 animate-fadeInPrimary">Welcome, {username}</h2>
+                        <p className="text-gray-600 mb-8 animate-fadeInSecondary">
                             Join now to take the first step to automating your store.
                         </p>
                         <div className="mb-6">
@@ -139,13 +139,13 @@ const OnboardingFlow: React.FC = () => {
                                 <p className="text-red-500 text-sm mt-2">{referralError}</p>
                             )}
                             {showReferralMessage && !referralError && (
-                                <p className="text-red-500 text-sm mt-2">
+                                <p className="text-houseBlue text-sm mt-2 animate-fadeInPrimary">
                                     Enter a referral code to get 25% off your first month.
                                 </p>
                             )}
                         </div>
                         <button
-                            className="btn border-0 bg-houseBlue text-white hover:bg-blue-600 w-full"
+                            className="btn border-0 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 text-opacity-100 w-full mx-auto rounded-lg shadow-lg"
                             onClick={handleNextStep}
                         >
                             {showReferralMessage && !referralError ? "Click again to continue" : "Next"}
@@ -154,29 +154,35 @@ const OnboardingFlow: React.FC = () => {
                 )}
                 {step === 2 && (
                     <section className="text-center">
-                        <h2 className="text-5xl font-bold mb-2">Welcome to</h2>
-                        <h2 className={`${lato.className} pb-1 text-5xl font-bold mb-4 text-gradient bg-gradient-to-r from-houseBlue to-textGradEnd bg-clip-text text-transparent`}>
+                        <h2 className={`${lato.className} pb-1 text-[40px] font-bold mb-4 text-gradient bg-gradient-to-r from-houseBlue to-textGradEnd bg-clip-text text-transparent`}>
                             flippify
                         </h2>
-                        <p className="text-lg text-gray-700 mb-8">
+                        <h2 className="text-2xl font-semibold mb-2">Welcome, {username}</h2>
+                        <p className="text-gray-600 mb-8">
                             Join now to take the first step to automating your store.
                         </p>
-                        <div className="mb-6">
+                        <p className="text-md text-black mb-1 font-semibold text-left animate-fadeInPrimary">
+                            Contact Email
+                        </p>
+                        <div className="mb-4">
                             <input
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Contact Email"
-                                className="input input-bordered w-full"
+                                className="input input-bordered w-full animate-fadeInSecondary"
                                 aria-label="Contact Email"
                                 aria-required="true"
                             />
                         </div>
+                        <p className="text-md text-black mb-1 font-semibold text-left animate-fadeInPrimary">
+                            Currency
+                        </p>
                         <div className="mb-6">
                             <select
                                 value={currency}
                                 onChange={(e) => setCurrency(e.target.value as 'GBP' | 'USD' | 'EUR')}
-                                className="input input-bordered w-full"
+                                className="input input-bordered w-full animate-fadeInSecondary"
                                 aria-label="Preferred Currency"
                             >
                                 <option value="GBP">GBP (£)</option>
@@ -185,7 +191,7 @@ const OnboardingFlow: React.FC = () => {
                             </select>
                         </div>
                         <button
-                            className="btn border-0 bg-houseBlue text-white hover:bg-blue-600 w-full"
+                            className="btn border-0 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 text-opacity-100 w-full mx-auto rounded-lg shadow-lg"
                             onClick={handleStep2Next}
                         >
                             Next
@@ -194,12 +200,15 @@ const OnboardingFlow: React.FC = () => {
                 )}
                 {step === 3 && (
                     <section className="text-center">
-                        <h2 className="text-2xl font-semibold mb-4">Choose a Plan</h2>
-                        <p className="text-gray-600 mb-8">
+                        <h2 className={`${lato.className} pb-1 text-[40px] font-bold mb-4 text-gradient bg-gradient-to-r from-houseBlue to-textGradEnd bg-clip-text text-transparent`}>
+                            flippify
+                        </h2>
+                        <h2 className="text-2xl font-semibold mb-4 animate-fadeInPrimary">Choose a Plan</h2>
+                        <p className="text-gray-600 mb-8 animate-fadeInSecondary">
                             Select a plan to get started with Flippify.
                         </p>
                         <button
-                            className="btn border-0 bg-houseBlue text-white hover:bg-blue-600 w-full"
+                            className="btn border-0 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 text-opacity-100 w-full mx-auto rounded-lg shadow-lg"
                             onClick={() => router.push(`/u/${session?.user.username}/plans`)}
                         >
                             Go to Plans

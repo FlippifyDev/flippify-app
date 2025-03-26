@@ -1,16 +1,19 @@
 "use client";
 
 // Local Imports
+import OrderInfo from "./OrderInfo";
+import FilterSelector from "./FilterSelector";
 import { IEbayOrder } from "@/models/store-data";
-import LoadingAnimation from "../../dom/ui/LoadingAnimation";
+import CardShippingInfo from "./ShippingInfo";
 import CardSaleAverages from "./SaleAverages";
+import LoadingAnimation from "../../dom/ui/LoadingAnimation";
 import CardCostAverages from "./CostAverages";
 import DateRangeSelector from "./DateRangeSelector";
 import { formatTimeFrom } from "@/utils/format-dates";
 import CardListingsAmount from "./ListingsAndOrdersAmount";
 import CardProfitsBarChart from "./ProfitsBarChart";
 import { currencySymbols } from "@/config/currency-config";
-import CardPlatformPieChart from "./PlatformDonutChart";
+import CardPlatformDonutChart from "./PlatformDonutChart";
 import { retrieveUserOrders } from "@/services/firebase/retrieve";
 import formatOrdersForCSVExport from "@/utils/format";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
@@ -21,11 +24,6 @@ import { HiOutlineDownload } from "react-icons/hi";
 import { useSession } from "next-auth/react";
 import { IoClose } from "react-icons/io5";
 import Link from "next/link";
-import CardShippingInfo from "./ShippingInfo";
-import { Filter } from "lucide-react";
-import FilterSelector from "./FilterSelector";
-import OrderInfo from "./OrderInfo";
-
 
 
 
@@ -338,7 +336,7 @@ const FinancialHubContent = () => {
                             <CardProfitsBarChart orders={orders} loading={loading} currencySymbol={currencySymbols[userCurrency]} />
                         </div>
                         <div className="col-span-12 sm:col-span-6 lg:col-span-4">
-                            <CardPlatformPieChart orders={orders} loading={loading} currencySymbol={currencySymbols[userCurrency]} />
+                            <CardPlatformDonutChart orders={orders} loading={loading} currencySymbol={currencySymbols[userCurrency]} />
                         </div>
                         <div className="col-span-12 lg:col-span-4 flex flex-col gap-4">
                             <div className="sm:h-1/4">

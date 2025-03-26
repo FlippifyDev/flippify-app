@@ -3,6 +3,12 @@ export async function updateStoreInfo(endpoint: string, ebayAccessToken: string,
 	// Set up headers with the access token
 	const headers = {
         Authorization: `Bearer ${ebayAccessToken}`,
+        "Accept": "*/*",
+        "Origin": "https://flippify.io",
+        "Referer": "https://flippify.io/",
+        "Content-Type": "application/json",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-site",
 	};
 
     const url = new URL(`https://api.flippify.io/${endpoint}`);

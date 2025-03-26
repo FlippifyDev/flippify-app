@@ -39,11 +39,12 @@ const OrderDetails = () => {
     const [alertMessage, setAlertMessage] = useState<string | null>(null);
     const [isAlertVisible, setIsAlertVisible] = useState<boolean>(false);
 
-    const [editedPlatform, setEditedPlatform] = useState<string>("");
-    const [editedCustomTag, setEditedCustomTag] = useState<string>("");
-    const [editedPurchasePrice, setEditedPurchasePrice] = useState<string>("");
+    const [editedPlatform, setEditedPlatform] = useState<string | null>("");
+    const [editedCustomTag, setEditedCustomTag] = useState<string | null>("");
+    const [editedPurchasePrice, setEditedPurchasePrice] = useState<string | null>("");
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
     const [editingType, setEditingType] = useState<string | null>(null);
+    const [ordersUpdated, setOrdersUpdated] = useState<boolean>(false);
 
     // This effect runs when selectedOrders length changes
     useEffect(() => {
@@ -68,11 +69,12 @@ const OrderDetails = () => {
     }, [session?.user]);
 
     useEffect(() => {
-        if (salesData && orderId && orders.length === 0) {
+        if (salesData && orderId && orders.length === 0 && !ordersUpdated) {
             const matchingOrders = salesData.filter((o) => o.legacyItemId === orderId);
             setOrders(matchingOrders);
         }
-    }, [salesData, orderId, orders]);
+        setOrdersUpdated(false);
+    }, [salesData, orderId, orders, ordersUpdated]);
 
     if (orders.length === 0) {
         return <p>Loading order details...</p>;
@@ -117,11 +119,14 @@ const OrderDetails = () => {
             totalSalePrice += sale.price + shipping.fees;
             totalAdditionalFees += additionalFees;
 
-            // Check if purchase price is valid before adding it to total
-            if (purchasePrice) {
-                totalPurchasePrice += purchase.price;
-                purchaseCount += 1;
-            }
+            
+            if (purchase.price === null) {
+                purchase.price = 0; 
+            }   
+
+
+            totalPurchasePrice += purchase.price;
+            purchaseCount += 1;
 
             // Calculate profit for each order and accumulate
             const profit = sale.price - (purchase.price || 0) - shipping.fees - additionalFees;
@@ -297,6 +302,9 @@ const OrderDetails = () => {
             }
             updatedOrders[index].customTag = editedCustomTag;
         } else if (type === "purchasePrice") {
+            if (!editedPurchasePrice) {
+                return;
+            }
             if (Number(editedPurchasePrice.replace(currencySymbols[currency], "")) === orders[index].purchase.price) {
                 return;
             }
@@ -412,13 +420,13 @@ const OrderDetails = () => {
                                         <td>{currencySymbols[currency]}{additionalFees.toFixed(2)}</td>
                                         <td>{currencySymbols[currency]}{shipping.fees.toFixed(2)}</td>
                                         <td
-                                            onClick={() => { setEditingIndex(index); setEditedPurchasePrice(`${currencySymbols[currency]}${order.purchase.price}`); setEditingType("purchasePrice"); }}
+                                            onClick={() => { setEditingIndex(index); setEditedPurchasePrice(`${currencySymbols[currency]}${order.purchase.price ?? ''}`); setEditingType("purchasePrice"); }}
                                             className="cursor-pointer transition duration-200"
                                         >
                                             <input
                                                 type="text"
-                                                value={(editingIndex === index && editingType === "purchasePrice") ? `${editedPurchasePrice}` : `${currencySymbols[currency]}${order.purchase.price.toFixed(2)}`}
-                                                onChange={(e) => setEditedPurchasePrice(Number(e.target.value).toFixed(2))}
+                                                value={(editingIndex === index && editingType === "purchasePrice") ? `${editedPurchasePrice ?? '0'}` : `${currencySymbols[currency]}${order.purchase.price ?? '0'}`}
+                                                onChange={(e) => setEditedPurchasePrice(e.target.value)}
                                                 onBlur={() => saveChange(index, "purchasePrice")}
                                                 onKeyDown={(e) => handleKeyPress(e, index, "purchasePrice")}
                                                 className="focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
@@ -433,7 +441,7 @@ const OrderDetails = () => {
                                         >
                                             <input
                                                 type="text"
-                                                value={(editingIndex === index && editingType === "platform") ? editedPlatform : order.purchase.platform}
+                                                value={(editingIndex === index && editingType === "platform") ? editedPlatform ?? "" : order.purchase.platform ?? ""}
                                                 onChange={(e) => setEditedPlatform(e.target.value)}
                                                 onBlur={() => saveChange(index, "platform")}
                                                 onKeyDown={(e) => handleKeyPress(e, index, "platform")}
@@ -447,7 +455,7 @@ const OrderDetails = () => {
                                         >
                                             <input
                                                 type="text"
-                                                value={(editingIndex === index && editingType === "customTag") ? editedCustomTag : order.customTag ?? ""}
+                                                value={(editingIndex === index && editingType === "customTag") ? editedCustomTag ?? "" : order.customTag ?? ""}
                                                 onChange={(e) => setEditedCustomTag(e.target.value)}
                                                 onBlur={() => saveChange(index, "customTag")}
                                                 onKeyDown={(e) => handleKeyPress(e, index, "customTag")}

@@ -22,9 +22,9 @@ interface IShipping {
 
 interface IPurchase {
     date: string;
-    platform: string;
-    price: number;
-    quantity: number;
+    platform: string | null;
+    price: number | null;
+    quantity: number | null;
 }
 
 interface ISale {

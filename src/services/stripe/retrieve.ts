@@ -4,7 +4,7 @@ import Stripe from 'stripe';
 
 
 const retrieveStripeCustomer = async (customerId: string | null, email: string, referralCode: string | null) => {
-    const stripeAPIKey = process.env.TEST_STRIPE_SECRET_KEY as string;
+    const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
 
     if (!stripeAPIKey) {
         throw new Error('Stripe API key not found');
@@ -50,7 +50,7 @@ const retrieveStripeCustomer = async (customerId: string | null, email: string, 
 };
 
 const checkForExistingDiscount = async (customerId: string) => {
-    const stripeAPIKey = process.env.TEST_STRIPE_SECRET_KEY as string;
+    const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
 
     if (!stripeAPIKey) {
         throw new Error('Stripe API key not found (checkForExistingDiscount)');

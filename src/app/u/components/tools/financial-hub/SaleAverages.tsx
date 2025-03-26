@@ -28,7 +28,7 @@ const calculateAverages = (orders: IEbayOrder[]) => {
         totalGross += gross;
 
         // Calculate profit
-        const profit = salePrice - purchasePrice - shippingFees - additionalFees;
+        const profit = salePrice - (purchasePrice ?? 0) - shippingFees - additionalFees;
         totalProfit += profit;
 
         // Calculate net profit margin for this order

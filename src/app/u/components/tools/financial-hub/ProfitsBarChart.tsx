@@ -41,7 +41,7 @@ const CardProfitsBarChart: React.FC<CardProfitsBarChartProps> = ({ orders, loadi
 
     // Dummy values for profit, income, and expense (can be dynamically calculated)
     const totalIncome = orders.reduce((acc, order) => acc + (order.sale.price * order.sale.quantity), 0).toFixed(2);
-    const totalExpense = orders.reduce((acc, order) => acc + ((order.purchase.price * order.purchase.quantity) + order.shipping.fees + order.additionalFees), 0).toFixed(2);
+    const totalExpense = orders.reduce((acc, order) => acc + ((order.purchase.price ?? 0) + order.shipping.fees + order.additionalFees), 0).toFixed(2);
     const totalProfit = (parseFloat(totalIncome) - parseFloat(totalExpense)).toFixed(2);
     const profitRate = ((parseFloat(totalProfit) / parseFloat(totalIncome)) * 100).toFixed(1);
 

@@ -46,7 +46,7 @@ async function retrieveAuthenticatedUserCount(): Promise<number> {
 
 async function retrieveUserByKeyAndValueAdmin(key: string, value: string): Promise<IUser | void> {
     try {
-        const collectionRef = firestoreAdmin.collection("user");
+        const collectionRef = firestoreAdmin.collection("users");
         const querySnapshot = await collectionRef.where(key, "==", value).get();
 
         if (querySnapshot.empty) {

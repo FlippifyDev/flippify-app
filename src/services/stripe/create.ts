@@ -9,7 +9,7 @@ import Stripe from 'stripe';
 
 
 const createBillingPortalUrl = async (username: string, customerId: string) => {
-    const stripeAPIKey = process.env.TEST_STRIPE_SECRET_KEY as string;
+    const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
     const root = process.env.ROOT as string;
 
     if (!stripeAPIKey) {
@@ -38,7 +38,7 @@ const createCheckoutSession = async (
     priceId: string,
     referredBy: string | null | undefined
 ): Promise<string | null> => {
-    const stripeAPIKey = process.env.TEST_STRIPE_SECRET_KEY as string;
+    const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
     const root = process.env.ROOT as string;
 
     if (!stripeAPIKey) {
@@ -65,7 +65,7 @@ const createCheckoutSession = async (
                 if (hasMemberSubscription) {
                     // Add the coupon code to discounts if condition is met
                     discounts.push({
-                        coupon: 'QvLHMMGH', // Stripe coupon code 25% off
+                        coupon: process.env.STRIPE_COUPON_CODE_25, // Stripe coupon code 25% off
                     });
                 }
             }
@@ -96,8 +96,7 @@ const createCheckoutSession = async (
 
 
 const createAndApplyCoupon = async (subscriptionName: string | null, customerId: string, percentOff: number) => {
-    const stripeAPIKey = process.env.TEST_STRIPE_SECRET_KEY as string;
-    const root = process.env.ROOT as string;
+    const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
 
     if (!stripeAPIKey) {
         throw new Error('Stripe api key not found (createAndApplyCoupon)');

@@ -10,7 +10,7 @@ const NavbarAddListing = () => {
     const { data: session } = useSession();
 
     function handleOnClick() {
-        router.push(`/u/${session?.user.username}/listings/new`);
+        router.push(`/u/${session?.user.username}/tools/listings/new`);
     }
     return (
         <div className="relative inline-block group">

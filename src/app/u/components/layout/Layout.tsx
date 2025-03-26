@@ -40,7 +40,7 @@ const LayoutContent = ({ removePadding, children }: { removePadding?: boolean, c
                 {/* Navbar */}
                 <div className="w-full h-14 bg-white z-30 sticky top-0 flex flex-row">
                     {/* Hamburger Icon for Mobile */}
-                    <div className={`sm:hidden transition-all duration-500 ${isSidebarOpen ? 'hidden' : 'block px-1'}`}>
+                    <div className={`sm:hidden transition-all duration-500 ml-1 flex items-center justicy-center ${isSidebarOpen ? 'hidden' : 'block px-1'}`}>
                         <LightHamburgerButton isActive={isSidebarOpen} onClick={() => setIsSidebarOpen(!isSidebarOpen)} />
                     </div>
                     <Navbar />

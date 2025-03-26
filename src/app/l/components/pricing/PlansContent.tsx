@@ -3,7 +3,7 @@
 import PlansCard from "./PlansCard";
 import PlansCardStandardWhatsIncluded from "./PlansCardProWhatsIncluded";
 import PlansCardEliteWhatsIncluded from "./PlansCardEliteWhatsIncluded";
-import PlansCardBasicWhatsIncluded from "./PlansCardStandardWhatsIncluded";
+import PlansCardBasicWhatsIncluded from "./PlansCardFreeWhatsIncluded";
 import PlansCardEnterpriseWhatsIncluded from "./PlansCardEnterpriseWhatsIncluded";
 import React, { useState, useEffect, useCallback } from "react";
 import { Lato, Inter } from "next/font/google";

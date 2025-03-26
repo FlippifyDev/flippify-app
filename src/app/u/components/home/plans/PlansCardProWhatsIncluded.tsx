@@ -1,3 +1,4 @@
+import React from "react";
 import PlansClickableBulletPoint from "./PlansClickableBulletPoint";
 
 const PlansCardProWhatsIncluded = () => {
@@ -11,14 +12,14 @@ const PlansCardProWhatsIncluded = () => {
 			<ul className={rootClass}>
 				<li className="w-full">
 					<PlansClickableBulletPoint
-						text="500 Manually Tracked Listings"
-                        tooltip="Manually track up to 500 listings, allowing for detailed management and performance tracking of each listing."
+						text="100 Manual Listings"
+						tooltip="Get prioritized support with a dedicated team ready to assist you as soon as possible. Whether it's a simple question or a complex issue, help will always be on hand."
 					/>
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
-						text="500 Automatically Tracked Listings"
-                        tooltip="Automatically track up to 500 listings, providing effortless performance monitoring and updates without manual input."
+						text="Advanced Inventory & Order Management"
+						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
 					/>
 				</li>
 			</ul>
@@ -29,15 +30,57 @@ const PlansCardProWhatsIncluded = () => {
 			<ul className={rootClass}>
 				<li className="w-full">
 					<PlansClickableBulletPoint
-						text="AI Created Listings"
-						tooltip="Simply insert your product URL and let our AI create the listing for you."
+						text="25 Automatic Listings"
+						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
 						comingSoon
 					/>
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
-						text="eBay store insights"
-						tooltip="Gain valuable insights about how to improve your eBay store and increase sales."
+						text="Shipping Label Generator"
+						tooltip="Connect your eBay account to Flippify, allowing us to track your sales, automatically list purchases, and handle everything in between. Say goodbye to manual entries and enjoy seamless automation."
+						comingSoon
+					/>
+				</li>
+				<li className="w-full">
+					<PlansClickableBulletPoint
+						text="Multi-Account Support (Manage 2 eBay Stores)"
+						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
+						comingSoon
+					/>
+				</li>
+				<li className="w-full">
+					<PlansClickableBulletPoint
+						text="Smart AI Listing Optimization"
+						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
+						comingSoon
+					/>
+				</li>
+				<li className="w-full">
+					<PlansClickableBulletPoint
+						text="AI-Powered Financial Reports & Tracking"
+						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
+						comingSoon
+					/>
+				</li>
+				<li className="w-full">
+					<PlansClickableBulletPoint
+						text="Bulk Editing & Relisting Automation"
+						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
+						comingSoon
+					/>
+				</li>
+				<li className="w-full">
+					<PlansClickableBulletPoint
+						text="Scheduled Listings & Auto-Drafts"
+						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
+						comingSoon
+					/>
+				</li>
+				<li className="w-full">
+					<PlansClickableBulletPoint
+						text="AI-Optimized Shipping Selection"
+						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
 						comingSoon
 					/>
 				</li>

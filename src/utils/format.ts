@@ -62,16 +62,16 @@ function formatOrdersForCSVExport(orders: IEbayOrder[], timeFrom: string, timeTo
         } = order;
 
         // Calculate Profit
-        const profit = sale.price - purchase.price - shipping.fees;
+        const profit = sale.price - (purchase.price ?? 0) - shipping.fees;
 
         // Calculate ROI (Return on Investment)
-        const totalCost = purchase.price + shipping.fees;
+        const totalCost = (purchase.price ?? 0) + shipping.fees;
         const roi = totalCost > 0 ? ((profit / totalCost) * 100).toFixed(2) : "0.00"; // Avoid division by zero
 
         return [
             orderId,
             itemName,
-            purchase.price.toFixed(2), // Format price with 2 decimal places
+            (purchase.price ?? 0).toFixed(2), // Format price with 2 decimal places
             purchase.quantity,
             sale.price.toFixed(2), // Format price with 2 decimal places
             sale.quantity,

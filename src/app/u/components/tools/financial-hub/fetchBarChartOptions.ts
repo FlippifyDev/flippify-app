@@ -12,8 +12,8 @@ function calculateMonthlyIncomeAndExpense(orders: IEbayOrder[]) {
         const saleDate = new Date(order.sale.date)
         const month = months[saleDate.getMonth()] // Get the month name
 
-        const incomeAmount = order.sale.price * order.sale.quantity
-        const expenseAmount = (order.purchase.price * order.purchase.quantity) + order.shipping.fees + order.additionalFees
+        const incomeAmount = order.sale.price;
+        const expenseAmount = (order.purchase.price ?? 0)+ order.shipping.fees + order.additionalFees;
 
         // Accumulate income and expense by month
         income[month] = (income[month] || 0) + incomeAmount

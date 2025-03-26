@@ -23,7 +23,7 @@ const calculateCostAverages = (orders: IEbayOrder[]) => {
     let totalAdditionalFees = 0;
 
     orders.forEach((order) => {
-        totalPurchasePrice += order.purchase.price;
+        totalPurchasePrice += order.purchase.price ?? 0;
         totalShippingCost += order.shipping.fees;
         totalAdditionalFees += order.additionalFees;
     });

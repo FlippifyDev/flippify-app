@@ -35,12 +35,12 @@ export function fetchBarChartOptions(orders: IEbayOrder[], currencySymbol: strin
         series: [
             {
                 name: "Income",
-                color: "#31C48D",
+                color: "#0D3B66",
                 data: incomeData,
             },
             {
                 name: "Expense",
-                color: "#F05252",
+                color: "#A9D6E5",
                 data: expenseData,
             }
         ],

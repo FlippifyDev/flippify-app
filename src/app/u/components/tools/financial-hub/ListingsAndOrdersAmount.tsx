@@ -8,18 +8,18 @@ import { fetchUserSubscription, fetchSubscriptionMaxListings } from '@/utils/fet
 // External Imports
 import { useSession } from 'next-auth/react'
 import React from 'react'
+import LoadingAnimation from '../../dom/ui/LoadingAnimation';
 
 
 const CardListingsAmount = () => {
     const { data: session } = useSession();
     const store = session?.user.store;
-    if (!store) return null;
 
-    const automaticListings = store.ebay.numListings?.automatic ?? 0;
-    const manualListings = store.ebay.numListings?.manual ?? 0;
+    const automaticListings = store?.ebay.numListings?.automatic ?? 0;
+    const manualListings = store?.ebay.numListings?.manual ?? 0;
 
-    const automaticOrders = store.ebay.numOrders?.automatic ?? 0;
-    const manualOrders = store.ebay.numOrders?.manual ?? 0;
+    const automaticOrders = store?.ebay.numOrders?.automatic ?? 0;
+    const manualOrders = store?.ebay.numOrders?.manual ?? 0;
 
     const userSubscription = fetchUserSubscription(session?.user.subscriptions ?? []);
     if (!userSubscription) return null;
@@ -27,11 +27,11 @@ const CardListingsAmount = () => {
     const { manual: maxManual, automatic: maxAutomatic } = fetchSubscriptionMaxListings(userSubscription);
 
     return (
-        <Card title="Listings Remaining" className='max-h-[30rem]'>
+        <Card title="Listings Remaining" className='h-full'>
             {/* Automatic Listings */}
-            <div>
+            <div className='mt-2'>
                 <span>Automatic Listings</span>
-                <div className="grid grid-cols-12 items-center mt-5">
+                <div className="grid grid-cols-12 items-center mt-7">
                     <div className="col-span-11">
                         <ProgressBar value={automaticListings} maxValue={maxAutomatic} />
                     </div>
@@ -40,9 +40,9 @@ const CardListingsAmount = () => {
             </div>
 
             {/* Manual Listings */}
-            <div>
+            <div className='mt-2'>
                 <span>Manual Listings</span>
-                <div className="grid grid-cols-12 items-center mt-5">
+                <div className="grid grid-cols-12 items-center mt-7">
                     <div className="col-span-11">
                         <ProgressBar value={manualListings} maxValue={maxManual} />
                     </div>
@@ -51,9 +51,9 @@ const CardListingsAmount = () => {
             </div>
 
             {/* Automatic Orders */}
-            <div>
+            <div className='mt-2'>
                 <span>Automatic Orders</span>
-                <div className="grid grid-cols-12 items-center mt-5">
+                <div className="grid grid-cols-12 items-center mt-7">
                     <div className="col-span-11">
                         <ProgressBar value={automaticOrders} maxValue={maxAutomatic} />
                     </div>
@@ -62,9 +62,9 @@ const CardListingsAmount = () => {
             </div>
 
             {/* Manual Orders */}
-            <div>
+            <div className='mt-2'>
                 <span className=''>Manual Orders</span>
-                <div className="grid grid-cols-12 items-center mt-5">
+                <div className="grid grid-cols-12 items-center mt-7">
                     <div className="col-span-11">
                         <ProgressBar value={manualOrders} maxValue={maxManual} />
                     </div>
@@ -83,7 +83,7 @@ const ProgressBar = ({ value, maxValue }: { value: number, maxValue: number }) =
         <div className="relative w-full">
             {/* Value label */}
             <div
-                className="absolute left-0 -top-[26px] py-0.5 px-1.5 bg-blue-50 border border-blue-200 text-xs font-medium text-blue-600 rounded-lg dark:bg-blue-800/30 dark:border-blue-800 dark:text-blue-500"
+                className="absolute left-0 -top-[26px] py-0.5 px-1.5 bg-blue-100 border border-blue-200 text-xs font-medium text-houseFinancialHub rounded-lg dark:bg-blue-800/30"
                 style={{ left: `calc(${percentage}% - 12px)` }} 
             >
                 {value}
@@ -99,7 +99,7 @@ const ProgressBar = ({ value, maxValue }: { value: number, maxValue: number }) =
             >
                 {/* Progress bar fill */}
                 <div
-                    className="flex flex-col justify-center rounded-full overflow-hidden bg-blue-600 text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-blue-500"
+                    className="flex flex-col justify-center rounded-full overflow-hidden bg-houseFinancialHub text-xs text-white text-center whitespace-nowrap transition duration-500"
                     style={{ width: `${percentage}%` }}
                 ></div>
             </div>

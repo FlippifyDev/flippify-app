@@ -25,7 +25,7 @@ export function fetchChartOptions(orders: IEbayOrder[], currencySymbol: string) 
 
     return {
         series: series,
-        colors: ["#0b5339", "#cc0086", "#fc5007", "#000000", "#81ac6f", "#410c1c", "#f8e8d0", "#c99a3c"],
+        colors: ["#0D3B66", "#1E6091", "#3A7CA5", "#468FAF", "#61A5C2", "#89C2D9", "#A9D6E5", "#CAF0F8"],
         chart: {
             height: 320,
             type: "donut",

@@ -39,6 +39,12 @@ const OrderDetails = () => {
     const [alertMessage, setAlertMessage] = useState<string | null>(null);
     const [isAlertVisible, setIsAlertVisible] = useState<boolean>(false);
 
+    const [editedPlatform, setEditedPlatform] = useState<string>("");
+    const [editedCustomTag, setEditedCustomTag] = useState<string>("");
+    const [editedPurchasePrice, setEditedPurchasePrice] = useState<string>("");
+    const [editingIndex, setEditingIndex] = useState<number | null>(null);
+    const [editingType, setEditingType] = useState<string | null>(null);
+
     // This effect runs when selectedOrders length changes
     useEffect(() => {
         if (selectedOrders.length > 0) {
@@ -74,7 +80,7 @@ const OrderDetails = () => {
 
     // Handle orders click
     const handleOrdersClick = () => {
-        router.push(`/u/${username}/inventory-orders#orders`);
+        router.push(`/u/${username}/tools/inventory-orders#orders`);
     };
 
     // Handle checkbox selection
@@ -269,6 +275,66 @@ const OrderDetails = () => {
         }
     };
 
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>, index: number, type: string) => {
+        if (e.key === "Enter") {
+            saveChange(index, type);
+        } else if (e.key === "Escape") {
+            setEditedPlatform(orders[index].purchase.platform);
+        }
+    };
+
+    const saveChange = async (index: number, type: string) => {
+        const updatedOrders = [...orders];
+
+        if (type === "platform") {
+            if (editedPlatform === orders[index].purchase.platform) {
+                return;
+            }
+            updatedOrders[index].purchase.platform = editedPlatform;
+        } else if (type === "customTag") {
+            if (editedCustomTag === orders[index].customTag) {
+                return;
+            }
+            updatedOrders[index].customTag = editedCustomTag;
+        } else if (type === "purchasePrice") {
+            if (Number(editedPurchasePrice.replace(currencySymbols[currency], "")) === orders[index].purchase.price) {
+                return;
+            }
+            updatedOrders[index].purchase.price = Number(editedPurchasePrice.replace(currencySymbols[currency], ""));
+        }
+
+        try {
+            // Determine the field to update based on the type
+            const updateFields: { [key: string]: any } = {};
+
+            if (type === "platform") {
+                updateFields["purchase.platform"] = editedPlatform;
+            } else if (type === "customTag") {
+                updateFields["customTag"] = editedCustomTag;
+            } else if (type === "purchasePrice") {
+                updateFields["purchase.price"] = updatedOrders[index].purchase.price;
+            }
+
+            const orderDocRef = doc(
+                firestore,
+                'orders',
+                session?.user.id as string,
+                'ebay',
+                updatedOrders[index].orderId
+            );
+
+            // Perform the update
+            await updateDoc(orderDocRef, updateFields);
+            
+            setEditingType(null);
+            setEditingIndex(null);
+            setOrders(updatedOrders);
+        } catch (error) {
+            console.error("Error updating platform:", error);
+            setAlertMessage("Failed to update platform.");
+            setIsAlertVisible(true);
+        }
+    };
 
     return (
         <div className="rounded-lg text-orderPageText space-y-2">
@@ -301,61 +367,99 @@ const OrderDetails = () => {
             </div>
             <div className="bg-white rounded-lg">
                 <h1 className="p-4 font-semibold">Product Data</h1>
-                <table className="table bg-white">
-                    <thead>
-                        <tr className="text-left bg-tableHeaderBackground shadow-sm">
-                            <th>Select</th>
-                            <th>Order ID</th>
-                            <th>Purchase Date</th>
-                            <th>Sale Date</th>
-                            <th>Quantity Sold</th>
-                            <th>Additional Fees</th>
-                            <th>Shipping Fees</th>
-                            <th>Cost</th>
-                            <th>Sold For</th>
-                            <th>Profit</th>
-                            <th>ROI (%)</th>
-                            <th>Purchased At</th>
-                            <th>Purchased By</th>
-                            <th>Tag</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {orders.map((order, index) => {
-                            const { orderId, sale, purchase, shipping, additionalFees } = order;
-                            const profit = (sale.price + shipping.fees) - (purchase.price || 0) - shipping.fees - additionalFees;
-                            const roi = purchase.price && purchase.price > 0 ? ((profit / purchase.price) * 100).toFixed(2) : "0";
-                            return (
-                                <tr key={index} className="cursor-pointer hover:bg-gray-100">
-                                    <td>
-                                        <label className="flex items-center cursor-pointer relative">
+                <div className="overflow-x-auto">
+                    <table className="table bg-white">
+                        <thead>
+                            <tr className="text-left bg-tableHeaderBackground shadow-sm">
+                                <th>Select</th>
+                                <th>Order ID</th>
+                                <th>Purchase Date</th>
+                                <th>Sale Date</th>
+                                <th>Quantity Sold</th>
+                                <th>Additional Fees</th>
+                                <th>Shipping Fees</th>
+                                <th>Purchased For</th>
+                                <th>Sold For</th>
+                                <th>Profit</th>
+                                <th>ROI (%)</th>
+                                <th>Purchased At</th>
+                                <th>Purchased By</th>
+                                <th>Tag</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {orders.map((order, index) => {
+                                const { orderId, sale, purchase, shipping, additionalFees } = order;
+                                const profit = (sale.price + shipping.fees) - (purchase.price || 0) - shipping.fees - additionalFees;
+                                const roi = purchase.price && purchase.price > 0 ? ((profit / purchase.price) * 100).toFixed(2) : "0";
+                                return (
+                                    <tr key={index}>
+                                        <td>
+                                            <label className="flex items-center cursor-pointer relative">
+                                                <input
+                                                    onChange={() => handleCheckboxChange(order.orderId)}
+                                                    type="checkbox"
+                                                    className="peer h-5 w-5 cursor-pointer transition-all appearance-none rounded shadow hover:shadow-md border border-slate-300 checked:bg-slate-800 checked:border-slate-800 focus:ring-0"
+                                                    id="check"
+                                                    checked={selectedOrders.includes(order.orderId)}
+                                                />
+                                            </label>
+                                        </td>
+                                        <td>{orderId}</td>
+                                        <td>{formatTableDate(order.purchase.date)}</td>
+                                        <td>{formatTableDate(order.sale.date)}</td>
+                                        <td>{sale.quantity}</td>
+                                        <td>{currencySymbols[currency]}{additionalFees.toFixed(2)}</td>
+                                        <td>{currencySymbols[currency]}{shipping.fees.toFixed(2)}</td>
+                                        <td
+                                            onClick={() => { setEditingIndex(index); setEditedPurchasePrice(`${currencySymbols[currency]}${order.purchase.price}`); setEditingType("purchasePrice"); }}
+                                            className="cursor-pointer transition duration-200"
+                                        >
                                             <input
-                                                onChange={() => handleCheckboxChange(order.orderId)}
-                                                type="checkbox"
-                                                className="peer h-5 w-5 cursor-pointer transition-all appearance-none rounded shadow hover:shadow-md border border-slate-300 checked:bg-slate-800 checked:border-slate-800 focus:ring-0"
-                                                id="check"
-                                                checked={selectedOrders.includes(order.orderId)}
+                                                type="text"
+                                                value={(editingIndex === index && editingType === "purchasePrice") ? `${editedPurchasePrice}` : `${currencySymbols[currency]}${order.purchase.price.toFixed(2)}`}
+                                                onChange={(e) => setEditedPurchasePrice(Number(e.target.value).toFixed(2))}
+                                                onBlur={() => saveChange(index, "purchasePrice")}
+                                                onKeyDown={(e) => handleKeyPress(e, index, "purchasePrice")}
+                                                className="focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
                                             />
-                                        </label>
-                                    </td>
-                                    <td>{orderId}</td>
-                                    <td>{formatTableDate(order.purchase.date)}</td>
-                                    <td>{formatTableDate(order.sale.date)}</td>
-                                    <td>{sale.quantity}</td>
-                                    <td>{currencySymbols[currency]}{additionalFees.toFixed(2)}</td>
-                                    <td>{currencySymbols[currency]}{shipping.fees.toFixed(2)}</td>
-                                    <td>{currencySymbols[currency]}{!purchase.price ? "N/A" : purchase.price}</td>
-                                    <td>{currencySymbols[currency]}{(sale.price + shipping.fees).toFixed(2)}</td>
-                                    <td>{currencySymbols[currency]}{profit.toFixed(2)}</td>
-                                    <td>{roi}%</td>
-                                    <td>{order.purchase.platform}</td>
-                                    <td>{order.sale.buyerUsername}</td>
-                                    <td>{order.customTag}</td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
+                                        </td>
+                                        <td>{currencySymbols[currency]}{(sale.price + shipping.fees).toFixed(2)}</td>
+                                        <td>{currencySymbols[currency]}{profit.toFixed(2)}</td>
+                                        <td>{roi}%</td>
+                                        <td
+                                            onClick={() => { setEditingIndex(index); setEditedPlatform(order.purchase.platform); setEditingType("platform"); }}
+                                            className="cursor-pointer transition duration-200"
+                                        >
+                                            <input
+                                                type="text"
+                                                value={(editingIndex === index && editingType === "platform") ? editedPlatform : order.purchase.platform}
+                                                onChange={(e) => setEditedPlatform(e.target.value)}
+                                                onBlur={() => saveChange(index, "platform")}
+                                                onKeyDown={(e) => handleKeyPress(e, index, "platform")}
+                                                className="focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
+                                            />
+                                        </td>
+                                        <td>{order.sale.buyerUsername}</td>
+                                        <td
+                                            onClick={() => { setEditingIndex(index); setEditedCustomTag(order.customTag ?? ""); setEditingType("customTag"); }}
+                                            className="cursor-pointer transition duration-200"
+                                        >
+                                            <input
+                                                type="text"
+                                                value={(editingIndex === index && editingType === "customTag") ? editedCustomTag : order.customTag ?? ""}
+                                                onChange={(e) => setEditedCustomTag(e.target.value)}
+                                                onBlur={() => saveChange(index, "customTag")}
+                                                onKeyDown={(e) => handleKeyPress(e, index, "customTag")}
+                                                className="focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
+                                            />
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             {selectedOrders.length > 0 && (

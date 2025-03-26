@@ -11,7 +11,8 @@ const config: Config = {
 		'./components/**/*.{ts,tsx,js,jsx,mdx}',
 		'./app/**/*.{ts,tsx,js,jsx,mdx}',
 		'./src/**/*.{ts,tsx,js,jsx,mdx}',
-	],
+    ],
+    safelist: [],
 	prefix: "",
 	theme: {
 		container: {
@@ -71,6 +72,8 @@ const config: Config = {
 				darkGreyText: '#222222',
 				houseBlue: '#1a73e8',
 				houseHoverBlue: '#1A9EEA',
+                houseFinancialHub: '#1E6091',
+                houseFinancialHubHover: '#0D3B66',
 				lightModeText: '#3b4045',
 				userPageBlueBg: '#1b2a49',
 				userPageLightBlueBg: '#3e78b2',

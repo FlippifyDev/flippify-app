@@ -9,15 +9,15 @@ import ThemeSetter from '../../components/ThemeSetter';
 const root = process.env.ROOT as string;
 
 export const metadata = {
-	title: 'Exclusive Flipping Products - Flippify Deals',
-	description: 'Explore Flippify’s product offerings, including Advanced Lego retirement deals, Discounted Electronics, Sneakers and other upcoming releases. Our platform tracks soon-to-retire Lego sets across multiple websites along with many other categories like electronics and sneakers, ensuring you never miss a valuable deal. Stay updated for more exclusive products and offers.',
+	title: 'Services - Flippify',
+    description: 'Streamline your eBay reselling business with AI-powered automation tools. From listing creation and pricing optimization to inventory tracking, order fulfillment, and financial management, Flippify helps you save time and boost profitability.',
 	openGraph: {
-		title: 'Exclusive Flipping Products - Flippify Deals',
-		description: 'Explore Flippify’s product offerings, including Advanced Lego retirement deals, Discounted Electronics, Sneakers and other upcoming releases. Our platform tracks soon-to-retire Lego sets across multiple websites along with many other categories like electronics and sneakers, ensuring you never miss a valuable deal. Stay updated for more exclusive products and offers.',
-		url: root.concat('/l/products'),
+        title: 'Services - Flippify',
+        description: 'Streamline your eBay reselling business with AI-powered automation tools. From listing creation and pricing optimization to inventory tracking, order fulfillment, and financial management, Flippify helps you save time and boost profitability.',
+		url: root.concat('/l/services'),
 		images: [
 			{
-				url: 'https://i.imgur.com/RfR639r.png',
+                url: 'https://i.imgur.com/iIlqxEj.png',
 				width: 1908,
 				height: 1076,
 				alt: 'Products Page Image'

@@ -20,7 +20,7 @@ const Navbar = () => {
 	return (
 		<div className="h-full w-full flex flex-row items-center">
 			<div className="w-full pl-4 sm:pl-12 font-semibold text-lg">
-				{title}
+				{title.replace("And", "&")}
 			</div>
             <div className="w-full flex justify-end pr-2 items-center">
                 <div className="flex justify-end pr-2">

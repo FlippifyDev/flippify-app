@@ -63,7 +63,7 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
 			<LayoutSubscriptionWrapper requiredSubscriptions={["!admin"]}>
 				<DisabledSideBarButton
 					text="Reports & Insights"
-					redirect="reports-insights"
+					redirect="reports-and-insights"
 					isSidebarOpen={isSidebarOpen}
 					symbol={<HiDocumentReport className="text-2xl" />}
 					tooltip="Coming Soon"
@@ -75,7 +75,7 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
 			<LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
 				<SidebarButton
 					text="Reports & Insights"
-					redirect="reports-insights"
+					redirect="reports-and-insights"
 					isSidebarOpen={isSidebarOpen}
 					symbol={<HiDocumentReport className="text-2xl" />}
 				/>
@@ -85,7 +85,7 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
 			<LayoutSubscriptionWrapper requiredSubscriptions={["!admin"]}>
 				<DisabledSideBarButton
 					text="Help & Resources"
-					redirect="help-resources"
+					redirect="help-and-resources"
 					isSidebarOpen={isSidebarOpen}
 					symbol={<FaBook className="text-lg" />}
 					tooltip="Coming Soon"
@@ -96,7 +96,7 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
 			<LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
 				<SidebarButton
 					text="Help & Resources"
-					redirect="help-resources"
+					redirect="help-and-resources"
 					isSidebarOpen={isSidebarOpen}
 					symbol={<FaBook className="text-lg" />}
 				/>

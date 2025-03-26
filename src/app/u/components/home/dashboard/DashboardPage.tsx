@@ -101,10 +101,10 @@ const DashboardPage: React.FC = () => {
                 requiredSubscriptions={["accessGranted", "!member"]}
             >
                 <div className="flex justify-center items-center flex-grow flex-col">
-                    <h1 className="text-lg font-semibold text-center mb-5">No subscription found</h1>
+                    <h1 className="text-xl font-semibold text-center mb-10">No subscription found</h1>
                     <LoadingAnimation text="Go to the plans page to get a subscription" type="hover-box" />
                     <div className="w-full flex justify-center items-center mt-5">
-                        <Link href={`/u/${session.user.username}/plans`} className="w-full text-center text-blue-600 hover:text-blue-700 hover:underline transition-all duration-200">View Plans</Link>
+                        <Link href={`/u/${session.user.username}/plans`} className="btn border-0 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 text-opacity-100 px-24 mx-auto rounded-lg shadow-lg">View Plans</Link>
                     </div>
                 </div>
             </LayoutSubscriptionWrapper>

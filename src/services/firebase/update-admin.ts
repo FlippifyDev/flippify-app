@@ -1,10 +1,10 @@
 "use server";
 
-import { IUser } from "@/models/user";
+import { ISubscription, IUser } from "@/models/user";
 import { firestoreAdmin } from "@/lib/firebase/config-admin";
 
 
-export async function updateReferreeUser(referredUserId: string, referreeCode: string): Promise<{ success: boolean }> {
+export async function updateReferreeUserAdmin(referredUserId: string, referreeCode: string): Promise<{ success: boolean }> {
     try {
         const referreeUserQuery = firestoreAdmin.collection('users').where('referral.referralCode', '==', referreeCode);
         if (!referreeUserQuery) return { success: false };
@@ -34,4 +34,34 @@ export async function updateReferreeUser(referredUserId: string, referreeCode: s
         return { success: false };
     }
 
+}
+
+
+export async function updateUserSubscriptionAdmin(uid: string, subscription: ISubscription): Promise<void> {
+    try {
+        const userRef = firestoreAdmin.collection('users').doc(uid);
+        // Update the user's subscriptions array
+        await userRef.set(
+            { subscriptions: [subscription] },
+            { merge: true }
+        );
+
+    } catch (error) {
+        console.error("Error updating user subscription:", error);
+    }
+}
+
+
+export async function updateReferredByAdmin(uid: string, referredBy: string): Promise<void> {
+    try {
+        const userRef = firestoreAdmin.collection('users').doc(uid);
+        // Update the user's referral code
+        await userRef.set(
+            { referral: { referredBy } },
+            { merge: true }
+        );
+
+    } catch (error) {
+        console.error("Error updating referral code:", error);
+    }
 }

@@ -22,7 +22,7 @@ const LayoutFooter = () => {
                 <nav className="flex items-center gap-4">
                     <Link href='https://www.instagram.com/flippifyuk/'><button className="mx-2 text-white"><FaInstagram className="text-xl" /></button></Link>
                     <Link href='https://www.tiktok.com/@flippifyuk?lang=en'><button className="mx-2 text-white"><FaTiktok className="text-xl" /></button></Link>
-                    <Link href='https://x.com/FlippifyUK'><button className="mx-2 text-white"><BsTwitterX className="text-lg" /></button></Link>
+                    <Link href='https://x.com/flippify_io'><button className="mx-2 text-white"><BsTwitterX className="text-lg" /></button></Link>
                     <Link href='https://discord.gg/gNPYfe7YFm'><button className="mx-2 text-white"><FaDiscord className="text-xl" /></button></Link>
                 </nav>
             </footer>

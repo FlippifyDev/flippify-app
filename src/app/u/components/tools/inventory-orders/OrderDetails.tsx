@@ -5,7 +5,7 @@ import Alert from "@/app/components/Alert";
 import UpdateFields from "./UpdateFields";
 import OrderInfoCard from "./OrderInfoCard";
 import { firestore } from "@/lib/firebase/config";
-import { IEbayOrder } from "@/models/store-data";
+import { IEbayInventoryItem, IEbayOrder } from "@/models/store-data";
 import { getCachedData, setCachedData } from "@/utils/cache-helpers";
 import { formatTableDate } from "@/utils/format-dates";
 import { currencySymbols } from "@/config/currency-config";
@@ -119,10 +119,10 @@ const OrderDetails = () => {
             totalSalePrice += sale.price + shipping.fees;
             totalAdditionalFees += additionalFees;
 
-            
+
             if (purchase.price === null) {
-                purchase.price = 0; 
-            }   
+                purchase.price = 0;
+            }
 
 
             totalPurchasePrice += purchase.price;
@@ -262,7 +262,7 @@ const OrderDetails = () => {
                 });
 
                 // After successful Firestore update, update the cache with the merged data
-                setCachedData(cacheKey, mergedOrders, cacheExpirationTime);
+                setCachedData(cacheKey, mergedOrders);
 
                 setAlertMessage("Orders successfully updated.");
                 setIsAlertVisible(true);
@@ -284,7 +284,14 @@ const OrderDetails = () => {
         if (e.key === "Enter") {
             saveChange(index, type);
         } else if (e.key === "Escape") {
-            setEditedPlatform(orders[index].purchase.platform);
+            if (type === "platform") {
+                setEditedPlatform(orders[index].purchase?.platform ?? "");
+            } else if (type === "customTag") {
+                setEditedCustomTag(orders[index].customTag ?? "");
+            } else if (type === "purchasePrice") {
+                setEditedPurchasePrice(`${currencySymbols[currency]}${orders[index].purchase?.price ?? ""}`);
+            }
+            setEditingType(null);
         }
     };
 
@@ -333,7 +340,7 @@ const OrderDetails = () => {
 
             // Perform the update
             await updateDoc(orderDocRef, updateFields);
-            
+
             setEditingType(null);
             setEditingIndex(null);
             setOrders(updatedOrders);
@@ -343,6 +350,26 @@ const OrderDetails = () => {
             setIsAlertVisible(true);
         }
     };
+
+    function handlePlatformInput(index: number, order: IEbayOrder) {
+        setEditingIndex(index);
+        setEditedPlatform(order.purchase.platform)
+        setEditingType("platform");
+    }
+
+    function handlePurchasePriceInput(index: number, purchasePrice: string) {
+        setEditingIndex(index);
+        setEditedPurchasePrice(purchasePrice);
+        setEditingType("purchasePrice");
+    }
+
+    function handleCustomTagInput(index: number, order: IEbayOrder) {
+        setEditingIndex(index);
+        setEditedCustomTag(order.customTag);
+        setEditingType("customTag");
+    }
+
+    console.log(editingIndex)
 
     return (
         <div className="rounded-lg text-orderPageText space-y-2">
@@ -400,6 +427,8 @@ const OrderDetails = () => {
                                 const { orderId, sale, purchase, shipping, additionalFees } = order;
                                 const profit = (sale.price + shipping.fees) - (purchase.price || 0) - shipping.fees - additionalFees;
                                 const roi = purchase.price && purchase.price > 0 ? ((profit / purchase.price) * 100).toFixed(2) : "0";
+                                
+                                const purchasePrice = purchase.price !== null ? purchase.price.toFixed(2) : "0";
                                 return (
                                     <tr key={index}>
                                         <td>
@@ -420,12 +449,13 @@ const OrderDetails = () => {
                                         <td>{currencySymbols[currency]}{additionalFees.toFixed(2)}</td>
                                         <td>{currencySymbols[currency]}{shipping.fees.toFixed(2)}</td>
                                         <td
-                                            onClick={() => { setEditingIndex(index); setEditedPurchasePrice(`${currencySymbols[currency]}${order.purchase.price ?? ''}`); setEditingType("purchasePrice"); }}
                                             className="cursor-pointer transition duration-200"
                                         >
                                             <input
+                                                onFocus={() => handlePurchasePriceInput(index, purchasePrice)}
+                                                onClick={() => handlePurchasePriceInput(index, purchasePrice)}
                                                 type="text"
-                                                value={(editingIndex === index && editingType === "purchasePrice") ? `${editedPurchasePrice ?? '0'}` : `${currencySymbols[currency]}${order.purchase.price ?? '0'}`}
+                                                value={(editingIndex === index && editingType === "purchasePrice") ? editedPurchasePrice ?? '0' : purchasePrice}
                                                 onChange={(e) => setEditedPurchasePrice(e.target.value)}
                                                 onBlur={() => saveChange(index, "purchasePrice")}
                                                 onKeyDown={(e) => handleKeyPress(e, index, "purchasePrice")}
@@ -436,10 +466,11 @@ const OrderDetails = () => {
                                         <td>{currencySymbols[currency]}{profit.toFixed(2)}</td>
                                         <td>{roi}%</td>
                                         <td
-                                            onClick={() => { setEditingIndex(index); setEditedPlatform(order.purchase.platform); setEditingType("platform"); }}
                                             className="cursor-pointer transition duration-200"
                                         >
                                             <input
+                                                onFocus={() => handlePlatformInput(index, order)}
+                                                onClick={() => handlePlatformInput(index, order)}
                                                 type="text"
                                                 value={(editingIndex === index && editingType === "platform") ? editedPlatform ?? "" : order.purchase.platform ?? ""}
                                                 onChange={(e) => setEditedPlatform(e.target.value)}
@@ -450,10 +481,11 @@ const OrderDetails = () => {
                                         </td>
                                         <td>{order.sale.buyerUsername}</td>
                                         <td
-                                            onClick={() => { setEditingIndex(index); setEditedCustomTag(order.customTag ?? ""); setEditingType("customTag"); }}
                                             className="cursor-pointer transition duration-200"
                                         >
                                             <input
+                                                onFocus={() => handleCustomTagInput(index, order)}
+                                                onClick={() => handleCustomTagInput(index, order)}
                                                 type="text"
                                                 value={(editingIndex === index && editingType === "customTag") ? editedCustomTag ?? "" : order.customTag ?? ""}
                                                 onChange={(e) => setEditedCustomTag(e.target.value)}

@@ -243,7 +243,7 @@ async function retrieveUserOrders(
         const data = await retrieveUserOrdersFromDB(uid, timeFrom, timeTo);
 
         // Cache the fetched data using the updated cacheKey
-        setCachedData(cacheKey, data, cacheExpirationTime);
+        setCachedData(cacheKey, data);
         return filterOrdersByTime(data, timeFrom, timeTo);
     } catch (error) {
         console.error(`Error fetching orders for user with UID=${uid}:`, error);
@@ -353,7 +353,7 @@ async function retrieveUserInventory(
     // If no cached data or update is required, fetch from Firestore
     try {
         const data = await retrieveUserInventoryFromDB(uid, timeFrom, timeTo); // Fetch inventory data
-        setCachedData(cacheKey, data, cacheExpirationTime); // Cache the fetched data
+        setCachedData(cacheKey, data); // Cache the fetched data
         return filterInventoryByTime(data, timeFrom, timeTo); // Apply time filtering
     } catch (error) {
         console.error(`Error fetching inventory for user with UID=${uid}:`, error);

@@ -1,6 +1,6 @@
 import { Hamster, StackLoader, HoverBox, TypeWriter } from "./LoadingAnimations";
 
-type AnimationType = "hamster" | "stack-loader" | "hover-box" | "typewriter"
+export type AnimationType = "hamster" | "stack-loader" | "hover-box" | "typewriter"
 
 
 interface LoadingAnimationProps {

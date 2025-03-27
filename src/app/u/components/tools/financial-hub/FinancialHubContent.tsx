@@ -5,8 +5,7 @@ import OrderInfo from "./OrderInfo";
 import FilterSelector from "./FilterSelector";
 import { IEbayOrder } from "@/models/store-data";
 import CardShippingInfo from "./ShippingInfo";
-import CardSaleAverages from "./SaleAverages";
-import LoadingAnimation from "../../dom/ui/LoadingAnimation";
+import ConnectAccountButton from "../../dom/ui/ConnectAccountButton";
 import CardCostAverages from "./CostAverages";
 import DateRangeSelector from "./DateRangeSelector";
 import { formatTimeFrom } from "@/utils/format-dates";
@@ -32,13 +31,13 @@ const FinancialHubContent = () => {
 
     const [orders, setOrders] = useState<IEbayOrder[]>([]);
     const [loading, setLoading] = useState(false);
-    
+
     // General Filters
     const [selectedFilter, setSelectedFilter] = useState("General");
     const [selectedTimeRange, setSelectedTimeRange] = useState("Last 30 days");
     const [timeFrom, setTimeFrom] = useState(formatTimeFrom(30));
     const [timeTo, setTimeTo] = useState<string | undefined>(undefined);
-    
+
     const userCurrency = session?.user.preferences.currency || "USD";
 
     // Export CSV Modal
@@ -352,13 +351,7 @@ const FinancialHubContent = () => {
                 </div>
             ) : (
                 <div className="relative flex flex-col w-full min-h-full">
-                    <div className="flex justify-center items-center flex-grow flex-col">
-                        <h1 className="text-lg font-semibold text-center mb-24">No account connected</h1>
-                        <LoadingAnimation text="Go to your profile to connect your eBay account" type="stack-loader" />
-                        <div className="w-full flex justify-center items-center mt-5">
-                            <Link href={`/u/${session?.user.username}/profile`} className="w-full text-center text-blue-600 hover:text-blue-700 hover:underline transition-all duration-200">Go to profile</Link>
-                        </div>
-                    </div >
+                    <ConnectAccountButton heading="No account connected" animationType="hover-box" subtitle="Go to your profile to connect your eBay account" buttonText="Go to profile" />
                 </div>
             )}
 

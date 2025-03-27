@@ -22,6 +22,12 @@ const PlansCardProWhatsIncluded = () => {
 						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
 					/>
 				</li>
+				<li className="w-full">
+					<PlansClickableBulletPoint
+						text="Advanced Financial Tracking"
+						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
+					/>
+				</li>
 			</ul>
 
 			<div className="text-black font-semibold ml-2 mb-[-6px]">
@@ -58,7 +64,7 @@ const PlansCardProWhatsIncluded = () => {
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
-						text="AI-Powered Financial Reports & Tracking"
+						text="AI-Powered Financial Reports"
 						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
 						comingSoon
 					/>

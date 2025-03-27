@@ -19,38 +19,55 @@ const PlansCardEliteWhatsIncluded = () => {
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
-						text="100 Automatic Listings"
-						tooltip="Have weekly 1-on-1 calls with our experts to ensure your success and growth as a reseller."
-					/>
-				</li>
-				<li className="w-full">
-					<PlansClickableBulletPoint
 						text="Full Inventory & Order Management"
 						tooltip="Join an exclusive VIP community of elite resellers for networking, insider knowledge, and special events."
 					/>
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
+						text="Full Financial Tracking"
+						tooltip="Join an exclusive VIP community of elite resellers for networking, insider knowledge, and special events."
+					/>
+				</li>
+			</ul>
+
+			<div className="text-black font-semibold ml-2 mb-[-6px]">
+				<p>Coming Soon:</p>
+			</div>
+			<ul className={rootClass}>
+				<li className="w-full">
+					<PlansClickableBulletPoint
+						text="100 Automatic Listings"
+						tooltip="Have weekly 1-on-1 calls with our experts to ensure your success and growth as a reseller."
+						comingSoon
+					/>
+				</li>
+				<li className="w-full">
+					<PlansClickableBulletPoint
 						text="Multi-Store Inventory Sync"
 						tooltip="Be the first to try out new features in beta before they are released to the general public."
+						comingSoon
 					/>
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
 						text="Advanced AI Listing Optimization & Smart Price Adjustments"
 						tooltip="Be the first to try out new features in beta before they are released to the general public."
+						comingSoon
 					/>
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
 						text="Manage up to 5 eBay Stores"
 						tooltip="Be the first to try out new features in beta before they are released to the general public."
+						comingSoon
 					/>
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
 						text="Priority AI Processing for Faster Listings & Insights"
 						tooltip="Be the first to try out new features in beta before they are released to the general public."
+						comingSoon
 					/>
 				</li>
 			</ul>

@@ -18,12 +18,6 @@ const PlansCardStandardWhatsIncluded = () => {
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
-						text="5 Automatic Listings (Created & Managed by AI)"
-						tooltip="Stay ahead of the game with real-time alerts for high-demand product restocks. Be the first to secure items and maximize your profits with unbeatable resale opportunities."
-					/>
-				</li>
-				<li className="w-full">
-					<PlansClickableBulletPoint
 						text="Basic Inventory & Order Management"
 						tooltip="Join a community of experienced, top-tier resellers and gain access to exclusive networking opportunities. Participate in live Q&A sessions, giveaways, and get access to private community spaces not available to the general public. Learn from the best and stay ahead of the competition."
 					/>
@@ -38,6 +32,19 @@ const PlansCardStandardWhatsIncluded = () => {
 					<PlansClickableBulletPoint
 						text="Single eBay Store Management"
 						tooltip="Join a community of experienced, top-tier resellers and gain access to exclusive networking opportunities. Participate in live Q&A sessions, giveaways, and get access to private community spaces not available to the general public. Learn from the best and stay ahead of the competition."
+					/>
+				</li>
+			</ul>
+
+			<div className="text-black font-semibold ml-2 mb-[-6px]">
+				<p>Coming Soon:</p>
+			</div>
+			<ul className={rootClass}>
+			<li className="w-full">
+					<PlansClickableBulletPoint
+						text="5 Automatic Listings (Created & Managed by AI)"
+						tooltip="Stay ahead of the game with real-time alerts for high-demand product restocks. Be the first to secure items and maximize your profits with unbeatable resale opportunities."
+						comingSoon
 					/>
 				</li>
 			</ul>

@@ -18,49 +18,13 @@ const PlansCardProWhatsIncluded = () => {
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
-						text="25 Automatic Listings"
-						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
-					/>
-				</li>
-				<li className="w-full">
-					<PlansClickableBulletPoint
 						text="Advanced Inventory & Order Management"
 						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
 					/>
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
-						text="Smart AI Listing Optimization"
-						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
-					/>
-				</li>
-				<li className="w-full">
-					<PlansClickableBulletPoint
-						text="AI-Powered Financial Reports & Tracking"
-						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
-					/>
-				</li>
-				<li className="w-full">
-					<PlansClickableBulletPoint
-						text="Bulk Editing & Relisting Automation"
-						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
-					/>
-				</li>
-				<li className="w-full">
-					<PlansClickableBulletPoint
-						text="Scheduled Listings & Auto-Drafts"
-						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
-					/>
-				</li>
-				<li className="w-full">
-					<PlansClickableBulletPoint
-						text="AI-Optimized Shipping Selection"
-						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
-					/>
-				</li>
-				<li className="w-full">
-					<PlansClickableBulletPoint
-						text="Multi-Account Support (Manage 2 eBay Stores)"
+						text="Advanced Financial Tracking"
 						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
 					/>
 				</li>
@@ -72,8 +36,57 @@ const PlansCardProWhatsIncluded = () => {
 			<ul className={rootClass}>
 				<li className="w-full">
 					<PlansClickableBulletPoint
+						text="25 Automatic Listings"
+						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
+						comingSoon
+					/>
+				</li>
+				<li className="w-full">
+					<PlansClickableBulletPoint
 						text="Shipping Label Generator"
 						tooltip="Connect your eBay account to Flippify, allowing us to track your sales, automatically list purchases, and handle everything in between. Say goodbye to manual entries and enjoy seamless automation."
+						comingSoon
+					/>
+				</li>
+				<li className="w-full">
+					<PlansClickableBulletPoint
+						text="Multi-Account Support (Manage 2 eBay Stores)"
+						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
+						comingSoon
+					/>
+				</li>
+				<li className="w-full">
+					<PlansClickableBulletPoint
+						text="Smart AI Listing Optimization"
+						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
+						comingSoon
+					/>
+				</li>
+				<li className="w-full">
+					<PlansClickableBulletPoint
+						text="AI-Powered Financial Reports"
+						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
+						comingSoon
+					/>
+				</li>
+				<li className="w-full">
+					<PlansClickableBulletPoint
+						text="Bulk Editing & Relisting Automation"
+						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
+						comingSoon
+					/>
+				</li>
+				<li className="w-full">
+					<PlansClickableBulletPoint
+						text="Scheduled Listings & Auto-Drafts"
+						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
+						comingSoon
+					/>
+				</li>
+				<li className="w-full">
+					<PlansClickableBulletPoint
+						text="AI-Optimized Shipping Selection"
+						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
 						comingSoon
 					/>
 				</li>

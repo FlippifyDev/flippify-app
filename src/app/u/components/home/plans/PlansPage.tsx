@@ -134,6 +134,7 @@ const PlansPage = () => {
           enterpriseListings={enterpriseListings}
           setEnterpriseListings={setEnterpriseListings}
           enterpriseContactUrl="/contact"
+          comingSoon
         />
       </div>
     </div>

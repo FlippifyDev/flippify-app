@@ -42,7 +42,7 @@ const PlansCardFreeWhatsIncluded = () => {
 			<ul className={rootClass}>
 				<li className="w-full">
 					<PlansClickableBulletPoint
-						text="5 AI Listings"
+						text="5 AI Automated Listings"
 						tooltip="Provide a product link, and our AI will create, list, and manage 5 listings for you, tracking them through to sale."
 						comingSoon
 					/>

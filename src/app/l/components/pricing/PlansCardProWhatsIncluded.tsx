@@ -13,7 +13,7 @@ const PlansCardProWhatsIncluded = () => {
 				<li className="w-full">
 					<PlansClickableBulletPoint
 						text="500 Auto-Tracked Listings /Month"
-						tooltip="Track up to 500 new eBay listings monthly. Log the purchase, and we&apos;ll automatically monitor inventory, sales, and financials. Limit resets each month; active tracked items don’t count toward the next month’s cap."
+						tooltip="Track up to 500 new eBay listings monthly. Log the purchase, and we&apos;ll automatically monitor inventory, sales, and financials. Limit resets each month; active tracked items don&apos;t count toward the next month&apos;s cap."
 					/>
 				</li>
 			</ul>
@@ -26,6 +26,13 @@ const PlansCardProWhatsIncluded = () => {
 					<PlansClickableBulletPoint
 						text="100 AI Automated Listings"
 						tooltip="Provide a product link, and our AI will create, list, and manage 100 listings for you, tracking them through to sale."
+						comingSoon
+					/>
+				</li>
+				<li className="w-full">
+					<PlansClickableBulletPoint
+						text="500 Manual Transaction Entries"
+						tooltip="Manually log purchases and sales to track them in your inventory, orders, and financials. You manage the item&apos;s status, such as moving it between inventory and orders, without automated tracking."
 						comingSoon
 					/>
 				</li>

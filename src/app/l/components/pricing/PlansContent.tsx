@@ -64,7 +64,7 @@ const PlansContent = () => {
         </div>
         <div className="flex justify-center w-4/5 sm:w-full animate-fadeInSecondary">
           <p className="mx-4 mt-[-12px] mb-2 sm:mx-2 text-gray-300 text-md sm:text-lg text-center">
-            Flexible Plans for Every Reseller: From Beginners to Experts
+            Flexible Plans for Every eBay Seller: From Beginners to Experts
           </p>
         </div>
         <div className="flex justify-center w-4/5 sm:w-full items-center space-x-4">
@@ -103,6 +103,7 @@ const PlansContent = () => {
           priceRange={selectedPlan}
           currency={currency}
           conversionRates={conversionRates}
+          specialPlan
         />
         <PlansCard
           title="Standard"
@@ -117,6 +118,7 @@ const PlansContent = () => {
           priceRange={selectedPlan}
           currency={currency}
           conversionRates={conversionRates}
+          comingSoon
         />
         <PlansCard
           title="Pro"
@@ -131,7 +133,7 @@ const PlansContent = () => {
           priceRange={selectedPlan}
           currency={currency}
           conversionRates={conversionRates}
-          specialPlan={true}
+          comingSoon
         />
         <PlansCard
           title="Enterprise"

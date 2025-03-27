@@ -114,7 +114,6 @@ const PlansCard: React.FC<PlansCardProps> = ({
         <div className={`w-full min-h-[700px] flex flex-col justify-between relative ${className || ""}`}>
           {isEnterprise ? (
             // Enterprise plan content with slider at the bottom and "Contact Us" button.
-            <BackgroundGradient className="z-40">
               <div className="bg-white rounded-2xl h-full p-6 z-50 flex flex-col justify-between min-h-[700px]">
                 <div className="text-center">
                   <h2 className="font-bold text-[24px]">{title}</h2>
@@ -180,7 +179,6 @@ const PlansCard: React.FC<PlansCardProps> = ({
                   </div>
                 </section>
               </div>
-            </BackgroundGradient>
           ) : (
             // Non-enterprise plan content (Standard, Pro, Elite)
             <>

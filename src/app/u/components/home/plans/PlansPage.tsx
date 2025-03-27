@@ -73,71 +73,72 @@ const PlansPage = () => {
                 </div>
             </div>
 
-            <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-4 gap-8 w-full mx-auto px-4 pb-2 sm:pb-4">
-                <PlansCard
-                    title="Standard"
-                    description="For beginners"
-                    prices={{ monthly: 0, yearly: 0 }}
-                    discountedPrices={{ monthly: 0, yearly: 0 }}
-                    priceIds={{
-                        monthly: "price_1R6umYJJRepiHZ8duYSajDvz",
-                        yearly: "price_1R6umYJJRepiHZ8d7eBwpE78",
-                    }}
-                    whatsIncludedComponent={<PlansCardBasicWhatsIncluded />}
-                    priceRange={selectedPlan}
-                    currency={currency}
-                    conversionRates={conversionRates}
-                />
-                <PlansCard
-                    title="Pro"
-                    description="For growing resellers"
-                    prices={{ monthly: 19.99, yearly: 199.99 }}
-                    discountedPrices={{ monthly: 9.99, yearly: 99.99 }}
-                    priceIds={{
-                        monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
-                        yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
-                    }}
-                    whatsIncludedComponent={<PlansCardStandardWhatsIncluded />}
-                    priceRange={selectedPlan}
-                    currency={currency}
-                    conversionRates={conversionRates}
-                />
-                <PlansCard
-                    title="Elite"
-                    description="For experts"
-                    prices={{ monthly: 29.99, yearly: 299.99 }}
-                    discountedPrices={{ monthly: 19.99, yearly: 199.99 }}
-                    priceIds={{
-                        monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
-                        yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
-                    }}
-                    whatsIncludedComponent={<PlansCardEliteWhatsIncluded />}
-                    priceRange={selectedPlan}
-                    currency={currency}
-                    conversionRates={conversionRates}
-                    specialPlan={true}
-                />
-                <PlansCard
-                    title="Enterprise"
-                    description="For Large Scale Operations"
-                    prices={{ monthly: 199.99, yearly: 1999.99 }}
-                    discountedPrices={{ monthly: 99.99, yearly: 999.99 }}
-                    priceIds={{
-                        monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
-                        yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
-                    }}
-                    whatsIncludedComponent={<PlansCardEnterpriseWhatsIncluded />}
-                    priceRange={selectedPlan}
-                    currency={currency}
-                    conversionRates={conversionRates}
-                    isEnterprise={true}
-                    enterpriseListings={enterpriseListings}
-                    setEnterpriseListings={setEnterpriseListings}
-                    enterpriseContactUrl="/contact"
-                />
-            </div>
-        </div>
-    );
+      <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-4 gap-8 w-full mx-auto px-4 pb-2 sm:pb-4">
+        <PlansCard
+          title="Standard"
+          description="For beginners"
+          prices={{ monthly: 0, yearly: 0 }}
+          discountedPrices={{ monthly: 0, yearly: 0 }}
+          priceIds={{
+            monthly: "price_1R6umYJJRepiHZ8duYSajDvz",
+            yearly: "price_1R6umYJJRepiHZ8d7eBwpE78",
+          }}
+          whatsIncludedComponent={<PlansCardBasicWhatsIncluded />}
+          priceRange={selectedPlan}
+          currency={currency}
+          conversionRates={conversionRates}
+        />
+        <PlansCard
+          title="Pro"
+          description="For growing resellers"
+          prices={{ monthly: 19.99, yearly: 199.99 }}
+          discountedPrices={{ monthly: 9.99, yearly: 99.99 }}
+          priceIds={{
+            monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
+            yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
+          }}
+          whatsIncludedComponent={<PlansCardStandardWhatsIncluded />}
+          priceRange={selectedPlan}
+          currency={currency}
+          conversionRates={conversionRates}
+        />
+        <PlansCard
+          title="Elite"
+          description="For experts"
+          prices={{ monthly: 29.99, yearly: 299.99 }}
+          discountedPrices={{ monthly: 19.99, yearly: 199.99 }}
+          priceIds={{
+            monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
+            yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
+          }}
+          whatsIncludedComponent={<PlansCardEliteWhatsIncluded />}
+          priceRange={selectedPlan}
+          currency={currency}
+          conversionRates={conversionRates}
+          specialPlan={true}
+        />
+        <PlansCard
+          title="Enterprise"
+          description="For Large Scale Operations"
+          prices={{ monthly: 199.99, yearly: 1999.99 }}
+          discountedPrices={{ monthly: 99.99, yearly: 999.99 }}
+          priceIds={{
+            monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
+            yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
+          }}
+          whatsIncludedComponent={<PlansCardEnterpriseWhatsIncluded />}
+          priceRange={selectedPlan}
+          currency={currency}
+          conversionRates={conversionRates}
+          isEnterprise={true}
+          enterpriseListings={enterpriseListings}
+          setEnterpriseListings={setEnterpriseListings}
+          enterpriseContactUrl="/contact"
+          comingSoon
+        />
+      </div>
+    </div>
+  );
 };
 
 export default PlansPage;

@@ -1,7 +1,7 @@
 import React from "react";
 import PlansClickableBulletPoint from "./PlansClickableBulletPoint";
 
-const PlansCardStandardWhatsIncluded = () => {
+const PlansCardFreeWhatsIncluded = () => {
 	const rootClass = "flex flex-col items-start text-gray-500 pt-6 pb-6 pl-2 gap-3"
 
 	return (
@@ -52,4 +52,4 @@ const PlansCardStandardWhatsIncluded = () => {
 	);
 };
 
-export default PlansCardStandardWhatsIncluded;
+export default PlansCardFreeWhatsIncluded;

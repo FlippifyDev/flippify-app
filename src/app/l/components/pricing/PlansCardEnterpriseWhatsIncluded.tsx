@@ -8,7 +8,7 @@ const PlansCardEliteWhatsIncluded = () => {
 	return (
 		<div className="mb-4">
 			<div className="text-black font-semibold mt-2 ml-2 mb-[-6px]">
-				<p>Everything in Elite, plus:</p>
+				<p>Everything in Pro, plus:</p>
 			</div>
 			<ul className={rootClass}>
 				<li className="w-full">

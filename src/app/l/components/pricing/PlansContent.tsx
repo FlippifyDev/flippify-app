@@ -1,9 +1,9 @@
 "use client";
 
 import PlansCard from "./PlansCard";
-import PlansCardStandardWhatsIncluded from "./PlansCardProWhatsIncluded";
-import PlansCardEliteWhatsIncluded from "./PlansCardEliteWhatsIncluded";
-import PlansCardBasicWhatsIncluded from "./PlansCardFreeWhatsIncluded";
+import PlansCardStandardWhatsIncluded from "./PlansCardStandardWhatsIncluded";
+import PlansCardProWhatsIncluded from "./PlansCardProWhatsIncluded";
+import PlansCardFreeWhatsIncluded from "./PlansCardFreeWhatsIncluded";
 import PlansCardEnterpriseWhatsIncluded from "./PlansCardEnterpriseWhatsIncluded";
 import React, { useState, useEffect, useCallback } from "react";
 import { Lato, Inter } from "next/font/google";
@@ -91,7 +91,7 @@ const PlansContent = () => {
       {/* Subscription Cards Grid */}
       <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-4 gap-10 md:px-[60px] w-full animate-fadeInBounce p-4">
         <PlansCard
-          title="Standard"
+          title="Free"
           description="For beginners"
           prices={{ monthly: 0, yearly: 0 }}
           discountedPrices={{ monthly: 0.0, yearly: 0.0 }}
@@ -99,14 +99,14 @@ const PlansContent = () => {
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
           }}
-          whatsIncludedComponent={<PlansCardBasicWhatsIncluded />}
+          whatsIncludedComponent={<PlansCardFreeWhatsIncluded />}
           priceRange={selectedPlan}
           currency={currency}
           conversionRates={conversionRates}
         />
         <PlansCard
-          title="Pro"
-          description="For growing resellers"
+          title="Standard"
+          description="For growing sellers"
           prices={{ monthly: 19.99, yearly: 199.99 }}
           discountedPrices={{ monthly: 9.99, yearly: 99.99 }}
           priceIds={{
@@ -119,7 +119,7 @@ const PlansContent = () => {
           conversionRates={conversionRates}
         />
         <PlansCard
-          title="Elite"
+          title="Pro"
           description="For experts"
           prices={{ monthly: 29.99, yearly: 299.99 }}
           discountedPrices={{ monthly: 19.99, yearly: 199.99 }}
@@ -127,7 +127,7 @@ const PlansContent = () => {
             monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
             yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
           }}
-          whatsIncludedComponent={<PlansCardEliteWhatsIncluded />}
+          whatsIncludedComponent={<PlansCardProWhatsIncluded />}
           priceRange={selectedPlan}
           currency={currency}
           conversionRates={conversionRates}

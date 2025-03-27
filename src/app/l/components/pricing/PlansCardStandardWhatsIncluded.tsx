@@ -12,20 +12,8 @@ const PlansCardStandardWhatsIncluded = () => {
 			<ul className={rootClass}>
 				<li className="w-full">
 					<PlansClickableBulletPoint
-						text="100 Manual Listings"
-						tooltip="Get prioritized support with a dedicated team ready to assist you as soon as possible. Whether it's a simple question or a complex issue, help will always be on hand."
-					/>
-				</li>
-				<li className="w-full">
-					<PlansClickableBulletPoint
-						text="Advanced Inventory & Order Management"
-						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
-					/>
-				</li>
-				<li className="w-full">
-					<PlansClickableBulletPoint
-						text="Advanced Financial Tracking"
-						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
+						text="100 Auto-Tracked Listings /Month"
+						tooltip="Track up to 100 new eBay listings monthly. Log the purchase, and we&apos;ll automatically monitor inventory, sales, and financials. Limit resets each month; active tracked items don’t count toward the next month’s cap."
 					/>
 				</li>
 			</ul>
@@ -36,57 +24,57 @@ const PlansCardStandardWhatsIncluded = () => {
 			<ul className={rootClass}>
 				<li className="w-full">
 					<PlansClickableBulletPoint
-						text="25 Automatic Listings"
-						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
+						text="25 AI Automated Listings"
+						tooltip="Provide a product link, and our AI will create, list, and manage 25 listings for you, tracking them through to sale."
 						comingSoon
 					/>
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
 						text="Shipping Label Generator"
-						tooltip="Connect your eBay account to Flippify, allowing us to track your sales, automatically list purchases, and handle everything in between. Say goodbye to manual entries and enjoy seamless automation."
+						tooltip="Print shipping labels directly from the platform for faster order processing."
 						comingSoon
 					/>
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
 						text="Multi-Account Support (Manage 2 eBay Stores)"
-						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
+						tooltip="Link and manage two eBay stores, syncing data across both."
 						comingSoon
 					/>
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
 						text="Smart AI Listing Optimization"
-						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
+						tooltip="Boost listing performance with AI suggestions for titles, descriptions, and pricing."
 						comingSoon
 					/>
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
 						text="AI-Powered Financial Reports"
-						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
+						tooltip="Unlock advanced financial insights and predictions driven by AI."
 						comingSoon
 					/>
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
 						text="Bulk Editing & Relisting Automation"
-						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
+						tooltip="Edit multiple listings at once and automatically relist unsold items."
 						comingSoon
 					/>
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
 						text="Scheduled Listings & Auto-Drafts"
-						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
+						tooltip="Set listings to go live on a schedule and auto-save drafts for later."
 						comingSoon
 					/>
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
 						text="AI-Optimized Shipping Selection"
-						tooltip="Easily export all your sales data into CSV format for analysis. This allows you to seamlessly import the data into spreadsheets or other apps for deeper insights and reporting."
+						tooltip="Let AI pick the best shipping options based on cost and speed."
 						comingSoon
 					/>
 				</li>

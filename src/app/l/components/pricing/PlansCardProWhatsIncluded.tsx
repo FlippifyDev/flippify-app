@@ -1,6 +1,5 @@
 import React from "react";
-import PlansClickableBulletPoint from "./PlansClickableBulletPoint"; // Correct import path for ClickableBulletPoint
-
+import PlansClickableBulletPoint from "./PlansClickableBulletPoint";
 
 const PlansCardProWhatsIncluded = () => {
 	const rootClass = "flex flex-col items-start text-gray-500 pt-6 pb-6 pl-2 gap-3";
@@ -13,20 +12,8 @@ const PlansCardProWhatsIncluded = () => {
 			<ul className={rootClass}>
 				<li className="w-full">
 					<PlansClickableBulletPoint
-						text="500 Manual Listings"
-						tooltip="Receive a personalized 1-on-1 onboarding session. You&apos;ll get expert guidance on how to maximize your experience with our tools and services."
-					/>
-				</li>
-				<li className="w-full">
-					<PlansClickableBulletPoint
-						text="Full Inventory & Order Management"
-						tooltip="Join an exclusive VIP community of elite resellers for networking, insider knowledge, and special events."
-					/>
-				</li>
-				<li className="w-full">
-					<PlansClickableBulletPoint
-						text="Full Financial Tracking"
-						tooltip="Join an exclusive VIP community of elite resellers for networking, insider knowledge, and special events."
+						text="500 Auto-Tracked Listings /Month"
+						tooltip="Track up to 500 new eBay listings monthly. Log the purchase, and we&apos;ll automatically monitor inventory, sales, and financials. Limit resets each month; active tracked items don’t count toward the next month’s cap."
 					/>
 				</li>
 			</ul>
@@ -37,36 +24,36 @@ const PlansCardProWhatsIncluded = () => {
 			<ul className={rootClass}>
 				<li className="w-full">
 					<PlansClickableBulletPoint
-						text="100 Automatic Listings"
-						tooltip="Have weekly 1-on-1 calls with our experts to ensure your success and growth as a reseller."
+						text="100 AI Automated Listings"
+						tooltip="Provide a product link, and our AI will create, list, and manage 100 listings for you, tracking them through to sale."
 						comingSoon
 					/>
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
 						text="Multi-Store Inventory Sync"
-						tooltip="Be the first to try out new features in beta before they are released to the general public."
+						tooltip="Keep inventory in sync across multiple stores to avoid overselling."
 						comingSoon
 					/>
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
 						text="Advanced AI Listing Optimization & Smart Price Adjustments"
-						tooltip="Be the first to try out new features in beta before they are released to the general public."
+						tooltip="Let AI fine-tune listings and adjust prices dynamically based on market trends."
 						comingSoon
 					/>
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
 						text="Manage up to 5 eBay Stores"
-						tooltip="Be the first to try out new features in beta before they are released to the general public."
+						tooltip="Link and manage up to five eBay stores with full tracking and control."
 						comingSoon
 					/>
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
 						text="Priority AI Processing for Faster Listings & Insights"
-						tooltip="Be the first to try out new features in beta before they are released to the general public."
+						tooltip="Enjoy faster AI-driven listing creation and insights with priority processing."
 						comingSoon
 					/>
 				</li>

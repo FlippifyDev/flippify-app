@@ -12,7 +12,7 @@ export function getCachedData(key: string, expirationTime: number) {
 };
 
 // Function to store data in localStorage with a timestamp
-export function setCachedData(key: string, data: any, expirationTime: number) {
+export function setCachedData(key: string, data: any) {
     const newCache = {
         data, // Store only the data (no need to preserve previous cache)
         timestamp: Date.now(), // Add a timestamp for expiration check

@@ -4,17 +4,35 @@ import { retrieveUserInventory } from "@/services/firebase/retrieve";
 import { formatTableDate } from "@/utils/format-dates";
 import { currencySymbols } from "@/config/currency-config";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { IEbayInventoryItem } from "@/models/store-data";
+import { firestore } from "@/lib/firebase/config";
+import { doc, updateDoc } from "firebase/firestore";
+import { update } from "react-spring";
+import { setCachedData } from "@/utils/cache-helpers";
+import Alert from "@/app/components/Alert";
 
 const InventoryContent = () => {
     const { data: session } = useSession();
+    const defaultTimeFrom = "2023-01-01T00:00:00Z";
     const currency = session?.user.preferences.currency || "GBP";
 
-    const [listedData, setListedData] = useState<any[]>([]);
+    const [listedData, setListedData] = useState<IEbayInventoryItem[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const ordersPerPage = 12;
+
+    // Edit state
+    const [editedPlatform, setEditedPlatform] = useState<string | null>("");
+    const [editedCustomTag, setEditedCustomTag] = useState<string | null>("");
+    const [editedPurchasePrice, setEditedPurchasePrice] = useState<string | null>("");
+    const [editingIndex, setEditingIndex] = useState<number | null>(null);
+    const [editingType, setEditingType] = useState<string | null>(null);
+
+    // Handle alert messages
+    const [alertMessage, setAlertMessage] = useState<string | null>(null);
+    const [isAlertVisible, setIsAlertVisible] = useState<boolean>(false);
 
     // Total number of pages
     const totalPages = Math.ceil(listedData.length / ordersPerPage);
@@ -23,7 +41,7 @@ const InventoryContent = () => {
         const fetchInventoryData = async () => {
             const inventory = await retrieveUserInventory(
                 session?.user.id as string,
-                "2023-01-01T00:00:00Z",
+                defaultTimeFrom,
                 session?.user.connectedAccounts.ebay?.ebayAccessToken as string
             );
             if (inventory) {
@@ -43,32 +61,156 @@ const InventoryContent = () => {
         }
     };
 
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>, index: number, type: string) => {
+        if (e.key === "Enter") {
+            saveChange(index, type);
+        } else if (e.key === "Escape") {
+            if (type === "platform") {
+                setEditedPlatform(listedData[index].purchase?.platform ?? "");
+            } else if (type === "customTag") {
+                setEditedCustomTag(listedData[index].customTag ?? "");
+            } else if (type === "purchasePrice") {
+                setEditedPurchasePrice(`${listedData[index].purchase?.price ?? ""}`);
+            }
+            setEditingType(null);
+        }
+    };
+
+
+    const saveChange = async (index: number, type: string) => {
+        const updatedListings = [...listedData];
+
+        if (updatedListings[index].purchase === undefined) {
+            updatedListings[index].purchase = {
+                platform: null,
+                price: null,
+                quantity: null,
+                date: null
+            };
+        }
+
+        if (type === "platform") {
+            if (editedPlatform === listedData[index].purchase?.platform) {
+                return;
+            }
+            updatedListings[index].purchase.platform = editedPlatform;
+        } else if (type === "customTag") {
+            if (editedCustomTag === listedData[index].customTag) {
+                return;
+            }
+            updatedListings[index].customTag = editedCustomTag;
+        } else if (type === "purchasePrice") {
+            if (!editedPurchasePrice) {
+                updatedListings[index].purchase.price = 0
+            } else if (Number(editedPurchasePrice) === listedData[index].purchase?.price) {
+                return;
+            } else if (!isNaN(parseFloat(editedPurchasePrice)) && isFinite(Number(editedPurchasePrice))) {
+                updatedListings[index].purchase.price = Number(editedPurchasePrice);
+            } 
+        }
+
+        try {
+            // Determine the field to update based on the type
+            const updateFields: { [key: string]: any } = {};
+
+            if (type === "platform") {
+                updateFields["purchase.platform"] = editedPlatform;
+            } else if (type === "customTag") {
+                updateFields["customTag"] = editedCustomTag;
+            } else if (type === "purchasePrice") {
+                updateFields["purchase.price"] = updatedListings[index].purchase?.price;
+            }
+
+            const orderDocRef = doc(
+                firestore,
+                'inventory',
+                session?.user.id as string,
+                'ebay',
+                updatedListings[index].itemId
+            );
+
+            // Perform the update
+            await updateDoc(orderDocRef, updateFields);
+            setCachedData(
+                `inventoryData-${session?.user.id}-${defaultTimeFrom}`, // Cache key
+                updatedListings, // Updated data
+            );
+            
+            setEditingType(null);
+            setEditingIndex(null);
+            setEditedPlatform(null);
+            setEditedCustomTag(null);
+            setEditedPurchasePrice(null);
+            setListedData(updatedListings);
+        } catch (error) {
+            console.error("Error updating platform:", error);
+            setAlertMessage("Failed to update platform.");
+            setIsAlertVisible(true);
+        }
+    };
+
     // Paginate data for current page
     const paginatedData = listedData.slice(
         (currentPage - 1) * ordersPerPage,
         currentPage * ordersPerPage
     );
 
+
+    function handlePlatformInput(index: number, item: IEbayInventoryItem) {
+        setTimeout(() => {
+            setEditingIndex(index);
+            setEditedPlatform(item.purchase?.platform ?? "");
+            setEditingType("platform");
+        }, 0);
+    }
+
+    function handlePurchasePriceInput(index: number, purchasePrice: string) {
+        setTimeout(() => {
+            setEditingIndex(index);
+            setEditedPurchasePrice(purchasePrice);
+            setEditingType("purchasePrice");
+        }, 0);
+    }
+
+    function handleCustomTagInput(index: number, item: IEbayInventoryItem) {
+        setTimeout(() => {
+            setEditingIndex(index);
+            setEditedCustomTag(item.customTag ?? "");
+            setEditingType("customTag");
+        }, 0);
+    }
+
     return (
         <div className="w-full h-full overflow-x-auto">
+            <Alert
+                message={alertMessage || ""}
+                visible={isAlertVisible}
+                onClose={() => setIsAlertVisible(false)}
+            />
             <table className="table w-full">
                 <thead>
                     <tr className="bg-tableHeaderBackground">
                         <th></th>
                         <th>Product</th>
                         <th>Quantity</th>
-                        <th>Price</th>
+                        <th>Purchase Platform</th>
+                        <th>Cost</th>
+                        <th>Listed Price</th>
                         <th>Date Listed</th>
-                        <th>Item ID</th>
+                        <th>Custom Tag</th>
                     </tr>
                 </thead>
                 <tbody>
                     {paginatedData.length > 0 ? (
                         paginatedData.map((item, index) => {
+                            let purchasePrice = item.purchase?.price !== undefined ? item.purchase.price?.toFixed(2) : "0";
+                            if (purchasePrice === undefined) {
+                                purchasePrice = "0";
+                            }
                             return (
                                 <tr
                                     key={index}
-                                    className="hover:bg-gray-100 cursor-pointer transition duration-100"
+                                    className=""
                                 >
                                     <td>
                                         <Image
@@ -83,12 +225,53 @@ const InventoryContent = () => {
                                     </td>
                                     <td>{item.itemName}</td>
                                     <td>{item.quantity}</td>
+                                    <td
+                                        className="cursor-pointer transition duration-200"
+                                    >
+                                        <input
+                                            onFocus={() => handlePlatformInput(index, item)}
+                                            onClick={() => handlePlatformInput(index, item)}
+                                            type="text"
+                                            value={(editingIndex === index && editingType === "platform") ? editedPlatform ?? "" : item.purchase?.platform ?? ""}
+                                            onChange={(e) => setEditedPlatform(e.target.value)}
+                                            onBlur={() => saveChange(index, "platform")}
+                                            onKeyDown={(e) => handleKeyPress(e, index, "platform")}
+                                            className="focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
+                                        />
+                                    </td>
+                                    <td
+                                        className="cursor-pointer transition duration-200"
+                                    >
+                                        <input
+                                            onFocus={() => handlePurchasePriceInput(index, purchasePrice)}
+                                            onClick={() => handlePurchasePriceInput(index, purchasePrice)}
+                                            type="text"
+                                            value={(editingIndex === index && editingType === "purchasePrice") ? editedPurchasePrice ?? "" : purchasePrice ?? ""}
+                                            onChange={(e) => setEditedPurchasePrice(e.target.value)}
+                                            onBlur={() => saveChange(index, "purchasePrice")}
+                                            onKeyDown={(e) => handleKeyPress(e, index, "purchasePrice")}
+                                            className="focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
+                                        />
+                                    </td>
                                     <td>
                                         {currencySymbols[currency]}
                                         {item.price.toFixed(2)}
                                     </td>
                                     <td>{formatTableDate(item.dateListed)}</td>
-                                    <td>{item.itemId}</td>
+                                    <td
+                                        className="cursor-pointer transition duration-200"
+                                    >
+                                        <input
+                                            onFocus={() => handleCustomTagInput(index, item)}
+                                            onClick={() => handleCustomTagInput(index, item)}
+                                            type="text"
+                                            value={(editingIndex === index && editingType === "customTag") ? editedCustomTag ?? "" : item.customTag ?? ""}
+                                            onChange={(e) => setEditedCustomTag(e.target.value)}
+                                            onBlur={() => saveChange(index, "customTag")}
+                                            onKeyDown={(e) => handleKeyPress(e, index, "customTag")}
+                                            className="focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
+                                        />
+                                    </td>
                                 </tr>
                             );
                         })

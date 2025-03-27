@@ -10,6 +10,13 @@ interface IEbayInventoryItem {
     dateListed: string;
     image: string[];
     recordType: RecordType;
+    customTag?: string | null;
+    purchase?: {
+        date: string | null;
+        platform: string | null;
+        price: number | null;
+        quantity: number | null;
+    };
 }
 
 interface IShipping {

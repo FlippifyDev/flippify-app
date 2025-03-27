@@ -1,7 +1,7 @@
 // Local Imports
 import { IUser } from "@/models/user";
-import { updateReferreeUser } from "./update-admin";
 import { retrieveUserRefById } from "./retrieve";
+import { updateReferreeUserAdmin } from "./update-admin";
 
 // External Imports
 import { deleteField, getDoc, setDoc } from "firebase/firestore";
@@ -90,7 +90,7 @@ async function completeOnboarding(uid: string, referralCode: string | null): Pro
 
         // Step 1: Handle referral if a referral code is provided
         if (referralCode) {
-            const { success } = await updateReferreeUser(uid, referralCode);
+            const { success } = await updateReferreeUserAdmin(uid, referralCode);
             if (success) {
                 await setDoc(userRef, { referral: { referredBy: referralCode } }, { merge: true });
             }

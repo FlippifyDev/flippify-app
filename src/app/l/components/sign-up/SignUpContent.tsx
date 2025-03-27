@@ -1,15 +1,19 @@
 "use client"
 
+// Local Imports
+import { formatDateToISO } from "@/utils/format-dates";
 import { auth, firestore } from "@/lib/firebase/config";
+import { updateUserSubscriptionAdmin } from "@/services/firebase/update-admin";
+
+// External Imports
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { useState, useEffect, useRef } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import Image from "next/image";
-import { formatDateToISO } from "@/utils/format-dates";
 import { Lato } from 'next/font/google';
+import Image from "next/image";
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
@@ -56,8 +60,8 @@ const SignUpContent = () => {
                 await updateDoc(doc(firestore, "users", auth.currentUser.uid), {
                     username: usernameRef.current,
                     "authentication.onboarding": true,
-                    subscriptions: [{ name: "accessGranted", id: "0", override: true, createdAt: formatDateToISO(new Date()) }]
                 });
+                await updateUserSubscriptionAdmin(auth.currentUser.uid, { name: "accessGranted", id: "0", override: true, createdAt: formatDateToISO(new Date()) });
                 clearInterval(checkVerificationInterval);
                 router.push(`/u/${usernameRef.current}/dashboard`);
             }

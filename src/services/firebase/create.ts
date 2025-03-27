@@ -1,11 +1,12 @@
+"use server";
+
 // Local Imports
 import { IUser } from '@/models/user';
-import { firestore } from '@/lib/firebase/config';
+import { firestoreAdmin } from '@/lib/firebase/config-admin';
+import { userProfileImages } from '@/utils/constants';
 import { retrieveStripeCustomer } from '@/services/stripe/retrieve';
 import { generateRandomChars } from '@/utils/generate-random';
 
-// External Imports
-import { doc, setDoc } from 'firebase/firestore';
 
 // This function will run when a new user signs up using Firebase Auth
 export async function createUser(uid: string, email: string): Promise<IUser | void> {
@@ -13,8 +14,11 @@ export async function createUser(uid: string, email: string): Promise<IUser | vo
         const referralCode = generateRandomChars(7);
         const randomUsername = generateRandomChars(10);
         const customerId = await retrieveStripeCustomer(null, email, referralCode);
-        // Add the user to Firestore `users` collection
-        const userRef = doc(firestore, 'users', uid);
+
+        // Get the user document reference
+        const userRef = firestoreAdmin.collection('users').doc(uid);
+
+        // Create an empty user object with default values
         const emptyUser: IUser = {
             id: uid,
             connectedAccounts: {
@@ -38,16 +42,20 @@ export async function createUser(uid: string, email: string): Promise<IUser | vo
                 currency: 'USD',
             },
             authentication: {
-                emailVerified: 'verified'
+                emailVerified: 'verified',
             },
             metaData: {
-                createdAt: new Date().toString()
-            }
+                createdAt: new Date().toISOString(), // Use ISO string for consistency
+                image: userProfileImages[Math.floor(Math.random() * userProfileImages.length)],
+            },
         };
 
-        await setDoc(userRef, emptyUser);
+        // Use Firestore Admin to write to Firestore (bypasses security rules)
+        await userRef.set(emptyUser);
+
+        console.log('User successfully created in Firestore!');
         return emptyUser;
     } catch (error) {
         console.error('Error creating user in Firestore:', error);
     }
-};
+}

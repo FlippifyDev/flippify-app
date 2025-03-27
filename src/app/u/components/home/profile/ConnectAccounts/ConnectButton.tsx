@@ -44,7 +44,7 @@ const ConnectButton: React.FC<ConnectButtonProps> = ({
     handleDisconnect,
 }) => {
     const disconnectButtonClass = "bg-red-600 hover:bg-red-500";
-    const connectButtonClass = "bg-green-500 hover:bg-green-400";
+    const connectButtonClass = "bg-houseBlue hover:bg-houseHoverBlue";
     const unavailableClass = "bg-gray-300 hover:bg-gray-300 cursor-not-allowed";
     const loadingClass = "bg-gray-500 hover:bg-gray-500 cursor-not-allowed";
 

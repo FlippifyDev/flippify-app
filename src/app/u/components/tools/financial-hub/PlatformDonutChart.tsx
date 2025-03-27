@@ -11,14 +11,14 @@ import ApexCharts from "apexcharts";
 import Card from "./Card";
 
 
-interface CardPlatformPieChartProps {
+interface CardPlatformDonutChartProps {
     orders: IEbayOrder[];
     loading: boolean;
     currencySymbol: string;
 }
 
 
-const CardPlatformPieChart: React.FC<CardPlatformPieChartProps> = ({ orders, loading, currencySymbol }) => {
+const CardPlatformDonutChart: React.FC<CardPlatformDonutChartProps> = ({ orders, loading, currencySymbol }) => {
     const scrollRef = useHorizontalScroll<HTMLDivElement>();
 
     // Chart options
@@ -123,4 +123,4 @@ const CardPlatformPieChart: React.FC<CardPlatformPieChartProps> = ({ orders, loa
     )
 }
 
-export default CardPlatformPieChart
+export default CardPlatformDonutChart

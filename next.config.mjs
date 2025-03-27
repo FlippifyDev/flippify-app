@@ -24,8 +24,7 @@ const nextConfig = {
     ROOT: process.env.ROOT,
     NEXT_PUBLIC_FIREBASE_API_KEY: "AIzaSyALlnrwPeEFtu7dXTAFvG4d9OUL-XiY2ao",
     NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: "flippify-3ffff.firebaseapp.com",
-    NEXT_PUBLIC_FIREBASE_DATABASE_URL:
-      "https://flippify-3ffff-default-rtdb.europe-west1.firebasedatabase.app/",
+    NEXT_PUBLIC_FIREBASE_DATABASE_URL: "https://flippify-3ffff-default-rtdb.europe-west1.firebasedatabase.app/",
     NEXT_PUBLIC_FIREBASE_PROJECT_ID: "flippify-3ffff",
     NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: "flippify-3ffff.appspot.com",
     NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: "238475908658",

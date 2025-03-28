@@ -10,8 +10,9 @@ import Image from "next/image";
 import { IEbayInventoryItem } from "@/models/store-data";
 import { firestore } from "@/lib/firebase/config";
 import { doc, updateDoc } from "firebase/firestore";
-import { setCachedData } from "@/utils/cache-helpers";
+import { getCachedData, getCachedTimes, setCachedData } from "@/utils/cache-helpers";
 import Alert from "@/app/components/Alert";
+import { cacheExpirationTime, ebayInventoryCacheKey } from "@/utils/constants";
 
 const InventoryContent = () => {
     const { data: session } = useSession();
@@ -78,6 +79,8 @@ const InventoryContent = () => {
 
     const saveChange = async (index: number, type: string) => {
         const updatedListings = [...listedData];
+        const cacheKey = `${ebayInventoryCacheKey}-${session?.user.id}`;
+        const cachedTimes = getCachedTimes(cacheKey);
 
         if (updatedListings[index].purchase === undefined) {
             updatedListings[index].purchase = {
@@ -131,8 +134,10 @@ const InventoryContent = () => {
             // Perform the update
             await updateDoc(orderDocRef, updateFields);
             setCachedData(
-                `inventoryData-${session?.user.id}-${defaultTimeFrom}`, // Cache key
-                updatedListings, // Updated data
+                cacheKey, 
+                updatedListings,
+                cachedTimes?.cacheTimeFrom,
+                cachedTimes?.cacheTimeTo 
             );
             
             setEditingType(null);

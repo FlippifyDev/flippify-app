@@ -5,11 +5,13 @@ import Alert from "@/app/components/Alert";
 import UpdateFields from "./UpdateFields";
 import OrderInfoCard from "./OrderInfoCard";
 import { firestore } from "@/lib/firebase/config";
-import { IEbayInventoryItem, IEbayOrder } from "@/models/store-data";
-import { getCachedData, setCachedData } from "@/utils/cache-helpers";
+import { IEbayOrder } from "@/models/store-data";
+import LoadingAnimation from "../../dom/ui/LoadingAnimation";
 import { formatTableDate } from "@/utils/format-dates";
 import { currencySymbols } from "@/config/currency-config";
 import { retrieveUserOrders } from "@/services/firebase/retrieve";
+import { cacheExpirationTime, ebayOrderCacheKey } from "@/utils/constants";
+import { getCachedData, getCachedTimes, setCachedData } from "@/utils/cache-helpers";
 
 // External Imports
 import { collection, doc, updateDoc } from "firebase/firestore";
@@ -17,6 +19,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { set } from "date-fns";
 
 const OrderDetails = () => {
     const { data: session } = useSession();
@@ -25,7 +28,7 @@ const OrderDetails = () => {
     const [orders, setOrders] = useState<IEbayOrder[]>([]);
     const [salesData, setSalesData] = useState<IEbayOrder[]>([]);
     const username = session?.user.username as string;
-    const currency = session?.user.preferences.currency || "GBP";
+    const currency = session?.user.preferences.currency || "USD";
     const currencySymbol = currencySymbols[currency];
     const [customTag, setCustomTag] = useState<string>("");
     const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
@@ -45,6 +48,7 @@ const OrderDetails = () => {
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
     const [editingType, setEditingType] = useState<string | null>(null);
     const [ordersUpdated, setOrdersUpdated] = useState<boolean>(false);
+    const [orderIdtoIndex, setOrderIdtoIndex] = useState<{ [key: string]: number }>({});
 
     // This effect runs when selectedOrders length changes
     useEffect(() => {
@@ -69,15 +73,15 @@ const OrderDetails = () => {
     }, [session?.user]);
 
     useEffect(() => {
-        if (salesData && orderId && orders.length === 0 && !ordersUpdated) {
-            const matchingOrders = salesData.filter((o) => o.legacyItemId === orderId);
+        if (salesData && orderId && !ordersUpdated) {
+            const matchingOrders = salesData.filter((o, index) => {o.legacyItemId === orderId; setOrderIdtoIndex((prev) => ({ ...prev, [o.orderId]: index })); return o.legacyItemId === orderId;});
             setOrders(matchingOrders);
+            setOrdersUpdated(false);
         }
-        setOrdersUpdated(false);
-    }, [salesData, orderId, orders, ordersUpdated]);
+    }, [salesData, orderId, ordersUpdated]);
 
     if (orders.length === 0) {
-        return <p>Loading order details...</p>;
+        return <LoadingAnimation text="Loading items" type="stack-loader"/>;
     }
 
     // Handle orders click
@@ -106,9 +110,9 @@ const OrderDetails = () => {
         let totalAdditionalFees = 0;
         let totalProfit = 0;
         let totalROI = 0;
-        let purchaseCount = 0;  // Track number of purchases for accurate ROI calculation
-        let totalDaysToSell = 0;  // Variable to track the total number of days to sell
-        let validSaleCount = 0;  // Track number of valid sales for time to sell calculation
+        let purchaseCount = 0; 
+        let totalDaysToSell = 0;  
+        let validSaleCount = 0;
 
         // Loop through each order to accumulate totals
         orders.forEach((order) => {
@@ -119,11 +123,9 @@ const OrderDetails = () => {
             totalSalePrice += sale.price + shipping.fees;
             totalAdditionalFees += additionalFees;
 
-
             if (purchase.price === null) {
                 purchase.price = 0;
             }
-
 
             totalPurchasePrice += purchase.price;
             purchaseCount += 1;
@@ -133,7 +135,7 @@ const OrderDetails = () => {
             totalProfit += profit;
 
             // Calculate ROI for each order if purchase price exists and accumulate
-            if (purchasePrice && purchase.price > 0) {
+            if (purchase.price > 0) {
                 totalROI += (profit / purchase.price) * 100;
             }
 
@@ -168,7 +170,6 @@ const OrderDetails = () => {
         };
     };
 
-
     const itemName = orders[0].itemName;
     const image = orders[0].image[0];
     const totals = calculateTotals();
@@ -180,8 +181,7 @@ const OrderDetails = () => {
             return;
         }
 
-        const cacheKey = `salesData-${session?.user.id}`; // Define cache key
-        const cacheExpirationTime = 1000 * 60 * 5; // 5 minutes cache expiration
+        const cacheKey = `${ebayOrderCacheKey}-${session?.user.id}`; // Define cache key
 
         let updatedOrders: IEbayOrder[] = [...orders]; // Copy the current orders to modify them
 
@@ -297,6 +297,8 @@ const OrderDetails = () => {
 
     const saveChange = async (index: number, type: string) => {
         const updatedOrders = [...orders];
+        const cacheKey = `${ebayOrderCacheKey}-${session?.user.id}`;
+        const cachedTimes = getCachedTimes(cacheKey); 
 
         if (type === "platform") {
             if (editedPlatform === orders[index].purchase.platform) {
@@ -340,6 +342,9 @@ const OrderDetails = () => {
 
             // Perform the update
             await updateDoc(orderDocRef, updateFields);
+            // Update the salesData with the modified order
+            salesData[orderIdtoIndex[updatedOrders[index].orderId]] = updatedOrders[index];
+            setCachedData(cacheKey, salesData, cachedTimes.cacheTimeFrom, cachedTimes.cacheTimeTo); 
 
             setEditingType(null);
             setEditingIndex(null);
@@ -368,8 +373,6 @@ const OrderDetails = () => {
         setEditedCustomTag(order.customTag);
         setEditingType("customTag");
     }
-
-    console.log(editingIndex)
 
     return (
         <div className="rounded-lg text-orderPageText space-y-2">

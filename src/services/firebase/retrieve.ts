@@ -10,7 +10,7 @@ import { filterInventoryByTime, filterOrdersByTime } from "@/utils/filters";
 // External Imports
 import { collection, doc, DocumentData, DocumentReference, getDoc, getDocs, orderBy, query, QueryDocumentSnapshot, where } from 'firebase/firestore';
 import { formatDate } from "@/utils/format";
-import { cacheExpirationTime } from "@/utils/constants";
+import { cacheExpirationTime, ebayInventoryCacheKey, ebayOrderCacheKey } from "@/utils/constants";
 
 
 
@@ -225,7 +225,7 @@ async function retrieveUserOrders(
     update?: boolean
 ): Promise<IEbayOrder[]> {
     // Cache expiration time: 30 minutes
-    const cacheKey = `ebay-orders-${uid}`;
+    const cacheKey = `${ebayOrderCacheKey}-${uid}`;
 
     let cachedData: IEbayOrder[] = [];
     let cacheTimeFrom: Date | undefined;
@@ -381,7 +381,7 @@ async function retrieveUserInventory(
     update: boolean = false,
     timeTo?: string
 ): Promise<IEbayInventoryItem[]> {
-    const cacheKey = `ebay-inventory-${uid}`;
+    const cacheKey = `${ebayInventoryCacheKey}-${uid}`;
 
     let cachedData: IEbayInventoryItem[] = [];
     let cacheTimeFrom: Date | undefined;
@@ -448,6 +448,7 @@ async function retrieveUserInventory(
 
     // If no valid cache exists or update is forced, fetch from Firestore
     try {
+        console.log("No cache exists", timeFromDate, timeToDate);
         const data = await retrieveUserInventoryFromDB(uid, timeFrom, timeTo);
         setCachedData(cacheKey, data, timeFromDate, timeTo ? new Date(timeTo) : new Date());
         return filterInventoryByTime(data, timeFrom, timeTo);

@@ -1,4 +1,6 @@
 export const cacheExpirationTime = 1000 * 60 * 30; // 30 min in milliseconds
+export const ebayInventoryCacheKey = "ebay-inventory"
+export const ebayOrderCacheKey = "ebay-orders"
 
 // Free
 export const FREE_MAX_AUTOMATIC_LISTINGS = 20;

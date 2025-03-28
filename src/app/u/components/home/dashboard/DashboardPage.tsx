@@ -13,8 +13,6 @@ import DashboardOverviewCard from "./DashboardOverviewCard";
 import DashboardProfitsGraph from "./DashboardProfitsGraph";
 import OnboardingFlow from "./OnboardingFlow";
 import { IEbayOrder } from "@/models/store-data";
-import LoadingAnimation from "../../dom/ui/LoadingAnimation";
-import Link from "next/link";
 import ConnectAccountButton from "../../dom/ui/ConnectAccountButton";
 
 

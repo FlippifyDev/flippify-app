@@ -252,6 +252,7 @@ async function retrieveUserOrders(
 
         // If the requested range is fully within the cached range, return filtered cached data.
         if (timeFromDate >= oldestTime && timeToDate <= newestTime) {
+            console.log("Requested date range is within cached orders range.");
             return filterOrdersByTime(cachedData, timeFrom, timeTo);
         }
 
@@ -259,16 +260,19 @@ async function retrieveUserOrders(
 
         // Case 1: Need older orders (requested timeFrom is earlier than oldest cached order)
         if (timeFromDate < oldestTime && timeToDate <= newestTime) {
+            console.log("Fetching older orders from Firestore.");
             const olderData = await retrieveUserOrdersFromDB(uid, timeFrom, oldestTime.toISOString());
             ordersToReturn = cachedData.concat(olderData);
         }
         // Case 2: Need newer orders (requested timeTo is later than newest cached order)
         else if (timeFromDate >= oldestTime && timeToDate > newestTime) {
+            console.log("Fetching newer orders from Firestore.");
             const newerData = await retrieveUserOrdersFromDB(uid, newestTime.toISOString(), timeTo);
             ordersToReturn = newerData.concat(cachedData);
         }
         // Case 3: Need both older and newer orders
         else if (timeFromDate < oldestTime && timeToDate > newestTime) {
+            console.log("Fetching both older and newer orders from Firestore.");
             const olderData = await retrieveUserOrdersFromDB(uid, timeFrom, oldestTime.toISOString());
             const newerData = await retrieveUserOrdersFromDB(uid, newestTime.toISOString(), timeTo);
             ordersToReturn = newerData.concat(cachedData, olderData);
@@ -289,7 +293,7 @@ async function retrieveUserOrders(
     // If no valid cache exists or update is forced, fetch from Firestore
     try {
         const data = await retrieveUserOrdersFromDB(uid, timeFrom, timeTo);
-        setCachedData(cacheKey, data, timeFromDate, timeTo ? new Date(timeTo) : undefined);
+        setCachedData(cacheKey, data, timeFromDate, timeTo ? new Date(timeTo) : new Date());
         return filterOrdersByTime(data, timeFrom, timeTo);
     } catch (error) {
         console.error(`Error fetching orders for user with UID=${uid}:`, error);
@@ -412,16 +416,19 @@ async function retrieveUserInventory(
 
         // Case 1: Need older inventory (timeFrom is earlier than the oldest cached item)
         if (timeFromDate < oldestTime && timeToDate <= newestTime) {
+            console.log("Fetching older inventory from Firestore.");
             const olderData = await retrieveUserInventoryFromDB(uid, timeFrom, oldestTime.toISOString());
             inventoryToReturn = cachedData.concat(olderData);
         }
         // Case 2: Need newer inventory (timeTo is later than the newest cached item)
         else if (timeFromDate >= oldestTime && timeToDate > newestTime) {
+            console.log("Fetching newer inventory from Firestore.");
             const newerData = await retrieveUserInventoryFromDB(uid, newestTime.toISOString(), timeTo);
             inventoryToReturn = newerData.concat(cachedData);
         }
         // Case 3: Need both older and newer inventory
         else if (timeFromDate < oldestTime && timeToDate > newestTime) {
+            console.log("Fetching both older and newer inventory from Firestore.");
             const olderData = await retrieveUserInventoryFromDB(uid, timeFrom, oldestTime.toISOString());
             const newerData = await retrieveUserInventoryFromDB(uid, newestTime.toISOString(), timeTo);
             inventoryToReturn = newerData.concat(cachedData, olderData);
@@ -442,7 +449,7 @@ async function retrieveUserInventory(
     // If no valid cache exists or update is forced, fetch from Firestore
     try {
         const data = await retrieveUserInventoryFromDB(uid, timeFrom, timeTo);
-        setCachedData(cacheKey, data, timeFromDate, timeTo ? new Date(timeTo) : undefined);
+        setCachedData(cacheKey, data, timeFromDate, timeTo ? new Date(timeTo) : new Date());
         return filterInventoryByTime(data, timeFrom, timeTo);
     } catch (error) {
         console.error(`Error fetching inventory for user with UID=${uid}:`, error);

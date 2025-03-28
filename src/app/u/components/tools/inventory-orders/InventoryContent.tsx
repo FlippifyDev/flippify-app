@@ -4,13 +4,12 @@ import { retrieveUserInventory } from "@/services/firebase/retrieve";
 import { formatTableDate } from "@/utils/format-dates";
 import { currencySymbols } from "@/config/currency-config";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { IEbayInventoryItem } from "@/models/store-data";
 import { firestore } from "@/lib/firebase/config";
 import { doc, updateDoc } from "firebase/firestore";
-import { update } from "react-spring";
 import { setCachedData } from "@/utils/cache-helpers";
 import Alert from "@/app/components/Alert";
 
@@ -42,7 +41,7 @@ const InventoryContent = () => {
             const inventory = await retrieveUserInventory(
                 session?.user.id as string,
                 defaultTimeFrom,
-                session?.user.connectedAccounts.ebay?.ebayAccessToken as string
+                session?.user.connectedAccounts.ebay?.ebayAccessToken as string,
             );
             if (inventory) {
                 setListedData(inventory);

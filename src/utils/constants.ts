@@ -1,15 +1,15 @@
 export const cacheExpirationTime = 1000 * 60 * 30; // 30 min in milliseconds
 
 // Free
-export const FREE_MAX_AUTOMATIC_LISTINGS = 5;
-export const FREE_MAX_MANUAL_LISTINGS = 10;
+export const FREE_MAX_AUTOMATIC_LISTINGS = 20;
+export const FREE_MAX_MANUAL_LISTINGS = 20;
 
 // Standard
-export const STANDARD_MAX_AUTOMATIC_LISTINGS = 25;
+export const STANDARD_MAX_AUTOMATIC_LISTINGS = 100;
 export const STANDARD_MAX_MANUAL_LISTINGS = 100;
 
-// Premium
-export const PREMIUM_MAX_AUTOMATIC_LISTINGS = 100;
+// Pro
+export const PREMIUM_MAX_AUTOMATIC_LISTINGS = 500;
 export const PREMIUM_MAX_MANUAL_LISTINGS = 500;
 
 

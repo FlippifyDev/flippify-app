@@ -2,6 +2,7 @@
 
 // Local Imports
 import { retrieveUserByKeyAndValueAdmin } from '../firebase/retrieve-admin';
+import { retrieveCouponCodeOrPromotionCode } from './retrieve';
 ;
 
 // External Imports
@@ -36,8 +37,9 @@ const createCheckoutSession = async (
     username: string,
     customerId: string,
     priceId: string,
-    referredBy: string | null | undefined
-): Promise<string | null> => {
+    referredBy?: string | null,
+    code?: string
+): Promise<{ url?: string | null, error?: string | null }> => {
     const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
     const root = process.env.ROOT as string;
 
@@ -53,6 +55,20 @@ const createCheckoutSession = async (
 
         let discounts: Stripe.Checkout.SessionCreateParams.Discount[] = [];
 
+        // Check if the code is valid
+        if (code) {
+            const { coupon, promotionCode, promoId } = await retrieveCouponCodeOrPromotionCode(code);
+            if (!coupon && !promotionCode) {
+                return { error: "Invalid coupon code" };
+            }
+            if (coupon) {
+                discounts.push({ coupon: code });
+            } else if (promotionCode) {
+                discounts.push({ promotion_code: promoId });
+            }
+        }
+
+        // If a coupon code is present, then disallow
         if (referredBy) {
             const referredUser = await retrieveUserByKeyAndValueAdmin("referral.referralCode", referredBy);
 
@@ -62,7 +78,8 @@ const createCheckoutSession = async (
                     subscription.name.toLowerCase().includes('member')
                 );
 
-                if (hasMemberSubscription) {
+                // Disallow the referral discount if a coupon code is present
+                if (hasMemberSubscription && !code) {
                     // Add the coupon code to discounts if condition is met
                     discounts.push({
                         coupon: process.env.STRIPE_COUPON_CODE_25, // Stripe coupon code 25% off
@@ -88,9 +105,10 @@ const createCheckoutSession = async (
             discounts: discounts.length > 0 ? discounts : undefined,
         });
 
-        return checkoutSession.url;
+        return { url: checkoutSession.url };
     } catch (error) {
-        throw error;
+        console.log(error)
+        return { error: `${error}` };
     }
 };
 

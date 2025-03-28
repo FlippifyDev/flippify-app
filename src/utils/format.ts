@@ -1,24 +1,10 @@
 import { IEbayOrder } from "@/models/store-data";
+import { filterOrdersByDateRange } from "./filters";
 
 // Helper function to format dates to readable format
-const formatDate = (date: string) => {
+export const formatDate = (date: string) => {
     const dateObj = new Date(date);
     return dateObj.toLocaleDateString(); // Formats date as YYYY/MM/DD
-};
-
-// Function to filter orders by the given time range
-const filterOrdersByDateRange = (orders: IEbayOrder[], timeFrom: string, timeTo: string) => {
-    const timeFromDate = new Date(timeFrom);
-    const timeToDate = new Date(timeTo);
-
-    return orders.filter(order => {
-        const listingDate = new Date(order.listingDate);
-        const saleDate = new Date(order.sale.date);
-
-        // Check if listingDate or saleDate is within the given time range
-        return (listingDate >= timeFromDate && listingDate <= timeToDate) ||
-            (saleDate >= timeFromDate && saleDate <= timeToDate);
-    });
 };
 
 // Function to format orders for CSV export

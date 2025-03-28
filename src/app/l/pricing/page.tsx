@@ -17,7 +17,7 @@ export const metadata = {
 		url: root.concat('/l/pricing'),
 		images: [
 			{
-                url: 'https://i.imgur.com/Pt4GSqD.png',
+				url: 'https://i.imgur.com/Pt4GSqD.png',
 				width: 1908,
 				height: 1076,
 				alt: 'Pricing Page Image'

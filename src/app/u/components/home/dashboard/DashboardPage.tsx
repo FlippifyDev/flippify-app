@@ -13,8 +13,7 @@ import DashboardOverviewCard from "./DashboardOverviewCard";
 import DashboardProfitsGraph from "./DashboardProfitsGraph";
 import OnboardingFlow from "./OnboardingFlow";
 import { IEbayOrder } from "@/models/store-data";
-import LoadingAnimation from "../../dom/ui/LoadingAnimation";
-import Link from "next/link";
+import ConnectAccountButton from "../../dom/ui/ConnectAccountButton";
 
 
 const DashboardPage: React.FC = () => {
@@ -100,13 +99,7 @@ const DashboardPage: React.FC = () => {
             <LayoutSubscriptionWrapper
                 requiredSubscriptions={["accessGranted", "!member"]}
             >
-                <div className="flex justify-center items-center flex-grow flex-col">
-                    <h1 className="text-xl font-semibold text-center mb-10">No subscription found</h1>
-                    <LoadingAnimation text="Go to the plans page to get a subscription" type="hover-box" />
-                    <div className="w-full flex justify-center items-center mt-5">
-                        <Link href={`/u/${session.user.username}/plans`} className="btn border-0 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 text-opacity-100 px-24 mx-auto rounded-lg shadow-lg">View Plans</Link>
-                    </div>
-                </div>
+                <ConnectAccountButton heading="No subscription connected" animationType="hover-box" subtitle="Go to the plans page to get a subscription" buttonText="View Plans" />
             </LayoutSubscriptionWrapper>
 
             {/* If They Have Subscription */}
@@ -143,15 +136,8 @@ const DashboardPage: React.FC = () => {
                         </div>
                     </div>
                 ) : (
-                    <div className="flex justify-center items-center flex-grow flex-col">
-                        <h1 className="text-lg font-semibold text-center mb-24">No account connected</h1>
-                        <LoadingAnimation text="Go to your profile to connect your eBay account" type="stack-loader" />
-                        <div className="w-full flex justify-center items-center mt-5">
-                            <Link href={`/u/${session.user.username}/profile`} className="w-full text-center text-blue-600 hover:text-blue-700 hover:underline transition-all duration-200">Go to profile</Link>
-                        </div>
-                    </div>
+                    <ConnectAccountButton heading="No account connected" animationType="hover-box" subtitle="Go to your profile to connect your eBay account" buttonText="Go to profile" />
                 )}
-
             </LayoutSubscriptionWrapper>
         </div>
     );

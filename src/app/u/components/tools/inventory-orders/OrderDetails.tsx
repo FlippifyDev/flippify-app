@@ -6,10 +6,12 @@ import UpdateFields from "./UpdateFields";
 import OrderInfoCard from "./OrderInfoCard";
 import { firestore } from "@/lib/firebase/config";
 import { IEbayOrder } from "@/models/store-data";
-import { getCachedData, setCachedData } from "@/utils/cache-helpers";
+import LoadingAnimation from "../../dom/ui/LoadingAnimation";
 import { formatTableDate } from "@/utils/format-dates";
 import { currencySymbols } from "@/config/currency-config";
 import { retrieveUserOrders } from "@/services/firebase/retrieve";
+import { cacheExpirationTime, ebayOrderCacheKey } from "@/utils/constants";
+import { getCachedData, getCachedTimes, setCachedData } from "@/utils/cache-helpers";
 
 // External Imports
 import { collection, doc, updateDoc } from "firebase/firestore";
@@ -17,6 +19,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { set } from "date-fns";
 
 const OrderDetails = () => {
     const { data: session } = useSession();
@@ -25,7 +28,7 @@ const OrderDetails = () => {
     const [orders, setOrders] = useState<IEbayOrder[]>([]);
     const [salesData, setSalesData] = useState<IEbayOrder[]>([]);
     const username = session?.user.username as string;
-    const currency = session?.user.preferences.currency || "GBP";
+    const currency = session?.user.preferences.currency || "USD";
     const currencySymbol = currencySymbols[currency];
     const [customTag, setCustomTag] = useState<string>("");
     const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
@@ -45,6 +48,7 @@ const OrderDetails = () => {
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
     const [editingType, setEditingType] = useState<string | null>(null);
     const [ordersUpdated, setOrdersUpdated] = useState<boolean>(false);
+    const [orderIdtoIndex, setOrderIdtoIndex] = useState<{ [key: string]: number }>({});
 
     // This effect runs when selectedOrders length changes
     useEffect(() => {
@@ -69,15 +73,15 @@ const OrderDetails = () => {
     }, [session?.user]);
 
     useEffect(() => {
-        if (salesData && orderId && orders.length === 0 && !ordersUpdated) {
-            const matchingOrders = salesData.filter((o) => o.legacyItemId === orderId);
+        if (salesData && orderId && !ordersUpdated) {
+            const matchingOrders = salesData.filter((o, index) => {o.legacyItemId === orderId; setOrderIdtoIndex((prev) => ({ ...prev, [o.orderId]: index })); return o.legacyItemId === orderId;});
             setOrders(matchingOrders);
+            setOrdersUpdated(false);
         }
-        setOrdersUpdated(false);
-    }, [salesData, orderId, orders, ordersUpdated]);
+    }, [salesData, orderId, ordersUpdated]);
 
     if (orders.length === 0) {
-        return <p>Loading order details...</p>;
+        return <LoadingAnimation text="Loading items" type="stack-loader"/>;
     }
 
     // Handle orders click
@@ -106,9 +110,9 @@ const OrderDetails = () => {
         let totalAdditionalFees = 0;
         let totalProfit = 0;
         let totalROI = 0;
-        let purchaseCount = 0;  // Track number of purchases for accurate ROI calculation
-        let totalDaysToSell = 0;  // Variable to track the total number of days to sell
-        let validSaleCount = 0;  // Track number of valid sales for time to sell calculation
+        let purchaseCount = 0; 
+        let totalDaysToSell = 0;  
+        let validSaleCount = 0;
 
         // Loop through each order to accumulate totals
         orders.forEach((order) => {
@@ -119,11 +123,9 @@ const OrderDetails = () => {
             totalSalePrice += sale.price + shipping.fees;
             totalAdditionalFees += additionalFees;
 
-            
             if (purchase.price === null) {
-                purchase.price = 0; 
-            }   
-
+                purchase.price = 0;
+            }
 
             totalPurchasePrice += purchase.price;
             purchaseCount += 1;
@@ -133,7 +135,7 @@ const OrderDetails = () => {
             totalProfit += profit;
 
             // Calculate ROI for each order if purchase price exists and accumulate
-            if (purchasePrice && purchase.price > 0) {
+            if (purchase.price > 0) {
                 totalROI += (profit / purchase.price) * 100;
             }
 
@@ -168,7 +170,6 @@ const OrderDetails = () => {
         };
     };
 
-
     const itemName = orders[0].itemName;
     const image = orders[0].image[0];
     const totals = calculateTotals();
@@ -180,8 +181,7 @@ const OrderDetails = () => {
             return;
         }
 
-        const cacheKey = `salesData-${session?.user.id}`; // Define cache key
-        const cacheExpirationTime = 1000 * 60 * 5; // 5 minutes cache expiration
+        const cacheKey = `${ebayOrderCacheKey}-${session?.user.id}`; // Define cache key
 
         let updatedOrders: IEbayOrder[] = [...orders]; // Copy the current orders to modify them
 
@@ -262,7 +262,7 @@ const OrderDetails = () => {
                 });
 
                 // After successful Firestore update, update the cache with the merged data
-                setCachedData(cacheKey, mergedOrders, cacheExpirationTime);
+                setCachedData(cacheKey, mergedOrders);
 
                 setAlertMessage("Orders successfully updated.");
                 setIsAlertVisible(true);
@@ -284,12 +284,21 @@ const OrderDetails = () => {
         if (e.key === "Enter") {
             saveChange(index, type);
         } else if (e.key === "Escape") {
-            setEditedPlatform(orders[index].purchase.platform);
+            if (type === "platform") {
+                setEditedPlatform(orders[index].purchase?.platform ?? "");
+            } else if (type === "customTag") {
+                setEditedCustomTag(orders[index].customTag ?? "");
+            } else if (type === "purchasePrice") {
+                setEditedPurchasePrice(`${currencySymbols[currency]}${orders[index].purchase?.price ?? ""}`);
+            }
+            setEditingType(null);
         }
     };
 
     const saveChange = async (index: number, type: string) => {
         const updatedOrders = [...orders];
+        const cacheKey = `${ebayOrderCacheKey}-${session?.user.id}`;
+        const cachedTimes = getCachedTimes(cacheKey); 
 
         if (type === "platform") {
             if (editedPlatform === orders[index].purchase.platform) {
@@ -333,7 +342,10 @@ const OrderDetails = () => {
 
             // Perform the update
             await updateDoc(orderDocRef, updateFields);
-            
+            // Update the salesData with the modified order
+            salesData[orderIdtoIndex[updatedOrders[index].orderId]] = updatedOrders[index];
+            setCachedData(cacheKey, salesData, cachedTimes.cacheTimeFrom, cachedTimes.cacheTimeTo); 
+
             setEditingType(null);
             setEditingIndex(null);
             setOrders(updatedOrders);
@@ -343,6 +355,24 @@ const OrderDetails = () => {
             setIsAlertVisible(true);
         }
     };
+
+    function handlePlatformInput(index: number, order: IEbayOrder) {
+        setEditingIndex(index);
+        setEditedPlatform(order.purchase.platform)
+        setEditingType("platform");
+    }
+
+    function handlePurchasePriceInput(index: number, purchasePrice: string) {
+        setEditingIndex(index);
+        setEditedPurchasePrice(purchasePrice);
+        setEditingType("purchasePrice");
+    }
+
+    function handleCustomTagInput(index: number, order: IEbayOrder) {
+        setEditingIndex(index);
+        setEditedCustomTag(order.customTag);
+        setEditingType("customTag");
+    }
 
     return (
         <div className="rounded-lg text-orderPageText space-y-2">
@@ -400,6 +430,8 @@ const OrderDetails = () => {
                                 const { orderId, sale, purchase, shipping, additionalFees } = order;
                                 const profit = (sale.price + shipping.fees) - (purchase.price || 0) - shipping.fees - additionalFees;
                                 const roi = purchase.price && purchase.price > 0 ? ((profit / purchase.price) * 100).toFixed(2) : "0";
+                                
+                                const purchasePrice = purchase.price !== null ? purchase.price.toFixed(2) : "0";
                                 return (
                                     <tr key={index}>
                                         <td>
@@ -420,12 +452,13 @@ const OrderDetails = () => {
                                         <td>{currencySymbols[currency]}{additionalFees.toFixed(2)}</td>
                                         <td>{currencySymbols[currency]}{shipping.fees.toFixed(2)}</td>
                                         <td
-                                            onClick={() => { setEditingIndex(index); setEditedPurchasePrice(`${currencySymbols[currency]}${order.purchase.price ?? ''}`); setEditingType("purchasePrice"); }}
                                             className="cursor-pointer transition duration-200"
                                         >
                                             <input
+                                                onFocus={() => handlePurchasePriceInput(index, purchasePrice)}
+                                                onClick={() => handlePurchasePriceInput(index, purchasePrice)}
                                                 type="text"
-                                                value={(editingIndex === index && editingType === "purchasePrice") ? `${editedPurchasePrice ?? '0'}` : `${currencySymbols[currency]}${order.purchase.price ?? '0'}`}
+                                                value={(editingIndex === index && editingType === "purchasePrice") ? editedPurchasePrice ?? '0' : purchasePrice}
                                                 onChange={(e) => setEditedPurchasePrice(e.target.value)}
                                                 onBlur={() => saveChange(index, "purchasePrice")}
                                                 onKeyDown={(e) => handleKeyPress(e, index, "purchasePrice")}
@@ -436,10 +469,11 @@ const OrderDetails = () => {
                                         <td>{currencySymbols[currency]}{profit.toFixed(2)}</td>
                                         <td>{roi}%</td>
                                         <td
-                                            onClick={() => { setEditingIndex(index); setEditedPlatform(order.purchase.platform); setEditingType("platform"); }}
                                             className="cursor-pointer transition duration-200"
                                         >
                                             <input
+                                                onFocus={() => handlePlatformInput(index, order)}
+                                                onClick={() => handlePlatformInput(index, order)}
                                                 type="text"
                                                 value={(editingIndex === index && editingType === "platform") ? editedPlatform ?? "" : order.purchase.platform ?? ""}
                                                 onChange={(e) => setEditedPlatform(e.target.value)}
@@ -450,10 +484,11 @@ const OrderDetails = () => {
                                         </td>
                                         <td>{order.sale.buyerUsername}</td>
                                         <td
-                                            onClick={() => { setEditingIndex(index); setEditedCustomTag(order.customTag ?? ""); setEditingType("customTag"); }}
                                             className="cursor-pointer transition duration-200"
                                         >
                                             <input
+                                                onFocus={() => handleCustomTagInput(index, order)}
+                                                onClick={() => handleCustomTagInput(index, order)}
                                                 type="text"
                                                 value={(editingIndex === index && editingType === "customTag") ? editedCustomTag ?? "" : order.customTag ?? ""}
                                                 onChange={(e) => setEditedCustomTag(e.target.value)}

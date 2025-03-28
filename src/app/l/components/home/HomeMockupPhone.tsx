@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 const HomeMockupPhone = () => {
 	return (
-		<div className="grid sm:grid-cols-1 md:grid-cols-2 pt-12 pb-8 md:pl-8">
+		<div className="grid sm:grid-cols-1 md:grid-cols-2 md:pl-8">
 			<div className="mockup-phone w-80 mockup-shadow">
 				<div className="camera"></div>
 				<div className="display">

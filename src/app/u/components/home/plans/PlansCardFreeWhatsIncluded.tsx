@@ -1,8 +1,8 @@
 import React from "react";
 import PlansClickableBulletPoint from "./PlansClickableBulletPoint";
 
-const PlansCardStandardWhatsIncluded = () => {
-	const rootClass = "flex flex-col items-start text-gray-500 pt-6 pb-6 pl-2 gap-3"
+const PlansCardFreeWhatsIncluded = () => {
+	const rootClass = "flex flex-col items-start text-gray-500 pt-6 pb-6 pl-2 gap-3";
 
 	return (
 		<div className="mb-4">
@@ -12,26 +12,26 @@ const PlansCardStandardWhatsIncluded = () => {
 			<ul className={rootClass}>
 				<li className="w-full">
 					<PlansClickableBulletPoint
-						text="20 Manual Listings (Tracked & Managed)"
-						tooltip="Get access to all our deal-finding bots, which continuously scan hundreds of websites and thousands of products. They automatically filter and deliver the most profitable opportunities directly to you, saving you time and maximizing your reselling potential."
+						text="20 Auto-Tracked Listings /Month"
+						tooltip="Track up to 20 new eBay listings monthly. Log the purchase, and we&apos;ll automatically monitor inventory, sales, and financials. Limit resets each month; active tracked items don&apos;t count toward the next month&apos;s cap."
 					/>
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
-						text="Basic Inventory & Order Management"
-						tooltip="Join a community of experienced, top-tier resellers and gain access to exclusive networking opportunities. Participate in live Q&A sessions, giveaways, and get access to private community spaces not available to the general public. Learn from the best and stay ahead of the competition."
+						text="Inventory & Order Management Access"
+						tooltip="Manage your inventory and orders with simple tools to track stock levels and fulfill sales."
 					/>
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
-						text="Basic Financial Tracking"
-						tooltip="Join a community of experienced, top-tier resellers and gain access to exclusive networking opportunities. Participate in live Q&A sessions, giveaways, and get access to private community spaces not available to the general public. Learn from the best and stay ahead of the competition."
+						text="Financial Tracking Access"
+						tooltip="Keep tabs on profits, costs, and sales with straightforward financial summaries."
 					/>
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
 						text="Single eBay Store Management"
-						tooltip="Join a community of experienced, top-tier resellers and gain access to exclusive networking opportunities. Participate in live Q&A sessions, giveaways, and get access to private community spaces not available to the general public. Learn from the best and stay ahead of the competition."
+						tooltip="Link and manage one eBay store, syncing your sales and tracking data effortlessly."
 					/>
 				</li>
 			</ul>
@@ -40,10 +40,17 @@ const PlansCardStandardWhatsIncluded = () => {
 				<p>Coming Soon:</p>
 			</div>
 			<ul className={rootClass}>
-			<li className="w-full">
+				<li className="w-full">
 					<PlansClickableBulletPoint
-						text="5 Automatic Listings (Created & Managed by AI)"
-						tooltip="Stay ahead of the game with real-time alerts for high-demand product restocks. Be the first to secure items and maximize your profits with unbeatable resale opportunities."
+						text="5 AI Automated Listings"
+						tooltip="Provide a product link, and our AI will create, list, and manage 5 listings for you, tracking them through to sale."
+						comingSoon
+					/>
+				</li>
+				<li className="w-full">
+					<PlansClickableBulletPoint
+						text="20 Manual Transaction Entries"
+						tooltip="Manually log purchases and sales to track them in your inventory, orders, and financials. You manage the item&apos;s status, such as moving it between inventory and orders, without automated tracking."
 						comingSoon
 					/>
 				</li>
@@ -52,4 +59,4 @@ const PlansCardStandardWhatsIncluded = () => {
 	);
 };
 
-export default PlansCardStandardWhatsIncluded;
+export default PlansCardFreeWhatsIncluded;

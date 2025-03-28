@@ -11,6 +11,7 @@ interface ServicesToolsCardProps {
   disclaimer: string | null;
   image: string;
   comingSoon?: boolean;
+  releasingSoon?: boolean;
 }
 
 const ServicesToolsCard: React.FC<ServicesToolsCardProps> = ({
@@ -19,6 +20,7 @@ const ServicesToolsCard: React.FC<ServicesToolsCardProps> = ({
   disclaimer,
   image,
   comingSoon = false,
+  releasingSoon = false,
 }) => {
   const [showDisclaimer, setShowDisclaimer] = useState(false);
 
@@ -46,6 +48,11 @@ const ServicesToolsCard: React.FC<ServicesToolsCardProps> = ({
         >
           {title}
         </h2>
+        {releasingSoon && (
+          <div className="flex justify-center text-houseHoverBlue font-medium text-sm">
+            Releasing Soon
+          </div>
+        )}
         <hr className="w-full" />
         <p className="flex items-center font-medium text-center pt-2 text-lightModeText">
           {description}

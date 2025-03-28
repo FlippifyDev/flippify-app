@@ -13,7 +13,7 @@ const PlansClickableBulletPoint: React.FC<ClickableBulletPointProps> = ({
   comingSoon,
 }) => {
   const textColor = "text-gray-500";
-  const hoverColor = "hover:text-houseBlue"; 
+  const hoverColor = "hover:text-houseBlue";
   const iconColor = comingSoon ? "text-gray-500" : "text-houseBlue";
 
   return (

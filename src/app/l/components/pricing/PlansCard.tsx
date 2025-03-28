@@ -114,73 +114,71 @@ const PlansCard: React.FC<PlansCardProps> = ({
         <div className={`w-full min-h-[700px] flex flex-col justify-between relative ${className || ""}`}>
           {isEnterprise ? (
             // Enterprise plan content with slider at the bottom and "Contact Us" button.
-            <BackgroundGradient className="z-40">
-              <div className="bg-white rounded-2xl h-full p-6 z-50 flex flex-col justify-between min-h-[700px]">
-                <div className="text-center">
-                  <h2 className="font-bold text-[24px]">{title}</h2>
-                  <p className="text-sm text-gray-600">{description}</p>
-                </div>
-                {/* Enterprise Price Display */}
-                <div className="flex flex-col items-center justify-center mt-4">
-                  <div className="flex items-baseline">
-                    {enterpriseListings !== undefined ? (
-                      <>
-                        {priceRange === 0 ? (
-                          // Monthly: discounted price = 90% of base price
-                          <PriceDisplay value={calculateEnterprisePrice(enterpriseListings) * 0.5} currencySymbol={currencySymbol} />
-                        ) : (
-                          // Yearly: discounted price = 90% of (10x base price + 0.09)
-                          <PriceDisplay value={(calculateEnterprisePrice(enterpriseListings) * 10 + 0.09) * 0.5} currencySymbol={currencySymbol} />
-                        )}
-                      </>
-                    ) : (
-                      <span className="font-extrabold text-[40px] text-gray-900">Custom Pricing</span>
-                    )}
-                    <span className="ml-1 text-lg text-black font-semibold">
-                      /{priceRange === 0 ? "mo" : "yr"}
-                    </span>
-                  </div>
-                  {/* Crossed-out original price */}
-                  {enterpriseListings !== undefined && (
-                    <span className="text-md text-gray-500 line-through">
-                      {priceRange === 0
-                        ? `${currencySymbol}${calculateEnterprisePrice(enterpriseListings).toFixed(2)}`
-                        : `${currencySymbol}${(calculateEnterprisePrice(enterpriseListings) * 10 + 0.09).toFixed(2)}`}
-                    </span>
-                  )}
-                </div>
-                {/* Features Section */}
-                <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
-                {/* Enterprise Slider at the Bottom */}
-                <div className="flex flex-col items-center justify-end mt-4">
-                  <label className="block text-gray-700 mb-2">
-                    Automatic Listings:{" "}
-                    {enterpriseListings !== undefined &&
-                      (enterpriseListings === 1500 ? "Unlimited" : enterpriseListings)}
-                  </label>
-                  <input
-                    type="range"
-                    min={200}
-                    max={1500}
-                    step={50}
-                    value={enterpriseListings}
-                    onChange={(e) => setEnterpriseListings && setEnterpriseListings(Number(e.target.value))}
-                    className="w-full slider-custom-thumb"
-                  />
-                </div>
-                {/* Contact Us Button */}
-                <section className="mt-4">
-                  <div className="flex">
-                    <a
-                      href={enterpriseContactUrl || "/contact"}
-                      className="btn border-0 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 text-opacity-100 w-2/3 mx-auto rounded-lg shadow-lg"
-                    >
-                      Contact Us
-                    </a>
-                  </div>
-                </section>
+            <div className="bg-white rounded-2xl h-full p-6 z-50 flex flex-col justify-between min-h-[700px]">
+              <div className="text-center">
+                <h2 className="font-bold text-[24px]">{title}</h2>
+                <p className="text-sm text-gray-600">{description}</p>
               </div>
-            </BackgroundGradient>
+              {/* Enterprise Price Display */}
+              <div className="flex flex-col items-center justify-center mt-4">
+                <div className="flex items-baseline">
+                  {enterpriseListings !== undefined ? (
+                    <>
+                      {priceRange === 0 ? (
+                        // Monthly: discounted price = 90% of base price
+                        <PriceDisplay value={calculateEnterprisePrice(enterpriseListings) * 0.5} currencySymbol={currencySymbol} />
+                      ) : (
+                        // Yearly: discounted price = 90% of (10x base price + 0.09)
+                        <PriceDisplay value={(calculateEnterprisePrice(enterpriseListings) * 10 + 0.09) * 0.5} currencySymbol={currencySymbol} />
+                      )}
+                    </>
+                  ) : (
+                    <span className="font-extrabold text-[40px] text-gray-900">Custom Pricing</span>
+                  )}
+                  <span className="ml-1 text-lg text-black font-semibold">
+                    /{priceRange === 0 ? "mo" : "yr"}
+                  </span>
+                </div>
+                {/* Crossed-out original price */}
+                {enterpriseListings !== undefined && (
+                  <span className="text-md text-gray-500 line-through">
+                    {priceRange === 0
+                      ? `${currencySymbol}${calculateEnterprisePrice(enterpriseListings).toFixed(2)}`
+                      : `${currencySymbol}${(calculateEnterprisePrice(enterpriseListings) * 10 + 0.09).toFixed(2)}`}
+                  </span>
+                )}
+              </div>
+              {/* Features Section */}
+              <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
+              {/* Enterprise Slider at the Bottom */}
+              <div className="flex flex-col items-center justify-end mt-4">
+                <label className="block text-gray-700 mb-2">
+                  AI-Automated Listings:{" "}
+                  {enterpriseListings !== undefined &&
+                    (enterpriseListings === 1500 ? "Unlimited" : enterpriseListings)}
+                </label>
+                <input
+                  type="range"
+                  min={200}
+                  max={1500}
+                  step={50}
+                  value={enterpriseListings}
+                  onChange={(e) => setEnterpriseListings && setEnterpriseListings(Number(e.target.value))}
+                  className="w-full slider-custom-thumb"
+                />
+              </div>
+              {/* Contact Us Button */}
+              <section className="mt-4">
+                <div className="flex">
+                  <a
+                    href={enterpriseContactUrl || "/contact"}
+                    className="btn border-0 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 text-opacity-100 w-2/3 mx-auto rounded-lg shadow-lg"
+                  >
+                    Contact Us
+                  </a>
+                </div>
+              </section>
+            </div>
           ) : (
             // Non-enterprise plan content (Standard, Pro, Elite)
             <>
@@ -203,13 +201,20 @@ const PlansCard: React.FC<PlansCardProps> = ({
                         {priceNumber === 0 ? (
                           <span className="font-extrabold text-[40px] text-gray-900">Free</span>
                         ) : priceNumber !== null ? (
-                          <PriceDisplay value={priceNumber} currencySymbol={currencySymbol} />
+                          <>
+                            <PriceDisplay value={priceNumber} currencySymbol={currencySymbol} />
+                            <span className="ml-1 text-lg text-black font-semibold">
+                              /{priceRange === 0 ? "mo" : "yr"}
+                            </span>
+                          </>
                         ) : (
-                          <span className="font-extrabold text-[40px] text-gray-900">Custom Pricing</span>
+                          <>
+                            <span className="font-extrabold text-[40px] text-gray-900">Custom Pricing</span>
+                            <span className="ml-1 text-lg text-black font-semibold">
+                              /{priceRange === 0 ? "mo" : "yr"}
+                            </span>
+                          </>
                         )}
-                        <span className="ml-1 text-lg text-black font-semibold">
-                          /{priceRange === 0 ? "mo" : "yr"}
-                        </span>
                       </div>
                       {priceNumber !== 0 && Number(displayPrice) !== Number(displayOriginalPrice) && (
                         <span className="text-md text-gray-500 line-through">
@@ -275,7 +280,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
           )}
         </div>
         {comingSoon && (
-          <div className="absolute inset-0 flex items-center justify-center z-50 pointer-events-none backdrop-blur-sm">
+          <div className="absolute inset-0 flex items-center justify-center z-50 pointer-events-none backdrop-blur-[4px]">
             <div className="bg-white font-semibold text-black py-2 px-4 rounded-lg shadow-xl">
               Coming Soon
             </div>

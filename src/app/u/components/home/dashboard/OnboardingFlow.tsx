@@ -1,15 +1,15 @@
 // Local Imports
 import { CurrencyType } from '@/models/user';
-import { completeOnboarding } from '@/services/firebase/update';
+import { retrieveUserRefById } from '@/services/firebase/retrieve';
 import { updateUserPreferences } from '@/services/firebase/update';
+import { updateReferredByAdmin } from '@/services/firebase/update-admin';
+import { retrieveUserByKeyAndValueAdmin } from '@/services/firebase/retrieve-admin';
 
 // External Imports
-import { retrieveUserRef, retrieveUserRefById } from '@/services/firebase/retrieve';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { Lato } from 'next/font/google';
 import { useRouter } from 'next/navigation';
-import { retrieveUserByKeyAndValueAdmin } from '@/services/firebase/retrieve-admin';
 import { deleteField, setDoc } from 'firebase/firestore';
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
@@ -104,11 +104,11 @@ const OnboardingFlow: React.FC = () => {
             await setDoc(
                 userRef,
                 {
-                    referral: { referredBy: referralCode },
                     authentication: { onboarding: deleteField() }
                 },
                 { merge: true }
             );
+            await updateReferredByAdmin(session.user.id, validReferralCode ?? "");
         }
     };
 

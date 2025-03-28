@@ -33,30 +33,34 @@ const EBayServices: React.FC = () => {
 					description="Create optimized eBay listings instantly with the use of our browser extension or by pasting a product link. AI extracts product details, generates a title, description, and pricing, and posts the listing automatically."
 					disclaimer={null}
 					image="/ListingAutomationToolBanner.png"
+					releasingSoon
 				/>
 				<ServicesToolsCard
 					title="Smart Pricing Optimization"
 					description="Stay competitive with AI-driven pricing that adjusts automatically based on the products market trends, competitor listings, and sales performance to maximize profitability."
 					disclaimer={null}
 					image="/PriceOptimizationToolBanner.png"
+					releasingSoon
 				/>
 				<ServicesToolsCard
-					title="Inventory Tracking & Management"
+					title="Inventory & Order Automation"
 					description="Keep full control of your reselling operation with our automated inventory tracker. Monitor your stock levels, current orders, past sales, and purchase history to make informed decisions and streamline your business operations."
 					disclaimer={null}
-					image="/InventoryTrackingToolBanner.png" 
+					image="/InventoryTrackingToolBanner.png"
 				/>
 				<ServicesToolsCard
-					title="Order & Shipping Automation"
+					title="Shipping & Fulfillment Automation"
 					description="Automatically generate shipping labels, sync tracking with eBay, and notify buyers. AI recommends the best shipping options based on speed and cost."
 					disclaimer={null}
 					image="/OrderAutomationToolBanner.png"
+					releasingSoon
 				/>
 				<ServicesToolsCard
 					title="Returns & Refund Management"
 					description="Easily manage returns with automated tracking, inventory updates, and refund processing. AI helps reduce return rates by analyzing product performance and pricing issues."
 					disclaimer={null}
 					image="/RefundAutomationToolBanner.png"
+					releasingSoon
 				/>
 				<ServicesToolsCard
 					title="Financial Hub & Profit Tracking"
@@ -69,12 +73,14 @@ const EBayServices: React.FC = () => {
 					description="Manage all aspects of your eBay store in one place, from messaging & communicating with buyers and store policies to performance tracking and automation settings."
 					disclaimer={null}
 					image="/AccountAutoManageToolBanner.png"
+					releasingSoon
 				/>
 				<ServicesToolsCard
 					title="Multi-Account & Business Insights"
 					description="Oversee multiple eBay accounts within a single dashboard, compare sales performance, and apply AI-driven automation across all stores."
 					disclaimer={null}
 					image="/MultiAccountToolBanner.png"
+					releasingSoon
 				/>
 			</div>
 		</div>

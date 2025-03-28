@@ -46,7 +46,7 @@ export default function HomePage() {
 			<MetadataHead {...metadata} />
 			<ThemeSetter theme="dark" />
 			<Suspense fallback={<Loading />}>
-				<Layout>
+				<Layout className='mb-0'>
 					<HomeContentWrapperPage />
 				</Layout>
 			</Suspense>

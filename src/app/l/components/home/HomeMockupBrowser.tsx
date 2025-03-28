@@ -10,13 +10,13 @@ const HomeMockupBrowser = () => {
 	const root = process.env.ROOT as string;
 
 	return (
-		<div className="grid sm:grid-cols-1 md:grid-cols-2 pt-12 mx-8 md:mx-1 lg:mx-2 xl:mx-8 place-content-center">
-			<div className="order-2 md:order-1 px-2 pt-6 md:pt-0 lg:pt-20 xl:pt-44">
+		<div className="grid sm:grid-cols-1 md:grid-cols-2 mx-8 md:mx-1 lg:mx-2 xl:mx-8 place-content-center">
+			<div className="order-2 md:order-1 px-2 pt-6 md:pt-0 flex flex-col justify-center items-center">
 				<p className={`${lato.className} text-4xl from-houseBlue to-houseHoverBlue to-60% bg-gradient-to-tr bg-clip-text text-transparent py-1 text-center`}>
 					Automate
 					<a href="#" className={`${inter.className} mb-8 text-lightModeText text-4xl font-bold`}>{" "}Every Step.</a>
 				</p>
-				<p className="pt-4 text-darkGreyText text-center font-semibold">
+				<p className="pt-4 text-darkGreyText text-center font-semibold max-w-2xl ">
 					Connect your eBay account for automatic listings, inventory management, order tracking, and detailed finance & tax reports. We handle everything — you just buy, ship and print profits.
 				</p>
 				<div className="flex justify-center pt-6">

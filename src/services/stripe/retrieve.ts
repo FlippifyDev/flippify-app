@@ -84,5 +84,41 @@ const checkForExistingDiscount = async (customerId: string) => {
     }
 };
 
+async function retrieveCouponCodeOrPromotionCode(code: string) {
+    const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
 
-export { retrieveStripeCustomer, checkForExistingDiscount };
+    if (!stripeAPIKey) {
+        throw new Error('Stripe API key not found (checkForExistingDiscount)');
+    }
+
+    const stripe = new Stripe(stripeAPIKey);
+    let coupon;
+    let promotionCode;
+    let promoId;
+    try {
+        await stripe.coupons.retrieve(code);
+        coupon = true;
+    } catch (error) {
+        coupon = false;
+    }
+
+    try {
+        const promotionCodes = await stripe.promotionCodes.list({
+            limit: 100,
+        });
+        for (const promCode of promotionCodes.data) {
+            if (promCode.code === code) {
+                promotionCode = true;
+                promoId = promCode.id;
+                break;
+            }
+            promotionCode = false;
+        }
+    } catch (error) {
+        promotionCode = false;
+    }
+
+    return { coupon, promotionCode, promoId };
+}
+
+export { retrieveStripeCustomer, checkForExistingDiscount, retrieveCouponCodeOrPromotionCode };

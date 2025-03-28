@@ -5,13 +5,14 @@ import OrderInfo from "./OrderInfo";
 import FilterSelector from "./FilterSelector";
 import { IEbayOrder } from "@/models/store-data";
 import CardShippingInfo from "./ShippingInfo";
-import ConnectAccountButton from "../../dom/ui/ConnectAccountButton";
 import CardCostAverages from "./CostAverages";
+import CardSaleAverages from "./SaleAverages";
 import DateRangeSelector from "./DateRangeSelector";
 import { formatTimeFrom } from "@/utils/format-dates";
 import CardListingsAmount from "./ListingsAndOrdersAmount";
 import CardProfitsBarChart from "./ProfitsBarChart";
 import { currencySymbols } from "@/config/currency-config";
+import ConnectAccountButton from "../../dom/ui/ConnectAccountButton";
 import CardPlatformDonutChart from "./PlatformDonutChart";
 import { retrieveUserOrders } from "@/services/firebase/retrieve";
 import formatOrdersForCSVExport from "@/utils/format";
@@ -22,7 +23,6 @@ import { useEffect, useState } from "react";
 import { HiOutlineDownload } from "react-icons/hi";
 import { useSession } from "next-auth/react";
 import { IoClose } from "react-icons/io5";
-import Link from "next/link";
 
 
 
@@ -244,6 +244,8 @@ const FinancialHubContent = () => {
     const handleCloseModal = () => {
         setExportModalOpen(false);
     };
+
+    //console.log(timeFrom, timeTo);
 
 
     return (

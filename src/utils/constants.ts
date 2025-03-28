@@ -1,3 +1,5 @@
+export const cacheExpirationTime = 1000 * 60 * 30; // 30 min in milliseconds
+
 // Free
 export const FREE_MAX_AUTOMATIC_LISTINGS = 5;
 export const FREE_MAX_MANUAL_LISTINGS = 10;

@@ -8,7 +8,9 @@ import { IEbayInventoryItem, IEbayOrder } from "@/models/store-data";
 import { filterInventoryByTime, filterOrdersByTime } from "@/utils/filters";
 
 // External Imports
-import { collection, doc, DocumentData, DocumentReference, getDoc, getDocs, query, QueryDocumentSnapshot, where } from 'firebase/firestore';
+import { collection, doc, DocumentData, DocumentReference, getDoc, getDocs, orderBy, query, QueryDocumentSnapshot, where } from 'firebase/firestore';
+import { formatDate } from "@/utils/format";
+import { cacheExpirationTime } from "@/utils/constants";
 
 
 
@@ -137,7 +139,7 @@ async function retrieveUserRefById(uid: string): Promise<DocumentReference | nul
         }
         return userRef;
     } catch (error) {
-        console.error(`Error retrieving user reference with id=${uid}:`, error);   
+        console.error(`Error retrieving user reference with id=${uid}:`, error);
         return null;
     }
 }
@@ -161,7 +163,7 @@ async function retrieveUserOrdersFromDB(
         const ordersCollectionRef = collection(firestore, "orders", uid, "ebay");
 
         // Base query to get all orders for the user
-        let q = query(ordersCollectionRef);
+        let q = query(ordersCollectionRef, orderBy("sale.date", "desc"));
 
         // If timeFrom is provided, filter orders with saleDate >= timeFrom
         if (timeFrom) {
@@ -222,28 +224,72 @@ async function retrieveUserOrders(
     timeTo?: string,
     update?: boolean
 ): Promise<IEbayOrder[]> {
-    const cacheKey = `salesData-${uid}-${timeFrom}`; // Include timeFrom in cache key
-    const cacheExpirationTime = 1000 * 60 * 5; // Cache expiration time (5 minutes)
+    // Cache expiration time: 30 minutes
+    const cacheKey = `ebay-orders-${uid}`;
+
+    let cachedData: IEbayOrder[] = [];
+    let cacheTimeFrom: Date | undefined;
+    let cacheTimeTo: Date | undefined;
 
     // Try to get the cached data first
     try {
-        const cachedData = getCachedData(cacheKey, cacheExpirationTime);
-        if (cachedData && cachedData.length > 0 && !update) {
-            return filterOrdersByTime(cachedData, timeFrom, timeTo);
-        } else if (update || !cachedData || cachedData.length === 0) {
-            // If update is requested or cache is empty, update store info before fetching
-            await updateStoreInfo("update-orders", ebayAccessToken, uid);
-        }
+        const cache = getCachedData(cacheKey, cacheExpirationTime, true);
+        cachedData = cache.data as IEbayOrder[];
+        cacheTimeFrom = cache.cacheTimeFrom ? new Date(cache.cacheTimeFrom) : undefined;
+        cacheTimeTo = cache.cacheTimeTo ? new Date(cache.cacheTimeTo) : undefined;
     } catch (error) {
         console.error(`Error retrieving cached orders for user with UID=${uid}:`, error);
     }
 
-    // Fetch from Firestore if no cache or update is required
+    const timeFromDate = new Date(timeFrom);
+    const timeToDate = timeTo ? new Date(timeTo) : new Date();
+
+    // If cache exists and update is not requested
+    if (cachedData && cachedData.length > 0 && !update) {
+        // Determine the cached range
+        const oldestTime = cacheTimeFrom ? cacheTimeFrom : new Date(cachedData[cachedData.length - 1].sale.date);
+        const newestTime = cacheTimeTo ? cacheTimeTo : new Date(cachedData[0].sale.date);
+
+        // If the requested range is fully within the cached range, return filtered cached data.
+        if (timeFromDate >= oldestTime && timeToDate <= newestTime) {
+            return filterOrdersByTime(cachedData, timeFrom, timeTo);
+        }
+
+        let ordersToReturn: IEbayOrder[] = [];
+
+        // Case 1: Need older orders (requested timeFrom is earlier than oldest cached order)
+        if (timeFromDate < oldestTime && timeToDate <= newestTime) {
+            const olderData = await retrieveUserOrdersFromDB(uid, timeFrom, oldestTime.toISOString());
+            ordersToReturn = cachedData.concat(olderData);
+        }
+        // Case 2: Need newer orders (requested timeTo is later than newest cached order)
+        else if (timeFromDate >= oldestTime && timeToDate > newestTime) {
+            const newerData = await retrieveUserOrdersFromDB(uid, newestTime.toISOString(), timeTo);
+            ordersToReturn = newerData.concat(cachedData);
+        }
+        // Case 3: Need both older and newer orders
+        else if (timeFromDate < oldestTime && timeToDate > newestTime) {
+            const olderData = await retrieveUserOrdersFromDB(uid, timeFrom, oldestTime.toISOString());
+            const newerData = await retrieveUserOrdersFromDB(uid, newestTime.toISOString(), timeTo);
+            ordersToReturn = newerData.concat(cachedData, olderData);
+        }
+
+        if (ordersToReturn && ordersToReturn.length > 0) {
+            // Update the cache with the newly combined data and the new range
+            setCachedData(cacheKey, ordersToReturn, timeFromDate, timeToDate);
+            return filterOrdersByTime(ordersToReturn, timeFrom, timeTo);
+        }
+        return [];
+    }
+    // If cache is empty or update is requested, update store info before fetching
+    else if (update || !cachedData || cachedData.length === 0) {
+        await updateStoreInfo("update-orders", ebayAccessToken, uid);
+    }
+
+    // If no valid cache exists or update is forced, fetch from Firestore
     try {
         const data = await retrieveUserOrdersFromDB(uid, timeFrom, timeTo);
-
-        // Cache the fetched data using the updated cacheKey
-        setCachedData(cacheKey, data);
+        setCachedData(cacheKey, data, timeFromDate, timeTo ? new Date(timeTo) : undefined);
         return filterOrdersByTime(data, timeFrom, timeTo);
     } catch (error) {
         console.error(`Error fetching orders for user with UID=${uid}:`, error);
@@ -271,7 +317,7 @@ async function retrieveUserInventoryFromDB(
         const inventoryCollectionRef = collection(firestore, "inventory", uid, "ebay");
 
         // Base query to get all inventory items for the user
-        let q = query(inventoryCollectionRef);
+        let q = query(inventoryCollectionRef, orderBy("dateListed", "desc"));
 
         // Apply timeFrom filter if provided
         if (timeFrom) {
@@ -331,30 +377,73 @@ async function retrieveUserInventory(
     update: boolean = false,
     timeTo?: string
 ): Promise<IEbayInventoryItem[]> {
-    // Cache key now includes timeFrom to cache different time-based data separately
-    const cacheKey = `inventoryData-${uid}-${timeFrom}`;
-    const cacheExpirationTime = 1000 * 60 * 10; // Cache expiration time (10 minutes)
+    const cacheKey = `ebay-inventory-${uid}`;
+
+    let cachedData: IEbayInventoryItem[] = [];
+    let cacheTimeFrom: Date | undefined;
+    let cacheTimeTo: Date | undefined;
 
     // Try to get the cached data first
     try {
-        const cachedData = getCachedData(cacheKey, cacheExpirationTime);
-        if (cachedData && cachedData.length > 0 && !update) {
-            // Filter cached inventory based on timeFrom and timeTo before returning
-            const filteredData = filterInventoryByTime(cachedData, timeFrom, timeTo);
-            return filteredData;
-        } else if (update || !cachedData || cachedData.length === 0) {
-            // Update store info if requested or no cache exists
-            await updateStoreInfo("update-inventory", ebayAccessToken, uid);
-        }
+        const cache = getCachedData(cacheKey, cacheExpirationTime, true);
+        cachedData = cache.data as IEbayInventoryItem[];
+        cacheTimeFrom = cache.cacheTimeFrom ? new Date(cache.cacheTimeFrom) : undefined;
+        cacheTimeTo = cache.cacheTimeTo ? new Date(cache.cacheTimeTo) : undefined;
     } catch (error) {
         console.error(`Error retrieving cached inventory for user with UID=${uid}:`, error);
     }
 
-    // If no cached data or update is required, fetch from Firestore
+    const timeFromDate = new Date(timeFrom);
+    const timeToDate = timeTo ? new Date(timeTo) : new Date();
+
+    // If cache exists and update is not requested
+    if (cachedData && cachedData.length > 0 && !update) {
+        // Determine the cached range
+        const oldestTime = cacheTimeFrom ? cacheTimeFrom : new Date(cachedData[cachedData.length - 1].dateListed);
+        const newestTime = cacheTimeTo ? cacheTimeTo : new Date(cachedData[0].dateListed);
+
+        // If the requested range is fully within the cached range, return filtered cached data.
+        if (timeFromDate >= oldestTime && timeToDate <= newestTime) {
+            console.log("Requested date range is within cached inventory range.");
+            return filterInventoryByTime(cachedData, timeFrom, timeTo);
+        }
+
+        let inventoryToReturn: IEbayInventoryItem[] = [];
+
+        // Case 1: Need older inventory (timeFrom is earlier than the oldest cached item)
+        if (timeFromDate < oldestTime && timeToDate <= newestTime) {
+            const olderData = await retrieveUserInventoryFromDB(uid, timeFrom, oldestTime.toISOString());
+            inventoryToReturn = cachedData.concat(olderData);
+        }
+        // Case 2: Need newer inventory (timeTo is later than the newest cached item)
+        else if (timeFromDate >= oldestTime && timeToDate > newestTime) {
+            const newerData = await retrieveUserInventoryFromDB(uid, newestTime.toISOString(), timeTo);
+            inventoryToReturn = newerData.concat(cachedData);
+        }
+        // Case 3: Need both older and newer inventory
+        else if (timeFromDate < oldestTime && timeToDate > newestTime) {
+            const olderData = await retrieveUserInventoryFromDB(uid, timeFrom, oldestTime.toISOString());
+            const newerData = await retrieveUserInventoryFromDB(uid, newestTime.toISOString(), timeTo);
+            inventoryToReturn = newerData.concat(cachedData, olderData);
+        }
+
+        if (inventoryToReturn && inventoryToReturn.length > 0) {
+            // Update the cache with the newly combined data and the new range
+            setCachedData(cacheKey, inventoryToReturn, timeFromDate, timeToDate);
+            return filterInventoryByTime(inventoryToReturn, timeFrom, timeTo);
+        }
+        return [];
+    }
+    // If cache is empty or update is requested, update store info before fetching
+    else if (update || !cachedData || cachedData.length === 0) {
+        await updateStoreInfo("update-inventory", ebayAccessToken, uid);
+    }
+
+    // If no valid cache exists or update is forced, fetch from Firestore
     try {
-        const data = await retrieveUserInventoryFromDB(uid, timeFrom, timeTo); // Fetch inventory data
-        setCachedData(cacheKey, data); // Cache the fetched data
-        return filterInventoryByTime(data, timeFrom, timeTo); // Apply time filtering
+        const data = await retrieveUserInventoryFromDB(uid, timeFrom, timeTo);
+        setCachedData(cacheKey, data, timeFromDate, timeTo ? new Date(timeTo) : undefined);
+        return filterInventoryByTime(data, timeFrom, timeTo);
     } catch (error) {
         console.error(`Error fetching inventory for user with UID=${uid}:`, error);
         return [];

@@ -6,7 +6,7 @@ import LayoutGradientBackground from "./LayoutGradientBackground";
 import LayoutWhiteSection from "./LayoutWhiteSection";
 import Footer from "./LayoutFooter";
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+const Layout = ({ children, className }: { children: React.ReactNode, className?: string }) => {
 	return (
 		<div className="relative min-h-screen bg-white flex flex-col">
 			<div className="fixed w-full z-50">
@@ -16,7 +16,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 			<main className="relative flex-1 w-full overflow-hidden">
 				<LayoutWhiteSection />
 				<LayoutGradientBackground />
-				<div className="relative flex justify-center z-10 mt-24 mb-24">
+                <div className={`${className} relative flex justify-center z-10 mt-24 mb-24`}>
 					{children}
 				</div>
 			</main>

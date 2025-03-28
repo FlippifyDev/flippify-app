@@ -157,6 +157,7 @@ const PlansPage = () => {
                     priceRange={selectedPlan}
                     currency={currency}
                     conversionRates={conversionRates}
+                    comingSoon
                     handleDisplayCouponModal={handleDisplayCouponModal}
                 />
                 <PlansCard

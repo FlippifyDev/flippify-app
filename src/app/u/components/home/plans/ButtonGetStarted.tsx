@@ -6,19 +6,18 @@ import { createCheckoutSession } from '@/services/stripe/create';
 // External Imports
 import { useEffect, useState, useRef } from 'react';
 import { useSession } from 'next-auth/react';
-import { set } from 'date-fns';
 
-interface PlansSubscribeNowProps {
+interface ButtonGetStartedProps {
     priceId: string;
     specialPlan?: boolean;
     unavailable?: string;
     displayModal?: boolean;
-    handleDisplayCouponModal: (priceId: string) => void;
+    handleDisplayModal: (priceId: string, type: string) => void;
     couponCode?: string;
     setCouponError?: (error: string) => void;
 }
 
-const PlansSubscribeNow: React.FC<PlansSubscribeNowProps> = ({ priceId, specialPlan, unavailable, displayModal, handleDisplayCouponModal, couponCode, setCouponError }) => {
+const ButtonGetStarted: React.FC<ButtonGetStartedProps> = ({ priceId, specialPlan, unavailable, displayModal, handleDisplayModal, couponCode, setCouponError }) => {
     const { data: session } = useSession();
     const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
     const customerIdRef = useRef<string | null>(null);
@@ -88,7 +87,7 @@ const PlansSubscribeNow: React.FC<PlansSubscribeNowProps> = ({ priceId, specialP
                 <>
                     <button
                         className={btnClass}
-                        onClick={() => handleDisplayCouponModal(priceId)}
+                        onClick={() => handleDisplayModal(priceId, "coupon")}
                         disabled={!isAvailable}
                     >
                         Get Started
@@ -114,4 +113,4 @@ const PlansSubscribeNow: React.FC<PlansSubscribeNowProps> = ({ priceId, specialP
     );
 };
 
-export default PlansSubscribeNow;
+export default ButtonGetStarted;

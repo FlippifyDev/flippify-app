@@ -4,13 +4,13 @@ import React from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
-interface PlansGetAccessButtonProps {
+interface ButtonGetAccessProps {
 	redirect: string;
 	specialPlan?: boolean;
 	unavailable?: string;
 }
 
-const PlansGetAccessButton: React.FC<PlansGetAccessButtonProps> = ({ redirect, specialPlan, unavailable }) => {
+const ButtonGetAccess: React.FC<ButtonGetAccessProps> = ({ redirect, specialPlan, unavailable }) => {
 	const { data: session } = useSession();
 	const router = useRouter();
 
@@ -40,7 +40,6 @@ const PlansGetAccessButton: React.FC<PlansGetAccessButtonProps> = ({ redirect, s
 			<button
 				className={btnClass}
 				onClick={redirectUser}
-				disabled={!isAvailable}
 			>
 				{isAvailable ? 'Get Access' : 'Coming Soon'}
 			</button>
@@ -53,4 +52,4 @@ const PlansGetAccessButton: React.FC<PlansGetAccessButtonProps> = ({ redirect, s
 	);
 };
 
-export default PlansGetAccessButton;
+export default ButtonGetAccess;

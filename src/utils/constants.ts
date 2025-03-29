@@ -15,6 +15,13 @@ export const PREMIUM_MAX_AUTOMATIC_LISTINGS = 500;
 export const PREMIUM_MAX_MANUAL_LISTINGS = 500;
 
 
+export const subscriptionPlans = {
+    "Free - member": 0,
+    "Standard - member": 1,
+    "Pro - member": 2,
+    "Enterprise - member": 3,
+}
+
 export const userProfileImages = [
     "https://i.imgur.com/CU6euIm.jpeg",
     "https://i.imgur.com/I8rDFTX.jpeg",

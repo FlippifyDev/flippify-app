@@ -1,14 +1,15 @@
 "use client";
 
 import React from "react";
+import ButtonGetAccess from "./ButtonGetAccess";
 import { AiOutlineTag } from "react-icons/ai";
-import PlansSubscribeNow from "./PlansSubscribeNow";
-import PlansGetAccessButton from "./PlansGetAccessButton";
-import { BackgroundGradient } from "@/components/ui/background-gradient";
-import ManageMembershipsButton from "./PlansManageMembershipButton";
-import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
+import ButtonGetStarted from "./ButtonGetStarted";
 import { currencySymbols } from "@/config/currency-config";
+import ButtonManageMembership from "./ButtonManageMembership";
+import { BackgroundGradient } from "@/components/ui/background-gradient";
 import { useSpring, animated } from "react-spring";
+import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
+import ButtonUpgradeSubscription from "./ButtonUpgradeSubscription";
 
 interface PlansCardProps {
     title: string;
@@ -17,6 +18,7 @@ interface PlansCardProps {
     discountedPrices: { monthly: number; yearly: number };
     priceIds: { monthly: string; yearly: string };
     whatsIncludedComponent: React.ReactNode;
+    currentSubscriptionName: string | null;
     specialPlan?: boolean;
     priceRange: number;
     className?: string;
@@ -27,7 +29,7 @@ interface PlansCardProps {
     enterpriseListings?: number;
     setEnterpriseListings?: (value: number) => void;
     enterpriseContactUrl?: string;
-    handleDisplayCouponModal: (priceId: string) => void;
+    handleDisplayModal: (priceId: string, type: string) => void;
 }
 
 // PriceDisplay component for animated prices
@@ -62,6 +64,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
     prices,
     discountedPrices,
     priceIds,
+    currentSubscriptionName,
     whatsIncludedComponent,
     specialPlan = false,
     priceRange,
@@ -73,7 +76,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
     enterpriseListings,
     setEnterpriseListings,
     enterpriseContactUrl,
-    handleDisplayCouponModal
+    handleDisplayModal
 }) => {
     const currencySymbol = currencySymbols[currency as keyof typeof currencySymbols] || "$";
 
@@ -179,100 +182,40 @@ const PlansCard: React.FC<PlansCardProps> = ({
                             <div className="absolute top-[-10px] left-6 bg-houseBlue text-white px-3 py-1 rounded-full text-xs">
                                 Most Popular
                             </div>
-                            <div className="text-center">
-                                <h2 className="font-bold text-[24px]">{title}</h2>
-                                <p className="text-sm text-gray-600">{description}</p>
-                            </div>
-                            <div className="flex items-center justify-center text-houseBlue font-semibold text-md mt-4">
-                                <AiOutlineTag className="mr-2" />
-                                Early Access Discount
-                            </div>
-                            <div className="flex flex-col items-center justify-center mt-4">
-                                <div className="flex items-baseline">
-                                    {isFreePlan ? (
-                                        <span className="font-extrabold text-[40px] text-gray-900">Free</span>
-                                    ) : (
-                                        <>
-                                            <PriceDisplay value={displayPrice} currencySymbol={currencySymbol} />
-                                            <span className="ml-1 text-lg text-black font-semibold">
-                                                /{priceRange === 0 ? "mo" : "yr"}
-                                            </span>
-                                        </>
-                                    )}
-                                </div>
-                                {!isFreePlan && Number(displayPrice) !== Number(displayOriginalPrice) && (
-                                    <span className="text-md text-gray-500 line-through">
-                                        {currencySymbol}
-                                        {displayOriginalPrice.toFixed(2)}
-                                    </span>
-                                )}
-                            </div>
-                            <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
-                            <section className="mt-auto">
-                                <div className="flex flex-col items-center gap-3">
-                                    {!comingSoon && (
-                                        <>
-                                            <LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
-                                                <PlansGetAccessButton redirect="dashboard" specialPlan={specialPlan} />
-                                            </LayoutSubscriptionWrapper>
-                                            <LayoutSubscriptionWrapper requiredSubscriptions={["accessGranted", `!${title.toLowerCase()}`]}>
-                                                <PlansSubscribeNow priceId={selectedPriceId} specialPlan={specialPlan} handleDisplayCouponModal={handleDisplayCouponModal} displayModal={true} />
-                                            </LayoutSubscriptionWrapper>
-                                            <LayoutSubscriptionWrapper requiredSubscriptions={[title.toLowerCase()]}>
-                                                <ManageMembershipsButton specialPlan={specialPlan} />
-                                            </LayoutSubscriptionWrapper>
-                                        </>
-                                    )}
-                                </div>
-                            </section>
+                            <PlansCardInfo
+                                title={title}
+                                description={description}
+                                currentSubscriptionName={currentSubscriptionName}
+                                isFreePlan={isFreePlan}
+                                displayPrice={displayPrice}
+                                currencySymbol={currencySymbol}
+                                priceRange={priceRange}
+                                displayOriginalPrice={displayOriginalPrice}
+                                whatsIncludedComponent={whatsIncludedComponent}
+                                specialPlan={specialPlan}
+                                selectedPriceId={selectedPriceId}
+                                comingSoon={comingSoon}
+                                handleDisplayModal={handleDisplayModal}
+                            />
                         </div>
                     </BackgroundGradient>
                 ) : (
                     <div className="bg-white border rounded-2xl hover:shadow-md transition duration-200 p-6 flex flex-col justify-between">
-                        <div className="text-center">
-                            <h2 className="font-bold text-[24px]">{title}</h2>
-                            <p className="text-sm text-gray-600">{description}</p>
-                        </div>
-                        <div className="flex items-center justify-center text-houseBlue font-semibold text-md mt-4">
-                            <AiOutlineTag className="mr-2" />
-                            Early Access Discount
-                        </div>
-                        <div className="flex flex-col items-center justify-center mt-4">
-                            <div className="flex items-baseline">
-                                {isFreePlan ? (
-                                    <span className="font-extrabold text-[40px] text-gray-900">Free</span>
-                                ) : (
-                                    <PriceDisplay value={displayPrice} currencySymbol={currencySymbol} />
-                                )}
-                                <span className="ml-1 text-lg text-black font-semibold">
-                                    /{priceRange === 0 ? "mo" : "yr"}
-                                </span>
-                            </div>
-                            {!isFreePlan && Number(displayPrice) !== Number(displayOriginalPrice) && (
-                                <span className="text-md text-gray-500 line-through">
-                                    {currencySymbol}
-                                    {displayOriginalPrice.toFixed(2)}
-                                </span>
-                            )}
-                        </div>
-                        <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
-                        <section className="mt-auto">
-                            <div className="flex flex-col items-center gap-3">
-                                {!comingSoon && (
-                                    <>
-                                        <LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
-                                            <PlansGetAccessButton redirect="dashboard" specialPlan={specialPlan} />
-                                        </LayoutSubscriptionWrapper>
-                                        <LayoutSubscriptionWrapper requiredSubscriptions={["accessGranted", `!${title.toLowerCase()}`]}>
-                                            <PlansSubscribeNow priceId={selectedPriceId} specialPlan={specialPlan} handleDisplayCouponModal={handleDisplayCouponModal} displayModal={true} />
-                                        </LayoutSubscriptionWrapper>
-                                        <LayoutSubscriptionWrapper requiredSubscriptions={[title.toLowerCase()]}>
-                                            <ManageMembershipsButton specialPlan={specialPlan} />
-                                        </LayoutSubscriptionWrapper>
-                                    </>
-                                )}
-                            </div>
-                        </section>
+                        <PlansCardInfo
+                            title={title}
+                            description={description}
+                            currentSubscriptionName={currentSubscriptionName}
+                            isFreePlan={isFreePlan}
+                            displayPrice={displayPrice}
+                            currencySymbol={currencySymbol}
+                            priceRange={priceRange}
+                            displayOriginalPrice={displayOriginalPrice}
+                            whatsIncludedComponent={whatsIncludedComponent}
+                            specialPlan={specialPlan}
+                            selectedPriceId={selectedPriceId}
+                            comingSoon={comingSoon}
+                            handleDisplayModal={handleDisplayModal}
+                        />
                     </div>
                 )}
                 {comingSoon && (
@@ -286,5 +229,81 @@ const PlansCard: React.FC<PlansCardProps> = ({
         </div>
     );
 };
+
+
+interface PlansCardInfoProps {
+    title: string;
+    description: string;
+    currentSubscriptionName: string | null;
+    isFreePlan: boolean;
+    displayPrice: number;
+    currencySymbol: string;
+    priceRange: number;
+    displayOriginalPrice: number;
+    whatsIncludedComponent: React.ReactNode;
+    specialPlan?: boolean;
+    selectedPriceId: string;
+    comingSoon?: boolean;
+    handleDisplayModal: (priceId: string, type: string) => void;
+}
+
+
+const PlansCardInfo: React.FC<PlansCardInfoProps> = ({ title, description, currentSubscriptionName, isFreePlan, displayPrice, currencySymbol, priceRange, displayOriginalPrice, whatsIncludedComponent, specialPlan, selectedPriceId, comingSoon, handleDisplayModal }) => {
+    return (
+        <>
+            <div className="text-center">
+                <h2 className="font-bold text-[24px]">{title}</h2>
+                <p className="text-sm text-gray-600">{description}</p>
+            </div>
+            <div className="flex items-center justify-center text-houseBlue font-semibold text-md mt-4">
+                <AiOutlineTag className="mr-2" />
+                Early Access Discount
+            </div>
+            <div className="flex flex-col items-center justify-center mt-4">
+                <div className="flex items-baseline">
+                    {isFreePlan ? (
+                        <span className="font-extrabold text-[40px] text-gray-900">Free</span>
+                    ) : (
+                        <>
+                            <PriceDisplay value={displayPrice} currencySymbol={currencySymbol} />
+                            <span className="ml-1 text-lg text-black font-semibold">
+                                /{priceRange === 0 ? "mo" : "yr"}
+                            </span>
+                        </>
+                    )}
+                </div>
+                {!isFreePlan && Number(displayPrice) !== Number(displayOriginalPrice) && (
+                    <span className="text-md text-gray-500 line-through">
+                        {currencySymbol}
+                        {displayOriginalPrice.toFixed(2)}
+                    </span>
+                )}
+            </div>
+            <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
+            <section className="mt-auto">
+                <div className="flex flex-col items-center gap-3">
+                    {!comingSoon && (
+                        <>
+                            <LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
+                                <ButtonGetAccess redirect="dashboard" specialPlan={specialPlan} />
+                            </LayoutSubscriptionWrapper>
+                            <LayoutSubscriptionWrapper requiredSubscriptions={["accessGranted", `!${title.toLowerCase()}`]}>
+                                {currentSubscriptionName ? (
+                                    <ButtonUpgradeSubscription priceId={selectedPriceId} currentSubscriptionName={currentSubscriptionName} planTitle={title} specialPlan={specialPlan} handleDisplayModal={handleDisplayModal} displayModal={true} />
+                                ) : (
+                                    <ButtonGetStarted priceId={selectedPriceId} specialPlan={specialPlan} handleDisplayModal={handleDisplayModal} displayModal={true} />
+                                )}
+                            </LayoutSubscriptionWrapper>
+
+                            <LayoutSubscriptionWrapper requiredSubscriptions={[title.toLowerCase()]}>
+                                <ButtonManageMembership specialPlan={specialPlan} />
+                            </LayoutSubscriptionWrapper>
+                        </>
+                    )}
+                </div>
+            </section >
+        </>
+    )
+}
 
 export default PlansCard;

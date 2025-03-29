@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Lato, Inter } from "next/font/google";
 import PlansCard from "./PlansCard";
@@ -9,7 +9,9 @@ import PlansCardStandardWhatsIncluded from "./PlansCardStandardWhatsIncluded";
 import PlansCardEliteWhatsIncluded from "./PlansCardProWhatsIncluded";
 import PlansCardEnterpriseWhatsIncluded from "./PlansCardEnterpriseWhatsIncluded";
 import { IoClose } from "react-icons/io5";
-import PlansSubscribeNow from "./PlansSubscribeNow";
+import PlansSubscribeNow from "./ButtonGetStarted";
+import Modal from "../../dom/ui/Modal";
+import ButtonUpgradeSubscription from "./ButtonUpgradeSubscription";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
@@ -22,9 +24,11 @@ const PlansPage = () => {
     const [selectedPlan, setSelectedPlan] = useState<number>(0); // 0 for monthly, 1 for yearly
     const [enterpriseListings, setEnterpriseListings] = useState<number>(200);
     const [displayCouponModal, setDisplayCouponModal] = useState<boolean>(false);
+    const [displaySubscriptionChangeModal, setDisplaySubscriptionChangeModal] = useState<boolean>(false);
     const [priceId, setPriceId] = useState<string>("");
     const [couponCode, setCouponCode] = useState<string | undefined>(undefined);
     const [couponError, setCouponError] = useState<string | null>(null);
+    const [currentSubscriptionName, setCurrentSubscriptionName] = useState<string | null>(null);
 
     const conversionRates = {
         GBP: 1,
@@ -41,54 +45,71 @@ const PlansPage = () => {
     };
 
 
-    function handleDisplayCouponModal(priceId: string) {
+    function handleDisplayModal(priceId: string, type: string) {
         setPriceId(priceId);
-        setDisplayCouponModal(true);
+        if (type === "coupon") {
+            setDisplayCouponModal(true);
+        } else if (type === "subscriptionChange") {
+            setDisplaySubscriptionChangeModal(true);
+        }
     }
+
+    useEffect(() => {
+        if (session?.user.subscriptions) {
+            const subscription = session.user.subscriptions.find((sub: any) => sub.name.includes("member"));
+            if (subscription) {
+                setCurrentSubscriptionName(subscription.name);
+            }
+        }
+    }, [session]);
 
 
     return (
         <div className="w-full h-full flex flex-col items-center relative">
             {displayCouponModal && (
-                <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-40">
-                    <div className="relative bg-white p-6 rounded-lg shadow-lg w-80 sm:w-96">
-                        {/* Close Button (Cross Icon) */}
-                        <button
-                            className="absolute -top-5 -right-5 text-white rounded-full bg-[#3c424b] p-2 shadow-gray-700 shadow-[rgba(0,0,0,0.2)_-2px_2px_8px] z-50"
-                            onClick={() => setDisplayCouponModal(false)}
-                        >
-                            <IoClose size={24} />
-                        </button>
+                <Modal setDisplayModal={setDisplayCouponModal}>
+                    <div className="w-full flex flex-col items-center justify-center gap-4">
+                        <h3 className="text-xl font-semibold mb-4 text-center">Enter coupon code</h3>
 
+                        <input
+                            type="text"
+                            value={couponCode ?? ""}
+                            onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                            placeholder="Coupon Code (optional)"
+                            className="input input-bordered w-full"
+                            aria-label="Coupon Code"
+                            aria-required="false"
+                        />
 
-                        <div className="w-full flex flex-col items-center justify-center gap-4 borer">
-                            <h3 className="text-xl font-semibold mb-4 text-center">Enter coupon code</h3>
+                        {couponError && (
+                            <p className="text-red-500 text-sm mt-2 w-full text-center">{couponError}</p>
+                        )}
 
-                            <input
-                                type="text"
-                                value={couponCode ?? ""}
-                                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                                placeholder="Coupon Code (optional)"
-                                className="input input-bordered w-full"
-                                aria-label="Coupon Code"
-                                aria-required="false"
-                            />
-
-                            {couponError && (
-                                <p className="text-red-500 text-sm mt-2 w-full text-center">{couponError}</p>
-                            )}
-
-                            <PlansSubscribeNow
-                                priceId={priceId}
-                                handleDisplayCouponModal={handleDisplayCouponModal}
-                                displayModal={false}
-                                couponCode={couponCode}
-                                setCouponError={setCouponError}
-                            />
-                        </div>
-
+                        <PlansSubscribeNow
+                            priceId={priceId}
+                            handleDisplayModal={handleDisplayModal}
+                            displayModal={false}
+                            couponCode={couponCode}
+                            setCouponError={setCouponError}
+                        />
                     </div>
-                </div>
+                </Modal>
+            )}
+
+            {displaySubscriptionChangeModal && (
+                <Modal setDisplayModal={setDisplaySubscriptionChangeModal}>
+                    <div className="w-full flex flex-col items-center justify-center gap-4">
+                        <h3 className="text-xl font-semibold mb-4 text-center">Subscription Change</h3>
+                        <p className="text-sm text-center mb-4">
+                            Are you sure you want to change your subscription? This will update your current plan and may incur additional charges.
+                        </p>
+                        <ButtonUpgradeSubscription
+                            priceId={priceId}
+                            handleDisplayModal={handleDisplayModal}
+                            displayModal={false}
+                        />
+                    </div>
+                </Modal>
             )}
             <div className="flex flex-col items-center space-y-5 text-center mt-6">
                 <div className="flex flex-wrap justify-center">
@@ -137,12 +158,13 @@ const PlansPage = () => {
                         monthly: "price_1R6umYJJRepiHZ8duYSajDvz",
                         yearly: "price_1R6umYJJRepiHZ8d7eBwpE78",
                     }}
+                    currentSubscriptionName={currentSubscriptionName}
                     whatsIncludedComponent={<PlansCardBasicWhatsIncluded />}
                     priceRange={selectedPlan}
                     currency={currency}
                     conversionRates={conversionRates}
                     specialPlan
-                    handleDisplayCouponModal={handleDisplayCouponModal}
+                    handleDisplayModal={handleDisplayModal}
                 />
                 <PlansCard
                     title="Standard"
@@ -153,12 +175,13 @@ const PlansPage = () => {
                         monthly: "price_1R6umXJJRepiHZ8dXNPscGu8",
                         yearly: "price_1R6umXJJRepiHZ8d473LpjVZ",
                     }}
+                    currentSubscriptionName={currentSubscriptionName}
                     whatsIncludedComponent={<PlansCardStandardWhatsIncluded />}
                     priceRange={selectedPlan}
                     currency={currency}
                     conversionRates={conversionRates}
                     comingSoon
-                    handleDisplayCouponModal={handleDisplayCouponModal}
+                    handleDisplayModal={handleDisplayModal}
                 />
                 <PlansCard
                     title="Pro"
@@ -169,12 +192,13 @@ const PlansPage = () => {
                         monthly: "price_1R6umUJJRepiHZ8dEZib7Bd1",
                         yearly: "price_1R6umUJJRepiHZ8dUeqJXo5d",
                     }}
+                    currentSubscriptionName={currentSubscriptionName}
                     whatsIncludedComponent={<PlansCardEliteWhatsIncluded />}
                     priceRange={selectedPlan}
                     currency={currency}
                     conversionRates={conversionRates}
                     comingSoon
-                    handleDisplayCouponModal={handleDisplayCouponModal}
+                    handleDisplayModal={handleDisplayModal}
                 />
                 <PlansCard
                     title="Enterprise"
@@ -185,6 +209,7 @@ const PlansPage = () => {
                         monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
                         yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
                     }}
+                    currentSubscriptionName={currentSubscriptionName}
                     whatsIncludedComponent={<PlansCardEnterpriseWhatsIncluded />}
                     priceRange={selectedPlan}
                     currency={currency}
@@ -194,7 +219,7 @@ const PlansPage = () => {
                     setEnterpriseListings={setEnterpriseListings}
                     enterpriseContactUrl="/contact"
                     comingSoon
-                    handleDisplayCouponModal={handleDisplayCouponModal}
+                    handleDisplayModal={handleDisplayModal}
                 />
             </div>
         </div>

@@ -8,7 +8,6 @@ import { fetchUserSubscription, fetchSubscriptionMaxListings } from '@/utils/fet
 // External Imports
 import { useSession } from 'next-auth/react'
 import React from 'react'
-import LoadingAnimation from '../../dom/ui/LoadingAnimation';
 
 
 const CardListingsAmount = () => {

@@ -1,10 +1,13 @@
 "use client";
 
+// Local Imports
 import OrderRow from "./OrderRow";
 import { IEbayOrder } from "@/models/store-data";
+import { currencySymbols } from "@/config/currency-config";
 import { retrieveUserOrders } from "@/services/firebase/retrieve";
 
-import React, { useEffect, useState } from "react";
+// External Imports
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
 interface CombinedOrder {
@@ -135,9 +138,9 @@ const OrdersContent: React.FC = () => {
                                 <th></th>
                                 <th>Product</th>
                                 <th>Quantity</th>
-                                <th>Cost</th>
-                                <th>Sold For</th>
-                                <th>Profit</th>
+                                <th>Cost ({currencySymbols[currency]})</th>
+                                <th>Sold For ({currencySymbols[currency]})</th>
+                                <th>Profit ({currencySymbols[currency]})</th>
                                 <th>ROI (%)</th>
                             </tr>
                         </thead>
@@ -158,7 +161,6 @@ const OrdersContent: React.FC = () => {
                                             totalPurchasePrice={totalPurchasePrice}
                                             totalShippingFees={order.totalShippingFees}
                                             totalOtherFees={order.totalOtherFees}
-                                            currency={currency}
                                             username={username}
                                             image={order.image}
                                         />
@@ -195,10 +197,10 @@ const OrdersContent: React.FC = () => {
                                         </span>
                                         <span>-</span>
                                         <span className="font-semibold text-white">
-                                            {Math.min(currentPage * ordersPerPage, salesData.length)}
+                                            {Math.min(currentPage * ordersPerPage, orderDataArray.length)}
                                         </span>
                                         <span>of</span>
-                                        <span className="font-semibold text-white">{salesData.length}</span>
+                                        <span className="font-semibold text-white">{orderDataArray.length}</span>
                                     </div>
                                     {/* Next Button */}
                                     <button

@@ -1,18 +1,21 @@
 "use client";
 
-import { retrieveUserInventory } from "@/services/firebase/retrieve";
+// Local Imports
+import Alert from "@/app/components/Alert";
+import { firestore } from "@/lib/firebase/config";
 import { formatTableDate } from "@/utils/format-dates";
 import { currencySymbols } from "@/config/currency-config";
+import { IEbayInventoryItem } from "@/models/store-data";
+import { ebayInventoryCacheKey } from "@/utils/constants";
+import { retrieveUserInventory } from "@/services/firebase/retrieve";
+import { getCachedTimes, setCachedData } from "@/utils/cache-helpers";
 
+// External Imports
 import { useEffect, useState } from "react";
+import { doc, updateDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { IEbayInventoryItem } from "@/models/store-data";
-import { firestore } from "@/lib/firebase/config";
-import { doc, updateDoc } from "firebase/firestore";
-import { getCachedData, getCachedTimes, setCachedData } from "@/utils/cache-helpers";
-import Alert from "@/app/components/Alert";
-import { cacheExpirationTime, ebayInventoryCacheKey } from "@/utils/constants";
+
 
 const InventoryContent = () => {
     const { data: session } = useSession();
@@ -198,8 +201,8 @@ const InventoryContent = () => {
                         <th>Product</th>
                         <th>Quantity</th>
                         <th>Purchase Platform</th>
-                        <th>Cost</th>
-                        <th>Listed Price</th>
+                        <th>Cost ({currencySymbols[currency]})</th>
+                        <th>Listed Price ({currencySymbols[currency]})</th>
                         <th>Date Listed</th>
                         <th>Custom Tag</th>
                     </tr>
@@ -258,7 +261,6 @@ const InventoryContent = () => {
                                         />
                                     </td>
                                     <td>
-                                        {currencySymbols[currency]}
                                         {item.price.toFixed(2)}
                                     </td>
                                     <td>{formatTableDate(item.dateListed)}</td>

@@ -196,9 +196,12 @@ const OrderDetails = () => {
             if (selectedOrders.includes(order.orderId)) {
                 return {
                     ...order,
-                    purchaseDate: purchaseDate || order.purchase.date,
-                    purchasePrice: purchasePrice ? +purchasePrice : order.purchase.price,
-                    purchasePlatform: purchasePlatform || order.purchase.platform,
+                    purchase: {
+                        ...order.purchase,
+                        date: purchaseDate || order.purchase.date,
+                        price: purchasePrice ? +purchasePrice : order.purchase.price,
+                        platform: purchasePlatform || order.purchase.platform,
+                    },
                     customTag: customTag || order.customTag || null,
                 };
             }
@@ -207,25 +210,8 @@ const OrderDetails = () => {
 
 
         try {
-            // Prepare the update object for Firestore
-            const updates: { [key: string]: any } = {};
-
-            // Loop through selected orders to prepare the updates
-            selectedOrders.forEach((orderId) => {
-                const orderToUpdate = updatedOrders.find((order) => order.orderId === orderId);
-                if (orderToUpdate) {
-                    updates[`orders.ebay.${orderToUpdate.orderId}`] = {
-                        ...orderToUpdate,
-                        purchaseDate: orderToUpdate.purchase.platform,
-                        purchasePrice: orderToUpdate.purchase.price,
-                        purchasePlatform: orderToUpdate.purchase.platform,
-                        customTag: orderToUpdate.customTag ?? null,
-                    };
-                }
-            });
-
             // Check if there are any updates
-            if (Object.keys(updates).length > 0) {
+            if (updatedOrders.length > 0) {
                 const ordersCollectionRef = collection(firestore, 'orders', session?.user.id as string, 'ebay');
 
                 // Loop through selected orders and update each document individually
@@ -233,12 +219,13 @@ const OrderDetails = () => {
                     const orderToUpdate = updatedOrders.find((order) => order.orderId === orderId);
                     if (orderToUpdate) {
                         const orderDocRef = doc(ordersCollectionRef, orderToUpdate.orderId); // Reference to individual order
-                        await updateDoc(orderDocRef, {
-                            purchaseDate: new Date(orderToUpdate.purchase.date ?? "").toISOString(),
-                            purchasePrice: orderToUpdate.purchase.price,
-                            purchasePlatform: orderToUpdate.purchase.platform,
+                        const updateData = {
+                            "purchase.date": orderToUpdate.purchase.date,
+                            "purchase.price": orderToUpdate.purchase.price,
+                            "purchase.platform": orderToUpdate.purchase.platform,
                             customTag: orderToUpdate.customTag,
-                        });
+                        };
+                        await updateDoc(orderDocRef, updateData);
                     }
                 });
 
@@ -246,26 +233,14 @@ const OrderDetails = () => {
                 await Promise.all(updatePromises);
 
                 // Retrieve the current cache data
-                const currentCache = getCachedData(cacheKey, cacheExpirationTime);
+                const currentCache = getCachedData(cacheKey, cacheExpirationTime) as IEbayOrder[];
 
                 // Merge updated orders with the current cache, preserving the existing ones
-                const mergedOrders = currentCache.map((cachedOrder: any) => {
-                    const updatedOrder = updatedOrders.find((order) => order.orderId === cachedOrder.orderId);
-                    if (updatedOrder) {
-                        // If the order exists in the updated orders, merge the updated data with the cached order
-                        return { ...cachedOrder, ...updatedOrder };
-                    }
-                    return cachedOrder; // Keep unchanged orders intact
-                });
-
-                // Add any new updated orders that aren't in the cache yet
-                updatedOrders.forEach((updatedOrder) => {
-                    const isOrderInCache = currentCache.some((cachedOrder: any) => cachedOrder.orderId === updatedOrder.orderId);
-                    if (!isOrderInCache) {
-                        // If the updated order is not in the cache, add it to the mergedOrders
-                        mergedOrders.push(updatedOrder);
-                    }
-                });
+                const mergedOrders = Array.from(
+                    new Map(
+                        [...currentCache, ...updatedOrders].map((order: IEbayOrder) => [order.orderId, order])
+                    ).values()
+                );
 
                 // After successful Firestore update, update the cache with the merged data
                 setCachedData(cacheKey, mergedOrders);
@@ -304,7 +279,6 @@ const OrderDetails = () => {
     const saveChange = async (index: number, type: string) => {
         const updatedOrders = [...orders];
         const cacheKey = `${ebayOrderCacheKey}-${session?.user.id}`;
-        const cachedTimes = getCachedTimes(cacheKey); 
 
         if (type === "platform") {
             if (editedPlatform === orders[index].purchase.platform) {
@@ -350,7 +324,7 @@ const OrderDetails = () => {
             await updateDoc(orderDocRef, updateFields);
             // Update the salesData with the modified order
             salesData[orderIdtoIndex[updatedOrders[index].orderId]] = updatedOrders[index];
-            setCachedData(cacheKey, salesData, cachedTimes.cacheTimeFrom, cachedTimes.cacheTimeTo); 
+            setCachedData(cacheKey, salesData); 
 
             setEditingType(null);
             setEditingIndex(null);

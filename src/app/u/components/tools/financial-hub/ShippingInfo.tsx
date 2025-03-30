@@ -72,7 +72,7 @@ const CardShippingInfo: React.FC<ICardShippingInfo> = ({ orders, loading, curren
 
     return (
         <>
-            <div className="col-span-12 lg:col-span-6 flex flex-col md:flex-row bg-white rounded-lg shadow-small p-4">
+            <div className="col-span-12 lg:col-span-6 flex flex-row bg-white rounded-lg shadow-small p-4 gap-4">
                 <div className="w-full text-center">
                     <h1 className="text-2xl font-semibold">
                         {loading ? '...' : `${avgDaysToSell < 1 ? '< 1 day' : avgDaysToSell.toFixed(0)}`}
@@ -87,7 +87,7 @@ const CardShippingInfo: React.FC<ICardShippingInfo> = ({ orders, loading, curren
                 </div>
 
             </div>
-            <div className="col-span-12 lg:col-span-6 flex flex-col md:flex-row bg-white rounded-lg shadow-small p-4">
+            <div className="col-span-12 lg:col-span-6 flex flex-row bg-white rounded-lg shadow-small p-4 gap-4">
                 <div className="w-full text-center">
                     <h1 className="text-2xl font-semibold">
                         {loading ? '...' : `${mostUsedService}`}

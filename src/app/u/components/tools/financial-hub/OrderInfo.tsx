@@ -27,7 +27,7 @@ const OrderInfo: React.FC<IOrderInfoProps> = ({ orders, loading }) => {
 
     return (
         <Card title="Order Info">
-            <div className='flex flex-col sm:flex-row'>
+            <div className='flex flex-row gap-4'>
                 <div className="w-full text-center">
                     <h1 className="text-2xl font-semibold">
                         {loading ? '...' : missingInfoCount}

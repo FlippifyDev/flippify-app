@@ -245,9 +245,6 @@ const FinancialHubContent = () => {
         setExportModalOpen(false);
     };
 
-    //console.log(timeFrom, timeTo);
-
-
     return (
         <LayoutSubscriptionWrapper anySubscriptions={["admin", "member"]}>
             {session?.user.connectedAccounts.ebay ? (

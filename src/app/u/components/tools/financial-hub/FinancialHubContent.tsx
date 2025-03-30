@@ -36,7 +36,7 @@ const FinancialHubContent = () => {
     const [selectedFilter, setSelectedFilter] = useState("General");
     const [selectedTimeRange, setSelectedTimeRange] = useState("Last 30 days");
     const [timeFrom, setTimeFrom] = useState(formatTimeFrom(30));
-    const [timeTo, setTimeTo] = useState<string | undefined>(undefined);
+    const [timeTo, setTimeTo] = useState<string>(new Date().toISOString());
 
     const userCurrency = session?.user.preferences.currency || "USD";
 
@@ -205,9 +205,6 @@ const FinancialHubContent = () => {
         setSelectedFilter(type);
     }
 
-    console.log("Times", timeFrom, timeTo);
-
-
     function handleExportCSV() {
         setError(undefined);
         // Get the CSV string from formatOrdersForCSVExport
@@ -288,7 +285,7 @@ const FinancialHubContent = () => {
                                                     <input
                                                         type="date"
                                                         id="timeFrom"
-                                                        value={timeFrom}
+                                                        value={timeFrom.split('T')[0]}
                                                         onChange={handleTimeFromChange}
                                                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                                     />
@@ -298,7 +295,7 @@ const FinancialHubContent = () => {
                                                     <input
                                                         type="date"
                                                         id="timeTo"
-                                                        value={timeTo}
+                                                        value={timeTo?.split('T')[0]}
                                                         onChange={handleTimeToChange}
                                                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                                     />

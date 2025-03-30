@@ -24,7 +24,7 @@ import { set } from "date-fns";
 const OrderDetails = () => {
     const { data: session } = useSession();
     const params = useParams();
-    const orderId = params?.["order-id"];
+    const legacyItemId = params?.["order-id"];
     const [orders, setOrders] = useState<IEbayOrder[]>([]);
     const [salesData, setSalesData] = useState<IEbayOrder[]>([]);
     const username = session?.user.username as string;
@@ -73,12 +73,18 @@ const OrderDetails = () => {
     }, [session?.user]);
 
     useEffect(() => {
-        if (salesData && orderId && !ordersUpdated) {
-            const matchingOrders = salesData.filter((o, index) => {o.legacyItemId === orderId; setOrderIdtoIndex((prev) => ({ ...prev, [o.orderId]: index })); return o.legacyItemId === orderId;});
+        if (salesData && legacyItemId && !ordersUpdated) {
+            const matchingOrders = salesData.filter((o, index) => {
+                const isMatch = o.legacyItemId === legacyItemId;
+                if (isMatch) {
+                    setOrderIdtoIndex((prev) => ({ ...prev, [o.orderId]: index }));
+                }
+                return isMatch;
+            });
             setOrders(matchingOrders);
             setOrdersUpdated(false);
         }
-    }, [salesData, orderId, ordersUpdated]);
+    }, [salesData, legacyItemId, ordersUpdated]);
 
     if (orders.length === 0) {
         return <LoadingAnimation text="Loading items" type="stack-loader"/>;
@@ -183,7 +189,7 @@ const OrderDetails = () => {
 
         const cacheKey = `${ebayOrderCacheKey}-${session?.user.id}`; // Define cache key
 
-        let updatedOrders: IEbayOrder[] = [...orders]; // Copy the current orders to modify them
+        let updatedOrders: IEbayOrder[] = [...orders];
 
         // Optimistically update the UI by directly modifying the orders state
         updatedOrders = updatedOrders.map((order) => {
@@ -191,7 +197,7 @@ const OrderDetails = () => {
                 return {
                     ...order,
                     purchaseDate: purchaseDate || order.purchase.date,
-                    purchasePrice: purchasePrice ? +purchasePrice : order.purchase.price, // Ensure purchasePrice is a number
+                    purchasePrice: purchasePrice ? +purchasePrice : order.purchase.price,
                     purchasePlatform: purchasePlatform || order.purchase.platform,
                     customTag: customTag || order.customTag || null,
                 };
@@ -385,7 +391,7 @@ const OrderDetails = () => {
                 <div className="breadcrumbs text-sm p-2">
                     <ul>
                         <li onClick={handleOrdersClick}><a>Orders</a></li>
-                        <li>{orderId}</li>
+                        <li>{legacyItemId}</li>
                     </ul>
                 </div>
                 <div className="flex items-center gap-2 h-full p-4">
@@ -414,11 +420,11 @@ const OrderDetails = () => {
                                 <th>Purchase Date</th>
                                 <th>Sale Date</th>
                                 <th>Quantity Sold</th>
-                                <th>Additional Fees</th>
-                                <th>Shipping Fees</th>
-                                <th>Purchased For</th>
-                                <th>Sold For</th>
-                                <th>Profit</th>
+                                <th>Additional Fees ({currencySymbols[currency]})</th>
+                                <th>Shipping Fees ({currencySymbols[currency]})</th>
+                                <th>Purchased For ({currencySymbols[currency]})</th>
+                                <th>Sold For ({currencySymbols[currency]})</th>
+                                <th>Profit ({currencySymbols[currency]})</th>
                                 <th>ROI (%)</th>
                                 <th>Purchased At</th>
                                 <th>Purchased By</th>
@@ -449,8 +455,8 @@ const OrderDetails = () => {
                                         <td>{formatTableDate(order.purchase.date)}</td>
                                         <td>{formatTableDate(order.sale.date)}</td>
                                         <td>{sale.quantity}</td>
-                                        <td>{currencySymbols[currency]}{additionalFees.toFixed(2)}</td>
-                                        <td>{currencySymbols[currency]}{shipping.fees.toFixed(2)}</td>
+                                        <td>{additionalFees.toFixed(2)}</td>
+                                        <td>{shipping.fees.toFixed(2)}</td>
                                         <td
                                             className="cursor-pointer transition duration-200"
                                         >
@@ -465,8 +471,8 @@ const OrderDetails = () => {
                                                 className="focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
                                             />
                                         </td>
-                                        <td>{currencySymbols[currency]}{(sale.price + shipping.fees).toFixed(2)}</td>
-                                        <td>{currencySymbols[currency]}{profit.toFixed(2)}</td>
+                                        <td>{(sale.price + shipping.fees).toFixed(2)}</td>
+                                        <td>{profit.toFixed(2)}</td>
                                         <td>{roi}%</td>
                                         <td
                                             className="cursor-pointer transition duration-200"

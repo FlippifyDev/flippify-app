@@ -1,7 +1,6 @@
 "use client"
 
 import Image from "next/image";
-import { currencySymbols } from "@/config/currency-config";
 
 import { useRouter } from "next/navigation";
 
@@ -14,7 +13,6 @@ interface OrderRowProps {
 	totalPurchasePrice: number | null;
 	totalShippingFees: number;
 	totalOtherFees: number;
-	currency: string;
 	username: string;
 	image: string;
 }
@@ -27,7 +25,6 @@ const OrderRow: React.FC<OrderRowProps> = ({
 	totalPurchasePrice,
 	totalShippingFees,
 	totalOtherFees,
-	currency,
 	username,
 	image,
 }) => {
@@ -48,9 +45,9 @@ const OrderRow: React.FC<OrderRowProps> = ({
 			</td>
 			<td>{itemName}</td>
 			<td>{quantitySold}</td>
-            <td>{totalPurchasePrice ? currencySymbols[currency]: ""}{totalPurchasePrice?.toFixed(2) || 'N/A'}</td>
-			<td>{currencySymbols[currency]}{totalSalePrice.toFixed(2)}</td>
-			<td>{currencySymbols[currency]}{profit.toFixed(2)}</td>
+            <td>{totalPurchasePrice?.toFixed(2) || 'N/A'}</td>
+			<td>{totalSalePrice.toFixed(2)}</td>
+			<td>{profit.toFixed(2)}</td>
             <td>{totalPurchasePrice ? `${roi}%`: "N/A"}</td>
 		</tr>
 	);

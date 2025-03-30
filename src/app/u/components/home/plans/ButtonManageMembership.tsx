@@ -13,7 +13,7 @@ interface Props {
 }
 
 
-const ManageMembershipsButton: React.FC<Props> = ({ specialPlan }) => {
+const ButtonManageMembership: React.FC<Props> = ({ specialPlan }) => {
 	const { data: session } = useSession();
 	const [billingUrl, setBillingUrl] = useState<string | null>(null);
 	const customerIdRef = useRef<string | null>(null);
@@ -60,4 +60,4 @@ const ManageMembershipsButton: React.FC<Props> = ({ specialPlan }) => {
 	);
 }
 
-export default ManageMembershipsButton;
+export default ButtonManageMembership;

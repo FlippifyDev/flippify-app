@@ -132,7 +132,7 @@ const ProfileOverview = () => {
                         <h3 className="text-xl font-semibold mb-4 text-center">Upload Profile Picture</h3>
                         {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
                         <div className='w-full flex items-center justify-center mb-3'>
-                            <label className="block w-1/2 bg-gray-800 p-2 rounded text-white text-center text-sm">
+                            <label className="block w-1/2 bg-gray-800 p-2 rounded text-white text-center text-sm hover:cursor-pointer">
                                 {fileName === "Upload File" ? fileName : shortenFileName(fileName)}
                                 <input
                                     type="file"

@@ -4,6 +4,7 @@ import ThemeSetter from "@/app/components/ThemeSetter";
 import Loading from "@/app/components/Loading";
 import MetadataHead from "@/app/components/MetadataHead";
 import { Lato, Inter } from 'next/font/google';
+import SignUpContent from "../components/sign-up/SignUpContent";
 
 const root = process.env.ROOT as string;
 

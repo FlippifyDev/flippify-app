@@ -11,7 +11,7 @@ const HomeAboutSeePlansButton = () => {
 	return (
 		<button
 			onClick={handleClick}
-			className="btn bg-houseBlue hover:bg-houseHoverBlue text-white border-houseBlue hover:border-0 border-0 font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300"
+            className="btn bg-houseBlue rounded-lg mr-1 text-white hover:bg-houseHoverBlue hover:shadow-lg hover:pb-[2px] border-none transform-duration-400 transition-duration-400"
 		>
 			See Plans and Start Earning
 		</button>

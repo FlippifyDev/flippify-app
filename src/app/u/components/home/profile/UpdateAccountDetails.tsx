@@ -85,7 +85,7 @@ const UpdateAccountDetails = () => {
             <div className='w-full border-b py-4 px-6 text-lg font-semibold'>
                 Update Account Details
             </div>
-            <div className="h-full flex flex-row gap-2 p-4">
+            <div className="h-full flex flex-col md:flex-row gap-2 p-4">
                 <div>
                     <UpdateEmail />
                 </div>

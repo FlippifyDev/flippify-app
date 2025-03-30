@@ -97,7 +97,7 @@ const DashboardPage: React.FC = () => {
         <div className="relative flex flex-col w-full min-h-full">
             {/* If They Have Access but NO Subscription*/}
             <LayoutSubscriptionWrapper
-                requiredSubscriptions={["accessGranted", "!member"]}
+                requiredSubscriptions={["accessGranted", "!member", "!admin"]}
             >
                 <ConnectAccountButton heading="No subscription connected" animationType="hover-box" subtitle="Go to the plans page to get a subscription" buttonText="View Plans" />
             </LayoutSubscriptionWrapper>

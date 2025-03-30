@@ -17,19 +17,56 @@ export const filterOrdersByDateRange = (orders: IEbayOrder[], timeFrom: string, 
     });
 };
 
+/**
+ * Filters orders based on the provided time range.
+ * 
+ * @param {IEbayOrder[]} orders - The array of orders to be filtered.
+ * @param {string} timeFrom - Start date in ISO format (e.g., "2025-02-28").
+ * @param {string} [timeTo] - End date in ISO format, or defaults to the current date.
+ * @returns {IEbayOrder[]} - Filtered orders matching the date range.
+ */
 export function filterOrdersByTime(
     orders: IEbayOrder[],
     timeFrom: string,
     timeTo?: string
 ): IEbayOrder[] {
+    // Parse start and end dates and convert them to UTC to avoid timezone mismatch
     const startDate = parseISO(timeFrom);
-    const endDate = timeTo ? parseISO(timeTo) : new Date(); // If no timeTo, use current date
+    const endDate = timeTo ? parseISO(timeTo) : new Date();
+
+    // Force endDate to be in UTC by using Date.UTC()
+    const endDateUTC = new Date(Date.UTC(
+        endDate.getUTCFullYear(),
+        endDate.getUTCMonth(),
+        endDate.getUTCDate(),
+        endDate.getUTCHours(),
+        endDate.getUTCMinutes(),
+        endDate.getUTCSeconds()
+    ));
 
     return orders.filter((order) => {
-        const orderDate = parseISO(order.sale.date); // Ensure order date is parsed correctly
+        // Parse order date and force UTC
+        const orderDate = parseISO(order.sale.date);
+
+        // Ensure valid date parsing
+        if (isNaN(orderDate.getTime())) {
+            console.warn(`Invalid order date format for order: ${order.orderId}`);
+            return false;
+        }
+
+        // Force orderDate to UTC for comparison consistency
+        const orderDateUTC = new Date(Date.UTC(
+            orderDate.getUTCFullYear(),
+            orderDate.getUTCMonth(),
+            orderDate.getUTCDate(),
+            orderDate.getUTCHours(),
+            orderDate.getUTCMinutes(),
+            orderDate.getUTCSeconds()
+        ));
+
         return (
-            (isAfter(orderDate, startDate) || isEqual(orderDate, startDate)) && // Order after or on start date
-            (isBefore(orderDate, endDate) || isEqual(orderDate, endDate)) // Order before or on end date
+            (isEqual(orderDateUTC, startDate) || isAfter(orderDateUTC, startDate)) &&
+            (isEqual(orderDateUTC, endDateUTC) || isBefore(orderDateUTC, endDateUTC))
         );
     });
 }

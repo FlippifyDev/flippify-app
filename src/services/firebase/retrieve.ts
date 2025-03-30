@@ -166,20 +166,12 @@ async function retrieveUserOrdersFromDB(
 
         // If timeFrom is provided, filter orders with saleDate >= timeFrom
         if (timeFrom) {
-            const timeFromDate = new Date(timeFrom).toISOString();
-            if (timeFromDate.toString() === "Invalid Date") {
-                throw new Error("Invalid timeFrom date format. Please provide a valid ISO date.");
-            }
-            q = query(q, where("sale.date", ">=", timeFromDate));
+            q = query(q, where("sale.date", ">=", timeFrom));
         }
 
         // If timeTo is provided, filter orders with saleDate <= timeTo
         if (timeTo) {
-            const timeToDate = new Date(timeTo).toISOString();
-            if (timeToDate.toString() === "Invalid Date") {
-                throw new Error("Invalid timeTo date format. Please provide a valid ISO date.");
-            }
-            q = query(q, where("sale.date", "<=", timeToDate));
+            q = query(q, where("sale.date", "<=", timeTo));
         }
 
         // Query to get orders based on the above filters
@@ -245,44 +237,51 @@ async function retrieveUserOrders(
 
     // If cache exists and update is not requested
     if (cachedData && cachedData.length > 0 && !update) {
-        // Determine the cached range
+        // Determine the cached range boundaries.
         const oldestTime = cacheTimeFrom ? cacheTimeFrom : new Date(cachedData[cachedData.length - 1].sale.date);
         const newestTime = cacheTimeTo ? cacheTimeTo : new Date(cachedData[0].sale.date);
 
-        // If the requested range is fully within the cached range, return filtered cached data.
+        // If the requested range is fully within the cached boundaries, simply return filtered cached data.
         if (timeFromDate >= oldestTime && timeToDate <= newestTime) {
             console.log("Requested date range is within cached orders range.");
             return filterOrdersByTime(cachedData, timeFrom, timeTo);
         }
 
-        let ordersToReturn: IEbayOrder[] = [];
+        // Start with the currently cached data.
+        let ordersToReturn: IEbayOrder[] = cachedData;
 
-        // Case 1: Need older orders (requested timeFrom is earlier than oldest cached order)
-        if (timeFromDate < oldestTime && timeToDate <= newestTime) {
+        // If requested timeFrom is earlier than the cached oldest order, fetch older orders.
+        if (timeFromDate < oldestTime) {
             console.log("Fetching older orders from Firestore.");
-            const olderData = await retrieveUserOrdersFromDB(uid, timeFrom, oldestTime.toISOString());
-            ordersToReturn = cachedData.concat(olderData);
-        }
-        // Case 2: Need newer orders (requested timeTo is later than newest cached order)
-        else if (timeFromDate >= oldestTime && timeToDate > newestTime) {
-            console.log("Fetching newer orders from Firestore.");
-            const newerData = await retrieveUserOrdersFromDB(uid, newestTime.toISOString(), timeTo);
-            ordersToReturn = newerData.concat(cachedData);
-        }
-        // Case 3: Need both older and newer orders
-        else if (timeFromDate < oldestTime && timeToDate > newestTime) {
-            console.log("Fetching both older and newer orders from Firestore.");
-            const olderData = await retrieveUserOrdersFromDB(uid, timeFrom, oldestTime.toISOString());
-            const newerData = await retrieveUserOrdersFromDB(uid, newestTime.toISOString(), timeTo);
-            ordersToReturn = newerData.concat(cachedData, olderData);
+            const olderData = await retrieveUserOrdersFromDB(
+                uid,
+                timeFromDate.toISOString(),
+                oldestTime.toISOString()
+            );
+            // Merge older orders with the current cache.
+            ordersToReturn = ordersToReturn.concat(olderData);
         }
 
-        if (ordersToReturn && ordersToReturn.length > 0) {
-            // Update the cache with the newly combined data and the new range
-            setCachedData(cacheKey, ordersToReturn, timeFromDate, timeToDate);
-            return filterOrdersByTime(ordersToReturn, timeFrom, timeTo);
+        // If requested timeTo is later than the cached newest order, fetch newer orders.
+        if (timeToDate > newestTime) {
+            console.log("Fetching newer orders from Firestore.");
+            const newerData = await retrieveUserOrdersFromDB(
+                uid,
+                newestTime.toISOString(),
+                timeToDate.toISOString()
+            );
+            // Prepend newer orders to the current cache.
+            ordersToReturn = newerData.concat(ordersToReturn);
         }
-        return [];
+
+        // Deduplicate the merged orders based on unique orderId.
+        ordersToReturn = Array.from(
+            new Map(ordersToReturn.map((order) => [order.orderId, order])).values()
+        );
+
+        // Update the cache with the deduplicated data and the requested boundaries.
+        setCachedData(cacheKey, ordersToReturn, timeFromDate, timeToDate);
+        return filterOrdersByTime(ordersToReturn, timeFrom, timeTo);
     }
     // If cache is empty or update is requested, update store info before fetching
     else if (update || !cachedData || cachedData.length === 0) {
@@ -291,7 +290,7 @@ async function retrieveUserOrders(
 
     // If no valid cache exists or update is forced, fetch from Firestore
     try {
-        const data = await retrieveUserOrdersFromDB(uid, timeFrom, timeTo);
+        const data = await retrieveUserOrdersFromDB(uid, timeFromDate.toISOString(), timeTo);
         setCachedData(cacheKey, data, timeFromDate, timeTo ? new Date(timeTo) : new Date());
         return filterOrdersByTime(data, timeFrom, timeTo);
     } catch (error) {

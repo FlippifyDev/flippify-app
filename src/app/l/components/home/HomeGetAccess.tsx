@@ -1,35 +1,30 @@
 'use client';
 
-import React from 'react'
-import { useSession, signIn } from 'next-auth/react';
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-
+import { useEffect, useState } from 'react';
 
 
 const HomeGetAccess = () => {
-	const { data: session } = useSession();
-	const router = useRouter();
+    const router = useRouter();
 
-	useEffect(() => {
-		if (session) {
-			{
-				session.user?.username ? (
-					router.push(`/u/${session.user.username}/dashboard`)
-				) : (
-				router.push(`/u/loading`)
-			)
-			}
-		}
-	}, [session, router]);
+    const [showAnimation, setShowAnimation] = useState(true);
 
-	const handleSignIn = () => {
-		signIn('credentials');
-	};
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowAnimation(false); // Disable animation after initial load
+        }, 500); // Duration of your fade-in animation (400ms or adjust as needed)
 
-	return (
-		<button className="btn bg-white text-black rounded-lg mr-1 hover:text-white hover:bg-houseHoverBlue hover:shadow-lg hover:pb-[2px] border-none transform-duration-400 transition-duration-400 animate-fadeInBounce" onClick={() => router.push('/l/coming-soon')}>Get Access Now</button>
-	)
+        return () => clearTimeout(timer);
+    }, []);
+
+    return (
+        <button
+            className={`btn bg-white text-black rounded-lg mr-1 hover:text-white hover:bg-houseHoverBlue hover:shadow-lg hover:pb-[2px] border-none transform-duration-400 transition-duration-400 ${showAnimation ? "animate-fadeInPrimary" : ""}`}
+            onClick={() => router.push('/l/login')}
+        >
+            Get Access Now
+        </button>
+    )
 }
 
 export default HomeGetAccess

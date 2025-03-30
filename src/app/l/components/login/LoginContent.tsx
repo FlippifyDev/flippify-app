@@ -73,14 +73,15 @@ const LoginContent = () => {
                         placeholder="Email Address"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full p-3 bg-gray-100 rounded-xl outline-none placeholder-gray-400"
+                        className="input input-bordered w-full bg-white placeholder-gray-400"
                     />
                     <input
                         type="password"
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="w-full p-3 bg-gray-100 rounded-xl outline-none placeholder-gray-400"
+                        className="input input-bordered w-full bg-white placeholder-gray-400"
+                        aria-required="false"
                     />
                     {errorMessage && (
                         <p className="text-red-500 text-sm mt-2">{errorMessage}</p>

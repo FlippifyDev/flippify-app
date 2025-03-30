@@ -28,7 +28,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 					redirect="tools/sales-tracker"
 					isSidebarOpen={isSidebarOpen}
 					symbol={<FaChartPie className="text-lg" />}
-					tooltip="Coming Soon"
+                    tooltip="Subscription Required"
 				/>
 			</LayoutSubscriptionWrapper>
 
@@ -49,7 +49,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 					redirect="tools/inventory-orders"
 					isSidebarOpen={isSidebarOpen}
 					symbol={<FaBoxOpen className="text-xl" />}
-					tooltip="Coming Soon"
+					tooltip="Subscription Required"
 				/>
 			</LayoutSubscriptionWrapper>
 

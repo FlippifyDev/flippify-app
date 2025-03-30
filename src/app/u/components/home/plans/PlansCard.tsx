@@ -18,6 +18,7 @@ interface PlansCardProps {
     discountedPrices: { monthly: number; yearly: number };
     priceIds: { monthly: string; yearly: string };
     whatsIncludedComponent: React.ReactNode;
+    isOnboarding: boolean;
     currentSubscriptionName: string | null;
     specialPlan?: boolean;
     priceRange: number;
@@ -64,6 +65,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
     prices,
     discountedPrices,
     priceIds,
+    isOnboarding,
     currentSubscriptionName,
     whatsIncludedComponent,
     specialPlan = false,
@@ -185,6 +187,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
                             <PlansCardInfo
                                 title={title}
                                 description={description}
+                                isOnboarding={isOnboarding}
                                 currentSubscriptionName={currentSubscriptionName}
                                 isFreePlan={isFreePlan}
                                 displayPrice={displayPrice}
@@ -204,6 +207,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
                         <PlansCardInfo
                             title={title}
                             description={description}
+                            isOnboarding={isOnboarding}
                             currentSubscriptionName={currentSubscriptionName}
                             isFreePlan={isFreePlan}
                             displayPrice={displayPrice}
@@ -235,6 +239,7 @@ interface PlansCardInfoProps {
     title: string;
     description: string;
     currentSubscriptionName: string | null;
+    isOnboarding: boolean;
     isFreePlan: boolean;
     displayPrice: number;
     currencySymbol: string;
@@ -248,7 +253,7 @@ interface PlansCardInfoProps {
 }
 
 
-const PlansCardInfo: React.FC<PlansCardInfoProps> = ({ title, description, currentSubscriptionName, isFreePlan, displayPrice, currencySymbol, priceRange, displayOriginalPrice, whatsIncludedComponent, specialPlan, selectedPriceId, comingSoon, handleDisplayModal }) => {
+const PlansCardInfo: React.FC<PlansCardInfoProps> = ({ title, description, isOnboarding, currentSubscriptionName, isFreePlan, displayPrice, currencySymbol, priceRange, displayOriginalPrice, whatsIncludedComponent, specialPlan, selectedPriceId, comingSoon, handleDisplayModal }) => {
     return (
         <>
             <div className="text-center">
@@ -282,11 +287,8 @@ const PlansCardInfo: React.FC<PlansCardInfoProps> = ({ title, description, curre
             <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
             <section className="mt-auto">
                 <div className="flex flex-col items-center gap-3">
-                    {!comingSoon && (
+                    {!comingSoon && !isOnboarding && (
                         <>
-                            <LayoutSubscriptionWrapper requiredSubscriptions={["!accessGranted"]}>
-                                <ButtonGetAccess redirect="dashboard" specialPlan={specialPlan} />
-                            </LayoutSubscriptionWrapper>
                             <LayoutSubscriptionWrapper requiredSubscriptions={["accessGranted", `!${title.toLowerCase()}`]}>
                                 {currentSubscriptionName ? (
                                     <ButtonUpgradeSubscription priceId={selectedPriceId} currentSubscriptionName={currentSubscriptionName} planTitle={title} specialPlan={specialPlan} handleDisplayModal={handleDisplayModal} displayModal={true} />
@@ -299,6 +301,9 @@ const PlansCardInfo: React.FC<PlansCardInfoProps> = ({ title, description, curre
                                 <ButtonManageMembership specialPlan={specialPlan} />
                             </LayoutSubscriptionWrapper>
                         </>
+                    )}
+                    {isOnboarding && (
+                        <ButtonGetAccess redirect="dashboard" specialPlan={specialPlan} />
                     )}
                 </div>
             </section >

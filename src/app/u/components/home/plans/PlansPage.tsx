@@ -12,6 +12,7 @@ import { IoClose } from "react-icons/io5";
 import PlansSubscribeNow from "./ButtonGetStarted";
 import Modal from "../../dom/ui/Modal";
 import ButtonUpgradeSubscription from "./ButtonUpgradeSubscription";
+import { fetchConversionRates } from "@/utils/currency-api";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
@@ -29,16 +30,16 @@ const PlansPage = () => {
     const [couponCode, setCouponCode] = useState<string | undefined>(undefined);
     const [couponError, setCouponError] = useState<string | null>(null);
     const [currentSubscriptionName, setCurrentSubscriptionName] = useState<string | null>(null);
+    const [isOnboarding, setIsOnboarding] = useState<boolean>(false);
+    const [conversionRates, setConversionRates] = useState<Record<string, number>>({});
 
-    const conversionRates = {
-        GBP: 1,
-        USD: 1.29,
-        EUR: 1.19,
-        AUD: 2.05,
-        CAD: 1.86,
-        JPY: 192.53,
-        NZD: 2.26,
-    };
+    useEffect(() => {
+        const fetchRates = async () => {
+            const rates = await fetchConversionRates();
+            setConversionRates(rates);
+        };
+        fetchRates();
+    }, []);
 
     const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedPlan(event.target.checked ? 1 : 0);
@@ -59,6 +60,9 @@ const PlansPage = () => {
             const subscription = session.user.subscriptions.find((sub: any) => sub.name.includes("member"));
             if (subscription) {
                 setCurrentSubscriptionName(subscription.name);
+            }
+            if (session.user.authentication.onboarding) {
+                setIsOnboarding(true);
             }
         }
     }, [session]);
@@ -158,6 +162,7 @@ const PlansPage = () => {
                         monthly: "price_1R6umYJJRepiHZ8duYSajDvz",
                         yearly: "price_1R6umYJJRepiHZ8d7eBwpE78",
                     }}
+                    isOnboarding={isOnboarding}
                     currentSubscriptionName={currentSubscriptionName}
                     whatsIncludedComponent={<PlansCardBasicWhatsIncluded />}
                     priceRange={selectedPlan}
@@ -175,6 +180,7 @@ const PlansPage = () => {
                         monthly: "price_1R6umXJJRepiHZ8dXNPscGu8",
                         yearly: "price_1R6umXJJRepiHZ8d473LpjVZ",
                     }}
+                    isOnboarding={isOnboarding}
                     currentSubscriptionName={currentSubscriptionName}
                     whatsIncludedComponent={<PlansCardStandardWhatsIncluded />}
                     priceRange={selectedPlan}
@@ -186,12 +192,13 @@ const PlansPage = () => {
                 <PlansCard
                     title="Pro"
                     description="For experts"
-                    prices={{ monthly: 29.99, yearly: 299.99 }}
-                    discountedPrices={{ monthly: 19.99, yearly: 199.99 }}
+                    prices={{ monthly: 19.99, yearly: 199.90 }}
+                    discountedPrices={{ monthly: 9.99, yearly: 99.90 }}
                     priceIds={{
                         monthly: "price_1R6umUJJRepiHZ8dEZib7Bd1",
                         yearly: "price_1R6umUJJRepiHZ8dUeqJXo5d",
                     }}
+                    isOnboarding={isOnboarding}
                     currentSubscriptionName={currentSubscriptionName}
                     whatsIncludedComponent={<PlansCardEliteWhatsIncluded />}
                     priceRange={selectedPlan}
@@ -203,12 +210,13 @@ const PlansPage = () => {
                 <PlansCard
                     title="Enterprise"
                     description="For Large Scale Operations"
-                    prices={{ monthly: 199.99, yearly: 1999.99 }}
-                    discountedPrices={{ monthly: 99.99, yearly: 999.99 }}
+                    prices={{ monthly: 199.99, yearly: 1999.90 }}
+                    discountedPrices={{ monthly: 99.99, yearly: 999.90 }}
                     priceIds={{
                         monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
                         yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
                     }}
+                    isOnboarding={isOnboarding}
                     currentSubscriptionName={currentSubscriptionName}
                     whatsIncludedComponent={<PlansCardEnterpriseWhatsIncluded />}
                     priceRange={selectedPlan}

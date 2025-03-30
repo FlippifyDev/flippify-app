@@ -172,27 +172,22 @@ const FinancialHubContent = () => {
 
             case "All Time":
                 // Set timeFrom to a date far in the past
-                timeFromDate = new Date(2000, 0, 1);
+                timeFromDate = new Date(2020, 0, 1);
                 setStartOfDay(timeFromDate);
                 timeToDate = today;
                 setEndOfDay(timeToDate);
                 break;
             default:
-                timeFromDate.setDate(today.getDate() - parseInt(days)); // Fallback for custom ranges
+                timeFromDate.setDate(today.getDate() - parseInt(days)); 
                 setStartOfDay(timeFromDate);
                 timeToDate = today;
                 setEndOfDay(timeToDate);
         }
 
-        // Format timeFrom and timeTo to ISO date format (YYYY-MM-DD)
-        const formattedFromDate = timeFromDate.toISOString().split("T")[0];
-        const formattedToDate = timeToDate.toISOString().split("T")[0];
-
-        // Set new timeFrom and timeTo
         setExportTimeFrom(timeFromDate.toLocaleDateString('en-CA'));
         setExportTimeTo(timeToDate.toLocaleDateString('en-CA'));
-        setTimeFrom(formattedFromDate);
-        setTimeTo(formattedToDate);
+        setTimeFrom(timeFromDate.toISOString());
+        setTimeTo(timeToDate.toISOString());
     };
 
     // Handle the date change for 'timeFrom'
@@ -209,6 +204,8 @@ const FinancialHubContent = () => {
     const handleFilterChange = (type: string) => {
         setSelectedFilter(type);
     }
+
+    console.log("Times", timeFrom, timeTo);
 
 
     function handleExportCSV() {

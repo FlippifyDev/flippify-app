@@ -83,7 +83,6 @@ const InventoryContent = () => {
     const saveChange = async (index: number, type: string) => {
         const updatedListings = [...listedData];
         const cacheKey = `${ebayInventoryCacheKey}-${session?.user.id}`;
-        const cachedTimes = getCachedTimes(cacheKey);
 
         if (updatedListings[index].purchase === undefined) {
             updatedListings[index].purchase = {
@@ -136,12 +135,7 @@ const InventoryContent = () => {
 
             // Perform the update
             await updateDoc(orderDocRef, updateFields);
-            setCachedData(
-                cacheKey, 
-                updatedListings,
-                cachedTimes?.cacheTimeFrom,
-                cachedTimes?.cacheTimeTo 
-            );
+            setCachedData(cacheKey, updatedListings);
             
             setEditingType(null);
             setEditingIndex(null);

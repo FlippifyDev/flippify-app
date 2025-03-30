@@ -24,13 +24,13 @@ export function getCachedData(key: string, expirationTime: number, returnCacheTi
 
 export function setCachedTimes(key: string, timeFrom?: Date, timeTo?: Date) {
     const newCache = {
-        timeFrom,
-        timeTo
+        cacheTimeFrom: timeFrom,
+        cacheTimeTo: timeTo
     };
     localStorage.setItem(key, JSON.stringify(newCache));
 }
 
-export function getCachedTimes(key: string) {
+export function getCachedTimes(key: string): { cacheTimeFrom?: Date, cacheTimeTo?: Date } | null {
     const cachedTimes = localStorage.getItem(key);
     if (cachedTimes) {
         const parsedData = JSON.parse(cachedTimes);
@@ -45,12 +45,17 @@ export function getCachedTimes(key: string) {
 
 // Function to store data in localStorage with a timestamp
 export function setCachedData(key: string, data: any, cacheTimeFrom?: Date, cacheTimeTo?: Date) {
+    const cachedTimes = getCachedTimes(key); 
+    const timeFrom = cacheTimeFrom ? cacheTimeFrom : cachedTimes?.cacheTimeFrom;
+    const timeTo = cacheTimeTo ? cacheTimeTo : cachedTimes?.cacheTimeTo;
+
     const newCache = {
-        data,
+        data: data,
         timestamp: Date.now(),
-        cacheTimeFrom,
-        cacheTimeTo
+        cacheTimeFrom: timeFrom,
+        cacheTimeTo: timeTo
     };
-    setCachedTimes(key, cacheTimeFrom, cacheTimeTo);
+    
+    setCachedTimes(key, timeFrom, timeTo);
     localStorage.setItem(key, JSON.stringify(newCache));
 };

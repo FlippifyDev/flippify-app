@@ -24,6 +24,12 @@ export const subscriptionPlans = {
     "Enterprise - member": 3,
 }
 
+
+export const discordSupportLink = "https://discord.gg/gNPYfe7YFm"
+export const xLink = "https://x.com/flippify_io"
+export const tiktokLink = "https://www.tiktok.com/@flippifyuk?lang=en"
+export const instagramLink = "https://www.instagram.com/flippifyuk/"
+
 export const userProfileImages = [
     "https://i.imgur.com/CU6euIm.jpeg",
     "https://i.imgur.com/I8rDFTX.jpeg",

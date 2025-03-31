@@ -5,6 +5,7 @@ import { AiOutlineTag } from "react-icons/ai";
 import PlansGetAccessButton from "./PlansGetAccessButton";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
 import { useSpring, animated } from "react-spring";
+import { discordSupportLink } from "@/utils/constants";
 
 interface PlansCardProps {
     title: string;
@@ -171,7 +172,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
                             <section className="mt-4">
                                 <div className="flex">
                                     <a
-                                        href={enterpriseContactUrl || "/contact"}
+                                        href={enterpriseContactUrl || discordSupportLink}
                                         className="btn border-0 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 text-opacity-100 w-2/3 mx-auto rounded-lg shadow-lg"
                                     >
                                         Contact Us

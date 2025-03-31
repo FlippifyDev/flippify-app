@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { BsTwitterX } from "react-icons/bs";
 import { FaDiscord, FaTiktok, FaInstagram } from 'react-icons/fa6';
 import { Lato } from 'next/font/google';
+import { discordSupportLink, instagramLink, tiktokLink, xLink } from "@/utils/constants";
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
@@ -20,10 +21,10 @@ const LayoutFooter = () => {
                     <Link href="legal" className="text-white hover:underline">Legal</Link>
                 </aside>
                 <nav className="flex items-center gap-4">
-                    <Link href='https://www.instagram.com/flippifyuk/'><button className="mx-2 text-white"><FaInstagram className="text-xl" /></button></Link>
-                    <Link href='https://www.tiktok.com/@flippifyuk?lang=en'><button className="mx-2 text-white"><FaTiktok className="text-xl" /></button></Link>
-                    <Link href='https://x.com/flippify_io'><button className="mx-2 text-white"><BsTwitterX className="text-lg" /></button></Link>
-                    <Link href='https://discord.gg/gNPYfe7YFm'><button className="mx-2 text-white"><FaDiscord className="text-xl" /></button></Link>
+                    <Link href={instagramLink}><button className="mx-2 text-white"><FaInstagram className="text-xl" /></button></Link>
+                    <Link href={tiktokLink}><button className="mx-2 text-white"><FaTiktok className="text-xl" /></button></Link>
+                    <Link href={xLink}><button className="mx-2 text-white"><BsTwitterX className="text-lg" /></button></Link>
+                    <Link href={discordSupportLink}><button className="mx-2 text-white"><FaDiscord className="text-xl" /></button></Link>
                 </nav>
             </footer>
         </div>

@@ -9,6 +9,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Lato, Inter } from "next/font/google";
 import { fetchConversionRates } from "@/utils/currency-api";
 import CurrencyDropdown from "./PlansCardCurrencyDropdown";
+import { discordSupportLink } from "@/utils/constants";
 
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
@@ -141,7 +142,7 @@ const PlansContent = () => {
                     isEnterprise={true}
                     enterpriseListings={enterpriseListings}
                     setEnterpriseListings={setEnterpriseListings}
-                    enterpriseContactUrl="/contact"
+                    enterpriseContactUrl={discordSupportLink}
                     comingSoon
                 />
             </div>

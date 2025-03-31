@@ -97,7 +97,7 @@ const SignUpContent = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center mt-[-64px]">
+        <div className="min-h-screen flex items-center justify-center mt-[-64px] p-4">
             {!emailVerifying ? (
                 <SignUpForm
                     username={username}

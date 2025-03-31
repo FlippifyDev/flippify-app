@@ -47,6 +47,7 @@ const HomeContent = ({ className = '' }) => {
                     <div className='bg-white py-20'>
                         <GroupInformation />
                     </div>
+                    <div className='w-full border-b border-dashed'></div>
                 </div>
 
             </div>

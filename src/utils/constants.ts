@@ -15,6 +15,8 @@ export const PREMIUM_MAX_AUTOMATIC_LISTINGS = 500;
 export const PREMIUM_MAX_MANUAL_LISTINGS = 500;
 
 
+export const MAX_INPUT_LENGTH = 40;
+
 export const subscriptionPlans = {
     "Free - member": 0,
     "Standard - member": 1,

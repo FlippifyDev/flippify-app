@@ -6,7 +6,7 @@ import { firestore } from "@/lib/firebase/config";
 import { formatTableDate } from "@/utils/format-dates";
 import { currencySymbols } from "@/config/currency-config";
 import { IEbayInventoryItem } from "@/models/store-data";
-import { ebayInventoryCacheKey } from "@/utils/constants";
+import { ebayInventoryCacheKey, MAX_INPUT_LENGTH } from "@/utils/constants";
 import { retrieveUserInventory } from "@/services/firebase/retrieve";
 import { getCachedTimes, setCachedData } from "@/utils/cache-helpers";
 
@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { validatePriceInput, validateTextInput } from "@/utils/input-validation";
 
 
 const InventoryContent = () => {
@@ -181,6 +182,19 @@ const InventoryContent = () => {
         }, 0);
     }
 
+
+    function handleChange(value: string, type: string) {
+        if (value.length > MAX_INPUT_LENGTH) return
+
+        if (type === "platform") {
+            validateTextInput(value, setEditedPlatform);
+        } else if (type === "customTag") {
+            validateTextInput(value, setEditedCustomTag);
+        } else if (type === "purchasePrice") {
+            validatePriceInput(value, setEditedPurchasePrice);
+        }
+    }
+
     return (
         <div className="w-full h-full overflow-x-auto">
             <Alert
@@ -234,7 +248,7 @@ const InventoryContent = () => {
                                             onClick={() => handlePlatformInput(index, item)}
                                             type="text"
                                             value={(editingIndex === index && editingType === "platform") ? editedPlatform ?? "" : item.purchase?.platform ?? ""}
-                                            onChange={(e) => setEditedPlatform(e.target.value)}
+                                            onChange={(e) => handleChange(e.target.value, "platform")}
                                             onBlur={() => saveChange(index, "platform")}
                                             onKeyDown={(e) => handleKeyPress(e, index, "platform")}
                                             className="focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
@@ -248,7 +262,7 @@ const InventoryContent = () => {
                                             onClick={() => handlePurchasePriceInput(index, purchasePrice)}
                                             type="text"
                                             value={(editingIndex === index && editingType === "purchasePrice") ? editedPurchasePrice ?? "" : purchasePrice ?? ""}
-                                            onChange={(e) => setEditedPurchasePrice(e.target.value)}
+                                            onChange={(e) => handleChange(e.target.value, "purchasePrice")}
                                             onBlur={() => saveChange(index, "purchasePrice")}
                                             onKeyDown={(e) => handleKeyPress(e, index, "purchasePrice")}
                                             className="focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
@@ -266,7 +280,7 @@ const InventoryContent = () => {
                                             onClick={() => handleCustomTagInput(index, item)}
                                             type="text"
                                             value={(editingIndex === index && editingType === "customTag") ? editedCustomTag ?? "" : item.customTag ?? ""}
-                                            onChange={(e) => setEditedCustomTag(e.target.value)}
+                                            onChange={(e) => handleChange(e.target.value, "customTag")}
                                             onBlur={() => saveChange(index, "customTag")}
                                             onKeyDown={(e) => handleKeyPress(e, index, "customTag")}
                                             className="focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"

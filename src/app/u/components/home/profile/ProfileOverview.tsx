@@ -13,12 +13,17 @@ import { useSession } from "next-auth/react";
 import { FaCamera } from "react-icons/fa";
 import { useState } from "react";
 import { IoClose } from "react-icons/io5";
+import { MAX } from 'uuid';
+import { MAX_INPUT_LENGTH } from '@/utils/constants';
+import { validateTextInput, validateUrlInput } from '@/utils/input-validation';
 
 const ProfileOverview = () => {
     const { data: session, update: setSession } = useSession();
     const [fileName, setFileName] = useState("Upload File");
     const [url, setUrl] = useState("");
     const [error, setError] = useState("");
+    const [validImage, setValidImage] = useState(false);
+    const [validUrl, setValidUrl] = useState(false);
 
     // Default avatar
     let avatar = "https://i.imgur.com/uOCy7MN.jpeg";
@@ -45,6 +50,7 @@ const ProfileOverview = () => {
         if (event.target.files && event.target.files.length > 0) {
             setFileName(event.target.files[0].name);
             setSelectedImage(event.target.files[0]);
+            setValidImage(true);
         }
     };
 
@@ -54,6 +60,11 @@ const ProfileOverview = () => {
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
+        setSelectedImage(null);
+        setFileName("Upload File");
+        setUrl("");
+        setValidUrl(false);
+        setValidImage(false);
     };
 
     const handleUpload = async () => {
@@ -80,6 +91,9 @@ const ProfileOverview = () => {
         }
 
         setIsModalOpen(false);
+        setSelectedImage(null);
+        setFileName("Upload File");
+        setUrl("");
     };
 
     // Return first 3 letters ... last 3 letters and the extension of the file
@@ -88,6 +102,11 @@ const ProfileOverview = () => {
         const firstThree = fileName.substring(0, 7);
         const lastThree = fileName.substring(fileName.length - 7);
         return `${firstThree}...${lastThree}`;
+    }
+
+
+    function handleInput(value: string) {
+        validateUrlInput(value, setUrl, setValidUrl);
     }
 
     return (
@@ -139,12 +158,17 @@ const ProfileOverview = () => {
                                     onChange={handleImageUpload}
                                     accept="image/*"
                                     className="hidden"
+                                    disabled={validUrl}
                                 />
                             </label>
                         </div>
                         <div className='flex flex-col items-center justify-center gap-2'>
                             <div className="flex justify-center">
-                                <button onClick={handleUpload} className='hover:text-gray-700 transition duration-200 flex flex-row gap-2 items-center justify-center'>
+                                <button
+                                    onClick={handleUpload}
+                                    disabled={!validImage && !validUrl}
+                                    className='hover:text-gray-700 disabled:cursor-not-allowed transition duration-200 flex flex-row gap-2 items-center justify-center'
+                                >
                                     <span><MdInsertPhoto /></span>
                                     <span className='text-sm'>Upload Photo</span>
                                 </button>
@@ -157,7 +181,13 @@ const ProfileOverview = () => {
                             </div>
 
                             <div className='text-center'>
-                                <input type="text" onChange={(e) => setUrl(e.target.value)} placeholder='Paste URL' className='text-sm font-bold border-0 ring-0 focus:ring-[1px] transition duration-200 hover:ring-[1px] bg-gray-800 text-white text-center placeholder-white focus:placeholder-opacity-0 rounded' />
+                                <input
+                                    type="text"
+                                    onChange={(e) => handleInput(e.target.value)}
+                                    placeholder='Paste URL'
+                                    disabled={validImage}
+                                    className='text-sm font-bold border-0 ring-0 focus:ring-[1px] transition duration-200 hover:ring-[1px] bg-gray-800 text-white text-center placeholder-white focus:placeholder-opacity-0 rounded'
+                                />
                             </div>
                         </div>
 

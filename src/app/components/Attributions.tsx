@@ -3,36 +3,42 @@ import React from 'react'
 
 const Attributions = () => {
     return (
-        <div className='text-white'>
-            <h1 className='text-lg'>Animations</h1>
-            <section className='flex flex-col gap-4 p-4'>
-                <UIVerseCopyWrite
-                    title='Add Listing Icon Animation'
-                    link='https://uiverse.io/catraco/fluffy-quail-74'
-                    username='Catraco'
-                />
-                <UIVerseCopyWrite
-                    title='Typewriter Animation'
-                    link='https://uiverse.io/Nawsome/kind-mole-87'
-                    username='Nawsome'
-                />
-                <UIVerseCopyWrite
-                    title='Hover Box Animation'
-                    link='https://uiverse.io/Juanes200122/great-starfish-26'
-                    username='Juanes200122'
-                />
-                <UIVerseCopyWrite
-                    title='Stack Loader Animation'
-                    link='https://uiverse.io/csozidev/weak-bulldog-22'
-                    username='csozidev'
-                />
-                <UIVerseCopyWrite
-                    title='Hamster Wheel Animation'
-                    link='https://uiverse.io/Nawsome/wet-mayfly-23'
-                    username='Nawsome'
-                />
+        <div className='text-white flex flex-col gap-4'>
+            <section>
+                <h1>Below is a list of software which Flippify has used which requires attribution.</h1>
+                <h3>We aim to attribute all the software which we have used that we have not created, however it is possible we have missed/forgotten some. If you notice this, please contact us immediately so we can give the proper attribution to the creator/artist.</h3>
             </section>
-        </div>
+            <section>
+                <h1 className='text-lg'>Animations</h1>
+                <div className='flex flex-col gap-4 p-4'>
+                    <UIVerseCopyWrite
+                        title='Add Listing Icon Animation'
+                        link='https://uiverse.io/catraco/fluffy-quail-74'
+                        username='Catraco'
+                    />
+                    <UIVerseCopyWrite
+                        title='Typewriter Animation'
+                        link='https://uiverse.io/Nawsome/kind-mole-87'
+                        username='Nawsome'
+                    />
+                    <UIVerseCopyWrite
+                        title='Hover Box Animation'
+                        link='https://uiverse.io/Juanes200122/great-starfish-26'
+                        username='Juanes200122'
+                    />
+                    <UIVerseCopyWrite
+                        title='Stack Loader Animation'
+                        link='https://uiverse.io/csozidev/weak-bulldog-22'
+                        username='csozidev'
+                    />
+                    <UIVerseCopyWrite
+                        title='Hamster Wheel Animation'
+                        link='https://uiverse.io/Nawsome/wet-mayfly-23'
+                        username='Nawsome'
+                    />
+                </div>
+            </section>
+        </div >
     )
 }
 

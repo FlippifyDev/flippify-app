@@ -293,7 +293,7 @@ const PlansCardInfo: React.FC<PlansCardInfoProps> = ({ title, description, isOnb
                                 {currentSubscriptionName ? (
                                     <ButtonUpgradeSubscription priceId={selectedPriceId} currentSubscriptionName={currentSubscriptionName} planTitle={title} specialPlan={specialPlan} handleDisplayModal={handleDisplayModal} displayModal={true} />
                                 ) : (
-                                    <ButtonGetStarted priceId={selectedPriceId} specialPlan={specialPlan} handleDisplayModal={handleDisplayModal} displayModal={true} />
+                                    <ButtonGetStarted priceId={selectedPriceId} specialPlan={specialPlan} handleDisplayModal={handleDisplayModal} displayModal={isFreePlan ? false : true} />
                                 )}
                             </LayoutSubscriptionWrapper>
 

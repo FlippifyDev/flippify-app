@@ -6,6 +6,7 @@ import { FaSearch, FaBook, FaDiscord, FaSignInAlt } from "react-icons/fa";
 import Link from 'next/link';
 import AnimationArrow from '@/app/components/AnimationArrow';
 import { useRouter } from 'next/navigation';
+import { discordLink } from '@/utils/constants';
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
@@ -57,7 +58,7 @@ const Navbar = () => {
 						</li>
 						<li className="transition duration-100 active:bg-gray-700 rounded-btn grid grid-cols-12 gap-8 items-center mx-2 text-white text-lg font-medium">
 							<span className='col-span-1 rounded-none'><FaDiscord className="text-lg" /></span>
-							<span className='col-span-11 rounded-none'><Link href="https://discord.gg/gNPYfe7YFm" target="_blank" className="col-span-10 text-left">Discord</Link></span>
+							<span className='col-span-11 rounded-none'><Link href={discordLink} target="_blank" className="col-span-10 text-left">Discord</Link></span>
 						</li>
 						{/* Adjusted Sign In button alignment */}
 						<li className="transition duration-100 active:bg-gray-700 rounded-btn grid grid-cols-12 gap-8 items-center mx-2 text-white text-lg font-medium">
@@ -82,7 +83,7 @@ const Navbar = () => {
 					<Link href="/l/pricing">Plans</Link>
 				</li>
 				<li className="transition duration-100 hover:scale-105 rounded-btn p-1">
-					<Link href="https://discord.gg/gNPYfe7YFm" target="_blank">Discord</Link>
+                    <Link href={discordLink} target="_blank">Discord</Link>
 				</li>
 			</ul>
 

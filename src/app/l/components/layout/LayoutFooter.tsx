@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { BsTwitterX } from "react-icons/bs";
 import { FaDiscord, FaTiktok, FaInstagram } from 'react-icons/fa6';
 import { Lato } from 'next/font/google';
-import { discordSupportLink, instagramLink, tiktokLink, xLink } from "@/utils/constants";
+import { discordLink, instagramLink, tiktokLink, xLink } from "@/utils/constants";
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
@@ -24,7 +24,7 @@ const LayoutFooter = () => {
                     <Link href={instagramLink}><button className="mx-2 text-white"><FaInstagram className="text-xl" /></button></Link>
                     <Link href={tiktokLink}><button className="mx-2 text-white"><FaTiktok className="text-xl" /></button></Link>
                     <Link href={xLink}><button className="mx-2 text-white"><BsTwitterX className="text-lg" /></button></Link>
-                    <Link href={discordSupportLink}><button className="mx-2 text-white"><FaDiscord className="text-xl" /></button></Link>
+                    <Link href={discordLink}><button className="mx-2 text-white"><FaDiscord className="text-xl" /></button></Link>
                 </nav>
             </footer>
         </div>

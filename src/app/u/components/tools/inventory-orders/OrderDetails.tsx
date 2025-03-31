@@ -10,7 +10,7 @@ import LoadingAnimation from "../../dom/ui/LoadingAnimation";
 import { formatTableDate } from "@/utils/format-dates";
 import { currencySymbols } from "@/config/currency-config";
 import { retrieveUserOrders } from "@/services/firebase/retrieve";
-import { cacheExpirationTime, ebayOrderCacheKey } from "@/utils/constants";
+import { cacheExpirationTime, ebayOrderCacheKey, MAX_INPUT_LENGTH } from "@/utils/constants";
 import { getCachedData, getCachedTimes, setCachedData } from "@/utils/cache-helpers";
 
 // External Imports
@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { set } from "date-fns";
+import { validatePriceInput, validateTextInput } from "@/utils/input-validation";
 
 const OrderDetails = () => {
     const { data: session } = useSession();
@@ -354,6 +355,21 @@ const OrderDetails = () => {
         setEditingType("customTag");
     }
 
+
+    function handleInput(value: string, type: string) {
+        if (value.length > MAX_INPUT_LENGTH) return;
+
+        if (type === "purchaseDate") {
+            setPurchaseDate(value);
+        } else if (type === "purchasePrice") {
+            validatePriceInput(value, setPurchasePrice);
+        } else if (type === "purchasePlatform") {
+            validateTextInput(value, setPurchasePlatform);
+        } else if (type === "customTag") {
+            validateTextInput(value, setCustomTag);
+        }
+    }
+
     return (
         <div className="rounded-lg text-orderPageText space-y-2">
             <Alert
@@ -439,7 +455,7 @@ const OrderDetails = () => {
                                                 onClick={() => handlePurchasePriceInput(index, purchasePrice)}
                                                 type="text"
                                                 value={(editingIndex === index && editingType === "purchasePrice") ? editedPurchasePrice ?? '0' : purchasePrice}
-                                                onChange={(e) => setEditedPurchasePrice(e.target.value)}
+                                                onChange={(e) => handleInput(e.target.value, "purchasePrice")}
                                                 onBlur={() => saveChange(index, "purchasePrice")}
                                                 onKeyDown={(e) => handleKeyPress(e, index, "purchasePrice")}
                                                 className="focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
@@ -456,7 +472,7 @@ const OrderDetails = () => {
                                                 onClick={() => handlePlatformInput(index, order)}
                                                 type="text"
                                                 value={(editingIndex === index && editingType === "platform") ? editedPlatform ?? "" : order.purchase.platform ?? ""}
-                                                onChange={(e) => setEditedPlatform(e.target.value)}
+                                                onChange={(e) => handleInput(e.target.value, "platform")}
                                                 onBlur={() => saveChange(index, "platform")}
                                                 onKeyDown={(e) => handleKeyPress(e, index, "platform")}
                                                 className="focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
@@ -471,7 +487,7 @@ const OrderDetails = () => {
                                                 onClick={() => handleCustomTagInput(index, order)}
                                                 type="text"
                                                 value={(editingIndex === index && editingType === "customTag") ? editedCustomTag ?? "" : order.customTag ?? ""}
-                                                onChange={(e) => setEditedCustomTag(e.target.value)}
+                                                onChange={(e) => handleInput(e.target.value, "customTag")}
                                                 onBlur={() => saveChange(index, "customTag")}
                                                 onKeyDown={(e) => handleKeyPress(e, index, "customTag")}
                                                 className="focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"

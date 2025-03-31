@@ -61,24 +61,6 @@ const AdminContent = () => {
                 >
                     User Database
                 </button>
-                <button
-                    className={`font-semibold ${activeTab === "eventManagement" ? "text-blue-600" : "text-gray-600"}`}
-                    onClick={() => setActiveTab("eventManagement")}
-                >
-                    Event Management
-                </button>
-                <button
-                    className={`font-semibold ${activeTab === "notificationManagement" ? "text-blue-600" : "text-gray-600"}`}
-                    onClick={() => setActiveTab("notificationManagement")}
-                >
-                    Notification Management
-                </button>
-                <button
-                    className={`font-semibold ${activeTab === "resellerNewsManagement" ? "text-blue-600" : "text-gray-600"}`}
-                    onClick={() => setActiveTab("resellerNewsManagement")}
-                >
-                    Reseller News Management
-                </button>
             </div>
 
             {activeTab === "userDatabase" && (

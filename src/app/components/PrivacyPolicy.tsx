@@ -1,22 +1,23 @@
 import React from "react";
 
 const PrivacyPolicy = () => {
+    const domain = "flippify.io"
 	return (
 		<div className="text-white">
 			<h1 className="text-white text-xl font-bold">PRIVACY POLICY</h1>
-			<p>Last updated July 05, 2024</p>
+			<p>Last updated March 31, 2025</p>
 			<br />
 			<p>
 				This privacy notice for Flippify (&apos;we&apos;, &apos;us&apos;, or &apos;our&apos;), describes how
 				and why we might collect, store, use, and/or share (&apos;process&apos;) your
 				information when you use our services (&apos;Services&apos;), such as when you:
-				Visit our website at https://www.flippify.co.uk, or any website of ours
+				Visit our website at https://www.{domain}, or any website of ours
 				that links to this privacy notice Engage with us in other related ways,
 				including any sales, marketing, or events Questions or concerns? Reading
 				this privacy notice will help you understand your privacy rights and
 				choices. If you do not agree with our policies and practices, please do
 				not use our Services. If you still have any questions or concerns,
-				please contact us at support@flippify.co.uk.
+				please contact us at support@{domain}.
 			</p>
 			<br />
 			<h1 className="text-white">SUMMARY OF KEY POINTS</h1>
@@ -281,7 +282,7 @@ const PrivacyPolicy = () => {
 				collected, we will deactivate the account and take reasonable measures
 				to promptly delete such data from our records. If you become aware of
 				any data we may have collected from children under age 18, please
-				contact us at support@flippify.co.uk.
+				contact us at support@{domain}.
 			</p>
 			<br />
 			<h1 className="text-white">9. WHAT ARE YOUR PRIVACY RIGHTS?</h1>
@@ -334,7 +335,7 @@ const PrivacyPolicy = () => {
 				prevent fraud, troubleshoot problems, assist with any investigations,
 				enforce our legal terms and/or comply with applicable legal
 				requirements. If you have questions or comments about your privacy
-				rights, you may email us at support@flippify.co.uk.
+				rights, you may email us at support@{domain}.
 			</p>
 			<br />
 			<h1 className="text-white">10. CONTROLS FOR DO-NOT-TRACK FEATURES</h1>
@@ -442,7 +443,7 @@ const PrivacyPolicy = () => {
 				operation of a voice or facial recognition feature (as permitted by
 				applicable law, including Florida’s privacy law) How to Exercise Your
 				Rights To exercise these rights, you can contact us by visiting
-				https://discord.gg/gNPYfe7YFm, by emailing us at support@flippify.co.uk,
+				https://discord.gg/gNPYfe7YFm, by emailing us at support@{domain},
 				Open a ticket in our discord server., or by referring to the contact
 				details at the bottom of this document. Under certain US state data
 				protection laws, you can designate an authorised agent to make a request
@@ -462,7 +463,7 @@ const PrivacyPolicy = () => {
 				need to provide a written and signed permission from you to submit such
 				request on your behalf. Appeals Under certain US state data protection
 				laws, if we decline to take action regarding your request, you may
-				appeal our decision by emailing us at support@flippify.co.uk. We will
+				appeal our decision by emailing us at support@{domain}. We will
 				inform you in writing of any action taken or not taken in response to
 				the appeal, including a written explanation of the reasons for the
 				decisions. If your appeal is denied, you may submit a complaint to your
@@ -529,7 +530,7 @@ const PrivacyPolicy = () => {
 			<h1 className="text-white">14. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?</h1>
 			<p>
 				If you have questions or comments about this notice, you may email us at
-				support@flippify.co.uk
+				support@{domain}
 			</p>
 			<br />
 			<h1 className="text-white">15. HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?</h1>

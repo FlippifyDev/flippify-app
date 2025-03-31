@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { Lato } from 'next/font/google';
 import { useRouter } from 'next/navigation';
 import { deleteField, setDoc } from 'firebase/firestore';
+import { validateAlphaNumericInput, validateEmailInput } from '@/utils/input-validation';
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
@@ -63,6 +64,7 @@ const OnboardingFlow: React.FC = () => {
     const [showReferralMessage, setShowReferralMessage] = useState<boolean>(false);
     const [referralError, setReferralError] = useState<string | null>(null);
     const [validReferralCode, setValidReferralCode] = useState<string | null>(null);
+    const [validInputs, setValidInputs] = useState<boolean>(true);
 
     // Default username
     let username = "User";
@@ -112,6 +114,18 @@ const OnboardingFlow: React.FC = () => {
         }
     };
 
+    function handleInput(value: string, type: string) {
+        if (type === "referral") {
+            if (value.length > 7) return;
+            validateAlphaNumericInput(value, setReferralCode);
+        } else if (type === "email") {
+            setEmail(value);
+            const isValid = validateEmailInput(value);
+            if (isValid) setValidInputs(true);
+            else setValidInputs(false);
+        }
+    }
+
     return (
         <div className="flex items-center justify-center pt-40">
             <div className="bg-white py-8 px-6 rounded-3xl shadow-md border-2 max-w-lg w-full">
@@ -129,7 +143,7 @@ const OnboardingFlow: React.FC = () => {
                             <input
                                 type="text"
                                 value={referralCode ?? ""}
-                                onChange={(e) => setReferralCode(e.target.value)}
+                                onChange={(e) => handleInput(e.target.value, "referral")}
                                 placeholder="Referral Code (optional)"
                                 className="input input-bordered w-full"
                                 aria-label="Referral Code"
@@ -168,7 +182,7 @@ const OnboardingFlow: React.FC = () => {
                             <input
                                 type="email"
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={(e) => handleInput(e.target.value, "email")}
                                 placeholder="Contact Email"
                                 className="input input-bordered w-full animate-fadeInSecondary"
                                 aria-label="Contact Email"
@@ -191,7 +205,8 @@ const OnboardingFlow: React.FC = () => {
                             </select>
                         </div>
                         <button
-                            className="btn border-0 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 text-opacity-100 w-full mx-auto rounded-lg shadow-lg"
+                            disabled={!validInputs}
+                            className="btn border-0 disabled:cursor-not-allowed bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 text-opacity-100 w-full mx-auto rounded-lg shadow-lg"
                             onClick={handleStep2Next}
                         >
                             Next

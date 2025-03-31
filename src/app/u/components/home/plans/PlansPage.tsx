@@ -13,6 +13,8 @@ import PlansSubscribeNow from "./ButtonGetStarted";
 import Modal from "../../dom/ui/Modal";
 import ButtonUpgradeSubscription from "./ButtonUpgradeSubscription";
 import { fetchConversionRates } from "@/utils/currency-api";
+import { validateTextInput } from "@/utils/input-validation";
+import { MAX_INPUT_LENGTH } from "@/utils/constants";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
@@ -68,6 +70,14 @@ const PlansPage = () => {
     }, [session]);
 
 
+    function handleInput(value: string, type: string) {
+        if (value.length > MAX_INPUT_LENGTH) return;
+
+        if (type === "coupon") {
+            validateTextInput(value, setCouponCode);
+        }
+    }
+    
     return (
         <div className="w-full h-full flex flex-col items-center relative">
             {displayCouponModal && (
@@ -78,7 +88,7 @@ const PlansPage = () => {
                         <input
                             type="text"
                             value={couponCode ?? ""}
-                            onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                            onChange={(e) => handleInput(e.target.value.toUpperCase(), "coupon")}
                             placeholder="Coupon Code (optional)"
                             className="input input-bordered w-full"
                             aria-label="Coupon Code"

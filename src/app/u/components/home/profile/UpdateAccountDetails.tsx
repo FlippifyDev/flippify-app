@@ -5,9 +5,10 @@ import { auth, firestore } from "@/lib/firebase/config";
 
 import { updatePassword, EmailAuthProvider, reauthenticateWithCredential, verifyBeforeUpdateEmail } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { Lock, Mail } from "lucide-react";
 import { useState } from "react";
 import { updateStripeCustomerEmail } from "@/services/stripe/update";
+import { validateEmailInput, validatePasswordInput } from "@/utils/input-validation";
+import { isValid } from "date-fns";
 
 
 async function updateUserEmail(newEmail: string, currentPassword: string, setNewEmailMessage: (value: string) => void, setEmailSuccessfullyUpdated: (value: boolean) => void): Promise<{ success: boolean, error?: string }> {
@@ -105,7 +106,8 @@ const UpdateEmail = () => {
     const [message, setMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [password, setPassword] = useState("")
-    const [isChanged, setIsChanged] = useState(false);
+    const [isValidEmail, setIsValidEmail] = useState(false);
+    const [isValidPassword, setIsValidPassword] = useState(false);
 
     const handleUpdate = async () => {
         if (!newEmail || !password) {
@@ -120,6 +122,22 @@ const UpdateEmail = () => {
         }
     };
 
+
+    function handleInput(value: string, type: string) {
+        if (type === "email") {
+            setNewEmail(value);
+            const isValid = validateEmailInput(value);
+            if (isValid) {
+                setIsValidEmail(true);
+            } else {
+                setIsValidEmail(false);
+            }
+        } else if (type === "password") {
+            validatePasswordInput(value, setPassword);
+            setIsValidPassword(true);
+        }
+    }
+
     return (
         <div className="h-full">
             <div className="w-full">
@@ -130,7 +148,7 @@ const UpdateEmail = () => {
                     type="password"
                     placeholder="Current Password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => handleInput(e.target.value, "password")}
                     className="w-full p-3 bg-gray-50 rounded-xl outline-none border  border-gray-500 placeholder-gray-400"
                 />
                 
@@ -141,7 +159,7 @@ const UpdateEmail = () => {
                     type="email"
                     placeholder="Email Address"
                     value={newEmail}
-                    onChange={(e) => setNewEmail(e.target.value)}
+                    onChange={(e) => handleInput(e.target.value, "email")}
                     className="w-full p-3 bg-gray-50 rounded-xl outline-none border border-gray-500 placeholder-gray-400"
                 />
 
@@ -152,9 +170,9 @@ const UpdateEmail = () => {
             <button
                 type="button"
                 onClick={handleUpdate}
-                disabled={!isChanged}
+                disabled={!isValidEmail || !isValidPassword}
                 className={`mt-4 w-full inline-block text-white py-2 rounded-md transition duration-200 ${
-                    isChanged ? 'bg-houseBlue hover:bg-houseHoverBlue' : 'bg-gray-300 cursor-not-allowed'
+                    isValidEmail && isValidPassword ? 'bg-houseBlue hover:bg-houseHoverBlue' : 'bg-gray-300 cursor-not-allowed'
                 }`}
             >
                 Update Email
@@ -187,6 +205,21 @@ const UpdatePassword = () => {
         }
     };
 
+    function handleInput(value: string, type: string) {
+        if (type === "currentPassword") {
+            validatePasswordInput(value, setCurrentPassword);
+        } else if (type === "newPassword") {
+            validatePasswordInput(value, setNewPassword);
+        } else if (type ==="confirmedPassword") {
+            validatePasswordInput(value, setConfirmedPassword);
+        }
+        if (value === "") {
+            setIsChanged(false);
+            return;
+        }
+        setIsChanged(newPassword !== "" && confirmedPassword !== "" && currentPassword !== newPassword && currentPassword !== confirmedPassword);
+    }
+
     return (
         <div className="h-full">
             <div className="w-full">
@@ -198,7 +231,7 @@ const UpdatePassword = () => {
                     type="password"
                     placeholder="Current Password"
                     value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    onChange={(e) => handleInput(e.target.value, "currentPassword")}
                     className="w-full p-3 bg-gray-50 rounded-xl outline-none border border-gray-500 placeholder-gray-400"
                 />
 
@@ -209,7 +242,7 @@ const UpdatePassword = () => {
                     type="password"
                     placeholder="New Password"
                     value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
+                    onChange={(e) => handleInput(e.target.value, "newPassword")}
                     className="w-full p-3 bg-gray-50 rounded-xl outline-none border border-gray-500 placeholder-gray-400"
                 />
 
@@ -220,7 +253,7 @@ const UpdatePassword = () => {
                     type="password"
                     placeholder="Confirm Password"
                     value={confirmedPassword}
-                    onChange={(e) => setConfirmedPassword(e.target.value)}
+                    onChange={(e) => handleInput(e.target.value, "confirmedPassword")}
                     className="w-full p-3 bg-gray-50 rounded-xl outline-none border border-gray-500 placeholder-gray-400"
                 />
 

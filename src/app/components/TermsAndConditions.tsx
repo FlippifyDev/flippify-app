@@ -1,21 +1,22 @@
 import React from "react";
 
 const TermsAndConditions = () => {
+    const domain = "flippify.io"
 	return (
 		<div className="text-white">
 			<h1 className="text-white text-xl font-bold">TERMS AND CONDITIONS</h1>
-			<p>Last updated July 06, 2024</p>
+			<p>Last updated March 31, 2025</p>
 			<br />
 			<h1 className="text-white">AGREEMENT TO OUR LEGAL TERMS</h1>
 			<p>
 				We are Flippify (&apos;Company&apos;, &apos;we&apos;, &apos;us&apos;, or &apos;our&apos;). We operate the
-				website https://www.flippify.co.uk (the &apos;Site&apos;), as well as any other
+				website https://www.{domain} (the &apos;Site&apos;), as well as any other
 				related products and services that refer or link to these legal terms
 				(the &apos;Legal Terms&apos;) (collectively, the &apos;Services&apos;). We provide services
 				that allow our users to make the most of their reselling business. With
 				our services, users can access deals faster, use our tools available and
 				our community to have the best chance at accelerating their profits. You
-				can contact us by phone at 07842522682, email at &quot;support@flippify.co.uk&quot;.
+				can contact us by phone at 07842522682, email at &quot;support@{domain}&quot;.
 				These Legal Terms constitute a legally binding agreement made between
 				you, whether personally or on behalf of an entity (&apos;you&apos;), and Flippify,
 				concerning your access to and use of the Services. You agree that by
@@ -90,7 +91,7 @@ const TermsAndConditions = () => {
 				commercial purpose whatsoever, without our express prior written
 				permission. If you wish to make any use of the Services, Content, or
 				Marks other than as set out in this section or elsewhere in our Legal
-				Terms, please address your request to: support@flippify.co.uk. If we
+				Terms, please address your request to: support@{domain}. If we
 				ever grant you the permission to post, reproduce, or publicly display
 				any part of our Services or Content, you must identify us as the owners
 				or licensors of the Services, Content, or Marks and ensure that any
@@ -191,7 +192,7 @@ const TermsAndConditions = () => {
 				can cancel your subscription at any time by logging into your account.
 				Your cancellation will take effect at the end of the current paid term.
 				If you have any questions or are unsatisfied with our Services, please
-				email us at support@flippify.co.uk. Fee Changes We may, from time to
+				email us at support@{domain}. Fee Changes We may, from time to
 				time, make changes to the subscription fee and will communicate any
 				price changes to you in accordance with applicable law.
 			</p>
@@ -428,7 +429,7 @@ const TermsAndConditions = () => {
 			<h1 className="text-white">13. PRIVACY POLICY</h1>
 			<p>
 				We care about data privacy and security. Please review our Privacy
-				Policy: http://www.flippify.co.uk/l/legal. By using the Services, you
+				Policy: http://www.{domain}/l/legal. By using the Services, you
 				agree to be bound by our Privacy Policy, which is incorporated into
 				these Legal Terms. Please be advised the Services are hosted in the
 				United Kingdom. If you access the Services from any other region of the
@@ -687,7 +688,7 @@ const TermsAndConditions = () => {
 			<p>
 				In order to resolve a complaint regarding the Services or to receive
 				further information regarding use of the Services, please contact us at:
-				Flippify Phone: 07842522682 support@flippify.co.uk
+				Flippify Phone: 07842522682 support@{domain}
 			</p>
 		</div>
 	);

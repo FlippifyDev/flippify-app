@@ -57,7 +57,6 @@ async function updateUser(uid: string, data: any): Promise<boolean> {
 async function updateUserPreferences(uid: string, preferredEmail: string, currency: string) {
     try {
         const userRef = await retrieveUserRefById(uid);
-        console.log("User ref:", userRef);
         if (userRef) {
             await setDoc(
                 userRef,

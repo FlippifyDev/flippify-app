@@ -13,7 +13,7 @@ const PlansCardFreeWhatsIncluded = () => {
 				<li className="w-full">
 					<PlansClickableBulletPoint
 						text="20 Auto-Tracked Listings /Month"
-						tooltip="Track up to 20 new eBay listings monthly. Log the purchase, and we&apos;ll automatically monitor inventory, sales, and financials. Limit resets each month; active tracked items don&apos;t count toward the next month&apos;s cap."
+						tooltip="Track up to 20 new eBay listings monthly. Log the purchase, and we&apos;ll automatically monitor inventory, sales, and financials. Limit resets each month; active tracked items don&apos;t count toward the next month&apos;s cap. On initial sign-up we can only track 90 days in the past and up to 100 items."
 					/>
 				</li>
 				<li className="w-full">

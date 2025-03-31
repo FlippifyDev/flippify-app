@@ -362,11 +362,11 @@ const OrderDetails = () => {
         if (type === "purchaseDate") {
             setPurchaseDate(value);
         } else if (type === "purchasePrice") {
-            validatePriceInput(value, setPurchasePrice);
-        } else if (type === "purchasePlatform") {
-            validateTextInput(value, setPurchasePlatform);
+            validatePriceInput(value, setEditedPurchasePrice);
+        } else if (type === "platform") {
+            validateTextInput(value, setEditedPlatform);
         } else if (type === "customTag") {
-            validateTextInput(value, setCustomTag);
+            validateTextInput(value, setEditedCustomTag);
         }
     }
 

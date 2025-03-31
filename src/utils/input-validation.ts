@@ -31,6 +31,7 @@ export const validatePriceInput = (value: string, setFunction: (value: string) =
 export const validateTextInput = (value: string, setFunction: (value: string) => void): void => {
     // Regex to allow only alphabets and spaces
     if (/^[a-zA-Z\s]*$/.test(value)) {
+        console.log("setting value")
         setFunction(value);
     }
 };

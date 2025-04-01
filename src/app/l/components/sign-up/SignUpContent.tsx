@@ -4,7 +4,7 @@
 import { formatDateToISO } from "@/utils/format-dates";
 import { auth, firestore } from "@/lib/firebase/config";
 import { updateUserSubscriptionAdmin } from "@/services/firebase/update-admin";
-import { retrieveUserSubscriptionCount } from "@/services/firebase/retrieve-admin";
+import { retrieveAuthenticatedUserCount, retrieveUserSubscriptionCount } from "@/services/firebase/retrieve-admin";
 
 // External Imports
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
@@ -77,7 +77,7 @@ const SignUpContent = () => {
         try {
             setLoading(true);
             setErrorMessage("");
-            const userCount = await retrieveUserSubscriptionCount();
+            const userCount = await retrieveAuthenticatedUserCount();
             const maxUserCount = Number(process.env.MAX_USER_COUNT ?? 100);
             if (userCount >= maxUserCount) {
                 setErrorMessage("User limit reached. Please try again later.");
@@ -237,7 +237,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
         // Retrieve user subscription count
         const fetchUserSubscriptionCount = async () => {
             try {
-                const count = await retrieveUserSubscriptionCount();
+                const count = await retrieveAuthenticatedUserCount();
                 setUserCount(count);
             } catch (error) {
                 console.error("Error fetching user subscription count:", error);

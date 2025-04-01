@@ -12,7 +12,7 @@ function findOrderInfo(orders: IEbayOrder[]) {
     let missingInfoCount = 0;
     let nonCompletedOrders = 0;
     orders.forEach((order) => {
-        if (!order.purchase.price || !order.purchase.date || !order.purchase.platform || !order.purchase.quantity) {
+        if (!order.purchase.price || !order.purchase.date || !order.purchase.platform) {
             missingInfoCount++;
         }
         if (order.status !== 'Completed') {

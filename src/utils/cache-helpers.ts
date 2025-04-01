@@ -1,5 +1,7 @@
+import { cacheExpirationTime } from "./constants";
+
 // Function to check if cached data is still valid
-export function getCachedData(key: string, expirationTime: number, returnCacheTimes?: boolean) {
+export function getCachedData(key: string, returnCacheTimes?: boolean) {
     const cachedData = localStorage.getItem(key);
     if (cachedData) {
         const parsedData = JSON.parse(cachedData);
@@ -8,7 +10,7 @@ export function getCachedData(key: string, expirationTime: number, returnCacheTi
         }
 
         // Check if the cached data is still valid based on expiration time
-        if (Date.now() - parsedData.timestamp >= expirationTime) {
+        if (Date.now() - parsedData.timestamp >= cacheExpirationTime) {
             return null
         }
 
@@ -59,3 +61,20 @@ export function setCachedData(key: string, data: any, cacheTimeFrom?: Date, cach
     setCachedTimes(key, timeFrom, timeTo);
     localStorage.setItem(key, JSON.stringify(newCache));
 };
+
+
+export function addCacheData(key: string, data: any) {
+    const cachedData = getCachedData(key, true);
+    if (cachedData) {
+        const newCache = {
+            data: [...cachedData.data, data],
+            timestamp: cachedData.timestamp,
+            cacheTimeFrom: cachedData.cacheTimeFrom,
+            cacheTimeTo: cachedData.cacheTimeTo
+        };
+        setCachedTimes(key, cachedData.cacheTimeFrom, cachedData.cacheTimeTo);
+        localStorage.setItem(key, JSON.stringify(newCache));
+    } else {
+        setCachedData(key, [data]);
+    }
+}

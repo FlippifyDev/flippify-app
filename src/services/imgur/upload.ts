@@ -26,10 +26,7 @@ export async function uploadImage(imageBase64: string): Promise<string | null> {
 
         // Parsing the JSON response from Imgur
         const data = await response.json();
-
-        // Debug: Log the full response data for insight
-        console.log('Imgur response data:', data);
-
+        
         // Check if upload was successful and return the image URL
         if (data.success) {
             const imageUrl = data.data.link;

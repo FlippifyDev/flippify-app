@@ -2,6 +2,8 @@
 
 import { ISubscription, IUser } from "@/models/user";
 import { firestoreAdmin } from "@/lib/firebase/config-admin";
+import { StorePlatform } from "@/models/store-data";
+import { FieldValue } from "firebase-admin/firestore";
 
 
 export async function updateReferreeUserAdmin(referredUserId: string, referreeCode: string): Promise<{ success: boolean }> {
@@ -63,5 +65,30 @@ export async function updateReferredByAdmin(uid: string, referredBy: string): Pr
 
     } catch (error) {
         console.error("Error updating referral code:", error);
+    }
+}
+
+
+export async function incrementUserManualListingsAdmin(uid: string, storePlatform: StorePlatform): Promise<{ success?: boolean, error?: any }> {
+    try {
+        const userRef = firestoreAdmin.collection('users').doc(uid);
+        // Update the user's manual listings count
+        await userRef.set(
+            {
+                store: {
+                    [storePlatform]: {
+                        numListings: {
+                            manual: FieldValue.increment(1)
+                        }
+                    }
+                }
+            }, { merge: true }
+        );
+
+        return { success: true };
+
+    } catch (error) {
+        console.error("Error updating manual listings:", error);
+        return { error: error };
     }
 }

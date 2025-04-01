@@ -230,7 +230,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
     loading,
     errorMessage,
 }) => {
-    const [userCount, setUserCount] = useState<number>(10);
+    const [userCount, setUserCount] = useState<number>(0);
     const maxUserCount = Number(process.env.MAX_USER_COUNT ?? 100);
 
     useEffect(() => {

@@ -138,11 +138,6 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({
             let currentRangeCosts = 0;
             let previousRangeCosts = 0;
 
-
-			// Prepare arrays for profit calculations
-			const seriesData = [];
-			const categories: string[] = [];
-
             const revenueByDate = new Map<string, number>();
             const revenueByMonth = new Map<string, number>();
 
@@ -205,6 +200,12 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({
             setPreviousCosts(previousRangeCosts);
             setPreviousNetProfit(previousRangeNetProfit);
 
+            // Determine categories based on the populated map (daily or monthly)
+            const categories =
+                Array.from(revenueByDate.keys()).length === 0
+                    ? Array.from(revenueByMonth.keys()).reverse()
+                    : Array.from(revenueByDate.keys()).reverse();
+
             // Set chart data
             setChartData({
                 categories,
@@ -242,7 +243,7 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({
 					</span>
 				</div>
 				<div
-					className={`flex items-center px-2.5 py-0.5 text-base font-semibold ${percentageChange >= 0 ? "text-green-500" : "text-red-500"
+					className={`flex items-center px-2.5 py-0.5 text-base font-semibold ${percentageChange >= 0 ? "text-houseBlue" : "text-red-500"
 						} text-center`}
 				>
 					{percentageChange >= 1000

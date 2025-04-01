@@ -1,5 +1,6 @@
 "use client";
 
+import NavbarAddOrder from "./NavbarAddOrder";
 import NavbarAddListing from "./NavbarAddListing";
 import NavbarProfileAvatar from "./NavbarProfileAvatar";
 import { getProcessedTitle } from "@/utils/extract-final-url-name";
@@ -28,8 +29,9 @@ const Navbar: React.FC<NavbarProps> = ({ handleDisplayModal }) => {
                 {title.replace("And", "&")}
             </div>
             <div className="w-full flex justify-end pr-2 items-center">
-                <div className="flex justify-end pr-2">
+                <div className="flex justify-end items-center mr-4 gap-4">
                     <NavbarAddListing handleDisplayModal={handleDisplayModal} />
+                    <NavbarAddOrder handleDisplayModal={handleDisplayModal} />
                 </div>
                 <div className="flex justify-end pr-2">
                     <NavbarProfileAvatar />

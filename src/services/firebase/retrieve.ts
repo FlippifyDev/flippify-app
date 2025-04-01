@@ -224,7 +224,7 @@ async function retrieveUserOrders(
 
     // Try to get the cached data first
     try {
-        const cache = getCachedData(cacheKey, cacheExpirationTime, true);
+        const cache = getCachedData(cacheKey, true);
         cachedData = cache.data as IEbayOrder[];
         cacheTimeFrom = cache.cacheTimeFrom ? new Date(cache.cacheTimeFrom) : undefined;
         cacheTimeTo = cache.cacheTimeTo ? new Date(cache.cacheTimeTo) : undefined;
@@ -387,7 +387,7 @@ async function retrieveUserInventory(
 
     // Try to get the cached data first
     try {
-        const cache = getCachedData(cacheKey, cacheExpirationTime, true);
+        const cache = getCachedData(cacheKey, true);
         cachedData = cache.data as IEbayInventoryItem[];
         cacheTimeFrom = cache.cacheTimeFrom ? new Date(cache.cacheTimeFrom) : undefined;
         cacheTimeTo = cache.cacheTimeTo ? new Date(cache.cacheTimeTo) : undefined;

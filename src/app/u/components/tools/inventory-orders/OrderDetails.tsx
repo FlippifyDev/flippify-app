@@ -10,8 +10,9 @@ import LoadingAnimation from "../../dom/ui/LoadingAnimation";
 import { formatTableDate } from "@/utils/format-dates";
 import { currencySymbols } from "@/config/currency-config";
 import { retrieveUserOrders } from "@/services/firebase/retrieve";
-import { cacheExpirationTime, ebayOrderCacheKey, MAX_INPUT_LENGTH } from "@/utils/constants";
-import { getCachedData, getCachedTimes, setCachedData } from "@/utils/cache-helpers";
+import { getCachedData, setCachedData } from "@/utils/cache-helpers";
+import { ebayOrderCacheKey, MAX_INPUT_LENGTH } from "@/utils/constants";
+import { validatePriceInput, validateTextInput } from "@/utils/input-validation";
 
 // External Imports
 import { collection, doc, updateDoc } from "firebase/firestore";
@@ -19,8 +20,6 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { set } from "date-fns";
-import { validatePriceInput, validateTextInput } from "@/utils/input-validation";
 
 const OrderDetails = () => {
     const { data: session } = useSession();
@@ -234,7 +233,7 @@ const OrderDetails = () => {
                 await Promise.all(updatePromises);
 
                 // Retrieve the current cache data
-                const currentCache = getCachedData(cacheKey, cacheExpirationTime) as IEbayOrder[];
+                const currentCache = getCachedData(cacheKey) as IEbayOrder[];
 
                 // Merge updated orders with the current cache, preserving the existing ones
                 const mergedOrders = Array.from(

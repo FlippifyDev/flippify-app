@@ -98,6 +98,7 @@ const DashboardProfitsChart: React.FC<DashboardProfitsChartProps> = ({
 					show: true,
 					formatter: (val: number) => {
 						const dateString = salesData.categories[val - 1];
+                        console.log(dateString)
 
 						if (dateString === undefined) {
 							return "";
@@ -126,7 +127,7 @@ const DashboardProfitsChart: React.FC<DashboardProfitsChartProps> = ({
 					},
 				},
 			},
-            colors: ["#008ffb", "#ffc107", "#00ff00"] // (revenue, costs, and profits)
+            colors: ["#008ffb", "#5a9bd5", "#87b3d9"] // (revenue, costs, and profits)
 		};
 
 		const chart = new ApexCharts(

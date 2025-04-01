@@ -36,6 +36,10 @@ const LayoutContent = ({ removePadding, children }: { removePadding?: boolean, c
         switch (type) {
             case "add-listing":
                 setModal(<NewEbayListingForm setDisplayModal={setIsModalOpen} />)
+                break;
+            default:
+                setModal(null);
+                break;
         }
     }
 

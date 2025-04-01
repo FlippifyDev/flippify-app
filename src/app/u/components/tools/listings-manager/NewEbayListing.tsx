@@ -121,28 +121,9 @@ const NewEbayListingForm: React.FC<NewEbayListingFormProps> = ({ setDisplayModal
     }
 
     return (
-        <Modal className="max-w-xl flex-grow" setDisplayModal={setDisplayModal}>
+        <Modal title="Add a new eBay listing" className="max-w-xl flex-grow" setDisplayModal={setDisplayModal}>
             <form className="w-full max-w-xl flex flex-col gap-4" onSubmit={handleSubmit}>
                 <Input type="text" placeholder="Enter item id" title="Product ID" value={itemId} onChange={(e) => handleChange(e.target.value, "itemId")} />
-                <div className="w-full flex flex-col sm:flex-row gap-4">
-                    <button
-                        type="button"
-                        className="bg-houseBlue text-white text-sm py-2 px-4 rounded-md hover:bg-houseHoverBlue transition duration-200"
-                        onClick={() => setIsModalOpen(true)}>
-                        {fileName}
-                    </button>
-                    {imageUrl && (
-                        <figure>
-                            <Image
-                                src={imageUrl}
-                                alt="Uploaded Image"
-                                width={40}
-                                height={40}
-                                className="rounded-md"
-                            />
-                        </figure>
-                    )}
-                </div>
                 <div className="flex flex-col sm:flex-row items-center w-full gap-4">
                     <Input type="text" placeholder="Enter item name" title="Product Name" value={itemName} onChange={(e) => handleChange(e.target.value, "itemName")} />
                     <Input type="text" placeholder="Enter quantity" title="Quantity" value={quantity} onChange={(e) => handleChange(e.target.value, "quantity")} />
@@ -159,7 +140,27 @@ const NewEbayListingForm: React.FC<NewEbayListingFormProps> = ({ setDisplayModal
                     <Input type="date" placeholder="Enter listing date" title="Listing Date" className="w-full" value={dateListed} onChange={(e) => handleChange(e.target.value, "dateListed")} />
                     <Input type="date" placeholder="Enter purchase date" title="Purchase Date" className="w-full" value={dateListed} onChange={(e) => handleChange(e.target.value, "datePurchased")} />
                 </div>
-
+                <hr />
+                <div className="w-full flex flex-col sm:flex-row gap-4 justify-end">
+                    {imageUrl && (
+                        <figure>
+                            <Image
+                                src={imageUrl}
+                                alt="Uploaded Image"
+                                width={40}
+                                height={40}
+                                className="rounded-md"
+                            />
+                        </figure>
+                    )}
+                    <button
+                        type="button"
+                        className="bg-houseBlue text-white text-sm py-2 px-4 rounded-md hover:bg-houseHoverBlue transition duration-200"
+                        onClick={() => setIsModalOpen(true)}>
+                        {imageUrl ? "Change Image" : "Upload Image"}
+                    </button>
+                </div>
+                <hr />
                 <div className="flex flex-col sm:flex-row items-center w-full gap-4 justify-end mt-2">
                     <button
                         type="button"

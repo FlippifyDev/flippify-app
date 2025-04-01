@@ -21,6 +21,7 @@ const nextConfig = {
     ],
   },
   env: {
+    MAX_USER_COUNT: 100,
     ROOT: process.env.ROOT,
     NEXT_PUBLIC_FIREBASE_API_KEY: "AIzaSyALlnrwPeEFtu7dXTAFvG4d9OUL-XiY2ao",
     NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: "flippify-3ffff.firebaseapp.com",

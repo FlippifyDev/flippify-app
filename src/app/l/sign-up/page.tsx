@@ -47,7 +47,7 @@ const SignUp = () => {
             <ThemeSetter theme="dark" />
             <Suspense fallback={<Loading />}>
                 <Layout>
-                    <ComingSoon />
+                    <SignUpContent />
                 </Layout>
             </Suspense>
         </>

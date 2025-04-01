@@ -44,6 +44,27 @@ async function retrieveAuthenticatedUserCount(): Promise<number> {
 }
 
 
+/**
+ * Function to retrieve the number of users with subscriptions which include the word member in them
+ * @returns {Promise<number>} - The number of users with subscriptions
+ */
+async function retrieveUserSubscriptionCount(): Promise<number> {
+    try {
+        const collectionRef = firestoreAdmin.collection("users");
+
+        // Query users where authentication.subscribed exists (i.e., they have a subscription level)
+        const querySnapshot = await collectionRef
+            .where("authentication.subscribed", "!=", null) // Ensure they have a subscription status
+            .get();
+
+        return querySnapshot.size; // Return count directly from Firestore
+    } catch (error) {
+        console.error("Error retrieving user subscription count:", error);
+        throw new Error("Failed to retrieve user subscription count.");
+    }
+}
+
+
 async function retrieveUserByKeyAndValueAdmin(key: string, value: string): Promise<IUser | void> {
     try {
         const collectionRef = firestoreAdmin.collection("users");
@@ -62,4 +83,4 @@ async function retrieveUserByKeyAndValueAdmin(key: string, value: string): Promi
     }
 }
 
-export { retrieveUserAdmin, retrieveUserRefAdmin, retrieveAuthenticatedUserCount, retrieveUserByKeyAndValueAdmin };
+export { retrieveUserAdmin, retrieveUserRefAdmin, retrieveAuthenticatedUserCount, retrieveUserByKeyAndValueAdmin, retrieveUserSubscriptionCount };

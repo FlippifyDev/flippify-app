@@ -75,31 +75,31 @@ const OrdersContent: React.FC = () => {
         const combinedOrders: { [key: string]: CombinedOrder } = {};
 
         unformattedOrderData.forEach(order => {
-            const { legacyItemId } = order;
+            const { itemName } = order;
 
-            if (!combinedOrders[legacyItemId]) {
-                combinedOrders[legacyItemId] = {
+            if (!combinedOrders[itemName]) {
+                combinedOrders[itemName] = {
                     image: order.image[0],
                     itemName: order.itemName,
                     quantitySold: order.sale.quantity,
                     totalSalePrice: order.sale.price,
                     totalPurchasePrice: order.purchase.price,
-                    totalShippingFees: order.shipping.fees,
-                    totalOtherFees: order.additionalFees,
+                    totalShippingFees: order.shipping.fees ?? 0,
+                    totalOtherFees: order.additionalFees ?? 0,
                     orders: [order],
                 };
             } else {
-                combinedOrders[legacyItemId].quantitySold += order.sale.quantity;
-                combinedOrders[legacyItemId].totalSalePrice += order.sale.price;
-                combinedOrders[legacyItemId].totalShippingFees += order.shipping.fees;
-                combinedOrders[legacyItemId].totalOtherFees += order.additionalFees;
+                combinedOrders[itemName].quantitySold += order.sale.quantity;
+                combinedOrders[itemName].totalSalePrice += order.sale.price;
+                combinedOrders[itemName].totalShippingFees += order.shipping.fees ?? 0;
+                combinedOrders[itemName].totalOtherFees += order.additionalFees ?? 0;
 
                 if (order.purchase.price !== null) {
-                    combinedOrders[legacyItemId].totalPurchasePrice =
-                        (combinedOrders[legacyItemId].totalPurchasePrice || 0) + (order.purchase.price || 0);
+                    combinedOrders[itemName].totalPurchasePrice =
+                        (combinedOrders[itemName].totalPurchasePrice || 0) + (order.purchase.price || 0);
                 }
 
-                combinedOrders[legacyItemId].orders.push(order);
+                combinedOrders[itemName].orders.push(order);
             }
         });
 
@@ -154,7 +154,6 @@ const OrdersContent: React.FC = () => {
                                     return (
                                         <OrderRow
                                             key={index}
-                                            itemId={order.itemId}
                                             itemName={order.itemName}
                                             quantitySold={quantity}
                                             totalSalePrice={salePrice}
@@ -178,7 +177,7 @@ const OrdersContent: React.FC = () => {
 
                     {/* Pagination Controls */}
                     {totalPages > 1 && (
-                        <div className="absolute bottom-0 right-0 p-2">
+                        <div className="fixed bottom-0 right-0 p-2">
                             <div className="flex flex-col items-center">
                                 {/* Pagination Buttons */}
                                 <div className="inline-flex mt-2 xs:mt-0">

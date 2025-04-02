@@ -22,6 +22,24 @@ export const STANDARD_MAX_MANUAL_LISTINGS = 100;
 export const PREMIUM_MAX_AUTOMATIC_LISTINGS = 500;
 export const PREMIUM_MAX_MANUAL_LISTINGS = 500;
 
+export const subscriptionLimits = {
+    "free": {
+        "automatic": FREE_MAX_AUTOMATIC_LISTINGS,
+        "manual": FREE_MAX_MANUAL_LISTINGS,
+    },
+    "standard": {
+        "automatic": STANDARD_MAX_AUTOMATIC_LISTINGS,
+        "manual": STANDARD_MAX_MANUAL_LISTINGS,
+    },
+    "pro": {
+        "automatic": PREMIUM_MAX_AUTOMATIC_LISTINGS,
+        "manual": PREMIUM_MAX_MANUAL_LISTINGS,
+    },
+    "enterprise": {
+        "automatic": 1000,
+        "manual": 1000,
+    },
+}
 
 export const MAX_INPUT_LENGTH = 40;
 

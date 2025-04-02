@@ -3,19 +3,20 @@
 // Local Imports
 import Alert from "@/app/components/Alert";
 import { firestore } from "@/lib/firebase/config";
+import { shortenText } from "@/utils/format";
 import { formatTableDate } from "@/utils/format-dates";
 import { currencySymbols } from "@/config/currency-config";
+import { updateCacheData } from "@/utils/cache-helpers";
 import { IEbayInventoryItem } from "@/models/store-data";
-import { ebayInventoryCacheKey, MAX_INPUT_LENGTH } from "@/utils/constants";
 import { retrieveUserInventory } from "@/services/firebase/retrieve";
-import { getCachedTimes, setCachedData } from "@/utils/cache-helpers";
+import { validatePriceInput, validateTextInput } from "@/utils/input-validation";
+import { ebayInventoryCacheKey, MAX_INPUT_LENGTH } from "@/utils/constants";
 
 // External Imports
 import { useEffect, useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { validatePriceInput, validateTextInput } from "@/utils/input-validation";
 
 
 const InventoryContent = () => {
@@ -25,7 +26,7 @@ const InventoryContent = () => {
 
     const [listedData, setListedData] = useState<IEbayInventoryItem[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const ordersPerPage = 12;
+    const itemsPerPage = 12;
 
     // Edit state
     const [editedPlatform, setEditedPlatform] = useState<string | null>("");
@@ -39,7 +40,7 @@ const InventoryContent = () => {
     const [isAlertVisible, setIsAlertVisible] = useState<boolean>(false);
 
     // Total number of pages
-    const totalPages = Math.ceil(listedData.length / ordersPerPage);
+    const totalPages = Math.ceil(listedData.length / itemsPerPage);
 
     useEffect(() => {
         const fetchInventoryData = async () => {
@@ -79,7 +80,6 @@ const InventoryContent = () => {
             setEditingType(null);
         }
     };
-
 
     const saveChange = async (index: number, type: string) => {
         const updatedListings = [...listedData];
@@ -136,7 +136,8 @@ const InventoryContent = () => {
 
             // Perform the update
             await updateDoc(orderDocRef, updateFields);
-            setCachedData(cacheKey, updatedListings);
+
+            updateCacheData(cacheKey, updatedListings[index]);
             
             setEditingType(null);
             setEditingIndex(null);
@@ -153,8 +154,8 @@ const InventoryContent = () => {
 
     // Paginate data for current page
     const paginatedData = listedData.slice(
-        (currentPage - 1) * ordersPerPage,
-        currentPage * ordersPerPage
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
     );
 
 
@@ -181,7 +182,6 @@ const InventoryContent = () => {
             setEditingType("customTag");
         }, 0);
     }
-
 
     function handleChange(value: string, type: string) {
         if (value.length > MAX_INPUT_LENGTH) return
@@ -227,7 +227,7 @@ const InventoryContent = () => {
                                     key={index}
                                     className=""
                                 >
-                                    <td>
+                                    <td className="min-w-20">
                                         <Image
                                             src={item.image[0]}
                                             width={100}
@@ -238,7 +238,7 @@ const InventoryContent = () => {
                                             style={{ objectFit: "cover" }}
                                         />
                                     </td>
-                                    <td>{item.itemName}</td>
+                                    <td>{shortenText(item.itemName)}</td>
                                     <td>{item.quantity}</td>
                                     <td
                                         className="cursor-pointer transition duration-200"
@@ -251,7 +251,7 @@ const InventoryContent = () => {
                                             onChange={(e) => handleChange(e.target.value, "platform")}
                                             onBlur={() => saveChange(index, "platform")}
                                             onKeyDown={(e) => handleKeyPress(e, index, "platform")}
-                                            className="focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
+                                            className="min-w-24 focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
                                         />
                                     </td>
                                     <td
@@ -265,13 +265,13 @@ const InventoryContent = () => {
                                             onChange={(e) => handleChange(e.target.value, "purchasePrice")}
                                             onBlur={() => saveChange(index, "purchasePrice")}
                                             onKeyDown={(e) => handleKeyPress(e, index, "purchasePrice")}
-                                            className="focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
+                                            className="min-w-24 focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
                                         />
                                     </td>
                                     <td>
                                         {item.price.toFixed(2)}
                                     </td>
-                                    <td>{formatTableDate(item.dateListed)}</td>
+                                    <td className="min-w-32">{formatTableDate(item.dateListed)}</td>
                                     <td
                                         className="cursor-pointer transition duration-200"
                                     >
@@ -283,7 +283,7 @@ const InventoryContent = () => {
                                             onChange={(e) => handleChange(e.target.value, "customTag")}
                                             onBlur={() => saveChange(index, "customTag")}
                                             onKeyDown={(e) => handleKeyPress(e, index, "customTag")}
-                                            className="focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
+                                            className="min-w-32 focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
                                         />
                                     </td>
                                 </tr>
@@ -301,43 +301,39 @@ const InventoryContent = () => {
 
             {/* Pagination Controls */}
             {totalPages > 1 && (
-                <div className="flex justify-end mt-4">
-                    <div className="flex items-center space-x-2">
-                        {/* Prev Button */}
-                        <button
-                            onClick={() => handlePageChange(currentPage - 1)}
-                            disabled={currentPage === 1}
-                            className={`px-5 h-10 text-sm font-medium text-white bg-gray-800 hover:bg-gray-900 rounded-s ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-                                }`}
-                        >
-                            Prev
-                        </button>
-
-                        {/* Show entries info dynamically */}
-                        <div className="flex items-center justify-center bg-gray-900 px-4 h-10 text-sm text-white space-x-1">
-                            <span className="font-semibold text-white">
-                                {Math.min(
-                                    (currentPage - 1) * ordersPerPage + 1,
-                                    listedData.length
-                                )}
-                            </span>
-                            <span>-</span>
-                            <span className="font-semibold text-white">
-                                {Math.min(currentPage * ordersPerPage, listedData.length)}
-                            </span>
-                            <span>of</span>
-                            <span className="font-semibold text-white">{listedData.length}</span>
+                <div className="fixed bottom-0 right-0 p-2">
+                    <div className="flex flex-col items-center">
+                        {/* Pagination Buttons */}
+                        <div className="inline-flex mt-2 xs:mt-0">
+                            {/* Prev Button */}
+                            <button
+                                onClick={() => handlePageChange(currentPage - 1)}
+                                disabled={currentPage === 1}
+                                className={`flex items-center justify-center px-5 h-12 text-sm font-medium text-white bg-gray-800 hover:bg-gray-900 rounded-s`}
+                            >
+                                Prev
+                            </button>
+                            {/* Show entries info dynamically */}
+                            <div className="flex items-center bg-gray-900 justify-center px-4 h-12 text-sm text-white space-x-1">
+                                <span className="font-semibold text-white">
+                                    {Math.min((currentPage - 1) * itemsPerPage + 1, listedData.length)}
+                                </span>
+                                <span>-</span>
+                                <span className="font-semibold text-white">
+                                    {Math.min(currentPage * itemsPerPage, paginatedData.length)}
+                                </span>
+                                <span>of</span>
+                                <span className="font-semibold text-white">{paginatedData.length}</span>
+                            </div>
+                            {/* Next Button */}
+                            <button
+                                onClick={() => handlePageChange(currentPage + 1)}
+                                disabled={currentPage === totalPages}
+                                className={`flex items-center justify-center px-5 h-12 text-sm font-medium text-white bg-gray-800 hover:bg-gray-900 rounded-e`}
+                            >
+                                Next
+                            </button>
                         </div>
-
-                        {/* Next Button */}
-                        <button
-                            onClick={() => handlePageChange(currentPage + 1)}
-                            disabled={currentPage === totalPages}
-                            className={`px-5 h-10 text-sm font-medium text-white bg-gray-800 hover:bg-gray-900 rounded-e ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
-                                }`}
-                        >
-                            Next
-                        </button>
                     </div>
                 </div>
             )}

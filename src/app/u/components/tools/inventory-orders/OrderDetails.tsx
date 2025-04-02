@@ -6,6 +6,7 @@ import UpdateFields from "./UpdateFields";
 import OrderInfoCard from "./OrderInfoCard";
 import { firestore } from "@/lib/firebase/config";
 import { IEbayOrder } from "@/models/store-data";
+import { shortenText } from "@/utils/format";
 import LoadingAnimation from "../../dom/ui/LoadingAnimation";
 import { formatTableDate } from "@/utils/format-dates";
 import { currencySymbols } from "@/config/currency-config";
@@ -16,15 +17,16 @@ import { validatePriceInput, validateTextInput } from "@/utils/input-validation"
 
 // External Imports
 import { collection, doc, updateDoc } from "firebase/firestore";
-import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 const OrderDetails = () => {
     const { data: session } = useSession();
-    const params = useParams();
-    const legacyItemId = params?.["order-id"];
+    const searchParams = useSearchParams();
+    const itemName = searchParams?.get("itemName") as string;
     const [orders, setOrders] = useState<IEbayOrder[]>([]);
     const [salesData, setSalesData] = useState<IEbayOrder[]>([]);
     const username = session?.user.username as string;
@@ -60,6 +62,7 @@ const OrderDetails = () => {
     }, [selectedOrders.length]);
 
     useEffect(() => {
+        console.log(itemName)
         const fetchOrderData = async () => {
             const orders = await retrieveUserOrders(session?.user.id as string, "2023-01-01T00:00:00Z", session?.user.connectedAccounts.ebay?.ebayAccessToken as string);
             if (orders) {
@@ -73,9 +76,9 @@ const OrderDetails = () => {
     }, [session?.user]);
 
     useEffect(() => {
-        if (salesData && legacyItemId && !ordersUpdated) {
+        if (salesData && itemName && !ordersUpdated) {
             const matchingOrders = salesData.filter((o, index) => {
-                const isMatch = o.legacyItemId === legacyItemId;
+                const isMatch = o.itemName === itemName;
                 if (isMatch) {
                     setOrderIdtoIndex((prev) => ({ ...prev, [o.orderId]: index }));
                 }
@@ -84,7 +87,7 @@ const OrderDetails = () => {
             setOrders(matchingOrders);
             setOrdersUpdated(false);
         }
-    }, [salesData, legacyItemId, ordersUpdated]);
+    }, [salesData, itemName, ordersUpdated]);
 
     if (orders.length === 0) {
         return <LoadingAnimation text="Loading items" type="stack-loader"/>;
@@ -176,7 +179,6 @@ const OrderDetails = () => {
         };
     };
 
-    const itemName = orders[0].itemName;
     const image = orders[0].image[0];
     const totals = calculateTotals();
 
@@ -233,17 +235,17 @@ const OrderDetails = () => {
                 await Promise.all(updatePromises);
 
                 // Retrieve the current cache data
-                const currentCache = getCachedData(cacheKey) as IEbayOrder[];
+                const currentCacheDict = getCachedData(cacheKey) as IEbayOrder[];
+                const currentCache = currentCacheDict.values();
 
                 // Merge updated orders with the current cache, preserving the existing ones
-                const mergedOrders = Array.from(
-                    new Map(
-                        [...currentCache, ...updatedOrders].map((order: IEbayOrder) => [order.orderId, order])
-                    ).values()
-                );
+                const mergedOrdersDict = {
+                    ...Object.fromEntries(currentCache.map(order => [order.orderId, order])),
+                    ...Object.fromEntries(updatedOrders.map(order => [order.orderId, order]))
+                };
 
                 // After successful Firestore update, update the cache with the merged data
-                setCachedData(cacheKey, mergedOrders);
+                setCachedData(cacheKey, mergedOrdersDict);
 
                 setAlertMessage("Orders successfully updated.");
                 setIsAlertVisible(true);
@@ -324,7 +326,13 @@ const OrderDetails = () => {
             await updateDoc(orderDocRef, updateFields);
             // Update the salesData with the modified order
             salesData[orderIdtoIndex[updatedOrders[index].orderId]] = updatedOrders[index];
-            setCachedData(cacheKey, salesData); 
+
+            // Convert salesData to a dictionary where orderId is the key
+            const salesDataDict = {
+                ...Object.fromEntries(salesData.map(order => [order.orderId, order]))
+            };
+
+            setCachedData(cacheKey, salesDataDict); 
 
             setEditingType(null);
             setEditingIndex(null);
@@ -354,7 +362,6 @@ const OrderDetails = () => {
         setEditingType("customTag");
     }
 
-
     function handleInput(value: string, type: string) {
         if (value.length > MAX_INPUT_LENGTH) return;
 
@@ -380,7 +387,7 @@ const OrderDetails = () => {
                 <div className="breadcrumbs text-sm p-2">
                     <ul>
                         <li onClick={handleOrdersClick}><a>Orders</a></li>
-                        <li>{legacyItemId}</li>
+                        <li>{shortenText(itemName, 20)}</li>
                     </ul>
                 </div>
                 <div className="flex items-center gap-2 h-full p-4">
@@ -440,9 +447,9 @@ const OrderDetails = () => {
                                                 />
                                             </label>
                                         </td>
-                                        <td>{orderId}</td>
-                                        <td>{formatTableDate(order.purchase.date)}</td>
-                                        <td>{formatTableDate(order.sale.date)}</td>
+                                        <td>{shortenText(orderId, 10)}</td>
+                                        <td className="min-w-32">{formatTableDate(order.purchase.date)}</td>
+                                        <td className="min-w-32">{formatTableDate(order.sale.date)}</td>
                                         <td>{sale.quantity}</td>
                                         <td>{additionalFees.toFixed(2)}</td>
                                         <td>{shipping.fees.toFixed(2)}</td>
@@ -457,7 +464,7 @@ const OrderDetails = () => {
                                                 onChange={(e) => handleInput(e.target.value, "purchasePrice")}
                                                 onBlur={() => saveChange(index, "purchasePrice")}
                                                 onKeyDown={(e) => handleKeyPress(e, index, "purchasePrice")}
-                                                className="focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
+                                                className="min-w-24 focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
                                             />
                                         </td>
                                         <td>{(sale.price + shipping.fees).toFixed(2)}</td>
@@ -474,7 +481,7 @@ const OrderDetails = () => {
                                                 onChange={(e) => handleInput(e.target.value, "platform")}
                                                 onBlur={() => saveChange(index, "platform")}
                                                 onKeyDown={(e) => handleKeyPress(e, index, "platform")}
-                                                className="focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
+                                                className="min-w-24 focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
                                             />
                                         </td>
                                         <td>{order.sale.buyerUsername}</td>
@@ -489,7 +496,7 @@ const OrderDetails = () => {
                                                 onChange={(e) => handleInput(e.target.value, "customTag")}
                                                 onBlur={() => saveChange(index, "customTag")}
                                                 onKeyDown={(e) => handleKeyPress(e, index, "customTag")}
-                                                className="focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
+                                                className="min-w-32 focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
                                             />
                                         </td>
                                     </tr>

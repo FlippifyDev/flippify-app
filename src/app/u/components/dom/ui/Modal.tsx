@@ -11,7 +11,7 @@ interface ModalProps {
 
 const Modal: React.FC<ModalProps> = ({ title, className, children, setDisplayModal }) => {
     return (
-        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-40">
+        <div className="fixed sm:absolute inset-0 flex justify-center items-start pt-24 pb-8 sm:pt-0 sm:items-center bg-black bg-opacity-50 z-40 overflow-y-auto">
             <div className={`relative bg-white rounded-lg shadow-lg w-80 sm:w-96 ${className}`}>
                 {/* Close Button (Cross Icon) */}
                 <button

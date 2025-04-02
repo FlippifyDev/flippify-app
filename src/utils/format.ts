@@ -24,7 +24,7 @@ function formatOrdersForCSVExport(orders: IEbayOrder[], timeFrom: string, timeTo
         "Sale Date",
         "Status",
         "Custom Tag",
-        "Profit", 
+        "Profit",
         "ROI (%)"
     ];
 
@@ -82,4 +82,20 @@ function formatOrdersForCSVExport(orders: IEbayOrder[], timeFrom: string, timeTo
     return csvContent;
 }
 
-export default formatOrdersForCSVExport;
+
+function shortenText(name: string, length: number = 20): string {
+    if (name.length <= length) {
+        return name;
+    }
+
+    if (name.length <= 2 * length) {
+        // For names between length and 2*length, split into two halves (minus 3 for the ellipsis)
+        const half = Math.floor((name.length - 3) / 2);
+        return `${name.substring(0, half)}...${name.substring(name.length - half)}`;
+    }
+
+    // For longer names, use the full cutoff at both ends.
+    return `${name.substring(0, length)}...${name.substring(name.length - length)}`;
+}
+
+export { formatOrdersForCSVExport, shortenText };

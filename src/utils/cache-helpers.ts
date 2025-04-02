@@ -66,8 +66,14 @@ export function setCachedData(key: string, data: any, cacheTimeFrom?: Date, cach
 export function addCacheData(key: string, data: any) {
     const cachedData = getCachedData(key, true);
     if (cachedData) {
+        const dataKey = data.itemId || data.orderId;
+        cachedData.data[dataKey] = data;
+        const newCacheData = {
+            ...cachedData.data,
+        };
+
         const newCache = {
-            data: [...cachedData.data, data],
+            data: newCacheData,
             timestamp: cachedData.timestamp,
             cacheTimeFrom: cachedData.cacheTimeFrom,
             cacheTimeTo: cachedData.cacheTimeTo
@@ -76,5 +82,49 @@ export function addCacheData(key: string, data: any) {
         localStorage.setItem(key, JSON.stringify(newCache));
     } else {
         setCachedData(key, [data]);
+    }
+}
+
+
+export function updateCacheData(key: string, data: any) {
+    const cachedData = getCachedData(key, true);
+    if (cachedData) {
+        const dataKey = data.itemId || data.orderId;
+        // Update the existing dictionary with the new data, keyed by data.id
+        cachedData.data[dataKey] = data;
+        const updatedCacheData = {
+            ...cachedData.data,
+        };
+
+        const newCache = {
+            data: updatedCacheData,
+            timestamp: cachedData.timestamp,
+            cacheTimeFrom: cachedData.cacheTimeFrom,
+            cacheTimeTo: cachedData.cacheTimeTo,
+        };
+
+        localStorage.setItem(key, JSON.stringify(newCache));
+    } else {
+        // If there's no existing cache, create a new cache with this item.
+        setCachedData(key, { [data.id]: data });
+    }
+}
+
+
+export function removeCacheData(key: string, itemKey: string) {
+    const cachedData = getCachedData(key, true);
+    if (cachedData) {
+        // Create a new cache without the removed item
+        const updatedCacheData = { ...cachedData.data };
+        delete updatedCacheData[itemKey];
+
+        const newCache = {
+            data: updatedCacheData,
+            timestamp: cachedData.timestamp,
+            cacheTimeFrom: cachedData.cacheTimeFrom,
+            cacheTimeTo: cachedData.cacheTimeTo,
+        };
+
+        localStorage.setItem(key, JSON.stringify(newCache));
     }
 }

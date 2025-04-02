@@ -15,7 +15,7 @@ import { currencySymbols } from "@/config/currency-config";
 import ConnectAccountButton from "../../dom/ui/ConnectAccountButton";
 import CardPlatformDonutChart from "./PlatformDonutChart";
 import { retrieveUserOrders } from "@/services/firebase/retrieve";
-import formatOrdersForCSVExport from "@/utils/format";
+import { formatOrdersForCSVExport } from "@/utils/format";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 
 // External Imports
@@ -178,7 +178,7 @@ const FinancialHubContent = () => {
                 setEndOfDay(timeToDate);
                 break;
             default:
-                timeFromDate.setDate(today.getDate() - parseInt(days)); 
+                timeFromDate.setDate(today.getDate() - parseInt(days));
                 setStartOfDay(timeFromDate);
                 timeToDate = today;
                 setEndOfDay(timeToDate);

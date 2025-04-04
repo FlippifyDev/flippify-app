@@ -48,10 +48,9 @@ const FilterSelector: React.FC<FilterSelectorProps> = ({ value, onChange }) => {
                 className={`absolute z-10 w-32 bg-white rounded-md shadow-lg overflow-y-auto transition-all duration-300 origin-top ${isOpen ? "opacity-100 scale-y-100" : "opacity-0 scale-y-0 max-h-0"}`}
             >
                 <ul className="" role="listbox">
-                    {filters.map((type) => (
-                        <>
+                    {filters.map((type, index) => (
+                        <div key={index}>
                             <li
-                                key={type}
                                 role="option"
                                 aria-selected={type === value}
                                 className={`px-4 py-2 text-sm cursor-pointer flex items-center gap-2 hover:bg-gray-100 ${type === value ? "bg-gray-50" : ""
@@ -63,7 +62,7 @@ const FilterSelector: React.FC<FilterSelectorProps> = ({ value, onChange }) => {
                                 </span>
                             </li>
                             {["Last year", "Last 90 days", "Year to date"].includes(type) && <hr className="border-gray-200" />}
-                        </>
+                        </div>
                     ))}
                 </ul>
             </div>

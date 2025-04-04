@@ -59,7 +59,7 @@ const FinancialHubContent = () => {
             setLoading(false);
         }
 
-        if (timeFrom) {
+        if (session?.user.authentication.subscribed) {
             fetchOrders();
         }
     }, [session, timeFrom, timeTo]);

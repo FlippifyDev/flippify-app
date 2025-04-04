@@ -3,7 +3,6 @@ import { cacheExpirationTime } from "./constants";
 // Function to check if cached data is still valid
 export function getCachedData(key: string, returnCacheTimes?: boolean) {
     const cachedData = localStorage.getItem(key);
-    console.log("cachedData", cachedData);
     if (cachedData) {
         const parsedData = JSON.parse(cachedData);
         if (!parsedData) {

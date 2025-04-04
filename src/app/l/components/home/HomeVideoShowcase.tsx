@@ -13,16 +13,16 @@ export default function HomeVideoShowcase() {
 
     return (
         <div className="w-full max-w-7xl mx-auto">
-            <div className="overflow-hidden rounded-lg  aspect-video">
-                <video
-                    ref={videoRef}
-                    src="/LandingDashboardShowcase.mp4"
+            <div className="overflow-hidden rounded-lg aspect-video">
+                <iframe
+                    src="https://www.youtube.com/embed/bwlF5wHMFuE?autoplay=1&loop=1&playlist=bwlF5wHMFuE&mute=1"
+                    title="Landing Dashboard Showcase"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
                     className="w-full h-full object-cover"
-                    muted
-                    playsInline
-                    loop
-                    autoPlay
-                />
+                >
+                </iframe>
             </div>
         </div>
     );

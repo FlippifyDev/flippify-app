@@ -101,7 +101,7 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
             setLoading(false);
             return true;
         }
-        const manualOrders = session?.user.store?.ebay.numOrders.manual || 0;
+        const manualOrders = session?.user.store?.ebay.numOrders?.manual || 0;
 
         if (manualOrders >= subscriptionLimits[plan].manual) {
             setErrorMessage(`You have reached the maximum number of manual orders for your plan. Please upgrade your plan to add more or wait till next month.`);

@@ -103,10 +103,9 @@ export default function DateRangeSelector({ value, onChange }: DateRangeSelector
                 className={`absolute z-10 w-32 bg-white rounded-md shadow-lg overflow-y-auto transition-all duration-300 origin-top ${isOpen ? "opacity-100 scale-y-100" : "opacity-0 scale-y-0 max-h-0"}`}
             >
                 <ul className="" role="listbox">
-                    {timeRanges.map((range) => (
-                        <>
+                    {timeRanges.map((range, index) => (
+                        <div key={index}>
                             <li
-                                key={range.label}
                                 role="option"
                                 aria-selected={range.value === value}
                                 className={`px-4 py-2 text-sm cursor-pointer flex items-center gap-2 hover:bg-gray-100 ${range.value === value ? "bg-gray-50" : ""
@@ -118,7 +117,7 @@ export default function DateRangeSelector({ value, onChange }: DateRangeSelector
                                 </span>
                             </li>
                             {["Last year", "Last 90 days", "Year to date"].includes(range.label) && <hr className="border-gray-200" />}
-                        </>
+                        </div>
                     ))}
                 </ul>
             </div>

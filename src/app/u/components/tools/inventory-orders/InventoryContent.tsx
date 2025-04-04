@@ -63,7 +63,7 @@ const InventoryContent = () => {
             setLoading(false);
         };
 
-        if (session?.user) {
+        if (session?.user.authentication.subscribed) {
             fetchInventoryData();
         }
     }, [session?.user]);

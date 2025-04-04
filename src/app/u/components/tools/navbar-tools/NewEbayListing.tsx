@@ -68,7 +68,7 @@ const NewEbayListingForm: React.FC<NewEbayListingFormProps> = ({ setDisplayModal
             setLoading(false);
             return true;
         }
-        const manualListings = session?.user.store?.ebay.numListings.manual || 0;
+        const manualListings = session?.user.store?.ebay.numListings?.manual || 0;
 
         if (manualListings >= subscriptionLimits[plan].manual) {
             setErrorMessage(`You have reached the maximum number of manual listings for your plan. Please upgrade your plan to add more or wait till next month.`);

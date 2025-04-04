@@ -50,7 +50,7 @@ const DashboardPage: React.FC = () => {
             }
         };
 
-        if (session?.user) {
+        if (session?.user.authentication.subscribed) {
             fetchSalesData();
         }
     }, [session?.user]);

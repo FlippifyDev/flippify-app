@@ -32,15 +32,15 @@ interface INumOrders {
 }
 
 interface IStore {
-    numListings: INumListings;
-    numOrders: INumOrders;
+    numListings?: INumListings;
+    numOrders?: INumOrders;
     lastFetchedDate: ILastFetchedDate | null;
 }
 
 
 interface ILastFetchedDate {
-    inventory: string;
-    orders: string;
+    inventory?: string;
+    orders?: string;
 }
 
 interface IAuthentication {

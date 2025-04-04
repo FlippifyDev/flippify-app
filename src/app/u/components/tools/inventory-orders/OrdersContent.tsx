@@ -66,7 +66,7 @@ const OrdersContent: React.FC = () => {
             setLoading(false);
         };
 
-        if (session?.user) {
+        if (session?.user.authentication.subscribed) {
             fetchOrderData();
         }
     }, [session?.user]);

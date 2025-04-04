@@ -234,8 +234,8 @@ const OrderDetails = () => {
                 await Promise.all(updatePromises);
 
                 // Retrieve the current cache data
-                const currentCacheDict = getCachedData(cacheKey) as IEbayOrder[];
-                const currentCache = currentCacheDict.values();
+                const currentCacheDict = getCachedData(cacheKey) as Record<string, IEbayOrder>;
+                const currentCache = Object.values(currentCacheDict) || [];
 
                 // Merge updated orders with the current cache, preserving the existing ones
                 const mergedOrdersDict = {

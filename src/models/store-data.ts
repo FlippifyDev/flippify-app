@@ -1,5 +1,6 @@
 export type RecordType = "automatic" | "manual";
 export type OrderStatus = "Active" | "Completed" | "Cancelled" | "Inactive" | "Shipped" | "InProcess" | "Invalid";
+export type StorePlatform = "ebay" | "amazon" | "shopify";
 
 interface IEbayInventoryItem {
     initialQuantity: number;
@@ -21,10 +22,10 @@ interface IEbayInventoryItem {
 
 interface IShipping {
     fees: number;
-    paymentToShippied: number;
-    service: string;
-    timeDays: number;
-    trackingNumber: string;
+    paymentToShipped?: number;
+    service?: string;
+    timeDays?: number;
+    trackingNumber?: string;
 }
 
 interface IPurchase {
@@ -35,7 +36,7 @@ interface IPurchase {
 }
 
 interface ISale {
-    buyerUsername: string;
+    buyerUsername?: string;
     date: string;
     platform: string;
     price: number;
@@ -47,7 +48,7 @@ interface IEbayOrder {
     customTag: string | null;
     image: string[];
     itemName: string;
-    legacyItemId: string;
+    legacyItemId?: string;
     listingDate: string;
     orderId: string;
     purchase: IPurchase;

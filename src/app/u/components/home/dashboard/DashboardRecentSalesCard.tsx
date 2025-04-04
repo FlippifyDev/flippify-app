@@ -86,7 +86,7 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ sal
 									<td colSpan={1}>{currencySymbol}{order.salePrice.toFixed(2)}</td>
 									<td colSpan={1}>{currencySymbol}{order.estimatedProfit.toFixed(2)}</td>
                                     <td className="" colSpan={2}>{order.purchasePlatform}</td>
-                                    <td className={`${order.status === 'Completed' ? "text-green-500 font-[500]": ""}`} colSpan={1}>{order.status}</td>
+                                    <td className={`${order.status === 'Completed' ? "text-houseBlue font-[500]": ""}`} colSpan={1}>{order.status}</td>
 								</tr>
 							))
 						) : (

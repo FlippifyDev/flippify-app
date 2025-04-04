@@ -2,28 +2,21 @@
 
 // Local Imports
 import ImageModal from '@/app/components/ImageModal';
+import ImageUpload from '../../dom/ui/ImageUpload';
 import { updateUser } from '@/services/firebase/update';
-import { uploadImage } from '@/services/imgur/upload';
 import ProfileSupportButton from "./ProfileSupportButton";
 import ProfileBillingPortalButton from "./ProfileBillingPortalButton";
 
 // External Imports
-import { MdInsertPhoto } from "react-icons/md";
 import { useSession } from "next-auth/react";
 import { FaCamera } from "react-icons/fa";
 import { useState } from "react";
-import { IoClose } from "react-icons/io5";
-import { MAX } from 'uuid';
-import { MAX_INPUT_LENGTH } from '@/utils/constants';
-import { validateTextInput, validateUrlInput } from '@/utils/input-validation';
+
 
 const ProfileOverview = () => {
     const { data: session, update: setSession } = useSession();
-    const [fileName, setFileName] = useState("Upload File");
+    const [fileName, setFileName] = useState("Upload Image");
     const [url, setUrl] = useState("");
-    const [error, setError] = useState("");
-    const [validImage, setValidImage] = useState(false);
-    const [validUrl, setValidUrl] = useState(false);
 
     // Default avatar
     let avatar = "https://i.imgur.com/uOCy7MN.jpeg";
@@ -44,70 +37,36 @@ const ProfileOverview = () => {
 
     // Modal state to show/hide the modal for uploading the image
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
-    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files && event.target.files.length > 0) {
-            setFileName(event.target.files[0].name);
-            setSelectedImage(event.target.files[0]);
-            setValidImage(true);
-        }
-    };
 
     const handleCameraClick = () => {
         setIsModalOpen(true);
     };
 
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-        setSelectedImage(null);
-        setFileName("Upload File");
-        setUrl("");
-        setValidUrl(false);
-        setValidImage(false);
-    };
 
-    const handleUpload = async () => {
+    const handleUpload = async (imageUrl?: string | null) => {
         if (!session?.user?.id) {
-            setError("You must be logged in to update your profile picture.");
             return;
         }
+        // Use the imageUrl passed in, or fall back to the state value
+        const finalUrl = imageUrl || url;
 
-        let imageUrl = url as string | null;
-        if (selectedImage) {
-            try {
-                const imageBuffer = await selectedImage.arrayBuffer();
-                imageUrl = await uploadImage(Buffer.from(imageBuffer).toString("base64"));
-            } catch (error) {
-                console.error("Image upload failed:", error);
-                setError("Image failed to upload. Please try again.");
-                return;
-            }
-        }
-
-        if (imageUrl) {
-            await updateUser(session.user.id, { metaData: { image: imageUrl } });
-            setSession({ ...session, user: { ...session.user, metaData: { ...session.user.metaData, image: imageUrl } } });
+        if (finalUrl) {
+            await updateUser(session.user.id, { metaData: { image: finalUrl } });
+            setSession({
+                ...session,
+                user: {
+                    ...session.user,
+                    metaData: { ...session.user.metaData, image: finalUrl }
+                }
+            });
         }
 
         setIsModalOpen(false);
-        setSelectedImage(null);
-        setFileName("Upload File");
+        setFileName("Upload Image");
         setUrl("");
     };
 
-    // Return first 3 letters ... last 3 letters and the extension of the file
-    function shortenFileName(fileName: string) {
-        if (fileName.length <= 14) return fileName;
-        const firstThree = fileName.substring(0, 7);
-        const lastThree = fileName.substring(fileName.length - 7);
-        return `${firstThree}...${lastThree}`;
-    }
-
-
-    function handleInput(value: string) {
-        validateUrlInput(value, setUrl, setValidUrl);
-    }
 
     return (
         <div className="w-full bg-white rounded-xl p-4 md:p-6 justify-start items-start">
@@ -137,62 +96,15 @@ const ProfileOverview = () => {
 
             {/* Modal for uploading the image */}
             {isModalOpen && (
-                <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-40">
-                    <div className="relative bg-white p-6 rounded-lg shadow-lg w-80 sm:w-96">
-                        {/* Close Button (Cross Icon) */}
-                        <button
-                            className="absolute -top-5 -right-5 text-white rounded-full bg-[#3c424b] p-2 shadow-gray-700 shadow-[rgba(0,0,0,0.2)_-2px_2px_8px] z-50"
-                            onClick={handleCloseModal}
-                        >
-                            <IoClose size={24} />
-                        </button>
-
-
-                        <h3 className="text-xl font-semibold mb-4 text-center">Upload Profile Picture</h3>
-                        {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
-                        <div className='w-full flex items-center justify-center mb-3'>
-                            <label className="block w-1/2 bg-gray-800 p-2 rounded text-white text-center text-sm hover:cursor-pointer">
-                                {fileName === "Upload File" ? fileName : shortenFileName(fileName)}
-                                <input
-                                    type="file"
-                                    onChange={handleImageUpload}
-                                    accept="image/*"
-                                    className="hidden"
-                                    disabled={validUrl}
-                                />
-                            </label>
-                        </div>
-                        <div className='flex flex-col items-center justify-center gap-2'>
-                            <div className="flex justify-center">
-                                <button
-                                    onClick={handleUpload}
-                                    disabled={!validImage && !validUrl}
-                                    className='hover:text-gray-700 disabled:cursor-not-allowed transition duration-200 flex flex-row gap-2 items-center justify-center'
-                                >
-                                    <span><MdInsertPhoto /></span>
-                                    <span className='text-sm'>Upload Photo</span>
-                                </button>
-                            </div>
-
-                            <div className="flex items-center justify-center gap-2 w-1/2">
-                                <hr className="flex-grow border-gray-500" />
-                                <span className="text-gray-800 font-bold">or</span>
-                                <hr className="flex-grow border-gray-500" />
-                            </div>
-
-                            <div className='text-center'>
-                                <input
-                                    type="text"
-                                    onChange={(e) => handleInput(e.target.value)}
-                                    placeholder='Paste URL'
-                                    disabled={validImage}
-                                    className='text-sm font-bold border-0 ring-0 focus:ring-[1px] transition duration-200 hover:ring-[1px] bg-gray-800 text-white text-center placeholder-white focus:placeholder-opacity-0 rounded'
-                                />
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
+                <ImageUpload
+                    title="Upload Profile Picture"
+                    fileName={fileName}
+                    url={url}
+                    setIsModalOpen={setIsModalOpen}
+                    setFileName={setFileName}
+                    setUrl={setUrl}
+                    handleUpload={handleUpload}
+                />
             )}
         </div>
     );

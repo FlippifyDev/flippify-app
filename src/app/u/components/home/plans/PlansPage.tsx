@@ -79,7 +79,7 @@ const PlansPage = () => {
     }
     
     return (
-        <div className="w-full h-full flex flex-col items-center relative">
+        <div className="w-full h-full flex flex-col items-center relative p-2 sm:p-4">
             {displayCouponModal && (
                 <Modal setDisplayModal={setDisplayCouponModal}>
                     <div className="w-full flex flex-col items-center justify-center gap-4">
@@ -111,7 +111,7 @@ const PlansPage = () => {
             )}
 
             {displaySubscriptionChangeModal && (
-                <Modal setDisplayModal={setDisplaySubscriptionChangeModal}>
+                <Modal setDisplayModal={setDisplaySubscriptionChangeModal} className="">
                     <div className="w-full flex flex-col items-center justify-center gap-4">
                         <h3 className="text-xl font-semibold mb-4 text-center">Subscription Change</h3>
                         <p className="text-sm text-center mb-4">

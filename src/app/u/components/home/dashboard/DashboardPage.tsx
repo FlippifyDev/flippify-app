@@ -122,10 +122,10 @@ const DashboardPage: React.FC = () => {
                             {/* Dropdown for selecting tags */}
                             <div className="flex flex-row w-full gap-4">
                                 {/* Dropdown for selecting date range */}
-                                <ProfitsGraphDateFilter ref={rangeDropdownRef} rangeDropdownOpen={rangeDropdownOpen} selectedLabel={selectedLabel} selectedRange={selectedRange} setRangeDropdownOpen={setRangeDropdownOpen} handleRangeChange={handleRangeChange} />
+                                <ProfitsGraphDateFilter ref={rangeDropdownRef} selectedLabel={selectedLabel} selectedRange={selectedRange} handleRangeChange={handleRangeChange} />
 
                                 {/* Dropdown for selecting custom tag */}
-                                <ProfitsGraphTagFilter ref={tagDropdownRef} tagDropdownOpen={tagDropdownOpen} selectedTag={selectedTag} uniqueTags={uniqueTags} setTagDropdownOpen={setTagDropdownOpen} setSelectedTag={setSelectedTag} />
+                                <ProfitsGraphTagFilter ref={tagDropdownRef} selectedTag={selectedTag} uniqueTags={uniqueTags} setSelectedTag={setSelectedTag} />
                             </div>
                         </div>
                         <div className="w-full">

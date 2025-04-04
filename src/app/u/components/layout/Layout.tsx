@@ -5,6 +5,8 @@ import React, { Suspense, useState, useEffect } from "react";
 import LayoutSubscriptionWrapper from "./LayoutSubscriptionWrapper";
 import LayoutLoadingSkeleton from "./LayoutLoadingSkeleton";
 import LightHamburgerButton from "@/app/components/LightHamburgerButton";
+import NewEbayListingForm from "../tools/navbar-tools/NewEbayListing";
+import NewEbayOrderForm from "../tools/navbar-tools/NewEbayOrder";
 import LayoutNoAccess from "./LayoutNoAccess";
 import Sidebar from "../dom/sidebar/Sidebar";
 import Navbar from "../dom/navbar/Navbar";
@@ -20,11 +22,30 @@ interface LayoutProps {
 
 const LayoutContent = ({ removePadding, children }: { removePadding?: boolean, children: React.ReactNode }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modal, setModal] = useState<React.ReactNode>(null);
 
     useEffect(() => {
         document.body.classList.remove('overflow-hidden');
         document.body.classList.remove('overflow-auto');
     }, []);
+
+
+    function handleDisplayModal(display: boolean, type: string) {
+        setIsModalOpen(display);
+
+        switch (type) {
+            case "add-listing":
+                setModal(<NewEbayListingForm setDisplayModal={setIsModalOpen} />)
+                break;
+            case "add-order":
+                setModal(<NewEbayOrderForm setDisplayModal={setIsModalOpen} />)
+                break;
+            default:
+                setModal(null);
+                break;
+        }
+    }
 
     return (
         <main className="flex flex-row min-h-screen overflow-x-hidden bg-userBackground">
@@ -43,13 +64,15 @@ const LayoutContent = ({ removePadding, children }: { removePadding?: boolean, c
                     <div className={`sm:hidden transition-all duration-500 ml-1 flex items-center justicy-center ${isSidebarOpen ? 'hidden' : 'block px-1'}`}>
                         <LightHamburgerButton isActive={isSidebarOpen} onClick={() => setIsSidebarOpen(!isSidebarOpen)} />
                     </div>
-                    <Navbar />
+                    <Navbar handleDisplayModal={handleDisplayModal} />
                 </div>
 
                 {/* Scrollable main content */}
-                <div className={`flex-grow overflow-y-auto scrollbar-hide z-20 ${removePadding ? '' : 'p-2 sm:p-4'}`}>
+                <div className={`relative flex-grow overflow-y-auto scrollbar-hide z-20 ${removePadding ? '' : 'p-2 sm:p-4'}`}>
                     <Suspense fallback={<LayoutLoadingSkeleton />}>
                         {children}
+
+                        {isModalOpen && modal}
                     </Suspense>
                 </div>
             </section>

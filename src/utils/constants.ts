@@ -1,3 +1,11 @@
+import { StorePlatform } from "@/models/store-data";
+
+export const storePlatforms: Record<string, StorePlatform> = {
+    "ebay": "ebay",
+    "amazon": "amazon",
+    "shopify": "shopify",
+}
+
 export const cacheExpirationTime = 1000 * 60 * 30; // 30 min in milliseconds
 export const ebayInventoryCacheKey = "ebay-inventory"
 export const ebayOrderCacheKey = "ebay-orders"
@@ -14,6 +22,24 @@ export const STANDARD_MAX_MANUAL_LISTINGS = 100;
 export const PREMIUM_MAX_AUTOMATIC_LISTINGS = 500;
 export const PREMIUM_MAX_MANUAL_LISTINGS = 500;
 
+export const subscriptionLimits = {
+    "free": {
+        "automatic": FREE_MAX_AUTOMATIC_LISTINGS,
+        "manual": FREE_MAX_MANUAL_LISTINGS,
+    },
+    "standard": {
+        "automatic": STANDARD_MAX_AUTOMATIC_LISTINGS,
+        "manual": STANDARD_MAX_MANUAL_LISTINGS,
+    },
+    "pro": {
+        "automatic": PREMIUM_MAX_AUTOMATIC_LISTINGS,
+        "manual": PREMIUM_MAX_MANUAL_LISTINGS,
+    },
+    "enterprise": {
+        "automatic": 1000,
+        "manual": 1000,
+    },
+}
 
 export const MAX_INPUT_LENGTH = 40;
 

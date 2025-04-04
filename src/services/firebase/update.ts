@@ -30,8 +30,6 @@ async function updateUser(uid: string, data: any): Promise<boolean> {
             return false;
         }
 
-        console.log("Updating user document with:", data);
-
         await setDoc(userRef, data, { merge: true });
 
         console.log("User document updated successfully.");

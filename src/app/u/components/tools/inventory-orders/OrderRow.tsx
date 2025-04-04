@@ -1,12 +1,12 @@
 "use client"
 
+import { shortenText } from "@/utils/format";
 import Image from "next/image";
 
 import { useRouter } from "next/navigation";
 
 
 interface OrderRowProps {
-	itemId: string;
 	itemName: string;
 	quantitySold: number;
 	totalSalePrice: number;
@@ -18,7 +18,6 @@ interface OrderRowProps {
 }
 
 const OrderRow: React.FC<OrderRowProps> = ({
-	itemId,
 	itemName,
 	quantitySold,
 	totalSalePrice,
@@ -35,15 +34,15 @@ const OrderRow: React.FC<OrderRowProps> = ({
 
 	// Handle row click
 	const handleRowClick = () => {
-		router.push(`/u/${username}/tools/inventory-orders/${itemId}`);
+        router.push(`/u/${username}/tools/inventory-orders/order-info?itemName=${itemName}`);
 	};
 
 	return (
 		<tr onClick={handleRowClick} className="cursor-pointer hover:bg-gray-100">
-			<td>
+            <td className="min-w-20">
 				<Image src={image} width={100} height={100} alt={"image"} className="rounded-full w-12 h-12" loading="lazy" style={{ objectFit: 'cover' }} />
 			</td>
-			<td>{itemName}</td>
+			<td>{shortenText(itemName)}</td>
 			<td>{quantitySold}</td>
             <td>{totalPurchasePrice?.toFixed(2) || 'N/A'}</td>
 			<td>{totalSalePrice.toFixed(2)}</td>

@@ -1,6 +1,9 @@
+import { cacheExpirationTime } from "./constants";
+
 // Function to check if cached data is still valid
-export function getCachedData(key: string, expirationTime: number, returnCacheTimes?: boolean) {
+export function getCachedData(key: string, returnCacheTimes?: boolean) {
     const cachedData = localStorage.getItem(key);
+    console.log("cachedData", cachedData);
     if (cachedData) {
         const parsedData = JSON.parse(cachedData);
         if (!parsedData) {
@@ -8,7 +11,7 @@ export function getCachedData(key: string, expirationTime: number, returnCacheTi
         }
 
         // Check if the cached data is still valid based on expiration time
-        if (Date.now() - parsedData.timestamp >= expirationTime) {
+        if (Date.now() - parsedData.timestamp >= cacheExpirationTime) {
             return null
         }
 
@@ -59,3 +62,70 @@ export function setCachedData(key: string, data: any, cacheTimeFrom?: Date, cach
     setCachedTimes(key, timeFrom, timeTo);
     localStorage.setItem(key, JSON.stringify(newCache));
 };
+
+
+export function addCacheData(key: string, data: any) {
+    const cachedData = getCachedData(key, true);
+    if (cachedData) {
+        const dataKey = data.itemId || data.orderId;
+        cachedData.data[dataKey] = data;
+        const newCacheData = {
+            ...cachedData.data,
+        };
+
+        const newCache = {
+            data: newCacheData,
+            timestamp: cachedData.timestamp,
+            cacheTimeFrom: cachedData.cacheTimeFrom,
+            cacheTimeTo: cachedData.cacheTimeTo
+        };
+        setCachedTimes(key, cachedData.cacheTimeFrom, cachedData.cacheTimeTo);
+        localStorage.setItem(key, JSON.stringify(newCache));
+    } else {
+        setCachedData(key, [data]);
+    }
+}
+
+
+export function updateCacheData(key: string, data: any) {
+    const cachedData = getCachedData(key, true);
+    if (cachedData) {
+        const dataKey = data.itemId || data.orderId;
+        // Update the existing dictionary with the new data, keyed by data.id
+        const updatedCacheData = {
+            [dataKey]: data,
+            ...cachedData.data,
+        };
+
+        const newCache = {
+            data: updatedCacheData,
+            timestamp: cachedData.timestamp,
+            cacheTimeFrom: cachedData.cacheTimeFrom,
+            cacheTimeTo: cachedData.cacheTimeTo,
+        };
+
+        localStorage.setItem(key, JSON.stringify(newCache));
+    } else {
+        // If there's no existing cache, create a new cache with this item.
+        setCachedData(key, { [data.id]: data });
+    }
+}
+
+
+export function removeCacheData(key: string, itemKey: string) {
+    const cachedData = getCachedData(key, true);
+    if (cachedData) {
+        // Create a new cache without the removed item
+        const updatedCacheData = { ...cachedData.data };
+        delete updatedCacheData[itemKey];
+
+        const newCache = {
+            data: updatedCacheData,
+            timestamp: cachedData.timestamp,
+            cacheTimeFrom: cachedData.cacheTimeFrom,
+            cacheTimeTo: cachedData.cacheTimeTo,
+        };
+
+        localStorage.setItem(key, JSON.stringify(newCache));
+    }
+}

@@ -30,7 +30,8 @@ const ProfileReferralData: React.FC = () => {
     const availableRewards = referralCount - totalRewardsClaimed > 0 ? referralCount : 0;
 
     const userSubscriptions = session?.user?.subscriptions || [];
-    const isMember = userSubscriptions.some((sub: ISubscription) => sub.name.includes('member'));
+    // Disabled while in development
+    const isMember = false;//userSubscriptions.some((sub: ISubscription) => sub.name.includes('member'));
 
     useEffect(() => {
         const checkDiscounts = async () => {
@@ -89,7 +90,7 @@ const ProfileReferralData: React.FC = () => {
             {!isMember && (
                 <div className="absolute inset-0 bg-gray-100 bg-opacity-90 z-10 flex items-center justify-center rounded-xl">
                     <div className="bg-white font-semibold text-black py-2 px-4 rounded-lg shadow-xl">
-                        Membership Required
+                        In Development{/*Membership Required*/}
                     </div>
                 </div>
             )}

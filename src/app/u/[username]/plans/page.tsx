@@ -11,7 +11,7 @@ export default function Plans() {
 	return (
 		<>
 			<ThemeSetter theme="light" />
-			<Layout requiredSubscriptions={['accessGranted']}>
+            <Layout requiredSubscriptions={['accessGranted']} removePadding={true}>
                 <PlansPage />
 			</Layout>
 		</>

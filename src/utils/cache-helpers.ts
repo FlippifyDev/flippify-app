@@ -3,6 +3,7 @@ import { cacheExpirationTime } from "./constants";
 // Function to check if cached data is still valid
 export function getCachedData(key: string, returnCacheTimes?: boolean) {
     const cachedData = localStorage.getItem(key);
+    console.log("cachedData", cachedData);
     if (cachedData) {
         const parsedData = JSON.parse(cachedData);
         if (!parsedData) {
@@ -91,8 +92,8 @@ export function updateCacheData(key: string, data: any) {
     if (cachedData) {
         const dataKey = data.itemId || data.orderId;
         // Update the existing dictionary with the new data, keyed by data.id
-        cachedData.data[dataKey] = data;
         const updatedCacheData = {
+            [dataKey]: data,
             ...cachedData.data,
         };
 

@@ -5,11 +5,11 @@
 import Modal from "../../dom/ui/Modal"
 import Input from "../../dom/ui/Input"
 import ImageUpload from "../../dom/ui/ImageUpload"
-import { addCacheData, removeCacheData } from "@/utils/cache-helpers"
+import { addCacheData } from "@/utils/cache-helpers"
 import { formatDateToISO } from "@/utils/format-dates"
 import { IEbayInventoryItem } from "@/models/store-data"
 import { createNewInventoryItemAdmin } from "@/services/firebase/create-admin"
-import { ebayInventoryCacheKey, ebayOrderCacheKey, storePlatforms, subscriptionLimits } from "@/utils/constants"
+import { ebayInventoryCacheKey, storePlatforms, subscriptionLimits } from "@/utils/constants"
 import { validateNumberInput, validatePriceInput, validateTextInput } from "@/utils/input-validation"
 
 // External Imports
@@ -55,13 +55,10 @@ const NewEbayListingForm: React.FC<NewEbayListingFormProps> = ({ setDisplayModal
 
 
     function handleCacheUpdate(inventoryItem: IEbayInventoryItem) {
-        const orderCacheKey = `${ebayOrderCacheKey}-${session?.user.id}`;
         const inventoryCacheKey = `${ebayInventoryCacheKey}-${session?.user.id}`;
         
         // Update the cache with the new item
         addCacheData(inventoryCacheKey, inventoryItem);
-
-        //removeCacheData(orderCacheKey, itemId);
     }
 
     function isAboveLimit() {
@@ -163,7 +160,7 @@ const NewEbayListingForm: React.FC<NewEbayListingFormProps> = ({ setDisplayModal
         <Modal title="Add a new eBay listing" className="max-w-[21rem] sm:max-w-xl flex-grow" setDisplayModal={setDisplayModal}>
             {aboveLimit && (
                 <div className="text-center">
-                    <span>Sorry you've reach your max manual listings for this month</span>
+                    <span>Sorry you&aposve reach your max manual listings for this month</span>
                 </div>
             )}
             

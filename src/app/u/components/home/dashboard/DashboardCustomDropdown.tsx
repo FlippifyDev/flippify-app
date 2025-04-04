@@ -29,7 +29,7 @@ export default function CustomDropdown({ value, onChange, options }: CustomDropd
     }, []);
 
     // Find the label of the currently selected option
-    const selectedLabel = options.find((opt) => opt.value === value)?.label || "";
+    const selectedLabel = options.find((opt) => opt.value === value)?.label || "Unknown";
 
     return (
         <div
@@ -57,7 +57,7 @@ export default function CustomDropdown({ value, onChange, options }: CustomDropd
                 </svg>
             </button>
             <div
-                className={`absolute z-20 w-full bg-white rounded-md shadow-lg overflow-y-auto transition-all duration-300 origin-top ${isOpen ? "opacity-100 scale-y-100" : "opacity-0 scale-y-0 max-h-0"
+                className={`absolute z-20 w-full bg-white max-h-[400px] rounded-md shadow-lg overflow-y-auto transition-all duration-300 origin-top ${isOpen ? "opacity-100 scale-y-100" : "opacity-0 scale-y-0 max-h-0"
                     }`}
             >
                 <ul className="py-1" role="listbox">

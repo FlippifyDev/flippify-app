@@ -83,7 +83,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     };
 
     return (
-        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-40">
+        <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 z-40">
             <div className="relative bg-white p-6 rounded-lg shadow-lg w-80 sm:w-96">
                 {/* Close Button (Cross Icon) */}
                 <button

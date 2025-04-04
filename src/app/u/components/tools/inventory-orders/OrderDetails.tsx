@@ -62,7 +62,6 @@ const OrderDetails = () => {
     }, [selectedOrders.length]);
 
     useEffect(() => {
-        console.log(itemName)
         const fetchOrderData = async () => {
             const orders = await retrieveUserOrders(session?.user.id as string, "2023-01-01T00:00:00Z", session?.user.connectedAccounts.ebay?.ebayAccessToken as string);
             if (orders) {
@@ -435,7 +434,7 @@ const OrderDetails = () => {
                                 
                                 const purchasePrice = purchase.price !== null ? purchase.price.toFixed(2) : "0";
                                 return (
-                                    <tr key={index}>
+                                    <tr key={index} className="hover:bg-gray-100">
                                         <td>
                                             <label className="flex items-center cursor-pointer relative">
                                                 <input
@@ -464,7 +463,7 @@ const OrderDetails = () => {
                                                 onChange={(e) => handleInput(e.target.value, "purchasePrice")}
                                                 onBlur={() => saveChange(index, "purchasePrice")}
                                                 onKeyDown={(e) => handleKeyPress(e, index, "purchasePrice")}
-                                                className="min-w-24 focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
+                                                className="min-w-24 focus:border text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
                                             />
                                         </td>
                                         <td>{(sale.price + shipping.fees).toFixed(2)}</td>
@@ -481,7 +480,7 @@ const OrderDetails = () => {
                                                 onChange={(e) => handleInput(e.target.value, "platform")}
                                                 onBlur={() => saveChange(index, "platform")}
                                                 onKeyDown={(e) => handleKeyPress(e, index, "platform")}
-                                                className="min-w-24 focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
+                                                className="min-w-32 focus:border text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
                                             />
                                         </td>
                                         <td>{order.sale.buyerUsername}</td>
@@ -496,7 +495,7 @@ const OrderDetails = () => {
                                                 onChange={(e) => handleInput(e.target.value, "customTag")}
                                                 onBlur={() => saveChange(index, "customTag")}
                                                 onKeyDown={(e) => handleKeyPress(e, index, "customTag")}
-                                                className="min-w-32 focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
+                                                className="min-w-32 focus:border text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
                                             />
                                         </td>
                                     </tr>

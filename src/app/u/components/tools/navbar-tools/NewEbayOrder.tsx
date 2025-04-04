@@ -9,24 +9,25 @@ import { formatDateToISO } from '@/utils/format-dates';
 import { currencySymbols } from '@/config/currency-config';
 import { generateRandomChars } from '@/utils/generate-random';
 import { createNewOrderItemAdmin } from '@/services/firebase/create-admin';
-import { addCacheData, getCachedData, removeCacheData, updateCacheData } from '@/utils/cache-helpers';
 import { validateNumberInput, validateTextInput } from '@/utils/input-validation';
 import { IEbayInventoryItem, IEbayOrder, OrderStatus } from '@/models/store-data';
+import { addCacheData, getCachedData, removeCacheData, updateCacheData } from '@/utils/cache-helpers';
 import { ebayInventoryCacheKey, ebayOrderCacheKey, storePlatforms, subscriptionLimits } from '@/utils/constants';
 
 // External Imports
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 
 
 interface NewEbayOrderFormProps {
+    fillItem?: IEbayInventoryItem,
     setDisplayModal: (value: boolean) => void
 }
 
 
-const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ setDisplayModal }) => {
+const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDisplayModal }) => {
     const { data: session } = useSession();
     const currencySymbol = currencySymbols[session?.user.preferences.currency ?? ""]
 
@@ -40,7 +41,6 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ setDisplayModal }) 
     const [imageUrl, setImageUrl] = useState<string>("");
 
     // Listing Info
-    const [listingPrice, setListingPrice] = useState<string>("")
     const [dateListed, setDateListed] = useState<string>(new Date().toISOString().split('T')[0])
     const [quantity, setQuantity] = useState<string>("1")
 
@@ -71,6 +71,12 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ setDisplayModal }) 
     const [successMessage, setSuccessMessage] = useState<string>("")
 
     const aboveLimit = isAboveLimit();
+
+    useEffect(() => {
+        if (!fillItem) return;
+
+        handleListingClick(fillItem);
+    }, [fillItem])
 
     function handleCacheUpdate(orderItem: IEbayOrder) {
         const orderCacheKey = `${ebayOrderCacheKey}-${session?.user.id}`;
@@ -178,7 +184,6 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ setDisplayModal }) 
 
         // Set Listing Info
         setListing(item.itemName);
-        setListingPrice(item.price.toString());
         setDateListed(new Date(item.dateListed).toISOString().split('T')[0]);
 
         // Set Purchase Info
@@ -232,10 +237,10 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ setDisplayModal }) 
     }
 
     return (
-        <Modal title="Add a new eBay order" className="max-w-[21rem] sm:max-w-xl flex-grow" setDisplayModal={setDisplayModal}>
+        <Modal title="Add a new eBay order" className="relative max-w-[21rem] sm:max-w-xl flex-grow" setDisplayModal={setDisplayModal}>
             {aboveLimit && (
-                <div className = "text-center">
-                    <span>Sorry you've reach your max manual orders for this month</span>
+                <div className="text-center">
+                    <span>Sorry you&apos;ve reach your max manual orders for this month</span>
                 </div>
             )}
 
@@ -250,7 +255,7 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ setDisplayModal }) 
                         <Input type="text" placeholder="Enter quantity" title="Quantity" value={quantity} onChange={(e) => handleChange(e.target.value, "quantity")} />
                     </div>
                     <div className="flex flex-col sm:flex-row items-center w-full gap-4">
-                        <Input type="text" placeholder="Enter sale price" title="Sale Price" value={salePrice} onChange={(e) => handleChange(e.target.value, "salePrice")} />
+                        <Input type="text" placeholder="Enter sale price" title={`Sale Price (${currencySymbol})`} value={salePrice} onChange={(e) => handleChange(e.target.value, "salePrice")} />
                         <Input type="date" placeholder="Enter sale date" title="Sale Date" className="w-full" value={saleDate} onChange={(e) => handleChange(e.target.value, "saleDate")} />
                     </div>
                     {/* Radio Buttons which select shipping status */}

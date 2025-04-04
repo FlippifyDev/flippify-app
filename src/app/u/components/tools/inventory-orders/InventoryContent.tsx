@@ -17,12 +17,17 @@ import { useEffect, useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import NewEbayOrderForm from "../navbar-tools/NewEbayOrder";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 
 const InventoryContent = () => {
     const { data: session } = useSession();
     const defaultTimeFrom = "2023-01-01T00:00:00Z";
     const currency = session?.user.preferences.currency || "GBP";
+    const [addNewOrderModalOpen, setAddNewOrderModalOpen] = useState(false);
+
+    const [fillItem, setFillItem] = useState<IEbayInventoryItem>();
 
     const [listedData, setListedData] = useState<IEbayInventoryItem[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -42,8 +47,11 @@ const InventoryContent = () => {
     // Total number of pages
     const totalPages = Math.ceil(listedData.length / itemsPerPage);
 
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         const fetchInventoryData = async () => {
+            setLoading(true);
             const inventory = await retrieveUserInventory(
                 session?.user.id as string,
                 defaultTimeFrom,
@@ -52,6 +60,7 @@ const InventoryContent = () => {
             if (inventory) {
                 setListedData(inventory);
             }
+            setLoading(false);
         };
 
         if (session?.user) {
@@ -111,7 +120,7 @@ const InventoryContent = () => {
                 return;
             } else if (!isNaN(parseFloat(editedPurchasePrice)) && isFinite(Number(editedPurchasePrice))) {
                 updatedListings[index].purchase.price = Number(editedPurchasePrice);
-            } 
+            }
         }
 
         try {
@@ -138,7 +147,7 @@ const InventoryContent = () => {
             await updateDoc(orderDocRef, updateFields);
 
             updateCacheData(cacheKey, updatedListings[index]);
-            
+
             setEditingType(null);
             setEditingIndex(null);
             setEditedPlatform(null);
@@ -195,6 +204,12 @@ const InventoryContent = () => {
         }
     }
 
+
+    function handleDisplayModal(item: IEbayInventoryItem) {
+        setFillItem(item);
+        setAddNewOrderModalOpen(true);
+    }
+
     return (
         <div className="w-full h-full overflow-x-auto">
             <Alert
@@ -225,9 +240,11 @@ const InventoryContent = () => {
                             return (
                                 <tr
                                     key={index}
-                                    className=""
+                                    className="cursor-pointer hover:bg-gray-100 transition duration-100"
                                 >
-                                    <td className="min-w-20">
+                                    <td
+                                        onClick={() => handleDisplayModal(item)}
+                                        className="min-w-20">
                                         <Image
                                             src={item.image[0]}
                                             width={100}
@@ -238,8 +255,8 @@ const InventoryContent = () => {
                                             style={{ objectFit: "cover" }}
                                         />
                                     </td>
-                                    <td>{shortenText(item.itemName)}</td>
-                                    <td>{item.quantity}</td>
+                                    <td onClick={() => handleDisplayModal(item)}>{shortenText(item.itemName)}</td>
+                                    <td onClick={() => handleDisplayModal(item)}>{item.quantity}</td>
                                     <td
                                         className="cursor-pointer transition duration-200"
                                     >
@@ -251,7 +268,7 @@ const InventoryContent = () => {
                                             onChange={(e) => handleChange(e.target.value, "platform")}
                                             onBlur={() => saveChange(index, "platform")}
                                             onKeyDown={(e) => handleKeyPress(e, index, "platform")}
-                                            className="min-w-24 focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
+                                            className="min-w-24 focus:border text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
                                         />
                                     </td>
                                     <td
@@ -265,13 +282,13 @@ const InventoryContent = () => {
                                             onChange={(e) => handleChange(e.target.value, "purchasePrice")}
                                             onBlur={() => saveChange(index, "purchasePrice")}
                                             onKeyDown={(e) => handleKeyPress(e, index, "purchasePrice")}
-                                            className="min-w-24 focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
+                                            className="min-w-24 focus:border text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
                                         />
                                     </td>
-                                    <td>
+                                    <td onClick={() => handleDisplayModal(item)}>
                                         {item.price.toFixed(2)}
                                     </td>
-                                    <td className="min-w-32">{formatTableDate(item.dateListed)}</td>
+                                    <td className="min-w-32" onClick={() => handleDisplayModal(item)}>{formatTableDate(item.dateListed)}</td>
                                     <td
                                         className="cursor-pointer transition duration-200"
                                     >
@@ -283,7 +300,7 @@ const InventoryContent = () => {
                                             onChange={(e) => handleChange(e.target.value, "customTag")}
                                             onBlur={() => saveChange(index, "customTag")}
                                             onKeyDown={(e) => handleKeyPress(e, index, "customTag")}
-                                            className="min-w-32 focus:border hover:bg-gray-100 text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
+                                            className="min-w-32 focus:border text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
                                         />
                                     </td>
                                 </tr>
@@ -291,8 +308,10 @@ const InventoryContent = () => {
                         })
                     ) : (
                         <tr>
-                            <td colSpan={12} className="text-center border">
-                                No inventory available.
+                            <td colSpan={12}>
+                                <div className="w-full flex justify-center items-center">
+                                    {loading ? <LoadingSpinner /> : "No inventory available."}
+                                </div>
                             </td>
                         </tr>
                     )}
@@ -336,6 +355,10 @@ const InventoryContent = () => {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {addNewOrderModalOpen && (
+                <NewEbayOrderForm fillItem={fillItem} setDisplayModal={setAddNewOrderModalOpen} />
             )}
         </div>
     );

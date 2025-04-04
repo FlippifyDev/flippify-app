@@ -9,9 +9,7 @@ import {
 	endOfMonth,
 	format,
 	subDays,
-	isWithinInterval,
-	addDays,
-	addMonths
+	isWithinInterval
 } from "date-fns";
 import { enGB } from 'date-fns/locale';
 import React, { useEffect, useState } from "react";

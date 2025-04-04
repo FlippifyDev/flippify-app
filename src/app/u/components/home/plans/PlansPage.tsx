@@ -111,7 +111,7 @@ const PlansPage = () => {
             )}
 
             {displaySubscriptionChangeModal && (
-                <Modal setDisplayModal={setDisplaySubscriptionChangeModal}>
+                <Modal setDisplayModal={setDisplaySubscriptionChangeModal} className="">
                     <div className="w-full flex flex-col items-center justify-center gap-4">
                         <h3 className="text-xl font-semibold mb-4 text-center">Subscription Change</h3>
                         <p className="text-sm text-center mb-4">

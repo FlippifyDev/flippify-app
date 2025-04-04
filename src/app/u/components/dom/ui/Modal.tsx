@@ -10,8 +10,11 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ title, className, children, setDisplayModal }) => {
+    /**
+     * Do not change this component to `absolute` position, as it will break the layout of the page.
+     */
     return (
-        <div className="fixed sm:absolute inset-0 flex justify-center items-start pt-24 pb-8 sm:pt-0 sm:items-center bg-black bg-opacity-50 z-40 overflow-y-auto">
+        <div className="fixed mt-12 inset-0 flex justify-center items-start pt-16 pb-8 sm:pt-12 bg-black bg-opacity-50 z-40 overflow-y-auto">
             <div className={`relative bg-white rounded-lg shadow-lg w-80 sm:w-96 ${className}`}>
                 {/* Close Button (Cross Icon) */}
                 <button

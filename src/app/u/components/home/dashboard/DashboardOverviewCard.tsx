@@ -1,13 +1,9 @@
-import "@/styles/overview-cards.css"
 import { IEbayOrder } from '@/models/store-data';
+import { currencySymbols } from '@/config/currency-config';
 
 import React, { useEffect, useState } from 'react';
 
-const currencySymbols: Record<string, string> = {
-	GBP: '£',
-	USD: '$',
-	EUR: '€',
-};
+import "@/styles/overview-cards.css"
 
 interface DashboardOverviewCardProps {
     salesData: IEbayOrder[];
@@ -21,7 +17,6 @@ const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ salesData
 		totalCosts: 0,
 		totalSales: 0,
 	});
-	const [missingCosts, setMissingCosts] = useState(false);
 
 	useEffect(() => {
 		if (!salesData || salesData.length === 0) return;
@@ -52,7 +47,6 @@ const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ salesData
 		let totalRevenue = 0;
 		let totalCosts = 0;
 		let totalSales = 0;
-		let costsMissing = false;
 
         salesData.forEach((order: IEbayOrder) => {
             if (order.status !== 'Completed') return;
@@ -69,8 +63,6 @@ const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ salesData
                     const totalPurchaseCost = purchasePrice;
                     totalRevenue += salePrice;
 					totalCosts += totalPurchaseCost + shippingFees + additionalFees;
-				} else {
-					costsMissing = true;
 				}
 
                 totalSales += order.sale.quantity;
@@ -82,7 +74,6 @@ const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ salesData
 			totalCosts,
 			totalSales,
 		});
-		setMissingCosts(costsMissing);
 
 	}, [salesData, selectedRange]); // Re-run when salesData or selectedRange changes
 
@@ -91,7 +82,7 @@ const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ salesData
 		? ((overviewData.totalRevenue - overviewData.totalCosts) / overviewData.totalCosts * 100).toFixed(2)
 		: 'N/A';
 
-	const currencySymbol = currencySymbols[currency] || '£';
+	const currencySymbol = currencySymbols[currency] || '$';
 
 	return (
 		<div className="w-full flex flex-col items-center">

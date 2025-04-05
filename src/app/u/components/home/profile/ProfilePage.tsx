@@ -18,9 +18,6 @@ const ProfileContent = () => {
                     <ProfileReferralData />
                 </div>
             </div>
-            <div className='w-full'>
-                <UpdateAccountDetails />
-            </div>
         </div>
     );
 };

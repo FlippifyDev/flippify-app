@@ -48,11 +48,10 @@ async function updateUser(uid: string, data: any): Promise<boolean> {
  * their preferences are updated with the provided values.
  *
  * @param {string} customerId - The Stripe customer ID of the user to update.
- * @param {string} email - The email to set as the user's preferred email.
  * @param {string} currency - The currency to set for the user.
  * @returns {Promise<void>} A promise that resolves when the document update is complete.
  */
-async function updateUserPreferences(uid: string, preferredEmail: string, currency: string) {
+async function updateUserPreferences(uid: string, currency: string) {
     try {
         const userRef = await retrieveUserRefById(uid);
         if (userRef) {
@@ -60,7 +59,6 @@ async function updateUserPreferences(uid: string, preferredEmail: string, curren
                 userRef,
                 {
                     preferences: {
-                        preferredEmail,
                         currency
                     }
                 },

@@ -15,10 +15,11 @@ import { updateStripeCustomerEmail } from "@/services/stripe/update";
 import { updateUserPreferences } from "@/services/firebase/update";
 import { validateEmailInput } from "@/utils/input-validation";
 import CurrencySelector from "./ProfileCurrencySelector";
+import Modal from "../../../dom/ui/Modal";
 
 type Currency = "GBP" | "USD" | "EUR" | "AUD" | "CAD" | "JPY" | "NZD";
 
-// Helper Functions
+// Helper Functions (unchanged)
 async function updateUserEmail(
     newEmail: string,
     currentPassword: string,
@@ -87,40 +88,7 @@ async function updateUserPassword(
     return { success, error };
 }
 
-// Modal Component
-const Modal = ({
-    isOpen,
-    onClose,
-    title,
-    children,
-}: {
-    isOpen: boolean;
-    onClose: () => void;
-    title: string;
-    children: React.ReactNode;
-}) => {
-    if (!isOpen) return null;
-
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-                <h2 className="text-2xl font-semibold mb-4">{title}</h2>
-                {children}
-                <div className="flex justify-end gap-4 mt-6">
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400 transition"
-                    >
-                        Cancel
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-// UpdateEmail Component
+// UpdateEmail Component (unchanged)
 const UpdateEmail = ({ onClose }: { onClose: () => void }) => {
     const [newEmail, setNewEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -194,7 +162,7 @@ const UpdateEmail = ({ onClose }: { onClose: () => void }) => {
     );
 };
 
-// UpdatePassword Component
+// UpdatePassword Component (unchanged)
 const UpdatePassword = ({ onClose }: { onClose: () => void }) => {
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -383,13 +351,17 @@ const ProfileSettings = () => {
                 Save Changes
             </button>
 
-            {/* Modals */}
-            <Modal isOpen={modalType === "email"} onClose={closeModal} title="Update Email">
-                <UpdateEmail onClose={closeModal} />
-            </Modal>
-            <Modal isOpen={modalType === "password"} onClose={closeModal} title="Update Password">
-                <UpdatePassword onClose={closeModal} />
-            </Modal>
+            {/* Updated Modals */}
+            {modalType === "email" && (
+                <Modal title="Update Email" setDisplayModal={() => setModalType(null)}>
+                    <UpdateEmail onClose={() => setModalType(null)} />
+                </Modal>
+            )}
+            {modalType === "password" && (
+                <Modal title="Update Password" setDisplayModal={() => setModalType(null)}>
+                    <UpdatePassword onClose={() => setModalType(null)} />
+                </Modal>
+            )}
         </div>
     );
 };

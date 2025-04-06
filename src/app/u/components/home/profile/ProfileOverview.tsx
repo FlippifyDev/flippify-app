@@ -31,7 +31,7 @@ const ProfileOverview = () => {
             username = session.user.username;
         }
         if (session.user?.email) {
-            email = session.user.preferences.preferredEmail;
+            email = session.user.email;
         }
     }
 

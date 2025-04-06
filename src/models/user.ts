@@ -86,7 +86,6 @@ interface IReferral {
 }
 
 interface IPreferences {
-    preferredEmail: string;
     locale: string;
     currency: CurrencyType;
 }

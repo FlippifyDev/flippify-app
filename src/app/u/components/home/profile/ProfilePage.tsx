@@ -2,7 +2,6 @@
 import ProfileOverview from './ProfileOverview';
 import ProfileSettings from './ProfileSettings/ProfileSettings';
 import ProfileReferralData from './ReferralProgram/ProfileReferralData';
-import UpdateAccountDetails from './UpdateAccountDetails';
 import ProfileMarketplaceConnect from './ConnectAccounts/ProfileMarketplaceConnect';
 
 const ProfileContent = () => {
@@ -17,9 +16,6 @@ const ProfileContent = () => {
                     <ProfileSettings />
                     <ProfileReferralData />
                 </div>
-            </div>
-            <div className='w-full'>
-                <UpdateAccountDetails />
             </div>
         </div>
     );

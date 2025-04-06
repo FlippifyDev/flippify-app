@@ -59,7 +59,7 @@ const OnboardingFlow: React.FC = () => {
 
     const [step, setStep] = useState(1);
     const [referralCode, setReferralCode] = useState<string | null>("");
-    const [email, setEmail] = useState<string>(session?.user.preferences?.preferredEmail ?? "");
+    const [email, setEmail] = useState<string>(session?.user.email ?? "");
     const [currency, setCurrency] = useState<CurrencyType>("USD");
     const [showReferralMessage, setShowReferralMessage] = useState<boolean>(false);
     const [referralError, setReferralError] = useState<string | null>(null);
@@ -99,7 +99,7 @@ const OnboardingFlow: React.FC = () => {
 
     const handleStep2Next = async () => {
         if (session?.user) {
-            await updateUserPreferences(session.user.id, email, currency);
+            await updateUserPreferences(session.user.id, currency);
             setStep(3);
             const userRef = await retrieveUserRefById(session?.user.id ?? "");
             if (!userRef) return;

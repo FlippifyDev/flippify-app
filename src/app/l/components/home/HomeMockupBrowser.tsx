@@ -10,7 +10,7 @@ const HomeMockupBrowser = () => {
 	const root = process.env.ROOT as string;
 
 	return (
-        <div className="flex flex-col md:flex-row justify-between gap-6 items-center max-w-5.5xl mx-auto">
+        <div className="flex flex-col md:flex-row justify-between gap-6 items-center max-w-6.5xl mx-auto">
 			<div className="order-2 md:order-1 px-2 pt-6 md:pt-0 flex flex-col justify-start items-start">
 				<p className={`${lato.className} text-4xl from-houseBlue to-houseHoverBlue to-60% bg-gradient-to-tr bg-clip-text text-transparent py-1 text-start`}>
 					Automate

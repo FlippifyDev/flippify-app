@@ -103,7 +103,7 @@ const Navbar = () => {
 
 
     return (
-        <nav className={`max-w-5.5xl mx-auto flex flex-row justify-between gap-6 items-center py-3 text-white transition duration-300`}>
+        <nav className={`max-w-6.5xl mx-auto flex flex-row justify-between gap-6 items-center py-3 text-white transition duration-300`}>
             <div className="drawer drawer-end relative md:hidden flex flex-col items-end">
                 <input id="my-drawer" type="checkbox" className="drawer-toggle" />
                 <div className='flex flex-row w-full items-center justify-between px-2'>

@@ -25,11 +25,11 @@ const Page = ({ className = "" }) => {
                 />
 
                 <div className="pt-[90px] lg:pt-[150px]" />
-                <div className="max-w-5.5xl relative w-full mb-4 py-8 px-2 sm:py-2 md:my-11 md:mx-6 md:py-0 md:pl-4 animate-fadeInPrimary">
+                <div className="max-w-6.5xl relative w-full mb-4 py-8 px-2 sm:py-2 md:my-11 md:mx-6 md:py-0 md:pl-4 animate-fadeInPrimary">
                     <HomeVideoShowcase />
                 </div>
 
-                <div className="max-w-5.5xl pb-20 pt-10">
+                <div className="max-w-6.5xl pb-20 pt-10">
                     <p className={`${lato.className} text-5xl from-houseBlue to-houseHoverBlue to-60% bg-gradient-to-tr bg-clip-text text-transparent py-1 text-center`}>
                         <span className={`${inter.className} mb-8 text-lightModeText text-5xl font-bold`}>
                             Automating your store with

@@ -23,7 +23,7 @@
 
 .line2 {
   bottom: 5px;
-  left: 5px;
+  left: 4px;
   transform: rotate(-45deg);
   animation: flipLine2 0.5s infinite linear;
 }

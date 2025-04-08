@@ -1,8 +1,8 @@
 // Local Imports
 import NavbarItem from './NavbarItem';
-import AnimationArrow from '@/app/components/AnimationArrow';
+import SidebarSubItem from './SidebarSubItem';
 import NavbarDropdown from './NavbarDropdown';
-import { discordLink } from '@/utils/constants';
+import AnimationArrow from '@/app/components/AnimationArrow';
 
 
 // External Imports
@@ -15,9 +15,10 @@ import Link from 'next/link';
 import { IoMenu } from 'react-icons/io5';
 import { RxCross2 } from "react-icons/rx";
 import { ImBubble } from "react-icons/im";
+import { IoMdPricetags } from "react-icons/io";
 import { MdAccountBalance } from "react-icons/md";
-import { FaHouse, FaBoxOpen, FaParachuteBox } from 'react-icons/fa6';
-import { FaSearch, FaBook, FaDiscord, FaSignInAlt, FaStore } from "react-icons/fa";
+import { FaBook, FaStore, FaBoxes } from "react-icons/fa";
+import { FaBoxOpen, FaParachuteBox, FaHandshakeSimple } from 'react-icons/fa6';
 import { FaShieldAlt, FaFileContract, FaQuestionCircle, FaBalanceScale, FaSitemap } from 'react-icons/fa';
 
 
@@ -37,6 +38,7 @@ const Navbar = () => {
     const [links, setLinks] = useState<ILinks[]>();
     const router = useRouter();
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [sidebarSubMenu, setSidebarSubMenu] = useState(-1);
 
     const productLinks = [
         { label: "Accounting Software", description: "Streamline finances and track transactions", href: "/accounting-software", icon: <MdAccountBalance className="text-lg" /> },
@@ -99,43 +101,87 @@ const Navbar = () => {
         }
     }
 
+
     return (
-        <nav className={`max-w-5.5xl mx-auto flex flex-row justify-between gap-6 items-center px-4 py-3 text-white transition duration-300`}>
-            <div className="drawer md:hidden flex justify-end">
+        <nav className={`max-w-5.5xl mx-auto flex flex-row justify-between gap-6 items-center py-3 text-white transition duration-300`}>
+            <div className="drawer drawer-end relative md:hidden flex flex-col items-end">
                 <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-                <div className="drawer-content flex flex-col lg:ml-64 right-0">
-                    <label
-                        htmlFor="my-drawer"
-                        onClick={() => setSidebarOpen(!sidebarOpen)}
-                        className={`btn btn-primary ${sidebarOpen ? "text-gray-800": "text-white"} text-2xl bg-transparent border-transparent shadow-none drawer-button xl:hidden hover:bg-transparent hover:border-transparent hover:scale-125 z-50`}>
-                        {sidebarOpen ? <RxCross2 className='text-base'/> : <IoMenu />}
-                    </label>
+                <div className='flex flex-row w-full items-center justify-between px-2'>
+                    <div className="md:hidden z-50 px-4">
+                        <a href="/l/home" className={`${lato.className} ${sidebarOpen ? "text-gray-800" : "text-white"} text-2xl hover:text-gray-300 transition-colors duration-400`}>flippify</a>
+                    </div>
+                    <div className="drawer-content flex flex-col lg:ml-64 right-0">
+                        <label
+                            htmlFor="my-drawer"
+                            onClick={() => setSidebarOpen(!sidebarOpen)}
+                            className={`btn btn-primary ${sidebarOpen ? "text-gray-800" : "text-white"} text-2xl bg-transparent border-transparent shadow-none drawer-button xl:hidden hover:bg-transparent hover:border-transparent hover:scale-125 z-50`}>
+                            {sidebarOpen ? <RxCross2 className='text-[20px]' /> : <IoMenu />}
+                        </label>
+                    </div>
                 </div>
+
                 {/* Side bar which appears on small screens */}
                 <div className="drawer-side z-40">
                     <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-                    <ul className="menu bg-white min-h-full w-full pt-16 gap-2 text-md text-gray-800 font-medium">
-                        <li className="transition duration-100 active:bg-gray-100 rounded-btn grid grid-cols-12 gap-8 items-center mx-2">
-                            <span className='col-span-1 rounded-none'><FaHouse className="pb-[2px]" /></span>
-                            <span className='col-span-11 rounded-none'><Link href="/l/home" className="text-left">Home</Link></span>
+                    <ul className="relative flex flex-col bg-white min-h-full px-4 w-full pt-[72px] gap-2 text-md text-gray-800 font-medium">
+                        <div className={`absolute right-0 left-0 ${sidebarOpen ? "block" : "hidden"} border-b border-dashed border-gray-300 w-screen z-50`}></div>
+                        <li
+                            onClick={() => setSidebarSubMenu(sidebarSubMenu === 0 ? -1 : 0)}
+                            className="flex flex-col w-full transition duration-100 mt-6"
+                        >
+                            <div className='w-full grid grid-cols-12 gap-8 items-center active:bg-gray-100 p-2 rounded-md'>
+                                <span className='col-span-1 rounded-none'><FaBoxes className="pb-[2px]" /></span>
+                                <span className='col-span-9 rounded-none'>Products</span>
+                                <span className='col-span-2'><AnimationArrow className={`transition-all duration-200 ${sidebarSubMenu === 0 ? 'rotate-90' : 'rotate-0'}`} /></span>
+                            </div>
+                            {sidebarSubMenu === 0 && (
+                                <ul className='px-2 transition-all duration-200'>
+                                    <SidebarSubItem text="Accounting Software" href="/l/accounting-software" icon={<MdAccountBalance />} />
+                                    <SidebarSubItem text="Inventory Management" href="/l/inventory-management" icon={<FaBoxOpen />} />
+                                    <SidebarSubItem text="Order Management" href="/l/order-management" icon={<FaParachuteBox />} />
+                                    <SidebarSubItem text="Store Management" href="/l/store-management" icon={<FaStore />} />
+                                </ul>
+                            )}
                         </li>
-                        <li className="transition duration-100 active:bg-gray-100 rounded-btn grid grid-cols-12 gap-8 items-center mx-2">
-                            <span className='col-span-1 rounded-none'><FaBook className="pb-[2px]" /></span>
-                            <span className='col-span-11 rounded-none'><Link href="/l/products" className="col-span-10 text-left">Products</Link></span>
+                        <li
+                            onClick={() => setSidebarSubMenu(sidebarSubMenu === 1 ? -1 : 1)}
+                            className="flex flex-col w-full transition duration-100 "
+                        >
+                            <div className='w-full grid grid-cols-12 gap-8 items-center active:bg-gray-100 p-2 rounded-md'>
+                                <span className='col-span-1 rounded-none'><FaBook className="pb-[2px]" /></span>
+                                <span className='col-span-9 rounded-none'>Resources</span>
+                                <span className='col-span-2'><AnimationArrow className={`transition-all duration-200 ${sidebarSubMenu === 1 ? 'rotate-90' : 'rotate-0'}`} /></span>
+                            </div>
+                            {sidebarSubMenu === 1 && (
+                                <ul className='px-2 transition-all duration-200'>
+                                    <SidebarSubItem text="About Us" href="/l/about" icon={<ImBubble />} />
+                                    <SidebarSubItem text="Privacy Policy" href="/l/privacy-policy" icon={<FaShieldAlt />} />
+                                    <SidebarSubItem text="Terms & Conditions" href="/l/terms-and-conditions" icon={<FaFileContract />} />
+                                    <SidebarSubItem text="FAQs" href="/l/faq" icon={<FaQuestionCircle />} />
+                                    <SidebarSubItem text="Attributions" href="/l/attributions" icon={<FaBalanceScale />} />
+                                    <SidebarSubItem text="Sitemap" href="/l/sitemap" icon={<FaSitemap />} />
+                                </ul>
+                            )}
                         </li>
-                        <li className="transition duration-100 active:bg-gray-100 rounded-btn grid grid-cols-12 gap-8 items-center mx-2">
-                            <span className='col-span-1 rounded-none'><FaSearch className="" /></span>
-                            <span className='col-span-11 rounded-none'><Link href="/l/pricing" className="col-span-10 text-left">Pricing</Link></span>
+                        <li className="flex flex-col w-full transition duration-100">
+                            <div className='grid grid-cols-12 gap-8 items-center active:bg-gray-100 p-2 rounded-md'>
+                                <span className='col-span-1 rounded-none'><IoMdPricetags className="" /></span>
+                                <span className='col-span-11 rounded-none'><Link href="/l/pricing" className="col-span-10 text-left">Pricing</Link></span>
+                            </div>
                         </li>
-                        <li className="transition duration-100 active:bg-gray-100 rounded-btn grid grid-cols-12 gap-8 items-center mx-2">
-                            <span className='col-span-1 rounded-none'><FaDiscord className="" /></span>
-                            <span className='col-span-11 rounded-none'><Link href={discordLink} target="_blank" className="col-span-10 text-left">Discord</Link></span>
+                        <li className="flex flex-col w-full transition duration-100">
+                            <div className='grid grid-cols-12 gap-8 items-center active:bg-gray-100 p-2 rounded-md'>
+                                <span className='col-span-1 rounded-none'><FaHandshakeSimple className="" /></span>
+                                <span className='col-span-11 rounded-none'><Link href="/l/partnerships" className="col-span-10 text-left">Partnerships</Link></span>
+                            </div>
                         </li>
-                        <li className="transition duration-100 active:bg-gray-100 rounded-btn grid grid-cols-12 gap-8 items-center mx-2">
-                            <span><FaSignInAlt className="col-span-1" /></span>
-                            <span className="col-span-11 text-left">
-                                <Link href="/l/login">Login</Link>
-                            </span>
+                        <li className="absolute right-0 left-0 w-full bottom-5">
+                            <div className='w-full h-full flex justify-center items-center'>
+                                <span className="flex flex-row justify-center items-center w-24 h-8 text-white transition duration-100 bg-houseBlue active:bg-houseHoverBlue rounded-full">
+                                    <Link href="/l/login" className='text-sm mx-2'>Login</Link>
+                                    <AnimationArrow />
+                                </span>
+                            </div>
                         </li>
                     </ul>
                 </div>

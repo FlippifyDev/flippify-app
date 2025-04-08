@@ -47,7 +47,7 @@ const PartnershipsBusinessCard: React.FC<ServicesToolsCardProps> = ({
                 <h2 className={`${inter.className} mt-4 text-2xl text-left text-lightModeText font-bold`}>
                     {title}
                 </h2>
-                <p className="text-left text-lightModeText mt-2">{subtitle}</p>
+                <p className="text-left text-lightModeText w-5/6 text-lg mt-2">{subtitle}</p>
                 <ul className="mt-4 space-y-2">
                     {bulletPoints.map((point, index) => (
                         <li key={index} className="flex items-start">

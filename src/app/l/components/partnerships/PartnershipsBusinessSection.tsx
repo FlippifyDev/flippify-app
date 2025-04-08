@@ -46,7 +46,7 @@ const PartnershipsBusinessDetails = () => {
                         "Insights to optimize your promotions"
                     ]}
                     disclaimer="Dashboard coming soon after beta."
-                    image="/ListingAutomationToolBanner.png"
+                    image="/PartnershipsTrackSuccess.jpg"
                 />
                 <PartnershipsBusinessCard
                     title="Gain Early Recognition"
@@ -57,7 +57,7 @@ const PartnershipsBusinessDetails = () => {
                         "Showcase your success to our community"
                     ]}
                     disclaimer={null}
-                    image="/ListingAutomationToolBanner.png"
+                    image="/PartnershipsEarlyRecognition.jpg"
                 />
             </div>
         </div>

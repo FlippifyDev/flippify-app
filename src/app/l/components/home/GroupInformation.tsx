@@ -12,7 +12,7 @@ const GroupInformation = () => {
     return (
         <div className="flex flex-col md:flex-row justify-between gap-6 max-w-5.5xl mx-auto">
             <div className="order-1 md:order-2 px-2 pt-6 pb-6 md:pt-0 md:pb-0 flex flex-col justify-center items-start">
-                <p className={`${lato.className} text-4xl from-houseBlue to-houseHoverBlue to-60% bg-gradient-to-tr bg-clip-text text-transparent py-1 text-center`}>
+                <p className={`${lato.className} text-4xl from-houseBlue to-houseHoverBlue to-60% bg-gradient-to-tr bg-clip-text text-transparent py-1 text-start`}>
                     <a href="#" className={`${inter.className} mb-8 text-lightModeText text-4xl font-bold`}>Give your reselling group{" "}</a>
                     cheaper rates
                 </p>

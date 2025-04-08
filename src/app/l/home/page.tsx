@@ -1,6 +1,6 @@
 import React from 'react';
 import Layout from '../components/layout/Layout';
-import HomeContentWrapperPage from '../components/home/HomeContentWrapperPage';
+import Page from '../components/home/Page';
 import Loading from '@/app/components/Loading';
 import { Suspense } from 'react';
 import MetadataHead from '../../components/MetadataHead';
@@ -47,7 +47,7 @@ export default function HomePage() {
 			<ThemeSetter theme="dark" />
 			<Suspense fallback={<Loading />}>
 				<Layout className='mb-0'>
-					<HomeContentWrapperPage />
+                    <Page />
 				</Layout>
 			</Suspense>
 		</>

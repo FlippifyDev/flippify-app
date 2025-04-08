@@ -11,7 +11,7 @@ import Hero from "../dom/Hero";
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
 
-const HomeContent = ({ className = "" }) => {
+const Page = ({ className = "" }) => {
     return (
         <div className={`home-details-container ${className} w-full`}>
             <div className="flex flex-col items-center w-full">
@@ -21,6 +21,7 @@ const HomeContent = ({ className = "" }) => {
                     button={<HomeGetAccess />}
                     image="/hero/home.png"
                     imageAlt="Flippify Home"
+                    imageContainerClassName="scale-150"
                 />
 
                 <div className="pt-[90px] lg:pt-[150px]" />
@@ -60,4 +61,4 @@ const HomeContent = ({ className = "" }) => {
     );
 };
 
-export default HomeContent;
+export default Page;

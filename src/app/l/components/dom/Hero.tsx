@@ -11,9 +11,11 @@ interface HeroProps {
     imageAlt: string;
     button?: React.ReactNode;
     titleClassName?: string;
+    imageClassName?: string;
+    imageContainerClassName?: string;
 }
 
-const Hero: React.FC<HeroProps> = ({ text, description, image, imageAlt, button, titleClassName }) => {
+const Hero: React.FC<HeroProps> = ({ text, description, image, imageAlt, button, titleClassName, imageContainerClassName, imageClassName }) => {
     const renderTitle = () => {
         if (!text || text.length === 0) return null;
 
@@ -55,11 +57,11 @@ const Hero: React.FC<HeroProps> = ({ text, description, image, imageAlt, button,
                 {button ? button : null}
             </div>
             {/* Right Side: Image */}
-            <div className="w-full lg:w-1/3 hidden lg:block">
+            <div className={`w-full lg:w-1/3 hidden lg:block pb-10 ${imageContainerClassName}`}>
                 <Image
                     src={image}
                     alt={imageAlt}
-                    className="w-full h-auto mt-8 sm:mt-10 md:mt-12 lg:mt-[120px] xl:mt-[140px] animate-fadeInSecondary"
+                    className={`w-full h-auto mt-8 sm:mt-10 md:mt-12 lg:mt-[120px] xl:mt-[140px] animate-fadeInSecondary ${imageClassName}`}
                     width={500}
                     height={500}
                 />

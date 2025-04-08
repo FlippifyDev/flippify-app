@@ -37,7 +37,6 @@ const PartnershipsBusinessCard: React.FC<ServicesToolsCardProps> = ({
                 <Image
                     src={image}
                     alt={title}
-                    layout="responsive"
                     width={600}  
                     height={400} 
                     objectFit="cover"

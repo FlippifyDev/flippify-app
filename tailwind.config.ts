@@ -40,7 +40,7 @@ const config: Config = {
 				'95': '23.75rem',
 			},
             maxWidth: {
-                '5.5xl': '68rem',
+                '6.5xl': '74rem',
             },
 			opacity: {
 				'96': '0.96',

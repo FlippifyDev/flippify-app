@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 const HomeMockupPhone = () => {
 	return (
-        <div className="flex flex-col md:flex-row justify-between gap-6 max-w-5.5xl mx-auto">
+        <div className="flex flex-col md:flex-row justify-between gap-6 max-w-6.5xl mx-auto">
 			<div className="mockup-phone w-80 mockup-shadow scale-[.8] 2xl:scale-100 mr-8">
 				<div className="">
 					<figure>

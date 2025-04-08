@@ -19,7 +19,7 @@ const Page = ({ className = "" }) => {
                     text={[{ text: "Inventory & Order" }, { "text": "Mangement Software", isGradient: true}]}
                     description="Streamline your warehouse management system, control stock, and optimize listings with automated tools. Whether you&apos;re running an eBay store, using an eBay business account, or exploring websites like eBay — we help you sell smarter and scale faster."
                     button={<HomeGetAccess />}
-                    image="/hero/home.png"
+                    image="/hero/home.svg"
                     imageAlt="Flippify Home"
                     imageContainerClassName="scale-150"
                 />

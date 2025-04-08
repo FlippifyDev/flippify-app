@@ -98,7 +98,6 @@ const SignUpContent = () => {
     };
 
 
-
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (username && email && password) {
@@ -107,7 +106,7 @@ const SignUpContent = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center mt-[-64px] p-4">
+        <div className="min-h-screen w-full flex flex-col md:flex-row items-center justify-center mt-[-64px] p-4 gap-16">
             {!emailVerifying ? (
                 <SignUpForm
                     username={username}
@@ -127,6 +126,15 @@ const SignUpContent = () => {
             ) : (
                 <EmailVerifying />
             )}
+            <div>
+                <Image
+                    src="/auth/sign-up.svg"
+                    alt="Sign Up Image"
+                    className="object-cover"
+                    width={700}
+                    height={700}
+                />
+            </div>
         </div>
     )
 }

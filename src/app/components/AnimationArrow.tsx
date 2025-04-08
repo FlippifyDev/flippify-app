@@ -1,6 +1,10 @@
 import React from 'react'
 
-const AnimationArrow = () => {
+interface AnimationArrowProps {
+    className?: string
+}
+
+const AnimationArrow:React.FC<AnimationArrowProps> = ({ className }) => {
 	return (
 		<svg
 			width="20"
@@ -8,7 +12,7 @@ const AnimationArrow = () => {
 			aria-hidden="true"
 			xmlns="http://www.w3.org/2000/svg"
 			viewBox="0 0 20 20"
-			className=""
+            className={`${className}`}
 		>
 			<path
 				d="M7 6l4 4-4 4"

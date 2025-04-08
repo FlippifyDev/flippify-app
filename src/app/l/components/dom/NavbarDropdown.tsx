@@ -1,3 +1,4 @@
+import AnimationArrow from '@/app/components/AnimationArrow';
 import Link from 'next/link'
 import React, { useEffect, useRef, useState } from 'react'
 
@@ -43,9 +44,9 @@ const NavbarDropdown: React.FC<NavbarDropdownProps> = ({ links, isHovered, hover
                 opacity: isHovered ? 1 : 0,
                 transform: isHovered ? 'translateY(0)' : 'translateY(10px)',
                 maxHeight: isHovered ? `${height}px` : '0px',
-                overflow: 'hidden', 
-                transitionProperty: 'max-height, opacity, transform, left', 
-                left: getDropdownPosition(hoverIndex), 
+                overflow: 'hidden',
+                transitionProperty: 'max-height, opacity, transform, left',
+                left: getDropdownPosition(hoverIndex),
             }}
         >
             <ul className="space-y-2">
@@ -54,13 +55,16 @@ const NavbarDropdown: React.FC<NavbarDropdownProps> = ({ links, isHovered, hover
                         key={index}
                         className="text-sm p-6 w-96 bg-white rounded-md transform transition duration-200"
                     >
-                        <Link href={link.href} className="group/link flex flex-row items-start text-gray-700 hover:text-gray-900">
+                        <Link href={link.href} className="group flex flex-row items-start text-gray-700 hover:text-gray-900">
                             <div className="mr-3">
                                 {link.icon && <span className="mr-2">{link.icon}</span>}
                             </div>
                             <div className="flex flex-col">
-                                <span className="flex flex-row items-center">{link.label}</span>
-                                <span className="text-sm font-medium text-gray-500 group-hover/link:text-gray-800 transition duration-200">
+                                <div className='flex flex-row'>
+                                    <span className="flex flex-row items-center">{link.label}</span>
+                                    <span><AnimationArrow className='scale-75' /></span>
+                                </div>
+                                <span className="text-sm font-medium text-gray-500 group-hover:text-gray-800 transition duration-200">
                                     {link.description}
                                 </span>
                             </div>

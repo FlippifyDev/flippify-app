@@ -32,19 +32,19 @@ const PartnershipsBusinessCard: React.FC<ServicesToolsCardProps> = ({
     };
 
     return (
-        <div className="m-2 bg-white w-full shadow-lg h-full mt-6 rounded-2xl animate-fadeInBounce">
-            <figure className="h-48 sm:h-62">
-                <div className="relative w-full h-full rounded-t-2xl overflow-hidden">
-                    <Image
-                        src={image}
-                        alt={title}
-                        layout="fill"
-                        objectFit="contain"
-                    />
-                </div>
+        <div className="bg-white w-full shadow-lg h-full mt-4 sm:mt-6 rounded-2xl animate-fadeInBounce">
+            <figure className="rounded-t-2xl overflow-hidden">
+                <Image
+                    src={image}
+                    alt={title}
+                    layout="responsive"
+                    width={600}  // Replace with your image's actual width
+                    height={400} // Replace with your image's actual height
+                    objectFit="cover"
+                />
             </figure>
             <div className="card-body p-4 sm:p-3">
-                <h2 className={`${inter.className} mt-4 text-2xl text-left text-lightModeText font-bold`}>
+                <h2 className={`${inter.className} text-2xl text-left text-lightModeText font-bold`}>
                     {title}
                 </h2>
                 <p className="text-left text-lightModeText w-5/6 text-lg mt-2">{subtitle}</p>

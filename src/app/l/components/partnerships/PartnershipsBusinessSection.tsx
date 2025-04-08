@@ -14,42 +14,50 @@ const PartnershipsBusinessDetails = () => {
             <p className="w-3/5 text-left text-lg text-lightModeText font-semibold mb-8 sm:mb-10 md:mb-12">
                 Partnering with Flippify unlocks a 40% revenue share, growth through promotions, and a real-time dashboard to track your success—all tailored to elevate your business.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 md:gap-10">
                 <PartnershipsBusinessCard
                     title="Earn Extra Income"
-                    description="Unlock a new revenue stream with Flippify’s generous commission structure:  
-                    - Earn 40% on every sale via your coupon codes.  
-                    - Steady income as your audience grows.  
-                    - No cap on your earning potential."
+                    subtitle="Unlock a new revenue stream with Flippify&apos;s generous commission structure"
+                    bulletPoints={[
+                        "Earn 40% on every sale via your coupon codes",
+                        "Steady income as your audience grows",
+                        "No cap on your earning potential"
+                    ]}
                     disclaimer={null}
-                    image="/RevenueStreamBanner.png"
+                    image="/PartnershipsExtraIncome.jpg"
                 />
                 <PartnershipsBusinessCard
                     title="Grow Your Audience"
-                    description="Expand your reach with Flippify’s promotional support:  
-                    - Official partner label for credibility.  
-                    - Co-branded social media challenges to attract members.  
-                    - We promote your business to our audience."
+                    subtitle="Expand your reach with Flippify&apos;s promotional support"
+                    bulletPoints={[
+                        "Official partner label for credibility",
+                        "Co-branded social media challenges to attract members",
+                        "We promote your business to our audience"
+                    ]}
                     disclaimer={null}
-                    image="/AudienceGrowthBanner.png"
+                    image="/PartnershipsAudienceGrowth.jpg"
                 />
                 <PartnershipsBusinessCard
                     title="Track Your Success"
-                    description="Stay in control with a dedicated partner dashboard:  
-                    - Real-time tracking of commissions.  
-                    - Monitor coupon code usage.  
-                    - Insights to optimize your promotions."
+                    subtitle="Stay in control with a dedicated partner dashboard"
+                    bulletPoints={[
+                        "Real-time tracking of commissions",
+                        "Monitor coupon code usage",
+                        "Insights to optimize your promotions"
+                    ]}
                     disclaimer="Dashboard coming soon after beta."
-                    image="/EarningsDashboardBanner.png"
+                    image="/ListingAutomationToolBanner.png"
                 />
                 <PartnershipsBusinessCard
                     title="Gain Early Recognition"
-                    description="Be a trailblazer with Flippify’s early partner perks:  
-                    - Featured in future case studies.  
-                    - Boost your brand’s visibility.  
-                    - Showcase your success to our community."
+                    subtitle="Be a trailblazer with Flippify&apos;s early partner perks"
+                    bulletPoints={[
+                        "Featured in future case studies",
+                        "Boost your brand&apos;s visibility",
+                        "Showcase your success to our community"
+                    ]}
                     disclaimer={null}
-                    image="/EarlyPartnerBanner.png"
+                    image="/ListingAutomationToolBanner.png"
                 />
             </div>
         </div>

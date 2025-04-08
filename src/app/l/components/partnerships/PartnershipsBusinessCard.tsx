@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import PartnershipsApplyButton from "./PartnershipsApplyButton";
 import Image from "next/image";
-import { Lato } from "next/font/google";
+import { Inter, Lato } from "next/font/google";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"] });
 
 interface ServicesToolsCardProps {
     title: string;
-    description: string;
+    subtitle: string;
+    bulletPoints: string[];
     disclaimer: string | null;
     image: string;
     comingSoon?: boolean;
@@ -16,7 +18,8 @@ interface ServicesToolsCardProps {
 
 const PartnershipsBusinessCard: React.FC<ServicesToolsCardProps> = ({
     title,
-    description,
+    subtitle,
+    bulletPoints,
     disclaimer,
     image,
     comingSoon = false,
@@ -29,55 +32,52 @@ const PartnershipsBusinessCard: React.FC<ServicesToolsCardProps> = ({
     };
 
     return (
-        <div className="card card-compact m-2 p-2 bg-white w-80 shadow-lg h-[500px] mt-6 relative rounded-2xl overflow-hidden animate-fadeInBounce">
-            <figure className="h-62">
-                <div className="relative w-full h-full">
+        <div className="m-2 bg-white w-full shadow-lg h-full mt-6 rounded-2xl animate-fadeInBounce">
+            <figure className="h-48 sm:h-62">
+                <div className="relative w-full h-full rounded-t-2xl overflow-hidden">
                     <Image
                         src={image}
                         alt={title}
-                        width={800}
-                        height={900}
-                        className="object-cover h-full w-full"
-                        style={{ objectFit: "cover" }}
+                        layout="fill"
+                        objectFit="contain"
                     />
                 </div>
             </figure>
-            <div className="card-body p-3">
-                <h2
-                    className={`${lato.className} text-2xl flex justify-center text-center text-houseBlue`}
-                >
+            <div className="card-body p-4 sm:p-3">
+                <h2 className={`${inter.className} mt-4 text-2xl text-left text-lightModeText font-bold`}>
                     {title}
                 </h2>
+                <p className="text-left text-lightModeText mt-2">{subtitle}</p>
+                <ul className="mt-4 space-y-2">
+                    {bulletPoints.map((point, index) => (
+                        <li key={index} className="flex items-start">
+                            <span className="text-houseBlue mr-2">✓</span>
+                            <span className="text-lightModeText">{point}</span>
+                        </li>
+                    ))}
+                </ul>
                 {releasingSoon && (
-                    <div className="flex justify-center text-houseHoverBlue font-medium text-sm">
+                    <div className="flex justify-center text-houseHoverBlue font-medium text-sm mt-2">
                         Releasing Soon
                     </div>
                 )}
-                <hr className="w-full" />
-                <p className="flex items-center font-medium text-center pt-2 text-lightModeText">
-                    {description}
-                </p>
                 {disclaimer && (
-                    <div>
+                    <div className="mt-4">
                         <a
                             href="#"
                             onClick={(e) => {
                                 e.preventDefault();
                                 handleToggleDisclaimer();
                             }}
-                            className="hover:underline text-gray-400"
+                            className="hover:underline text-gray-400 text-sm"
                         >
                             {showDisclaimer ? "Hide disclaimer" : "Show disclaimer"}
                         </a>
                         {showDisclaimer && (
-                            <p className="mt-2 text-gray-400">Disclaimer: {disclaimer}</p>
+                            <p className="mt-2 text-gray-400 text-sm">Disclaimer: {disclaimer}</p>
                         )}
                     </div>
                 )}
-                <hr className="w-full mb-1" />
-                <div className="card-actions justify-center w-full">
-                    <PartnershipsApplyButton />
-                </div>
             </div>
             {comingSoon && (
                 <div className="absolute inset-0 flex items-center justify-center z-50 pointer-events-none backdrop-blur-sm">

@@ -6,6 +6,7 @@ import HomeMockupPhone from "./HomeMockupPhone";
 import HomeMockupBrowser from "./HomeMockupBrowser";
 import HomeVideoShowcase from "./HomeVideoShowcase";
 import GroupInformation from "./GroupInformation";
+import Hero from "./Hero";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
@@ -14,22 +15,7 @@ const HomeContent = ({ className = "" }) => {
     return (
         <div className={`home-details-container ${className} w-full`}>
             <div className="flex flex-col items-center w-full">
-                <div className="w-full mt-3 lg:mt-10 animate-fadeInPrimary max-w-5.5xl">
-                    <p className={`${lato.className} text-6xl text-white text-center`}>
-                        <span className="bg-gradient-to-tr pb-1 pl-1 from-textGradStart to-textGradEnd bg-clip-text text-transparent">
-                            Inventory{" "}
-                        </span>
-                        & Warehouse
-                    </p>
-                    <p className={`${lato.className} text-6xl text-white text-center`}>
-                        Mangement System
-                    </p>
-                </div>
-                <p className="w-11/12 sm:max-w-5.5xl mt-3 mb-8 pb-1 pt-2 text-gray-300 text-lg text-center animate-fadeInSecondary">
-                    Powerful inventory management software designed for eBay sellers. Streamline your warehouse management system, control stock, and optimize listings with automated tools. Whether you&apos;re running an eBay store, using an eBay business account, or exploring websites like eBay — we help you sell smarter and scale faster.
-                </p>
-
-                <HomeGetAccess />
+                <Hero />
 
                 <div className="pt-[90px] lg:pt-[150px]" />
                 <div className="max-w-5.5xl relative w-full mb-4 py-8 px-2 sm:py-2 md:my-11 md:mx-6 md:py-0 md:pl-4 animate-fadeInPrimary">

@@ -59,11 +59,11 @@ const Footer = () => {
             <FooterColumn>
                 <FooterTitle text="Products & pricing" />
                 <FooterLink text="Pricing" href="/l/pricing" />
-                <FooterLink text="Accounting Software" href="/accounting-software" />
-                <FooterLink text="Inventory Management" href="/inventory-management" />
-                <FooterLink text="Order Management" href="/order-management" />
-                <FooterLink text="Store Management" href="/store-management" />
-                <FooterLink text="Partnerships" href="/partnerships" />
+                <FooterLink text="Accounting Software" href="/l/accounting-software" />
+                <FooterLink text="Inventory Management" href="/l/inventory-management" />
+                <FooterLink text="Order Management" href="/l/order-management" />
+                <FooterLink text="Store Management" href="/l/store-management" />
+                <FooterLink text="Partnerships" href="/l/partnerships" />
             </FooterColumn>
 
             <FooterDivider />
@@ -71,11 +71,11 @@ const Footer = () => {
             {/* About Section */}
             <FooterColumn>
                 <FooterTitle text="Resources" />
-                <FooterLink text="About Us" href="/about" />
-                <FooterLink text="Privacy Policy" href="/privacy-policy" />
-                <FooterLink text="Terms & Conditions" href="/terms-and-conditions" />
-                <FooterLink text="FAQs" href="/faq" />
-                <FooterLink text="Attributions" href="/attributions" />
+                <FooterLink text="About Us" href="/l/about" />
+                <FooterLink text="Privacy Policy" href="/l/privacy-policy" />
+                <FooterLink text="Terms & Conditions" href="/l/terms-and-conditions" />
+                <FooterLink text="FAQs" href="/l/faq" />
+                <FooterLink text="Attributions" href="/l/attributions" />
                 <FooterLink text="Sitemap" href="/sitemap.xml" />
             </FooterColumn>
 
@@ -105,13 +105,6 @@ const Footer = () => {
         </footer>
     );
 };
-
-/*
-                <aside className="flex items-center">
-                    <a href="#" className={`${lato.className} text-white text-2xl font-bold`}>f</a>
-                    <p className="text-white ml-2">Copyright © {new Date().getFullYear()} - All right reserved</p>
-                </aside>
-*/
 
 
 export default Footer;

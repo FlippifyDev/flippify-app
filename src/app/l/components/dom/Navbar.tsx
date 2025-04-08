@@ -41,23 +41,23 @@ const Navbar = () => {
     const [sidebarSubMenu, setSidebarSubMenu] = useState(-1);
 
     const productLinks = [
-        { label: "Accounting Software", description: "Streamline finances and track transactions", href: "/accounting-software", icon: <MdAccountBalance className="text-lg" /> },
-        { label: "Inventory Management", description: "Track stock and optimize inventory levels", href: "/inventory-management", icon: <FaBoxOpen className="text-lg" /> },
-        { label: "Order Management", description: "Efficiently manage and fulfill orders", href: "/order-management", icon: <FaParachuteBox className="text-lg" /> },
-        { label: "Store Management", description: "Control your eBay store operations seamlessly", href: "/store-management", icon: <FaStore className="text-lg" /> },
+        { label: "Accounting Software", description: "Streamline finances and track transactions", href: "/l/accounting-software", icon: <MdAccountBalance className="text-lg" /> },
+        { label: "Inventory Management", description: "Track stock and optimize inventory levels", href: "/l/inventory-management", icon: <FaBoxOpen className="text-lg" /> },
+        { label: "Order Management", description: "Efficiently manage and fulfill orders", href: "/l/order-management", icon: <FaParachuteBox className="text-lg" /> },
+        { label: "Store Management", description: "Control your eBay store operations seamlessly", href: "/l/store-management", icon: <FaStore className="text-lg" /> },
     ]
 
     const resourceLinks = [
         {
             label: "About Us",
             description: "Learn who we are and what we do",
-            href: "/about",
+            href: "/l/about",
             icon: <ImBubble className="text-lg" />
         },
         {
             label: "Privacy Policy",
             description: "How we protect your data",
-            href: "/privacy-policy",
+            href: "/l/privacy-policy",
             icon: <FaShieldAlt className="text-lg" />
         },
         {
@@ -69,19 +69,19 @@ const Navbar = () => {
         {
             label: "FAQs",
             description: "Common questions, answered",
-            href: "/faq",
+            href: "/l/faq",
             icon: <FaQuestionCircle className="text-lg" />
         },
         {
             label: "Attributions",
             description: "Credits to resources and tools we use",
-            href: "/attributions",
+            href: "/l/attributions",
             icon: <FaBalanceScale className="text-lg" />
         },
         {
             label: "Sitemap",
             description: "All pages in one place",
-            href: "/sitemap",
+            href: "/l/sitemap",
             icon: <FaSitemap className="text-lg" />
         }
     ];
@@ -202,7 +202,7 @@ const Navbar = () => {
                 <div className='relative flex flex-row items-center space-x-3 xl:space-x-12'>
                     <NavbarItem title="Products" handleHover={handleHover} isHovered={isHovered} hoverIndex={0} />
                     <NavbarItem title="Resources" handleHover={handleHover} isHovered={isHovered} hoverIndex={1} />
-                    <NavbarItem title="Partnerships" link="/partnerships" handleHover={handleHover} isHovered={isHovered} hoverIndex={-1} />
+                    <NavbarItem title="Partnerships" link="/l/partnerships" handleHover={handleHover} isHovered={isHovered} hoverIndex={-1} />
                     <NavbarItem title="Pricing" link="/l/pricing" handleHover={handleHover} isHovered={isHovered} hoverIndex={-1} />
 
                     {isHovered && links && (
@@ -215,7 +215,7 @@ const Navbar = () => {
                 <div className='transition duration-100 rounded-btn p-1'>
                     <a className="text-white group flex flex-row hover:text-gray-300" onClick={() => router.push('/l/login')}>
                         <span className='text-sm select-none font-semibold'>Login</span>
-                        <span className='pt-[1px] pl-1'><AnimationArrow /></span>
+                        <span className='pl-1'><AnimationArrow /></span>
                     </a>
                 </div>
             </div>

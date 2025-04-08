@@ -10,7 +10,7 @@ const HomeMockupBrowser = () => {
 	const root = process.env.ROOT as string;
 
 	return (
-		<div className="grid sm:grid-cols-1 md:grid-cols-2 mx-8 md:mx-1 lg:mx-2 xl:mx-8 place-content-center">
+        <div className="flex flex-col md:flex-row justify-between gap-6 items-center max-w-5.5xl mx-auto">
 			<div className="order-2 md:order-1 px-2 pt-6 md:pt-0 flex flex-col justify-center items-center">
 				<p className={`${lato.className} text-4xl from-houseBlue to-houseHoverBlue to-60% bg-gradient-to-tr bg-clip-text text-transparent py-1 text-center`}>
 					Automate
@@ -23,19 +23,16 @@ const HomeMockupBrowser = () => {
 					<HomeGetEarlyAccess />
 				</div>
 			</div>
-			<div className="mockup-browser order-1 bg-[#222222] md:order-2 w-full md:w-auto mockup-shadow">
-				<div className="mockup-browser-toolbar bg-[#222222]">
-					<div className="input !bg-[#121212] text-white border-2 border-[#121212]">{root}</div>
-				</div>
+			<div className="mockup-browser md:order-2 w-full mockup-shadow scale-[.8]">
 				<div className="bg-[#222222] flex justify-center px-1 py-1">
 					<figure>
 						<Image
 							src="/laptopMockup.png"
-							alt="Browser Mockup"
-							width={2448}
-							height={1336}
+                            alt="Flippify desktop dashboard showing eBay store automation, inventory management system, and order fulfillment tools"
+							width={2541}
+							height={1354}
 							loading="lazy"
-							className="rounded-lg mb-2"
+							className="rounded-xl"
 						/>
 					</figure>
 				</div>

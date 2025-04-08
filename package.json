@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "@netlify/plugin-nextjs": "^5.8.1",
@@ -33,6 +34,7 @@
     "ml-matrix": "^6.11.1",
     "next": "^14.2.4",
     "next-auth": "^4.24.7",
+    "next-sitemap": "^4.2.3",
     "ngrok": "^5.0.0-beta.2",
     "node-fetch": "^2.7.0",
     "nookies": "^2.5.2",

@@ -39,6 +39,9 @@ const config: Config = {
 				'94': '23.5rem',
 				'95': '23.75rem',
 			},
+            maxWidth: {
+                '5.5xl': '68rem',
+            },
 			opacity: {
 				'96': '0.96',
 				'97': '0.97',
@@ -69,6 +72,7 @@ const config: Config = {
 				darkBackground: '#090a25',
 				deepBlue: '#000011',
 				greyStroke: '#A9A9A9',
+                footerText: '#0a2540',
 				darkGreyText: '#222222',
 				houseBlue: '#1a73e8',
 				houseHoverBlue: '#1A9EEA',

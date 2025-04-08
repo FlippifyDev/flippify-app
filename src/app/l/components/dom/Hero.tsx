@@ -43,10 +43,10 @@ const Hero: React.FC<HeroProps> = ({ text, description, image, imageAlt, button,
     };
 
     return (
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 flex flex-col lg:flex-row items-start justify-between gap-8">
+        <div className="w-full max-w-7xl mx-auto px-6 sm:px-6 md:px-8 lg:px-10 xl:px-12 flex flex-col lg:flex-row items-start justify-between gap-8">
             {/* Left Side: Header, Subtitle, and Button */}
             <div className={`w-full lg:w-1/2 ${titleClassName}`}>
-                <div className="mt-8 sm:mt-10 md:mt-12 lg:mt-[120px] xl:mt-[140px] text-4xl sm:text-5xl md:text-6xl text-left animate-fadeInPrimary">
+                <div className="mt-8 sm:mt-10 md:mt-12 lg:mt-[120px] xl:mt-[140px] text-5xl md:text-6xl text-left animate-fadeInPrimary">
                     <p className="mb-2">
                         {renderTitle()}
                     </p>

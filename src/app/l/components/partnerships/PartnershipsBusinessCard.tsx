@@ -38,8 +38,8 @@ const PartnershipsBusinessCard: React.FC<ServicesToolsCardProps> = ({
                     src={image}
                     alt={title}
                     layout="responsive"
-                    width={600}  // Replace with your image's actual width
-                    height={400} // Replace with your image's actual height
+                    width={600}  
+                    height={400} 
                     objectFit="cover"
                 />
             </figure>

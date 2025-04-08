@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 const PartnershipsJoinDetails = () => {
     return (
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+        <div className="w-full max-w-7xl mx-auto px-6 sm:px-6 md:px-8 lg:px-10 xl:px-12">
             <h2 className={`${inter.className} text-3xl sm:text-4xl md:text-4xl font-bold text-left text-lightModeText mb-4 sm:mb-6 md:mb-8`}>
                 How to Join the Flippify Partner Network
             </h2>

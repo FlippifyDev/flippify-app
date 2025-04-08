@@ -14,7 +14,7 @@ const PartnershipsContent = () => {
     return (
         <div className="partnerships-details-container">
             <Hero
-                text={[{ text: "Grow your business" }, { text: "as a", }, { text: "Flippiy", isGradient: true }, { text: "partner" }]}
+                text={[{ text: "Grow your business" }, { text: "as a", }, { text: "Flippify", isGradient: true }, { text: "partner" }]}
                 description="Partner with Flippify to unlock new revenue streams, enhance your offerings, and empower your clients with cutting-edge e-commerce automation."
                 button={<PartnershipsApplyButton />}
                 image="/hero/partnershipsHeroIcon.png"

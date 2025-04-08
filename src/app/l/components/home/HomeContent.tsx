@@ -6,7 +6,7 @@ import HomeMockupPhone from "./HomeMockupPhone";
 import HomeMockupBrowser from "./HomeMockupBrowser";
 import HomeVideoShowcase from "./HomeVideoShowcase";
 import GroupInformation from "./GroupInformation";
-import Hero from "./Hero";
+import Hero from "../dom/Hero";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
@@ -15,7 +15,13 @@ const HomeContent = ({ className = "" }) => {
     return (
         <div className={`home-details-container ${className} w-full`}>
             <div className="flex flex-col items-center w-full">
-                <Hero />
+                <Hero 
+                    text={[{ text: "Inventory & Order" }, { "text": "Mangement Software", isGradient: true}]}
+                    description="Streamline your warehouse management system, control stock, and optimize listings with automated tools. Whether you&apos;re running an eBay store, using an eBay business account, or exploring websites like eBay — we help you sell smarter and scale faster."
+                    button={<HomeGetAccess />}
+                    image="/hero/home.png"
+                    imageAlt="Flippify Home"
+                />
 
                 <div className="pt-[90px] lg:pt-[150px]" />
                 <div className="max-w-5.5xl relative w-full mb-4 py-8 px-2 sm:py-2 md:my-11 md:mx-6 md:py-0 md:pl-4 animate-fadeInPrimary">

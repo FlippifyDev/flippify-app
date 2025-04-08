@@ -1,25 +1,25 @@
 "use client";
 
-import { Lato, Inter } from "next/font/google";
-import PartnershipsContactForm from "./PartnershipsContactForm";
+import Hero from "../dom/Hero";
 import PartnershipsBusinessDetails from "./PartnershipsBusinessSection";
-import PartnershipsHeroSection from "./PartnershipsHeroSection";
 import PartnershipsClientDetails from "./PartnershipsClientSection";
 import PartnershipsEventsDetails from "./PartnershipsEventsSection";
 import PartnershipsJoinDetails from "./PartnershipsJoinSection";
 import PartnershipsApplySection from "./PartnershipsApplySection";
 import PartnershipsSuccessSection from "./PartnershipsSuccessSection";
 import PartnershipsFAQSection from "./PartnershipsFAQSection";
-
-const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
-const inter = Inter({ subsets: ["latin"] });
+import PartnershipsApplyButton from "./PartnershipsApplyButton";
 
 const PartnershipsContent = () => {
     return (
         <div className="partnerships-details-container">
-            <div className="">
-                <PartnershipsHeroSection />
-            </div>
+            <Hero
+                text={[{ text: "Grow your business" }, { text: "as a", }, { text: "Flippiy", isGradient: true }, { text: "partner" }]}
+                description="Partner with Flippify to unlock new revenue streams, enhance your offerings, and empower your clients with cutting-edge e-commerce automation."
+                button={<PartnershipsApplyButton />}
+                image="/hero/partnershipsHeroIcon.png"
+                imageAlt="Flippify Partnerships"
+            />
 
             <div className="flex flex-col mt-16 sm:mt-20 md:mt-24 lg:mt-[200px] xl:mt-[280px]">
                 <div className="py-20">

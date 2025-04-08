@@ -8,18 +8,20 @@ import Layout from '../components/layout/Layout';
 const root = process.env.ROOT as string;
 
 export const metadata = {
-    title: 'About - Flippify',
-    description: 'Partner with Flippify to empower your reselling group with exclusive discounts, 50% revenue sharing, and collaborative opportunities. Automate eBay stores with AI-powered tools—open to all partners!',
+    title: "About Flippify | Inventory & Warehouse Management for eBay Sellers",
+    description:
+        "Discover Flippify—a cutting-edge warehouse and inventory management system designed for eBay sellers, Shopify dropshipping, and online business success. Optimize your eBay seller account, control stock, and streamline your eBay store operations with our powerful tools.",
     openGraph: {
-        title: 'Partnerships - Flippify',
-        description: 'Partner with Flippify to empower your reselling group with exclusive discounts, 50% revenue sharing, and collaborative opportunities. Automate eBay stores with AI-powered tools—open to all partners!',
-        url: root.concat('/l/partnerships'),
+        title: "About Flippify | Inventory & Warehouse Management for eBay Sellers",
+        description:
+            "Learn how Flippify transforms your online business with advanced inventory management and warehouse control. Perfect for eBay business accounts, eBay selling, stock control, and Shopify dropshipping.",
+        url: root.concat("/about"),
         images: [
             {
-                url: 'https://i.imgur.com/partnerships-preview.png',
-                width: 1200,
-                height: 630,
-                alt: 'Flippify Partnerships Program'
+                url: ``,
+                width: 2600,
+                height: 1440,
+                alt: "About Flippify – eBay Inventory, Warehouse, and Stock Control System"
             }
         ]
     },
@@ -31,13 +33,12 @@ export const metadata = {
             index: true,
             follow: true,
             noimageindex: true,
-            'max-video-preview': -1,
-            'max-image-preview': 'large',
-            'max-snippet': -1,
-        },
-    },
+            "max-video-preview": -1,
+            "max-image-preview": "large",
+            "max-snippet": -1
+        }
+    }
 };
-
 
 export default function AboutPage() {
     return (

@@ -18,9 +18,9 @@ export const metadata = {
 		url: root.concat('/l/home'),
 		images: [
 			{
-                url: "https://i.imgur.com/rivBjM6.png",
-				width: 1908,
-				height: 1076,
+                url: "https://i.imgur.com/i0EUERY.png",
+				width: 2600,
+				height: 1440,
                 alt: "Flippify mobile app showing eBay inventory management, stock control, and automated order tracking for sellers"
 			}
 		]
@@ -46,7 +46,7 @@ export default function HomePage() {
 			<MetadataHead {...metadata} />
 			<ThemeSetter theme="dark" />
 			<Suspense fallback={<Loading />}>
-				<Layout className='mb-0'>
+				<Layout>
                     <Page />
 				</Layout>
 			</Suspense>

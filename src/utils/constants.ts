@@ -59,6 +59,8 @@ export const instagramLink = "https://www.instagram.com/_flippify/"
 export const productHuntLink = "https://www.producthunt.com/products/flippify"
 export const githubLink = "https://github.com/FlippifyDev"
 
+export const supportEmail = "support@flippify.io"
+
 export const userProfileImages = [
     "https://i.imgur.com/CU6euIm.jpeg",
     "https://i.imgur.com/I8rDFTX.jpeg",

@@ -7,19 +7,22 @@ import Layout from '../components/layout/Layout';
 
 const root = process.env.ROOT as string;
 
+
 export const metadata = {
-    title: 'Terms & Conditions - Flippify',
-    description: 'Partner with Flippify to empower your reselling group with exclusive discounts, 50% revenue sharing, and collaborative opportunities. Automate eBay stores with AI-powered tools—open to all partners!',
+    title: 'Terms and Conditions - Flippify | User Agreement & Policies',
+    description:
+        'Read the Terms and Conditions for using Flippify’s platform. This user agreement outlines your rights, obligations, and the terms for using our inventory and eBay management tools.',
     openGraph: {
-        title: 'Partnerships - Flippify',
-        description: 'Partner with Flippify to empower your reselling group with exclusive discounts, 50% revenue sharing, and collaborative opportunities. Automate eBay stores with AI-powered tools—open to all partners!',
-        url: root.concat('/l/partnerships'),
+        title: 'Terms and Conditions - Flippify | User Agreement & Policies',
+        description:
+            'Flippify’s Terms and Conditions outline the legal agreement between users and Flippify. Understand your rights, responsibilities, and the terms of using our platform for inventory and eBay management.',
+        url: root.concat('/l/terms-and-conditions'),
         images: [
             {
-                url: 'https://i.imgur.com/partnerships-preview.png',
-                width: 1200,
-                height: 630,
-                alt: 'Flippify Partnerships Program'
+                url: 'https://example.com/terms-conditions-image.png',
+                width: 2600,
+                height: 1440,
+                alt: 'Flippify Terms and Conditions - User Agreement'
             }
         ]
     },
@@ -33,10 +36,11 @@ export const metadata = {
             noimageindex: true,
             'max-video-preview': -1,
             'max-image-preview': 'large',
-            'max-snippet': -1,
-        },
-    },
+            'max-snippet': -1
+        }
+    }
 };
+
 
 
 export default function TermsAndConditionsPage() {

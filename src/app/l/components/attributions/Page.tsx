@@ -1,5 +1,6 @@
 import React from 'react'
 import Hero from '../dom/Hero'
+import Attributions from './Attributions'
 
 const Page = () => {
     return (
@@ -15,6 +16,10 @@ const Page = () => {
                 imageContainerClassName='scale-150'
                 imageClassName='pb-64'
             />
+
+            <div className='max-w-6.5xl mt-[28rem] px-4'>
+                <Attributions />
+            </div>
         </div>
     )
 }

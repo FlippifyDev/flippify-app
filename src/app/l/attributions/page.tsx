@@ -8,18 +8,20 @@ import Layout from '../components/layout/Layout';
 const root = process.env.ROOT as string;
 
 export const metadata = {
-    title: 'Attributions - Flippify',
-    description: 'Partner with Flippify to empower your reselling group with exclusive discounts, 50% revenue sharing, and collaborative opportunities. Automate eBay stores with AI-powered tools—open to all partners!',
+    title: "Attributions | Flippify - Acknowledging Our Partners & Resources",
+    description:
+        "Explore the attributions page of Flippify to learn about our valuable partners, tools, and resources that help power our inventory and accounting solutions for eBay sellers, dropshipping businesses, and more.",
     openGraph: {
-        title: 'Partnerships - Flippify',
-        description: 'Partner with Flippify to empower your reselling group with exclusive discounts, 50% revenue sharing, and collaborative opportunities. Automate eBay stores with AI-powered tools—open to all partners!',
-        url: root.concat('/l/partnerships'),
+        title: "Attributions | Flippify - Acknowledging Our Partners & Resources",
+        description:
+            "Visit Flippify's attributions page to discover our trusted partners and resources that contribute to the success of our inventory management, accounting software, and eBay seller solutions.",
+        url: root.concat('/l/attributions'),
         images: [
             {
-                url: 'https://i.imgur.com/partnerships-preview.png',
-                width: 1200,
-                height: 630,
-                alt: 'Flippify Partnerships Program'
+                url: `${root}/static/og-attributions.png`,
+                width: 2600,
+                height: 1440,
+                alt: "Flippify Attributions - Partners and Resources for eBay Sellers"
             }
         ]
     },
@@ -33,9 +35,9 @@ export const metadata = {
             noimageindex: true,
             'max-video-preview': -1,
             'max-image-preview': 'large',
-            'max-snippet': -1,
-        },
-    },
+            'max-snippet': -1
+        }
+    }
 };
 
 

@@ -4,7 +4,7 @@ import React from "react";
 import Navbar from "../dom/Navbar";
 import LayoutGradientBackground from "./LayoutGradientBackground";
 import LayoutWhiteSection from "./LayoutWhiteSection";
-import Footer from "./Footer";
+import Footer from "../dom/Footer";
 
 const Layout = ({ children, className }: { children: React.ReactNode, className?: string }) => {
 	return (

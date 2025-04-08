@@ -7,19 +7,22 @@ import Layout from '../components/layout/Layout';
 
 const root = process.env.ROOT as string;
 
+
 export const metadata = {
-    title: 'Privacy Policy - Flippify',
-    description: 'Partner with Flippify to empower your reselling group with exclusive discounts, 50% revenue sharing, and collaborative opportunities. Automate eBay stores with AI-powered tools—open to all partners!',
+    title: 'Privacy Policy - Flippify | Protecting Your Data and Privacy',
+    description:
+        'Flippify values your privacy. Learn how we collect, use, and protect your personal data when using our platform. Our privacy policy outlines your rights and how we ensure the security of your information.',
     openGraph: {
-        title: 'Partnerships - Flippify',
-        description: 'Partner with Flippify to empower your reselling group with exclusive discounts, 50% revenue sharing, and collaborative opportunities. Automate eBay stores with AI-powered tools—open to all partners!',
-        url: root.concat('/l/partnerships'),
+        title: 'Privacy Policy - Flippify | Protecting Your Data and Privacy',
+        description:
+            'At Flippify, we are committed to safeguarding your personal information. Read our privacy policy to understand how we collect, store, and secure your data while you use our platform.',
+        url: root.concat('/l/privacy-policy'),
         images: [
             {
-                url: 'https://i.imgur.com/partnerships-preview.png',
+                url: 'https://example.com/privacy-policy-image.png', // Replace with your actual image
                 width: 1200,
                 height: 630,
-                alt: 'Flippify Partnerships Program'
+                alt: 'Flippify Privacy Policy - Protecting Your Data and Information'
             }
         ]
     },
@@ -33,10 +36,11 @@ export const metadata = {
             noimageindex: true,
             'max-video-preview': -1,
             'max-image-preview': 'large',
-            'max-snippet': -1,
-        },
-    },
+            'max-snippet': -1
+        }
+    }
 };
+
 
 
 export default function PrivacyPolicyPage() {

@@ -17,8 +17,9 @@ const PartnershipsContent = () => {
                 text={[{ text: "Grow your business" }, { text: "as a", }, { text: "Flippify", isGradient: true }, { text: "partner" }]}
                 description="Partner with Flippify to unlock new revenue streams, enhance your offerings, and empower your clients with cutting-edge e-commerce automation."
                 button={<PartnershipsApplyButton />}
-                image="/hero/partnershipsHeroIcon.png"
+                image="/hero/partnerships.svg"
                 imageAlt="Flippify Partnerships"
+                imageContainerClassName="scale-125"
             />
 
             <div className="flex flex-col mt-16 sm:mt-20 md:mt-24 lg:mt-[200px] xl:mt-[280px]">

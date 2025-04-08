@@ -18,8 +18,8 @@ export const metadata = {
         images: [
             {
                 url: 'https://i.imgur.com/Pt4GSqD.png',
-                width: 1908,
-                height: 1076,
+                width: 2600,
+                height: 1440,
                 alt: 'Flippify Pricing Page - Affordable Plans for eBay Sellers & Resellers'
             }
         ]

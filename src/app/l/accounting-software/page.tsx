@@ -7,19 +7,22 @@ import Layout from '../components/layout/Layout';
 
 const root = process.env.ROOT as string;
 
+
 export const metadata = {
-    title: 'Account Software - Flippify',
-    description: 'Partner with Flippify to empower your reselling group with exclusive discounts, 50% revenue sharing, and collaborative opportunities. Automate eBay stores with AI-powered tools—open to all partners!',
+    title: "Flippify Accounting Software for eBay Sellers | Automate Taxes & Manage Expenses",
+    description:
+        "Flippify's accounting software for eBay sellers helps automate taxes, track expenses, and manage your finances with ease. Effortlessly export CSVs, stay tax compliant, and focus on growing your business with the best eBay accounting solution.",
     openGraph: {
-        title: 'Partnerships - Flippify',
-        description: 'Partner with Flippify to empower your reselling group with exclusive discounts, 50% revenue sharing, and collaborative opportunities. Automate eBay stores with AI-powered tools—open to all partners!',
-        url: root.concat('/l/partnerships'),
+        title: "Flippify Accounting Software for eBay Sellers | Automate Taxes & Manage Expenses",
+        description:
+            "Flippify's eBay accounting software automates tax calculations, tracks expenses, and simplifies financial management for online sellers. Perfect for eBay business accounts and growing eBay stores.",
+        url: root.concat('/l/accounting-software'),
         images: [
             {
-                url: 'https://i.imgur.com/partnerships-preview.png',
-                width: 1200,
-                height: 630,
-                alt: 'Flippify Partnerships Program'
+                url: `https://i.imgur.com/rSUUDZb.png`,
+                width: 2600,
+                height: 1440,
+                alt: "Flippify Accounting Software for eBay Sellers - Automate Taxes & Manage Finances"
             }
         ]
     },
@@ -33,10 +36,11 @@ export const metadata = {
             noimageindex: true,
             'max-video-preview': -1,
             'max-image-preview': 'large',
-            'max-snippet': -1,
-        },
-    },
+            'max-snippet': -1
+        }
+    }
 };
+
 
 
 export default function AccountingSoftwarePage() {

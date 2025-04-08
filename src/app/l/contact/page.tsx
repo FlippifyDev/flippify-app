@@ -1,4 +1,4 @@
-import Page from '../components/store-management/Page';
+import Page from '../components/contact/Page';
 import Loading from '@/app/components/Loading';
 import { Suspense } from 'react';
 import MetadataHead from '../../components/MetadataHead';
@@ -7,22 +7,21 @@ import Layout from '../components/layout/Layout';
 
 const root = process.env.ROOT as string;
 
-
 export const metadata = {
-    title: 'Store Management - Flippify | Effortless eBay Inventory & Order Control',
+    title: "Contact Us | Flippify - Get in Touch with Our Team",
     description:
-        'Flippify’s store management tools help eBay sellers streamline inventory management, track orders, and automate store operations. Manage your eBay store effortlessly and boost sales with ease.',
+        "Have questions? Reach out to the Flippify team! Whether you're looking for support, partnership opportunities, or just want to chat, we're here to help.",
     openGraph: {
-        title: 'Store Management - Flippify | Effortless eBay Inventory & Order Control',
+        title: "Contact Us | Flippify - Get in Touch with Our Team",
         description:
-            'Flippify offers powerful store management features to automate your eBay store. Keep track of inventory, orders, and customer data in real-time to enhance your sales performance and efficiency.',
-        url: root.concat('/l/store-management'),
+            "Contact Flippify for any inquiries, support requests, or partnership opportunities. Our team is ready to assist you with any questions you have about our inventory and accounting solutions.",
+        url: root.concat('/l/contact'),
         images: [
             {
-                url: 'https://i.imgur.com/2yAlsRL.png', 
+                url: `${root}/static/og-contact.png`,
                 width: 2600,
                 height: 1440,
-                alt: 'Flippify Store Management - Automate eBay Store Operations'
+                alt: "Contact Us - Flippify"
             }
         ]
     },
@@ -41,9 +40,7 @@ export const metadata = {
     }
 };
 
-
-
-export default function PrivacyPolicyPage() {
+export default function ContactPage() {
     return (
         <>
             <MetadataHead {...metadata} />

@@ -1,5 +1,6 @@
 import React from 'react'
 import Hero from '../dom/Hero'
+import Policy from './Policy'
 
 const Page = () => {
     return (
@@ -15,6 +16,9 @@ const Page = () => {
                 imageAlt="Privacy and Security"
                 imageContainerClassName='pb-20 scale-150'
             />
+            <div className='max-w-6.5xl mt-[28rem] px-4'>
+                <Policy />
+            </div>
         </div>
     )
 }

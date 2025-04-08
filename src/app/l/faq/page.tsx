@@ -8,18 +8,20 @@ import Layout from '../components/layout/Layout';
 const root = process.env.ROOT as string;
 
 export const metadata = {
-    title: 'FAQs - Flippify',
-    description: 'Partner with Flippify to empower your reselling group with exclusive discounts, 50% revenue sharing, and collaborative opportunities. Automate eBay stores with AI-powered tools—open to all partners!',
+    title: "Frequently Asked Questions | Flippify - eBay Seller Tools & Inventory Management",
+    description:
+        "Have questions about Flippify's inventory management, accounting software, or eBay seller tools? Find answers to common queries about our platform, eBay store management, stock control, and more.",
     openGraph: {
-        title: 'Partnerships - Flippify',
-        description: 'Partner with Flippify to empower your reselling group with exclusive discounts, 50% revenue sharing, and collaborative opportunities. Automate eBay stores with AI-powered tools—open to all partners!',
-        url: root.concat('/l/partnerships'),
+        title: "Frequently Asked Questions | Flippify - eBay Seller Tools & Inventory Management",
+        description:
+            "Visit the Flippify FAQs page to find answers to your questions on inventory management systems, eBay business accounts, tax automation, and more. Learn how our tools help eBay sellers streamline their processes.",
+        url: root.concat('/l/faqs'),
         images: [
             {
-                url: 'https://i.imgur.com/partnerships-preview.png',
-                width: 1200,
-                height: 630,
-                alt: 'Flippify Partnerships Program'
+                url: `${root}/static/og-faqs.png`,
+                width: 2600,
+                height: 1440,
+                alt: "Flippify FAQs - eBay Seller Tools, Inventory Management & Accounting Software"
             }
         ]
     },
@@ -33,10 +35,11 @@ export const metadata = {
             noimageindex: true,
             'max-video-preview': -1,
             'max-image-preview': 'large',
-            'max-snippet': -1,
-        },
-    },
+            'max-snippet': -1
+        }
+    }
 };
+
 
 
 export default function FAQPage() {

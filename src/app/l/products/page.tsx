@@ -9,18 +9,18 @@ import ThemeSetter from '../../components/ThemeSetter';
 const root = process.env.ROOT as string;
 
 export const metadata = {
-    title: 'Services - Flippify',
-    description: 'Streamline your eBay reselling business with AI-powered automation tools. From listing creation and pricing optimization to inventory tracking, order fulfillment, and financial management, Flippify helps you save time and boost profitability.',
+    title: 'Flippify Products - eBay Business Automation & Inventory Management Tools',
+    description: 'Flippify offers AI-powered tools to automate your eBay reselling business. From inventory management systems and order fulfillment to pricing optimization and financial tracking, streamline your workflow and increase profits with Flippify’s all-in-one solution.',
     openGraph: {
-        title: 'Services - Flippify',
-        description: 'Streamline your eBay reselling business with AI-powered automation tools. From listing creation and pricing optimization to inventory tracking, order fulfillment, and financial management, Flippify helps you save time and boost profitability.',
-        url: root.concat('/l/services'),
+        title: 'Flippify Products - eBay Business Automation & Inventory Management Tools',
+        description: 'Flippify offers AI-powered tools to automate your eBay reselling business. From inventory management systems and order fulfillment to pricing optimization and financial tracking, streamline your workflow and increase profits with Flippify’s all-in-one solution.',
+        url: root.concat('/l/products'),
         images: [
             {
                 url: 'https://i.imgur.com/iIlqxEj.png',
                 width: 1908,
                 height: 1076,
-                alt: 'Products Page Image'
+                alt: 'Flippify Services Page - Inventory and eBay Automation Tools'
             }
         ]
     },

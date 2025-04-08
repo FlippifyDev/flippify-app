@@ -12,31 +12,31 @@ const inter = Inter({ subsets: ["latin"] });
 
 const HomeContent = ({ className = "" }) => {
     return (
-        <div className={`home-details-container ${className}`}>
-            <div className="flex flex-col items-center">
-                <div className="w-full mt-3 lg:mt-10 animate-fadeInPrimary">
+        <div className={`home-details-container ${className} w-full`}>
+            <div className="flex flex-col items-center w-full">
+                <div className="w-full mt-3 lg:mt-10 animate-fadeInPrimary max-w-5.5xl">
                     <p className={`${lato.className} text-6xl text-white text-center`}>
                         <span className="bg-gradient-to-tr pb-1 pl-1 from-textGradStart to-textGradEnd bg-clip-text text-transparent">
-                            Automated{" "}
+                            Inventory{" "}
                         </span>
-                        Inventory
+                        & Warehouse
                     </p>
                     <p className={`${lato.className} text-6xl text-white text-center`}>
-                        & Financial Tracking
+                        Mangement System
                     </p>
                 </div>
-                <p className="w-11/12 sm:w-full mt-3 mb-8 pb-1 pt-2 text-gray-300 text-lg text-center animate-fadeInSecondary">
-                    Effortlessly manage your eBay listings - from creation to optimization and pricing, with automated updates and performance tracking.
+                <p className="w-11/12 sm:max-w-5.5xl mt-3 mb-8 pb-1 pt-2 text-gray-300 text-lg text-center animate-fadeInSecondary">
+                    Powerful inventory management software designed for eBay sellers. Streamline your warehouse management system, control stock, and optimize listings with automated tools. Whether you&apos;re running an eBay store, using an eBay business account, or exploring websites like eBay — we help you sell smarter and scale faster.
                 </p>
 
                 <HomeGetAccess />
 
                 <div className="pt-[90px] lg:pt-[150px]" />
-                <div className="relative w-full mb-4 py-8 px-2 sm:py-2 md:my-11 md:mx-6 md:py-0 md:pl-4 animate-fadeInPrimary">
+                <div className="max-w-5.5xl relative w-full mb-4 py-8 px-2 sm:py-2 md:my-11 md:mx-6 md:py-0 md:pl-4 animate-fadeInPrimary">
                     <HomeVideoShowcase />
                 </div>
 
-                <div className="pb-20 pt-10">
+                <div className="max-w-5.5xl pb-20 pt-10">
                     <p className={`${lato.className} text-5xl from-houseBlue to-houseHoverBlue to-60% bg-gradient-to-tr bg-clip-text text-transparent py-1 text-center`}>
                         <span className={`${inter.className} mb-8 text-lightModeText text-5xl font-bold`}>
                             Automating your store with
@@ -44,21 +44,21 @@ const HomeContent = ({ className = "" }) => {
                         {/* Space */} AI
                     </p>
                     <p className="pt-4 text-lightModeText text-center font-semibold lg:w-4/5 mx-auto">
-                        Sit back and watch your eBay store operate on autopilot with AI listing products for you, managing your Inventory, Orders, Financials and more, all in one place.
+                        Put your eBay business account on autopilot. Our AI-powered system helps you list products, manage inventory, process orders, and handle finances—seamlessly integrated with your warehouse management system. Perfect for dropshippers, eBay sellers, and anyone scaling a store across platforms like Shopify or websites like eBay.
                     </p>
                 </div>
 
-                <div className="flex flex-col justify-center">
+                <div className="w-full flex flex-col justify-center">
                     <div className="w-full border-b border-dashed"></div>
-                    <div className="bg-white py-20">
+                    <div className="w-full bg-white py-20">
                         <HomeMockupPhone />
                     </div>
                     <div className="w-full border-b border-dashed"></div>
-                    <div className="bg-[#f6f9fc] py-20">
+                    <div className="w-full bg-[#f6f9fc] py-20">
                         <HomeMockupBrowser />
                     </div>
                     <div className="w-full border-b border-dashed"></div>
-                    <div className="bg-white py-20">
+                    <div className="w-full bg-white py-20">
                         <GroupInformation />
                     </div>
                     <div className="w-full border-b border-dashed"></div>

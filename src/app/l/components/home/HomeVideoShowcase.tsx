@@ -44,7 +44,7 @@ export default function HomeVideoShowcase() {
                     poster="/DashboardVideoPreview.jpg"
                     className="w-full h-full object-cover rounded-lg"
                 >
-                    <source src="/optimized.mp4" type="video/mp4" />
+                    <source src="/optimized.mp4" type="video/mp4"/>
                     Your browser does not support the video tag.
                 </video>
             </div>

@@ -20,7 +20,7 @@ const PlansGetAccessButton: React.FC<PlansGetAccessButtonProps> = ({ redirect, s
         <div className="relative group w-full flex flex-col justify-end">
             <button
                 className={btnClass}
-                onClick={() => router.push('/l/login')}
+                onClick={() => router.push('/l/sign-up')}
             >
                 Get Access Now
             </button>

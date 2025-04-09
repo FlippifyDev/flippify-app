@@ -43,8 +43,13 @@ const ButtonGetStarted: React.FC<ButtonGetStartedProps> = ({ priceId, specialPla
                             referred_by,
                             couponCode
                         );
+                        console.log(error)
                         if (error && setCouponError) {
-                            setCouponError(error);
+                            if (error === "Error: This promotion code cannot be redeemed because the associated customer has prior transactions.") {
+                                setCouponError("You cannot redeem this code twice")
+                            } else {
+                                setCouponError(error);
+                            }
                         }
                         if (url) {
                             setCheckoutUrl(url);

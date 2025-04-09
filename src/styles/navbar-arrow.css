@@ -1,0 +1,109 @@
+.arrow {
+  position: relative;
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+}
+
+/* Common styles for both lines */
+.line {
+  position: absolute;
+  width: 60%;
+  height: 1px;
+  background-color: currentColor;
+}
+
+/* Initial state: arrow pointing down */
+.line1 {
+  bottom: 5px;
+  right: 5px;
+  transform: rotate(45deg);
+  animation: flipLine1 0.5s infinite linear;
+}
+
+.line2 {
+  bottom: 5px;
+  left: 4px;
+  transform: rotate(-45deg);
+  animation: flipLine2 0.5s infinite linear;
+}
+
+/* When hovered, run keyframe animations */
+.group:hover .line1 {
+  animation: flipLine1 0.3s forwards;
+}
+
+.group:hover .line2 {
+  animation: flipLine2 0.3s forwards;
+}
+
+/* When not hovered, run the reverse animation */
+.group:not(:hover) .line1 {
+  animation: flipLine1Reverse 0.3s  forwards;
+}
+
+.group:not(:hover) .line2 {
+  animation: flipLine2Reverse 0.3s forwards;
+}
+
+/* Keyframes for line1 (upper-left line) */
+@keyframes flipLine1 {
+  0% {
+    transform: rotate(45deg);
+  }
+  50% {
+    /* Both lines meet as a horizontal line */
+    transform: rotate(0deg);
+  }
+  100% {
+    /* Ends as part of upward arrow */
+    transform: rotate(-45deg);
+  }
+}
+
+/* Keyframes for line2 (lower-right line) */
+@keyframes flipLine2 {
+  0% {
+    transform: rotate(-45deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(45deg);
+  }
+}
+
+/* Reverse animations when unhovering */
+@keyframes flipLine1Reverse {
+  0% {
+    transform: rotate(-45deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(45deg);
+  }
+}
+
+@keyframes flipLine2Reverse {
+  0% {
+    transform: rotate(45deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-45deg);
+  }
+}
+
+
+.animate-arrow .line1 {
+  animation: flipLine1 0.5s infinite linear;
+}
+
+.animate-arrow .line2 {
+  animation: flipLine2 0.5s infinite linear;
+}

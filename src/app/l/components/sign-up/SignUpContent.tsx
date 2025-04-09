@@ -4,7 +4,7 @@
 import { formatDateToISO } from "@/utils/format-dates";
 import { auth, firestore } from "@/lib/firebase/config";
 import { updateUserSubscriptionAdmin } from "@/services/firebase/update-admin";
-import { retrieveAuthenticatedUserCount, retrieveUserSubscriptionCount } from "@/services/firebase/retrieve-admin";
+import { retrieveAuthenticatedUserCount } from "@/services/firebase/retrieve-admin";
 
 // External Imports
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
@@ -98,7 +98,6 @@ const SignUpContent = () => {
     };
 
 
-
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (username && email && password) {
@@ -107,7 +106,7 @@ const SignUpContent = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center mt-[-64px] p-4">
+        <div className="min-h-screen w-full flex flex-col md:flex-row items-center justify-center p-4 gap-16">
             {!emailVerifying ? (
                 <SignUpForm
                     username={username}
@@ -127,6 +126,15 @@ const SignUpContent = () => {
             ) : (
                 <EmailVerifying />
             )}
+            <div>
+                <Image
+                    src="/auth/sign-up.svg"
+                    alt="Sign Up Image"
+                    className="object-cover"
+                    width={700}
+                    height={700}
+                />
+            </div>
         </div>
     )
 }
@@ -230,48 +238,12 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
     loading,
     errorMessage,
 }) => {
-    const [userCount, setUserCount] = useState<number>(0);
-    const maxUserCount = Number(process.env.MAX_USER_COUNT ?? 100);
-
-    useEffect(() => {
-        // Retrieve user subscription count
-        const fetchUserSubscriptionCount = async () => {
-            try {
-                const count = await retrieveAuthenticatedUserCount();
-                setUserCount(count);
-            } catch (error) {
-                console.error("Error fetching user subscription count:", error);
-            }
-        };
-        fetchUserSubscriptionCount();
-    }, []);
-
     return (
         <div className="bg-white rounded-3xl shadow-lg w-full max-w-md p-8">
             {/* Logo */}
             <h2 className={`${lato.className} pb-1 text-[40px] flex justify-center font-bold mb-4 text-black`}>
                 flippify
             </h2>
-
-            <h3 className="text-gray-500 w-full text-center">
-                User count
-            </h3>
-            <div className="mb-4 flex flex-row items-center">
-                <span className="text-sm mr-1">{userCount}</span>
-                <div
-                    className="flex w-full h-1.5 bg-gray-200 rounded-full overflow-hidden"
-                    role="progressbar"
-                    aria-valuenow={(userCount * 100) / maxUserCount}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                >
-                    <div
-                        className="flex flex-col justify-center rounded-full overflow-hidden bg-blue-600 text-xs text-white text-center whitespace-nowrap transition duration-500"
-                        style={{ width: `${(userCount * 100) / maxUserCount}%` }}
-                    ></div>
-                </div>
-                <span className="text-sm ml-1">{maxUserCount}</span>
-            </div>
 
             {/* Title & Subtitle */}
             <h1 className="text-2xl font-semibold text-center mb-2">Create your account</h1>
@@ -306,10 +278,10 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
 
                 <button
                     type="submit"
-                    disabled={loading || userCount >= Number(maxUserCount)}
+                    disabled={loading}
                     className="w-full mt-4 p-3 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 rounded-lg shadow-lg"
                 >
-                    {userCount >= Number(maxUserCount) ? "Max Users Reached" : loading ? "Processing..." : "Sign Up"}
+                    {loading ? "Processing..." : "Sign Up"}
                 </button>
             </form>
             {/* Login Link */}

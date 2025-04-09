@@ -1,6 +1,6 @@
 import React from 'react';
 import Layout from '@/app/u/components/layout/Layout';
-import FinancialHubContent from '@/app/u/components/tools/financial-hub/FinancialHubContent';
+import Page from '@/app/u/components/tools/financial-hub/Page';
 import ThemeSetter from '@/app/components/ThemeSetter';
 
 export const metadata = {
@@ -13,7 +13,7 @@ export default function Dashboard() {
 		<>
 			<ThemeSetter theme="light" />
 			<Layout anySubscriptions={['admin', 'member']} removePadding={true}>
-				<FinancialHubContent />
+                <Page />
 			</Layout>
 		</>
 	);

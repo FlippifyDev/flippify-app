@@ -1,6 +1,6 @@
 import React from 'react';
 import Layout from '../components/layout/Layout';
-import HomeContentWrapperPage from '../components/home/HomeContentWrapperPage';
+import Page from '../components/home/Page';
 import Loading from '@/app/components/Loading';
 import { Suspense } from 'react';
 import MetadataHead from '../../components/MetadataHead';
@@ -10,18 +10,18 @@ import ThemeSetter from '../../components/ThemeSetter';
 const root = process.env.ROOT as string;
 
 export const metadata = {
-    title: 'Flippify - Automate Your eBay Business and Boost Profits',
-    description: 'Flippify is the ultimate platform for eBay resellers. Use advanced tools to automate inventory management, listings, and order fulfillment, accelerating your profits and scaling your business effortlessly.',
+    title: 'Flippify - Inventory & Warehouse Management for eBay Sellers and Dropshippers',
+    description: 'Flippify is the ultimate inventory management system for eBay sellers and Shopify dropshipping. Manage your eBay store, automate listings, control stock, and scale your eBay business account with powerful warehouse management tools. Whether you’re running an eBay shop or exploring websites like eBay, Flippify helps you sell on eBay smarter and faster.',
 	openGraph: {
-        title: 'Flippify - Automate Your eBay Business and Boost Profits',
-        description: 'Flippify is the ultimate platform for eBay resellers. Use advanced tools to automate inventory management, listings, and order fulfillment, accelerating your profits and scaling your business effortlessly.',
+        title: 'Flippify - Inventory & Warehouse Management for eBay Sellers and Dropshippers',
+        description: 'Flippify is the ultimate inventory management system for eBay sellers and Shopify dropshipping. Manage your eBay store, automate listings, control stock, and scale your eBay business account with powerful warehouse management tools. Whether you’re running an eBay shop or exploring websites like eBay, Flippify helps you sell on eBay smarter and faster.Flippify is the ultimate inventory management system for eBay sellers and Shopify dropshipping. Manage your eBay store, automate listings, control stock, and scale your eBay business account with powerful warehouse management tools. Whether you’re running an eBay shop or exploring websites like eBay, Flippify helps you sell on eBay smarter and faster.',
 		url: root.concat('/l/home'),
 		images: [
 			{
-                url: "https://i.imgur.com/rivBjM6.png",
-				width: 1908,
-				height: 1076,
-				alt: "Home Page Image"
+                url: "https://i.imgur.com/i0EUERY.png",
+				width: 2600,
+				height: 1440,
+                alt: "Flippify mobile app showing eBay inventory management, stock control, and automated order tracking for sellers"
 			}
 		]
 	},
@@ -46,8 +46,8 @@ export default function HomePage() {
 			<MetadataHead {...metadata} />
 			<ThemeSetter theme="dark" />
 			<Suspense fallback={<Loading />}>
-				<Layout className='mb-0'>
-					<HomeContentWrapperPage />
+				<Layout>
+                    <Page />
 				</Layout>
 			</Suspense>
 		</>

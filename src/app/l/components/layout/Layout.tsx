@@ -4,12 +4,12 @@ import React from "react";
 import Navbar from "../dom/Navbar";
 import LayoutGradientBackground from "./LayoutGradientBackground";
 import LayoutWhiteSection from "./LayoutWhiteSection";
-import Footer from "./LayoutFooter";
+import Footer from "../dom/Footer";
 
 const Layout = ({ children, className }: { children: React.ReactNode, className?: string }) => {
 	return (
 		<div className="relative min-h-screen bg-white flex flex-col">
-			<div className="fixed w-full z-50">
+			<div className="absolute top-0 left-0 w-full z-50">
 				<Navbar />
 			</div>
 

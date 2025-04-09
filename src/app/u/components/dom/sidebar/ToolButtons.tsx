@@ -1,10 +1,6 @@
-"use client";
-
 import DisabledSideBarButton from "./ButtonDisabled";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import SidebarButton from "./Button";
-import React, { useState } from 'react';
-import { useSession } from 'next-auth/react';
 import { AiFillProduct } from "react-icons/ai";
 import { FaBoxOpen } from "react-icons/fa6";
 import { FaStore, FaChartPie } from "react-icons/fa";
@@ -53,7 +49,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 				/>
 			</LayoutSubscriptionWrapper>
 
-			{/* Inventory & Orders Button - Admin */}
+			{/* Inventory & Orders Button */}
 			<LayoutSubscriptionWrapper anySubscriptions={["admin", "member"]}>
 				<SidebarButton
 					text="Inventory & Orders"
@@ -84,8 +80,8 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 				/>
 			</LayoutSubscriptionWrapper>
 
-			{/* Shipping & Fulfillment Button - Public*/}
-			<LayoutSubscriptionWrapper requiredSubscriptions={["!admin"]}>
+			{/* Shipping & Fulfillment Button - Public */}
+            <LayoutSubscriptionWrapper requiredSubscriptions={["!admin", "!member"]}>
 				<DisabledSideBarButton
 					text="Shipping & Fulfillment"
 					redirect="tools/shipping-and-fulfillment"
@@ -96,7 +92,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 			</LayoutSubscriptionWrapper>
 
 			{/* Shipping & Fulfillment Button - Admin */}
-			<LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
+            <LayoutSubscriptionWrapper anySubscriptions={["admin", "member"]}>
 				<SidebarButton
 					text="Shipping & Fulfillment"
 					redirect="tools/shipping-and-fulfillment"

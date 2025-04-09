@@ -1,13 +1,13 @@
 "use client"
 
 // Local Imports
+import Card from '../../dom/ui/Card';
 import { IEbayOrder } from '@/models/store-data';
 import { fetchBarChartOptions } from './fetchBarChartOptions';
 
 // External Imports
 import { useEffect, useRef, useState } from 'react';
 import ApexCharts from 'apexcharts';
-import Card from './Card';
 
 interface CardProfitsBarChartProps {
     orders: IEbayOrder[];

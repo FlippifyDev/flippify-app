@@ -4,23 +4,22 @@ import ThemeSetter from "@/app/components/ThemeSetter";
 import Loading from "@/app/components/Loading";
 import MetadataHead from "@/app/components/MetadataHead";
 import SignUpContent from "../components/sign-up/SignUpContent";
-import ComingSoon from "../components/coming-soon/ComingSoon";
 
 const root = process.env.ROOT as string;
 
 export const metadata = {
-    title: 'Sign Up - Flippify',
-    description: 'Create your Flippify account to start buying, selling, and flipping amazing deals. Join our community and unlock exclusive features today!',
+    title: 'Sign Up - Flippify | Join Our Community & Start Flipping Deals',
+    description: 'Create your Flippify account and gain access to exclusive tools for buying, selling, and flipping amazing deals. Join a community of sellers today and unlock features to grow your business!',
     openGraph: {
-        title: 'Sign Up - Flippify',
-        description: 'Create your Flippify account to start buying, selling, and flipping amazing deals. Join our community and unlock exclusive features today!',
+        title: 'Sign Up - Flippify | Join Our Community & Start Flipping Deals',
+        description: 'Sign up for Flippify today to gain access to exclusive features and tools to help you buy, sell, and flip amazing deals. Join our growing community and start your business journey!',
         url: root.concat('/l/sign-up'),
         images: [
             {
-                url: "https://i.imgur.com/CguUL1h.png",
-                width: 1908,
-                height: 1076,
-                alt: "Sign Up Page Image"
+                url: "https://i.imgur.com/ycu0VT6.png",
+                width: 2600,
+                height: 1440,
+                alt: "Flippify Sign Up Page - Join the Community of Sellers"
             }
         ]
     },

@@ -90,10 +90,11 @@ export function updateCacheData(key: string, data: any) {
     const cachedData = getCachedData(key, true);
     if (cachedData) {
         const dataKey = data.itemId || data.orderId;
+        
         // Update the existing dictionary with the new data, keyed by data.id
         const updatedCacheData = {
-            [dataKey]: data,
             ...cachedData.data,
+            [dataKey]: data,
         };
 
         const newCache = {

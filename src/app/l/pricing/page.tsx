@@ -9,18 +9,18 @@ import ThemeSetter from '../../components/ThemeSetter';
 const root = process.env.ROOT as string;
 
 export const metadata = {
-    title: 'Affordable Pricing Plans for Resellers - Flippify',
-    description: 'Discover Flippify’s pricing plans designed to suit all your reselling needs. From monitoring soon-to-retire Lego sets to exclusive deals, our affordable plans help you maximize profits and stay ahead in the flipping game.',
+    title: 'Flippify Pricing - Affordable Plans for eBay Sellers & Resellers',
+    description: 'Explore Flippify’s pricing plans tailored for eBay sellers and resellers. From inventory tracking and automated listings to exclusive deals, our flexible and affordable plans help you maximize profits and stay ahead of the competition.',
     openGraph: {
-        title: 'Affordable Pricing Plans for Resellers - Flippify',
-        description: 'Discover Flippify’s pricing plans designed to suit all your reselling needs. From monitoring soon-to-retire Lego sets to exclusive deals, our affordable plans help you maximize profits and stay ahead in the flipping game.',
+        title: 'Flippify Pricing - Affordable Plans for eBay Sellers & Resellers',
+        description: 'Explore Flippify’s pricing plans tailored for eBay sellers and resellers. From inventory tracking and automated listings to exclusive deals, our flexible and affordable plans help you maximize profits and stay ahead of the competition.',
         url: root.concat('/l/pricing'),
         images: [
             {
                 url: 'https://i.imgur.com/Pt4GSqD.png',
-                width: 1908,
-                height: 1076,
-                alt: 'Pricing Page Image'
+                width: 2600,
+                height: 1440,
+                alt: 'Flippify Pricing Page - Affordable Plans for eBay Sellers & Resellers'
             }
         ]
     },

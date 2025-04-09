@@ -7,19 +7,22 @@ import { Suspense } from "react";
 
 const root = process.env.ROOT as string;
 
+
 export const metadata = {
-    title: 'Login - Flippify',
-    description: 'Access your Flippify account to manage your listings, track your sales, and explore exclusive deals. Sign in securely and start flipping today!',
+    title: "Login to Flippify | Manage Your eBay Store & Inventory",
+    description:
+        "Login to your Flippify account to manage your eBay store, track inventory, automate accounting, and streamline your business operations. Secure and easy access to your dashboard for eBay sellers and online businesses.",
     openGraph: {
-        title: 'Login - Flippify',
-        description: 'Access your Flippify account to manage your listings, track your sales, and explore exclusive deals. Sign in securely and start flipping today!',
+        title: "Login to Flippify | Manage Your eBay Store & Inventory",
+        description:
+            "Access your Flippify account to manage inventory, sales, and finances for your eBay store. Log in securely to optimize your business operations and automate key tasks for better results.",
         url: root.concat('/l/login'),
         images: [
             {
-                url: "https://i.imgur.com/YpsQrYq.png",
-                width: 1908,
-                height: 1076,
-                alt: "Login Page Image"
+                url: `https://i.imgur.com/IsUhFBb.png`,
+                width: 2600,
+                height: 1440,
+                alt: "Flippify Login - Manage eBay Store and Inventory"
             }
         ]
     },
@@ -28,15 +31,16 @@ export const metadata = {
         follow: true,
         nocache: true,
         googleBot: {
-            index: true,
+            index: false,
             follow: true,
             noimageindex: true,
             'max-video-preview': -1,
             'max-image-preview': 'large',
-            'max-snippet': -1,
-        },
-    },
+            'max-snippet': -1
+        }
+    }
 };
+
 
 
 const Login = () => {

@@ -17,6 +17,7 @@ const Navbar: React.FC<NavbarProps> = ({ handleDisplayModal }) => {
     const customerId = session?.user.stripeCustomerId;
     const [title, setTitle] = useState(getProcessedTitle())
     const isConnected = session?.user.connectedAccounts.ebay ? true : false;
+    const subscribed = session?.user.authentication.subscribed ? true: false;
 
     // Fetch unread notifications count from Firebase
     useEffect(() => {
@@ -31,8 +32,8 @@ const Navbar: React.FC<NavbarProps> = ({ handleDisplayModal }) => {
             </div>
             <div className="w-full flex justify-end pr-2 items-center">
                 <div className="flex justify-end items-center mr-4 gap-4">
-                    <NavbarAddListing handleDisplayModal={handleDisplayModal} isConnected={isConnected}/>
-                    <NavbarAddOrder handleDisplayModal={handleDisplayModal} isConnected={isConnected} />
+                    <NavbarAddListing handleDisplayModal={handleDisplayModal} isConnected={isConnected} isSubscribed={subscribed}/>
+                    <NavbarAddOrder handleDisplayModal={handleDisplayModal} isConnected={isConnected} isSubscribed={subscribed} />
                 </div>
                 <div className="flex justify-end pr-2">
                     <NavbarProfileAvatar />

@@ -6,19 +6,19 @@ import { Metadata } from 'next';
 
 const root = process.env.ROOT as string;
 
-export const metadata: Metadata = {
-    title: 'Flippify',
-    description: 'Reselling bots and tools. Monitoring the best releases and restocks on the market from sneakers to PS5s',
+export const metadata = {
+    title: 'Flippify - Inventory & Warehouse Management for eBay Sellers and Dropshippers',
+    description: 'Flippify is the ultimate inventory management system for eBay sellers and Shopify dropshipping. Manage your eBay store, automate listings, control stock, and scale your eBay business account with powerful warehouse management tools. Whether you’re running an eBay shop or exploring websites like eBay, Flippify helps you sell on eBay smarter and faster.',
     openGraph: {
-        title: 'Transform Your Reselling Game - Flippify Home',
-        description: 'Welcome to Flippify, your ultimate reselling platform for flipping, buying, and selling unique items. Boost your profits with our fast deal bots, covering everything from Lego to sneakers. Learn how Flippify makes reselling easy and lucrative.',
-        url: root,
+        title: 'Flippify - Inventory & Warehouse Management for eBay Sellers and Dropshippers',
+        description: 'Flippify is the ultimate inventory management system for eBay sellers and Shopify dropshipping. Manage your eBay store, automate listings, control stock, and scale your eBay business account with powerful warehouse management tools. Whether you’re running an eBay shop or exploring websites like eBay, Flippify helps you sell on eBay smarter and faster.Flippify is the ultimate inventory management system for eBay sellers and Shopify dropshipping. Manage your eBay store, automate listings, control stock, and scale your eBay business account with powerful warehouse management tools. Whether you’re running an eBay shop or exploring websites like eBay, Flippify helps you sell on eBay smarter and faster.',
+        url: root.concat('/l/home'),
         images: [
             {
-                url: "https://i.imgur.com/JzWi4ye.png",
+                url: "https://i.imgur.com/rivBjM6.png",
                 width: 1908,
                 height: 1076,
-                alt: "Home Page Image"
+                alt: "Flippify mobile app showing eBay inventory management, stock control, and automated order tracking for sellers"
             }
         ]
     },
@@ -35,7 +35,8 @@ export const metadata: Metadata = {
             'max-snippet': -1,
         },
     },
-}
+};
+
 
 export default function Home() {
     return (

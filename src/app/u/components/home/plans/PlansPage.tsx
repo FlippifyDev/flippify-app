@@ -4,16 +4,15 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Lato, Inter } from "next/font/google";
 import PlansCard from "./PlansCard";
-import PlansCardBasicWhatsIncluded from "./PlansCardFreeWhatsIncluded";
-import PlansCardStandardWhatsIncluded from "./PlansCardStandardWhatsIncluded";
-import PlansCardEliteWhatsIncluded from "./PlansCardProWhatsIncluded";
-import PlansCardEnterpriseWhatsIncluded from "./PlansCardEnterpriseWhatsIncluded";
-import { IoClose } from "react-icons/io5";
+import PlansCardFreeWhatsIncluded from "@/app/components/plans/PlansCardFreeWhatsIncluded";
+import PlansCardStandardWhatsIncluded from "@/app/components/plans/PlansCardStandardWhatsIncluded";
+import PlansCardProWhatsIncluded from "@/app/components/plans/PlansCardProWhatsIncluded";
+import PlansCardEnterpriseWhatsIncluded from "@/app/components/plans/PlansCardEnterpriseWhatsIncluded";
 import PlansSubscribeNow from "./ButtonGetStarted";
 import Modal from "../../dom/ui/Modal";
 import ButtonUpgradeSubscription from "./ButtonUpgradeSubscription";
 import { fetchConversionRates } from "@/utils/currency-api";
-import { validateTextInput } from "@/utils/input-validation";
+import { validateAlphaNumericInput } from "@/utils/input-validation";
 import { MAX_INPUT_LENGTH } from "@/utils/constants";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
@@ -74,7 +73,7 @@ const PlansPage = () => {
         if (value.length > MAX_INPUT_LENGTH) return;
 
         if (type === "coupon") {
-            validateTextInput(value, setCouponCode);
+            validateAlphaNumericInput(value, setCouponCode);
         }
     }
     
@@ -174,7 +173,7 @@ const PlansPage = () => {
                     }}
                     isOnboarding={isOnboarding}
                     currentSubscriptionName={currentSubscriptionName}
-                    whatsIncludedComponent={<PlansCardBasicWhatsIncluded />}
+                    whatsIncludedComponent={<PlansCardFreeWhatsIncluded />}
                     priceRange={selectedPlan}
                     currency={currency}
                     conversionRates={conversionRates}
@@ -196,7 +195,6 @@ const PlansPage = () => {
                     priceRange={selectedPlan}
                     currency={currency}
                     conversionRates={conversionRates}
-                    comingSoon
                     handleDisplayModal={handleDisplayModal}
                 />
                 <PlansCard
@@ -210,11 +208,10 @@ const PlansPage = () => {
                     }}
                     isOnboarding={isOnboarding}
                     currentSubscriptionName={currentSubscriptionName}
-                    whatsIncludedComponent={<PlansCardEliteWhatsIncluded />}
+                    whatsIncludedComponent={<PlansCardProWhatsIncluded />}
                     priceRange={selectedPlan}
                     currency={currency}
                     conversionRates={conversionRates}
-                    comingSoon
                     handleDisplayModal={handleDisplayModal}
                 />
                 <PlansCard

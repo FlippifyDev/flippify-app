@@ -4,10 +4,8 @@ import Hero from "../dom/Hero";
 import PartnershipsBusinessDetails from "./PartnershipsBusinessSection";
 import PartnershipsClientDetails from "./PartnershipsClientSection";
 import PartnershipsEventsDetails from "./PartnershipsEventsSection";
-import PartnershipsJoinDetails from "./PartnershipsJoinSection";
 import PartnershipsApplySection from "./PartnershipsApplySection";
 import PartnershipsSuccessSection from "./PartnershipsSuccessSection";
-import PartnershipsFAQSection from "./PartnershipsFAQSection";
 import PartnershipsApplyButton from "./PartnershipsApplyButton";
 
 const PartnershipsContent = () => {

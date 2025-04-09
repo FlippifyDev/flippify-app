@@ -1,25 +1,17 @@
-"use client";
-
 import DisabledSideBarButton from "./ButtonDisabled";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import SidebarButton from "./Button";
-import React, { useState } from 'react';
-import { useSession } from 'next-auth/react';
-import { FaSearch, FaBook } from "react-icons/fa";
-import { FaHouse } from "react-icons/fa6";
+import { FaBook, FaSearch } from "react-icons/fa";
 import { MdStickyNote2 } from "react-icons/md";
-import { GrHelpBook } from "react-icons/gr";
 import { HiDocumentReport } from "react-icons/hi";
+import { FaGlobe } from "react-icons/fa";
 
 interface SidebarHomeButtonsProps {
   isSidebarOpen: boolean;
   showAlert: () => void;
 }
 
-const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, showAlert }) => {
-	const { data: session } = useSession();
-	const [unreadCount, setUnreadCount] = useState(0);
-	
+const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, showAlert }) => {	
 	return (
 		<div className="w-full flex flex-col">
 			{/* Dashboard Button - Public*/}
@@ -27,16 +19,18 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
 				text="Dashboard"
 				redirect="dashboard"
 				isSidebarOpen={isSidebarOpen}
-				symbol={<FaHouse className="text-lg" />}
+                symbol={<FaGlobe className="text-lg" />}
 			/>
 
-			{/* Plans Button - Public*/}
-			<SidebarButton
-				text="Plans"
-				redirect="plans"
-				isSidebarOpen={isSidebarOpen}
-				symbol={<FaSearch className="text-lg" />}
-			/>
+            {/* Plans - Public*/}
+            <LayoutSubscriptionWrapper requiredSubscriptions={["!member"]}>
+                <SidebarButton
+                    text="Plans"
+                    redirect="plans"
+                    isSidebarOpen={isSidebarOpen}
+                    symbol={<FaSearch className="text-lg" />}
+                />
+            </LayoutSubscriptionWrapper>
 
 			{/* Activity Log Button - Public*/}
 			<LayoutSubscriptionWrapper requiredSubscriptions={["!admin"]}>

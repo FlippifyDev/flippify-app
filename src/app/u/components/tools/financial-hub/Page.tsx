@@ -23,14 +23,18 @@ import { useEffect, useState } from "react";
 import { HiOutlineDownload } from "react-icons/hi";
 import { useSession } from "next-auth/react";
 import { IoClose } from "react-icons/io5";
+import Modal from "../../dom/ui/Modal";
+import { exportCSVAllowedSubscriptionPlans } from "@/utils/constants";
+import Link from "next/link";
 
 
 
-const FinancialHubContent = () => {
+const Page = () => {
     const { data: session } = useSession();
 
     const [orders, setOrders] = useState<IEbayOrder[]>([]);
     const [loading, setLoading] = useState(false);
+    const subscribed = session?.user.authentication.subscribed;
 
     // General Filters
     const [selectedFilter, setSelectedFilter] = useState("General");
@@ -59,10 +63,10 @@ const FinancialHubContent = () => {
             setLoading(false);
         }
 
-        if (session?.user.authentication.subscribed) {
+        if (subscribed) {
             fetchOrders();
         }
-    }, [session, timeFrom, timeTo]);
+    }, [session, timeFrom, timeTo, subscribed]);
 
 
     const handleTimeRangeChange = (label: string, days: string) => {
@@ -200,7 +204,6 @@ const FinancialHubContent = () => {
         setExportTimeTo(e.target.value);
     };
 
-
     const handleFilterChange = (type: string) => {
         setSelectedFilter(type);
     }
@@ -263,18 +266,9 @@ const FinancialHubContent = () => {
 
                     {/* Export Modal */}
                     {exportModalOpen && (
-                        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-40">
-                            <div className="relative bg-white p-6 rounded-lg shadow-lg w-80 sm:w-96">
-                                {/* Close Button (Cross Icon) */}
-                                <button
-                                    className="absolute -top-5 -right-5 text-white rounded-full bg-[#3c424b] p-2 shadow-gray-700 shadow-[rgba(0,0,0,0.2)_-2px_2px_8px] z-50"
-                                    onClick={handleCloseModal}
-                                >
-                                    <IoClose size={24} />
-                                </button>
-
+                        <Modal title="Export Data" setDisplayModal={setExportModalOpen}>
+                            {subscribed && exportCSVAllowedSubscriptionPlans.includes(subscribed) ? (
                                 <div className="text-center">
-                                    <h2 className="text-lg font-semibold mb-4">Export Data</h2>
                                     <p>You&apos;re about to export a CSV file containing your orders</p>
                                     {/* Date Selectors */}
                                     <div className="mt-4">
@@ -318,8 +312,18 @@ const FinancialHubContent = () => {
                                         </button>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            ) : (
+                                <div className="text-center space-y-4 flex flex-col items-center">
+                                    <p className="text-sm text-center">You need a paid subscription to export data</p>
+                                    <p className="text-sm text-center">Please upgrade your plan to access this feature</p>
+                                    <Link href={`/u/${session.user.username}/plans`} className="bg-houseBlue max-w-[120px] p-3 hover:bg-houseHoverBlue transition duraction-200 text-white text-sm rounded-lg">
+                                        Upgrade Plan
+                                    </Link>
+                                </div>
+                            )}
+
+                        </Modal>
+
                     )}
 
                     <div className="grid grid-cols-12 gap-4 p-2 sm:p-4">
@@ -352,4 +356,4 @@ const FinancialHubContent = () => {
     );
 };
 
-export default FinancialHubContent;
+export default Page;

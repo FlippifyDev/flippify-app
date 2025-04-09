@@ -1,10 +1,6 @@
-"use client";
-
 import DisabledSideBarButton from "./ButtonDisabled";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import SidebarButton from "./Button";
-import React, { useState } from 'react';
-import { useSession } from 'next-auth/react';
 import { AiFillProduct } from "react-icons/ai";
 import { FaBoxOpen } from "react-icons/fa6";
 import { FaStore, FaChartPie } from "react-icons/fa";

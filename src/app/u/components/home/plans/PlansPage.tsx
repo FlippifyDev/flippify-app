@@ -4,11 +4,10 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Lato, Inter } from "next/font/google";
 import PlansCard from "./PlansCard";
-import PlansCardBasicWhatsIncluded from "./PlansCardFreeWhatsIncluded";
-import PlansCardStandardWhatsIncluded from "./PlansCardStandardWhatsIncluded";
-import PlansCardEliteWhatsIncluded from "./PlansCardProWhatsIncluded";
-import PlansCardEnterpriseWhatsIncluded from "./PlansCardEnterpriseWhatsIncluded";
-import { IoClose } from "react-icons/io5";
+import PlansCardFreeWhatsIncluded from "@/app/components/plans/PlansCardFreeWhatsIncluded";
+import PlansCardStandardWhatsIncluded from "@/app/components/plans/PlansCardStandardWhatsIncluded";
+import PlansCardProWhatsIncluded from "@/app/components/plans/PlansCardProWhatsIncluded";
+import PlansCardEnterpriseWhatsIncluded from "@/app/components/plans/PlansCardEnterpriseWhatsIncluded";
 import PlansSubscribeNow from "./ButtonGetStarted";
 import Modal from "../../dom/ui/Modal";
 import ButtonUpgradeSubscription from "./ButtonUpgradeSubscription";
@@ -174,7 +173,7 @@ const PlansPage = () => {
                     }}
                     isOnboarding={isOnboarding}
                     currentSubscriptionName={currentSubscriptionName}
-                    whatsIncludedComponent={<PlansCardBasicWhatsIncluded />}
+                    whatsIncludedComponent={<PlansCardFreeWhatsIncluded />}
                     priceRange={selectedPlan}
                     currency={currency}
                     conversionRates={conversionRates}
@@ -210,7 +209,7 @@ const PlansPage = () => {
                     }}
                     isOnboarding={isOnboarding}
                     currentSubscriptionName={currentSubscriptionName}
-                    whatsIncludedComponent={<PlansCardEliteWhatsIncluded />}
+                    whatsIncludedComponent={<PlansCardProWhatsIncluded />}
                     priceRange={selectedPlan}
                     currency={currency}
                     conversionRates={conversionRates}

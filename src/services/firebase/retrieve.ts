@@ -459,9 +459,20 @@ async function retrieveUserInventory(
 }
 
 
+async function retrieveUserOrderItemRef(uid: string, orderId: string): Promise<DocumentReference | null> {
+    try {
+        const ordersCollectionRef = collection(firestore, "orders", uid, "ebay");
+        return doc(ordersCollectionRef, orderId);
+    } catch (error) {
+        console.error(`Error retrieving order with ID=${orderId}:`, error);
+        return null;
+    }
+}
+
+
 async function retrieveProducts() {
     return [];
 }
 
 
-export { retrieveUserAndCreate, retrieveUser, retrieveUserSnapshot, retrieveUserRef, retrieveUserRefById, retrieveProducts, retrieveUserOrders, retrieveUserInventory };
+export { retrieveUserAndCreate, retrieveUser, retrieveUserSnapshot, retrieveUserRef, retrieveUserRefById, retrieveProducts, retrieveUserOrders, retrieveUserInventory, retrieveUserOrderItemRef };

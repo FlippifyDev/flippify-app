@@ -156,7 +156,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
                                 </label>
                                 <input
                                     type="range"
-                                    min={200}
+                                    min={100}
                                     max={1500}
                                     step={50}
                                     value={enterpriseListings}

@@ -12,7 +12,7 @@ const PartnershipsBusinessDetails = () => {
                 Boost Your Business with Flippify
             </h2>
             <p className="w-full md:w-3/5 text-left text-lg text-lightModeText font-semibold mb-8 sm:mb-10 md:mb-12">
-                Partnering with Flippify unlocks a 40% revenue share, growth through promotions, and a real-time dashboard to track your success—all tailored to elevate your business.
+                Partnering with Flippify not only provides your community with revolutionary technology but also unlocks a 40% revenue share, growth through promotions, and a real-time dashboard to track your success—all tailored to elevate your business.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 md:gap-10">
                 <PartnershipsBusinessCard

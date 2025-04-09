@@ -8,18 +8,20 @@ import Layout from '../components/layout/Layout';
 const root = process.env.ROOT as string;
 
 export const metadata = {
-    title: 'Partnerships - Flippify',
-    description: 'Partner with Flippify to empower your reselling group with exclusive discounts, 50% revenue sharing, and collaborative opportunities. Automate eBay stores with AI-powered tools—open to all partners!',
+    title: "Inventory Management System for eBay Sellers | Flippify - Track & Control Stock",
+    description:
+        "Flippify’s inventory management system helps eBay sellers manage stock levels, avoid overselling, and sync products across platforms. Track inventory in real-time and streamline your eBay store operations with ease.",
     openGraph: {
-        title: 'Partnerships - Flippify',
-        description: 'Partner with Flippify to empower your reselling group with exclusive discounts, 50% revenue sharing, and collaborative opportunities. Automate eBay stores with AI-powered tools—open to all partners!',
-        url: root.concat('/l/partnerships'),
+        title: "Inventory Management System for eBay Sellers | Flippify - Track & Control Stock",
+        description:
+            "Manage your eBay store’s stock, track inventory levels in real-time, and automate processes with Flippify’s inventory management system. Perfect for eBay sellers and online businesses looking to optimize stock control.",
+        url: root.concat('/l/inventory-management'),
         images: [
             {
-                url: 'https://i.imgur.com/partnerships-preview.png', 
-                width: 1200,
-                height: 630,
-                alt: 'Flippify Partnerships Program'
+                url: `https://i.imgur.com/C1q3wfX.png`,
+                width: 2600,
+                height: 1440,
+                alt: "Flippify Inventory Management for eBay Sellers - Track & Control Stock"
             }
         ]
     },
@@ -33,11 +35,10 @@ export const metadata = {
             noimageindex: true,
             'max-video-preview': -1,
             'max-image-preview': 'large',
-            'max-snippet': -1,
-        },
-    },
+            'max-snippet': -1
+        }
+    }
 };
-
 
 export default function InventoryManagementPage() {
     return (

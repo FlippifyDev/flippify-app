@@ -11,7 +11,7 @@ const PartnershipsClientDetails = () => {
                 Empower Your Clients with Advanced Tools
             </h2>
             <p className="text-left text-lightModeText font-semibold mb-8 sm:mb-10 md:mb-12">
-                Enhance your offerings by providing your clients with Flippify's AI-driven automation tools. These advanced solutions streamline listings, pricing, and inventory management, saving your clients time, reducing errors, and boosting their profits—making you a valuable partner in their success.
+                Enhance your offerings by providing your clients with Flippify&apos;s AI-driven automation tools. These advanced solutions streamline listings, pricing, and inventory management, saving your clients time, reducing errors, and boosting their profits—making you a valuable partner in their success.
             </p>
         </div>
     )

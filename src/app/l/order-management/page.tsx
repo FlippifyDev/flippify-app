@@ -7,19 +7,22 @@ import Layout from '../components/layout/Layout';
 
 const root = process.env.ROOT as string;
 
+
 export const metadata = {
-    title: 'Order Management - Flippify',
-    description: 'Partner with Flippify to empower your reselling group with exclusive discounts, 50% revenue sharing, and collaborative opportunities. Automate eBay stores with AI-powered tools—open to all partners!',
+    title: "Order Management for eBay Sellers | Flippify - Streamline Your Sales",
+    description:
+        "Flippify's order management system helps eBay sellers efficiently track and process orders, manage shipments, and maintain accurate sales records. Streamline your eBay business with our intuitive tools for order fulfillment and tracking.",
     openGraph: {
-        title: 'Partnerships - Flippify',
-        description: 'Partner with Flippify to empower your reselling group with exclusive discounts, 50% revenue sharing, and collaborative opportunities. Automate eBay stores with AI-powered tools—open to all partners!',
-        url: root.concat('/l/partnerships'),
+        title: "Order Management for eBay Sellers | Flippify - Streamline Your Sales",
+        description:
+            "Take control of your eBay sales with Flippify’s order management system. Manage and track orders, process shipments, and stay organized. Perfect for eBay sellers who want to optimize their order fulfillment processes.",
+        url: root.concat('/l/order-management'),
         images: [
             {
-                url: 'https://i.imgur.com/partnerships-preview.png',
-                width: 1200,
-                height: 630,
-                alt: 'Flippify Partnerships Program'
+                url: `https://i.imgur.com/ZNfDzFq.png`,
+                width: 2600,
+                height: 1440,
+                alt: "Flippify Order Management for eBay Sellers - Track and Process Orders"
             }
         ]
     },
@@ -33,10 +36,11 @@ export const metadata = {
             noimageindex: true,
             'max-video-preview': -1,
             'max-image-preview': 'large',
-            'max-snippet': -1,
-        },
-    },
+            'max-snippet': -1
+        }
+    }
 };
+
 
 
 export default function OrderManagementPage() {

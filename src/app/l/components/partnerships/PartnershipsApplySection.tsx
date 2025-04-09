@@ -12,14 +12,14 @@ const PartnershipsApplySection = () => {
                 Ready to Partner with Flippify?
             </h2>
             <p className="text-left text-lightModeText font-semibold mb-6 sm:mb-8 md:mb-10">
-                We're excited to connect with a wide range of potential partners, from reselling groups and eBay sellers to software providers and consultants. While partnerships are on hold during our beta phase, we encourage you to express your interest now—we’ll reach out as soon as we’re ready to onboard new partners.
+                We&apos;re excited to connect with a wide range of potential partners, from reselling groups and eBay sellers to software providers and consultants. While partnerships are on hold during our beta phase, we encourage you to express your interest now—we’ll reach out as soon as we’re ready to onboard new partners.
             </p>
             <p className="text-left text-lightModeText font-semibold mb-6 sm:mb-8 md:mb-10">
                 Open a ticket or email{" "}
                 <a href="mailto:partnerships@flippify.com" className="text-blue-400 hover:underline">
                     partnerships@flippify.com
                 </a>{" "}
-                to let us know you're interested. For example, reselling group leaders can get ahead by signing up early!
+                to let us know you&apos;re interested. For example, reselling group leaders can get ahead by signing up early!
             </p>
             <PartnershipsContactForm />
         </div>

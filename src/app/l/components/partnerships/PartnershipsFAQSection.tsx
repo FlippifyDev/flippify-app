@@ -17,7 +17,7 @@ const PartnershipsFAQSection = () => {
                 <div>
                     <p className="font-bold text-left">How do I track my earnings?</p>
                     <p className="text-left">
-                        Once partnerships launch, you'll get access to a dashboard to monitor your 40% commission in real-time.
+                        Once partnerships launch, you&apos;ll get access to a dashboard to monitor your 40% commission in real-time.
                     </p>
                 </div>
                 <div>
@@ -29,13 +29,13 @@ const PartnershipsFAQSection = () => {
                 <div>
                     <p className="font-bold text-left">When will partnerships start?</p>
                     <p className="text-left">
-                        We're in beta now, but we'll onboard partners soon—express interest to get in line!
+                        We&apos;re in beta now, but we&apos;ll onboard partners soon—express interest to get in line!
                     </p>
                 </div>
                 <div>
                     <p className="font-bold text-left">What support do partners get?</p>
                     <p className="text-left">
-                        You'll receive promo materials, priority support, and collaboration opportunities like challenges.
+                        You&apos;ll receive promo materials, priority support, and collaboration opportunities like challenges.
                     </p>
                 </div>
             </div>

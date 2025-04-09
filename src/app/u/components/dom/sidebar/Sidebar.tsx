@@ -63,7 +63,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, setIsSidebarOpen }) =>
 				</div>
 				<div className="mt-5">
 					<ButtonFeedback isSidebarOpen={isSidebarOpen} />
-					<SidebarButton text="Legal" redirect="legal" isSidebarOpen={isSidebarOpen} symbol={<BsClipboard2Fill className="text-xl" />} />
 					<SidebarSignOutButton isSidebarOpen={isSidebarOpen} />
 				</div>
 			</div>

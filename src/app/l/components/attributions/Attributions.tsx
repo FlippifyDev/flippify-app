@@ -3,13 +3,33 @@ import React from 'react'
 
 const Attributions = () => {
     return (
-        <div className='text-white flex flex-col gap-4'>
-            <section>
-                <h1>Below is a list of software which Flippify has used which requires attribution.</h1>
-                <h3>We aim to attribute all the software which we have used that we have not created, however it is possible we have missed/forgotten some. If you notice this, please contact us immediately so we can give the proper attribution to the creator/artist.</h3>
+        <div className='text-gray-800 flex flex-col gap-24'>
+            <section className='space-y-4'>
+                <h1 className='text-3xl font-bold'>Attributions</h1>
+                <p>Last updated March 31, 2025</p>
+                <p>Below is a list of software which Flippify has used which requires attribution.</p>
+                <p>We aim to attribute all the software which we have used that we have not created, however it is possible we have missed/forgotten some. If you notice this, please contact us immediately so we can give the proper attribution to the creator/artist.</p>
             </section>
-            <section>
-                <h1 className='text-lg'>Animations</h1>
+
+            <section className='space-y-4'>
+                <h1 className='text-lg font-bold'>Storyset</h1>
+
+                <p>
+                    The illustrations used in this website are powered by <Link className='text-blue-600 hover:underline' href="https://storyset.com/" target="_blank" rel="noopener noreferrer">Storyset</Link>.
+                    Storyset provides high-quality illustrations that enhance the visual appeal of our website.
+                </p>
+
+                <p>
+                    Although we have a premium subscription and are not required to attribute, we still wish to give credit to Storyset for their amazing work and resources. You can find more of their free and premium illustrations at <Link className='text-blue-600 hover:underline' href="https://storyset.com/" target="_blank" rel="noopener noreferrer">Storyset</Link>.
+                </p>
+
+                <p className="text-sm text-gray-500">
+                    Illustration credits: Storyset by Freepik
+                </p>
+            </section>
+
+            <section className='space-y-4'>
+                <h1 className='text-lg font-bold'>UIVerse Animations</h1>
                 <div className='flex flex-col gap-4 p-4'>
                     <UIVerseCopyWrite
                         title='Add Listing Icon Animation'
@@ -37,6 +57,24 @@ const Attributions = () => {
                         username='Nawsome'
                     />
                 </div>
+            </section>
+
+
+            <section className='space-y-4'>
+                <h1 className='text-lg font-bold'>React Icons</h1>
+
+                <p>
+                    The icons used throughout this website are provided by <a href="https://react-icons.github.io/react-icons/" target="_blank" rel="noopener noreferrer">React Icons</a>.
+                    React Icons offers a wide variety of customizable icons that have been integrated into our design to enhance usability and visual appeal.
+                </p>
+
+                <p>
+                    While we benefit from their open-source library, we want to ensure React Icons is credited for providing such a fantastic set of icons for developers and designers.
+                </p>
+
+                <p className="text-sm text-gray-500">
+                    Icon credits: <a href="https://react-icons.github.io/react-icons/" target="_blank" rel="noopener noreferrer">React Icons</a>
+                </p>
             </section>
         </div >
     )

@@ -57,7 +57,7 @@ const Hero: React.FC<HeroProps> = ({ text, description, image, imageAlt, button,
                 {button ? button : null}
             </div>
             {/* Right Side: Image */}
-            <div className={`w-full lg:w-1/3 hidden lg:block pb-10 ${imageContainerClassName}`}>
+            <div className={`w-full lg:w-1/3 hidden lg:block pb-10 ${imageContainerClassName} select-none`}>
                 <Image
                     src={image}
                     alt={imageAlt}

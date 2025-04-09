@@ -11,10 +11,10 @@ const PartnershipsSuccessSection = () => {
                 Success Stories on the Horizon
             </h2>
             <p className="text-left text-lightModeText font-semibold mb-6 sm:mb-8 md:mb-10">
-                As our partner network expands, we'll feature standout partners in case studies, highlighting how Flippify's AI tools have driven success across diverse business models. Join us early to be part of these inspiring stories and gain visibility in the e-commerce community.
+                As our partner network expands, we&apos;ll feature standout partners in case studies, highlighting how Flippify&apos;s AI tools have driven success across diverse business models. Join us early to be part of these inspiring stories and gain visibility in the e-commerce community.
             </p>
             <p className="text-left text-lightModeText font-semibold">
-                Be among the first to showcase your success with Flippify—whether you're a reselling group leader or a software innovator!
+                Be among the first to showcase your success with Flippify—whether you&apos;re a reselling group leader or a software innovator!
             </p>
         </div>
     )

@@ -11,10 +11,10 @@ const PartnershipsEventsDetails = () => {
                 Expand Your Reach with Flippify Challenges
             </h2>
             <p className="text-left text-lightModeText font-semibold mb-6 sm:mb-8 md:mb-10">
-                Collaborate with Flippify to launch engaging social media challenges that captivate your audience and attract new clients, showcasing the power of our AI tools to drive results. Whether you're a reselling group, a marketing agency, or a software provider, these challenges offer a unique way to demonstrate value and grow your business.
+                Collaborate with Flippify to launch engaging social media challenges that captivate your audience and attract new clients, showcasing the power of our AI tools to drive results. Whether you&apos;re a reselling group, a marketing agency, or a software provider, these challenges offer a unique way to demonstrate value and grow your business.
             </p>
             <p className="text-left text-lightModeText font-semibold">
-                Partner with us to host challenges—like 'Who can make the most profit in 30 days?'—where we'll promote your business, select participants, and track results using our tools. It's a win-win: your audience sees the benefits of automation, and you gain exposure and new sign-ups. For instance, Discord reselling groups can showcase how their members thrive with Flippify.
+                Partner with us to host challenges—like &apos;Who can make the most profit in 30 days?&apos;—where we&apos;ll promote your business, select participants, and track results using our tools. It&apos;s a win-win: your audience sees the benefits of automation, and you gain exposure and new sign-ups. For instance, Discord reselling groups can showcase how their members thrive with Flippify.
             </p>
         </div>
     )

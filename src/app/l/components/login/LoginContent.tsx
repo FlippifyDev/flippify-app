@@ -8,6 +8,7 @@ import { signInWithEmailAndPassword as firebaseSignIn } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { IUser } from "@/models/user";
 import { Lato } from 'next/font/google';
+import Image from "next/image";
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
@@ -51,7 +52,7 @@ const LoginContent = () => {
         }
     };
     return (
-        <div className="min-h-screen flex items-center justify-center mt-[-64px] p-4">
+        <div className="min-h-screen flex items-center justify-center mt-[-64px] p-4 gap-16">
             <div className="bg-white rounded-3xl shadow-lg w-full max-w-md p-8">
                 {/* Logo */}
                 <h2 className={`${lato.className} pb-1 text-[40px] flex justify-center font-bold mb-4 text-black`}>
@@ -104,6 +105,15 @@ const LoginContent = () => {
                         Sign Up
                     </button>
                 </div>
+            </div>
+            <div>
+                <Image
+                    src="/auth/login.svg"
+                    alt="Sign Up Image"
+                    className="object-cover"
+                    width={600}
+                    height={600}
+                />
             </div>
         </div>
     )

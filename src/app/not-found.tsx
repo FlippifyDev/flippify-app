@@ -4,9 +4,9 @@ import Layout from "./l/components/layout/Layout";
 export default function NotFound() {
     return (
         <Layout>
-            <div className="w-full max-w-7xl flex justify-center items-center mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+            <div className="min-h-screen w-full max-w-7xl flex justify-center items-start mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 scale-125">
                 <Image 
-                    src="/404NotFound.png"
+                    src="/404NotFound.svg"
                     alt="404 Not Found"
                     width={1000}
                     height={1000}

@@ -63,7 +63,7 @@ const Navbar = () => {
         {
             label: "Terms & Conditions",
             description: "Legal terms of using our services",
-            href: "/terms-and-conditions",
+            href: "/l/terms-and-conditions",
             icon: <FaFileContract className="text-lg" />
         },
         {
@@ -78,12 +78,6 @@ const Navbar = () => {
             href: "/l/attributions",
             icon: <FaBalanceScale className="text-lg" />
         },
-        {
-            label: "Sitemap",
-            description: "All pages in one place",
-            href: "/l/sitemap",
-            icon: <FaSitemap className="text-lg" />
-        }
     ];
 
     function handleHover(index: number) {

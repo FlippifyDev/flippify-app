@@ -9,18 +9,18 @@ import ThemeSetter from '../../components/ThemeSetter';
 const root = process.env.ROOT as string;
 
 export const metadata = {
-    title: 'Partnerships - Flippify',
-    description: 'Partner with Flippify to empower your reselling group with exclusive discounts, 50% revenue sharing, and collaborative opportunities. Automate eBay stores with AI-powered tools—open to all partners!',
+    title: 'Partnerships Program - Flippify | Exclusive Discounts & AI-Powered Tools for eBay Resellers',
+    description: 'Partner with Flippify to empower your reselling group with exclusive discounts, 40% revenue sharing, and collaborative opportunities. Automate eBay stores with AI-powered tools—open to all partners!',
     openGraph: {
-        title: 'Partnerships - Flippify',
-        description: 'Partner with Flippify to empower your reselling group with exclusive discounts, 50% revenue sharing, and collaborative opportunities. Automate eBay stores with AI-powered tools—open to all partners!',
+        title: 'Partnerships Program - Flippify | Exclusive Discounts & AI-Powered Tools for eBay Resellers',
+        description: 'Partner with Flippify to empower your reselling group with exclusive discounts, 40% revenue sharing, and collaborative opportunities. Automate eBay stores with AI-powered tools—open to all partners!',
         url: root.concat('/l/partnerships'),
         images: [
             {
-                url: 'https://i.imgur.com/partnerships-preview.png', // Replace with your actual image
-                width: 1200,
-                height: 630,
-                alt: 'Flippify Partnerships Program'
+                url: 'https://i.imgur.com/x9hYVeg.png', 
+                width: 2600,
+                height: 1440,
+                alt: 'Flippify Partnerships Program for eBay Resellers - AI Tools and Revenue Sharing'
             }
         ]
     },
@@ -38,6 +38,7 @@ export const metadata = {
         },
     },
 };
+
 
 export default function PartnershipsPage() {
     return (

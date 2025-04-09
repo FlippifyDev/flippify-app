@@ -2,7 +2,7 @@
 
 
 // Local Imports
-import Card from './Card'
+import Card from '../../dom/ui/Card';
 import { fetchUserSubscription, fetchSubscriptionMaxListings } from '@/utils/fetch-user-sub';
 
 // External Imports

@@ -1,4 +1,4 @@
-import Card from './Card'
+import Card from '../../dom/ui/Card';
 import { IEbayOrder } from '@/models/store-data';
 
 

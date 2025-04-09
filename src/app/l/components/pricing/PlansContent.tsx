@@ -1,10 +1,10 @@
 "use client";
 
 import PlansCard from "./PlansCard";
-import PlansCardStandardWhatsIncluded from "./PlansCardStandardWhatsIncluded";
-import PlansCardProWhatsIncluded from "./PlansCardProWhatsIncluded";
-import PlansCardFreeWhatsIncluded from "./PlansCardFreeWhatsIncluded";
-import PlansCardEnterpriseWhatsIncluded from "./PlansCardEnterpriseWhatsIncluded";
+import PlansCardFreeWhatsIncluded from "@/app/components/plans/PlansCardFreeWhatsIncluded";
+import PlansCardStandardWhatsIncluded from "@/app/components/plans/PlansCardStandardWhatsIncluded";
+import PlansCardProWhatsIncluded from "@/app/components/plans/PlansCardProWhatsIncluded";
+import PlansCardEnterpriseWhatsIncluded from "@/app/components/plans/PlansCardEnterpriseWhatsIncluded";
 import React, { useState, useEffect, useCallback } from "react";
 import { Lato, Inter } from "next/font/google";
 import { fetchConversionRates } from "@/utils/currency-api";

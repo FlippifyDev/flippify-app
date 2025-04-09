@@ -1,6 +1,7 @@
 "use client"
 
 // Local Imports
+import Card from '../../dom/ui/Card';
 import { IEbayOrder } from "@/models/store-data";
 import { fetchChartOptions } from "./fetchChartOptions";
 import { useHorizontalScroll } from "@/utils/useHorizontalScroll";
@@ -8,8 +9,6 @@ import { useHorizontalScroll } from "@/utils/useHorizontalScroll";
 // External Imports
 import { useEffect, useRef, useState } from "react";
 import ApexCharts from "apexcharts";
-import Card from "./Card";
-
 
 interface CardPlatformDonutChartProps {
     orders: IEbayOrder[];

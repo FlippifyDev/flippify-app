@@ -1,7 +1,6 @@
-import React from 'react';
+import Page from '@/app/u/components/tools/shipping-and-fulfillment/Page';
 import Layout from '@/app/u/components/layout/Layout';
 import ThemeSetter from '@/app/components/ThemeSetter';
-import LoadingAnimation from '../../../components/dom/ui/LoadingAnimation';
 
 export const metadata = {
     title: 'Shipping & Fulfillment - Flippify',
@@ -13,7 +12,7 @@ export default function ShippingAndFulfillment() {
         <>
             <ThemeSetter theme="light" />
             <Layout requiredSubscriptions={['accessGranted']}>
-                <LoadingAnimation text="This page is in development" type="typewriter" />
+                <Page />
             </Layout>
         </>
     );

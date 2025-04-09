@@ -12,10 +12,22 @@ const PlansCardStandardWhatsIncluded = () => {
 			<ul className={rootClass}>
 				<li className="w-full">
 					<PlansClickableBulletPoint
-						text="100 Auto-Tracked Listings /Month"
-                        tooltip="Track up to 100 new eBay listings monthly. Log the purchase, and we&apos;ll automatically monitor inventory, sales, and financials. Limit resets each month; active tracked items don&apos;t count toward the next month&apos;s cap. On initial sign-up we can only track 90 days in the past and up to 500 items."
+						text="48 Auto-Tracked Listings /Month"
+                        tooltip="Track up to 48 new eBay listings monthly. Log the purchase, and we&apos;ll automatically monitor inventory, sales, and financials. Limit resets each month; active tracked items don&apos;t count toward the next month&apos;s cap. On initial sign-up we can only track 90 days in the past and up to 500 items."
 					/>
-				</li>
+                </li>
+                <li className="w-full">
+                    <PlansClickableBulletPoint
+                        text="48 Manual Transaction Entries"
+                        tooltip="Manually log purchases and sales to track them in your inventory, orders, and financials. You manage the item&apos;s status, such as moving it between inventory and orders, without automated tracking."
+                    />
+                </li>
+                <li className="w-full">
+                    <PlansClickableBulletPoint
+                        text="Export to CSV"
+                        tooltip="Easily export your inventory, orders, and financials to CSV format for external use."
+                    />
+                </li>
 			</ul>
 
 			<div className="text-black font-semibold ml-2 mb-[-6px]">
@@ -26,13 +38,6 @@ const PlansCardStandardWhatsIncluded = () => {
 					<PlansClickableBulletPoint
 						text="20 AI Automated Listings"
 						tooltip="Provide a product link, and our AI will create, list, and manage 25 listings for you, tracking them through to sale."
-						comingSoon
-					/>
-				</li>
-				<li className="w-full">
-					<PlansClickableBulletPoint
-						text="100 Manual Transaction Entries"
-						tooltip="Manually log purchases and sales to track them in your inventory, orders, and financials. You manage the item&apos;s status, such as moving it between inventory and orders, without automated tracking."
 						comingSoon
 					/>
 				</li>

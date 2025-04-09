@@ -1,11 +1,14 @@
 // Local Imports
 import { IUser } from "@/models/user";
-import { retrieveUserRefById } from "./retrieve";
+import { formatDateToISO } from "@/utils/format-dates";
+import { updateCacheData } from "@/utils/cache-helpers";
+import { ebayOrderCacheKey } from "@/utils/constants";
 import { updateReferreeUserAdmin } from "./update-admin";
+import { IEbayOrder, OrderStatus } from "@/models/store-data";
+import { retrieveUserOrderItemRef, retrieveUserRefById } from "./retrieve";
 
 // External Imports
-import { deleteField, getDoc, setDoc } from "firebase/firestore";
-import { formatDateToISO } from "@/utils/format-dates";
+import { deleteField, getDoc, setDoc, updateDoc } from "firebase/firestore";
 
 
 
@@ -165,4 +168,27 @@ async function incrementRewardsClaimed(uid: string): Promise<void> {
 }
 
 
-export { updateUser, updateUserPreferences, completeOnboarding, incrementRewardsClaimed };
+async function updateOrderStatus(uid: string, order: IEbayOrder, status: OrderStatus): Promise<void> {
+    try {
+        const orderId = order.orderId;
+        const orderRef = await retrieveUserOrderItemRef(uid, orderId);
+
+        if (!orderRef) {
+            console.error(`No order found with ID: ${orderId}`);
+            return;
+        }
+
+        await updateDoc(orderRef, { status });
+
+        order.status = status;
+        console.log("order", order)
+        updateCacheData(`${ebayOrderCacheKey}-${uid}`, order)
+
+        console.log(`Order ${orderId} status updated to ${status}`);
+    } catch (error) {
+        console.error("Error updating Firestore order status:", error);
+        throw error;
+    }
+}
+
+export { updateUser, updateUserPreferences, completeOnboarding, incrementRewardsClaimed, updateOrderStatus };

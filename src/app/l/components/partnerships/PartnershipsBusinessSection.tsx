@@ -53,7 +53,7 @@ const PartnershipsBusinessDetails = () => {
                     subtitle="Be a trailblazer with Flippify&apos;s early partner perks"
                     bulletPoints={[
                         "Featured in future case studies",
-                        "Boost your brand&apos;s visibility",
+                        "Boost your brand's visibility",
                         "Showcase your success to our community"
                     ]}
                     disclaimer={null}

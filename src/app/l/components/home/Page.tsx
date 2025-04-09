@@ -15,9 +15,9 @@ const Page = ({ className = "" }) => {
     return (
         <div className={`home-details-container ${className} w-full`}>
             <div className="flex flex-col items-center w-full">
-                <Hero 
-                    text={[{ text: "Inventory & Order" }, { "text": "Mangement Software", isGradient: true}]}
-                    description="Streamline your warehouse management system, control stock, and optimize listings with automated tools. Whether you&apos;re running an eBay store, using an eBay business account, or exploring websites like eBay — we help you sell smarter and scale faster."
+                <Hero
+                    text={[{ text: "Inventory & Order" }, { "text": "Mangement Software", isGradient: true }]}
+                    description="Streamline warehouse management, control stock, and optimize listings with automated tools to sell smarter and scale faster on eBay."
                     button={<HomeGetAccess />}
                     image="/hero/home.svg"
                     imageAlt="Flippify Home"

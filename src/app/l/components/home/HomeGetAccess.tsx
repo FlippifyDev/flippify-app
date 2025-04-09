@@ -19,7 +19,7 @@ const HomeGetAccess = () => {
 
     return (
         <button
-            className={`btn bg-houseHoverBlue rounded-lg mr-1 text-white hover:bg-houseBlue hover:shadow-lg hover:pb-[2px] border-none transform-duration-400 transition-duration-400 ${showAnimation ? "animate-fadeInPrimary" : ""}`}
+            className={`btn bg-houseHoverBlue rounded-lg mr-1 text-white hover:bg-houseBlue hover:shadow-lg hover:pb-[2px] border-none transform duration-200 ${showAnimation ? "animate-fadeInPrimary" : ""}`}
             onClick={() => router.push('/l/login')}
         >
             Get Access Now

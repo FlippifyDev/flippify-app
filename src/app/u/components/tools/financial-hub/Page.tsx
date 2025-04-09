@@ -267,7 +267,7 @@ const Page = () => {
                     {/* Export Modal */}
                     {exportModalOpen && (
                         <Modal title="Export Data" setDisplayModal={setExportModalOpen}>
-                            {subscribed && !exportCSVAllowedSubscriptionPlans.includes(subscribed) ? (
+                            {subscribed && exportCSVAllowedSubscriptionPlans.includes(subscribed) ? (
                                 <div className="text-center">
                                     <p>You&apos;re about to export a CSV file containing your orders</p>
                                     {/* Date Selectors */}

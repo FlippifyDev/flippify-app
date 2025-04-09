@@ -26,29 +26,21 @@ const PartnershipsContent = () => {
                 <div className="py-20">
                     <PartnershipsBusinessDetails />
                 </div>
-                <div className="w-full border-b border-dashed"></div>
+                <div className="w-full border-b-2 border-gray-300 border-dashed"></div>
                 <div className="py-20">
                     <PartnershipsClientDetails />
                 </div>
-                <div className="w-full border-b border-dashed"></div>
+                <div className="w-full border-b-2 border-gray-300 border-dashed"></div>
                 <div className="py-20">
                     <PartnershipsEventsDetails />
                 </div>
-                <div className="w-full border-b border-dashed"></div>
-                <div className="py-20">
-                    <PartnershipsJoinDetails />
-                </div>
-                <div className="w-full border-b border-dashed"></div>
+                <div className="w-full border-b-2 border-gray-300 border-dashed"></div>
                 <div className="py-20">
                     <PartnershipsApplySection />
                 </div>
-                <div className="w-full border-b border-dashed"></div>
-                <div className="py-20">
+                <div className="w-full border-b-2 border-gray-300 border-dashed"></div>
+                <div className="pt-20">
                     <PartnershipsSuccessSection />
-                </div>
-                <div className="w-full border-b border-dashed"></div>
-                <div className="py-20">
-                    <PartnershipsFAQSection />
                 </div>
             </div>
 

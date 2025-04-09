@@ -464,20 +464,6 @@ const OrderDetails = () => {
                                                 onFocus={() => handlePurchasePriceInput(index, purchasePrice)}
                                                 onClick={() => handlePurchasePriceInput(index, purchasePrice)}
                                                 type="text"
-                                                value={(editingIndex === index && editingType === "shippingFees") ? editedPurchasePrice ?? '0' : purchasePrice}
-                                                onChange={(e) => handleInput(e.target.value, "shippingFees")}
-                                                onBlur={() => saveChange(index, "shippingFees")}
-                                                onKeyDown={(e) => handleKeyPress(e, index, "shippingFees")}
-                                                className="min-w-24 focus:border text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
-                                            />
-                                        </td>
-                                        <td
-                                            className="cursor-pointer transition duration-200"
-                                        >
-                                            <input
-                                                onFocus={() => handlePurchasePriceInput(index, purchasePrice)}
-                                                onClick={() => handlePurchasePriceInput(index, purchasePrice)}
-                                                type="text"
                                                 value={(editingIndex === index && editingType === "purchasePrice") ? editedPurchasePrice ?? '0' : purchasePrice}
                                                 onChange={(e) => handleInput(e.target.value, "purchasePrice")}
                                                 onBlur={() => saveChange(index, "purchasePrice")}

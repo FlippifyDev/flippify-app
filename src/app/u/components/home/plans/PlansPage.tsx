@@ -195,7 +195,7 @@ const PlansPage = () => {
                     priceRange={selectedPlan}
                     currency={currency}
                     conversionRates={conversionRates}
-                
+                    comingSoon
                     handleDisplayModal={handleDisplayModal}
                 />
                 <PlansCard
@@ -213,7 +213,7 @@ const PlansPage = () => {
                     priceRange={selectedPlan}
                     currency={currency}
                     conversionRates={conversionRates}
-                    
+                    comingSoon
                     handleDisplayModal={handleDisplayModal}
                 />
                 <PlansCard
@@ -235,7 +235,7 @@ const PlansPage = () => {
                     enterpriseListings={enterpriseListings}
                     setEnterpriseListings={setEnterpriseListings}
                     enterpriseContactUrl="/contact"
-                    
+                    comingSoon
                     handleDisplayModal={handleDisplayModal}
                 />
             </div>

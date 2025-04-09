@@ -32,6 +32,7 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
     const currencySymbol = currencySymbols[session?.user.preferences.currency ?? ""]
 
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+    const [aboveLimit, setAboveLimit] = useState(false);
 
     // General Info
     const [itemId, setItemId] = useState<string>("")
@@ -70,7 +71,26 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
     const [errorMessage, setErrorMessage] = useState<string>("")
     const [successMessage, setSuccessMessage] = useState<string>("")
 
-    const aboveLimit = isAboveLimit();
+    useEffect(() => {
+        const checkLimit = () => {
+            const plan = session?.user.authentication.subscribed;
+            if (!plan) {
+                setErrorMessage("Please subscribe to a plan to add orders.");
+                setAboveLimit(true);
+                return;
+            }
+            const manualOrders = session?.user.store?.ebay.numOrders?.manual || 0;
+            if (manualOrders >= subscriptionLimits[plan].manual) {
+                setErrorMessage(`You have reached the maximum number of manual orders for your plan. Please upgrade your plan to add more or wait till next month.`);
+                setAboveLimit(true);
+                return;
+            }
+
+            setAboveLimit(false);
+        };
+
+        if (session?.user) checkLimit();
+    }, [session?.user]);
 
     useEffect(() => {
         if (!fillItem) return;
@@ -94,29 +114,11 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
         }
     }
 
-    function isAboveLimit() {
-        const plan = session?.user.authentication.subscribed;
-        if (!plan) {
-            setErrorMessage("Please subscribe to a plan to add orders.");
-            setLoading(false);
-            return true;
-        }
-        const manualOrders = session?.user.store?.ebay.numOrders?.manual || 0;
-
-        if (manualOrders >= subscriptionLimits[plan].manual) {
-            setErrorMessage(`You have reached the maximum number of manual orders for your plan. Please upgrade your plan to add more or wait till next month.`);
-            setLoading(false);
-            return true;
-        }
-
-        return false;
-    }
-
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         setLoading(true);
 
-        if (isAboveLimit()) return;
+        if (aboveLimit) return;
 
         const orderItem: IEbayOrder = {
             additionalFees: 0,

@@ -16,7 +16,7 @@ export const metadata = {
         url: root.concat('/l/sign-up'),
         images: [
             {
-                url: "https://i.imgur.com/CguUL1h.png",
+                url: "https://i.imgur.com/ycu0VT6.png",
                 width: 2600,
                 height: 1440,
                 alt: "Flippify Sign Up Page - Join the Community of Sellers"

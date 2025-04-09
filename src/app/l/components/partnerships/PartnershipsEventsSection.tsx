@@ -26,7 +26,7 @@ const PartnershipsEventsDetails = () => {
                         <ul className="space-y-2">
                             <li className="flex items-start">
                                 <span className="text-houseBlue mr-2">✓</span>
-                                <span className="text-lightModeText">From challenges to webinars or co-branded campaigns, we're open to any event that highlights your expertise and our AI tools.</span>
+                                <span className="text-lightModeText">From challenges to webinars or co-branded campaigns, we&apos;re open to any event that highlights your expertise and our AI tools.</span>
                             </li>
                         </ul>
                     </div>
@@ -76,7 +76,7 @@ const PartnershipsEventsDetails = () => {
                     Example: 30-Day Profit Challenge
                 </h3>
                 <p className="text-left text-lightModeText mb-6">
-                    We invite applicants and select a few to use your business and Flippify's tools to maximize profits in 30 days. Their progress is posted on social media, showing how easy it is to succeed—boosting recognition and growth for us both.
+                    We invite applicants and select a few to use your business and Flippify&apos;s tools to maximize profits in 30 days. Their progress is posted on social media, showing how easy it is to succeed—boosting recognition and growth for us both.
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">

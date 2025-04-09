@@ -4,7 +4,7 @@ import Policy from './Policy'
 
 const Page = () => {
     return (
-        <div className='min-h-screen'>
+        <div className='min-h-screen flex flex-col items-center'>
             <Hero
                 text={[
                     { text: "Your privacy ", isGradient: false },
@@ -16,7 +16,7 @@ const Page = () => {
                 imageAlt="Privacy and Security"
                 imageContainerClassName='pb-20 scale-150'
             />
-            <div className='max-w-6.5xl mt-[28rem] px-4'>
+            <div className='max-w-6.5xl mt-[16rem] md:mt-0 2xl:mt-[4rem] px-8 md:px-4'>
                 <Policy />
             </div>
         </div>

@@ -11,7 +11,7 @@ export default function ShippingAndFulfillment() {
     return (
         <>
             <ThemeSetter theme="light" />
-            <Layout requiredSubscriptions={['accessGranted']}>
+            <Layout anySubscriptions={['admin', 'member']}>
                 <Page />
             </Layout>
         </>

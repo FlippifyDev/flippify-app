@@ -2,13 +2,14 @@ import { MdOutlineAddBusiness } from "react-icons/md";
 
 interface NavbarAddListingProps {
     isConnected: boolean;
+    isSubscribed: boolean;
     handleDisplayModal: (display: boolean, type: string) => void;
 }
 
 
-const NavbarAddListing: React.FC<NavbarAddListingProps> = ({ isConnected, handleDisplayModal }) => {
+const NavbarAddListing: React.FC<NavbarAddListingProps> = ({ isConnected, isSubscribed, handleDisplayModal }) => {
     function handleOnClick() {
-        if (!isConnected) return;
+        if (!isConnected || !isSubscribed) return;
         handleDisplayModal(true, "add-listing");
     }
 
@@ -18,7 +19,9 @@ const NavbarAddListing: React.FC<NavbarAddListingProps> = ({ isConnected, handle
             {/* Tooltip */}
             <div className="absolute left-1/4 transform -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                 <div className="bg-gray-800 text-white text-xs rounded py-1 px-2 w-[114px]">
-                    {isConnected ? "Add To Inventory" : "No connected account"}
+                    {!isSubscribed ? "Subscription Required" :
+                        isConnected ? "Add To Inventory" : "No connected account"
+                    }
                 </div>
             </div>
         </div>

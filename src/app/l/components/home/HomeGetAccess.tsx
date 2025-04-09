@@ -11,16 +11,16 @@ const HomeGetAccess = () => {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setShowAnimation(false); // Disable animation after initial load
-        }, 500); // Duration of your fade-in animation (400ms or adjust as needed)
+            setShowAnimation(false); 
+        }, 500); 
 
         return () => clearTimeout(timer);
     }, []);
 
     return (
         <button
-            className={`btn bg-houseHoverBlue rounded-lg mr-1 text-white hover:bg-houseBlue hover:shadow-lg hover:pb-[2px] border-none transform duration-200 ${showAnimation ? "animate-fadeInPrimary" : ""}`}
-            onClick={() => router.push('/l/login')}
+            className={`btn bg-houseHoverBlue rounded-lg text-white hover:bg-houseBlue hover:shadow-lg hover:pb-[2px] border-none transform duration-200 ${showAnimation ? "animate-fadeInPrimary" : ""}`}
+            onClick={() => router.push('/l/sign-up')}
         >
             Get Access Now
         </button>

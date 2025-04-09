@@ -343,7 +343,7 @@ const Page = () => {
                             </div>
                         </div>
                         <CardCostAverages orders={orders} loading={loading} currencySymbol={currencySymbols[userCurrency]} />
-                        <CardShippingInfo orders={orders} loading={loading} currencySymbol={currencySymbols[userCurrency]} />
+                        <CardShippingInfo orders={orders} loading={loading} />
                     </div>
                 </div>
             ) : (

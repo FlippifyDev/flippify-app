@@ -62,7 +62,7 @@ const PartnershipsApplySection = () => {
                         Join the Flippify Partner Network Today
                     </h2>
                     <p className="text-left text-lg text-lightModeText font-semibold mb-6">
-                        We're in beta and building fast—get started by exploring our current tools on the product pages and what's ahead on our roadmap. Ready to join us? Express your interest below!
+                        We&apos;re in beta and building fast—get started by exploring our current tools on the product pages and what&apos;s ahead on our roadmap. Ready to join us? Express your interest below!
                     </p>
                     <p className="text-left text-lightModeText mb-4">
                         Have questions or need support? Email us at{" "}
@@ -71,7 +71,7 @@ const PartnershipsApplySection = () => {
                         </a>
                     </p>
                     <p className="text-left text-lightModeText mb-4">
-                        We're ready to onboard partners like reselling groups, eBay sellers, software providers, consultants, and more. Join us now to start leveraging our AI-driven tools, with much more in development to enhance your clients' success. For example, reselling group leaders can immediately empower their members with our automation solutions!
+                        We&apos;re ready to onboard partners like reselling groups, eBay sellers, software providers, consultants, and more. Join us now to start leveraging our AI-driven tools, with much more in development to enhance your clients&apos; success. For example, reselling group leaders can immediately empower their members with our automation solutions!
                     </p>
                 </div>
 
@@ -85,7 +85,7 @@ const PartnershipsApplySection = () => {
                         <div className="p-6 bg-blue-50 rounded-xl border border-blue-200">
                             <h4 className="text-xl font-medium text-houseBlue mb-2">Thank you for your interest!</h4>
                             <p className="text-houseBlue">
-                                We've received your submission and will be in touch soon. Meanwhile, feel free to explore our product pages to learn more about what we offer.
+                                We&apos;ve received your submission and will be in touch soon. Meanwhile, feel free to explore our product pages to learn more about what we offer.
                             </p>
                         </div>
                     ) : (
@@ -97,7 +97,7 @@ const PartnershipsApplySection = () => {
                                     id="name"
                                     name="name"
                                     placeholder="John Doe"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-houseBlue"
+                                    className="input input-bordered w-full bg-white placeholder-gray-400"
                                     required
                                 />
                             </div>
@@ -109,7 +109,7 @@ const PartnershipsApplySection = () => {
                                     id="email"
                                     name="email"
                                     placeholder="john@example.com"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-houseBlue"
+                                    className="input input-bordered w-full bg-white placeholder-gray-400"
                                     required
                                 />
                             </div>
@@ -121,7 +121,7 @@ const PartnershipsApplySection = () => {
                                     id="company"
                                     name="company"
                                     placeholder="Acer Resellers"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-houseBlue"
+                                    className="input input-bordered w-full bg-white placeholder-gray-400"
                                 />
                             </div>
 
@@ -132,7 +132,7 @@ const PartnershipsApplySection = () => {
                                     id="website"
                                     name="website"
                                     placeholder="example.com"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-houseBlue"
+                                    className="input input-bordered w-full bg-white placeholder-gray-400"
                                 />
                             </div>
 
@@ -143,7 +143,7 @@ const PartnershipsApplySection = () => {
                                     id="country"
                                     name="country"
                                     placeholder="United States"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-houseBlue"
+                                    className="input input-bordered w-full bg-white placeholder-gray-400"
                                     required
                                 />
                             </div>
@@ -153,7 +153,7 @@ const PartnershipsApplySection = () => {
                                 <select
                                     id="businessType"
                                     name="businessType"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-houseBlue"
+                                    className="input input-bordered w-full bg-white placeholder-gray-400"
                                     required
                                     value={businessType}
                                     onChange={handleBusinessTypeChange}
@@ -175,7 +175,7 @@ const PartnershipsApplySection = () => {
                                         id="otherBusinessType"
                                         name="otherBusinessType"
                                         placeholder="Other business type"
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-houseBlue"
+                                        className="input input-bordered w-full bg-white placeholder-gray-400"
                                         required
                                     />
                                 </div>
@@ -188,7 +188,7 @@ const PartnershipsApplySection = () => {
                                     name="goals"
                                     rows={3}
                                     placeholder="To further equip my clients in their selling journey."
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-houseBlue"
+                                    className="input input-bordered w-full bg-white placeholder-gray-400"
                                 ></textarea>
                             </div>
 
@@ -214,7 +214,7 @@ const PartnershipsApplySection = () => {
                                     id="referral"
                                     name="referral"
                                     placeholder="e.g., social media, friend, search"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-houseBlue"
+                                    className="input input-bordered w-full bg-white placeholder-gray-400"
                                 />
                             </div>
 

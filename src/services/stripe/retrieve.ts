@@ -84,8 +84,13 @@ const checkForExistingDiscount = async (customerId: string) => {
     }
 };
 
-async function retrieveCouponCodeOrPromotionCode(code: string) {
+async function retrieveCouponCodeOrPromotionCode(code: string): Promise<{ coupon: boolean; promotionCode: boolean; promoId: string | null }> {
     const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
+    const referralCode = process.env.STRIPE_COUPON_CODE_25 as string;
+
+    if (code === referralCode) {
+        return { coupon: false, promotionCode: false, promoId: null }; 
+    }
 
     if (!stripeAPIKey) {
         throw new Error('Stripe API key not found (checkForExistingDiscount)');
@@ -93,8 +98,8 @@ async function retrieveCouponCodeOrPromotionCode(code: string) {
 
     const stripe = new Stripe(stripeAPIKey);
     let coupon;
-    let promotionCode;
-    let promoId;
+    let promotionCode = false;
+    let promoId = null;
     try {
         await stripe.coupons.retrieve(code);
         coupon = true;

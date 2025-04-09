@@ -11,7 +11,7 @@ const PartnershipsClientDetails = () => {
                 Equip Your Clients with Advanced Tools
             </h2>
             <p className="w-full md:w-3/5 text-left text-lg text-lightModeText font-semibold mb-8 sm:mb-10 md:mb-12">
-                Your clients—whether reselling group members or individual users—gain access to Flippify's revolutionary automation software, transforming their operations with unmatched efficiency, time savings, and profit growth, all at a discount through your group's code.
+                Your clients—whether reselling group members or individual users—gain access to Flippify&apos;s revolutionary automation software, transforming their operations with unmatched efficiency, time savings, and profit growth, all at a discount through your group&apos;s code.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2">
@@ -29,7 +29,7 @@ const PartnershipsClientDetails = () => {
                     <ul className="space-y-2">
                         <li className="flex items-start">
                             <span className="text-houseBlue mr-2">✓</span>
-                            <span className="text-lightModeText">Save 10% on Flippify services using your group's unique code.</span>
+                            <span className="text-lightModeText">Save 10% on Flippify services using your group&apos;s unique code.</span>
                         </li>
                         <li className="flex items-start">
                             <span className="text-houseBlue mr-2">✓</span>
@@ -83,7 +83,7 @@ const PartnershipsClientDetails = () => {
                     <ul className="space-y-2">
                         <li className="flex items-start">
                             <span className="text-houseBlue mr-2">✓</span>
-                            <span className="text-lightModeText">Seamlessly complement your group's intel (e.g., what to buy) with our tools.</span>
+                            <span className="text-lightModeText">Seamlessly complement your group&apos;s intel (e.g., what to buy) with our tools.</span>
                         </li>
                         <li className="flex items-start">
                             <span className="text-houseBlue mr-2">✓</span>

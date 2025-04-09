@@ -110,7 +110,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
     const priceNumber = !isNaN(Number(displayPrice)) ? Number(displayPrice) : null;
 
     return (
-        <div className="col-span-1 flex justify-center w-full mx-auto">
+        <div className="col-span-1 flex justify-center w-full mx-auto max-w-md">
             <div className={`relative w-full rounded-2xl ${comingSoon ? "overflow-hidden select-none pointer-events-none" : ""}`}>
                 <div className={`w-full min-h-[700px] flex flex-col justify-between relative ${className || ""}`}>
                     {isEnterprise ? (

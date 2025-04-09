@@ -3,12 +3,13 @@ import { BiBookAdd } from "react-icons/bi";
 
 interface NavbarAddListingProps {
     isConnected: boolean;
+    isSubscribed: boolean;
     handleDisplayModal: (display: boolean, type: string) => void;
 }
 
-const NavbarAddOrder: React.FC<NavbarAddListingProps> = ({ isConnected, handleDisplayModal }) => {
+const NavbarAddOrder: React.FC<NavbarAddListingProps> = ({ isConnected, isSubscribed, handleDisplayModal }) => {
     function handleOnClick() {
-        if (!isConnected) return;
+        if (!isConnected || !isSubscribed) return;
         handleDisplayModal(true, "add-order");
     }
     return (
@@ -17,7 +18,9 @@ const NavbarAddOrder: React.FC<NavbarAddListingProps> = ({ isConnected, handleDi
             {/* Tooltip */}
             <div className="absolute left-1/4 transform -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                 <div className="bg-gray-800 text-white text-xs rounded py-1 px-2 w-[114px]">
-                    {isConnected ? "Add To Orders" : "No connected account"}
+                    {!isSubscribed ? "Subscription Required" :
+                        isConnected ? "Add To Orders" : "No connected account"
+                    }
                 </div>
             </div>
         </div>

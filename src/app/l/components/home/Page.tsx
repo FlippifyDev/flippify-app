@@ -21,7 +21,7 @@ const Page = ({ className = "" }) => {
                     button={<HomeGetAccess />}
                     image="/hero/home.svg"
                     imageAlt="Flippify Home"
-                    imageContainerClassName="scale-150"
+                    imageContainerClassName="scale-150 pr-12"
                 />
 
                 <div className="pt-[90px] lg:pt-[150px]" />

@@ -12,7 +12,7 @@ import PlansSubscribeNow from "./ButtonGetStarted";
 import Modal from "../../dom/ui/Modal";
 import ButtonUpgradeSubscription from "./ButtonUpgradeSubscription";
 import { fetchConversionRates } from "@/utils/currency-api";
-import { validateTextInput } from "@/utils/input-validation";
+import { validateAlphaNumericInput } from "@/utils/input-validation";
 import { MAX_INPUT_LENGTH } from "@/utils/constants";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
@@ -73,7 +73,7 @@ const PlansPage = () => {
         if (value.length > MAX_INPUT_LENGTH) return;
 
         if (type === "coupon") {
-            validateTextInput(value, setCouponCode);
+            validateAlphaNumericInput(value, setCouponCode);
         }
     }
     
@@ -195,7 +195,6 @@ const PlansPage = () => {
                     priceRange={selectedPlan}
                     currency={currency}
                     conversionRates={conversionRates}
-                    comingSoon
                     handleDisplayModal={handleDisplayModal}
                 />
                 <PlansCard
@@ -213,7 +212,6 @@ const PlansPage = () => {
                     priceRange={selectedPlan}
                     currency={currency}
                     conversionRates={conversionRates}
-                    comingSoon
                     handleDisplayModal={handleDisplayModal}
                 />
                 <PlansCard

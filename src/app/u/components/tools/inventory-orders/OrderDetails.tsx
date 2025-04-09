@@ -33,10 +33,13 @@ const OrderDetails = () => {
     const currency = session?.user.preferences.currency || "USD";
     const currencySymbol = currencySymbols[currency];
     const [customTag, setCustomTag] = useState<string>("");
+
     const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
+
     const [purchaseDate, setPurchaseDate] = useState<string>("");
     const [purchasePrice, setPurchasePrice] = useState<string>("");
     const [purchasePlatform, setPurchasePlatform] = useState<string>("");
+
     const router = useRouter();
     const [fadeIn, setFadeIn] = useState(false);
 
@@ -49,6 +52,8 @@ const OrderDetails = () => {
     const [editedPurchasePrice, setEditedPurchasePrice] = useState<string | null>("");
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
     const [editingType, setEditingType] = useState<string | null>(null);
+
+
     const [ordersUpdated, setOrdersUpdated] = useState<boolean>(false);
     const [orderIdtoIndex, setOrderIdtoIndex] = useState<{ [key: string]: number }>({});
 
@@ -452,6 +457,20 @@ const OrderDetails = () => {
                                         <td>{sale.quantity}</td>
                                         <td>{additionalFees.toFixed(2)}</td>
                                         <td>{shipping.fees.toFixed(2)}</td>
+                                        <td
+                                            className="cursor-pointer transition duration-200"
+                                        >
+                                            <input
+                                                onFocus={() => handlePurchasePriceInput(index, purchasePrice)}
+                                                onClick={() => handlePurchasePriceInput(index, purchasePrice)}
+                                                type="text"
+                                                value={(editingIndex === index && editingType === "shippingFees") ? editedPurchasePrice ?? '0' : purchasePrice}
+                                                onChange={(e) => handleInput(e.target.value, "shippingFees")}
+                                                onBlur={() => saveChange(index, "shippingFees")}
+                                                onKeyDown={(e) => handleKeyPress(e, index, "shippingFees")}
+                                                className="min-w-24 focus:border text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm"
+                                            />
+                                        </td>
                                         <td
                                             className="cursor-pointer transition duration-200"
                                         >

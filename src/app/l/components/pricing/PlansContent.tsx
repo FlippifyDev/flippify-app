@@ -109,7 +109,6 @@ const PlansContent = () => {
                     priceRange={selectedPlan}
                     currency={currency}
                     conversionRates={conversionRates}
-                    comingSoon
                 />
                 <PlansCard
                     title="Pro"
@@ -117,14 +116,13 @@ const PlansContent = () => {
                     prices={{ monthly: 19.99, yearly: 199.90 }}
                     discountedPrices={{ monthly: 9.99, yearly: 99.90 }}
                     priceIds={{
-                        monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
-                        yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
+                        monthly: "price_1R6umUJJRepiHZ8dEZib7Bd1",
+                        yearly: "price_1R6umUJJRepiHZ8dUeqJXo5d",
                     }}
                     whatsIncludedComponent={<PlansCardProWhatsIncluded />}
                     priceRange={selectedPlan}
                     currency={currency}
                     conversionRates={conversionRates}
-                    comingSoon
                 />
                 <PlansCard
                     title="Enterprise"

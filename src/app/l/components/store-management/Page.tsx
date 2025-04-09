@@ -4,7 +4,7 @@ import HomeGetAccess from '../home/HomeGetAccess'
 
 const Page = () => {
     return (
-        <div className='min-h-screen'>
+        <div className='min-h-screen flex flex-col items-center'>
             <Hero
                 text={[
                     { text: "Effortless" },
@@ -17,6 +17,9 @@ const Page = () => {
                 imageContainerClassName='pb-20 scale-150'
                 button={<HomeGetAccess />}
             />
+            <div className='max-w-6.5xl mt-[16rem] md:mt-0 2xl:mt-[4rem] px-8 md:px-4'>
+                <p>Stay tuned this page is still under development!</p>
+            </div>
         </div>
     )
 }

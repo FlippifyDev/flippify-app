@@ -46,7 +46,7 @@ const ButtonGetStarted: React.FC<ButtonGetStartedProps> = ({ priceId, specialPla
                         console.log(error)
                         if (error && setCouponError) {
                             if (error === "Error: This promotion code cannot be redeemed because the associated customer has prior transactions.") {
-                                setCouponError("You cannot redeem this code twice")
+                                setCouponError("This code is for first time customers")
                             } else {
                                 setCouponError(error);
                             }

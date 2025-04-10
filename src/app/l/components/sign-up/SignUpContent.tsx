@@ -48,7 +48,7 @@ const SignUpContent = () => {
     useEffect(() => {
         const checkVerificationInterval = setInterval(async () => {
             if (!auth.currentUser) return;
-            await auth.currentUser.reload();
+            // await auth.currentUser.reload(); had to comment this out as it caused email verified to be true for some reason
             if (auth.currentUser.emailVerified) {
                 setEmailVerified(true);
                 // Sign in with NextAuth credentials
@@ -106,7 +106,7 @@ const SignUpContent = () => {
     };
 
     return (
-        <div className="min-h-screen w-full flex flex-col md:flex-row items-center justify-center p-4 gap-16">
+        <div className="min-h-screen w-full flex flex-col md:flex-row items-center justify-center p-4 -mt-24 gap-16">
             {!emailVerifying ? (
                 <SignUpForm
                     username={username}
@@ -130,7 +130,7 @@ const SignUpContent = () => {
                 <Image
                     src="/auth/sign-up.svg"
                     alt="Sign Up Image"
-                    className="object-cover"
+                    className="object-cover hidden lg:block"
                     width={700}
                     height={700}
                 />

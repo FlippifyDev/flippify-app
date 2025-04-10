@@ -5,13 +5,15 @@ import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] });
 
+/* eslint-disable react/no-unescaped-entities */
+
 const Page = () => {
     return (
         <div className='min-h-screen flex flex-col items-center'>
             <div>
                 <Hero
                     text={[{ text: "Automate your finances with" }, { "text": "Flippify’s expert", isGradient: true }, { "text": "Accounting Software" }]}
-                    description="Flippify’s accounting software helps eBay sellers automate taxes, track expenses, and manage stock. Export CSVs in one click and stay tax compliant as you grow."
+                    description="Flippify&apos;s accounting software helps eBay sellers automate taxes, track expenses, and manage stock. Export CSVs in one click and stay tax compliant as you grow."
                     button={<HomeGetAccess />}
                     image="/hero/accountingSoftware.svg"
                     imageAlt="Flippify Inventory Management"

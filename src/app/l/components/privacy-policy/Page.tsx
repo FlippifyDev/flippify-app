@@ -11,7 +11,7 @@ const Page = () => {
                     { text: "matters", isGradient: true },
                     { text: " to us." }
                 ]}
-                description="We’re committed to protecting your data and being transparent about how we use it. Learn how Flippify collects, stores, and safeguards your information while you grow your eBay business."
+                description="We&apos;re committed to protecting your data and being transparent about how we use it. Learn how Flippify collects, stores, and safeguards your information while you grow your eBay business."
                 image="/hero/privacyPolicy.svg"
                 imageAlt="Privacy and Security"
                 imageContainerClassName='pb-20 scale-150'

@@ -10,7 +10,7 @@ const Page = () => {
                     { text: "Credits & ", isGradient: false },
                     { text: "Attributions", isGradient: true }
                 ]}
-                description="Flippify proudly uses open-source tools, licensed assets, and community-powered tech. Here’s a full list of the creators and resources that help power our platform."
+                description="Flippify proudly uses open-source tools, licensed assets, and community-powered tech. Here&apos;s a full list of the creators and resources that help power our platform."
                 image="/hero/attributions.svg"
                 imageAlt="Creative and Technical Attributions"
                 imageContainerClassName='scale-150'

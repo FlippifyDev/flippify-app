@@ -7,6 +7,8 @@ import Layout from '../components/layout/Layout';
 
 const root = process.env.ROOT as string;
 
+/* eslint-disable react/no-unescaped-entities */
+
 
 export const metadata = {
     title: "Order Management for eBay Sellers | Flippify - Streamline Your Sales",

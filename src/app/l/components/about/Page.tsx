@@ -11,7 +11,7 @@ const Page = () => {
                         { text: "sellers,", isGradient: true },
                         { text: "by sellers" }
                     ]}
-                    description="At Flippify, we understand the grind—because we’ve lived it. Our team of former online sellers is on a mission to make selling on eBay easier, smarter, and more profitable. We build tools we wish we had—simple, powerful, and made for real businesses."
+                    description="At Flippify, we understand the grind—because we&apos;ve lived it. Our team of former online sellers is on a mission to make selling on eBay easier, smarter, and more profitable. We build tools we wish we had—simple, powerful, and made for real businesses."
                     image="/hero/about.svg"
                     imageAlt="Flippify Team and Mission"
                     imageContainerClassName='pb-20 scale-125'

@@ -3,6 +3,8 @@ import Image from 'next/image';
 import HomeGetAccess from './HomeGetAccess';
 import Link from 'next/link';
 
+/* eslint-disable react/no-unescaped-entities */
+
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 const inter = Inter({ subsets: ['latin'] });
 

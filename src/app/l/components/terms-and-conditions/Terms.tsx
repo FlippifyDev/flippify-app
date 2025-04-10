@@ -125,7 +125,7 @@ const Terms = () => {
                 represent that your Submissions do not constitute confidential
                 information. You are solely responsible for your Submissions and you
                 expressly agree to reimburse us for any and all losses that we may
-                suffer because of your breach of (a) this section, (b) any third party’s
+                suffer because of your breach of (a) this section, (b) any third party&apos;s
                 intellectual property rights, or (c) applicable law.
             </p>
             <br />
@@ -221,7 +221,7 @@ const Terms = () => {
                 (or attempt to upload or to transmit) viruses, Trojan horses, or other
                 material, including excessive use of capital letters and spamming
                 (continuous posting of repetitive text), that interferes with any
-                party’s uninterrupted use and enjoyment of the Services or modifies,
+                party&apos;s uninterrupted use and enjoyment of the Services or modifies,
                 impairs, disrupts, alters, or interferes with the use, features,
                 functions, operation, or maintenance of the Services. Engage in any
                 automated use of the system, such as using scripts to send comments or
@@ -231,7 +231,7 @@ const Terms = () => {
                 or use the username of another user. Upload or transmit (or attempt to
                 upload or to transmit) any material that acts as a passive or active
                 information collection or transmission mechanism, including without
-                limitation, clear graphics interchange formats (&apos;gifs&apos;), 1×1 pixels, web
+                limitation, clear graphics interchange formats (&apos;gifs&apos;), 1x1 pixels, web
                 bugs, cookies, or other similar devices (sometimes referred to as
                 &apos;spyware&apos; or &apos;passive collection mechanisms&apos; or &apos;pcms&apos;). Interfere with,
                 disrupt, or create an undue burden on the Services or the networks or
@@ -440,7 +440,7 @@ const Terms = () => {
                 to have your data transferred to and processed in the United Kingdom.
                 Further, we do not knowingly accept, request, or solicit information
                 from children or knowingly market to children. Therefore, in accordance
-                with the U.S. Children’s Online Privacy Protection Act, if we receive
+                with the U.S. Children&apos;s Online Privacy Protection Act, if we receive
                 actual knowledge that anyone under the age of 13 has provided personal
                 information to us without the requisite and verifiable parental consent,
                 we will delete that information from the Services as quickly as is
@@ -606,7 +606,7 @@ const Terms = () => {
                 You agree to defend, indemnify, and hold us harmless, including our
                 subsidiaries, affiliates, and all of our respective officers, agents,
                 partners, and employees, from and against any loss, damage, liability,
-                claim, or demand, including reasonable attorneys’ fees and expenses,
+                claim, or demand, including reasonable attorneys&apos; fees and expenses,
                 made by any third party due to or arising out of: (1) use of the
                 Services; (2) breach of these Legal Terms; (3) any breach of your
                 representations and warranties set forth in these Legal Terms; (4) your

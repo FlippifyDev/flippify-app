@@ -12,7 +12,7 @@ const Page = () => {
                         { text: "Touch", isGradient: true },
                         { text: "with Us" }
                     ]}
-                    description="Have questions or need support? Our team is here to help! Reach out to us for any inquiries, and we’ll get back to you as soon as possible."
+                    description="Have questions or need support? Our team is here to help! Reach out to us for any inquiries, and we&apos;ll get back to you as soon as possible."
                     image="/hero/contact.svg"
                     imageAlt="Contact Us"
                     imageContainerClassName="scale-150"

@@ -6,6 +6,8 @@ import { Suspense } from 'react';
 import MetadataHead from '../../components/MetadataHead';
 import ThemeSetter from '../../components/ThemeSetter';
 
+/* eslint-disable react/no-unescaped-entities */
+
 
 const root = process.env.ROOT as string;
 

@@ -11,7 +11,7 @@ const Page = () => {
             <div>
                 <Hero
                     text={[{ text: "Smart Order " }, { "text": "Management", isGradient: true }, { text: "for your eBay business" }]}
-                    description="Flippify’s order management software helps eBay sellers automate orders, track shipments, and manage stock."
+                    description="Flippify&apos;s order management software helps eBay sellers automate orders, track shipments, and manage stock."
                     button={<HomeGetAccess />}
                     image="/hero/orderManagement.svg"
                     imageAlt="Flippify Order Management"

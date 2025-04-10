@@ -11,7 +11,7 @@ const Page = () => {
                     { text: "terms,", isGradient: true },
                     { text: "solid foundations" }
                 ]}
-                description="Our terms and conditions are here to protect both you and us. Read the rules that guide the use of Flippify’s tools and services—clear, fair, and built for trust."
+                description="Our terms and conditions are here to protect both you and us. Read the rules that guide the use of Flippify&apos;s tools and services—clear, fair, and built for trust."
                 image="/hero/termsAndConditions.svg"
                 imageAlt="Terms and Conditions Document"
                 imageContainerClassName='scale-150'

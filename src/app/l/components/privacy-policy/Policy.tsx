@@ -146,7 +146,7 @@ const Policy = () => {
                 process your information to fulfil and manage your orders, payments,
                 returns, and exchanges made through the Services. To save or protect an
                 individual&apos;s vital interest. We may process your information when
-                necessary to save or protect an individual’s vital interest, such as to
+                necessary to save or protect an individual&apos;s vital interest, such as to
                 prevent harm.
             </p>
             <br />
@@ -277,7 +277,7 @@ const Policy = () => {
                 or market to children under 18 years of age, nor do we knowingly sell
                 such personal information. By using the Services, you represent that you
                 are at least 18 or that you are the parent or guardian of such a minor
-                and consent to such minor dependent’s use of the Services. If we learn
+                and consent to such minor dependent&apos;s use of the Services. If we learn
                 that personal information from users less than 18 years of age has been
                 collected, we will deactivate the account and take reasonable measures
                 to promptly delete such data from our records. If you become aware of
@@ -393,7 +393,7 @@ const Policy = () => {
                 directory information NO K. Inferences drawn from collected personal
                 information Inferences drawn from any of the collected personal
                 information listed above to create a profile or summary about, for
-                example, an individual’s preferences and characteristics NO L. Sensitive
+                example, an individual&apos;s preferences and characteristics NO L. Sensitive
                 personal Information NO We may also collect other personal information
                 outside of these categories through instances where you interact with us
                 in person, online, or by phone or mail in the context of: Receiving help
@@ -428,7 +428,7 @@ const Policy = () => {
                 Right to obtain a copy of the personal data you previously shared with
                 us Right to non-discrimination for exercising your rights Right to opt
                 out of the processing of your personal data if it is used for targeted
-                advertising (or sharing as defined under California’s privacy law), the
+                advertising (or sharing as defined under California&apos;s privacy law), the
                 sale of personal data, or profiling in furtherance of decisions that
                 produce legal or similarly significant effects (&apos;profiling&apos;) Depending
                 upon the state where you live, you may also have the following rights:
@@ -436,12 +436,12 @@ const Policy = () => {
                 have disclosed personal data (as permitted by applicable law, including
                 California&apos;s and Delaware&apos;s privacy law) Right to obtain a list of
                 specific third parties to which we have disclosed personal data (as
-                permitted by applicable law, including Oregon’s privacy law) Right to
+                permitted by applicable law, including Oregon&apos;s privacy law) Right to
                 limit use and disclosure of sensitive personal data (as permitted by
-                applicable law, including California’s privacy law) Right to opt out of
+                applicable law, including California&apos;s privacy law) Right to opt out of
                 the collection of sensitive data and personal data collected through the
                 operation of a voice or facial recognition feature (as permitted by
-                applicable law, including Florida’s privacy law) How to Exercise Your
+                applicable law, including Florida&apos;s privacy law) How to Exercise Your
                 Rights To exercise these rights, you can contact us by visiting
                 https://discord.gg/gNPYfe7YFm, by emailing us at support@{domain},
                 Open a ticket in our discord server., or by referring to the contact

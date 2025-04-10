@@ -5,6 +5,8 @@ import MetadataHead from '../../components/MetadataHead';
 import ThemeSetter from '../../components/ThemeSetter';
 import Layout from '../components/layout/Layout';
 
+/* eslint-disable react/no-unescaped-entities */
+
 const root = process.env.ROOT as string;
 
 export const metadata = {

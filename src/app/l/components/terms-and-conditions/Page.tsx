@@ -4,7 +4,7 @@ import Terms from './Terms'
 
 const Page = () => {
     return (
-        <div className='min-h-screen'>
+        <div className='min-h-screen flex flex-col items-center'>
             <Hero
                 text={[
                     { text: "Simple ", },
@@ -18,7 +18,7 @@ const Page = () => {
                 imageClassName='pb-64'
             />
 
-            <div className='max-w-6.5xl mt-[28rem] px-4'>
+            <div className='max-w-6.5xl mt-[16rem] md:mt-0 2xl:mt-[4rem] px-8 md:px-4'>
                 <Terms />
             </div>
         </div>

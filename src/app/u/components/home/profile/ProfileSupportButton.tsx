@@ -1,12 +1,16 @@
 'use client';
 
+// Local Imports
+
+import { discordSupportLink } from '@/utils/constants';
+
 // External Imports
-import React from 'react';
 import { BiSupport } from "react-icons/bi";
+import React from 'react';
 
 const ProfileSupportButton = () => {
     const handleSupportButtonClick = () => {
-        window.open("https://discord.com/channels/1236428617962229830/1236436288442466394", '_blank');
+        window.open(discordSupportLink, '_blank');
     };
 
     return (

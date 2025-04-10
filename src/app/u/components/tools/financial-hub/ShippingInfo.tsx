@@ -37,7 +37,8 @@ const calculateOrderStats = (orders: IEbayOrder[]) => {
         }
 
         // Track shipping services
-        const service = order.shipping.service || 'Unknown';
+        const service = order.shipping.service;
+        if (!service) continue; // Skip if service is not defined
         serviceCount[service] = (serviceCount[service] || 0) + 1;
     }
 
@@ -62,12 +63,11 @@ const calculateOrderStats = (orders: IEbayOrder[]) => {
 interface ICardShippingInfo {
     orders: IEbayOrder[];
     loading: boolean;
-    currencySymbol: string;
 }
 
 
 
-const CardShippingInfo: React.FC<ICardShippingInfo> = ({ orders, loading, currencySymbol }) => {
+const CardShippingInfo: React.FC<ICardShippingInfo> = ({ orders, loading }) => {
     const { avgDaysToSell, avgDaysToList, mostUsedService, completedOrdersCount } = calculateOrderStats(orders);
 
     return (

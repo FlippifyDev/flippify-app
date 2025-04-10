@@ -19,7 +19,7 @@ export async function middleware(request: NextRequest) {
 
         url.pathname = '/l/home';
         url.searchParams.delete('ref');
-        return NextResponse.redirect(url);
+        return NextResponse.redirect(url, 301);
     }
 
     return NextResponse.next();

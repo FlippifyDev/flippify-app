@@ -13,7 +13,7 @@ import { ebayInventoryCacheKey, storePlatforms, subscriptionLimits } from "@/uti
 import { validateNumberInput, validatePriceInput, validateTextInput } from "@/utils/input-validation"
 
 // External Imports
-import { FormEvent, useState } from "react"
+import { FormEvent, useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
 
@@ -50,8 +50,28 @@ const NewEbayListingForm: React.FC<NewEbayListingFormProps> = ({ setDisplayModal
     const [successMessage, setSuccessMessage] = useState<string>("")
 
     const [loading, setLoading] = useState<boolean>(false);
+    const [aboveLimit, setAboveLimit] = useState<boolean>(false);
 
-    const aboveLimit = isAboveLimit();
+    useEffect(() => {
+        const checkLimit = () => {
+            const plan = session?.user.authentication.subscribed;
+            if (!plan) {
+                setErrorMessage("Please subscribe to a plan to add orders.");
+                setAboveLimit(true);
+                return;
+            }
+            const manualListings = session?.user.store?.ebay.numListings?.manual || 0;
+            if (manualListings >= subscriptionLimits[plan].manual) {
+                setErrorMessage(`You have reached the maximum number of manual listings for your plan. Please upgrade your plan to add more or wait till next month.`);
+                setAboveLimit(true);
+                return;
+            }
+
+            setAboveLimit(false);
+        };
+
+        if (session?.user) checkLimit();
+    }, [session?.user]);
 
 
     function handleCacheUpdate(inventoryItem: IEbayInventoryItem) {
@@ -61,29 +81,10 @@ const NewEbayListingForm: React.FC<NewEbayListingFormProps> = ({ setDisplayModal
         addCacheData(inventoryCacheKey, inventoryItem);
     }
 
-    function isAboveLimit() {
-        const plan = session?.user.authentication.subscribed;
-        if (!plan) {
-            setErrorMessage("Please subscribe to a plan to add listings.");
-            setLoading(false);
-            return true;
-        }
-        const manualListings = session?.user.store?.ebay.numListings?.manual || 0;
-
-        if (manualListings >= subscriptionLimits[plan].manual) {
-            setErrorMessage(`You have reached the maximum number of manual listings for your plan. Please upgrade your plan to add more or wait till next month.`);
-            setLoading(false);
-            return true;
-        }
-
-        return false;
-    }
-
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
         setLoading(true);
         
-        const aboveLimit = isAboveLimit();
         if (aboveLimit) return;
 
         const inventoryItem: IEbayInventoryItem = {
@@ -160,7 +161,7 @@ const NewEbayListingForm: React.FC<NewEbayListingFormProps> = ({ setDisplayModal
         <Modal title="Add a new eBay listing" className="max-w-[21rem] sm:max-w-xl flex-grow" setDisplayModal={setDisplayModal}>
             {aboveLimit && (
                 <div className="text-center">
-                    <span>Sorry you&aposve reach your max manual listings for this month</span>
+                    <span>Sorry you&apos;ve reach your max manual listings for this month</span>
                 </div>
             )}
             
@@ -181,7 +182,7 @@ const NewEbayListingForm: React.FC<NewEbayListingFormProps> = ({ setDisplayModal
                     </div>
                     <div className="flex flex-col sm:flex-row items-center w-full gap-4">
                         <Input type="date" placeholder="Enter listing date" title="Listing Date" className="w-full" value={dateListed} onChange={(e) => handleChange(e.target.value, "dateListed")} />
-                        <Input type="date" placeholder="Enter purchase date" title="Purchase Date" className="w-full" value={dateListed} onChange={(e) => handleChange(e.target.value, "datePurchased")} />
+                        <Input type="date" placeholder="Enter purchase date" title="Purchase Date" className="w-full" value={datePurchased} onChange={(e) => handleChange(e.target.value, "datePurchased")} />
                     </div>
                     <hr />
                     <div className="w-full flex flex-row gap-4 justify-between items-center">

@@ -63,7 +63,7 @@ const createCheckoutSession = async (
             }
             if (coupon) {
                 discounts.push({ coupon: code });
-            } else if (promotionCode) {
+            } else if (promotionCode && promoId) {
                 discounts.push({ promotion_code: promoId });
             }
         }

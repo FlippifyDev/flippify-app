@@ -4,7 +4,7 @@ import HomeGetAccess from '../home/HomeGetAccess'
 
 const Page = () => {
     return (
-        <div className='min-h-screen'>
+        <div className='min-h-screen flex flex-col items-center'>
             <div>
                 <Hero
                     text={[{ text: "Smart Inventory " }, { "text": "Control", isGradient: true }, { text: "for eBay" }]}
@@ -15,6 +15,9 @@ const Page = () => {
                     imageContainerClassName="scale-150"
                     imageClassName='pb-20'
                 />
+            </div>
+            <div className='max-w-6.5xl mt-[16rem] md:mt-0 2xl:mt-[4rem] px-8 md:px-4'>
+                <p>Stay tuned this page is still under development!</p>
             </div>
         </div>
     )

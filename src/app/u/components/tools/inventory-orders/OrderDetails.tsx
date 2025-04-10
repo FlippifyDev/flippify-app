@@ -33,10 +33,13 @@ const OrderDetails = () => {
     const currency = session?.user.preferences.currency || "USD";
     const currencySymbol = currencySymbols[currency];
     const [customTag, setCustomTag] = useState<string>("");
+
     const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
+
     const [purchaseDate, setPurchaseDate] = useState<string>("");
     const [purchasePrice, setPurchasePrice] = useState<string>("");
     const [purchasePlatform, setPurchasePlatform] = useState<string>("");
+
     const router = useRouter();
     const [fadeIn, setFadeIn] = useState(false);
 
@@ -49,6 +52,8 @@ const OrderDetails = () => {
     const [editedPurchasePrice, setEditedPurchasePrice] = useState<string | null>("");
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
     const [editingType, setEditingType] = useState<string | null>(null);
+
+
     const [ordersUpdated, setOrdersUpdated] = useState<boolean>(false);
     const [orderIdtoIndex, setOrderIdtoIndex] = useState<{ [key: string]: number }>({});
 

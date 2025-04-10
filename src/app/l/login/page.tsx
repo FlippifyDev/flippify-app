@@ -19,7 +19,7 @@ export const metadata = {
         url: root.concat('/l/login'),
         images: [
             {
-                url: `${root}/static/og-login.png`,
+                url: `https://i.imgur.com/IsUhFBb.png`,
                 width: 2600,
                 height: 1440,
                 alt: "Flippify Login - Manage eBay Store and Inventory"

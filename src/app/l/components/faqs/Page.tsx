@@ -1,5 +1,8 @@
 import React from 'react'
 import Hero from '../dom/Hero'
+import { Inter } from 'next/font/google'
+
+const inter = Inter({ subsets: ['latin'] });
 
 const Page = () => {
     return (
@@ -16,7 +19,7 @@ const Page = () => {
                 imageContainerClassName='pb-20 scale-150'
             />
 
-            <div className='max-w-6.5xl mt-[16rem] md:mt-0 2xl:mt-[4rem] px-8 md:px-4'>
+            <div className={`${inter.className} font-semibold text-lightModeText max-w-6.5xl mt-[16rem] md:mt-0 2xl:mt-[4rem] px-8 md:px-4`}>
                 <p>Stay tuned this page is still under development!</p>
             </div>
         </div>

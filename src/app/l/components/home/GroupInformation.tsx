@@ -16,7 +16,10 @@ const GroupInformation = () => {
                     cheaper rates
                 </p>
                 <p className="pt-4 text-darkGreyText text-start font-semibold max-w-2xl ">
-                    Join our reselling community and unlock personalized discounts for your group. Share a unique referral link to track sign-ups and earn rewards while giving your members access to affordable Flippify subscriptions. <Link href="/l/partnerships" className="text-houseHoverBlue hover:underline">Find out more</Link>
+                    Equip your members with our automation software to revolutionize their reselling operations. From automated inventory management & financials tracking to features currently in the works such as automatic listings & dynamic pricing using AI, our tools save time and boost profits.
+                </p>
+                <p className="pt-4 text-darkGreyText text-start font-semibold max-w-2xl ">
+                    As a partner, you'll earn a 40% revenue share on every sale made through your coupon codes, while your members enjoy a 10% discount on Flippify subscriptions. <Link href="/l/partnerships" className="text-houseHoverBlue hover:underline">Find out more</Link>
                 </p>
                 <div className='mt-6'>
                     <HomeGetAccess />

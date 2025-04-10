@@ -47,29 +47,67 @@ const SignUpContent = () => {
     // Poll for email verification (for email/password sign‑up)
     useEffect(() => {
         const checkVerificationInterval = setInterval(async () => {
-            if (!auth.currentUser) return;
-            // await auth.currentUser.reload(); had to comment this out as it caused email verified to be true for some reason
-            if (auth.currentUser.emailVerified) {
-                setEmailVerified(true);
-                // Sign in with NextAuth credentials
-                const result = await signIn("credentials", {
-                    email: emailRef.current,
-                    password: passwordRef.current,
-                    redirect: false,
-                });
-                if (result?.error) {
-                    console.error("Error during sign-in:", result.error);
+            try {
+                if (!auth.currentUser) {
+                    console.log("No current user found");
                     return;
                 }
-                await updateDoc(doc(firestore, "users", auth.currentUser.uid), {
-                    username: usernameRef.current,
-                    "authentication.onboarding": true,
-                });
-                await updateUserSubscriptionAdmin(auth.currentUser.uid, { name: "accessGranted", id: "0", override: true, createdAt: formatDateToISO(new Date()) });
-                clearInterval(checkVerificationInterval);
-                router.push(`/u/${usernameRef.current}/dashboard`);
+
+                // Store the current verification status before reload
+                const wasVerifiedBefore = auth.currentUser.emailVerified;
+                console.log("Before reload - Email verified status:", wasVerifiedBefore);
+
+                // Reload the user properly with error handling
+                try {
+                    await auth.currentUser.reload();
+                    console.log("User reloaded successfully");
+                } catch (reloadError) {
+                    console.error("Error reloading user:", reloadError);
+                    return;
+                }
+
+                // Check the new verification status
+                const isVerifiedNow = auth.currentUser.emailVerified;
+                console.log("After reload - Email verified status:", isVerifiedNow);
+
+                // Only proceed if the status changed from unverified to verified
+                // This prevents the false positive issue you were experiencing
+                if (!wasVerifiedBefore && isVerifiedNow) {
+                    console.log("Email verification detected, proceeding with sign in");
+                    setEmailVerified(true);
+
+                    // Sign in with NextAuth credentials
+                    const result = await signIn("credentials", {
+                        email: emailRef.current,
+                        password: passwordRef.current,
+                        redirect: false,
+                    });
+
+                    if (result?.error) {
+                        console.error("Error during sign-in:", result.error);
+                        return;
+                    }
+
+                    await updateDoc(doc(firestore, "users", auth.currentUser.uid), {
+                        username: usernameRef.current,
+                        "authentication.onboarding": true,
+                    });
+
+                    await updateUserSubscriptionAdmin(auth.currentUser.uid, {
+                        name: "accessGranted",
+                        id: "0",
+                        override: true,
+                        createdAt: formatDateToISO(new Date())
+                    });
+
+                    clearInterval(checkVerificationInterval);
+                    router.push(`/u/${usernameRef.current}/dashboard`);
+                }
+            } catch (error) {
+                console.error("Error in verification check:", error);
             }
         }, 3000);
+
         return () => clearInterval(checkVerificationInterval);
     }, [router]);
 

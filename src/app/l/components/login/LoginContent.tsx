@@ -52,7 +52,7 @@ const LoginContent = () => {
         }
     };
     return (
-        <div className="min-h-screen flex flex-col md:flex-row items-center justify-center p-4 gap-16">
+        <div className="min-h-screen flex flex-col md:flex-row items-center justify-center p-4 -mt-24 gap-16">
             <div className="bg-white rounded-3xl shadow-lg w-full max-w-md p-8">
                 {/* Logo */}
                 <h2 className={`${lato.className} pb-1 text-[40px] flex justify-center font-bold mb-4 text-black`}>
@@ -110,7 +110,7 @@ const LoginContent = () => {
                 <Image
                     src="/auth/login.svg"
                     alt="Sign Up Image"
-                    className="object-cover"
+                    className="object-cover hidden lg:block"
                     width={600}
                     height={600}
                 />

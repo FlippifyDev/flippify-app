@@ -1,6 +1,6 @@
 // External Imports
 import { getAuth } from "firebase/auth";
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore'; 
 import { getApp, getApps, initializeApp } from "firebase/app";
 
 const firebaseConfig = {

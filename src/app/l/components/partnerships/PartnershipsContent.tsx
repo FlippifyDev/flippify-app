@@ -33,7 +33,7 @@ const PartnershipsContent = () => {
                     <PartnershipsEventsDetails />
                 </div>
                 <div className="w-full border-b-2 border-gray-300 border-dashed"></div>
-                <div className="py-20">
+                <div className="py-20" id="contact-form">
                     <PartnershipsApplySection />
                 </div>
                 <div className="w-full border-b-2 border-gray-300 border-dashed"></div>

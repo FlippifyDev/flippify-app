@@ -4,6 +4,7 @@ import Loading from "@/app/components/Loading";
 import MetadataHead from "@/app/components/MetadataHead";
 import LoginContent from "../components/login/LoginContent";
 import { Suspense } from "react";
+import UnderMaintenance from "../components/development/UnderMaintenance";
 
 const root = process.env.ROOT as string;
 
@@ -50,7 +51,7 @@ const Login = () => {
             <ThemeSetter theme="dark" />
             <Suspense fallback={<Loading />}>
                 <Layout>
-                    <LoginContent />
+                    <UnderMaintenance />
                 </Layout>
             </Suspense>
         </>

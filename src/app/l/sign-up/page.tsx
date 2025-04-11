@@ -4,6 +4,7 @@ import ThemeSetter from "@/app/components/ThemeSetter";
 import Loading from "@/app/components/Loading";
 import MetadataHead from "@/app/components/MetadataHead";
 import SignUpContent from "../components/sign-up/SignUpContent";
+import UnderMaintenance from "../components/development/UnderMaintenance";
 
 const root = process.env.ROOT as string;
 
@@ -46,7 +47,7 @@ const SignUp = () => {
             <ThemeSetter theme="dark" />
             <Suspense fallback={<Loading />}>
                 <Layout>
-                    <SignUpContent />
+                    <UnderMaintenance />
                 </Layout>
             </Suspense>
         </>

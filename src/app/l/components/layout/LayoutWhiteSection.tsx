@@ -1,12 +1,12 @@
 import React from "react";
 
-// Note: To increase the size of this svg, change all the `20000` values to a greater value
+// Note: To increase the size of this svg, change all the `25000` values to a greater value
 const LayoutWhiteSection: React.FC = () => {
 	return (
-		<div className="absolute top-0 left-0 w-full z-10 pt-96 sm:pt-48 md:pt-36 lg:pt-24 xl:pt-0">
+		<div className="absolute top-0 left-0 w-full z-10 pt-[384px] xs:pt-[220px] sm:pt-[192px] md:pt-[144px] lg:pt-[160px] lg2:pt-[96px] xl:-mt-[60px]">
 			<svg
 				id="visual"
-				viewBox="0 0 900 20000"
+				viewBox="0 0 900 25000"
 				xmlns="http://www.w3.org/2000/svg"
 				xmlnsXlink="http://www.w3.org/1999/xlink"
 				version="1.1"
@@ -16,8 +16,8 @@ const LayoutWhiteSection: React.FC = () => {
 					fill="#ffffff"
 				></path>
 				<path
-					d="M0 492L21.5 494C43 496 86 500 128.8 484.8C171.7 469.7 214.3 435.3 257.2 415.7C300 396 343 391 385.8 395.5C428.7 400 471.3 414 514.2 430.7C557 447.3 600 466.7 642.8 463.5C685.7 460.3 728.3 434.7 771.2 421.8C814 409 857 409 878.5 409L900 409L900 20000L878.5 20000C857 20000 814 20000 771.2 20000C728.3 20000 685.7 20000 642.8 20000C600 20000 557 20000 514.2 20000C471.3 20000 428.7 20000 385.8 20000C343 20000 300 20000 257.2 20000C214.3 20000 171.7 20000 128.8 20000C86 20000 43 20000 21.5 20000L0 20000Z"
-                    fill="#f6f9fc"
+					d="M0 492L21.5 494C43 496 86 500 128.8 484.8C171.7 469.7 214.3 435.3 257.2 415.7C300 396 343 391 385.8 395.5C428.7 400 471.3 414 514.2 430.7C557 447.3 600 466.7 642.8 463.5C685.7 460.3 728.3 434.7 771.2 421.8C814 409 857 409 878.5 409L900 409L900 25000L878.5 25000C857 25000 814 25000 771.2 25000C728.3 25000 685.7 25000 642.8 25000C600 25000 557 25000 514.2 25000C471.3 25000 428.7 25000 385.8 25000C343 25000 300 25000 257.2 25000C214.3 25000 171.7 25000 128.8 25000C86 25000 43 25000 21.5 25000L0 25000Z"
+					fill="#f6f9fc"
 				></path>
 			</svg>
 

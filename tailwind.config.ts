@@ -134,9 +134,9 @@ const config: Config = {
 					to: { height: "0" },
 				},
 				"fade-in-settings": {
-          "0%": { opacity: "0", transform: "translateY(20px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
-        },
+					"0%": { opacity: "0", transform: "translateY(20px)" },
+					"100%": { opacity: "1", transform: "translateY(0)" },
+				},
 				"fade-in-bounce": {
 					"0%": { opacity: "0", transform: "translateY(20px)" },
 					"60%": { opacity: "1", transform: "translateY(-10px)" },
@@ -153,6 +153,16 @@ const config: Config = {
 			},
 			fontFamily: {
 				sans: ['Rubik', 'sans-serif'],
+			},
+			screens: {
+				'xs': '480px',  // custom extra small    
+				'sm': '640px',     // default
+				'md': '768px',   // default
+				'lg': '1024px',      // default
+				'lg2': '1100px',   // custom between lg and xl
+				'xl': '1280px',    // default
+				'2xl': '1536px',    // default
+				'3xl': '1800px',   // custom very large
 			},
 		},
 	},

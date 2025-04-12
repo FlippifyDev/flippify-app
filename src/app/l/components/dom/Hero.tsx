@@ -61,7 +61,7 @@ const Hero: React.FC<HeroProps> = ({ text, description, image, imageAlt, button,
                 <Image
                     src={image}
                     alt={imageAlt}
-                    className={`w-full h-auto mt-8 sm:mt-10 md:mt-12 lg:mt-[120px] xl:mt-[140px] animate-fadeInSecondary ${imageClassName}`}
+                    className={`w-full h-auto mt-8 sm:mt-10 md:mt-10 lg:mt-[60px] lg2:mt-[70px] xl:mt-[80px] 2xl:mt-[140px] animate-fadeInSecondary ${imageClassName}`}
                     width={500}
                     height={500}
                 />

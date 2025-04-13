@@ -32,7 +32,7 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ sal
             const estimatedProfit = salePrice - totalCosts;
 
 			return {
-				itemName: order.itemName,
+				itemName: order.name,
 				purchaseDate: order.purchase.date ? format(new Date(order.purchase.date), 'dd MMM yyyy') : 'N/A',
 				saleDate: order.sale.date ? format(new Date(order.sale.date), 'dd MMM yyyy') : 'N/A',
 				quantitySold: order.sale.quantity,

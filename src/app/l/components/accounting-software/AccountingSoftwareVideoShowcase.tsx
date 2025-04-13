@@ -2,11 +2,11 @@ import React from 'react'
 
 const AccountingSoftwareVideoShowcase = () => {
     return (
-        <div className="relative w-full max-w-7xl mx-auto p-3 border-[3px] border-white rounded-4xl bg-white shadow-md">
-            <div className="aspect-video w-full rounded-3xl overflow-hidden select-none pointer-events-none">
+        <div className="relative w-full max-w-6.5xl mx-auto">
+            <div className="aspect-video w-full border-2 bg-gray-100/80 shadow-md border-white p-2 rounded-4xl overflow-hidden select-none pointer-events-none">
                 <video
                     src="https://flippify.b-cdn.net/OptimisedLandingDemo.mp4"
-                    className="w-full h-full"
+                    className="w-full h-full rounded-3xl object-fill"
                     autoPlay
                     loop
                     muted

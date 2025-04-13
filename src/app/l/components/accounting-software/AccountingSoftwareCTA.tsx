@@ -20,7 +20,7 @@ const AccountingSoftwareCTA = () => {
                 </div>
                 <div className={`w-full lg:w-1/3 hidden lg:block pb-10 scale-125 select-none`}>
                     <Image
-                        src={"/AccountingConfused.png"}
+                        src={"/accounting-software/Confused.svg"}
                         alt={"Stop Manually bookkeeping, use flippify automated financial hub instead."}
                         className={`w-full h-auto animate-fadeInSecondary scale-125`}
                         width={500}

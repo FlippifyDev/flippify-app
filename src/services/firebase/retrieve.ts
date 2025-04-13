@@ -194,8 +194,8 @@ async function retrieveUserOrdersFromDB(
         const orders: Record<string, IEbayOrder> = {};
         querySnapshot.forEach((doc) => {
             const order = doc.data() as IEbayOrder;
-            // Use the orderId as the key (assuming each order has a unique orderId)
-            orders[order.orderId] = order;
+            // Use the transactionId as the key
+            orders[order.transactionId] = order;
         });
 
         return orders;
@@ -459,12 +459,12 @@ async function retrieveUserInventory(
 }
 
 
-async function retrieveUserOrderItemRef(uid: string, orderId: string): Promise<DocumentReference | null> {
+async function retrieveUserOrderItemRef(uid: string, transactionId: string): Promise<DocumentReference | null> {
     try {
         const ordersCollectionRef = collection(firestore, "orders", uid, "ebay");
-        return doc(ordersCollectionRef, orderId);
+        return doc(ordersCollectionRef, transactionId);
     } catch (error) {
-        console.error(`Error retrieving order with ID=${orderId}:`, error);
+        console.error(`Error retrieving order with ID=${transactionId}:`, error);
         return null;
     }
 }

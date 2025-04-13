@@ -24,7 +24,7 @@ const InventoryManagementOverview = () => {
                 <div className="w-full flex items-center justify-center">
                     <div className="relative w-full" style={{ paddingBottom: '66.65%' }}>
                         <Image
-                            src="/AutomatedInventory.png"
+                            src="/inventory-management/AutomatedInventory.png"
                             alt="Inventory Dashboard Preview"
                             fill
                             className="object-contain rounded-lg"

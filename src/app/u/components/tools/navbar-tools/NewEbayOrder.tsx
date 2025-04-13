@@ -7,11 +7,12 @@ import ImageUpload from '../../dom/ui/ImageUpload';
 import { shortenText } from '@/utils/format';
 import { formatDateToISO } from '@/utils/format-dates';
 import { currencySymbols } from '@/config/currency-config';
-import { generateRandomChars } from '@/utils/generate-random';
+import { createHistoryItem } from '@/services/firebase/helpers';
 import { createNewOrderItemAdmin } from '@/services/firebase/create-admin';
 import { validateNumberInput, validateTextInput } from '@/utils/input-validation';
 import { IEbayInventoryItem, IEbayOrder, OrderStatus } from '@/models/store-data';
 import { addCacheData, getCachedData, removeCacheData, updateCacheData } from '@/utils/cache-helpers';
+import { generateRandomFlippifyOrderId, generateRandomFlippifyTransactionId } from '@/utils/generate-random';
 import { ebayInventoryCacheKey, ebayOrderCacheKey, storePlatforms, subscriptionLimits } from '@/utils/constants';
 
 // External Imports
@@ -52,6 +53,7 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
     const [datePurchased, setDatePurchased] = useState<string>(new Date().toISOString().split('T')[0])
     const [purchasePlatform, setPurchasePlatform] = useState<string>("")
     const [purchasePrice, setPurchasePrice] = useState<string>("")
+    const [purchaseQuantity, setPurchaseQuantity] = useState<number>(0)
 
     // Sale Info
     const [saleDate, setSaleDate] = useState<string>(new Date().toISOString().split('T')[0])
@@ -60,7 +62,7 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
     // Shipping Info
     const [shippingFees, setShippingFees] = useState<string>("")
     const [shippingCompany, setShippingCompany] = useState<string>("")
-    const [shippingStatus, setShippingStatus] = useState<OrderStatus | null>("Active")
+    const [shippingStatus, setShippingStatus] = useState<OrderStatus>("Active")
 
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -116,27 +118,36 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
+        setErrorMessage("")
         setLoading(true);
 
         if (aboveLimit) return;
+
+        const historyItem = createHistoryItem(shippingStatus, Number(salePrice), session?.user.preferences.currency ?? "USD");
+        if (!historyItem) return;
 
         const orderItem: IEbayOrder = {
             additionalFees: 0,
             customTag: customTag,
             image: [imageUrl],
-            itemName: itemName,
-            legacyItemId: itemId ?? null,
+            history: [historyItem], 
+            name: itemName,
+            itemId: itemId ?? null,
+            lastModified: formatDateToISO(new Date()),
             listingDate: formatDateToISO(new Date(dateListed)),
-            orderId: generateRandomChars(20),
+            orderId: generateRandomFlippifyOrderId(20),
             purchase: {
+                currency: session?.user.preferences.currency ?? "USD",
                 date: datePurchased ? datePurchased : dateListed,
                 platform: purchasePlatform || null,
                 price: purchasePrice ? Number(purchasePrice) : null,
-                quantity: quantity ? Number(quantity) : null
+                quantity: purchaseQuantity
             },
             recordType: "manual",
+            refund: null,
             sale: {
                 buyerUsername: "",
+                currency: session?.user.preferences.currency ?? "USD",
                 date: saleDate,
                 platform: session?.user.preferences.locale ?? "US",
                 price: Number(salePrice),
@@ -150,20 +161,23 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
                 trackingNumber: undefined,
             },
             status: shippingStatus ?? "Active",
+            transactionId: generateRandomFlippifyTransactionId(20)
         }
 
-        const { success, error } = await createNewOrderItemAdmin(session?.user.id ?? "", storePlatforms.ebay, orderItem);
+        const { success, error, orderExists } = await createNewOrderItemAdmin(session?.user.id ?? "", storePlatforms.ebay, orderItem);
         if (!success) {
             console.error("Error creating new order item", error)
-            setErrorMessage("Error creating new order item")
-            setLoading(false);
-            return
+            if (orderExists) {
+                setErrorMessage(error);
+            } else {
+                setErrorMessage("Error creating new order item")
+            }
+        } else {
+            handleCacheUpdate(orderItem);
+            setSuccessMessage("Order Added!")
         }
 
-        handleCacheUpdate(orderItem);
-
         setLoading(false);
-        setSuccessMessage("Order Added!")
     }
 
     function handleSearchForListing(value: string) {
@@ -172,7 +186,7 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
             return;
         }
         const filteredListings = Object.values(cachedListings ?? {})?.filter((listing: IEbayInventoryItem) => {
-            return listing.itemId.toLowerCase().includes(value.toLowerCase()) || listing.itemName.toLowerCase().includes(value.toLowerCase())
+            return listing.itemId.toLowerCase().includes(value.toLowerCase()) || listing.name.toLowerCase().includes(value.toLowerCase())
         }) || [];
         setListingDowndownItems(filteredListings);
     }
@@ -180,12 +194,12 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
     function handleListingClick(item: IEbayInventoryItem) {
         // General Info
         setItemId(item.itemId);
-        setItemName(item.itemName);
+        setItemName(item.name);
         setImageUrl(item.image[0]);
         setCustomTag(item.customTag || "");
 
         // Set Listing Info
-        setListing(item.itemName);
+        setListing(item.itemId);
         setDateListed(new Date(item.dateListed).toISOString().split('T')[0]);
 
         // Set Purchase Info
@@ -193,6 +207,7 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
         const purchaseDate = item.purchase?.date || item.dateListed;
         setDatePurchased(new Date(purchaseDate).toISOString().split('T')[0]);
         setPurchasePlatform(item.purchase?.platform || "");
+        setPurchaseQuantity(item.initialQuantity)
 
         // Set Sale Info
         setSalePrice(item.price.toString());
@@ -263,7 +278,7 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
                     {/* Radio Buttons which select shipping status */}
                     <ShippingStatusRadioButtons shippingStatus={shippingStatus} setShippingStatus={setShippingStatus} />
 
-                    {(shippingStatus === "Shipped" || shippingStatus === "Completed") && (
+                    {(shippingStatus === "InProcess" || shippingStatus === "Completed") && (
                         <div className="flex flex-col sm:flex-row items-center w-full gap-4">
                             <Input type="text" placeholder="Enter shipping fees" title="Shipping Fees" value={shippingFees} onChange={(e) => handleChange(e.target.value, "shippingFees")} />
                             <Input type="text" placeholder="Enter shipping company" title="Shipping Company" className="w-full" value={shippingCompany} onChange={(e) => handleChange(e.target.value, "shippingCompany")} />
@@ -355,9 +370,9 @@ const ShippingStatusRadioButtons: React.FC<ShippingStatusRadioButtonsProps> = ({
                     type="radio"
                     name="shippingStatus"
                     value="Shipped"
-                    checked={shippingStatus === "Shipped"}
+                    checked={shippingStatus === "InProcess"}
                     className='radio radio-xs'
-                    onChange={(e) => setShippingStatus("Shipped")}
+                    onChange={(e) => setShippingStatus("InProcess")}
                 />
                 Shipped
             </label>
@@ -394,14 +409,14 @@ const SelectRelatedListing: React.FC<SelectRelatedListingProps> = ({ listingDown
                             <figure className="border-[3px] rounded-full">
                                 <Image
                                     src={item.image[0]}
-                                    alt={item.itemName}
+                                    alt={item.name}
                                     className='h-9 w-9 object-cover rounded-full'
                                     width={50}
                                     height={50}
                                 />
                             </figure>
                             <div className='flex flex-col'>
-                                <span className='text-sm font-semibold'>{shortenText(item.itemName)}</span>
+                                <span className='text-sm font-semibold'>{shortenText(item.name)}</span>
                                 <span className='text-xs text-gray-500'>{item.itemId}</span>
                             </div>
                         </div>

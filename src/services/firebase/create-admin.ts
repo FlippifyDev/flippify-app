@@ -11,12 +11,19 @@ import { updateListingAdmin, updateUserManualListingsCountAdmin, updateUserManua
  * @param storePlatform 
  * @param listing 
  */
-async function createNewInventoryItemAdmin(uid: string, storePlatform: StorePlatform, listing: IEbayInventoryItem): Promise<{ success?: boolean, error?: any }> {
+async function createNewInventoryItemAdmin(uid: string, storePlatform: StorePlatform, listing: IEbayInventoryItem): Promise<{ success?: boolean, error?: any, listingExists?: boolean }> {
     try {
         const inventoryRef = firestoreAdmin.collection("inventory").doc(uid).collection(storePlatform)
 
         // Use the listing's id as the document id in the store collection
         const itemDocRef = inventoryRef.doc(listing.itemId);
+
+        // Check if the listing already exists
+        const docSnapshot = await itemDocRef.get();
+        if (docSnapshot.exists) {
+            console.warn(`Listing ${listing.itemId} already exists.`);
+            return { error: `Listing ${listing.itemId} already exists.`, listingExists: true };
+        }
 
         // Create or update the listing document
         await itemDocRef.set(listing, { merge: true });
@@ -37,7 +44,7 @@ async function createNewInventoryItemAdmin(uid: string, storePlatform: StorePlat
 
 
 /**
- * Creates or updates an order listing in Firestore under `orders/{uid}/{storePlatform}/{orderId}`.
+ * Creates or updates an order listing in Firestore under `orders/{uid}/{storePlatform}/{transactionId}`.
  * 
  * This function stores the order details in Firestore, increments the user's manual order count, 
  * and decreases the user's manual listing count if the order is associated with an existing listing.
@@ -55,14 +62,21 @@ async function createNewInventoryItemAdmin(uid: string, storePlatform: StorePlat
  * 
  * @remarks
  * - If the order already exists, it will be merged with existing data.
- * - If the order has a `legacyItemId`, the function will decrease the manual listing count accordingly.
+ * - If the order has a `itemId`, the function will decrease the manual listing count accordingly.
  */
-async function createNewOrderItemAdmin(uid: string, storePlatform: StorePlatform, order: IEbayOrder): Promise<{ success?: boolean, error?: any }> {
+async function createNewOrderItemAdmin(uid: string, storePlatform: StorePlatform, order: IEbayOrder): Promise<{ success?: boolean, error?: any, orderExists?: boolean }> {
     try {
         const orderRef = firestoreAdmin.collection("orders").doc(uid).collection(storePlatform)
-
-        // Use the order's id as the document id in the store collection
-        const itemDocRef = orderRef.doc(order.orderId);
+        
+        // Use the order's transaction id as the document id in the store collection
+        const itemDocRef = orderRef.doc(order.transactionId);
+    
+        // Check if the listing already exists
+        const docSnapshot = await itemDocRef.get();
+        if (docSnapshot.exists) {
+            console.warn(`Order ${order.transactionId} already exists.`);
+            return { error: `Order ${order.transactionId} already exists.`, orderExists: true };
+        }
 
         // Create or update the listing document
         await itemDocRef.set(order, { merge: true });
@@ -75,13 +89,13 @@ async function createNewOrderItemAdmin(uid: string, storePlatform: StorePlatform
         }
 
         // Update the user's manual orders count
-        // In the case where there is no legacy item id, then there is no listings that matches the order
+        // In the case where there is no item id, then there is no listings that matches the order
         // so the order is likely custom
-        if (order.legacyItemId) {
-            await updateListingAdmin(uid, storePlatform, order.legacyItemId, order.sale.quantity);
+        if (order.itemId) {
+            await updateListingAdmin(uid, storePlatform, order.itemId, order.sale.quantity);
         }
 
-        console.log(`Order item ${order.orderId} created/updated successfully.`);
+        console.log(`Order item ${order.transactionId} created/updated successfully.`);
         return { success: true };
     } catch (error) {
         console.error("Error creating/updating order item:", error);

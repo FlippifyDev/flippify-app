@@ -42,7 +42,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
             <LayoutSubscriptionWrapper requiredSubscriptions={["!admin", "!member"]}>
 				<DisabledSideBarButton
 					text="Inventory & Orders"
-					redirect="tools/inventory-orders"
+					redirect="tools/inventory-and-orders"
 					isSidebarOpen={isSidebarOpen}
 					symbol={<FaBoxOpen className="text-xl" />}
 					tooltip="Subscription Required"
@@ -53,7 +53,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 			<LayoutSubscriptionWrapper anySubscriptions={["admin", "member"]}>
 				<SidebarButton
 					text="Inventory & Orders"
-					redirect="tools/inventory-orders"
+					redirect="tools/inventory-and-orders"
 					isSidebarOpen={isSidebarOpen}
 					symbol={<FaBoxOpen className="text-xl" />}
 				/>

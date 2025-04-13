@@ -1,13 +1,12 @@
 import Layout from "../components/layout/Layout";
-import ThemeSetter from "@/app/components/ThemeSetter";
 import Loading from "@/app/components/Loading";
+import ThemeSetter from "@/app/components/ThemeSetter";
 import MetadataHead from "@/app/components/MetadataHead";
 import LoginContent from "../components/login/LoginContent";
+
 import { Suspense } from "react";
-import UnderMaintenance from "../components/development/UnderMaintenance";
 
 const root = process.env.ROOT as string;
-
 
 export const metadata = {
     title: "Login to Flippify | Manage Your eBay Store & Inventory",
@@ -51,7 +50,7 @@ const Login = () => {
             <ThemeSetter theme="dark" />
             <Suspense fallback={<Loading />}>
                 <Layout>
-                    <UnderMaintenance />
+                    <LoginContent />
                 </Layout>
             </Suspense>
         </>

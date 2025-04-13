@@ -22,7 +22,6 @@ import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import { useEffect, useState } from "react";
 import { HiOutlineDownload } from "react-icons/hi";
 import { useSession } from "next-auth/react";
-import { IoClose } from "react-icons/io5";
 import Modal from "../../dom/ui/Modal";
 import { exportCSVAllowedSubscriptionPlans } from "@/utils/constants";
 import Link from "next/link";

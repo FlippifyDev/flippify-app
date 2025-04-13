@@ -5,7 +5,7 @@
 import { useState, useRef } from "react";
 
 
-const filters = ["General"];
+const filters = ["eBay"];
 
 
 interface FilterSelectorProps {

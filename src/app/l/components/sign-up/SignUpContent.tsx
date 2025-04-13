@@ -1,6 +1,9 @@
 "use client"
 
 // Local Imports
+import { StatusType } from "@/models/config";
+import UnderMaintenance from "../development/UnderMaintenance";
+import { retrieveStatus } from "@/services/api/request";
 import { formatDateToISO } from "@/utils/format-dates";
 import { auth, firestore } from "@/lib/firebase/config";
 import { updateUserSubscriptionAdmin } from "@/services/firebase/update-admin";
@@ -30,6 +33,7 @@ const SignUpContent = () => {
     const [emailVerified, setEmailVerified] = useState(false);
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [status, setStatus] = useState<StatusType | null>(null);
 
     const router = useRouter();
 
@@ -143,36 +147,56 @@ const SignUpContent = () => {
         }
     };
 
+
+    useEffect(() => {
+        async function fetchStatus() {
+            const webStatus = await retrieveStatus();
+            if (webStatus) {
+                setStatus(webStatus["status"])
+            }
+        }
+
+        fetchStatus()
+    }, [])
+
     return (
         <div className="min-h-screen w-full flex flex-col md:flex-row items-center justify-center p-4 -mt-24 gap-16">
-            {!emailVerifying ? (
-                <SignUpForm
-                    username={username}
-                    email={email}
-                    password={password}
-                    setUsername={setUsername}
-                    setEmail={setEmail}
-                    setPassword={setPassword}
-                    handleSignUp={handleSignUp}
-                    handleSubmit={handleSubmit}
-                    router={router}
-                    loading={loading}
-                    errorMessage={errorMessage}
-                />
-            ) : emailVerified ? (
-                <EmailVerified />
-            ) : (
-                <EmailVerifying />
+            {status === "active" && (
+                <>
+                    {!emailVerifying ? (
+                        <SignUpForm
+                            username={username}
+                            email={email}
+                            password={password}
+                            setUsername={setUsername}
+                            setEmail={setEmail}
+                            setPassword={setPassword}
+                            handleSignUp={handleSignUp}
+                            handleSubmit={handleSubmit}
+                            router={router}
+                            loading={loading}
+                            errorMessage={errorMessage}
+                        />
+                    ) : emailVerified ? (
+                        <EmailVerified />
+                    ) : (
+                        <EmailVerifying />
+                    )}
+                    <div>
+                        <Image
+                            src="/auth/sign-up.svg"
+                            alt="Sign Up Image"
+                            className="object-cover hidden lg:block"
+                            width={700}
+                            height={700}
+                        />
+                    </div>
+                </>
             )}
-            <div>
-                <Image
-                    src="/auth/sign-up.svg"
-                    alt="Sign Up Image"
-                    className="object-cover hidden lg:block"
-                    width={700}
-                    height={700}
-                />
-            </div>
+
+            {status === "under maintenance" && (
+                <UnderMaintenance />
+            )}
         </div>
     )
 }

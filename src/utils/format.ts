@@ -38,7 +38,7 @@ function formatOrdersForCSVExport(orders: IEbayOrder[], timeFrom: string, timeTo
     const csvRows = filteredOrders.map(order => {
         const {
             orderId,
-            itemName,
+            name,
             purchase,
             sale,
             shipping,
@@ -56,7 +56,7 @@ function formatOrdersForCSVExport(orders: IEbayOrder[], timeFrom: string, timeTo
 
         return [
             orderId,
-            itemName,
+            name,
             (purchase.price ?? 0).toFixed(2), // Format price with 2 decimal places
             purchase.quantity,
             sale.price.toFixed(2), // Format price with 2 decimal places

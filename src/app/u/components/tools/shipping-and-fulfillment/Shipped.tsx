@@ -25,7 +25,7 @@ const Shipped: React.FC<IShipppedProps> = ({ item, uid, setUpdatedStatus }) => {
     async function handleUpdateStatus(status: OrderStatus) {
         await updateOrderStatus(uid, item, status);
 
-        if (status === "Shipped") {
+        if (status === "InProcess") {
             setShipped(true);
         } else if (status === "Completed") {
             setCompleted(true);
@@ -56,7 +56,7 @@ const Shipped: React.FC<IShipppedProps> = ({ item, uid, setUpdatedStatus }) => {
                     </figure>
                 </td>
                 <td>
-                    {shortenText(item.itemName)}
+                    {shortenText(item.name)}
                 </td>
                 <td>
                     {item.sale.quantity}

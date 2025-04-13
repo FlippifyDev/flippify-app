@@ -19,7 +19,7 @@ const StoreManagementCTA = () => {
                 </div>
                 <div className={`w-full lg:w-1/3 pt-10 md:pt-0 lg:scale-125 select-none`}>
                     <Image
-                        src={"/StoreManagementChoas.png"}
+                        src={"/store-management/Chaos.svg"}
                         alt={"Simplify your eBay store management with Flippify’s all-in-one solution."}
                         className={`w-full h-auto animate-fadeInSecondary scale-125`}
                         width={500}

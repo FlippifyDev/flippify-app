@@ -1,6 +1,7 @@
 import React from 'react';
 import { Inter } from 'next/font/google';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,10 +22,12 @@ const StoreManagementFeatures = () => {
 
                 {/* Image - Right Side */}
                 <div className="md:w-1/2 md:pl-8">
-                    <img
-                        src="/StoreManagementSimple.png"
+                    <Image
+                        src="/store-management/Simple.svg"
                         alt="Dashboard overview"
                         className="w-full"
+                        width={1000}
+                        height={1000}
                     />
                 </div>
             </div>
@@ -48,10 +51,12 @@ const StoreManagementFeatures = () => {
 
                 {/* Image - Left Side */}
                 <div className="md:w-1/2 md:pr-8">
-                    <img
-                        src="/StoreManagementPlans.png"
+                    <Image
+                        src="/store-management/Plans.svg"
                         alt="Roadmap preview"
                         className="w-full"
+                        width={1000}
+                        height={1000}
                     />
                 </div>
             </div>

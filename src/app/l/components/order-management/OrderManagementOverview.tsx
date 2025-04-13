@@ -24,7 +24,7 @@ const OrderManagementOverview = () => {
                 <div className="w-full flex items-center justify-center">
                     <div className="relative w-full" style={{ paddingBottom: '66.65%' }}>
                         <Image
-                            src="/OrdersManagement.png"
+                            src="/order-management/Management.png"
                             alt="Order Management Dashboard Preview"
                             fill
                             className="object-contain rounded-lg"

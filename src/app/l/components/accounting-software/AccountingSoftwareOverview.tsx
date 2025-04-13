@@ -42,7 +42,7 @@ const AccountingSoftwareOverview = () => {
                 <div className="w-full md:w-2/5 flex items-center justify-center">
                     <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden">
                         <Image
-                            src="/AccountingSoftware.png"
+                            src="/accounting-software/Software.png"
                             alt="Financial Dashboard Preview"
                             fill
                             className="object-cover"

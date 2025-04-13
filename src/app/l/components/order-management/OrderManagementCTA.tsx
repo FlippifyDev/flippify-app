@@ -19,7 +19,7 @@ const OrderManagementCTA = () => {
                 </div>
                 <div className={`w-full lg:w-1/3 pt-10 md:pt-0 lg:scale-125 select-none`}>
                     <Image
-                        src={"/OrdersJuggling.png"}
+                        src={"/order-management/Juggling.png"}
                         alt={"Streamline your eBay orders with Flippify’s smart tools."}
                         className={`w-full h-auto animate-fadeInSecondary scale-125`}
                         width={500}

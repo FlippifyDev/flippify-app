@@ -19,7 +19,7 @@ const InventoryManagementCTA = () => {
                 </div>
                 <div className={`w-full lg:w-1/3 pt-10 md:pt-0 lg:scale-125 select-none`}>
                     <Image
-                        src={"/InventoryGetStarted.png"}
+                        src={"/inventory-management/GetStarted.png"}
                         alt={"Stop Manually bookkeeping, use flippify automated financial hub instead."}
                         className={`w-full h-auto animate-fadeInSecondary scale-125`}
                         width={500}

@@ -1,4 +1,4 @@
-const jokes = [
+export const jokes = [
     "Reticulating splines...",
     "Generating witty dialog...",
     "Swapping time and space...",
@@ -299,7 +299,4 @@ const jokes = [
     "Don't panic and carry a towel",
     "The ships hung in the sky in much the same way that bricks don't",
     "I've been talking to the main computer...It hates me.",
-    "Never even heard of mesh monitors"
 ];
-
-export default jokes;

@@ -2,9 +2,9 @@
 
 // Local Imports
 
+import IconButton from '../../dom/ui/IconButton';
 import OrdersContent from './OrdersContent';
 import InventoryContent from './InventoryContent';
-import ConnectAccountButton from '../../dom/ui/ConnectAccountButton';
 import { FaShoppingCart } from 'react-icons/fa';
 import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
 
@@ -115,7 +115,7 @@ const InventoryOrdersContent = () => {
                 </main>
             ) : (
                 <div className="relative flex flex-col w-full min-h-full">
-                    <ConnectAccountButton heading="No account connected" animationType="hover-box" subtitle="Go to your profile to connect your eBay account" buttonText="Go to profile" />
+                    <IconButton heading="No account connected" animationType="hover-box" subtitle="Go to your profile to connect your eBay account" buttonText="Go to profile" redirect="profile"/>
                 </div>
             )}
 

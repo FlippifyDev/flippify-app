@@ -13,7 +13,7 @@ import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 interface CombinedOrder {
     image: string;
-    itemName: string;
+    name: string;
     quantitySold: number;
     totalSalePrice: number;
     totalPurchasePrice: number | null;
@@ -81,12 +81,12 @@ const OrdersContent: React.FC = () => {
         const combinedOrders: { [key: string]: CombinedOrder } = {};
 
         unformattedOrderData.forEach(order => {
-            const { itemName } = order;
+            const { name } = order;
 
-            if (!combinedOrders[itemName]) {
-                combinedOrders[itemName] = {
+            if (!combinedOrders[name]) {
+                combinedOrders[name] = {
                     image: order.image[0],
-                    itemName: order.itemName,
+                    name: order.name,
                     quantitySold: order.sale.quantity,
                     totalSalePrice: order.sale.price,
                     totalPurchasePrice: order.purchase.price,
@@ -95,17 +95,17 @@ const OrdersContent: React.FC = () => {
                     orders: [order],
                 };
             } else {
-                combinedOrders[itemName].quantitySold += order.sale.quantity;
-                combinedOrders[itemName].totalSalePrice += order.sale.price;
-                combinedOrders[itemName].totalShippingFees += order.shipping.fees ?? 0;
-                combinedOrders[itemName].totalOtherFees += order.additionalFees ?? 0;
+                combinedOrders[name].quantitySold += order.sale.quantity;
+                combinedOrders[name].totalSalePrice += order.sale.price;
+                combinedOrders[name].totalShippingFees += order.shipping.fees ?? 0;
+                combinedOrders[name].totalOtherFees += order.additionalFees ?? 0;
 
                 if (order.purchase.price !== null) {
-                    combinedOrders[itemName].totalPurchasePrice =
-                        (combinedOrders[itemName].totalPurchasePrice || 0) + (order.purchase.price || 0);
+                    combinedOrders[name].totalPurchasePrice =
+                        (combinedOrders[name].totalPurchasePrice || 0) + (order.purchase.price || 0);
                 }
 
-                combinedOrders[itemName].orders.push(order);
+                combinedOrders[name].orders.push(order);
             }
         });
 
@@ -154,7 +154,7 @@ const OrdersContent: React.FC = () => {
                             return (
                                 <OrderRow
                                     key={index}
-                                    itemName={order.itemName}
+                                    name={order.name}
                                     quantitySold={quantity}
                                     totalSalePrice={salePrice}
                                     totalPurchasePrice={totalPurchasePrice}

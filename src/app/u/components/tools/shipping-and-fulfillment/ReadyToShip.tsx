@@ -38,7 +38,7 @@ const ReadyToShip: React.FC<IReadyToShipProps> = ({ item, uid, setUpdatedStatus 
     }
 
     async function handleMarkAsShipped() {
-        await updateOrderStatus(uid, item, "Shipped");
+        await updateOrderStatus(uid, item, "InProcess");
         setShipped(true);
         setUpdatedStatus(true);
         setTimeout(() => {
@@ -65,7 +65,7 @@ const ReadyToShip: React.FC<IReadyToShipProps> = ({ item, uid, setUpdatedStatus 
                     </figure>
                 </td>
                 <td>
-                    {shortenText(item.itemName)}
+                    {shortenText(item.name)}
                 </td>
                 <td>
                     {item.sale.quantity}

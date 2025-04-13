@@ -1,6 +1,6 @@
 import React from 'react';
 import Layout from '../../../../components/layout/Layout';
-import OrderDetails from '../../../../components/tools/inventory-orders/OrderDetails';
+import OrderDetails from '../../../../components/tools/inventory-and-orders/OrderDetails';
 
 import ThemeSetter from '@/app/components/ThemeSetter';
 

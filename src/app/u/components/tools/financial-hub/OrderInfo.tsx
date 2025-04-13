@@ -15,7 +15,7 @@ function findOrderInfo(orders: IEbayOrder[]) {
         if (!order.purchase.price || !order.purchase.date || !order.purchase.platform) {
             missingInfoCount++;
         }
-        if (order.status !== 'Completed') {
+        if (order.status !== 'Completed' && order.status !== 'Cancelled') {
             nonCompletedOrders++;
         }
     });

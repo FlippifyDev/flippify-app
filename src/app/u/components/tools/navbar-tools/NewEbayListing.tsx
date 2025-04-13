@@ -9,6 +9,7 @@ import { addCacheData } from "@/utils/cache-helpers"
 import { formatDateToISO } from "@/utils/format-dates"
 import { IEbayInventoryItem } from "@/models/store-data"
 import { createNewInventoryItemAdmin } from "@/services/firebase/create-admin"
+import { generateRandomFlippifyListingId } from "@/utils/generate-random"
 import { ebayInventoryCacheKey, storePlatforms, subscriptionLimits } from "@/utils/constants"
 import { validateNumberInput, validatePriceInput, validateTextInput } from "@/utils/input-validation"
 
@@ -27,7 +28,7 @@ const NewEbayListingForm: React.FC<NewEbayListingFormProps> = ({ setDisplayModal
     const { data: session } = useSession();
 
     // General Info
-    const [itemId, setItemId] = useState<string>("")
+    const [itemId, setItemId] = useState<string>(generateRandomFlippifyListingId(20))
     const [itemName, setItemName] = useState<string>("")
     const [imageUrl, setImageUrl] = useState<string>("");
     const [customTag, setCustomTag] = useState<string>("")
@@ -83,39 +84,44 @@ const NewEbayListingForm: React.FC<NewEbayListingFormProps> = ({ setDisplayModal
 
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
+        setErrorMessage("")
         setLoading(true);
         
         if (aboveLimit) return;
 
         const inventoryItem: IEbayInventoryItem = {
+            currency: session?.user.preferences.currency ?? "USD",
             customTag: customTag,
             dateListed: formatDateToISO(new Date(dateListed)),
             image: [imageUrl],
             initialQuantity: Number(quantity),
             itemId: itemId,
-            itemName: itemName,
+            name: itemName,
             price: Number(listingPrice),
             purchase: {
-                date: datePurchased ? datePurchased : dateListed,
+                date: datePurchased ? formatDateToISO(new Date(datePurchased)) : formatDateToISO(new Date(dateListed)),
                 platform: purchasePlatform || null,
                 price: purchasePrice ? Number(purchasePrice) : null,
-                quantity: quantity ? Number(quantity) : null
             },
             quantity: Number(quantity),
             recordType: "manual",
+            lastModified: formatDateToISO(new Date())
         }
 
-        const { success, error } = await createNewInventoryItemAdmin(session?.user.id ?? "", storePlatforms.ebay, inventoryItem);
+        const { success, error, listingExists } = await createNewInventoryItemAdmin(session?.user.id ?? "", storePlatforms.ebay, inventoryItem);
         if (!success) {
             console.error("Error creating new inventory item", error)
-            setErrorMessage("Error creating new inventory item")
-            return
+            if (listingExists) {
+                setErrorMessage(error)
+            } else {
+                setErrorMessage(`Error creating new inventory item`)
+            }
+        } else {
+            handleCacheUpdate(inventoryItem);
+            setSuccessMessage("Listing Added!")
         }
 
-        handleCacheUpdate(inventoryItem);
-
         setLoading(false);
-        setSuccessMessage("Listing Added!")
     }
 
     function handleChange(value: string, type: string) {

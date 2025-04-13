@@ -33,7 +33,7 @@ const Page = () => {
 
     function sortOrderData(inventoryData: IEbayOrder[]) {
         const active = inventoryData.filter(item => item.status === 'Active');
-        const shipped = inventoryData.filter(item => item.status === 'Shipped');
+        const shipped = inventoryData.filter(item => item.status === 'InProcess');
 
         setShippedListings(shipped);
         setActiveListings(active);

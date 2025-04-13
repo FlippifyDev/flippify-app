@@ -98,7 +98,6 @@ const InventoryContent = () => {
             updatedListings[index].purchase = {
                 platform: null,
                 price: null,
-                quantity: null,
                 date: null
             };
         }
@@ -255,7 +254,7 @@ const InventoryContent = () => {
                                             style={{ objectFit: "cover" }}
                                         />
                                     </td>
-                                    <td onClick={() => handleDisplayModal(item)}>{shortenText(item.itemName)}</td>
+                                    <td onClick={() => handleDisplayModal(item)}>{shortenText(item.name)}</td>
                                     <td onClick={() => handleDisplayModal(item)}>{item.quantity}</td>
                                     <td
                                         className="cursor-pointer transition duration-200"

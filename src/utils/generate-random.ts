@@ -7,3 +7,16 @@ export const generateRandomChars = (numChar: number) => {
     }
     return code;
 };
+
+
+export const generateRandomFlippifyTransactionId = (numChar: number) => {
+    return `ftid-${generateRandomChars(numChar)}`;
+}
+
+export const generateRandomFlippifyOrderId = (numChar: number) => {
+    return `foid-${generateRandomChars(numChar)}`;
+}
+
+export const generateRandomFlippifyListingId = (numChar: number) => {
+    return `flid-${generateRandomChars(numChar)}`;
+}

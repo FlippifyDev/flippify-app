@@ -26,7 +26,7 @@ import Image from "next/image";
 const OrderDetails = () => {
     const { data: session } = useSession();
     const searchParams = useSearchParams();
-    const itemName = searchParams?.get("itemName") as string;
+    const name = searchParams?.get("name") as string;
     const [orders, setOrders] = useState<IEbayOrder[]>([]);
     const [salesData, setSalesData] = useState<IEbayOrder[]>([]);
     const username = session?.user.username as string;
@@ -55,7 +55,7 @@ const OrderDetails = () => {
 
 
     const [ordersUpdated, setOrdersUpdated] = useState<boolean>(false);
-    const [orderIdtoIndex, setOrderIdtoIndex] = useState<{ [key: string]: number }>({});
+    const [transactionIdtoIndex, settransactionIdtoIndex] = useState<{ [key: string]: number }>({});
 
     // This effect runs when selectedOrders length changes
     useEffect(() => {
@@ -80,18 +80,18 @@ const OrderDetails = () => {
     }, [session?.user]);
 
     useEffect(() => {
-        if (salesData && itemName && !ordersUpdated) {
+        if (salesData && name && !ordersUpdated) {
             const matchingOrders = salesData.filter((o, index) => {
-                const isMatch = o.itemName === itemName;
+                const isMatch = o.name === name;
                 if (isMatch) {
-                    setOrderIdtoIndex((prev) => ({ ...prev, [o.orderId]: index }));
+                    settransactionIdtoIndex((prev) => ({ ...prev, [o.transactionId]: index }));
                 }
                 return isMatch;
             });
             setOrders(matchingOrders);
             setOrdersUpdated(false);
         }
-    }, [salesData, itemName, ordersUpdated]);
+    }, [salesData, name, ordersUpdated]);
 
     if (orders.length === 0) {
         return <LoadingAnimation text="Loading items" type="stack-loader"/>;
@@ -99,16 +99,16 @@ const OrderDetails = () => {
 
     // Handle orders click
     const handleOrdersClick = () => {
-        router.push(`/u/${username}/tools/inventory-orders#orders`);
+        router.push(`/u/${username}/tools/inventory-and-orders#orders`);
     };
 
     // Handle checkbox selection
-    const handleCheckboxChange = (orderId: string) => {
+    const handleCheckboxChange = (transactionId: string) => {
         setSelectedOrders((prev) => {
-            if (prev.includes(orderId)) {
-                return prev.filter((id) => id !== orderId); // Deselect
+            if (prev.includes(transactionId)) {
+                return prev.filter((id) => id !== transactionId); // Deselect
             } else {
-                return [...prev, orderId]; // Select
+                return [...prev, transactionId]; // Select
             }
         });
     };
@@ -199,7 +199,7 @@ const OrderDetails = () => {
 
         // Optimistically update the UI by directly modifying the orders state
         updatedOrders = updatedOrders.map((order) => {
-            if (selectedOrders.includes(order.orderId)) {
+            if (selectedOrders.includes(order.transactionId)) {
                 return {
                     ...order,
                     purchase: {
@@ -221,10 +221,10 @@ const OrderDetails = () => {
                 const ordersCollectionRef = collection(firestore, 'orders', session?.user.id as string, 'ebay');
 
                 // Loop through selected orders and update each document individually
-                const updatePromises = selectedOrders.map(async (orderId) => {
-                    const orderToUpdate = updatedOrders.find((order) => order.orderId === orderId);
+                const updatePromises = selectedOrders.map(async (transactionId) => {
+                    const orderToUpdate = updatedOrders.find((order) => order.transactionId === transactionId);
                     if (orderToUpdate) {
-                        const orderDocRef = doc(ordersCollectionRef, orderToUpdate.orderId); // Reference to individual order
+                        const orderDocRef = doc(ordersCollectionRef, orderToUpdate.transactionId); // Reference to individual order
                         const updateData = {
                             "purchase.date": orderToUpdate.purchase.date,
                             "purchase.price": orderToUpdate.purchase.price,
@@ -244,8 +244,8 @@ const OrderDetails = () => {
 
                 // Merge updated orders with the current cache, preserving the existing ones
                 const mergedOrdersDict = {
-                    ...Object.fromEntries(currentCache.map(order => [order.orderId, order])),
-                    ...Object.fromEntries(updatedOrders.map(order => [order.orderId, order]))
+                    ...Object.fromEntries(currentCache.map(order => [order.transactionId, order])),
+                    ...Object.fromEntries(updatedOrders.map(order => [order.transactionId, order]))
                 };
 
                 // After successful Firestore update, update the cache with the merged data
@@ -323,17 +323,17 @@ const OrderDetails = () => {
                 'orders',
                 session?.user.id as string,
                 'ebay',
-                updatedOrders[index].orderId
+                updatedOrders[index].transactionId
             );
 
             // Perform the update
             await updateDoc(orderDocRef, updateFields);
             // Update the salesData with the modified order
-            salesData[orderIdtoIndex[updatedOrders[index].orderId]] = updatedOrders[index];
+            salesData[transactionIdtoIndex[updatedOrders[index].transactionId]] = updatedOrders[index];
 
-            // Convert salesData to a dictionary where orderId is the key
+            // Convert salesData to a dictionary where transactionId is the key
             const salesDataDict = {
-                ...Object.fromEntries(salesData.map(order => [order.orderId, order]))
+                ...Object.fromEntries(salesData.map(order => [order.transactionId, order]))
             };
 
             setCachedData(cacheKey, salesDataDict); 
@@ -342,8 +342,8 @@ const OrderDetails = () => {
             setEditingIndex(null);
             setOrders(updatedOrders);
         } catch (error) {
-            console.error("Error updating platform:", error);
-            setAlertMessage("Failed to update platform.");
+            console.error(`Error updating ${type}:`, error);
+            setAlertMessage(`Failed to update ${type}.`);
             setIsAlertVisible(true);
         }
     };
@@ -391,12 +391,12 @@ const OrderDetails = () => {
                 <div className="breadcrumbs text-sm p-2">
                     <ul>
                         <li onClick={handleOrdersClick}><a>Orders</a></li>
-                        <li>{shortenText(itemName, 20)}</li>
+                        <li>{shortenText(name, 20)}</li>
                     </ul>
                 </div>
                 <div className="flex items-center gap-2 h-full p-4">
                     <Image src={image} width={200} height={200} alt={"image"} className="rounded-full w-20 h-20" loading="lazy" style={{ objectFit: 'cover' }} />
-                    <h1 className="text-xl font-bold leading-tight">{itemName}</h1>
+                    <h1 className="text-xl font-bold leading-tight">{name}</h1>
                 </div>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 2xl:grid-cols-8 gap-2 w-full">
@@ -416,7 +416,7 @@ const OrderDetails = () => {
                         <thead>
                             <tr className="text-left bg-tableHeaderBackground shadow-sm">
                                 <th>Select</th>
-                                <th>Order ID</th>
+                                <th>Transaction ID</th>
                                 <th>Purchase Date</th>
                                 <th>Sale Date</th>
                                 <th>Quantity Sold</th>
@@ -433,7 +433,7 @@ const OrderDetails = () => {
                         </thead>
                         <tbody>
                             {orders.map((order, index) => {
-                                const { orderId, sale, purchase, shipping, additionalFees } = order;
+                                const { transactionId, sale, purchase, shipping, additionalFees } = order;
                                 const profit = (sale.price + shipping.fees) - (purchase.price || 0) - shipping.fees - additionalFees;
                                 const roi = purchase.price && purchase.price > 0 ? ((profit / purchase.price) * 100).toFixed(2) : "0";
                                 
@@ -443,15 +443,15 @@ const OrderDetails = () => {
                                         <td>
                                             <label className="flex items-center cursor-pointer relative">
                                                 <input
-                                                    onChange={() => handleCheckboxChange(order.orderId)}
+                                                    onChange={() => handleCheckboxChange(order.transactionId)}
                                                     type="checkbox"
                                                     className="peer h-5 w-5 cursor-pointer transition-all appearance-none rounded shadow hover:shadow-md border border-slate-300 checked:bg-slate-800 checked:border-slate-800 focus:ring-0"
                                                     id="check"
-                                                    checked={selectedOrders.includes(order.orderId)}
+                                                    checked={selectedOrders.includes(order.transactionId)}
                                                 />
                                             </label>
                                         </td>
-                                        <td>{shortenText(orderId, 10)}</td>
+                                        <td>{shortenText(transactionId, 10)}</td>
                                         <td className="min-w-32">{formatTableDate(order.purchase.date)}</td>
                                         <td className="min-w-32">{formatTableDate(order.sale.date)}</td>
                                         <td>{sale.quantity}</td>

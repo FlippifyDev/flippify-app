@@ -40,7 +40,7 @@ export default function CustomDropdown({ value, onChange, options }: CustomDropd
         >
             <button
                 type="button"
-                className="w-full py-3 px-6 rounded-lg bg-white border border-gray-300 text-sm flex items-center gap-2"
+                className="min-w-32 py-3 px-6 rounded-lg bg-white border border-gray-300 text-sm flex items-center gap-2"
                 aria-haspopup="listbox"
                 aria-expanded={isOpen}
                 onClick={() => setIsOpen((prev) => !prev)}

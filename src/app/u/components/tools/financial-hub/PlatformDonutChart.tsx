@@ -106,13 +106,13 @@ const CardPlatformDonutChart: React.FC<CardPlatformDonutChartProps> = ({ orders,
                 )}
 
                 {/* Chart */}
-                {orders.length > 0 ? (
+                {orders.length > 0 && !loading ? (
                     <div ref={chartRef} className="py-6" id="donut-chart"></div>
                 ) : (
                     null
                 )}
 
-                {orders.length === 0 && (
+                {orders.length === 0 && !loading && (
                     <div className="text-center">
                         No orders found in this range
                     </div>

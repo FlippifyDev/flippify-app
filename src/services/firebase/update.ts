@@ -1,14 +1,15 @@
 // Local Imports
-import { IUser } from "@/models/user";
 import { formatDateToISO } from "@/utils/format-dates";
 import { updateCacheData } from "@/utils/cache-helpers";
 import { ebayOrderCacheKey } from "@/utils/constants";
+import { createHistoryItem } from "./helpers";
+import { CurrencyType, IUser } from "@/models/user";
 import { updateReferreeUserAdmin } from "./update-admin";
 import { IEbayOrder, OrderStatus } from "@/models/store-data";
 import { retrieveUserOrderItemRef, retrieveUserRefById } from "./retrieve";
 
 // External Imports
-import { deleteField, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { arrayUnion, deleteField, getDoc, setDoc, updateDoc } from "firebase/firestore";
 
 
 
@@ -170,21 +171,25 @@ async function incrementRewardsClaimed(uid: string): Promise<void> {
 
 async function updateOrderStatus(uid: string, order: IEbayOrder, status: OrderStatus): Promise<void> {
     try {
-        const orderId = order.orderId;
-        const orderRef = await retrieveUserOrderItemRef(uid, orderId);
+        const transactionId = order.transactionId;
+        const orderRef = await retrieveUserOrderItemRef(uid, transactionId);
 
         if (!orderRef) {
-            console.error(`No order found with ID: ${orderId}`);
+            console.error(`No order found with ID: ${transactionId}`);
             return;
         }
 
-        await updateDoc(orderRef, { status });
+        const historyItem = createHistoryItem(status, order.sale.price, order.sale.currency as CurrencyType);
+
+        await updateDoc(orderRef, {
+            status: status,
+            history: arrayUnion(historyItem)
+        });
 
         order.status = status;
-        console.log("order", order)
         updateCacheData(`${ebayOrderCacheKey}-${uid}`, order)
 
-        console.log(`Order ${orderId} status updated to ${status}`);
+        console.log(`Order ${transactionId} status updated to ${status}`);
     } catch (error) {
         console.error("Error updating Firestore order status:", error);
         throw error;

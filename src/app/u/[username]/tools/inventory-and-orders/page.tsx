@@ -1,6 +1,6 @@
 import React from 'react';
 import Layout from '@/app/u/components/layout/Layout';
-import InventoryOrdersContent from '../../../components/tools/inventory-orders/InventoryOrdersContent';
+import InventoryOrdersContent from '../../../components/tools/inventory-and-orders/InventoryOrdersContent';
 import ThemeSetter from '@/app/components/ThemeSetter';
 
 export const metadata = {

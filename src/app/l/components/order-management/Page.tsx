@@ -1,28 +1,45 @@
-import React from 'react'
-import Hero from '../dom/Hero'
-import HomeGetAccess from '../home/HomeGetAccess'
-import { Inter } from 'next/font/google'
+import React from 'react';
+import { Inter } from 'next/font/google';
+import Hero from '../dom/Hero';
+import HomeGetAccess from '../home/HomeGetAccess';
+import OrderManagementOverview from './OrderManagementOverview';
+import OrderManagementFeatures from './OrderManagementFeatures';
+import OrderManagementCTA from './OrderManagementCTA';
 
-const inter = Inter({ subsets: ['latin'] });
-
-const Page = () => {
+const OrderManagementContent = () => {
     return (
-        <div className='min-h-screen flex flex-col items-center'>
+        <div className='order-management-container'>
             <div>
                 <Hero
-                    text={[{ text: "Smart Order " }, { "text": "Management", isGradient: true }, { text: "for your eBay business" }]}
-                    description="Flippify&apos;s order management software helps eBay sellers automate orders, track shipments, and manage stock."
+                    text={[{ text: "Order management done" }, { text: "the", }, { text: "right", isGradient: true }, { text: "way" }]}
+                    description="Manage your eBay orders stress-free with Flippify’s automated services—integrated with our Inventory Management system for seamless tracking."
                     button={<HomeGetAccess />}
                     image="/hero/orderManagement.svg"
                     imageAlt="Flippify Order Management"
-                    imageContainerClassName="scale-150"
+                    titleClassName="lg:w-3/5"
                 />
             </div>
-            <div className={`${inter.className} font-semibold text-lightModeText max-w-6.5xl mt-[16rem] md:mt-0 2xl:mt-[4rem] px-8 md:px-4`}>
-                <p>Stay tuned this page is still under development!</p>
+
+            <div className="flex flex-col mt-16 sm:mt-20 md:mt-24 lg:mt-[200px] xl:mt-[280px]">
+                {/* Summary Section */}
+                <div className="py-20">
+                    <OrderManagementOverview />
+                </div>
+                <div className="w-full border-b-2 border-gray-300 border-dashed"></div>
+
+                {/* Key Points Section */}
+                <div className="py-20">
+                    <OrderManagementFeatures />
+                </div>
+                <div className="w-full border-b-2 border-gray-300 border-dashed"></div>
+
+                {/* Call to Action Section */}
+                <div className="pt-20">
+                    <OrderManagementCTA />
+                </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Page
+export default OrderManagementContent;

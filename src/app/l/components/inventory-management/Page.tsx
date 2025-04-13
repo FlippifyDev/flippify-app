@@ -1,29 +1,47 @@
-import React from 'react'
-import Hero from '../dom/Hero'
-import HomeGetAccess from '../home/HomeGetAccess'
-import { Inter } from 'next/font/google'
+import React from 'react';
+import { Inter } from 'next/font/google';
+import Hero from '../dom/Hero';
+import HomeGetAccess from '../home/HomeGetAccess';
+import InventoryManagementOverview from './InventoryManagementOverview';
+import InventoryManagementFeatures from './InventoryManagementFeatures';
+import InventoryManagementCTA from './InventoryManagementCTA';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
-const Page = () => {
+const InventoryManagementContent = () => {
     return (
-        <div className='min-h-screen flex flex-col items-center'>
+        <div className='inventory-management-container'>
             <div>
                 <Hero
-                    text={[{ text: "Smart Inventory " }, { "text": "Control", isGradient: true }, { text: "for eBay" }]}
-                    description="Flippify&apos;s inventory software keeps your stock synced with eBay whilst allowing you to upload your own custom stock. Track levels in real-time, avoid overselling, and manage your warehouse with ease."
+                    text={[{ text: "Stop counting boxes," }, { text: "It’s on" }, { text: "autopilot", isGradient: true }, { text: " now." }]}
+                    description="Effortlessly track your inventory with Flippify’s automated tools—integrated with eBay and our Order Management system for seamless updates."
                     button={<HomeGetAccess />}
                     image="/hero/inventoryManagement.svg"
                     imageAlt="Flippify Inventory Management"
-                    imageContainerClassName="scale-150"
-                    imageClassName='pb-20'
+                    titleClassName="lg:w-3/5"
                 />
             </div>
-            <div className={`${inter.className} font-semibold text-lightModeText max-w-6.5xl mt-[16rem] md:mt-0 2xl:mt-[4rem] px-8 md:px-4`}>
-                <p>Stay tuned this page is still under development!</p>
+
+            <div className="flex flex-col mt-16 sm:mt-20 md:mt-24 lg:mt-[200px] xl:mt-[280px]">
+                {/* Summary Section */}
+                <div className="py-20">
+                    <InventoryManagementOverview />
+                </div>
+                <div className="w-full border-b-2 border-gray-300 border-dashed"></div>
+
+                {/* Key Points Section */}
+                <div className="py-20">
+                    <InventoryManagementFeatures />
+                </div>
+                <div className="w-full border-b-2 border-gray-300 border-dashed"></div>
+
+                {/* Call to Action Section */}
+                <div className="pt-20">
+                    <InventoryManagementCTA />
+                </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Page
+export default InventoryManagementContent;

@@ -19,7 +19,7 @@ export const metadata = {
         url: root.concat('/l/privacy-policy'),
         images: [
             {
-                url: 'https://example.com/privacy-policy-image.png', // Replace with your actual image
+                url: 'https://i.imgur.com/zoVdFqX.png', // Replace with your actual image
                 width: 1200,
                 height: 630,
                 alt: 'Flippify Privacy Policy - Protecting Your Data and Information'

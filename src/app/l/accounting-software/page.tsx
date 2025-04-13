@@ -19,7 +19,7 @@ export const metadata = {
         url: root.concat('/l/accounting-software'),
         images: [
             {
-                url: `https://i.imgur.com/rSUUDZb.png`,
+                url: `https://i.imgur.com/ZNqXm19.png`,
                 width: 2600,
                 height: 1440,
                 alt: "Flippify Accounting Software for eBay Sellers - Automate Taxes & Manage Finances"

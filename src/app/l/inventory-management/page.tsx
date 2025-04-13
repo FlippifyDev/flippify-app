@@ -20,7 +20,7 @@ export const metadata = {
         url: root.concat('/l/inventory-management'),
         images: [
             {
-                url: `https://i.imgur.com/C1q3wfX.png`,
+                url: "https://i.imgur.com/IvpTsu7.png",
                 width: 2600,
                 height: 1440,
                 alt: "Flippify Inventory Management for eBay Sellers - Track & Control Stock"

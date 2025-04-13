@@ -18,7 +18,7 @@ export const metadata = {
         url: root.concat('/l/faqs'),
         images: [
             {
-                url: `${root}/static/og-faqs.png`,
+                url: "https://i.imgur.com/WnJa8Ea.png",
                 width: 2600,
                 height: 1440,
                 alt: "Flippify FAQs - eBay Seller Tools, Inventory Management & Accounting Software"

@@ -5,15 +5,15 @@ import React, { useState, useEffect, useRef } from "react";
 
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import DashboardRecentSalesCard from "./DashboardRecentSalesCard";
-import ProfitsGraphDateFilter from "./ProfitsGraphDateFilter";
 import { retrieveUserOrders } from "@/services/firebase/retrieve";
+import ProfitsGraphDateFilter from "./ProfitsGraphDateFilter";
 import LayoutLoadingSkeleton from "../../layout/LayoutLoadingSkeleton";
 import ProfitsGraphTagFilter from "./ProfitsGraphTagFilter";
 import DashboardOverviewCard from "./DashboardOverviewCard";
 import DashboardProfitsGraph from "./DashboardProfitsGraph";
-import OnboardingFlow from "./OnboardingFlow";
+import IconButton from "../../dom/ui/IconButton";
 import { IEbayOrder } from "@/models/store-data";
-import ConnectAccountButton from "../../dom/ui/ConnectAccountButton";
+import OnboardingFlow from "./OnboardingFlow";
 
 
 const DashboardPage: React.FC = () => {
@@ -22,8 +22,6 @@ const DashboardPage: React.FC = () => {
     const [salesData, setSalesData] = useState<IEbayOrder[]>([]);
     const [selectedRange, setSelectedRange] = useState<number>(30);
     const [selectedLabel, setSelectedLabel] = useState<string>("This Month");
-    const [rangeDropdownOpen, setRangeDropdownOpen] = useState(false);
-    const [tagDropdownOpen, setTagDropdownOpen] = useState(false);
 
     const rangeDropdownRef = useRef<HTMLDivElement | null>(null);
     const tagDropdownRef = useRef<HTMLDivElement | null>(null);
@@ -34,7 +32,6 @@ const DashboardPage: React.FC = () => {
     const handleRangeChange = (range: string, label: string) => {
         setSelectedLabel(label)
         setSelectedRange(Number(range));
-        setRangeDropdownOpen(false);
     };
 
     // Extract unique custom tags from sales data for filtering
@@ -55,29 +52,13 @@ const DashboardPage: React.FC = () => {
         }
     }, [session?.user]);
 
-    // Close dropdowns if clicked outside
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (
-                rangeDropdownRef.current &&
-                !rangeDropdownRef.current.contains(event.target as Node) &&
-                tagDropdownRef.current &&
-                !tagDropdownRef.current.contains(event.target as Node)
-            ) {
-                setRangeDropdownOpen(false);
-                setTagDropdownOpen(false);
-            }
-        };
-
-        document.addEventListener("mousedown", handleClickOutside);
-
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []);
 
     if (!session || !session.user || !session.user.stripeCustomerId) {
-        return <LayoutLoadingSkeleton />;
+        return (
+            <div className="min-h-screen flex justify-center items-center">
+                <LayoutLoadingSkeleton />
+            </div>
+        );
     }
 
     // Filter sales data based on the selected tag
@@ -99,7 +80,7 @@ const DashboardPage: React.FC = () => {
             <LayoutSubscriptionWrapper
                 requiredSubscriptions={["accessGranted", "!member", "!admin"]}
             >
-                <ConnectAccountButton heading="No subscription connected" animationType="hover-box" subtitle="Go to the plans page to get a subscription" buttonText="View Plans" />
+                <IconButton heading="No subscription connected" animationType="hover-box" subtitle="Go to the plans page to get a subscription" buttonText="View Plans" redirect="plans" />
             </LayoutSubscriptionWrapper>
 
             {/* If They Have Subscription */}
@@ -136,7 +117,7 @@ const DashboardPage: React.FC = () => {
                         </div>
                     </div>
                 ) : (
-                    <ConnectAccountButton heading="No account connected" animationType="hover-box" subtitle="Go to your profile to connect your eBay account" buttonText="Go to profile" />
+                    <IconButton heading="No account connected" animationType="hover-box" subtitle="Go to your profile to connect your eBay account" buttonText="Go to profile" redirect="profile" />
                 )}
             </LayoutSubscriptionWrapper>
         </div>

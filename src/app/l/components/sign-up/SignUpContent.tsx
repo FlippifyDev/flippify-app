@@ -4,28 +4,25 @@
 import { StatusType } from "@/models/config";
 import UnderMaintenance from "../development/UnderMaintenance";
 import { retrieveStatus } from "@/services/api/request";
-import { formatDateToISO } from "@/utils/format-dates";
 import { auth, firestore } from "@/lib/firebase/config";
-import { updateUserSubscriptionAdmin } from "@/services/firebase/update-admin";
+import { updateAccessGrantedAdmin } from "@/services/firebase/update-admin";
 import { retrieveAuthenticatedUserCount } from "@/services/firebase/retrieve-admin";
 
 // External Imports
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { useState, useEffect, useRef } from "react";
-import { doc, updateDoc } from "firebase/firestore";
-import { useSession } from "next-auth/react";
+import { doc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { Lato } from 'next/font/google';
-import Image from "next/image";
 import dotenv from "dotenv";
+import Image from "next/image";
 
 dotenv.config();
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
 const SignUpContent = () => {
-    const { data: session } = useSession();
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -41,12 +38,6 @@ const SignUpContent = () => {
     const usernameRef = useRef<string | null>(null);
     const emailRef = useRef<string | null>(null);
     const passwordRef = useRef<string | null>(null);
-
-    useEffect(() => {
-        if (session) {
-            router.push(`/u/${session.user.username}/dashboard`);
-        }
-    }, [session, router]);
 
     // Poll for email verification (for email/password sign‑up)
     useEffect(() => {
@@ -79,33 +70,44 @@ const SignUpContent = () => {
                 if (!wasVerifiedBefore && isVerifiedNow) {
                     console.log("Email verification detected, proceeding with sign in");
                     setEmailVerified(true);
+                    
+                    try {
 
-                    // Sign in with NextAuth credentials
-                    const result = await signIn("credentials", {
-                        email: emailRef.current,
-                        password: passwordRef.current,
-                        redirect: false,
-                    });
-
-                    if (result?.error) {
-                        console.error("Error during sign-in:", result.error);
-                        return;
+                        // Sign in with NextAuth credentials
+                        const result = await signIn("credentials", {
+                            email: emailRef.current,
+                            password: passwordRef.current,
+                            redirect: false,
+                        });
+                        
+                        if (result?.error) {
+                            console.error("Error during sign-in:", result.error);
+                            return;
+                        }
+                    } catch (error) {
+                        console.error(error)
                     }
 
-                    await updateDoc(doc(firestore, "users", auth.currentUser.uid), {
-                        username: usernameRef.current,
-                        "authentication.onboarding": true,
-                    });
-
-                    await updateUserSubscriptionAdmin(auth.currentUser.uid, {
-                        name: "accessGranted",
-                        id: "0",
-                        override: true,
-                        createdAt: formatDateToISO(new Date())
-                    });
+                    try {
+                        
+                        await setDoc(doc(firestore, "users", auth.currentUser.uid), {
+                            username: usernameRef.current,
+                            authentication: {
+                                onboarding: true,
+                            }
+                        }, { merge: true });
+                    } catch (error) {
+                        console.error(error)
+                    }
+                    
+                    try {
+                        await updateAccessGrantedAdmin(auth.currentUser.uid);
+                    } catch (error) {
+                        console.error(error)
+                    }
 
                     clearInterval(checkVerificationInterval);
-                    router.push(`/u/${usernameRef.current}/dashboard`);
+                    router.push(`/u/preparing?uid=${auth.currentUser.uid}&username=${usernameRef.current}`);
                 }
             } catch (error) {
                 console.error("Error in verification check:", error);
@@ -161,7 +163,7 @@ const SignUpContent = () => {
 
     return (
         <div className="min-h-screen w-full flex flex-col md:flex-row items-center justify-center p-4 -mt-24 gap-16">
-            {status === "active" && (
+            {status !== "active" && (
                 <>
                     {!emailVerifying ? (
                         <SignUpForm
@@ -171,7 +173,6 @@ const SignUpContent = () => {
                             setUsername={setUsername}
                             setEmail={setEmail}
                             setPassword={setPassword}
-                            handleSignUp={handleSignUp}
                             handleSubmit={handleSubmit}
                             router={router}
                             loading={loading}
@@ -194,7 +195,7 @@ const SignUpContent = () => {
                 </>
             )}
 
-            {status === "under maintenance" && (
+            {status === "active" && (
                 <UnderMaintenance />
             )}
         </div>
@@ -280,7 +281,6 @@ interface SignUpFormProps {
     setUsername: (username: string) => void;
     setEmail: (email: string) => void;
     setPassword: (password: string) => void;
-    handleSignUp: () => void;
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     router: any;
     loading: boolean;
@@ -294,7 +294,6 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
     setUsername,
     setEmail,
     setPassword,
-    handleSignUp,
     handleSubmit,
     router,
     loading,

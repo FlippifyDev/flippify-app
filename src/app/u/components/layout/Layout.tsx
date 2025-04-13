@@ -10,6 +10,8 @@ import NewEbayOrderForm from "../tools/navbar-tools/NewEbayOrder";
 import LayoutNoAccess from "./LayoutNoAccess";
 import Sidebar from "../dom/sidebar/Sidebar";
 import Navbar from "../dom/navbar/Navbar";
+import { useSession } from "next-auth/react";
+import LoadingAnimation from "../dom/ui/LoadingAnimation";
 
 
 interface LayoutProps {

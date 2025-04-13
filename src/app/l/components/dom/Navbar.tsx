@@ -20,6 +20,7 @@ import { MdAccountBalance } from "react-icons/md";
 import { FaBook, FaStore, FaBoxes } from "react-icons/fa";
 import { FaBoxOpen, FaParachuteBox, FaHandshakeSimple } from 'react-icons/fa6';
 import { FaShieldAlt, FaFileContract, FaQuestionCircle, FaBalanceScale, FaSitemap } from 'react-icons/fa';
+import { useSession } from 'next-auth/react';
 
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
@@ -33,6 +34,7 @@ interface ILinks {
 }
 
 const Navbar = () => {
+    const { data: session } = useSession();
     const [isHovered, setIsHovered] = useState(false);
     const [hoverIndex, setHoverIndex] = useState(0);
     const [links, setLinks] = useState<ILinks[]>();
@@ -95,6 +97,13 @@ const Navbar = () => {
         }
     }
 
+    function handleLoginClick() {
+        if (session && session.user && session.user.subscriptions) {
+            router.push(`/u/${session.user.username}/dashboard`)
+        } else {
+            router.push("/l/login")
+        }
+    }
 
     return (
         <div className="md:px-8 lg:px-[44px]">
@@ -209,8 +218,8 @@ const Navbar = () => {
 
                 <div className="hidden md:flex items-center justify-end">
                     <div className='transition duration-100 rounded-btn p-1'>
-                        <a className="text-white group flex flex-row hover:text-gray-300" onClick={() => router.push('/l/login')}>
-                            <span className='text-sm select-none font-semibold'>Login</span>
+                        <a className="text-white group flex flex-row hover:text-gray-300" onClick={handleLoginClick}>
+                            <span className='text-sm select-none font-semibold'>{session?.user.subscriptions ? "Dashboard": "Login"}</span>
                             <span className='pl-1'><AnimationArrow /></span>
                         </a>
                     </div>

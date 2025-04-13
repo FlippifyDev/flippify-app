@@ -12,18 +12,18 @@ import { formatTimeFrom } from "@/utils/format-dates";
 import CardListingsAmount from "./ListingsAndOrdersAmount";
 import CardProfitsBarChart from "./ProfitsBarChart";
 import { currencySymbols } from "@/config/currency-config";
-import ConnectAccountButton from "../../dom/ui/ConnectAccountButton";
+import IconButton from "../../dom/ui/IconButton";
 import CardPlatformDonutChart from "./PlatformDonutChart";
 import { retrieveUserOrders } from "@/services/firebase/retrieve";
-import { formatOrdersForCSVExport } from "@/utils/format";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
+import { formatOrdersForCSVExport } from "@/utils/format";
+import { exportCSVAllowedSubscriptionPlans } from "@/utils/constants";
 
 // External Imports
 import { useEffect, useState } from "react";
 import { HiOutlineDownload } from "react-icons/hi";
 import { useSession } from "next-auth/react";
 import Modal from "../../dom/ui/Modal";
-import { exportCSVAllowedSubscriptionPlans } from "@/utils/constants";
 import Link from "next/link";
 
 
@@ -347,7 +347,7 @@ const Page = () => {
                 </div>
             ) : (
                 <div className="relative flex flex-col w-full min-h-full">
-                    <ConnectAccountButton heading="No account connected" animationType="hover-box" subtitle="Go to your profile to connect your eBay account" buttonText="Go to profile" />
+                    <IconButton heading="No account connected" animationType="hover-box" subtitle="Go to your profile to connect your eBay account" buttonText="Go to profile" redirect="profile" />
                 </div>
             )}
 

@@ -4,6 +4,7 @@ import { ISubscription, IUser } from "@/models/user";
 import { firestoreAdmin } from "@/lib/firebase/config-admin";
 import { StorePlatform } from "@/models/store-data";
 import { FieldValue } from "firebase-admin/firestore";
+import { formatDateToISO } from "@/utils/format-dates";
 
 
 export async function updateReferreeUserAdmin(referredUserId: string, referreeCode: string): Promise<{ success: boolean }> {
@@ -53,6 +54,15 @@ export async function updateUserSubscriptionAdmin(uid: string, subscription: ISu
     }
 }
 
+
+export async function updateAccessGrantedAdmin(uid: string): Promise<void> {
+    await updateUserSubscriptionAdmin(uid, {
+        name: "accessGranted",
+        id: "0",
+        override: true,
+        createdAt: formatDateToISO(new Date())
+    });
+}
 
 export async function updateReferredByAdmin(uid: string, referredBy: string): Promise<void> {
     try {

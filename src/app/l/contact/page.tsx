@@ -18,7 +18,7 @@ export const metadata = {
         url: root.concat('/l/contact'),
         images: [
             {
-                url: `${root}/static/og-contact.png`,
+                url: "https://i.imgur.com/tJHuMck.png",
                 width: 2600,
                 height: 1440,
                 alt: "Contact Us - Flippify"

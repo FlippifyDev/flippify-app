@@ -18,7 +18,7 @@ export const metadata = {
         url: root.concat('/l/attributions'),
         images: [
             {
-                url: `${root}/static/og-attributions.png`,
+                url: "https://i.imgur.com/yNAiFZa.png",
                 width: 2600,
                 height: 1440,
                 alt: "Flippify Attributions - Partners and Resources for eBay Sellers"

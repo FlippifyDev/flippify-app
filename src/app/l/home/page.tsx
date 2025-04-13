@@ -12,18 +12,18 @@ import ThemeSetter from '../../components/ThemeSetter';
 const root = process.env.ROOT as string;
 
 export const metadata = {
-    title: 'Flippify - Inventory & Warehouse Management for eBay Sellers and Dropshippers',
-    description: 'Flippify is the ultimate inventory management system for eBay sellers and Shopify dropshipping. Manage your eBay store, automate listings, control stock, and scale your eBay business account with powerful warehouse management tools. Whether you’re running an eBay shop or exploring websites like eBay, Flippify helps you sell on eBay smarter and faster.',
+	title: 'Flippify - Inventory & Warehouse Management for eBay Sellers and Dropshippers',
+	description: 'Flippify is the ultimate inventory management system for eBay sellers and Shopify dropshipping. Manage your eBay store, automate listings, control stock, and scale your eBay business account with powerful warehouse management tools. Whether you’re running an eBay shop or exploring websites like eBay, Flippify helps you sell on eBay smarter and faster.',
 	openGraph: {
-        title: 'Flippify - Inventory & Warehouse Management for eBay Sellers and Dropshippers',
-        description: 'Flippify is the ultimate inventory management system for eBay sellers and Shopify dropshipping. Manage your eBay store, automate listings, control stock, and scale your eBay business account with powerful warehouse management tools. Whether you’re running an eBay shop or exploring websites like eBay, Flippify helps you sell on eBay smarter and faster.Flippify is the ultimate inventory management system for eBay sellers and Shopify dropshipping. Manage your eBay store, automate listings, control stock, and scale your eBay business account with powerful warehouse management tools. Whether you’re running an eBay shop or exploring websites like eBay, Flippify helps you sell on eBay smarter and faster.',
+		title: 'Flippify - Inventory & Warehouse Management for eBay Sellers and Dropshippers',
+		description: 'Flippify is the ultimate inventory management system for eBay sellers and Shopify dropshipping. Manage your eBay store, automate listings, control stock, and scale your eBay business account with powerful warehouse management tools. Whether you’re running an eBay shop or exploring websites like eBay, Flippify helps you sell on eBay smarter and faster.Flippify is the ultimate inventory management system for eBay sellers and Shopify dropshipping. Manage your eBay store, automate listings, control stock, and scale your eBay business account with powerful warehouse management tools. Whether you’re running an eBay shop or exploring websites like eBay, Flippify helps you sell on eBay smarter and faster.',
 		url: root.concat('/l/home'),
 		images: [
 			{
-                url: "https://i.imgur.com/i0EUERY.png",
+				url: "https://i.imgur.com/E4uUyeB.png",
 				width: 2600,
 				height: 1440,
-                alt: "Flippify mobile app showing eBay inventory management, stock control, and automated order tracking for sellers"
+				alt: "Flippify mobile app showing eBay inventory management, stock control, and automated order tracking for sellers"
 			}
 		]
 	},
@@ -49,7 +49,7 @@ export default function HomePage() {
 			<ThemeSetter theme="dark" />
 			<Suspense fallback={<Loading />}>
 				<Layout>
-                    <Page />
+					<Page />
 				</Layout>
 			</Suspense>
 		</>

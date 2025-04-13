@@ -17,7 +17,7 @@ export const metadata = {
         url: root.concat('/l/partnerships'),
         images: [
             {
-                url: 'https://i.imgur.com/x9hYVeg.png', 
+                url: 'https://i.imgur.com/6piDwFY.png',
                 width: 2600,
                 height: 1440,
                 alt: 'Flippify Partnerships Program for eBay Resellers - AI Tools and Revenue Sharing'

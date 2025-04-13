@@ -19,7 +19,7 @@ export const metadata = {
         url: root.concat('/l/pricing'),
         images: [
             {
-                url: 'https://i.imgur.com/Pt4GSqD.png',
+                url: 'https://i.imgur.com/8PFiNhm.png',
                 width: 2600,
                 height: 1440,
                 alt: 'Flippify Pricing Page - Affordable Plans for eBay Sellers & Resellers'

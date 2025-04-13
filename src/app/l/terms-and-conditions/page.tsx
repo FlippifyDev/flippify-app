@@ -21,7 +21,7 @@ export const metadata = {
         url: root.concat('/l/terms-and-conditions'),
         images: [
             {
-                url: 'https://example.com/terms-conditions-image.png',
+                url: 'https://i.imgur.com/RrJWAiF.png',
                 width: 2600,
                 height: 1440,
                 alt: 'Flippify Terms and Conditions - User Agreement'

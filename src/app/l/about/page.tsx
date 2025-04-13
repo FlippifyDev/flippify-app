@@ -18,7 +18,7 @@ export const metadata = {
         url: root.concat("/about"),
         images: [
             {
-                url: ``,
+                url: "https://i.imgur.com/u7MUdXu.png",
                 width: 2600,
                 height: 1440,
                 alt: "About Flippify – eBay Inventory, Warehouse, and Stock Control System"

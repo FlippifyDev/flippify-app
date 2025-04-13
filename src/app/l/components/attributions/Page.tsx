@@ -17,7 +17,7 @@ const Page = () => {
                 imageClassName='pb-64'
             />
 
-            <div className='max-w-6.5xl mt-[28rem] px-4'>
+            <div className='max-w-6.5xl mt-[15rem] lg:mt-0 px-4'>
                 <Attributions />
             </div>
         </div>

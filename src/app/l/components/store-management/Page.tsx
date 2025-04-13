@@ -23,6 +23,8 @@ const Page = () => {
             <div className={`${inter.className} font-semibold text-lightModeText max-w-6.5xl mt-[16rem] md:mt-0 2xl:mt-[4rem] px-8 md:px-4`}>
                 <p>Stay tuned this page is still under development!</p>
             </div>
+
+            {/* Things like communication, multi-store connection, dashboard overview, the different tools to manage with etc.*/}
         </div>
     )
 }

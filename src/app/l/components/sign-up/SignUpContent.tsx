@@ -163,7 +163,7 @@ const SignUpContent = () => {
 
     return (
         <div className="min-h-screen w-full flex flex-col md:flex-row items-center justify-center p-4 -mt-24 gap-16">
-            {status !== "active" && (
+            {status === "active" && (
                 <>
                     {!emailVerifying ? (
                         <SignUpForm
@@ -195,7 +195,7 @@ const SignUpContent = () => {
                 </>
             )}
 
-            {status === "active" && (
+            {status === "under maintenance" && (
                 <UnderMaintenance />
             )}
         </div>

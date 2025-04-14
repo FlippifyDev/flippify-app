@@ -18,7 +18,7 @@ export const metadata = {
         url: root.concat('/l/roadmap'),
         images: [
             {
-                url: "https://i.imgur.com/WnJa8Ea.png",
+                url: "https://i.imgur.com/GjZEceX.png",
                 width: 2600,
                 height: 1440,
                 alt: "Flippify Roadmap - Upcoming Features for eBay Seller Tools"

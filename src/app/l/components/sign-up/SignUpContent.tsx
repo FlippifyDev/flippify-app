@@ -17,6 +17,7 @@ import { signIn } from "next-auth/react";
 import { Lato } from 'next/font/google';
 import dotenv from "dotenv";
 import Image from "next/image";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 dotenv.config();
 
@@ -163,7 +164,7 @@ const SignUpContent = () => {
 
     return (
         <div className="min-h-screen w-full flex flex-col md:flex-row items-center justify-center p-4 -mt-24 gap-16">
-            {status === "active" && (
+            {(status === "active" || status === null) && (
                 <>
                     {!emailVerifying ? (
                         <SignUpForm
@@ -176,6 +177,7 @@ const SignUpContent = () => {
                             handleSubmit={handleSubmit}
                             router={router}
                             loading={loading}
+                            status={status}
                             errorMessage={errorMessage}
                         />
                     ) : emailVerified ? (
@@ -284,6 +286,7 @@ interface SignUpFormProps {
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     router: any;
     loading: boolean;
+    status: StatusType | null;
     errorMessage: string;
 }
 
@@ -297,6 +300,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
     handleSubmit,
     router,
     loading,
+    status,
     errorMessage,
 }) => {
     return (
@@ -339,10 +343,14 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
 
                 <button
                     type="submit"
-                    disabled={loading}
+                    disabled={loading || !status}
                     className="w-full mt-4 p-3 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 rounded-lg shadow-lg"
                 >
-                    {loading ? "Processing..." : "Sign Up"}
+                    {loading ? "Processing..." : status ? "Sign Up": 
+                    <div className="w-full flex justify-center">
+                        <LoadingSpinner />
+                    </div>
+                    }
                 </button>
             </form>
             {/* Login Link */}

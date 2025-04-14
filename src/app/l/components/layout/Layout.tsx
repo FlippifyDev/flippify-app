@@ -1,10 +1,13 @@
 "use client";
 
-import React from "react";
+// Local Imports
 import Navbar from "../dom/Navbar";
-import LayoutGradientBackground from "./LayoutGradientBackground";
-import LayoutWhiteSection from "./LayoutWhiteSection";
 import Footer from "../dom/Footer";
+import LayoutWhiteSection from "./LayoutWhiteSection";
+import LayoutGradientBackground from "./LayoutGradientBackground";
+
+// External Imports
+import React from "react";
 
 const Layout = ({ children, className }: { children: React.ReactNode, className?: string }) => {
 	return (

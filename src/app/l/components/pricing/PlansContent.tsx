@@ -107,7 +107,6 @@ const PlansContent = () => {
                         priceRange={selectedPlan}
                         currency={currency}
                         conversionRates={conversionRates}
-                    // specialPlan
                     />
                 </div>
                 <div className="h-full">
@@ -124,6 +123,7 @@ const PlansContent = () => {
                         priceRange={selectedPlan}
                         currency={currency}
                         conversionRates={conversionRates}
+                        specialPlan
                     />
                 </div>
                 <div className="h-full">

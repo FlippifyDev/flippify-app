@@ -1,16 +1,16 @@
 import Page from '../components/terms-and-conditions/Page';
 import Loading from '@/app/components/Loading';
 import { Suspense } from 'react';
-import MetadataHead from '../../components/MetadataHead';
 import ThemeSetter from '../../components/ThemeSetter';
 import Layout from '../components/layout/Layout';
+import { Metadata } from 'next';
 
 /* eslint-disable react/no-unescaped-entities */
 
 const root = process.env.ROOT as string;
 
 
-export const metadata = {
+export const metadata: Metadata = {
     title: 'Terms and Conditions - Flippify | User Agreement & Policies',
     description:
         'Read the Terms and Conditions for using Flippify’s platform. This user agreement outlines your rights, obligations, and the terms for using our inventory and eBay management tools.',
@@ -48,7 +48,6 @@ export const metadata = {
 export default function TermsAndConditionsPage() {
     return (
         <>
-            <MetadataHead {...metadata} />
             <ThemeSetter theme="dark" />
             <Suspense fallback={<Loading />}>
                 <Layout>

@@ -2,12 +2,12 @@ import { Suspense } from "react";
 import Layout from "../components/layout/Layout";
 import ThemeSetter from "@/app/components/ThemeSetter";
 import Loading from "@/app/components/Loading";
-import MetadataHead from "@/app/components/MetadataHead";
 import SignUpContent from "../components/sign-up/SignUpContent";
+import { Metadata } from "next";
 
 const root = process.env.ROOT as string;
 
-export const metadata = {
+export const metadata: Metadata = {
     title: 'Sign Up - Flippify | Join Our Community & Start Flipping Deals',
     description: 'Create your Flippify account and gain access to exclusive tools for buying, selling, and flipping amazing deals. Join a community of sellers today and unlock features to grow your business!',
     openGraph: {
@@ -24,15 +24,15 @@ export const metadata = {
         ]
     },
     robots: {
-        index: true,
-        follow: true,
-        nocache: true,
+        index: false,
+        follow: false,
+        nocache: false,
         googleBot: {
-            index: true,
-            follow: true,
-            noimageindex: true,
+            index: false,
+            follow: false,
+            noimageindex: false,
             'max-video-preview': -1,
-            'max-image-preview': 'large',
+            'max-image-preview': 'none',
             'max-snippet': -1,
         },
     },
@@ -42,7 +42,6 @@ export const metadata = {
 const SignUp = () => {
     return (
         <>
-            <MetadataHead {...metadata} />
             <ThemeSetter theme="dark" />
             <Suspense fallback={<Loading />}>
                 <Layout>

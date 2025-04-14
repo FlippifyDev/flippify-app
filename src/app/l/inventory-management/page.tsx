@@ -1,7 +1,6 @@
 import Page from '../components/inventory-management/Page';
 import Loading from '@/app/components/Loading';
 import { Suspense } from 'react';
-import MetadataHead from '../../components/MetadataHead';
 import ThemeSetter from '../../components/ThemeSetter';
 import Layout from '../components/layout/Layout';
 
@@ -45,7 +44,6 @@ export const metadata = {
 export default function InventoryManagementPage() {
     return (
         <>
-            <MetadataHead {...metadata} />
             <ThemeSetter theme="dark" />
             <Suspense fallback={<Loading />}>
                 <Layout>

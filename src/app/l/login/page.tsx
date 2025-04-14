@@ -1,14 +1,14 @@
 import Layout from "../components/layout/Layout";
 import Loading from "@/app/components/Loading";
 import ThemeSetter from "@/app/components/ThemeSetter";
-import MetadataHead from "@/app/components/MetadataHead";
 import LoginContent from "../components/login/LoginContent";
 
 import { Suspense } from "react";
+import { Metadata } from "next";
 
 const root = process.env.ROOT as string;
 
-export const metadata = {
+export const metadata: Metadata = {
     title: "Login to Flippify | Manage Your eBay Store & Inventory",
     description:
         "Login to your Flippify account to manage your eBay store, track inventory, automate accounting, and streamline your business operations. Secure and easy access to your dashboard for eBay sellers and online businesses.",
@@ -27,15 +27,15 @@ export const metadata = {
         ]
     },
     robots: {
-        index: true,
-        follow: true,
-        nocache: true,
+        index: false,
+        follow: false,
+        nocache: false,
         googleBot: {
             index: false,
-            follow: true,
-            noimageindex: true,
+            follow: false,
+            noimageindex: false,
             'max-video-preview': -1,
-            'max-image-preview': 'large',
+            'max-image-preview': 'none',
             'max-snippet': -1
         }
     }
@@ -46,7 +46,6 @@ export const metadata = {
 const Login = () => {
     return (
         <>
-            <MetadataHead {...metadata} />
             <ThemeSetter theme="dark" />
             <Suspense fallback={<Loading />}>
                 <Layout>

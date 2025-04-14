@@ -1,13 +1,13 @@
 import Page from '../components/about/Page';
 import Loading from '@/app/components/Loading';
 import { Suspense } from 'react';
-import MetadataHead from '../../components/MetadataHead';
 import ThemeSetter from '../../components/ThemeSetter';
 import Layout from '../components/layout/Layout';
+import { Metadata } from 'next';
 
 const root = process.env.ROOT as string;
 
-export const metadata = {
+export const metadata: Metadata = {
     title: "About Flippify | Inventory & Warehouse Management for eBay Sellers",
     description:
         "Discover Flippify—a cutting-edge warehouse and inventory management system designed for eBay sellers, Shopify dropshipping, and online business success. Optimize your eBay seller account, control stock, and streamline your eBay store operations with our powerful tools.",
@@ -43,7 +43,6 @@ export const metadata = {
 export default function AboutPage() {
     return (
         <>
-            <MetadataHead {...metadata} />
             <ThemeSetter theme="dark" />
             <Suspense fallback={<Loading />}>
                 <Layout>

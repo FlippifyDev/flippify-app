@@ -1,14 +1,14 @@
 import Page from '../components/privacy-policy/Page';
 import Loading from '@/app/components/Loading';
 import { Suspense } from 'react';
-import MetadataHead from '../../components/MetadataHead';
 import ThemeSetter from '../../components/ThemeSetter';
 import Layout from '../components/layout/Layout';
+import { Metadata } from 'next';
 
 const root = process.env.ROOT as string;
 
 
-export const metadata = {
+export const metadata: Metadata = {
     title: 'Privacy Policy - Flippify | Protecting Your Data and Privacy',
     description:
         'Flippify values your privacy. Learn how we collect, use, and protect your personal data when using our platform. Our privacy policy outlines your rights and how we ensure the security of your information.',
@@ -19,7 +19,7 @@ export const metadata = {
         url: root.concat('/l/privacy-policy'),
         images: [
             {
-                url: 'https://i.imgur.com/zoVdFqX.png', // Replace with your actual image
+                url: 'https://i.imgur.com/zoVdFqX.png',
                 width: 1200,
                 height: 630,
                 alt: 'Flippify Privacy Policy - Protecting Your Data and Information'
@@ -46,7 +46,6 @@ export const metadata = {
 export default function PrivacyPolicyPage() {
     return (
         <>
-            <MetadataHead {...metadata} />
             <ThemeSetter theme="dark" />
             <Suspense fallback={<Loading />}>
                 <Layout>

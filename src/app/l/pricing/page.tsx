@@ -3,14 +3,14 @@ import Layout from '../components/layout/Layout';
 import PlansContent from '../components/pricing/PlansContent';
 import Loading from '@/app/components/Loading';
 import { Suspense } from 'react';
-import MetadataHead from '../../components/MetadataHead';
 import ThemeSetter from '../../components/ThemeSetter';
+import { Metadata } from 'next';
 
 /* eslint-disable react/no-unescaped-entities */
 
 const root = process.env.ROOT as string;
 
-export const metadata = {
+export const metadata: Metadata = {
     title: 'Flippify Pricing - Affordable Plans for eBay Sellers & Resellers',
     description: 'Explore Flippify’s pricing plans tailored for eBay sellers and resellers. From inventory tracking and automated listings to exclusive deals, our flexible and affordable plans help you maximize profits and stay ahead of the competition.',
     openGraph: {
@@ -44,7 +44,6 @@ export const metadata = {
 export default function PricingPage() {
     return (
         <>
-            <MetadataHead {...metadata} />
             <ThemeSetter theme="dark" />
             <Suspense fallback={<Loading />}>
                 <Layout>

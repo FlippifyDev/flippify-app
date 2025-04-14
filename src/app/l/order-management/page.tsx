@@ -1,16 +1,16 @@
 import Page from '../components/order-management/Page';
 import Loading from '@/app/components/Loading';
 import { Suspense } from 'react';
-import MetadataHead from '../../components/MetadataHead';
 import ThemeSetter from '../../components/ThemeSetter';
 import Layout from '../components/layout/Layout';
+import { Metadata } from 'next';
 
 const root = process.env.ROOT as string;
 
 /* eslint-disable react/no-unescaped-entities */
 
 
-export const metadata = {
+export const metadata: Metadata = {
     title: "Order Management for eBay Sellers | Flippify - Streamline Your Sales",
     description:
         "Flippify's order management system helps eBay sellers efficiently track and process orders, manage shipments, and maintain accurate sales records. Streamline your eBay business with our intuitive tools for order fulfillment and tracking.",
@@ -48,7 +48,6 @@ export const metadata = {
 export default function OrderManagementPage() {
     return (
         <>
-            <MetadataHead {...metadata} />
             <ThemeSetter theme="dark" />
             <Suspense fallback={<Loading />}>
                 <Layout>

@@ -3,12 +3,12 @@ import Layout from '../components/layout/Layout';
 import PartnershipsContent from '../components/partnerships/PartnershipsContent';
 import Loading from '@/app/components/Loading';
 import { Suspense } from 'react';
-import MetadataHead from '../../components/MetadataHead';
 import ThemeSetter from '../../components/ThemeSetter';
+import { Metadata } from 'next';
 
 const root = process.env.ROOT as string;
 
-export const metadata = {
+export const metadata: Metadata = {
     title: 'Partnerships Program - Flippify | Exclusive Discounts & AI-Powered Tools for eBay Resellers',
     description: 'Partner with Flippify to empower your reselling group with exclusive discounts, 40% revenue sharing, and collaborative opportunities. Automate eBay stores with AI-powered tools—open to all partners!',
     openGraph: {
@@ -43,7 +43,6 @@ export const metadata = {
 export default function PartnershipsPage() {
     return (
         <>
-            <MetadataHead {...metadata} />
             <ThemeSetter theme="dark" />
             <Suspense fallback={<Loading />}>
                 <Layout>

@@ -36,7 +36,7 @@ const Page = () => {
     const subscribed = session?.user.authentication.subscribed;
 
     // General Filters
-    const [selectedFilter, setSelectedFilter] = useState("General");
+    const [selectedFilter, setSelectedFilter] = useState("eBay");
     const [selectedTimeRange, setSelectedTimeRange] = useState("Last 30 days");
     const [timeFrom, setTimeFrom] = useState(formatTimeFrom(30));
     const [timeTo, setTimeTo] = useState<string>(new Date().toISOString());

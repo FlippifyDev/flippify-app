@@ -4,11 +4,12 @@ import { Suspense } from 'react';
 import MetadataHead from '../../components/MetadataHead';
 import ThemeSetter from '../../components/ThemeSetter';
 import Layout from '../components/layout/Layout';
+import { Metadata } from 'next';
 
 const root = process.env.ROOT as string;
 
 
-export const metadata = {
+export const metadata: Metadata = {
     title: "Flippify Accounting Software for eBay Sellers | Automate Taxes & Manage Expenses",
     description:
         "Flippify's accounting software for eBay sellers helps automate taxes, track expenses, and manage your finances with ease. Effortlessly export CSVs, stay tax compliant, and focus on growing your business with the best eBay accounting solution.",
@@ -46,7 +47,6 @@ export const metadata = {
 export default function AccountingSoftwarePage() {
     return (
         <>
-            <MetadataHead {...metadata} />
             <ThemeSetter theme="dark" />
             <Suspense fallback={<Loading />}>
                 <Layout>

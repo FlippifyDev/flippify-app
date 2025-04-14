@@ -57,13 +57,6 @@ const PlansCardStandardWhatsIncluded = () => {
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
-						text="Smart AI Listing Optimization"
-						tooltip="Boost listing performance with AI suggestions for titles, descriptions, and pricing."
-						comingSoon
-					/>
-				</li>
-				<li className="w-full">
-					<PlansClickableBulletPoint
 						text="AI-Powered Financial Reports"
 						tooltip="Unlock advanced financial insights and predictions driven by AI."
 						comingSoon

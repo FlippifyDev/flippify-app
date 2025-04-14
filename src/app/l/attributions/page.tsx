@@ -4,10 +4,11 @@ import { Suspense } from 'react';
 import MetadataHead from '../../components/MetadataHead';
 import ThemeSetter from '../../components/ThemeSetter';
 import Layout from '../components/layout/Layout';
+import { Metadata } from 'next';
 
 const root = process.env.ROOT as string;
 
-export const metadata = {
+export const metadata: Metadata = {
     title: "Attributions | Flippify - Acknowledging Our Partners & Resources",
     description:
         "Explore the attributions page of Flippify to learn about our valuable partners, tools, and resources that help power our inventory and accounting solutions for eBay sellers, dropshipping businesses, and more.",
@@ -44,7 +45,6 @@ export const metadata = {
 export default function AttributionsPage() {
     return (
         <>
-            <MetadataHead {...metadata} />
             <ThemeSetter theme="dark" />
             <Suspense fallback={<Loading />}>
                 <Layout>

@@ -1,13 +1,13 @@
 import Page from '../components/faqs/Page';
 import Loading from '@/app/components/Loading';
 import { Suspense } from 'react';
-import MetadataHead from '../../components/MetadataHead';
 import ThemeSetter from '../../components/ThemeSetter';
 import Layout from '../components/layout/Layout';
+import { Metadata } from 'next';
 
 const root = process.env.ROOT as string;
 
-export const metadata = {
+export const metadata: Metadata = {
     title: "Frequently Asked Questions | Flippify - eBay Seller Tools & Inventory Management",
     description:
         "Have questions about Flippify's inventory management, accounting software, or eBay seller tools? Find answers to common queries about our platform, eBay store management, stock control, and more.",
@@ -45,7 +45,6 @@ export const metadata = {
 export default function FAQPage() {
     return (
         <>
-            <MetadataHead {...metadata} />
             <ThemeSetter theme="dark" />
             <Suspense fallback={<Loading />}>
                 <Layout>

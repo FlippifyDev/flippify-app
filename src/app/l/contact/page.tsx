@@ -4,10 +4,11 @@ import { Suspense } from 'react';
 import MetadataHead from '../../components/MetadataHead';
 import ThemeSetter from '../../components/ThemeSetter';
 import Layout from '../components/layout/Layout';
+import { Metadata } from 'next';
 
 const root = process.env.ROOT as string;
 
-export const metadata = {
+export const metadata: Metadata = {
     title: "Contact Us | Flippify - Get in Touch with Our Team",
     description:
         "Have questions? Reach out to the Flippify team! Whether you're looking for support, partnership opportunities, or just want to chat, we're here to help.",
@@ -43,7 +44,6 @@ export const metadata = {
 export default function ContactPage() {
     return (
         <>
-            <MetadataHead {...metadata} />
             <ThemeSetter theme="dark" />
             <Suspense fallback={<Loading />}>
                 <Layout>

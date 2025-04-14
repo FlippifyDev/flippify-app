@@ -1,16 +1,16 @@
 import Page from '../components/store-management/Page';
 import Loading from '@/app/components/Loading';
 import { Suspense } from 'react';
-import MetadataHead from '../../components/MetadataHead';
 import ThemeSetter from '../../components/ThemeSetter';
 import Layout from '../components/layout/Layout';
+import { Metadata } from 'next';
 
 /* eslint-disable react/no-unescaped-entities */
 
 const root = process.env.ROOT as string;
 
 
-export const metadata = {
+export const metadata: Metadata = {
     title: 'Store Management - Flippify | Effortless eBay Inventory & Order Control',
     description:
         'Flippify’s store management tools help eBay sellers streamline inventory management, track orders, and automate store operations. Manage your eBay store effortlessly and boost sales with ease.',
@@ -48,7 +48,6 @@ export const metadata = {
 export default function PrivacyPolicyPage() {
     return (
         <>
-            <MetadataHead {...metadata} />
             <ThemeSetter theme="dark" />
             <Suspense fallback={<Loading />}>
                 <Layout>

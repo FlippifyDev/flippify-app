@@ -25,7 +25,7 @@ const StoreManagementContent = () => {
 
             <div className="flex flex-col mt-16 sm:mt-20 md:mt-24 lg:mt-[200px] xl:mt-[280px]">
                 {/* Overview Section */}
-                <div className="py-20">
+                <div className="pt-20">
                     <StoreManagementOverview />
                 </div>
                 <div className="pb-20">

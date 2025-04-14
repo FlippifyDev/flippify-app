@@ -47,6 +47,7 @@ const Navbar = () => {
         { label: "Inventory Management", description: "Track stock and optimize inventory levels", href: "/l/inventory-management", icon: <FaBoxOpen className="text-lg" /> },
         { label: "Order Management", description: "Efficiently manage and fulfill orders", href: "/l/order-management", icon: <FaParachuteBox className="text-lg" /> },
         { label: "Store Management", description: "Control your eBay store operations seamlessly", href: "/l/store-management", icon: <FaStore className="text-lg" /> },
+        { label: "Our Roadmap", description: "See our upcoming features and tools", href: "/l/roadmap", icon: <FaBook className="text-lg" /> },
     ]
 
     const resourceLinks = [
@@ -219,7 +220,7 @@ const Navbar = () => {
                 <div className="hidden md:flex items-center justify-end">
                     <div className='transition duration-100 rounded-btn p-1'>
                         <a className="text-white group flex flex-row hover:text-gray-300" onClick={handleLoginClick}>
-                            <span className='text-sm select-none font-semibold'>{session?.user.subscriptions ? "Dashboard": "Login"}</span>
+                            <span className='text-sm select-none font-semibold'>{session?.user.subscriptions ? "Dashboard" : "Login"}</span>
                             <span className='pl-1'><AnimationArrow /></span>
                         </a>
                     </div>

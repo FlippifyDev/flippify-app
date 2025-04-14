@@ -9,6 +9,8 @@ export const storePlatforms: Record<string, StorePlatform> = {
 export const cacheExpirationTime = 1000 * 60 * 30; // 30 min in milliseconds
 export const ebayInventoryCacheKey = "ebay-inventory"
 export const ebayOrderCacheKey = "ebay-orders"
+export const statusCacheKey = "HsdaIDF89S"
+export const statusCacheExpirationTime = 1000 * 60 * 2 // 2 min in milliseconds
 
 export const exportCSVAllowedSubscriptionPlans = ["standard", "pro", "enterprise"];
 

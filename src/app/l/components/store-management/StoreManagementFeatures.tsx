@@ -43,8 +43,8 @@ const StoreManagementFeatures = () => {
                         We're always adding new ways to make your store management even better. Take a peek at our roadmap for upcoming features!
                     </p>
                     <Link href="/l/roadmap">
-                        <button className="btn-disabled bg-houseHoverBlue hover:bg-houseBlue text-white px-6 py-3 rounded-lg font-semibold transition duration-200">
-                            Coming Soon
+                        <button className="bg-houseHoverBlue hover:bg-houseBlue text-white px-6 py-3 rounded-lg font-semibold transition duration-200">
+                            View our Roadmap
                         </button>
                     </Link>
                 </div>

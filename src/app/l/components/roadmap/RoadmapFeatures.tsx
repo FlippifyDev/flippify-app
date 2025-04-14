@@ -8,27 +8,24 @@ const RoadmapFeatures = () => {
     const features = [
         {
             title: "Seller-Buyer Communication x AI",
-            description: "Automate customer interactions with AI-driven responses to save time while maintaining excellent service.",
+            description: "Say hello to in-house seller-buyer communications allowing you to truly stay in one place for all your needs, with the addition of AI assistance for frequent questions to automate responses to maintain excellent customer service.",
             bulletPoints: [
-                "AI-powered responses to common customer questions",
+                "Automatic AI-powered responses to common customer questions",
                 "Automated order updates and shipping notifications",
                 "Customizable templates to match your store's tone",
                 "Seamless integration with eBay messaging system"
             ],
             image: "/roadmap/RoadmapAICommunication.jpg",
-            releasingSoon: true
         },
         {
             title: "Automated Listings Using AI",
-            description: "Let AI handle the listing process for you with our smart automation tools.",
+            description: "By far our most anticipated tool - let AI handle the listing process for you with our smart automation tools to revolutionize your listing process.",
             bulletPoints: [
-                "Browser extension for one-click listing creation",
-                "Import product details from external links",
-                "AI-generated product titles and descriptions",
-                "Automated category selection and item specifics"
+                "Use our browser extension for one-click listing creation or import a product link to our listing manager, confirm the details and Flippify will handle the rest.",
+                "Fully automated listings through data scraping and AI optimization: Product Image, Descriptions, Pricing, Shipping Details and more.",
+                "Automatic price optimization and management with 24/7 competitor analysis ensuring maximum profit and fastest turnover."
             ],
             image: "/roadmap/RoadmapAutomatedListings.jpg",
-            comingSoon: false
         },
         {
             title: "Expanded Financial Reporting",
@@ -36,11 +33,10 @@ const RoadmapFeatures = () => {
             bulletPoints: [
                 "Detailed tax reports for easy compliance",
                 "Profit margin analysis by product category",
-                "Expense tracking and categorization",
-                "Exportable reports for accounting software"
+                "24/7 Automated competitor analysis and price optimization pn products",
+                "Detailed exportable reports for accounting software and PDF generation"
             ],
             image: "/roadmap/RoadmapFinancialReports.jpg",
-            comingSoon: false
         },
         {
             title: "Multi-Store Support",

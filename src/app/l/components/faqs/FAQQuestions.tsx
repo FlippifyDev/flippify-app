@@ -33,7 +33,7 @@ const FAQItem = ({ question, answer }: FAQItemProps) => {
                 </svg>
             </button>
             <div
-                className={`overflow-hidden transition-all duration-300 ${isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                className={`overflow-hidden transition-all duration-300 ${isOpen ? "max-h-auto opacity-100" : "max-h-0 opacity-0"
                     }`}
             >
                 <div className="p-6 text-lightModeText">

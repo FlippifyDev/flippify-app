@@ -9,7 +9,7 @@ const StoreManagementFeatures = () => {
     return (
         <div className="w-full max-w-7xl mx-auto px-6 sm:px-6 md:px-8 lg:px-10 xl:px-12">
             {/* Top section - Text on left, image on right */}
-            <div className="flex flex-col md:flex-row justify-between items-center mb-12">
+            <div className="flex flex-col md:flex-row justify-between items-center">
                 {/* Features Description - Left Side */}
                 <div className="md:w-1/2 mb-6 md:mb-0">
                     <h2 className={`${inter.className} text-3xl sm:text-4xl md:text-4xl font-bold text-left text-lightModeText mb-4 sm:mb-6 md:mb-8`}>

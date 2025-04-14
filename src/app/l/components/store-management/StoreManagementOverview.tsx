@@ -16,13 +16,13 @@ const StoreManagementOverview = () => {
                     <p className="text-left text-lg text-lightModeText font-semibold pb-6">
                         Flippify’s Store Management system simplifies running your eBay store by bringing everything into one place. Access financials, inventory, and order management tools seamlessly, with a unified dashboard that gives you a clear overview of your operations in real-time.
                     </p>
-                    <p className="text-left text-lg text-lightModeText font-semibold pb-6">
+                    <p className="text-left text-lg text-lightModeText font-semibold">
                         Whether you’re tweaking listings, monitoring sales, or managing stock, Flippify makes it effortless. Focus on scaling your business while we handle the complexity of store management for you.
                     </p>
                 </div>
                 {/* Right side image */}
                 <div className="w-full flex items-center justify-center">
-                    <div className="relative w-full" style={{ paddingBottom: '66.65%' }}>
+                    <div className="relative w-full pb-[100%] sm:pb-[80%]">
                         <Image
                             src="/store-management/Overview.svg"
                             alt="Store Management Dashboard Preview"

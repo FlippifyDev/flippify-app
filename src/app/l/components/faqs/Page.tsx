@@ -18,11 +18,11 @@ const Page = () => {
                 description="Find answers to the most common questions about Flippify. Whether you need help getting started, managing your store, or using specific features, our FAQs provide clear and concise information to assist you."
                 image="/hero/faqs.svg"
                 imageAlt="Frequently Asked Questions"
-                imageContainerClassName='pb-20 scale-150'
+                imageContainerClassName='pb-20 scale-125'
             />
 
-            <div className={`${inter.className} w-full mt-[16rem] md:mt-0 2xl:mt-[4rem]`}>
-                <div className="pt-20">
+            <div className={`${inter.className} w-full mt-[10rem] xs:mt-[6rem] sm:mt-[8rem] md:mt-[10rem] lg2:mt-0 2xl:mt-[4rem]`}>
+                <div className="py-20">
                     <FAQQuestions />
                 </div>
                 <div>

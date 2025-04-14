@@ -175,7 +175,7 @@ export default function FAQPage() {
     ];
 
     return (
-        <div className="w-full max-w-6xl mx-auto px-6 sm:px-6 md:px-8 lg:px-10 xl:px-12 pb-16">
+        <div className="w-full max-w-6xl mx-auto px-6 sm:px-6 md:px-8 lg:px-10 xl:px-12">
             <FAQSection title="General Questions" items={generalQuestions} />
             <FAQSection title="Features and Functionality" items={featureQuestions} />
             <FAQSection title="Setup and Compatibility" items={setupQuestions} />

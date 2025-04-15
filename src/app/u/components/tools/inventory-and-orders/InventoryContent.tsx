@@ -3,10 +3,12 @@
 // Local Imports
 import Alert from "@/app/components/Alert";
 import { firestore } from "@/lib/firebase/config";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 import { shortenText } from "@/utils/format";
+import NewEbayOrderForm from "../navbar-tools/NewEbayOrder";
 import { formatTableDate } from "@/utils/format-dates";
-import { currencySymbols } from "@/config/currency-config";
 import { updateCacheData } from "@/utils/cache-helpers";
+import { currencySymbols } from "@/config/currency-config";
 import { IEbayInventoryItem } from "@/models/store-data";
 import { retrieveUserInventory } from "@/services/firebase/retrieve";
 import { validatePriceInput, validateTextInput } from "@/utils/input-validation";
@@ -17,8 +19,6 @@ import { useEffect, useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import NewEbayOrderForm from "../navbar-tools/NewEbayOrder";
-import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 
 const InventoryContent = () => {

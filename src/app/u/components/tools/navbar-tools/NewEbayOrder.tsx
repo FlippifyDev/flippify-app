@@ -138,7 +138,7 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
             orderId: generateRandomFlippifyOrderId(20),
             purchase: {
                 currency: session?.user.preferences.currency ?? "USD",
-                date: datePurchased ? datePurchased : dateListed,
+                date: datePurchased ? formatDateToISO(new Date(datePurchased)) : formatDateToISO(new Date(dateListed)),
                 platform: purchasePlatform || null,
                 price: purchasePrice ? Number(purchasePrice) : null,
                 quantity: purchaseQuantity
@@ -148,7 +148,7 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
             sale: {
                 buyerUsername: "",
                 currency: session?.user.preferences.currency ?? "USD",
-                date: saleDate,
+                date: formatDateToISO(new Date(saleDate)),
                 platform: session?.user.preferences.locale ?? "US",
                 price: Number(salePrice),
                 quantity: Number(quantity),

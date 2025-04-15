@@ -6,13 +6,24 @@ export const validateNumberInput = (value: string, setFunction: (value: string) 
     }
 };
 
+export const validateIntegerInput = (
+    value: string,
+    setFunction: (value: string) => void
+): void => {
+    // Regex to allow only letters and numbers (no special characters)
+    const validIntegerRegex = /^[0-9]*$/;
+    if (validIntegerRegex.test(value)) {
+        setFunction(value);
+    }
+};
+
 
 export const validateAlphaNumericInput = (
     value: string,
     setFunction: (value: string) => void
 ): void => {
     // Regex to allow only letters and numbers (no special characters)
-    const validAlphaNumericRegex = /^[a-zA-Z0-9]*$/;
+    const validAlphaNumericRegex = /^[\p{L}\p{N}]*$/u;
     if (validAlphaNumericRegex.test(value)) {
         setFunction(value);
     }

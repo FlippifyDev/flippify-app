@@ -1,5 +1,5 @@
 // Local Imports
-import { IEbayOrder } from '@/models/store-data'
+import { IEbayOrder, OrderStatus } from '@/models/store-data'
 import { shortenText } from '@/utils/format';
 import { handleShortDate } from '@/utils/format-dates';
 import { updateOrderStatus } from '@/services/firebase/update';
@@ -37,7 +37,9 @@ const ReadyToShip: React.FC<IReadyToShipProps> = ({ item, uid, setUpdatedStatus 
         return `${daysLeft} day${daysLeft > 1 ? 's' : ''}`;
     }
 
+
     async function handleMarkAsShipped() {
+        // Cache is updated in this function
         await updateOrderStatus(uid, item, "InProcess");
         setShipped(true);
         setUpdatedStatus(true);

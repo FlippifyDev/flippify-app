@@ -10,6 +10,7 @@ import { retrieveUserOrders } from "@/services/firebase/retrieve";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import { defaultTimeFrom } from "@/utils/constants";
 
 interface CombinedOrder {
     image: string;
@@ -24,7 +25,6 @@ interface CombinedOrder {
 
 const OrdersContent: React.FC = () => {
     const [combinedOrderData, setCombinedOrderData] = useState<{ [key: string]: CombinedOrder }>({});
-
 
     const [error, setError] = useState<string | null>(null);
     const { data: session } = useSession();
@@ -52,13 +52,16 @@ const OrdersContent: React.FC = () => {
 
     const [loading, setLoading] = useState(false);
 
+
     useEffect(() => {
         const fetchOrderData = async () => {
             setLoading(true);
             const orders = await retrieveUserOrders(
-                session?.user.id as string,
-                "2023-01-01T00:00:00Z",
-                session?.user.connectedAccounts.ebay?.ebayAccessToken as string
+                {
+                    uid: session?.user.id as string,
+                    timeFrom: defaultTimeFrom,
+                    ebayAccessToken: session?.user.connectedAccounts.ebay?.ebayAccessToken as string
+                }
             );
             if (orders) {
                 setSalesData(orders);

@@ -9,7 +9,7 @@ import { ebayInventoryCacheKey, ebayOrderCacheKey } from "@/utils/constants";
 import { filterInventoryByTime, filterOrdersByTime } from "@/utils/filters";
 
 // External Imports
-import { collection, doc, DocumentData, DocumentReference, getDoc, getDocs, orderBy, query, QueryDocumentSnapshot, where } from 'firebase/firestore';
+import { collection, doc, DocumentData, DocumentReference, getDoc, getDocs, limit, orderBy, query, QueryConstraint, QueryDocumentSnapshot, startAfter, startAt, where } from 'firebase/firestore';
 
 
 
@@ -146,55 +146,67 @@ async function retrieveUserRefById(uid: string): Promise<DocumentReference | nul
 
 /**
  * Retrieves a list of orders from Firestore for a specific user based on their UID.
- * 
+ *
  * @param {string} uid - The unique identifier of the user.
- *  * @param {string | null} timeFrom - The start date (in ISO format) to filter the orders by. If null, no filter is applied.
- * @returns {Promise<IEbayOrder[]>} - An array of user's orders, or an empty array if no orders are found.
+ * @param {string | null} timeFrom - The start date (in ISO format) to filter the orders by. If null, no filter is applied.
+ * @param {number} [itemsPerPage] - (Optional) Maximum number of orders to return (for pagination).
+ * @param {string | null} timeTo - (Optional) The end date (in ISO format) to filter the orders by.
+ * @param {{ [key: string]: any }} [filter] - (Optional) Additional filters.
+ *
+ * @returns {Promise<Record<string, IEbayOrder>>} - A mapping of transactionId to its order data.
  * @throws {Error} - Logs and handles errors if Firestore retrieval fails.
  */
-async function retrieveUserOrdersFromDB(
-    uid: string,
-    timeFrom: string | null,
-    timeTo?: string | null,
-    filter?: { [key: string]: any }
-): Promise<Record<string, IEbayOrder>> {
+interface RetrieveUserOrdersFromDBProps {
+    uid: string;
+    timeFrom: string | null;
+    timeTo?: string | null;
+    filter?: { [key: string]: any };
+}
+
+async function retrieveUserOrdersFromDB({
+    uid,
+    timeFrom,
+    timeTo,
+    filter,
+}: RetrieveUserOrdersFromDBProps): Promise<Record<string, IEbayOrder>> {
     try {
         // Reference to the user's orders collection
         const ordersCollectionRef = collection(firestore, "orders", uid, "ebay");
 
-        // Base query to get all orders for the user
-        let q = query(ordersCollectionRef, orderBy("sale.date", "desc"));
+        // Build an array of query constraints for clarity
+        const constraints: QueryConstraint[] = [orderBy("sale.date", "desc")];
 
-        // If timeFrom is provided, filter orders with saleDate >= timeFrom
+        // If timeFrom is provided, filter orders with sale.date >= timeFrom
         if (timeFrom) {
-            q = query(q, where("sale.date", ">=", timeFrom));
+            constraints.push(where("sale.date", ">=", timeFrom));
         }
 
-        // If timeTo is provided, filter orders with saleDate <= timeTo
+        // If timeTo is provided, filter orders with sale.date <= timeTo
         if (timeTo) {
-            q = query(q, where("sale.date", "<=", timeTo));
+            constraints.push(where("sale.date", "<=", timeTo));
         }
 
-        // Apply additional filters if provided
+        // Apply any additional filters
         if (filter) {
             Object.entries(filter).forEach(([field, value]) => {
-                q = query(q, where(field, "==", value));
+                constraints.push(where(field, "==", value));
             });
         }
 
-        // Query to get orders based on the above filters
+        // Build the query with all constraints
+        const q = query(ordersCollectionRef, ...constraints);
         const querySnapshot = await getDocs(q);
 
         if (querySnapshot.empty) {
             console.log(`No orders found for user with UID: ${uid}`);
-            return {}; // Return empty array if no orders found
+            return {}; // Return an empty dictionary if no orders found
         }
 
-        // Map over the documents and extract order data to match the IEbayOrder interface
+        // Map over the documents and extract order data,
+        // using the transactionId as the key in the resulting dictionary.
         const orders: Record<string, IEbayOrder> = {};
         querySnapshot.forEach((doc) => {
             const order = doc.data() as IEbayOrder;
-            // Use the transactionId as the key
             orders[order.transactionId] = order;
         });
 
@@ -205,7 +217,6 @@ async function retrieveUserOrdersFromDB(
     }
 }
 
-
 /**
  * Retrieves user orders from cache or Firestore, optionally updating the data if requested.
  *
@@ -214,17 +225,28 @@ async function retrieveUserOrdersFromDB(
  * @param ebayAccessToken - The eBay access token used for updating store info if necessary.
  * @param timeTo - (Optional) The end date (in ISO format) to filter orders.
  * @param update - (Optional) If true, forces updating the orders by fetching the latest data.
+ * @param filter - (Optional) Additional filters applied to the query
  *
  * @returns A promise that resolves to an array of orders (filtered by time) derived from a dictionary.
  */
-async function retrieveUserOrders(
+interface RetrieveUserOrdersProps {
     uid: string,
     timeFrom: string,
     ebayAccessToken: string,
     timeTo?: string,
-    update: boolean = false,
-    filter?: { [key: string]: any }
-): Promise<IEbayOrder[]> {
+    update?: boolean,
+    filter?: { [key: string]: any },
+    itemsPerPage?: number,
+    startAfterDate?: string,
+}
+async function retrieveUserOrders({
+    uid,
+    timeFrom,
+    ebayAccessToken,
+    timeTo,
+    update = false,
+    filter,
+}: RetrieveUserOrdersProps): Promise<IEbayOrder[]> {
     // Cache key for orders
     const cacheKey = `${ebayOrderCacheKey}-${uid}`;
 
@@ -264,7 +286,7 @@ async function retrieveUserOrders(
         // If requested timeFrom is earlier than the cached oldest order, fetch older orders.
         if (timeFromDate < oldestTime) {
             console.log("Fetching older orders from Firestore.");
-            const olderData = await retrieveUserOrdersFromDB(uid, timeFromDate.toISOString(), oldestTime.toISOString(), filter);
+            const olderData = await retrieveUserOrdersFromDB({ uid: uid, timeFrom: timeFromDate.toISOString(), timeTo: oldestTime.toISOString(), filter });
             // Merge older orders with the current cache (older orders override if keys conflict)
             ordersToReturn = { ...olderData, ...ordersToReturn };
         }
@@ -272,7 +294,7 @@ async function retrieveUserOrders(
         // If requested timeTo is later than the cached newest order, fetch newer orders.
         if (timeToDate > newestTime) {
             console.log("Fetching newer orders from Firestore.");
-            const newerData = await retrieveUserOrdersFromDB(uid, newestTime.toISOString(), timeToDate.toISOString(), filter);
+            const newerData = await retrieveUserOrdersFromDB({ uid: uid, timeFrom: newestTime.toISOString(), timeTo: timeToDate.toISOString(), filter });
             // Merge newer orders with the current cache
             ordersToReturn = { ...ordersToReturn, ...newerData };
         }
@@ -288,7 +310,7 @@ async function retrieveUserOrders(
 
     // If no valid cache exists or update is forced, fetch from Firestore
     try {
-        const data = await retrieveUserOrdersFromDB(uid, timeFromDate.toISOString(), timeToDate.toISOString(), filter);
+        const data = await retrieveUserOrdersFromDB({ uid: uid, timeFrom: timeFromDate.toISOString(), timeTo: timeToDate.toISOString(), filter });
         setCachedData(cacheKey, data, timeFromDate, timeToDate);
         return filterOrdersByTime(Object.values(data), timeFrom, timeTo);
     } catch (error) {

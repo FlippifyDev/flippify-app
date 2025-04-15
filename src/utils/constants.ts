@@ -14,6 +14,8 @@ export const statusCacheExpirationTime = 1000 * 60 * 2 // 2 min in milliseconds
 
 export const exportCSVAllowedSubscriptionPlans = ["standard", "pro", "enterprise"];
 
+export const defaultTimeFrom = "2023-01-01T00:00:00Z";
+
 // Free
 export const FREE_MAX_AUTOMATIC_LISTINGS = 12;
 export const FREE_MAX_MANUAL_LISTINGS = 12;

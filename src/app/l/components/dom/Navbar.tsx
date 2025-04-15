@@ -219,7 +219,7 @@ const Navbar = () => {
 
                 <div className="hidden md:flex items-center justify-end">
                     <div className='transition duration-100 rounded-btn p-1'>
-                        <a className="text-white group flex flex-row hover:text-gray-300" onClick={handleLoginClick}>
+                        <a className="text-white group flex flex-row hover:text-gray-300 cursor-pointer" onClick={handleLoginClick}>
                             <span className='text-sm select-none font-semibold'>{session?.user.subscriptions ? "Dashboard" : "Login"}</span>
                             <span className='pl-1'><AnimationArrow /></span>
                         </a>

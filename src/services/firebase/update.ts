@@ -187,6 +187,9 @@ async function updateOrderStatus(uid: string, order: IEbayOrder, status: OrderSt
         });
 
         order.status = status;
+        if (historyItem) {
+            order.history.push(historyItem)
+        }
         updateCacheData(`${ebayOrderCacheKey}-${uid}`, order)
 
         console.log(`Order ${transactionId} status updated to ${status}`);

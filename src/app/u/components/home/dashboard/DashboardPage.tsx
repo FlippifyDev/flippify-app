@@ -14,6 +14,7 @@ import DashboardProfitsGraph from "./DashboardProfitsGraph";
 import IconButton from "../../dom/ui/IconButton";
 import { IEbayOrder } from "@/models/store-data";
 import OnboardingFlow from "./OnboardingFlow";
+import { defaultTimeFrom } from "@/utils/constants";
 
 
 const DashboardPage: React.FC = () => {
@@ -41,7 +42,11 @@ const DashboardPage: React.FC = () => {
 
     useEffect(() => {
         const fetchSalesData = async () => {
-            const orders = await retrieveUserOrders(session?.user.id as string, "2023-01-01T00:00:00Z", session?.user.connectedAccounts.ebay?.ebayAccessToken as string);
+            const orders = await retrieveUserOrders({
+                uid: session?.user.id as string,
+                timeFrom: defaultTimeFrom,
+                ebayAccessToken: session?.user.connectedAccounts.ebay?.ebayAccessToken as string
+            });
             if (orders) {
                 setSalesData(orders);
             }

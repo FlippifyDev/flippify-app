@@ -160,7 +160,7 @@ const NavbarProfileAvatar = () => {
             {isDropdownOpen && ( // Conditionally render the dropdown menu
                 <ul
                     tabIndex={0}
-                    className="menu menu-sm dropdown-content bg-darkBackground text-white rounded-box mt-3 w-52 p-2 shadow"
+                    className="menu menu-sm dropdown-content bg-darkBackground text-white rounded-lg mt-3 w-52 p-2 shadow"
                 >
                     <button
                         className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-700 active:bg-gray-300 transform transition duration-200'

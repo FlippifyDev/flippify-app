@@ -23,8 +23,8 @@ const Shipped: React.FC<IShipppedProps> = ({ item, uid, setUpdatedStatus }) => {
     const [completed, setCompleted] = useState(false);
 
     async function handleUpdateStatus(status: OrderStatus) {
+        // Cache is updated in this function
         await updateOrderStatus(uid, item, status);
-
         if (status === "InProcess") {
             setShipped(true);
         } else if (status === "Completed") {

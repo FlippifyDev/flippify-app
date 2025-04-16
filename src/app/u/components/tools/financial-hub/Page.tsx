@@ -17,7 +17,7 @@ import CardPlatformDonutChart from "./PlatformDonutChart";
 import { retrieveUserOrders } from "@/services/firebase/retrieve";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import { formatOrdersForCSVExport } from "@/utils/format";
-import { exportCSVAllowedSubscriptionPlans } from "@/utils/constants";
+import { defaultTimeFrom, exportCSVAllowedSubscriptionPlans } from "@/utils/constants";
 
 // External Imports
 import { useEffect, useState } from "react";
@@ -45,8 +45,8 @@ const Page = () => {
 
     // Export CSV Modal
     const [exportModalOpen, setExportModalOpen] = useState(false);
-    const [exportTimeFrom, setExportTimeFrom] = useState<string | undefined>(undefined);
-    const [exportTimeTo, setExportTimeTo] = useState<string | undefined>(undefined);
+    const [exportTimeFrom, setExportTimeFrom] = useState<string>(timeFrom);
+    const [exportTimeTo, setExportTimeTo] = useState<string>(timeTo);
     const [error, setError] = useState<string | undefined>(undefined);
 
     // Using useEffect to initialize the chart only once when the component is mounted
@@ -57,7 +57,11 @@ const Page = () => {
             }
 
             setLoading(true);
-            const orders = await retrieveUserOrders(session.user.id, timeFrom, session.user.connectedAccounts.ebay.ebayAccessToken, timeTo);
+            const orders = await retrieveUserOrders({
+                uid: session?.user.id as string,
+                timeFrom: defaultTimeFrom,
+                ebayAccessToken: session?.user.connectedAccounts.ebay?.ebayAccessToken as string,
+            });
             setOrders(orders);  // Set the orders to state
             setLoading(false);
         }
@@ -278,8 +282,8 @@ const Page = () => {
                                                     <input
                                                         type="date"
                                                         id="timeFrom"
-                                                        value={timeFrom.split('T')[0]}
-                                                        onChange={handleTimeFromChange}
+                                                        value={exportTimeFrom.split('T')[0]}
+                                                        onChange={(e) => handleTimeFromChange(e)}
                                                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                                     />
                                                 </div>
@@ -288,8 +292,8 @@ const Page = () => {
                                                     <input
                                                         type="date"
                                                         id="timeTo"
-                                                        value={timeTo?.split('T')[0]}
-                                                        onChange={handleTimeToChange}
+                                                        value={exportTimeTo?.split('T')[0]}
+                                                        onChange={(e) => handleTimeToChange(e)}
                                                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                                     />
                                                 </div>

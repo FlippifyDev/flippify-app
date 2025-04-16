@@ -1,5 +1,5 @@
 // Local Imports
-import { IEbayOrder, OrderStatus } from '@/models/store-data'
+import { IEbayOrder } from '@/models/store-data'
 import { shortenText } from '@/utils/format';
 import { handleShortDate } from '@/utils/format-dates';
 import { updateOrderStatus } from '@/services/firebase/update';

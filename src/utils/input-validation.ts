@@ -1,4 +1,14 @@
-export const validateNumberInput = (value: string, setFunction: (value: string) => void): void => {
+export const validateNumberInput = (
+    value: string,
+    setFunction: (value: string) => void,
+    maxLength: number = 12
+): void => {
+
+    // Check if the input exceeds the maximum length.
+    if (value.length > maxLength) {
+        return;
+    }
+
     // Regex to allow only numbers and at most one "."
     const validNumberRegex = /^\d*\.?\d*$/;
     if (validNumberRegex.test(value)) {
@@ -8,8 +18,14 @@ export const validateNumberInput = (value: string, setFunction: (value: string) 
 
 export const validateIntegerInput = (
     value: string,
-    setFunction: (value: string) => void
+    setFunction: (value: string) => void,
+    maxLength: number = 12
 ): void => {
+    // Check if the input exceeds the maximum length.
+    if (value.length > maxLength) {
+        return;
+    }
+
     // Regex to allow only letters and numbers (no special characters)
     const validIntegerRegex = /^[0-9]*$/;
     if (validIntegerRegex.test(value)) {
@@ -20,17 +36,34 @@ export const validateIntegerInput = (
 
 export const validateAlphaNumericInput = (
     value: string,
-    setFunction: (value: string) => void
+    setFunction: (value: string) => void,
+    maxLength: number = 100
 ): void => {
+    if (value === "") setFunction(value);
+
+    // Check if the input exceeds the maximum length.
+    if (value.length > maxLength) {
+        return;
+    }
+
     // Regex to allow only letters and numbers (no special characters)
-    const validAlphaNumericRegex = /^[\p{L}\p{N}]*$/u;
+    const validAlphaNumericRegex = /^(?:[\p{L}\p{N}]+(?: [\p{L}\p{N}]+)* ?)$/u;
     if (validAlphaNumericRegex.test(value)) {
         setFunction(value);
     }
 };
 
 
-export const validatePriceInput = (value: string, setFunction: (value: string) => void): void => {
+export const validatePriceInput = (
+    value: string,
+    setFunction: (value: string) => void,
+    maxLength: number = 12
+): void => {
+    // Check if the input exceeds the maximum length.
+    if (value.length > maxLength) {
+        return;
+    }
+
     // Regex to allow only numbers and at most one "."
     const validPriceRegex = /^\d*(\.\d{0,2})?$/;
     if (validPriceRegex.test(value)) {
@@ -39,7 +72,16 @@ export const validatePriceInput = (value: string, setFunction: (value: string) =
 };
 
 
-export const validateTextInput = (value: string, setFunction: (value: string) => void): void => {
+export const validateTextInput = (
+    value: string,
+    setFunction: (value: string) => void,
+    maxLength: number = 200
+): void => {
+    // Check if the input exceeds the maximum length.
+    if (value.length > maxLength) {
+        return;
+    }
+
     // Regex to allow only alphabets and spaces
     if (/^[a-zA-Z\s]*$/.test(value)) {
         setFunction(value);
@@ -47,7 +89,17 @@ export const validateTextInput = (value: string, setFunction: (value: string) =>
 };
 
 
-export const validateUrlInput = (url: string, setFunction: (value: string) => void, setValidUrl?: (value: boolean) => void): void => {
+export const validateUrlInput = (
+    url: string,
+    setFunction: (value: string) => void,
+    setValidUrl?: (value: boolean) => void,
+    maxLength: number = 2048
+): void => {
+    // Check if the input exceeds the maximum length.
+    if (url.length > maxLength) {
+        return;
+    }
+
     const urlPattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-._~:/?#[\]@!$&'()*+,;=]*)?$/i;
     const isValidUrl = urlPattern.test(url);
     if (isValidUrl) {
@@ -60,7 +112,16 @@ export const validateUrlInput = (url: string, setFunction: (value: string) => vo
 };
 
 
-export const validatePasswordInput = (password: string, setFunction: (value: string) => void): void => {
+export const validatePasswordInput = (
+    password: string,
+    setFunction: (value: string) => void,
+    maxLength: number = 64
+): void => {
+    // Check if the input exceeds the maximum length.
+    if (password.length > maxLength) {
+        return;
+    }
+
     if (password === "") {
         setFunction(password);
         return;
@@ -72,7 +133,16 @@ export const validatePasswordInput = (password: string, setFunction: (value: str
     }
 }
 
-export const validateEmailInput = (email: string): boolean => {
+export const validateEmailInput = (
+    email: string,
+    maxLength: number = 254
+): boolean => {
+
+    // Check if the input exceeds the maximum length.
+    if (email.length > maxLength) {
+        return false;
+    }
+
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailPattern.test(email);
 };

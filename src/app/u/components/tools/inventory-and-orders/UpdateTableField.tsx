@@ -2,7 +2,7 @@
 import { StoreType } from '@/models/user';
 import { firestore } from '@/lib/firebase/config';
 import { IEbayInventoryItem, IEbayOrder } from '@/models/store-data';
-import { validateAlphaNumericInput, validatePriceInput, validateTextInput } from '@/utils/input-validation';
+import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput, validateTextInput } from '@/utils/input-validation';
 
 
 // External Imports
@@ -16,7 +16,7 @@ import { formatDateToISO } from '@/utils/format-dates';
 type ExtraKey = "customTag"
 type PurchaseKey = "purchase.platform" | "purchase.price" | "purchase.date" | "purchase.quantity"
 type InventoryKey = "customTag"
-type OrderKey = "sale.price"
+type OrderKey = "sale.price" | "shipping.fees" | "sale.date" | "additionalFees" | "sale.quantity"
 
 interface UpdateTableFieldProps {
     type?: "text" | "date";
@@ -38,7 +38,7 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
     const [value, setValue] = useState(currentValue);
 
     const saveChange = async () => {
-        if (value === "" || value === currentValue) return;
+        if (value === currentValue) return;
 
         try {
             const docRef = doc(firestore, docType, session?.user.id as string, storeType, docId);
@@ -48,11 +48,18 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
                 case "customTag":
                     set(item, keyType, value);
                     break;
+                case "sale.quantity":
+                    setValue(Number(value).toFixed(0))
+                    set(item, keyType, Number(value));
+                    break;
+                case "additionalFees":
                 case "purchase.price":
+                case "shipping.fees":
                     setValue(Number(value).toFixed(2))
                     set(item, keyType, Number(value));
                     break;
                 case "purchase.date":
+                case "sale.date":
                     set(item, keyType, formatDateToISO(new Date(value ?? "")));
                     break;
             }
@@ -76,10 +83,16 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
             case "customTag":
                 validateAlphaNumericInput(input, setValue);
                 break;
+            case "sale.quantity":
+                validateIntegerInput(input, setValue)
+                break;
+            case "additionalFees":
             case "purchase.price":
+            case "shipping.fees":
                 validatePriceInput(input, setValue);
                 break;
             case "purchase.date":
+            case "sale.date":
                 setValue(input);
                 break;
         }

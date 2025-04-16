@@ -7,7 +7,7 @@ import ImageUpload from '../../dom/ui/ImageUpload';
 import { shortenText } from '@/utils/format';
 import { formatDateToISO } from '@/utils/format-dates';
 import { currencySymbols } from '@/config/currency-config';
-import { createHistoryItem } from '@/services/firebase/helpers';
+import { createHistoryItems } from '@/services/firebase/helpers';
 import { createNewOrderItemAdmin } from '@/services/firebase/create-admin';
 import { validateNumberInput, validateTextInput } from '@/utils/input-validation';
 import { IEbayInventoryItem, IEbayOrder, OrderStatus } from '@/models/store-data';
@@ -123,14 +123,18 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
 
         if (aboveLimit) return;
 
-        const historyItem = createHistoryItem(shippingStatus, Number(salePrice), session?.user.preferences.currency ?? "USD");
-        if (!historyItem) return;
+        const historyItems = createHistoryItems({
+            status: shippingStatus,
+            salePrice: Number(salePrice),
+            saleDate: formatDateToISO(new Date(saleDate))
+        });
+        if (!historyItems) return;
 
         const orderItem: IEbayOrder = {
             additionalFees: 0,
             customTag: customTag,
             image: [imageUrl],
-            history: [historyItem], 
+            history: historyItems,
             name: itemName,
             itemId: itemId ?? null,
             lastModified: formatDateToISO(new Date()),

@@ -2,7 +2,7 @@
 import { formatDateToISO } from "@/utils/format-dates";
 import { updateCacheData } from "@/utils/cache-helpers";
 import { ebayOrderCacheKey } from "@/utils/constants";
-import { createHistoryItem } from "./helpers";
+import { createHistoryItems } from "./helpers";
 import { CurrencyType, IUser } from "@/models/user";
 import { updateReferreeUserAdmin } from "./update-admin";
 import { IEbayOrder, OrderStatus } from "@/models/store-data";
@@ -179,16 +179,23 @@ async function updateOrderStatus(uid: string, order: IEbayOrder, status: OrderSt
             return;
         }
 
-        const historyItem = createHistoryItem(status, order.sale.price, order.sale.currency as CurrencyType);
+        const historyItems = createHistoryItems(
+            {
+                status, 
+                salePrice: order.sale.price, 
+                dbHistory: order.history,
+                saleDate: order.sale.date
+            }
+        );
 
         await updateDoc(orderRef, {
             status: status,
-            history: arrayUnion(historyItem)
+            history: historyItems
         });
 
         order.status = status;
-        if (historyItem) {
-            order.history.push(historyItem)
+        if (historyItems) {
+            order.history = historyItems
         }
         updateCacheData(`${ebayOrderCacheKey}-${uid}`, order)
 

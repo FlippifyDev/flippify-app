@@ -132,7 +132,7 @@ const Orders = () => {
                                         {shortenText(order.name)}
                                     </td>
                                     <td className="w-32">{formatTableDate(order.sale.date)}</td>
-                                    <UpdateTableField currentValue={purchase.price?.toFixed(2)} docId={transactionId} item={order} docType='orders' storeType='ebay' keyType="purchase.price" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} className='max-w-32' />
+                                    <UpdateTableField currentValue={purchase.price?.toFixed(2)} docId={transactionId} item={order} docType='orders' storeType='ebay' keyType="purchase.price" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} className='max-w-32 hover:bg-gray-100 transition duration-300' />
                                     <td>
                                         {soldFor.toFixed(2)}
                                     </td>
@@ -145,7 +145,7 @@ const Orders = () => {
                                     <td className={`${status === "Completed" ? "text-houseBlue" : ""} font-semibold`}>
                                         {status}
                                     </td>
-                                    <UpdateTableField currentValue={customTag} docId={transactionId} item={order} docType='orders' storeType='ebay' keyType="customTag" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
+                                    <UpdateTableField currentValue={customTag} docId={transactionId} item={order} docType='orders' storeType='ebay' keyType="customTag" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} className='hover:bg-gray-100 transition duration-300' />
                                 </tr>
                             );
                         })

@@ -7,12 +7,12 @@ import OrderInfoCard from "./OrderInfoCard";
 import { firestore } from "@/lib/firebase/config";
 import { IEbayOrder } from "@/models/store-data";
 import { shortenText } from "@/utils/format";
-import LoadingAnimation from "../../dom/ui/LoadingAnimation";
+import LoadingAnimation from "../../../dom/ui/LoadingAnimation";
 import { formatTableDate } from "@/utils/format-dates";
 import { currencySymbols } from "@/config/currency-config";
 import { retrieveUserOrders } from "@/services/firebase/retrieve";
 import { getCachedData, setCachedData } from "@/utils/cache-helpers";
-import { ebayOrderCacheKey, MAX_INPUT_LENGTH } from "@/utils/constants";
+import { defaultTimeFrom, ebayOrderCacheKey, MAX_INPUT_LENGTH } from "@/utils/constants";
 import { validatePriceInput, validateTextInput } from "@/utils/input-validation";
 
 // External Imports
@@ -68,7 +68,11 @@ const OrderDetails = () => {
 
     useEffect(() => {
         const fetchOrderData = async () => {
-            const orders = await retrieveUserOrders(session?.user.id as string, "2023-01-01T00:00:00Z", session?.user.connectedAccounts.ebay?.ebayAccessToken as string);
+            const orders = await retrieveUserOrders({
+                uid: session?.user.id as string,
+                timeFrom: defaultTimeFrom,
+                ebayAccessToken: session?.user.connectedAccounts.ebay?.ebayAccessToken as string,
+            });
             if (orders) {
                 setSalesData(orders);
             }
@@ -94,7 +98,7 @@ const OrderDetails = () => {
     }, [salesData, name, ordersUpdated]);
 
     if (orders.length === 0) {
-        return <LoadingAnimation text="Loading items" type="stack-loader"/>;
+        return <LoadingAnimation text="Loading items" type="stack-loader" />;
     }
 
     // Handle orders click
@@ -123,8 +127,8 @@ const OrderDetails = () => {
         let totalAdditionalFees = 0;
         let totalProfit = 0;
         let totalROI = 0;
-        let purchaseCount = 0; 
-        let totalDaysToSell = 0;  
+        let purchaseCount = 0;
+        let totalDaysToSell = 0;
         let validSaleCount = 0;
 
         // Loop through each order to accumulate totals
@@ -336,7 +340,7 @@ const OrderDetails = () => {
                 ...Object.fromEntries(salesData.map(order => [order.transactionId, order]))
             };
 
-            setCachedData(cacheKey, salesDataDict); 
+            setCachedData(cacheKey, salesDataDict);
 
             setEditingType(null);
             setEditingIndex(null);
@@ -436,7 +440,7 @@ const OrderDetails = () => {
                                 const { transactionId, sale, purchase, shipping, additionalFees } = order;
                                 const profit = (sale.price + shipping.fees) - (purchase.price || 0) - shipping.fees - additionalFees;
                                 const roi = purchase.price && purchase.price > 0 ? ((profit / purchase.price) * 100).toFixed(2) : "0";
-                                
+
                                 const purchasePrice = purchase.price !== null ? purchase.price.toFixed(2) : "0";
                                 return (
                                     <tr key={index} className="hover:bg-gray-100">

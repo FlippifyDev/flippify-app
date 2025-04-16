@@ -1,8 +1,11 @@
+import { IEbayInventoryItem, IEbayOrder } from "@/models/store-data";
 import { cacheExpirationTime } from "./constants";
+
+type CachedItem = IEbayOrder | IEbayInventoryItem;
 
 // Function to check if cached data is still valid
 export function getCachedData(key: string, returnCacheTimes?: boolean) {
-    const cachedData = localStorage.getItem(key);
+    const cachedData = sessionStorage.getItem(key);
     if (cachedData) {
         const parsedData = JSON.parse(cachedData);
         if (!parsedData) {
@@ -29,11 +32,11 @@ export function setCachedTimes(key: string, timeFrom?: Date, timeTo?: Date) {
         cacheTimeFrom: timeFrom,
         cacheTimeTo: timeTo
     };
-    localStorage.setItem(key, JSON.stringify(newCache));
+    sessionStorage.setItem(key, JSON.stringify(newCache));
 }
 
 export function getCachedTimes(key: string): { cacheTimeFrom?: Date, cacheTimeTo?: Date } | null {
-    const cachedTimes = localStorage.getItem(key);
+    const cachedTimes = sessionStorage.getItem(key);
     if (cachedTimes) {
         const parsedData = JSON.parse(cachedTimes);
         if (!parsedData) {
@@ -45,7 +48,7 @@ export function getCachedTimes(key: string): { cacheTimeFrom?: Date, cacheTimeTo
 
 }
 
-// Function to store data in localStorage with a timestamp
+// Function to store data in sessionStorage with a timestamp
 export function setCachedData(key: string, data: any, cacheTimeFrom?: Date, cacheTimeTo?: Date) {
     const cachedTimes = getCachedTimes(key); 
     const timeFrom = cacheTimeFrom ? cacheTimeFrom : cachedTimes?.cacheTimeFrom;
@@ -59,29 +62,52 @@ export function setCachedData(key: string, data: any, cacheTimeFrom?: Date, cach
     };
     
     setCachedTimes(key, timeFrom, timeTo);
-    localStorage.setItem(key, JSON.stringify(newCache));
+    sessionStorage.setItem(key, JSON.stringify(newCache));
 };
 
 
+function isOrder(item: CachedItem): item is IEbayOrder {
+    return 'sale' in item && !!item.sale;
+}
+
 export function addCacheData(key: string, data: any) {
     const cachedData = getCachedData(key, true);
-    if (cachedData) {
-        const dataKey = data.itemId || data.orderId;
-        cachedData.data[dataKey] = data;
-        const newCacheData = {
-            ...cachedData.data,
-        };
 
+    // Determine key
+    const dataKey = data.transactionId ?? data.itemId;
+
+    if (cachedData) {
+        cachedData.data[dataKey] = data;
+
+        // Convert object to array for sorting
+        const sortedArray = Object.values(cachedData.data as Record<string, CachedItem>)
+            .sort((a, b) => {
+                const dateA = isOrder(a) ? new Date(a.sale.date).getTime() : new Date(a.dateListed).getTime();
+                const dateB = isOrder(b) ? new Date(b.sale.date).getTime() : new Date(b.dateListed).getTime();
+                return dateB - dateA;
+            });
+
+        // Convert back to object using transactionId/itemId as key
+        const sortedData: Record<string, CachedItem> = {};
+        sortedArray.forEach(item => {
+            const key = isOrder(item) ? item.transactionId : item.itemId;
+            sortedData[key] = item;
+        });
+        
         const newCache = {
-            data: newCacheData,
+            data: sortedData,
             timestamp: cachedData.timestamp,
             cacheTimeFrom: cachedData.cacheTimeFrom,
-            cacheTimeTo: cachedData.cacheTimeTo
+            cacheTimeTo: cachedData.cacheTimeTo,
         };
+
         setCachedTimes(key, cachedData.cacheTimeFrom, cachedData.cacheTimeTo);
-        localStorage.setItem(key, JSON.stringify(newCache));
+        sessionStorage.setItem(key, JSON.stringify(newCache));
     } else {
-        setCachedData(key, [data]);
+        // Initialize as a new object
+        const dataKey = data.transactionId ?? data.itemId;
+        const newData = { [dataKey]: data };
+        setCachedData(key, newData);
     }
 }
 
@@ -89,7 +115,14 @@ export function addCacheData(key: string, data: any) {
 export function updateCacheData(key: string, data: any) {
     const cachedData = getCachedData(key, true);
     if (cachedData) {
-        const dataKey = data.itemId || data.orderId;
+
+        // Check if the incoming data is an order or a listing
+        let dataKey;
+        if (data.transactionId)  {
+            dataKey = data.transactionId;
+        } else {
+            dataKey = data.itemId
+        }
         
         // Update the existing dictionary with the new data, keyed by data.id
         const updatedCacheData = {
@@ -104,7 +137,7 @@ export function updateCacheData(key: string, data: any) {
             cacheTimeTo: cachedData.cacheTimeTo,
         };
 
-        localStorage.setItem(key, JSON.stringify(newCache));
+        sessionStorage.setItem(key, JSON.stringify(newCache));
     } else {
         // If there's no existing cache, create a new cache with this item.
         setCachedData(key, { [data.id]: data });
@@ -126,6 +159,19 @@ export function removeCacheData(key: string, itemKey: string) {
             cacheTimeTo: cachedData.cacheTimeTo,
         };
 
-        localStorage.setItem(key, JSON.stringify(newCache));
+        sessionStorage.setItem(key, JSON.stringify(newCache));
+    }
+}
+
+
+export function getCachedItem(key: string, itemKey: string) {
+    const cachedData = sessionStorage.getItem(key);
+    if (cachedData) {
+        const parsedData = JSON.parse(cachedData);
+        if (!parsedData) {
+            return null;
+        }
+
+        return parsedData.data[itemKey]
     }
 }

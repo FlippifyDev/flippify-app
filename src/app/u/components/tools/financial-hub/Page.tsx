@@ -17,7 +17,7 @@ import CardPlatformDonutChart from "./PlatformDonutChart";
 import { retrieveUserOrders } from "@/services/firebase/retrieve";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import { formatOrdersForCSVExport } from "@/utils/format";
-import { exportCSVAllowedSubscriptionPlans } from "@/utils/constants";
+import { defaultTimeFrom, exportCSVAllowedSubscriptionPlans } from "@/utils/constants";
 
 // External Imports
 import { useEffect, useState } from "react";
@@ -57,7 +57,11 @@ const Page = () => {
             }
 
             setLoading(true);
-            const orders = await retrieveUserOrders(session.user.id, timeFrom, session.user.connectedAccounts.ebay.ebayAccessToken, timeTo);
+            const orders = await retrieveUserOrders({
+                uid: session?.user.id as string,
+                timeFrom: defaultTimeFrom,
+                ebayAccessToken: session?.user.connectedAccounts.ebay?.ebayAccessToken as string,
+            });
             setOrders(orders);  // Set the orders to state
             setLoading(false);
         }

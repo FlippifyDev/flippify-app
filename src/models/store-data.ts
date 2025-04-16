@@ -58,9 +58,10 @@ interface ISale {
 }
 
 interface IHistory {
-    description: string;
-    timestamp: string;
     title: string;
+    description: string;
+    status: OrderStatus;
+    timestamp: string;
 }
 
 interface IRefund {

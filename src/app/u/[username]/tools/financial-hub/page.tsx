@@ -8,7 +8,7 @@ export const metadata = {
 	description: 'Keep track of your sales and profits with Flippify’s comprehensive Financial Hub. Monitor your performance and maximize your reselling success.',
 };
 
-export default function Dashboard() {
+export default function FinancialHub() {
 	return (
 		<>
 			<ThemeSetter theme="light" />

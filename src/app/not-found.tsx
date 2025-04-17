@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Layout from "./l/components/layout/Layout";
-import MetadataHead from "./components/MetadataHead";
 
 export const metadata = {
     title: "Page Not Found",

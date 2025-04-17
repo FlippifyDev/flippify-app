@@ -50,6 +50,7 @@ const PlansPage = () => {
     function handleDisplayModal(priceId: string, type: string) {
         setPriceId(priceId);
         if (type === "coupon") {
+            setCouponError(null);
             setDisplayCouponModal(true);
         } else if (type === "subscriptionChange") {
             setDisplaySubscriptionChangeModal(true);
@@ -87,7 +88,7 @@ const PlansPage = () => {
                         <input
                             type="text"
                             value={couponCode ?? ""}
-                            onChange={(e) => handleInput(e.target.value.toUpperCase(), "coupon")}
+                            onChange={(e) => handleInput(e.target.value, "coupon")}
                             placeholder="Coupon Code (optional)"
                             className="input input-bordered w-full"
                             aria-label="Coupon Code"

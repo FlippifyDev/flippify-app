@@ -75,6 +75,9 @@ const ButtonGetStarted: React.FC<ButtonGetStartedProps> = ({ priceId, specialPla
     }, [submitted, checkoutUrl, setCouponError]);
 
     const handleBuyButtonClick = () => {
+        if (setCouponError) {
+            setCouponError("");
+        }
         setSubmitted(true);
     };
 

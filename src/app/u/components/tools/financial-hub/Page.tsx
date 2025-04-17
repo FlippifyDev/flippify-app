@@ -59,7 +59,8 @@ const Page = () => {
             setLoading(true);
             const orders = await retrieveUserOrders({
                 uid: session?.user.id as string,
-                timeFrom: defaultTimeFrom,
+                timeFrom: timeFrom,
+                timeTo: timeTo,
                 ebayAccessToken: session?.user.connectedAccounts.ebay?.ebayAccessToken as string,
             });
             setOrders(orders);  // Set the orders to state
@@ -229,7 +230,7 @@ const Page = () => {
         link.href = url;
 
         // Set download file name with a timestamp
-        const fileName = `orders-${new Date().toISOString().split("T")[0]}.csv`;
+        const fileName = `flippify-orders-${new Date().toISOString().split("T")[0]}.csv`;
         link.setAttribute("download", fileName);
 
         // Append link to body and trigger download
@@ -240,10 +241,6 @@ const Page = () => {
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
     }
-
-    const handleCloseModal = () => {
-        setExportModalOpen(false);
-    };
 
     return (
         <LayoutSubscriptionWrapper anySubscriptions={["admin", "member"]}>

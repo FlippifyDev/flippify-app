@@ -112,6 +112,8 @@ const OnboardingFlow: React.FC = () => {
             );
             await updateReferredByAdmin(session.user.id, validReferralCode ?? "");
         }
+
+        window.location.reload()
     };
 
     function handleInput(value: string, type: string) {
@@ -154,7 +156,7 @@ const OnboardingFlow: React.FC = () => {
                             )}
                             {showReferralMessage && !referralError && (
                                 <p className="text-houseBlue text-sm mt-2 animate-fadeInPrimary">
-                                    Enter a referral code to get 25% off your first month.
+                                    Enter a referral code to get 10% off your first month.
                                 </p>
                             )}
                         </div>

@@ -10,16 +10,28 @@ const PlansCardStandardWhatsIncluded = () => {
 				<p>Everything in Free, plus:</p>
 			</div>
 			<ul className={rootClass}>
-				<li className="w-full">
-					<PlansClickableBulletPoint
-						text="48 Auto-Tracked Listings /Month"
-                        tooltip="Track up to 48 new eBay listings monthly. Log the purchase, and we&apos;ll automatically monitor inventory, sales, and financials. Limit resets each month; active tracked items don&apos;t count toward the next month&apos;s cap. On initial sign-up we can only track 90 days in the past and up to 500 items."
-					/>
+                <li className="w-full">
+                    <PlansClickableBulletPoint
+                        text="48 Auto-Tracked Sales /Month"
+                        tooltip="Track up to 48 new eBay sales monthly. Automatically monitor inventory, sales, and financials. Limit resets each month; active tracked items don&apos;t count toward the next month&apos;s cap. On initial sign-up we can only track 90 days in the past and up to 50 items."
+                    />
                 </li>
                 <li className="w-full">
                     <PlansClickableBulletPoint
-                        text="48 Manual Transaction Entries"
-                        tooltip="Manually log purchases and sales to track them in your inventory, orders, and financials. You manage the item&apos;s status, such as moving it between inventory and orders, without automated tracking."
+                        text="48 Auto-Tracked Listings"
+                        tooltip="Track up to 48 listings at any time. Add custom information such as purchase price, platform, etc. When this listing sells, or you move it to sold then the listing is removed from your total and you can add another listing."
+                    />
+                </li>
+                <li className="w-full">
+                    <PlansClickableBulletPoint
+                        text="48 Manual Sales Entries /Month"
+                        tooltip="Manually log sales to track them in your orders, and financials. You manage the item&apos;s status, such as moving it between inventory and orders, without automated tracking."
+                    />
+                </li>
+                <li className="w-full">
+                    <PlansClickableBulletPoint
+                        text="48 Manual Listing Entries"
+                        tooltip="Manually add up to 48 listings at any time. Add custom information such as purchase price, platform, etc. When this listing sells, or you move it to sold then the listing is removed from your total and you can add another listing."
                     />
                 </li>
                 <li className="w-full">

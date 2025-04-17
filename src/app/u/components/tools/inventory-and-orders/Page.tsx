@@ -2,19 +2,19 @@
 
 // Local Imports
 
+import Orders from './Orders';
+import Inventory from './Inventory';
 import IconButton from '../../dom/ui/IconButton';
-import OrdersContent from './OrdersContent';
-import InventoryContent from './InventoryContent';
-import { FaShoppingCart } from 'react-icons/fa';
 import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
 
 // External Imports
 import React, { useEffect, useState, useRef } from 'react'
+import { FaShoppingCart } from 'react-icons/fa';
 import { useSession } from "next-auth/react";
 import { FaBox } from "react-icons/fa";
 
 
-const InventoryOrdersContent = () => {
+const Page = () => {
     const [initialTab, setInitialTab] = useState("inventory");
     const { data: session } = useSession();
 
@@ -110,7 +110,7 @@ const InventoryOrdersContent = () => {
 
                     {/* Conditional Content Rendering with Fade Transition */}
                     <div className={`transition-opacity duration-300 rounded-b-xl ${fadeIn ? 'opacity-100' : 'opacity-0'}`}>
-                        {activeTab === "inventory" ? <InventoryContent /> : <OrdersContent />}
+                        {activeTab === "inventory" ? <Inventory /> : <Orders />}
                     </div>
                 </main>
             ) : (
@@ -123,4 +123,4 @@ const InventoryOrdersContent = () => {
     )
 }
 
-export default InventoryOrdersContent;
+export default Page;

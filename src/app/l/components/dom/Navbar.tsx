@@ -17,6 +17,7 @@ import { RxCross2 } from "react-icons/rx";
 import { ImBubble } from "react-icons/im";
 import { IoMdPricetags } from "react-icons/io";
 import { MdAccountBalance } from "react-icons/md";
+import { PiRoadHorizonFill } from "react-icons/pi";
 import { FaBook, FaStore, FaBoxes } from "react-icons/fa";
 import { FaBoxOpen, FaParachuteBox, FaHandshakeSimple } from 'react-icons/fa6';
 import { FaShieldAlt, FaFileContract, FaQuestionCircle, FaBalanceScale, FaSitemap } from 'react-icons/fa';
@@ -47,7 +48,7 @@ const Navbar = () => {
         { label: "Inventory Management", description: "Track stock and optimize inventory levels", href: "/l/inventory-management", icon: <FaBoxOpen className="text-lg" /> },
         { label: "Order Management", description: "Efficiently manage and fulfill orders", href: "/l/order-management", icon: <FaParachuteBox className="text-lg" /> },
         { label: "Store Management", description: "Control your eBay store operations seamlessly", href: "/l/store-management", icon: <FaStore className="text-lg" /> },
-        { label: "Our Roadmap", description: "See our upcoming features and tools", href: "/l/roadmap", icon: <FaBook className="text-lg" /> },
+        { label: "Our Roadmap", description: "See our upcoming features and tools", href: "/l/roadmap", icon: <PiRoadHorizonFill className="text-lg" /> },
     ]
 
     const resourceLinks = [
@@ -146,6 +147,7 @@ const Navbar = () => {
                                         <SidebarSubItem text="Inventory Management" href="/l/inventory-management" icon={<FaBoxOpen />} />
                                         <SidebarSubItem text="Order Management" href="/l/order-management" icon={<FaParachuteBox />} />
                                         <SidebarSubItem text="Store Management" href="/l/store-management" icon={<FaStore />} />
+                                        <SidebarSubItem text="Our Roadmap" href="/l/roadmap" icon={<PiRoadHorizonFill />} />
                                     </ul>
                                 )}
                             </li>
@@ -219,7 +221,7 @@ const Navbar = () => {
 
                 <div className="hidden md:flex items-center justify-end">
                     <div className='transition duration-100 rounded-btn p-1'>
-                        <a className="text-white group flex flex-row hover:text-gray-300" onClick={handleLoginClick}>
+                        <a className="text-white group flex flex-row hover:text-gray-300 cursor-pointer" onClick={handleLoginClick}>
                             <span className='text-sm select-none font-semibold'>{session?.user.subscriptions ? "Dashboard" : "Login"}</span>
                             <span className='pl-1'><AnimationArrow /></span>
                         </a>

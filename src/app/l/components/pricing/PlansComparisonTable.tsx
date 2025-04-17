@@ -60,7 +60,7 @@ const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
                         {/* Auto-Tracked Listings */}
                         <tr className="border-b">
                             <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
-                                Auto-Tracked Listings
+                                Auto-Tracked Sales
                             </td>
                             <td className="py-4 px-6 text-center">
                                 <span className="text-gray-600">12/month</span>
@@ -73,10 +73,10 @@ const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
                             </td>
                         </tr>
 
-                        {/* Manual Transaction Entries */}
+                        {/* Manual Listing Entries */}
                         <tr className="border-b">
                             <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
-                                Manual Transaction Entries
+                                Auto-Tracked Listings
                             </td>
                             <td className="py-4 px-6 text-center bg-gray-50">
                                 <span className="text-gray-600">12</span>
@@ -88,6 +88,40 @@ const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
                                 <span className="text-gray-600">96</span>
                             </td>
                         </tr>
+
+                        {/* Manual Sales Entries */}
+                        <tr className="border-b">
+                            <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
+                                Manual Sales Entries
+                            </td>
+                            <td className="py-4 px-6 text-center bg-gray-50">
+                                <span className="text-gray-600">12/month</span>
+                            </td>
+                            <td className="py-4 px-6 text-center bg-gray-50">
+                                <span className="text-gray-600">48/month</span>
+                            </td>
+                            <td className="py-4 px-6 text-center bg-gray-50">
+                                <span className="text-gray-600">96/month</span>
+                            </td>
+                        </tr>
+
+                        {/* Manual Sales Entries */}
+                        <tr className="border-b">
+                            <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
+                                Manual Listing Entries
+                            </td>
+                            <td className="py-4 px-6 text-center bg-gray-50">
+                                <span className="text-gray-600">12</span>
+                            </td>
+                            <td className="py-4 px-6 text-center bg-gray-50">
+                                <span className="text-gray-600">48</span>
+                            </td>
+                            <td className="py-4 px-6 text-center bg-gray-50">
+                                <span className="text-gray-600">96</span>
+                            </td>
+                        </tr>
+
+
 
                         {/* Export to CSV */}
                         <tr className="border-b">

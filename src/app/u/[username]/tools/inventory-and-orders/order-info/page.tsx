@@ -1,16 +1,16 @@
 import React from 'react';
 import Layout from '../../../../components/layout/Layout';
-import OrderDetails from '../../../../components/tools/inventory-and-orders/OrderDetails';
+import Order from '../../../../components/tools/inventory-and-orders/Order';
 
 import ThemeSetter from '@/app/components/ThemeSetter';
 
 
-export default function Dashboard() {
+export default function OrderInfo() {
     return (
         <>
             <ThemeSetter theme="light" />
-            <Layout anySubscriptions={['admin', 'member']}>
-                <OrderDetails />
+            <Layout anySubscriptions={['admin', 'member']} removePadding>
+                <Order />
             </Layout>
         </>
     );

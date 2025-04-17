@@ -13,12 +13,12 @@ import { retrieveUserOrders } from '@/services/firebase/retrieve';
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react';
 import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
+import { defaultTimeFrom } from '@/utils/constants';
 
 const ITEMS_PER_PAGE = 5;
 
 const Page = () => {
     const { data: session } = useSession();
-    const defaultTimeFrom = "2023-01-01T00:00:00Z";
 
     const [loading, setLoading] = useState(false);
     const [initialLoad, setInitialLoad] = useState(true);
@@ -46,11 +46,11 @@ const Page = () => {
             if (initialLoad) {
                 setLoading(true);
             }
-            const orders = await retrieveUserOrders(
-                session?.user.id as string,
-                defaultTimeFrom,
-                session?.user.connectedAccounts.ebay?.ebayAccessToken as string,
-            );
+            const orders = await retrieveUserOrders({
+                uid: session?.user.id as string,
+                timeFrom: defaultTimeFrom,
+                ebayAccessToken: session?.user.connectedAccounts.ebay?.ebayAccessToken as string,
+            });
 
             if (orders) {
                 sortOrderData(orders);

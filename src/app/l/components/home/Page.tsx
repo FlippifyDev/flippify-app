@@ -16,7 +16,7 @@ const Page = ({ className = "" }) => {
         <div className={`home-details-container ${className} w-full`}>
             <div className="flex flex-col items-center w-full">
                 <Hero
-                    text={[{ text: "Inventory & Order" }, { "text": "Mangement Software", isGradient: true }]}
+                    text={[{ text: "Inventory & Order" }, { "text": "Management Software", isGradient: true }]}
                     description="Streamline warehouse management, control stock, and optimize listings with automated tools to sell smarter and scale faster on eBay."
                     button={<HomeGetAccess />}
                     image="/hero/home.svg"

@@ -112,6 +112,8 @@ const OnboardingFlow: React.FC = () => {
             );
             await updateReferredByAdmin(session.user.id, validReferralCode ?? "");
         }
+
+        window.location.reload()
     };
 
     function handleInput(value: string, type: string) {

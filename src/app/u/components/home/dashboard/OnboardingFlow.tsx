@@ -154,7 +154,7 @@ const OnboardingFlow: React.FC = () => {
                             )}
                             {showReferralMessage && !referralError && (
                                 <p className="text-houseBlue text-sm mt-2 animate-fadeInPrimary">
-                                    Enter a referral code to get 25% off your first month.
+                                    Enter a referral code to get 10% off your first month.
                                 </p>
                             )}
                         </div>

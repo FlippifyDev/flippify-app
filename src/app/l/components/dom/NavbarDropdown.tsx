@@ -24,6 +24,8 @@ const NavbarDropdown: React.FC<NavbarDropdownProps> = ({ links, isHovered, hover
                 return '';
             case 1:
                 return 'left-[28px] transform translate-x-[28px]';
+            case 2:
+                return 'left-[106px] transform translate-x-[106px]';
             default:
                 return '';
         }
@@ -35,6 +37,8 @@ const NavbarDropdown: React.FC<NavbarDropdownProps> = ({ links, isHovered, hover
                 return '';
             case 1:
                 return 'left-[53px] transform translate-x-[53px]';
+            case 2:
+                return 'left-[90px] transform translate-x-[90px]';
             default:
                 return '';
         }

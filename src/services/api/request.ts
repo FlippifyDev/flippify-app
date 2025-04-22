@@ -13,7 +13,7 @@ export async function updateStoreInfo(endpoint: string, ebayAccessToken: string,
         "Sec-Fetch-Site": "same-site",
     };
 
-    const url = new URL(`https://api.flippify.io/v1/update`);
+    const url = new URL(`https://api.flippify.io/v1/update/${endpoint}`);
     url.searchParams.append("uid", uid);
     url.searchParams.append("store_type", "ebay");
 

@@ -305,7 +305,7 @@ async function retrieveUserOrders({
     }
     // If cache is empty or update is requested, update store info before fetching
     else if (update || !cachedData || Object.keys(cachedData).length === 0) {
-        await updateStoreInfo("update-orders", ebayAccessToken, uid);
+        await updateStoreInfo("orders", ebayAccessToken, uid);
     }
 
     // If no valid cache exists or update is forced, fetch from Firestore
@@ -464,7 +464,7 @@ async function retrieveUserInventory(
     // If cache is empty or update is requested, update store info before fetching
     else if (update || !cachedData || Object.keys(cachedData).length === 0) {
         console.log("Request to check for new inventory");
-        await updateStoreInfo("update-inventory", ebayAccessToken, uid);
+        await updateStoreInfo("inventory", ebayAccessToken, uid);
     }
 
     // If no valid cache exists or update is forced, fetch from Firestore

@@ -22,7 +22,7 @@ type Currency = "GBP" | "USD" | "EUR" | "AUD" | "CAD" | "JPY" | "NZD";
 
 const PlansPage = () => {
     const { data: session } = useSession();
-    const currency = (session?.user.preferences.currency as Currency) || "GBP";
+    const currency = (session?.user.preferences?.currency as Currency) || "GBP";
     const [selectedPlan, setSelectedPlan] = useState<number>(0); // 0 for monthly, 1 for yearly
     const [enterpriseListings, setEnterpriseListings] = useState<number>(200);
     const [displayCouponModal, setDisplayCouponModal] = useState<boolean>(false);
@@ -60,10 +60,10 @@ const PlansPage = () => {
     useEffect(() => {
         if (session?.user.subscriptions) {
             const subscription = session.user.subscriptions.find((sub: any) => sub.name.includes("member"));
-            if (subscription) {
+            if (subscription && subscription.name) {
                 setCurrentSubscriptionName(subscription.name);
             }
-            if (session.user.authentication.onboarding) {
+            if (session.user.authentication?.onboarding) {
                 setIsOnboarding(true);
             }
         }

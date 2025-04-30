@@ -1,15 +1,16 @@
 // Local Imports
+import { IUser } from "@/models/user";
+import { orderCacheKey } from "@/utils/constants";
 import { formatDateToISO } from "@/utils/format-dates";
 import { updateCacheData } from "@/utils/cache-helpers";
-import { ebayOrderCacheKey } from "@/utils/constants";
 import { createHistoryItems } from "./helpers";
-import { CurrencyType, IUser } from "@/models/user";
 import { updateReferreeUserAdmin } from "./update-admin";
-import { IEbayOrder, OrderStatus } from "@/models/store-data";
+import { IListing, IOrder, OrderStatus, StoreType } from "@/models/store-data";
 import { retrieveUserOrderItemRef, retrieveUserRefById } from "./retrieve";
 
 // External Imports
-import { arrayUnion, deleteField, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { collection, deleteField, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { firestore } from "@/lib/firebase/config";
 
 
 
@@ -169,20 +170,23 @@ async function incrementRewardsClaimed(uid: string): Promise<void> {
 }
 
 
-async function updateOrderStatus(uid: string, order: IEbayOrder, status: OrderStatus): Promise<void> {
+async function updateOrderStatus(uid: string, order: IOrder, status: OrderStatus): Promise<void> {
     try {
-        const transactionId = order.transactionId;
-        const orderRef = await retrieveUserOrderItemRef(uid, transactionId);
+        if (!order.transactionId || !order.sale?.price || !order.sale.date) {
+            throw Error("error")
+        }
+
+        const orderRef = await retrieveUserOrderItemRef(uid, order.transactionId);
 
         if (!orderRef) {
-            console.error(`No order found with ID: ${transactionId}`);
+            console.error(`No order found with ID: ${order.transactionId}`);
             return;
         }
 
         const historyItems = createHistoryItems(
             {
-                status, 
-                salePrice: order.sale.price, 
+                status,
+                salePrice: order.sale.price,
                 dbHistory: order.history,
                 saleDate: order.sale.date
             }
@@ -197,13 +201,47 @@ async function updateOrderStatus(uid: string, order: IEbayOrder, status: OrderSt
         if (historyItems) {
             order.history = historyItems
         }
-        updateCacheData(`${ebayOrderCacheKey}-${uid}`, order)
+        updateCacheData(`${orderCacheKey}-${uid}`, order)
 
-        console.log(`Order ${transactionId} status updated to ${status}`);
+        console.log(`Order ${order.transactionId} status updated to ${status}`);
     } catch (error) {
         console.error("Error updating Firestore order status:", error);
         throw error;
     }
 }
 
-export { updateUser, updateUserPreferences, completeOnboarding, incrementRewardsClaimed, updateOrderStatus };
+
+/**
+ * Updates (or creates) an eBay inventory item in Firestore.
+ * @param uid       – the user’s UID
+ * @param listing   – the full listing payload to write
+ * @param storeType – which sub‐collection under "inventory"/uid to use
+ * @returns         – the saved listing, or null on error
+ */
+async function updateListing(
+    uid: string,
+    listing: IListing,
+    storeType: StoreType
+): Promise<{ success?: boolean, error?: any }> {
+    try {
+        if (!listing.itemId) {
+            throw Error("Listing did not contain an ID")
+        }
+
+        // Reference to /inventory/{uid}/{storeType}/{itemId}
+        const colRef = collection(firestore, "inventory", uid, storeType);
+        const itemDoc = doc(colRef, listing.itemId);
+
+        // Write the listing object to Firestore, merging with any existing data
+        await setDoc(itemDoc, listing, { merge: true });
+
+        // Return the payload back to the caller for further use
+        return { success: true };
+    } catch (error) {
+        console.error(`Error updating item with ID=${listing.itemId}:`, error);
+        return { error: `Error updating item with ID=${listing.itemId}: ${error}`};
+    }
+}
+
+
+export { updateUser, updateUserPreferences, completeOnboarding, incrementRewardsClaimed, updateOrderStatus, updateListing };

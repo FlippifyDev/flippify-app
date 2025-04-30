@@ -1,13 +1,14 @@
-import { IEbayOrder } from "@/models/store-data";
+import { IOrder } from "@/models/store-data";
 
-export function fetchChartOptions(orders: IEbayOrder[], currencySymbol: string) {
+export function fetchChartOptions(orders: IOrder[], currencySymbol: string) {
     // Initialize a map to hold total sales for each platform
     const platformSales = new Map<string, number>();
 
     // Iterate over orders and accumulate the sales by platform
     orders.forEach(order => {
-        const platform = order.purchase.platform ?? "Unknown";
-        const saleAmount = order.sale.price;
+        const platform = order.purchase?.platform ?? "Unknown";
+        const saleAmount = order.sale?.price;
+        if (!saleAmount) return;
 
         if (platformSales.has(platform)) {
             platformSales.set(platform, platformSales.get(platform)! + saleAmount);

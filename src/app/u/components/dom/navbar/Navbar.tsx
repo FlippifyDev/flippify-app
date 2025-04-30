@@ -16,8 +16,8 @@ const Navbar: React.FC<NavbarProps> = ({ handleDisplayModal }) => {
     const { data: session } = useSession();
     const customerId = session?.user.stripeCustomerId;
     const [title, setTitle] = useState(getProcessedTitle())
-    const isConnected = session?.user.connectedAccounts.ebay ? true : false;
-    const subscribed = session?.user.authentication.subscribed ? true: false;
+    const isConnected = session?.user.connectedAccounts?.ebay ? true : false;
+    const subscribed = session?.user.authentication?.subscribed ? true: false;
 
     // Fetch unread notifications count from Firebase
     useEffect(() => {
@@ -26,7 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({ handleDisplayModal }) => {
 
 
     return (
-        <div className="h-full w-full flex flex-row items-center">
+        <div className="h-14 w-full flex flex-row items-center">
             <div className="w-full pl-4 sm:pl-12 font-semibold text-lg">
                 {title.replace("And", "&")}
             </div>

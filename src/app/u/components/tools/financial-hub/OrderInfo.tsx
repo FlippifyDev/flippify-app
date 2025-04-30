@@ -1,18 +1,18 @@
 import Card from '../../dom/ui/Card';
-import { IEbayOrder } from '@/models/store-data';
+import { IOrder } from '@/models/store-data';
 
 
 interface IOrderInfoProps {
-    orders: IEbayOrder[];
+    orders: IOrder[];
     loading: boolean;
 }
 
 
-function findOrderInfo(orders: IEbayOrder[]) {
+function findOrderInfo(orders: IOrder[]) {
     let missingInfoCount = 0;
     let nonCompletedOrders = 0;
     orders.forEach((order) => {
-        if (!order.purchase.price || !order.purchase.date || !order.purchase.platform) {
+        if (!order.purchase?.price || !order.purchase?.date || !order.purchase?.platform) {
             missingInfoCount++;
         }
         if (order.status !== 'Completed' && order.status !== 'Cancelled') {

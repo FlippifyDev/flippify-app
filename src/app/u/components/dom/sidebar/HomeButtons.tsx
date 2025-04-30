@@ -54,19 +54,19 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
 			</LayoutSubscriptionWrapper>
 
 			{/* Reports & Insights Button - Public*/}
-			<LayoutSubscriptionWrapper requiredSubscriptions={["!admin"]}>
+            <LayoutSubscriptionWrapper requiredSubscriptions={["!standard", "!pro", "!admin"]}>
 				<DisabledSideBarButton
 					text="Reports & Insights"
 					redirect="reports-and-insights"
 					isSidebarOpen={isSidebarOpen}
 					symbol={<HiDocumentReport className="text-2xl" />}
-					tooltip="Coming Soon"
+                    tooltip="Your subscription does not include this"
 
 				/>
 			</LayoutSubscriptionWrapper>
 
-			{/* Reports & Insights Button - Admin*/}
-			<LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
+			{/* Reports & Insights Button */}
+			<LayoutSubscriptionWrapper anySubscriptions={["standard", "pro", "admin"]}>
 				<SidebarButton
 					text="Reports & Insights"
 					redirect="reports-and-insights"

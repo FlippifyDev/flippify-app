@@ -1,6 +1,6 @@
 "use client";
 
-import { IEbayOrder } from '@/models/store-data';
+import { IOrder } from '@/models/store-data';
 import { IHistoryGrid } from '@/models/recent-sales';
 import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
@@ -12,20 +12,20 @@ const currencySymbols: Record<string, string> = {
 };
 
 interface DashboardRecentSalesCardProps {
-    salesData: IEbayOrder[];
+    salesData: IOrder[];
 	currency: string;
 }
 
 const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ salesData, currency }) => {
 	const maxPreviousSales = 5; // Set the maximum number of recent sales to retrieve
 	const [sales, setSales] = useState<IHistoryGrid[]>([]);
-	const currencySymbol = currencySymbols[currency] || '£'; // Get the currency symbol based on the currency
+	const currencySymbol = currencySymbols[currency] || '$'; // Get the currency symbol based on the currency
 
 	useEffect(() => {
 		const salesArray: IHistoryGrid[] = salesData.map((order) => {
-			const salePrice = order.sale.price || 0;
-			const purchasePrice = order.purchase.price || 0;
-			const shippingCost = order.shipping.fees || 0;
+			const salePrice = order.sale?.price || 0;
+			const purchasePrice = order.purchase?.price || 0;
+			const shippingCost = order.shipping?.fees || 0;
 			const otherCosts = order.additionalFees || 0;
 
             const totalCosts = purchasePrice + shippingCost + otherCosts;
@@ -33,24 +33,24 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ sal
 
 			return {
 				itemName: order.name,
-				purchaseDate: order.purchase.date ? format(new Date(order.purchase.date), 'dd MMM yyyy') : 'N/A',
-				saleDate: order.sale.date ? format(new Date(order.sale.date), 'dd MMM yyyy') : 'N/A',
-				quantitySold: order.sale.quantity,
-                purchasePricePerUnit: purchasePrice / order.sale.quantity,
+				purchaseDate: order.purchase?.date ? format(new Date(order.purchase?.date), 'dd MMM yyyy') : 'N/A',
+				saleDate: order.sale?.date ? format(new Date(order.sale?.date), 'dd MMM yyyy') : 'N/A',
+				quantitySold: order.sale?.quantity,
+                purchasePricePerUnit: order.sale?.quantity ? purchasePrice / order.sale.quantity: 0,
 				salePrice: salePrice,
 				totalCosts: totalCosts,
 				estimatedProfit: estimatedProfit,
-				salePlatform: order.sale.platform || 'N/A',
-				purchasePlatform: order.purchase.platform || 'N/A',
+				salePlatform: order.sale?.platform || 'N/A',
+				purchasePlatform: order.purchase?.platform || 'N/A',
 				shippingCost: shippingCost,
 				otherCosts: otherCosts,
-                status: order.status || 'N/A',
+                status: order.status,
 			};
 		});
 
 		// Sort the sales by date in descending order and take the first 5 entries
 		const recentSales = salesArray
-			.sort((a, b) => new Date(b.saleDate).getTime() - new Date(a.saleDate).getTime())
+			.sort((a, b) => new Date(b.saleDate ?? "").getTime() - new Date(a.saleDate ?? "").getTime())
 			.slice(0, maxPreviousSales);
 
 		setSales(recentSales);
@@ -82,9 +82,9 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ sal
 									<td colSpan={2}>{order.saleDate}</td>
 									<td colSpan={3}>{order.itemName}</td>
 									<td colSpan={1}>{order.quantitySold}</td>
-									<td colSpan={1}>{currencySymbol}{order.totalCosts.toFixed(2)}</td>
-									<td colSpan={1}>{currencySymbol}{order.salePrice.toFixed(2)}</td>
-									<td colSpan={1}>{currencySymbol}{order.estimatedProfit.toFixed(2)}</td>
+									<td colSpan={1}>{currencySymbol}{order.totalCosts?.toFixed(2)}</td>
+									<td colSpan={1}>{currencySymbol}{order.salePrice?.toFixed(2)}</td>
+									<td colSpan={1}>{currencySymbol}{order.estimatedProfit?.toFixed(2)}</td>
                                     <td className="" colSpan={2}>{order.purchasePlatform}</td>
                                     <td className={`${order.status === 'Completed' ? "text-houseBlue font-[500]": ""}`} colSpan={1}>{order.status}</td>
 								</tr>

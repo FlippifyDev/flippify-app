@@ -6,7 +6,7 @@ import { IHistory, OrderStatus } from "@/models/store-data";
 interface CreateHistoryItemsProps {
     status: OrderStatus,
     salePrice: number,
-    dbHistory?: IHistory[],
+    dbHistory?: IHistory[] | null,
     saleDate?: string,
     shippedTime?: string,
 }
@@ -62,7 +62,12 @@ export function createHistoryItems({
     const mergedHistory = dbHistory ? [...dbHistory, ...newItems] : newItems;
 
     // Sort by timestamp (oldest first). This assumes timestamps are ISO strings.
-    mergedHistory.sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+    mergedHistory.sort((a, b) => {
+        const timestampA = a.timestamp ?? ""; // Fallback to an empty string if null or undefined
+        const timestampB = b.timestamp ?? ""; // Fallback to an empty string if null or undefined
+
+        return timestampA.localeCompare(timestampB);
+    });
 
     return mergedHistory;
 }

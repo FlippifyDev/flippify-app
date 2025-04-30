@@ -2,7 +2,7 @@
 
 import { ISubscription, IUser } from "@/models/user";
 import { firestoreAdmin } from "@/lib/firebase/config-admin";
-import { StorePlatform } from "@/models/store-data";
+import { StoreType } from "@/models/store-data";
 import { FieldValue } from "firebase-admin/firestore";
 import { formatDateToISO } from "@/utils/format-dates";
 
@@ -18,9 +18,9 @@ export async function updateReferreeUserAdmin(referredUserId: string, referreeCo
         const referralData = referreeDoc.data() as IUser;
 
         // Check if the referred user ID is already in the validReferrals array
-        if (!referralData.referral.validReferrals.includes(referredUserId)) {
+        if (!referralData.referral?.validReferrals?.includes(referredUserId)) {
             // Add the referred user's ID to the validReferrals array
-            const updatedReferrals = [...referralData.referral.validReferrals, referredUserId];
+            const updatedReferrals = [...referralData.referral?.validReferrals ?? [], referredUserId];
 
             // Update the document in Firestore
             await referreeDoc.ref.set(
@@ -79,53 +79,70 @@ export async function updateReferredByAdmin(uid: string, referredBy: string): Pr
 }
 
 
-export async function updateUserManualListingsCountAdmin(uid: string, storePlatform: StorePlatform, amount: number = 1): Promise<{ success?: boolean, error?: any }> {
+export async function updateUserListingsCountAdmin(
+    uid: string,
+    storePlatform: StoreType,
+    amount: number = 1,
+    isAuto: boolean = false
+): Promise<{ success?: boolean; error?: any }> {
     try {
         const userRef = firestoreAdmin.collection('users').doc(uid);
-        // Update the user's manual listings count
-        await userRef.set(
-            {
-                store: {
-                    [storePlatform]: {
-                        numListings: {
-                            manual: FieldValue.increment(amount)
-                        }
-                    }
-                }
-            }, { merge: true }
-        );
+
+        // pick field based on isAuto flag
+        const counterField = isAuto ? 'automatic' : 'manual';
+
+        // build the dynamic update payload
+        const updatePayload = {
+            store: {
+                [storePlatform]: {
+                    numListings: {
+                        [counterField]: FieldValue.increment(amount),
+                    },
+                },
+            },
+        };
+
+        // merge into existing document
+        await userRef.set(updatePayload, { merge: true });
 
         return { success: true };
-
     } catch (error) {
-        console.error("Error updating manual listings:", error);
-        return { error: error };
+        console.error("Error updating listings count:", error);
+        return { error };
     }
 }
 
 
-export async function updateUserManualOrdersCountAdmin(uid: string, storePlatform: StorePlatform, amount: number = 1): Promise<{ success?: boolean, error?: any }> {
+export async function updateUserOrdersCountAdmin(
+    uid: string,
+    storePlatform: StoreType,
+    amount: number = 1,
+    isAuto: boolean = false
+): Promise<{ success?: boolean; error?: any }> {
     try {
         const userRef = firestoreAdmin.collection('users').doc(uid);
-        // Update the user's manual orders count
-        await userRef.set(
-            {
-                store: {
-                    [storePlatform]: {
-                        numOrders: {
-                            manual: FieldValue.increment(amount),
-                            totalManual: FieldValue.increment(amount)
-                        }
-                    }
-                }
-            }, { merge: true }
-        );
+
+        // pick the right fields
+        const counterField = isAuto ? 'automatic' : 'manual';
+        const totalCounterField = isAuto ? 'totalAutomatic' : 'totalManual';
+
+        const updatePayload = {
+            store: {
+                [storePlatform]: {
+                    numOrders: {
+                        [counterField]: FieldValue.increment(amount),
+                        [totalCounterField]: FieldValue.increment(amount),
+                    },
+                },
+            },
+        };
+
+        await userRef.set(updatePayload, { merge: true });
 
         return { success: true };
-
     } catch (error) {
-        console.error("Error updating manual orders:", error);
-        return { error: error };
+        console.error("Error updating orders count:", error);
+        return { error };
     }
 }
 
@@ -153,7 +170,7 @@ export async function updateUserManualOrdersCountAdmin(uid: string, storePlatfor
  * - If the new quantity is zero or negative, the listing is deleted instead of updated.
  * - The user's manual listings count is decremented accordingly.
  */
-export async function updateListingAdmin(uid: string, storePlatform: StorePlatform, listingId: string, amount: number = 1): Promise<{ success?: boolean; error?: any }> {
+export async function updateListingAdmin(uid: string, storePlatform: StoreType, listingId: string, amount: number = 1): Promise<{ success?: boolean; error?: any }> {
     try {
         const listingRef = firestoreAdmin.collection('inventory').doc(uid).collection(storePlatform).doc(listingId);
 
@@ -171,7 +188,7 @@ export async function updateListingAdmin(uid: string, storePlatform: StorePlatfo
             await listingRef.delete();
 
             // Decrement the user's manual listings count when quantity is 0 or less
-            const { success, error } = await updateUserManualListingsCountAdmin(uid, storePlatform, -1);
+            const { success, error } = await updateUserListingsCountAdmin(uid, storePlatform, -1);
             if (!success) {
                 console.error(`Error decrementing user manual listings count. ${error}`);
                 return { error: `Error decrementing user manual listings count. ${error}` };

@@ -20,8 +20,8 @@ interface ButtonGetStartedProps {
 const ButtonGetStarted: React.FC<ButtonGetStartedProps> = ({ priceId, specialPlan, unavailable, displayModal, handleDisplayModal, couponCode, setCouponError }) => {
     const { data: session } = useSession();
     const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
-    const customerIdRef = useRef<string | null>(null);
-    const usernameRef = useRef<string | null>(null);
+    const customerIdRef = useRef<string | null | undefined>(null);
+    const usernameRef = useRef<string | null | undefined>(null);
     const isAvailable = unavailable !== "unavailable";
     const root = process.env.ROOT as string;
     const [submitted, setSubmitted] = useState(false);

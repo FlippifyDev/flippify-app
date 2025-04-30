@@ -24,7 +24,7 @@ const ProfileOverview = () => {
     let email = "N/A";
 
     if (session) {
-        if (session.user?.metaData.image) {
+        if (session.user?.metaData?.image) {
             avatar = session.user.metaData.image;
         }
         if (session.user?.username) {

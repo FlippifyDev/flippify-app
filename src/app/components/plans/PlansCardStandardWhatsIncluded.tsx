@@ -40,6 +40,12 @@ const PlansCardStandardWhatsIncluded = () => {
                         tooltip="Easily export your inventory, orders, and financials to CSV format for external use."
                     />
                 </li>
+                <li className="w-full">
+                    <PlansClickableBulletPoint
+                        text="Tax reporting"
+                        tooltip="Easily export your inventory, orders, and financials to CSV format for external use."
+                    />
+                </li>
 			</ul>
 
 			<div className="text-black font-semibold ml-2 mb-[-6px]">

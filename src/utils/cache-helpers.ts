@@ -1,7 +1,7 @@
-import { IEbayInventoryItem, IEbayOrder } from "@/models/store-data";
+import { IListing, IOrder } from "@/models/store-data";
 import { cacheExpirationTime } from "./constants";
 
-type CachedItem = IEbayOrder | IEbayInventoryItem;
+type CachedItem = IOrder | IListing;
 
 // Function to check if cached data is still valid
 export function getCachedData(key: string, returnCacheTimes?: boolean) {
@@ -50,7 +50,7 @@ export function getCachedTimes(key: string): { cacheTimeFrom?: Date, cacheTimeTo
 
 // Function to store data in sessionStorage with a timestamp
 export function setCachedData(key: string, data: any, cacheTimeFrom?: Date, cacheTimeTo?: Date) {
-    const cachedTimes = getCachedTimes(key); 
+    const cachedTimes = getCachedTimes(key);
     const timeFrom = cacheTimeFrom ? cacheTimeFrom : cachedTimes?.cacheTimeFrom;
     const timeTo = cacheTimeTo ? cacheTimeTo : cachedTimes?.cacheTimeTo;
 
@@ -60,13 +60,13 @@ export function setCachedData(key: string, data: any, cacheTimeFrom?: Date, cach
         cacheTimeFrom: timeFrom,
         cacheTimeTo: timeTo
     };
-    
+
     setCachedTimes(key, timeFrom, timeTo);
     sessionStorage.setItem(key, JSON.stringify(newCache));
 };
 
 
-function isOrder(item: CachedItem): item is IEbayOrder {
+function isOrder(item: CachedItem): item is IOrder {
     return 'sale' in item && !!item.sale;
 }
 
@@ -82,8 +82,8 @@ export function addCacheData(key: string, data: any) {
         // Convert object to array for sorting
         const sortedArray = Object.values(cachedData.data as Record<string, CachedItem>)
             .sort((a, b) => {
-                const dateA = isOrder(a) ? new Date(a.sale.date).getTime() : new Date(a.dateListed).getTime();
-                const dateB = isOrder(b) ? new Date(b.sale.date).getTime() : new Date(b.dateListed).getTime();
+                const dateA = isOrder(a) ? new Date(a.sale?.date ?? "").getTime() : new Date(a.dateListed ?? "").getTime();
+                const dateB = isOrder(b) ? new Date(b.sale?.date ?? "").getTime() : new Date(b.dateListed ?? "").getTime();
                 return dateB - dateA;
             });
 
@@ -91,9 +91,11 @@ export function addCacheData(key: string, data: any) {
         const sortedData: Record<string, CachedItem> = {};
         sortedArray.forEach(item => {
             const key = isOrder(item) ? item.transactionId : item.itemId;
-            sortedData[key] = item;
+            if (key) {
+                sortedData[key] = item;
+            }
         });
-        
+
         const newCache = {
             data: sortedData,
             timestamp: cachedData.timestamp,
@@ -118,12 +120,12 @@ export function updateCacheData(key: string, data: any) {
 
         // Check if the incoming data is an order or a listing
         let dataKey;
-        if (data.transactionId)  {
+        if (data.transactionId) {
             dataKey = data.transactionId;
         } else {
             dataKey = data.itemId
         }
-        
+
         // Update the existing dictionary with the new data, keyed by data.id
         const updatedCacheData = {
             ...cachedData.data,

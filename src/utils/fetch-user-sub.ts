@@ -6,7 +6,7 @@ import { ISubscription } from "@/models/user";
  * Working by returning the subscription with member in the name
  */
 export function fetchUserSubscription(subscriptions: ISubscription[]): ISubscription | void {
-    return subscriptions.find(sub => sub.name.includes('member'));
+    return subscriptions.find(sub => sub.name?.includes('member'));
 }
 
 

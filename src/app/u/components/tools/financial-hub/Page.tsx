@@ -3,7 +3,7 @@
 // Local Imports
 import OrderInfo from "./OrderInfo";
 import FilterSelector from "./FilterSelector";
-import { IEbayOrder } from "@/models/store-data";
+import { IOrder } from "@/models/store-data";
 import CardShippingInfo from "./ShippingInfo";
 import CardCostAverages from "./CostAverages";
 import CardSaleAverages from "./SaleAverages";
@@ -31,9 +31,9 @@ import Link from "next/link";
 const Page = () => {
     const { data: session } = useSession();
 
-    const [orders, setOrders] = useState<IEbayOrder[]>([]);
+    const [orders, setOrders] = useState<IOrder[]>([]);
     const [loading, setLoading] = useState(false);
-    const subscribed = session?.user.authentication.subscribed;
+    const subscribed = session?.user.authentication?.subscribed;
 
     // General Filters
     const [selectedFilter, setSelectedFilter] = useState("eBay");
@@ -41,7 +41,7 @@ const Page = () => {
     const [timeFrom, setTimeFrom] = useState(formatTimeFrom(30));
     const [timeTo, setTimeTo] = useState<string>(new Date().toISOString());
 
-    const userCurrency = session?.user.preferences.currency || "USD";
+    const userCurrency = session?.user.preferences?.currency || "USD";
 
     // Export CSV Modal
     const [exportModalOpen, setExportModalOpen] = useState(false);
@@ -52,7 +52,7 @@ const Page = () => {
     // Using useEffect to initialize the chart only once when the component is mounted
     useEffect(() => {
         async function fetchOrders() {
-            if (!session || !session.user.id || !session.user.connectedAccounts.ebay?.ebayAccessToken) {
+            if (!session || !session.user.id || !session.user.connectedAccounts?.ebay?.ebayAccessToken) {
                 return;
             }
 
@@ -244,7 +244,7 @@ const Page = () => {
 
     return (
         <LayoutSubscriptionWrapper anySubscriptions={["admin", "member"]}>
-            {session?.user.connectedAccounts.ebay ? (
+            {session?.user.connectedAccounts?.ebay ? (
                 <div className="relative w-full flex flex-col">
                     <div className="w-full py-2 px-4 bg-white border-t flex items-center">
                         <div>

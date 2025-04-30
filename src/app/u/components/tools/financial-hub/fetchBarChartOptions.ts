@@ -1,7 +1,7 @@
-import { IEbayOrder } from "@/models/store-data"
+import { IOrder } from "@/models/store-data"
 
 
-function calculateMonthlyIncomeAndExpense(orders: IEbayOrder[]) {
+function calculateMonthlyIncomeAndExpense(orders: IOrder[]) {
     const income: Record<string, number> = {}
     const expense: Record<string, number> = {}
 
@@ -9,14 +9,17 @@ function calculateMonthlyIncomeAndExpense(orders: IEbayOrder[]) {
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
     orders.forEach(order => {
+        if (!order.sale?.date || !order.purchase?.price || !order.sale?.price) {
+            return;
+        }
+
         const saleDate = new Date(order.sale.date)
         const month = months[saleDate.getMonth()] // Get the month name
 
-        const incomeAmount = order.sale.price;
-        const expenseAmount = (order.purchase.price ?? 0)+ order.shipping.fees + order.additionalFees;
+        const expenseAmount = order.purchase.price + (order.shipping?.fees ?? 0) + (order.additionalFees ?? 0);
 
         // Accumulate income and expense by month
-        income[month] = (income[month] || 0) + incomeAmount
+        income[month] = (income[month] || 0) + order.sale.price
         expense[month] = (expense[month] || 0) + expenseAmount
     })
 
@@ -28,7 +31,7 @@ function calculateMonthlyIncomeAndExpense(orders: IEbayOrder[]) {
     return { incomeData, expenseData, months: filteredMonths }
 }
 
-export function fetchBarChartOptions(orders: IEbayOrder[], currencySymbol: string) {
+export function fetchBarChartOptions(orders: IOrder[], currencySymbol: string) {
     const { incomeData, expenseData, months } = calculateMonthlyIncomeAndExpense(orders)
 
     return {

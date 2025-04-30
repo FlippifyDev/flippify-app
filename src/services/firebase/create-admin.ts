@@ -1,19 +1,24 @@
 "use server";
 
 import { firestoreAdmin } from "@/lib/firebase/config-admin";
-import { IEbayInventoryItem, IEbayOrder, StorePlatform } from "@/models/store-data";
-import { updateListingAdmin, updateUserManualListingsCountAdmin, updateUserManualOrdersCountAdmin } from "./update-admin";
+import { IListing, IOrder, StoreType } from "@/models/store-data";
+import { updateListingAdmin, updateUserListingsCountAdmin, updateUserOrdersCountAdmin } from "./update-admin";
 
 
 /**
- * Create a new listing in inventory/{uid}/{storePlatform}/{itemId}
+ * Create a new listing in inventory/{uid}/{StoreType}/{itemId}
  * @param uid 
- * @param storePlatform 
+ * @param StoreType 
  * @param listing 
  */
-async function createNewInventoryItemAdmin(uid: string, storePlatform: StorePlatform, listing: IEbayInventoryItem): Promise<{ success?: boolean, error?: any, listingExists?: boolean }> {
+async function createNewInventoryItemAdmin(uid: string, StoreType: StoreType, listing: IListing): Promise<{ success?: boolean, error?: any, listingExists?: boolean }> {
+
     try {
-        const inventoryRef = firestoreAdmin.collection("inventory").doc(uid).collection(storePlatform)
+        if (!listing.itemId) {
+            throw Error("Item does not contain an ID")
+        }
+
+        const inventoryRef = firestoreAdmin.collection("inventory").doc(uid).collection(StoreType)
 
         // Use the listing's id as the document id in the store collection
         const itemDocRef = inventoryRef.doc(listing.itemId);
@@ -28,7 +33,7 @@ async function createNewInventoryItemAdmin(uid: string, storePlatform: StorePlat
         // Create or update the listing document
         await itemDocRef.set(listing, { merge: true });
 
-        const { success: incrementSuccess } = await updateUserManualListingsCountAdmin(uid, storePlatform)
+        const { success: incrementSuccess } = await updateUserListingsCountAdmin(uid, StoreType)
         if (!incrementSuccess) {
             console.error("Error incrementing user manual listings count.");
             return { error: "Error incrementing user manual listings count." };
@@ -44,15 +49,15 @@ async function createNewInventoryItemAdmin(uid: string, storePlatform: StorePlat
 
 
 /**
- * Creates or updates an order listing in Firestore under `orders/{uid}/{storePlatform}/{transactionId}`.
+ * Creates or updates an order listing in Firestore under `orders/{uid}/{StoreType}/{transactionId}`.
  * 
  * This function stores the order details in Firestore, increments the user's manual order count, 
  * and decreases the user's manual listing count if the order is associated with an existing listing.
  * It will also delete the listing if the quantity is 0.
  * 
  * @param {string} uid - The unique user ID for whom the order is being created.
- * @param {StorePlatform} storePlatform - The e-commerce platform (e.g., eBay, Amazon) where the order was placed.
- * @param {IEbayOrder} order - The order details to be stored in Firestore.
+ * @param {StoreType} StoreType - The e-commerce platform (e.g., eBay, Amazon) where the order was placed.
+ * @param {IOrder} order - The order details to be stored in Firestore.
  * 
  * @returns {Promise<{ success?: boolean; error?: any }>} 
  * - Returns `{ success: true }` if the operation is successful.
@@ -64,9 +69,13 @@ async function createNewInventoryItemAdmin(uid: string, storePlatform: StorePlat
  * - If the order already exists, it will be merged with existing data.
  * - If the order has a `itemId`, the function will decrease the manual listing count accordingly.
  */
-async function createNewOrderItemAdmin(uid: string, storePlatform: StorePlatform, order: IEbayOrder): Promise<{ success?: boolean, error?: any, orderExists?: boolean }> {
+async function createNewOrderItemAdmin(uid: string, StoreType: StoreType, order: IOrder): Promise<{ success?: boolean, error?: any, orderExists?: boolean }> {
     try {
-        const orderRef = firestoreAdmin.collection("orders").doc(uid).collection(storePlatform)
+        if (!order.transactionId) {
+            throw Error("Item does not contain an ID")
+        }
+
+        const orderRef = firestoreAdmin.collection("orders").doc(uid).collection(StoreType)
         
         // Use the order's transaction id as the document id in the store collection
         const itemDocRef = orderRef.doc(order.transactionId);
@@ -82,7 +91,7 @@ async function createNewOrderItemAdmin(uid: string, storePlatform: StorePlatform
         await itemDocRef.set(order, { merge: true });
 
         // Increment the user's manual orders count by 1
-        const { success: incrementSuccess } = await updateUserManualOrdersCountAdmin(uid, storePlatform)
+        const { success: incrementSuccess } = await updateUserOrdersCountAdmin(uid, StoreType)
         if (!incrementSuccess) {
             console.error("Error incrementing user manual orders count.");
             return { error: "Error incrementing user manual orders count." };
@@ -91,8 +100,8 @@ async function createNewOrderItemAdmin(uid: string, storePlatform: StorePlatform
         // Update the user's manual orders count
         // In the case where there is no item id, then there is no listings that matches the order
         // so the order is likely custom
-        if (order.itemId) {
-            await updateListingAdmin(uid, storePlatform, order.itemId, order.sale.quantity);
+        if (order.itemId && order.sale?.quantity) {
+            await updateListingAdmin(uid, StoreType, order.itemId, order.sale.quantity);
         }
 
         console.log(`Order item ${order.transactionId} created/updated successfully.`);

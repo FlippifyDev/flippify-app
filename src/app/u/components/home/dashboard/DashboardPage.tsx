@@ -12,15 +12,15 @@ import ProfitsGraphTagFilter from "./ProfitsGraphTagFilter";
 import DashboardOverviewCard from "./DashboardOverviewCard";
 import DashboardProfitsGraph from "./DashboardProfitsGraph";
 import IconButton from "../../dom/ui/IconButton";
-import { IEbayOrder } from "@/models/store-data";
+import { IOrder } from "@/models/store-data";
 import OnboardingFlow from "./OnboardingFlow";
 import { defaultTimeFrom } from "@/utils/constants";
 
 
 const DashboardPage: React.FC = () => {
     const { data: session } = useSession();
-    const currency = session?.user.preferences.currency as string;
-    const [salesData, setSalesData] = useState<IEbayOrder[]>([]);
+    const currency = session?.user.preferences?.currency as string;
+    const [salesData, setSalesData] = useState<IOrder[]>([]);
     const [selectedRange, setSelectedRange] = useState<number>(30);
     const [selectedLabel, setSelectedLabel] = useState<string>("This Month");
 
@@ -45,14 +45,14 @@ const DashboardPage: React.FC = () => {
             const orders = await retrieveUserOrders({
                 uid: session?.user.id as string,
                 timeFrom: defaultTimeFrom,
-                ebayAccessToken: session?.user.connectedAccounts.ebay?.ebayAccessToken as string
+                ebayAccessToken: session?.user.connectedAccounts?.ebay?.ebayAccessToken as string
             });
             if (orders) {
                 setSalesData(orders);
             }
         };
 
-        if (session?.user.authentication.subscribed) {
+        if (session?.user.authentication?.subscribed) {
             fetchSalesData();
         }
     }, [session?.user]);
@@ -71,7 +71,7 @@ const DashboardPage: React.FC = () => {
         ? salesData.filter((order) => order.customTag === selectedTag)
         : salesData;
 
-    if (session.user.authentication.onboarding) {
+    if (session.user.authentication?.onboarding) {
         return (
             <div className="h-full">
                 <OnboardingFlow />
@@ -90,7 +90,7 @@ const DashboardPage: React.FC = () => {
 
             {/* If They Have Subscription */}
             <LayoutSubscriptionWrapper anySubscriptions={["admin", "member"]}>
-                {session.user.connectedAccounts.ebay ? (
+                {session.user.connectedAccounts?.ebay ? (
                     <div className="h-full w-full flex flex-col gap-2 sm:gap-4">
                         <div className="w-full">
                             <DashboardOverviewCard

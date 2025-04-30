@@ -99,7 +99,7 @@ const OnboardingFlow: React.FC = () => {
 
     const handleStep2Next = async () => {
         if (session?.user) {
-            await updateUserPreferences(session.user.id, currency);
+            await updateUserPreferences(session.user.id ?? "", currency);
             setStep(3);
             const userRef = await retrieveUserRefById(session?.user.id ?? "");
             if (!userRef) return;
@@ -110,7 +110,7 @@ const OnboardingFlow: React.FC = () => {
                 },
                 { merge: true }
             );
-            await updateReferredByAdmin(session.user.id, validReferralCode ?? "");
+            await updateReferredByAdmin(session.user.id ?? "", validReferralCode ?? "");
         }
 
         window.location.reload()

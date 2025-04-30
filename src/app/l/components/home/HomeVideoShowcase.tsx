@@ -18,3 +18,38 @@ export default function HomeVideoShowcase() {
         </div>
     );
 }
+
+/**
+    <--------------- DO NOT REMOVE THIS --------------->
+
+    // Youtube embed example
+
+    <iframe
+        className="w-full h-full rounded-3xl"
+        src="https://www.youtube.com/embed/bwlF5wHMFuE?autoplay=1&loop=1&controls=0&mute=1&playlist=bwlF5wHMFuE"
+        title="YouTube video player"
+        allow="autoplay; encrypted-media"
+        referrerPolicy="strict-origin-when-cross-origin"
+        allowFullScreen
+    /> 
+ */
+
+/*
+
+    <--------------- DO NOT REMOVE THIS --------------->
+
+    // Bunny CDN example
+
+    <video
+        src="https://flippify.b-cdn.net/OptimisedLandingDemo.mp4"
+        className="w-full h-full rounded-3xl object-fill"
+        autoPlay
+        loop
+        muted
+        playsInline
+        controls={false}
+    >
+        <source src="https://flippify.b-cdn.net/OptimisedLandingDemo.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+    </video>
+*/

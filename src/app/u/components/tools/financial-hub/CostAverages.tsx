@@ -1,14 +1,14 @@
 import React from 'react';
-import { IEbayOrder } from '@/models/store-data';
+import { IOrder } from '@/models/store-data';
 
 interface ICardCostAverages {
-    orders: IEbayOrder[];
+    orders: IOrder[];
     loading: boolean;
     currencySymbol: string;
 }
 
 // Helper function to calculate cost averages
-const calculateCostAverages = (orders: IEbayOrder[]) => {
+const calculateCostAverages = (orders: IOrder[]) => {
     if (orders.length === 0) {
         return {
             avgPurchasePrice: 0,
@@ -23,9 +23,9 @@ const calculateCostAverages = (orders: IEbayOrder[]) => {
     let totalAdditionalFees = 0;
 
     orders.forEach((order) => {
-        totalPurchasePrice += order.purchase.price ?? 0;
-        totalShippingCost += order.shipping.fees;
-        totalAdditionalFees += order.additionalFees;
+        totalPurchasePrice += order.purchase?.price ?? 0;
+        totalShippingCost += order.shipping?.fees ?? 0;
+        totalAdditionalFees += order.additionalFees ?? 0;
     });
 
     const avgPurchasePrice = totalPurchasePrice / orders.length;

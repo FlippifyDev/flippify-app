@@ -3,7 +3,7 @@
 import React, { ReactNode, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import Preparing from '../preparing/Preparing';
+import { ISubscription } from '@/models/user';
 
 interface LayoutSubscriptionWrapperProps {
     requiredSubscriptions?: string[];
@@ -12,11 +12,6 @@ interface LayoutSubscriptionWrapperProps {
     redirectPath?: string;
     pagePath?: string;
 }
-
-export interface Subscription {
-    name: string;
-}
-
 const LayoutSubscriptionWrapper: React.FC<LayoutSubscriptionWrapperProps> = ({
     requiredSubscriptions = [],
     anySubscriptions = [],
@@ -72,7 +67,7 @@ const LayoutSubscriptionWrapper: React.FC<LayoutSubscriptionWrapperProps> = ({
     return hasRequiredSubscriptions && hasAnySubscriptions ? <>{children}</> : null;
 };
 
-const checkSubscriptions = (userSubscriptions: Subscription[], requiredSubscriptions: string[]) => {
+const checkSubscriptions = (userSubscriptions: ISubscription[], requiredSubscriptions: string[]) => {
     return requiredSubscriptions.every(sub => {
         const isNegation = sub.startsWith('!');
         const subscriptionToCheck = isNegation ? sub.slice(1).toLowerCase() : sub.toLowerCase();
@@ -83,7 +78,7 @@ const checkSubscriptions = (userSubscriptions: Subscription[], requiredSubscript
     });
 };
 
-const checkAnySubscriptions = (userSubscriptions: Subscription[], anySubscriptions: string[]) => {
+const checkAnySubscriptions = (userSubscriptions: ISubscription[], anySubscriptions: string[]) => {
     return anySubscriptions.some(sub => {
         const subscriptionToCheck = sub.toLowerCase();
         return userSubscriptions.some(subscription =>

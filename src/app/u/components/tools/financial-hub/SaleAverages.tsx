@@ -1,9 +1,9 @@
-import { IEbayOrder } from '@/models/store-data'
+import { IOrder } from '@/models/store-data'
 import React from 'react'
 
 
 // Helper function to calculate averages
-const calculateAverages = (orders: IEbayOrder[]) => {
+const calculateAverages = (orders: IOrder[]) => {
     if (orders.length === 0) {
         return {
             avgGrossPerSale: 0,
@@ -18,10 +18,12 @@ const calculateAverages = (orders: IEbayOrder[]) => {
     let totalNpm = 0;
 
     orders.forEach((order) => {
-        const salePrice = order.sale.price;
-        const purchasePrice = order.purchase.price;
-        const shippingFees = order.shipping.fees;
-        const additionalFees = order.additionalFees;
+        const salePrice = order.sale?.price;
+        const purchasePrice = order.purchase?.price;
+        const shippingFees = order.shipping?.fees ?? 0;
+        const additionalFees = order.additionalFees ?? 0;
+
+        if (!salePrice || !purchasePrice) return;
 
         // Calculate gross
         const gross = salePrice;
@@ -50,7 +52,7 @@ const calculateAverages = (orders: IEbayOrder[]) => {
 };
 
 interface ICardSaleAverages {
-    orders: IEbayOrder[];
+    orders: IOrder[];
     loading: boolean;
     currencySymbol: string;
 }

@@ -1,17 +1,17 @@
 // Local Imports
-import { StoreType } from '@/models/user';
 import { firestore } from '@/lib/firebase/config';
-import { IEbayInventoryItem, IEbayOrder } from '@/models/store-data';
-import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput, validateTextInput } from '@/utils/input-validation';
+import { formatDateToISO } from '@/utils/format-dates';
+import { updateCacheData } from '@/utils/cache-helpers';
+import { IListing, IOrder, StoreType } from '@/models/store-data';
+import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput } from '@/utils/input-validation';
 
 
 // External Imports
 import React, { useState } from 'react'
-import { useSession } from 'next-auth/react';
 import { doc, updateDoc } from 'firebase/firestore';
+import { useSession } from 'next-auth/react';
 import set from 'lodash/set';
-import { updateCacheData } from '@/utils/cache-helpers';
-import { formatDateToISO } from '@/utils/format-dates';
+
 
 type ExtraKey = "customTag"
 type PurchaseKey = "purchase.platform" | "purchase.price" | "purchase.date" | "purchase.quantity"
@@ -21,9 +21,9 @@ type OrderKey = "sale.price" | "shipping.fees" | "sale.date" | "additionalFees" 
 interface UpdateTableFieldProps {
     type?: "text" | "date";
     currentValue: string | undefined | null;
-    docId: string;
+    docId?: string | null;
     docType: "inventory" | "orders";
-    item: IEbayOrder | IEbayInventoryItem;
+    item: IOrder | IListing;
     keyType: InventoryKey | OrderKey | PurchaseKey | ExtraKey;
     cacheKey: string;
     tdClassName?: string;
@@ -38,7 +38,7 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
     const [value, setValue] = useState(currentValue);
 
     const saveChange = async () => {
-        if (value === currentValue) return;
+        if (value === currentValue || !docId) return;
 
         try {
             const docRef = doc(firestore, docType, session?.user.id as string, storeType, docId);
@@ -97,6 +97,8 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
                 break;
         }
     }
+
+    if (!docId) return null;
 
     return (
         <td

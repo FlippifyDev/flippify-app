@@ -1,14 +1,14 @@
-import { StorePlatform } from "@/models/store-data";
+import { StoreType } from "@/models/store-data";
 
-export const storePlatforms: Record<string, StorePlatform> = {
+export const storePlatforms: Record<string, StoreType> = {
     "ebay": "ebay",
     "amazon": "amazon",
     "shopify": "shopify",
 }
 
 export const cacheExpirationTime = 1000 * 60 * 30; // 30 min in milliseconds
-export const ebayInventoryCacheKey = "ebay-inventory"
-export const ebayOrderCacheKey = "ebay-orders"
+export const inventoryCacheKey = "ebay-inventory"
+export const orderCacheKey = "ebay-orders"
 export const statusCacheKey = "HsdaIDF89S"
 export const statusCacheExpirationTime = 1000 * 60 * 2 // 2 min in milliseconds
 

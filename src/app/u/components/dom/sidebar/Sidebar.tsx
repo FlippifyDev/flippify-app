@@ -1,12 +1,9 @@
 import SidebarSignOutButton from './ButtonSignout';
 import SidebarHomeButtons from './HomeButtons';
 import SidebarToolButtons from './ToolButtons';
-import SidebarButton from './Button';
 import ButtonFeedback from './ButtonFeedback';
 import Alert from '@/app/components/Alert';
 import React, { useState, useEffect } from 'react';
-
-import { BsClipboard2Fill } from 'react-icons/bs';
 
 import MenuButton from '@/app/components/MenuButton';
 
@@ -37,11 +34,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, setIsSidebarOpen }) =>
 	}, []);
 
 	return (
-		<div className={`relative z-0 h-full bg-darkBackground transition-all duration-300 ${isSidebarOpen ? 'w-full sm:w-72 2xl:w-80' : 'hidden sm:block w-16'}`}>
+        <div className={`relative z-0 h-full bg-deepBlue transition-all duration-300 ${isSidebarOpen ? 'w-full sm:w-72 2xl:w-80' : 'hidden sm:block w-16'}`}>
 			<Alert message="Membership Required." visible={alertVisible} onClose={hideAlert} />
 
 			{/* Toggle Button */}
-            <div className="p-2 border-b border-gray-500 flex justify-center items-center">
+            <div className="p-2 h-14 border-b border-gray-500 flex justify-center items-center">
 				<MenuButton isSidebarOpen={isSidebarOpen} onClick={() => setIsSidebarOpen(!isSidebarOpen)} />
 			</div>
 

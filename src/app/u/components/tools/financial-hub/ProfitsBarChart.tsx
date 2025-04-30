@@ -2,7 +2,7 @@
 
 // Local Imports
 import Card from '../../dom/ui/Card';
-import { IEbayOrder } from '@/models/store-data';
+import { IOrder } from '@/models/store-data';
 import { fetchBarChartOptions } from './fetchBarChartOptions';
 
 // External Imports
@@ -10,13 +10,14 @@ import { useEffect, useRef, useState } from 'react';
 import ApexCharts from 'apexcharts';
 
 interface CardProfitsBarChartProps {
-    orders: IEbayOrder[];
+    orders: IOrder[];
     loading: boolean;
     currencySymbol: string;
 }
 
 const CardProfitsBarChart: React.FC<CardProfitsBarChartProps> = ({ orders, loading, currencySymbol }) => {
     const chartRef = useRef<HTMLDivElement | null>(null);
+    const chartInstanceRef = useRef<ApexCharts | null>(null);
     const [options, setOptions] = useState<any>(null);
 
     useEffect(() => {
@@ -27,21 +28,35 @@ const CardProfitsBarChart: React.FC<CardProfitsBarChartProps> = ({ orders, loadi
     }, [orders, currencySymbol]);
 
     useEffect(() => {
-        // Check if chartRef and options are valid before rendering
-        if (chartRef.current && options && options.series?.length > 0) {
-            const chart = new ApexCharts(chartRef.current, options);
-            chart.render();
+        if (!chartRef.current || !options?.series?.length) return;
 
-            // Cleanup chart instance on component unmount or re-render
-            return () => {
-                chart.destroy();
-            };
-        }
+        // Destroy old chart if it exists
+        chartInstanceRef.current?.destroy();
+
+        // Create new
+        const chart = new ApexCharts(chartRef.current, {
+            ...options,
+            chart: {
+                ...options.chart,
+                // let ApexCharts know we want it to reflow on parent/ window resize
+                redrawOnParentResize: true,
+                redrawOnWindowResize: true,
+            }
+        });
+
+        chart.render();
+        chartInstanceRef.current = chart;
+
+        // cleanup
+        return () => {
+            chart.destroy();
+            chartInstanceRef.current = null;
+        };
     }, [options]);
 
     // Dummy values for profit, income, and expense (can be dynamically calculated)
-    const totalIncome = orders.reduce((acc, order) => acc + (order.sale.price), 0).toFixed(2);
-    const totalExpense = orders.reduce((acc, order) => acc + ((order.purchase.price ?? 0) + order.shipping.fees + order.additionalFees), 0).toFixed(2);
+    const totalIncome = orders.reduce((acc, order) => acc + (order.sale?.price ?? 0), 0).toFixed(2);
+    const totalExpense = orders.reduce((acc, order) => acc + ((order.purchase?.price ?? 0) + (order.shipping?.fees ?? 0) + (order.additionalFees ?? 0)), 0).toFixed(2);
     const totalProfit = (parseFloat(totalIncome) - parseFloat(totalExpense)).toFixed(2);
     const profitRate = ((parseFloat(totalProfit) / parseFloat(totalIncome)) * 100).toFixed(1);
 

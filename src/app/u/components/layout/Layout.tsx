@@ -5,13 +5,11 @@ import React, { Suspense, useState, useEffect } from "react";
 import LayoutSubscriptionWrapper from "./LayoutSubscriptionWrapper";
 import LayoutLoadingSkeleton from "./LayoutLoadingSkeleton";
 import LightHamburgerButton from "@/app/components/LightHamburgerButton";
-import NewEbayListingForm from "../tools/navbar-tools/NewEbayListing";
-import NewEbayOrderForm from "../tools/navbar-tools/NewEbayOrder";
 import LayoutNoAccess from "./LayoutNoAccess";
+import NewListing from "../tools/navbar-tools/NewListing";
+import NewOrder from "../tools/navbar-tools/NewOrder";
 import Sidebar from "../dom/sidebar/Sidebar";
 import Navbar from "../dom/navbar/Navbar";
-import { useSession } from "next-auth/react";
-import LoadingAnimation from "../dom/ui/LoadingAnimation";
 
 
 interface LayoutProps {
@@ -38,10 +36,10 @@ const LayoutContent = ({ removePadding, children }: { removePadding?: boolean, c
 
         switch (type) {
             case "add-listing":
-                setModal(<NewEbayListingForm setDisplayModal={setIsModalOpen} />)
+                setModal(<NewListing setDisplayModal={setIsModalOpen} />)
                 break;
             case "add-order":
-                setModal(<NewEbayOrderForm setDisplayModal={setIsModalOpen} />)
+                setModal(<NewOrder setDisplayModal={setIsModalOpen} />)
                 break;
             default:
                 setModal(null);

@@ -3,7 +3,7 @@
 // Local Imports
 import { shortenText } from '@/utils/format';
 import { updateOrderStatus } from '@/services/firebase/update';
-import { IEbayOrder, OrderStatus } from '@/models/store-data';
+import { IOrder, OrderStatus } from '@/models/store-data';
 
 // External Imports
 import { RiHomeOfficeFill } from "react-icons/ri";
@@ -13,7 +13,7 @@ import { FaCheck } from "react-icons/fa";
 import Image from 'next/image';
 
 interface IShipppedProps {
-    item: IEbayOrder;
+    item: IOrder;
     uid: string;
     setUpdatedStatus: (status: boolean) => void;
 }
@@ -45,7 +45,7 @@ const Shipped: React.FC<IShipppedProps> = ({ item, uid, setUpdatedStatus }) => {
                 <td className="min-w-20">
                     <figure>
                         <Image
-                            src={item.image[0]}
+                            src={item.image ? item.image[0]: ""}
                             width={100}
                             height={100}
                             alt={"image"}
@@ -56,10 +56,10 @@ const Shipped: React.FC<IShipppedProps> = ({ item, uid, setUpdatedStatus }) => {
                     </figure>
                 </td>
                 <td>
-                    {shortenText(item.name)}
+                    {shortenText(item.name ?? "N/A")}
                 </td>
                 <td>
-                    {item.sale.quantity}
+                    {item.sale?.quantity}
                 </td>
                 <td>
                     <button

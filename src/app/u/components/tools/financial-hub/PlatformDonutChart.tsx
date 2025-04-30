@@ -2,7 +2,7 @@
 
 // Local Imports
 import Card from '../../dom/ui/Card';
-import { IEbayOrder } from "@/models/store-data";
+import { IOrder } from "@/models/store-data";
 import { fetchChartOptions } from "./fetchChartOptions";
 import { useHorizontalScroll } from "@/utils/useHorizontalScroll";
 
@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import ApexCharts from "apexcharts";
 
 interface CardPlatformDonutChartProps {
-    orders: IEbayOrder[];
+    orders: IOrder[];
     loading: boolean;
     currencySymbol: string;
 }
@@ -65,7 +65,7 @@ const CardPlatformDonutChart: React.FC<CardPlatformDonutChartProps> = ({ orders,
         setSelectedTags(updatedTags);
 
         // If no tags are selected, use all localOrders
-        const filteredOrders = updatedTags.length === 0 ? orders : orders.filter(order => order.customTag !== null && updatedTags.includes(order.customTag));
+        const filteredOrders = updatedTags.length === 0 ? orders : orders.filter(order => order.customTag !== null && updatedTags.includes(order.customTag ?? ""));
 
         // Aggregate and update chart data
         const chartOptions = fetchChartOptions(filteredOrders, currencySymbol);

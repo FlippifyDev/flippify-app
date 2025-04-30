@@ -7,11 +7,11 @@ import Input from "../../dom/ui/Input"
 import ImageUpload from "../../dom/ui/ImageUpload"
 import { addCacheData } from "@/utils/cache-helpers"
 import { formatDateToISO } from "@/utils/format-dates"
-import { IEbayInventoryItem } from "@/models/store-data"
+import { IListing } from "@/models/store-data"
 import { createNewInventoryItemAdmin } from "@/services/firebase/create-admin"
 import { generateRandomFlippifyListingId } from "@/utils/generate-random"
-import { ebayInventoryCacheKey, storePlatforms, subscriptionLimits } from "@/utils/constants"
-import { validateNumberInput, validatePriceInput, validateTextInput } from "@/utils/input-validation"
+import { inventoryCacheKey, storePlatforms, subscriptionLimits } from "@/utils/constants"
+import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput } from "@/utils/input-validation"
 
 // External Imports
 import { FormEvent, useEffect, useState } from "react"
@@ -19,12 +19,12 @@ import { useSession } from "next-auth/react"
 import Image from "next/image"
 
 
-interface NewEbayListingFormProps {
-    setDisplayModal: (value: boolean) => void
+interface NewListingProps {
+    setDisplayModal: (value: boolean) => void;
 }
 
 
-const NewEbayListingForm: React.FC<NewEbayListingFormProps> = ({ setDisplayModal }) => {
+const NewListing: React.FC<NewListingProps> = ({ setDisplayModal }) => {
     const { data: session } = useSession();
 
     // General Info
@@ -55,7 +55,7 @@ const NewEbayListingForm: React.FC<NewEbayListingFormProps> = ({ setDisplayModal
 
     useEffect(() => {
         const checkLimit = () => {
-            const plan = session?.user.authentication.subscribed;
+            const plan = session?.user.authentication?.subscribed;
             if (!plan) {
                 setErrorMessage("Please subscribe to a plan to add orders.");
                 setAboveLimit(true);
@@ -75,11 +75,11 @@ const NewEbayListingForm: React.FC<NewEbayListingFormProps> = ({ setDisplayModal
     }, [session?.user]);
 
 
-    function handleCacheUpdate(inventoryItem: IEbayInventoryItem) {
-        const inventoryCacheKey = `${ebayInventoryCacheKey}-${session?.user.id}`;
+    function handleCacheUpdate(inventoryItem: IListing) {
+        const cacheKey = `${inventoryCacheKey}-${session?.user.id}`;
         
         // Update the cache with the new item
-        addCacheData(inventoryCacheKey, inventoryItem);
+        addCacheData(cacheKey, inventoryItem);
     }
 
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -89,8 +89,8 @@ const NewEbayListingForm: React.FC<NewEbayListingFormProps> = ({ setDisplayModal
         
         if (aboveLimit) return;
 
-        const inventoryItem: IEbayInventoryItem = {
-            currency: session?.user.preferences.currency ?? "USD",
+        const inventoryItem: IListing = {
+            currency: session?.user.preferences?.currency ?? "USD",
             customTag: customTag,
             dateListed: formatDateToISO(new Date(dateListed)),
             image: [imageUrl],
@@ -118,7 +118,7 @@ const NewEbayListingForm: React.FC<NewEbayListingFormProps> = ({ setDisplayModal
             }
         } else {
             handleCacheUpdate(inventoryItem);
-            setSuccessMessage("Listing Added!")
+            setSuccessMessage("Listing Added!");
         }
 
         setLoading(false);
@@ -127,7 +127,7 @@ const NewEbayListingForm: React.FC<NewEbayListingFormProps> = ({ setDisplayModal
     function handleChange(value: string, type: string) {
         switch (type) {
             case "customTag":
-                validateTextInput(value, setCustomTag)
+                validateAlphaNumericInput(value, setCustomTag)
                 break
             case "dateListed":
                 setDateListed(value)
@@ -139,19 +139,19 @@ const NewEbayListingForm: React.FC<NewEbayListingFormProps> = ({ setDisplayModal
                 setItemId(value)
                 break
             case "itemName":
-                validateTextInput(value, setItemName)
+                validateAlphaNumericInput(value, setItemName)
                 break
             case "listingPrice":
                 validatePriceInput(value, setListingPrice)
                 break
             case "purchasePlatform":
-                validateTextInput(value, setPurchasePlatform)
+                validateAlphaNumericInput(value, setPurchasePlatform)
                 break
             case "purchasePrice":
                 validatePriceInput(value, setPurchasePrice)
                 break
             case "quantity":
-                validateNumberInput(value, setQuantity)
+                validateIntegerInput(value, setQuantity)
                 break
         }
     }
@@ -164,7 +164,7 @@ const NewEbayListingForm: React.FC<NewEbayListingFormProps> = ({ setDisplayModal
     }
 
     return (
-        <Modal title="Add a new eBay listing" className="max-w-[21rem] sm:max-w-xl flex-grow" setDisplayModal={setDisplayModal}>
+        <Modal title="Add a new listing" className="max-w-[21rem] sm:max-w-xl flex-grow" setDisplayModal={setDisplayModal}>
             {aboveLimit && (
                 <div className="text-center">
                     <span>Sorry you&apos;ve reach your max manual listings for this month</span>
@@ -249,4 +249,4 @@ const NewEbayListingForm: React.FC<NewEbayListingFormProps> = ({ setDisplayModal
     )
 }
 
-export default NewEbayListingForm;
+export default NewListing;

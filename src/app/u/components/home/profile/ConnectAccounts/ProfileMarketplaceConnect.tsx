@@ -17,6 +17,12 @@ const ProfileMarketplaceConnect = () => {
                     image="/ebayLogo.png"
                 />
 
+                <ConnectAccount
+                    name="Depop"
+                    image="/DepopLogo.svg"
+                />
+
+
                 {/* Amazon Connect Account Card */}
                 <ConnectAccount
                     name="Amazon"

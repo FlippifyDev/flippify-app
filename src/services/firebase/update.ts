@@ -172,11 +172,11 @@ async function incrementRewardsClaimed(uid: string): Promise<void> {
 
 async function updateOrderStatus(uid: string, order: IOrder, status: OrderStatus): Promise<void> {
     try {
-        if (!order.transactionId || !order.sale?.price || !order.sale.date) {
+        if (!order.transactionId || !order.sale?.price || !order.sale.date || !order.storeType) {
             throw Error("error")
         }
 
-        const orderRef = await retrieveUserOrderItemRef(uid, order.transactionId);
+        const orderRef = await retrieveUserOrderItemRef(uid, order.storeType, order.transactionId);
 
         if (!orderRef) {
             console.error(`No order found with ID: ${order.transactionId}`);

@@ -3,7 +3,7 @@
 
 // Local Imports
 import Card from '../../dom/ui/Card';
-import { fetchUserSubscription, fetchSubscriptionMaxListings } from '@/utils/fetch-user-sub';
+import { fetchUserSubscription, fetchSubscriptionMaxListings, fetchUserInventoryAndOrdersCount } from '@/utils/extract-user-data';
 
 // External Imports
 import { useSession } from 'next-auth/react'
@@ -12,13 +12,8 @@ import React from 'react'
 
 const CardListingsAmount = () => {
     const { data: session } = useSession();
-    const store = session?.user.store;
 
-    const automaticListings = store?.ebay.numListings?.automatic ?? 0;
-    const manualListings = store?.ebay.numListings?.manual ?? 0;
-
-    const automaticOrders = store?.ebay.numOrders?.automatic ?? 0;
-    const manualOrders = store?.ebay.numOrders?.manual ?? 0;
+    const { automaticListings, automaticOrders, manualListings, manualOrders } = fetchUserInventoryAndOrdersCount(session?.user);
 
     const userSubscription = fetchUserSubscription(session?.user.subscriptions ?? []);
     if (!userSubscription) return null;
@@ -83,7 +78,7 @@ const ProgressBar = ({ value, maxValue }: { value: number, maxValue: number }) =
             {/* Value label */}
             <div
                 className="absolute left-0 -top-[26px] py-0.5 px-1.5 bg-blue-100 border border-blue-200 text-xs font-medium text-houseFinancialHub rounded-lg dark:bg-blue-800/30"
-                style={{ left: `calc(${percentage}% - 12px)` }} 
+                style={{ left: `calc(${percentage}% - 12px)` }}
             >
                 {value}
             </div>

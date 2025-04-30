@@ -4,16 +4,18 @@
 import Card from '../../dom/ui/Card'
 import Revenue from './Revenue'
 import Expenses from './Expenses'
+import Download from './Download'
+import { IUser } from '@/models/user'
 import { IOrder } from '@/models/store-data'
 import InventoryAndCogs from './InventoryAndCogs'
 import { formatDateToISO } from '@/utils/format-dates'
+import { fetchUserStores } from '@/utils/extract-user-data'
 import DateRangeSelector, { TimeRange, generateTimeRanges } from './DateRangeSelector'
 import { retrieveOldestOrder, retrieveUserOrders, retrieveUserOrdersInPeriod } from '@/services/firebase/retrieve'
 
 // External Imports
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import Download from './Download'
 
 
 
@@ -66,7 +68,6 @@ const Page = () => {
 
 
     // Missing Info
-
     const [missingOrderInfoCount, setMissingOrderInfoCount] = useState(0);
 
     // Initialize time ranges based on oldest order
@@ -74,15 +75,20 @@ const Page = () => {
         if (!session?.user.id) return
 
         async function initTimeRanges() {
+            const storeTypes = fetchUserStores(session?.user as IUser);
+
             const oldestOrder = await retrieveOldestOrder({
                 uid: session?.user.id ?? "",
-                storeType: "ebay",
+                storeTypes
             })
             const firstSaleDate = oldestOrder
                 ? new Date(oldestOrder.sale?.date ?? "")
                 : new Date()
 
-            const ranges = generateTimeRanges(firstSaleDate, new Date())
+            const end = new Date(firstSaleDate.getFullYear(), 11, 31, 23, 59, 59, 999);
+ 
+            const ranges = generateTimeRanges(firstSaleDate, end)
+            console.log(ranges)
             setTimeRanges(ranges)
 
             if (ranges.length > 0) {
@@ -97,24 +103,41 @@ const Page = () => {
         }
 
         initTimeRanges()
-    }, [session?.user.id])
+    }, [session?.user])
 
     useEffect(() => {
         const fetchOrders = async () => {
+            if (!session) return;
             setLoading(true);
 
-            const sales = await retrieveUserOrders({
-                uid: session?.user.id as string,
-                timeFrom: periodStart,
-                timeTo: periodEnd,
-                ebayAccessToken: session?.user.connectedAccounts?.ebay?.ebayAccessToken as string,
-            });
+            const storeTypes = fetchUserStores(session.user);
 
-            const inventory = await retrieveUserOrdersInPeriod({
-                uid: session?.user.id as string,
-                timeFrom: periodStart,
-                timeTo: periodEnd,
-            })
+            const salesResult = await Promise.all(
+                storeTypes.map((storeType) => {
+                    return retrieveUserOrders({
+                        uid: session.user.id as string,
+                        timeFrom: periodStart,
+                        timeTo: periodEnd,
+                        ebayAccessToken: session.user.connectedAccounts?.ebay?.ebayAccessToken ?? "",
+                        storeType,
+                    }).then((order) => [storeType, order] as const);
+                })
+            );
+            const sales = salesResult[salesResult.length - 1]?.[1] ?? [];
+
+
+            const inventoryResult = await Promise.all(
+                storeTypes.map((storeType) => {
+                    return retrieveUserOrdersInPeriod({
+                        uid: session.user.id as string,
+                        timeFrom: periodStart,
+                        timeTo: periodEnd,
+                        storeType,
+                    }).then((order) => [storeType, order] as const);
+                })
+            );
+
+            const inventory = inventoryResult[inventoryResult.length - 1]?.[1] ?? [];
 
             setSales(sales);
             setInventoryBought(inventory)
@@ -126,7 +149,7 @@ const Page = () => {
         if (session?.user.authentication?.subscribed) {
             fetchOrders();
         }
-    }, [session?.user.id, periodStart, periodEnd, session?.user.connectedAccounts?.ebay?.ebayAccessToken, session?.user.authentication?.subscribed])
+    }, [session, session?.user.id, periodStart, periodEnd, session?.user.connectedAccounts?.ebay?.ebayAccessToken, session?.user.authentication?.subscribed])
 
     return (
         <div className='flex flex-col md:flex-row gap-4'>

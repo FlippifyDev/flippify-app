@@ -12,6 +12,7 @@ import { HiOutlineDownload } from "react-icons/hi";
 import { useSession } from 'next-auth/react';
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
+import { fetchUserStores } from '@/utils/extract-user-data';
 
 
 interface IDownloadProps {
@@ -28,12 +29,22 @@ const Download: React.FC<IDownloadProps> = ({ orders, timeFrom, timeTo }) => {
 
     useEffect(() => {
         const fetchInventory = async () => {
-            const inventory = await retrieveUserInventory({
-                uid: session?.user.id as string,
-                timeFrom: timeFrom,
-                ebayAccessToken: session?.user.connectedAccounts?.ebay?.ebayAccessToken ?? "",
-                timeTo: timeTo,
-            })
+            if (!session) return;
+
+            const storeTypes = fetchUserStores(session.user);
+
+            const inventoryResults = await Promise.all(
+                storeTypes.map((storeType) => {
+                    return retrieveUserInventory({
+                        uid: session.user.id as string,
+                        timeFrom: timeFrom,
+                        timeTo: timeTo,
+                        ebayAccessToken: session.user.connectedAccounts?.ebay?.ebayAccessToken ?? "",
+                        storeType,
+                    }).then((inventory) => [storeType, inventory] as const);
+                })
+            );
+            const inventory = inventoryResults[inventoryResults.length - 1]?.[1] ?? [];
 
             setInventory(inventory);
         };
@@ -41,7 +52,7 @@ const Download: React.FC<IDownloadProps> = ({ orders, timeFrom, timeTo }) => {
         if (session?.user.authentication?.subscribed) {
             fetchInventory();
         }
-    }, [session?.user.id, timeFrom, timeTo, session?.user.authentication?.subscribed])
+    }, [session, session?.user.id, timeFrom, timeTo, session?.user.authentication?.subscribed])
 
     const handleDownload = async () => {
         console.log("downloading")

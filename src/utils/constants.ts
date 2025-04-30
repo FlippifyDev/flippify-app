@@ -7,8 +7,8 @@ export const storePlatforms: Record<string, StoreType> = {
 }
 
 export const cacheExpirationTime = 1000 * 60 * 30; // 30 min in milliseconds
-export const inventoryCacheKey = "ebay-inventory"
-export const orderCacheKey = "ebay-orders"
+export const inventoryCacheKey = "inventory"
+export const orderCacheKey = "orders"
 export const statusCacheKey = "HsdaIDF89S"
 export const statusCacheExpirationTime = 1000 * 60 * 2 // 2 min in milliseconds
 

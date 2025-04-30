@@ -10,7 +10,7 @@ interface IUser {
     username?: string | null;
     stripeCustomerId?: string | null;
     subscriptions?: ISubscription[] | null;
-    store?: Record<StoreType, IStore> | null;
+    store?: Record<StoreType | string, IStore> | null;
     referral?: IReferral | null;
     preferences?: IPreferences | null;
     authentication?: IAuthentication | null;
@@ -88,4 +88,4 @@ interface IPreferences {
     currency?: CurrencyType;
 }
 
-export type { IUser, ISubscription, IEbay, IReferral, IPreferences, IConnectedAccounts };
+export type { IUser, ISubscription, IEbay, IReferral, IPreferences, IConnectedAccounts, IStore };

@@ -1,8 +1,8 @@
 "use server";
 
 import { firestoreAdmin } from "@/lib/firebase/config-admin";
-import { IListing, IOrder, StoreType } from "@/models/store-data";
-import { updateListingAdmin, updateUserListingsCountAdmin, updateUserOrdersCountAdmin } from "./update-admin";
+import { IListing, IOrder, ItemType, StoreType } from "@/models/store-data";
+import { updateListingAdmin, updateUserItemCountAdmin, updateUserListingsCountAdmin, updateUserOrdersCountAdmin } from "./update-admin";
 
 
 /**
@@ -11,8 +11,7 @@ import { updateListingAdmin, updateUserListingsCountAdmin, updateUserOrdersCount
  * @param StoreType 
  * @param listing 
  */
-async function createNewInventoryItemAdmin(uid: string, StoreType: StoreType, listing: IListing): Promise<{ success?: boolean, error?: any, listingExists?: boolean }> {
-
+async function createNewInventoryItemAdmin(uid: string, StoreType: StoreType | string, listing: IListing): Promise<{ success?: boolean, error?: any, listingExists?: boolean }> {
     try {
         if (!listing.itemId) {
             throw Error("Item does not contain an ID")
@@ -76,10 +75,10 @@ async function createNewOrderItemAdmin(uid: string, StoreType: StoreType, order:
         }
 
         const orderRef = firestoreAdmin.collection("orders").doc(uid).collection(StoreType)
-        
+
         // Use the order's transaction id as the document id in the store collection
         const itemDocRef = orderRef.doc(order.transactionId);
-    
+
         // Check if the listing already exists
         const docSnapshot = await itemDocRef.get();
         if (docSnapshot.exists) {
@@ -113,4 +112,42 @@ async function createNewOrderItemAdmin(uid: string, StoreType: StoreType, order:
 }
 
 
-export { createNewInventoryItemAdmin, createNewOrderItemAdmin };
+function isOrder(item: IOrder | IListing): item is IOrder {
+    return (item as IOrder).transactionId !== undefined;
+}
+
+
+async function updateMovedItemAdmin(uid: string, storeType: StoreType, item: IOrder | IListing) {
+    try {
+        if (storeType === item.storeType) return;
+        const isItemOrder = isOrder(item);
+
+        const itemType = isItemOrder ? "orders" : "inventory";
+        const isAuto = item.recordType === "automatic" ? true : false;
+        const idKey = isItemOrder ? item.transactionId : item.itemId;
+
+        if (!idKey || !item.storeType) {
+            throw Error(`Item does not contain an ID or a storeType: ID: ${idKey} | StoreType: ${item.storeType}`)
+        }
+
+        const oldItemRef = firestoreAdmin.collection(itemType).doc(uid).collection(storeType).doc(idKey);
+        const newItemRef = firestoreAdmin.collection(itemType).doc(uid).collection(item.storeType).doc(idKey);
+
+        // Add the new item
+        await newItemRef.set(item);
+
+        // Increment the new store count
+        await updateUserItemCountAdmin({ uid, itemType, storeType: item.storeType, amount: 1, isAuto })
+        
+        await oldItemRef.delete();
+
+        // Decrement the old store count
+        await updateUserItemCountAdmin({ uid, itemType, storeType: storeType, amount: -1, isAuto })
+    } catch (error) {
+        console.error("Error moving item between storeTypes:", error);
+        throw error;
+    }
+}
+
+
+export { createNewInventoryItemAdmin, createNewOrderItemAdmin, updateMovedItemAdmin };

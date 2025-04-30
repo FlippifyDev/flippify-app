@@ -2,7 +2,7 @@
 
 import { ISubscription, IUser } from "@/models/user";
 import { firestoreAdmin } from "@/lib/firebase/config-admin";
-import { StoreType } from "@/models/store-data";
+import { ItemType, StoreType } from "@/models/store-data";
 import { FieldValue } from "firebase-admin/firestore";
 import { formatDateToISO } from "@/utils/format-dates";
 
@@ -81,7 +81,7 @@ export async function updateReferredByAdmin(uid: string, referredBy: string): Pr
 
 export async function updateUserListingsCountAdmin(
     uid: string,
-    storePlatform: StoreType,
+    storePlatform: StoreType | string,
     amount: number = 1,
     isAuto: boolean = false
 ): Promise<{ success?: boolean; error?: any }> {
@@ -146,6 +146,26 @@ export async function updateUserOrdersCountAdmin(
     }
 }
 
+interface IUpdateUserItemCountAdminProps {
+    uid: string,
+    itemType: ItemType,
+    storeType: StoreType,
+    amount: number,
+    isAuto: boolean
+}
+export async function updateUserItemCountAdmin({
+    uid,
+    itemType,
+    storeType,
+    amount = 1,
+    isAuto = false
+}: IUpdateUserItemCountAdminProps) {
+    if (itemType === "inventory") {
+        return await updateUserListingsCountAdmin(uid, storeType, amount, isAuto)
+    } else if (itemType === "orders") {
+        return await updateUserOrdersCountAdmin(uid, storeType, amount, isAuto) 
+    }
+}   
 
 /**
  * Updates or deletes a listing in Firestore under `inventory/{uid}/{storePlatform}/{listingId}`.

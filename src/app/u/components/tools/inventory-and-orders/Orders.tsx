@@ -9,6 +9,7 @@ import { formatTableDate } from '@/utils/format-dates';
 import { currencySymbols } from '@/config/currency-config';
 import { retrieveUserOrders } from '@/services/firebase/retrieve';
 import { defaultTimeFrom, orderCacheKey } from '@/utils/constants';
+import { fetchUserOrdersCount, fetchUserStores } from '@/utils/extract-user-data';
 
 // External Imports
 import { useEffect, useState } from 'react'
@@ -28,8 +29,7 @@ const Orders = () => {
     // Page Config
     const itemsPerPage = 12;
     const [currentPage, setCurrentPage] = useState(1);
-    const numOrders = session?.user.store?.ebay.numOrders ?? { totalAutomatic: 0, totalManual: 0 };
-    const totalOrders = (numOrders.totalAutomatic ?? 0) + (numOrders.totalManual ?? 0);
+    const totalOrders = fetchUserOrdersCount(session?.user)
     const totalPages = Math.ceil(totalOrders / itemsPerPage);
 
     const paginatedData = orderData.slice(
@@ -43,17 +43,29 @@ const Orders = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             // Already fetched enough for this page
-            if (orderData.length >= currentPage * itemsPerPage) return;
+            if (!session?.user.authentication?.subscribed || orderData.length >= currentPage * itemsPerPage) return;
 
             setLoading(true);
-            const orders = await retrieveUserOrders({
-                uid: session?.user.id as string,
-                timeFrom: defaultTimeFrom,
-                ebayAccessToken: session?.user.connectedAccounts?.ebay?.ebayAccessToken as string,
-            });
 
-            setOrderData(orders);
+            // grab the storeType keys they actually have
+            const storeTypes = fetchUserStores(session.user);
+
+            // for each storeType, fetch their orders in parallel
+            const results = await Promise.all(
+                storeTypes.map((storeType) => {
+                    return retrieveUserOrders({
+                        uid: session.user.id as string,
+                        timeFrom: defaultTimeFrom,
+                        ebayAccessToken: session.user.connectedAccounts?.ebay?.ebayAccessToken ?? "",
+                        storeType,
+                    }).then((order) => [storeType, order] as const);
+                })
+            );
+            const lastOrder = results[results.length - 1]?.[1] ?? [];
+            setOrderData(lastOrder);
+
             setLoading(false);
+            setTriggerUpdate(false);
         };
 
         if (session?.user.authentication?.subscribed && triggerUpdate) {
@@ -75,12 +87,13 @@ const Orders = () => {
     }
 
     return (
-        <div className="w-full h-full overflow-x-auto">
+        <div className="w-full h-full  rounded-b-sm overflow-x-auto">
             <table className="table w-full">
                 <thead>
                     <tr className="bg-tableHeaderBackground">
                         <th></th>
                         <th>Product</th>
+                        <th>Marketplace</th>
                         <th>Sold</th>
                         <th>Purchased For ({currencySymbols[currency]})</th>
                         <th>Sold For ({currencySymbols[currency]})</th>
@@ -131,8 +144,9 @@ const Orders = () => {
                                         onClick={() => handleRouteToOrderPage(order)}>
                                         {shortenText(order.name ?? "N/A")}
                                     </td>
+                                    <UpdateTableField currentValue={order?.storeType} docId={order.itemId} item={order} docType='orders' storeType={order.storeType} keyType="storeType" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} className='max-w-32 hover:bg-gray-100 transition duration-300' />
                                     <td className="w-32">{formatTableDate(order.sale?.date)}</td>
-                                    <UpdateTableField currentValue={purchasePrice.toFixed(2)} docId={transactionId} item={order} docType='orders' storeType='ebay' keyType="purchase.price" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} className='max-w-32 hover:bg-gray-100 transition duration-300' />
+                                    <UpdateTableField currentValue={purchasePrice.toFixed(2)} docId={transactionId} item={order} docType='orders' storeType={order.storeType} keyType="purchase.price" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} className='max-w-32 hover:bg-gray-100 transition duration-300' />
                                     <td>
                                         {soldFor.toFixed(2)}
                                     </td>
@@ -145,7 +159,7 @@ const Orders = () => {
                                     <td className={`${status === "Completed" ? "text-houseBlue" : ""} font-semibold`}>
                                         {status}
                                     </td>
-                                    <UpdateTableField currentValue={customTag} docId={transactionId} item={order} docType='orders' storeType='ebay' keyType="customTag" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} className='hover:bg-gray-100 transition duration-300' />
+                                    <UpdateTableField currentValue={customTag} docId={transactionId} item={order} docType='orders' storeType={order.storeType} keyType="customTag" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} className='hover:bg-gray-100 transition duration-300' />
                                 </tr>
                             );
                         })

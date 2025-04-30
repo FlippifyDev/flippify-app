@@ -145,14 +145,6 @@ const Order = () => {
                                 className="dropdown-content mt-2 right-0 menu bg-white space-y-1 rounded-lg w-40 border border-gray-200"
                             >
                                 <button
-                                    className='flex items-center gap-3 font-semibold py-2 px-3 rounded-md hover:bg-gray-100 active:bg-gray-200 transition duration-200'
-
-                                >
-                                    <span><MdOutlineCurrencyExchange /></span>
-                                    <span className=''>Currency</span>
-                                </button>
-                                <hr />
-                                <button
                                     onClick={handleDeleteOrder}
                                     disabled={deleting}
                                     className='flex items-center gap-3 disabled:bg-muted text-red-500 font-semibold py-2 px-3 rounded-md hover:bg-gray-100 active:bg-gray-200 transition duration-200'
@@ -178,7 +170,7 @@ interface OrderInfoTableProps {
 }
 
 const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, triggerUpdate }) => {
-    const { transactionId, sale, purchase, shipping, additionalFees, customTag } = order;
+    const { transactionId, sale, purchase, shipping, additionalFees, customTag, storeType } = order;
 
     let soldFor: number, profit: number | "N/A", roi: number | "N/A";
     const purchasePrice = purchase?.price ?? 0;
@@ -215,6 +207,24 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                 </tr>
                 <tr className='border-b'>
                     <td className="py-4 px-6 font-medium text-gray-800">
+                        Marketplace
+                    </td>
+                    <UpdateTableField
+                        type="text"
+                        currentValue={storeType}
+                        docId={transactionId}
+                        item={order}
+                        docType='orders'
+                        storeType={order.storeType}
+                        keyType="storeType"
+                        cacheKey={cacheKey}
+                        triggerUpdate={triggerUpdate}
+                        tdClassName='px-3'
+                        className='max-w-64 bg-gray-100 hover:bg-gray-200 text-gray-600 !text-base transition duration-300'
+                    />
+                </tr>
+                <tr className='border-b'>
+                    <td className="py-4 px-6 font-medium text-gray-800">
                         Custom Tag
                     </td>
                     <UpdateTableField
@@ -223,7 +233,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         docId={transactionId}
                         item={order}
                         docType='orders'
-                        storeType='ebay'
+                        storeType={order.storeType}
                         keyType="customTag"
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
@@ -241,7 +251,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         docId={transactionId}
                         item={order}
                         docType='orders'
-                        storeType='ebay'
+                        storeType={order.storeType}
                         keyType="purchase.date"
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
@@ -259,7 +269,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         docId={transactionId}
                         item={order}
                         docType='orders'
-                        storeType='ebay'
+                        storeType={order.storeType}
                         keyType="sale.date"
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
@@ -276,7 +286,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         docId={transactionId}
                         item={order}
                         docType='orders'
-                        storeType='ebay'
+                        storeType={order.storeType}
                         keyType="sale.quantity"
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
@@ -293,7 +303,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         docId={transactionId}
                         item={order}
                         docType='orders'
-                        storeType='ebay'
+                        storeType={order.storeType}
                         keyType="purchase.platform"
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
@@ -310,7 +320,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         docId={transactionId}
                         item={order}
                         docType='orders'
-                        storeType='ebay'
+                        storeType={order.storeType}
                         keyType="purchase.price"
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
@@ -327,7 +337,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         docId={transactionId}
                         item={order}
                         docType='orders'
-                        storeType='ebay'
+                        storeType={order.storeType}
                         keyType="sale.price"
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
@@ -344,7 +354,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         docId={transactionId}
                         item={order}
                         docType='orders'
-                        storeType='ebay'
+                        storeType={order.storeType}
                         keyType="shipping.fees"
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
@@ -361,7 +371,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         docId={transactionId}
                         item={order}
                         docType='orders'
-                        storeType='ebay'
+                        storeType={order.storeType}
                         keyType="additionalFees"
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}

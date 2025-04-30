@@ -1,10 +1,10 @@
 // Local Imports
 import { firestore } from "@/lib/firebase/config";
+import { ItemType, StoreType } from "@/models/store-data";
+import { updateUserItemCountAdmin } from "./update-admin";
 
 // External Imports
 import { doc, deleteDoc } from 'firebase/firestore';
-import { updateUserListingsCountAdmin, updateUserOrdersCountAdmin } from "./update-admin";
-import { ItemType, StoreType } from "@/models/store-data";
 
 
 interface IDeleteItemProps {
@@ -24,11 +24,7 @@ async function deleteItem({ uid, itemType, storeType, docId, isAuto = false }: I
         await deleteDoc(docRef);
 
         // Decrement the item count
-        if (itemType === "orders") {
-            await updateUserOrdersCountAdmin(uid, storeType, -1, isAuto);
-        } else if (itemType === "inventory") {
-            await updateUserListingsCountAdmin(uid, storeType, -1, isAuto);
-        }
+        await updateUserItemCountAdmin({ uid, itemType, storeType, amount: -1, isAuto })
         console.log(`Item, with docId ${docId} deleted successfully.`);
     } catch (error) {
         console.error('Error deleting item from Firestore:', error);

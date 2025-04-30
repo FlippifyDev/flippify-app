@@ -48,6 +48,7 @@ function formatOrdersForCSVExport(orders: IOrder[], timeFrom: string, timeTo: st
             transactionId,
             orderId,
             name,
+            storeType,
             purchase,
             sale,
             shipping,
@@ -79,6 +80,7 @@ function formatOrdersForCSVExport(orders: IOrder[], timeFrom: string, timeTo: st
             `"\'${transactionId}"`,
             `"\'${orderId}"`,
             escapeCSVField(name ?? "N/A"),
+            escapeCSVField(storeType ?? "N/A"),
             purchasePrice, 
             purchase?.quantity ?? "N/A",
             sale?.price ? sale.price.toFixed(2) : "N/A",
@@ -111,15 +113,17 @@ export function formatSalesForCSVExport(
     timeFrom: string,
     timeTo: string
 ): string | null {
+    console.log("formatSalesForCSVExport", orders);
     const header = [
         "Sale Date",
+        "Transaction ID",
         "Order ID",
         "Item Name",
+        "Marketplace",
         "Sale Price",
         "Quantity",
         "Shipping Fees",
         "Buyer",
-        "Platform",
         "Currency",
     ];
     const filtered = filterOrdersByDateRange(orders, timeFrom, timeTo)
@@ -129,13 +133,14 @@ export function formatSalesForCSVExport(
 
     const rows = filtered.map(o => [
         o.sale!.date ? formatDate(o.sale!.date) : "N/A",
-        o.orderId ?? "N/A",
+        `"\'${o.transactionId}"`,
+        `"\'${o.orderId}"`,
         escapeCSVField(o.name ?? "N/A"),
+        escapeCSVField(o.storeType ?? "N/A"),
         o.sale!.price?.toFixed(2) ?? "N/A",
         o.sale!.quantity?.toString() ?? "N/A",
         o.shipping?.fees?.toFixed(2) ?? "0.00",
         o.sale!.buyerUsername ?? "N/A",
-        o.sale!.platform ?? "N/A",
         o.sale!.currency ?? "N/A",
     ].join(","));
 
@@ -148,13 +153,16 @@ export function formatCOGSForCSVExport(
     timeFrom: string,
     timeTo: string
 ): string | null {
+    console.log("formatCOGSForCSVExport", orders);
+
     const header = [
         "Purchase Date",
+        "Transaction ID",
         "Order ID",
         "Item Name",
+        "Marketplace",
         "Purchase Price",
         "Quantity",
-        "Platform",
         "Currency",
     ];
     const filtered = filterOrdersByDateRange(orders, timeFrom, timeTo)
@@ -164,11 +172,12 @@ export function formatCOGSForCSVExport(
 
     const rows = filtered.map(o => [
         o.purchase!.date ? formatDate(o.purchase!.date) : "N/A",
-        o.orderId ?? "N/A",
+        `"\'${o.transactionId}"`,
+        `"\'${o.orderId}"`,
         escapeCSVField(o.name ?? "N/A"),
+        escapeCSVField(o.storeType ?? "N/A"),
         o.purchase!.price?.toFixed(2) ?? "N/A",
         o.purchase!.quantity?.toString() ?? "N/A",
-        o.purchase!.platform ?? "N/A",
         o.purchase!.currency ?? "N/A",
     ].join(","));
 
@@ -195,14 +204,16 @@ export function formatInventoryForCSVExport(
     timeFrom: string,
     timeTo: string
 ): string | null {
+    console.log("formatInventoryForCSVExport", listings);
+
     const header = [
         "Date Listed",
         "Item ID",
         "Item Name",
+        "Marketplace",
         "Listing Price",
         "Purchase Price",
         "Quantity",
-        "Platform",
         "Currency",
     ];
     const filtered = filterListingsByDateRange(listings, timeFrom, timeTo);
@@ -211,12 +222,12 @@ export function formatInventoryForCSVExport(
 
     const rows = filtered.map(l => [
         l.dateListed ? formatDate(l.dateListed) : "N/A",
-        l.itemId ?? "N/A",
+        `"\'${l.itemId}"`,
         escapeCSVField(l.name ?? "N/A"),
+        escapeCSVField(l.storeType ?? "N/A"),
         l.price?.toFixed(2) ?? "N/A",
         l.purchase?.price?.toFixed(2) ?? "N/A",
         l.quantity?.toString() ?? "N/A",
-        l.purchase?.platform ?? "N/A",
         l.currency ?? "N/A",
     ].join(","));
 
@@ -229,10 +240,14 @@ export function formatRefundsForCSVExport(
     timeFrom: string,
     timeTo: string
 ): string | null {
+    console.log("formatRefundsForCSVExport", orders);
+
     const header = [
         "Refund Date",
+        "Transaction ID",
         "Order ID",
         "Item Name",
+        "Marketplace",
         "Refund Amount",
         "Refunded To",
         "Status",
@@ -245,8 +260,10 @@ export function formatRefundsForCSVExport(
 
     const rows = filtered.map(o => [
         o.refund!.refundedAt ? formatDate(o.refund!.refundedAt) : "N/A",
-        o.orderId ?? "N/A",
+        `"\'${o.transactionId}"`,
+        `"\'${o.orderId}"`,
         escapeCSVField(o.name ?? "N/A"),
+        escapeCSVField(o.storeType ?? "N/A"),
         o.refund!.amount?.toFixed(2) ?? "N/A",
         o.refund!.refundedTo ?? "N/A",
         o.refund!.status ?? "N/A",

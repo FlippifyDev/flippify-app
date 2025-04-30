@@ -25,6 +25,7 @@ import { HiOutlineDownload } from "react-icons/hi";
 import { useSession } from "next-auth/react";
 import Modal from "../../dom/ui/Modal";
 import Link from "next/link";
+import { fetchUserStores } from "@/utils/extract-user-data";
 
 
 
@@ -57,13 +58,24 @@ const Page = () => {
             }
 
             setLoading(true);
-            const orders = await retrieveUserOrders({
-                uid: session?.user.id as string,
-                timeFrom: timeFrom,
-                timeTo: timeTo,
-                ebayAccessToken: session?.user.connectedAccounts.ebay?.ebayAccessToken as string,
-            });
-            setOrders(orders);  // Set the orders to state
+
+            // grab the storeType keys they actually have
+            const storeTypes = fetchUserStores(session.user);
+
+            const results = await Promise.all(
+                storeTypes.map((storeType) => {
+                    return retrieveUserOrders({
+                        uid: session.user.id as string,
+                        timeFrom: timeFrom,
+                        timeTo: timeTo,
+                        ebayAccessToken: session.user.connectedAccounts?.ebay?.ebayAccessToken ?? "",
+                        storeType,
+                    }).then((order) => [storeType, order] as const);
+                })
+            );
+            const lastOrder = results[results.length - 1]?.[1] ?? [];
+
+            setOrders(lastOrder);  // Set the orders to state
             setLoading(false);
         }
 

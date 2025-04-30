@@ -11,7 +11,7 @@ export function generateTimeRanges(startDate: Date, endDate: Date = new Date()):
     const endYear = endDate.getFullYear();
     const ranges: TimeRange[] = [];
 
-    for (let year = startYear; year < endYear; year++) {
+    for (let year = startYear; year <= endYear; year++) {
         ranges.push({
             label: `${year} - ${year + 1}`,
             value: `${year}-${year + 1}`,

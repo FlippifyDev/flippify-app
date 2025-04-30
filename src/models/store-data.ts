@@ -11,7 +11,7 @@ export type OrderStatus =
     | "InProcess";    // Order is being processed (e.g., payment or shipping underway), not yet complete.
 
 
-export type StoreType = "ebay" | "amazon" | "shopify" | "depop";
+export type StoreType = "ebay" | "amazon" | "shopify" | "depop" | string;
 
 interface IListing {
     currency?: string | null;
@@ -30,6 +30,7 @@ interface IListing {
     } | null;
     quantity?: number | null;
     recordType?: RecordType | null;
+    storeType?: StoreType | null;
 }
 
 
@@ -91,6 +92,7 @@ interface IOrder {
     sale?: ISale | null;
     shipping?: IShipping | null;
     status?: OrderStatus | null;
+    storeType?: StoreType | null;
     transactionId?: string | null;
 }
 
@@ -101,6 +103,7 @@ interface IInventory {
 
 interface IOrders {
     ebay?: Record<string, IOrder> | null;
+    depop?: Record<string, IOrder> | null;
 }
 
 export type { IListing, IOrder, IInventory, IOrders, IHistory };

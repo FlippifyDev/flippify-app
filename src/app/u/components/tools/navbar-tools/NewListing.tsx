@@ -10,7 +10,8 @@ import { formatDateToISO } from "@/utils/format-dates"
 import { IListing } from "@/models/store-data"
 import { createNewInventoryItemAdmin } from "@/services/firebase/create-admin"
 import { generateRandomFlippifyListingId } from "@/utils/generate-random"
-import { inventoryCacheKey, storePlatforms, subscriptionLimits } from "@/utils/constants"
+import { fetchUserInventoryAndOrdersCount } from "@/utils/extract-user-data"
+import { inventoryCacheKey, subscriptionLimits } from "@/utils/constants"
 import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput } from "@/utils/input-validation"
 
 // External Imports
@@ -32,17 +33,18 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal }) => {
     const [itemName, setItemName] = useState<string>("")
     const [imageUrl, setImageUrl] = useState<string>("");
     const [customTag, setCustomTag] = useState<string>("")
-    
+    const [storeType, setStoreType] = useState<string>("")
+
     // Purchase Info
     const [purchasePrice, setPurchasePrice] = useState<string>("")
     const [purchasePlatform, setPurchasePlatform] = useState<string>("")
     const [datePurchased, setDatePurchased] = useState<string>(new Date().toISOString().split('T')[0])
-    
+
     // Listing Info
     const [listingPrice, setListingPrice] = useState<string>("")
     const [quantity, setQuantity] = useState<string>("1")
     const [dateListed, setDateListed] = useState<string>(new Date().toISOString().split('T')[0])
-    
+
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
     const [fileName, setFileName] = useState("Upload Image");
 
@@ -61,8 +63,8 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal }) => {
                 setAboveLimit(true);
                 return;
             }
-            const manualListings = session?.user.store?.ebay.numListings?.manual || 0;
-            if (manualListings >= subscriptionLimits[plan].manual) {
+            const count = fetchUserInventoryAndOrdersCount(session.user);
+            if (count.manualListings >= subscriptionLimits[plan].manual) {
                 setErrorMessage(`You have reached the maximum number of manual listings for your plan. Please upgrade your plan to add more or wait till next month.`);
                 setAboveLimit(true);
                 return;
@@ -77,7 +79,7 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal }) => {
 
     function handleCacheUpdate(inventoryItem: IListing) {
         const cacheKey = `${inventoryCacheKey}-${session?.user.id}`;
-        
+
         // Update the cache with the new item
         addCacheData(cacheKey, inventoryItem);
     }
@@ -86,7 +88,7 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal }) => {
         e.preventDefault()
         setErrorMessage("")
         setLoading(true);
-        
+
         if (aboveLimit) return;
 
         const inventoryItem: IListing = {
@@ -105,10 +107,11 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal }) => {
             },
             quantity: Number(quantity),
             recordType: "manual",
-            lastModified: formatDateToISO(new Date())
+            lastModified: formatDateToISO(new Date()),
+            storeType: storeType
         }
 
-        const { success, error, listingExists } = await createNewInventoryItemAdmin(session?.user.id ?? "", storePlatforms.ebay, inventoryItem);
+        const { success, error, listingExists } = await createNewInventoryItemAdmin(session?.user.id ?? "", storeType, inventoryItem);
         if (!success) {
             console.error("Error creating new inventory item", error)
             if (listingExists) {
@@ -128,6 +131,9 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal }) => {
         switch (type) {
             case "customTag":
                 validateAlphaNumericInput(value, setCustomTag)
+                break
+            case "storeType":
+                validateAlphaNumericInput(value.toLowerCase(), setStoreType) // Must be lowercase
                 break
             case "dateListed":
                 setDateListed(value)
@@ -170,10 +176,13 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal }) => {
                     <span>Sorry you&apos;ve reach your max manual listings for this month</span>
                 </div>
             )}
-            
+
             {!aboveLimit && (
                 <form className="w-full max-w-xl flex flex-col gap-4" onSubmit={handleSubmit}>
-                    <Input type="text" placeholder="Enter item id" title="Product ID" value={itemId} onChange={(e) => handleChange(e.target.value, "itemId")} />
+                    <div className="flex flex-col sm:flex-row items-center w-full gap-4">
+                        <Input type="text" placeholder="Enter item id" title="Product ID" value={itemId} onChange={(e) => handleChange(e.target.value, "itemId")} />
+                        <Input type="text" placeholder="Enter marketplace" title="Marketplace" value={storeType} onChange={(e) => handleChange(e.target.value, "storeType")} />
+                    </div>
                     <div className="flex flex-col sm:flex-row items-center w-full gap-4">
                         <Input type="text" placeholder="Enter item name" title="Product Name" value={itemName} onChange={(e) => handleChange(e.target.value, "itemName")} />
                         <Input type="text" placeholder="Enter quantity" title="Quantity" value={quantity} onChange={(e) => handleChange(e.target.value, "quantity")} />
@@ -216,7 +225,7 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal }) => {
                         <div>
                             <button
                                 type="submit"
-                                disabled={loading || !itemName || !itemId || !listingPrice || !quantity || !dateListed}
+                                disabled={loading || !itemName || !itemId || !listingPrice || !quantity || !dateListed || !storeType}
                                 className="disabled:bg-gray-600 disabled:pointer-events-none bg-houseBlue text-white text-sm py-2 px-4 rounded-md hover:bg-houseHoverBlue transition duration-200"
                             >
                                 {successMessage ? successMessage : loading ? "Adding..." : "Add Listing"}

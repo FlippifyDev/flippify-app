@@ -3,14 +3,14 @@
 // Local Imports
 import NewOrder from "../navbar-tools/NewOrder";
 import EditListing from "../navbar-tools/EditListing";
+import { IListing, StoreType } from "@/models/store-data";
+import { deleteItem } from "@/services/firebase/delete";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import { shortenText } from "@/utils/format";
 import UpdateTableField from "./UpdateTableField";
-import { deleteItem } from "@/services/firebase/delete";
 import { formatTableDate } from "@/utils/format-dates";
-import { currencySymbols } from "@/config/currency-config";
 import { removeCacheData } from "@/utils/cache-helpers";
-import { IListing } from "@/models/store-data";
+import { currencySymbols } from "@/config/currency-config";
 import { retrieveUserInventory } from "@/services/firebase/retrieve";
 import { defaultTimeFrom, inventoryCacheKey } from "@/utils/constants";
 
@@ -18,6 +18,7 @@ import { defaultTimeFrom, inventoryCacheKey } from "@/utils/constants";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { fetchUserListingsCount, fetchUserStores } from "@/utils/extract-user-data";
 
 
 const Inventory = () => {
@@ -35,12 +36,13 @@ const Inventory = () => {
     // Page Config
     const itemsPerPage = 12;
     const [currentPage, setCurrentPage] = useState(1);
-    const totalPages = Math.ceil(listedData.length / itemsPerPage);
+    const totalListings = fetchUserListingsCount(session?.user)
+    const totalPages = Math.ceil(totalListings / itemsPerPage);
 
-    const [paginatedData, setPagenatedData] = useState(listedData.slice(
+    const paginatedData = listedData.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
-    ));
+    );
 
     const [triggerUpdate, setTriggerUpdate] = useState(true);
     const [loading, setLoading] = useState(false);
@@ -48,31 +50,43 @@ const Inventory = () => {
     const [contextMenu, setContextMenu] = useState<{ mouseX: number; mouseY: number; item: any } | null>(null);
 
     useEffect(() => {
-        const fetchInventoryData = async () => {
+        const fetchAllInventories = async () => {
+            if (!session?.user.authentication?.subscribed || listedData.length >= currentPage * itemsPerPage) return;
+
             setLoading(true);
-            const inventory = await retrieveUserInventory({
-                uid: session?.user.id as string,
-                timeFrom: defaultTimeFrom,
-                ebayAccessToken: session?.user.connectedAccounts?.ebay?.ebayAccessToken ?? "",
-            });
-            if (inventory) {
-                setListedData(inventory);
-            }
+
+            // grab the storeType keys they actually have
+            const storeTypes = fetchUserStores(session.user);
+
+
+            // for each storeType, fetch their inventory in parallel
+            const results = await Promise.all(
+                storeTypes.map((storeType) => {
+                    return retrieveUserInventory({
+                        uid: session.user.id as string,
+                        timeFrom: defaultTimeFrom,
+                        ebayAccessToken: session.user.connectedAccounts?.ebay?.ebayAccessToken ?? "",
+                        storeType,
+                    }).then((inventory) => [storeType, inventory] as const);
+                })
+            );
+            const lastInventory = results[results.length - 1]?.[1] ?? [];
+            setListedData(lastInventory);
+
             setLoading(false);
+            setTriggerUpdate(false);
         };
 
-        if (session?.user.authentication?.subscribed && triggerUpdate) {
-            fetchInventoryData();
-            setTriggerUpdate(false);
-        }
-    }, [session?.user, triggerUpdate]);
 
-    useEffect(() => {
-        setPagenatedData(listedData)
-    }, [listedData])
+        if (session?.user.authentication?.subscribed && triggerUpdate) {
+            fetchAllInventories();
+            setTriggerUpdate(false)
+        }
+    }, [session?.user, currentPage, listedData, triggerUpdate]);
 
     // Handle page change
     const handlePageChange = (newPage: number) => {
+        setTriggerUpdate(true);
         if (newPage > 0 && newPage <= totalPages) {
             setCurrentPage(newPage);
         }
@@ -136,6 +150,7 @@ const Inventory = () => {
                     <tr className="bg-tableHeaderBackground">
                         <th></th>
                         <th>Product</th>
+                        <th>Marketplace</th>
                         <th>Quantity</th>
                         <th>Purchase Platform</th>
                         <th>Cost ({currencySymbols[currency]})</th>
@@ -177,6 +192,8 @@ const Inventory = () => {
                                         </div>
                                     </td>
                                     <td onClick={() => handleDisplayOrderModal(item)}>{shortenText(item.name ?? "N/A")}</td>
+                                    <UpdateTableField currentValue={item?.storeType} docId={item.itemId} item={item} docType='inventory' storeType={item.storeType} keyType="storeType" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
+
                                     <td onClick={() => handleDisplayOrderModal(item)}>{item.quantity}</td>
                                     <UpdateTableField currentValue={purchase?.platform} docId={item.itemId} item={item} docType='inventory' storeType='ebay' keyType="purchase.platform" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
                                     <UpdateTableField currentValue={purchase?.price?.toFixed(2)} docId={item.itemId} item={item} docType='inventory' storeType='ebay' keyType="purchase.price" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
@@ -252,14 +269,14 @@ const Inventory = () => {
                             {/* Show entries info dynamically */}
                             <div className="flex items-center bg-gray-900 justify-center px-4 h-12 text-sm text-white space-x-1">
                                 <span className="font-semibold text-white">
-                                    {Math.min((currentPage - 1) * itemsPerPage + 1, listedData.length)}
+                                    {(currentPage - 1) * itemsPerPage + 1}
                                 </span>
                                 <span>-</span>
                                 <span className="font-semibold text-white">
-                                    {Math.min(currentPage * itemsPerPage, paginatedData.length)}
+                                    {Math.min(currentPage * itemsPerPage, listedData.length)}
                                 </span>
                                 <span>of</span>
-                                <span className="font-semibold text-white">{paginatedData.length}</span>
+                                <span className="font-semibold text-white">{listedData.length}</span>
                             </div>
                             {/* Next Button */}
                             <button

@@ -14,6 +14,7 @@ import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
 // External Imports
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react';
+import { fetchUserStores } from '@/utils/extract-user-data';
 
 
 const ITEMS_PER_PAGE = 5;
@@ -44,17 +45,28 @@ const Page = () => {
 
     useEffect(() => {
         const fetchOrderData = async () => {
+            if (!session) return;
+
             if (initialLoad) {
                 setLoading(true);
             }
-            const orders = await retrieveUserOrders({
-                uid: session?.user.id as string,
-                timeFrom: defaultTimeFrom,
-                ebayAccessToken: session?.user.connectedAccounts?.ebay?.ebayAccessToken as string,
-            });
 
-            if (orders) {
-                sortOrderData(orders);
+            const storeTypes = fetchUserStores(session.user);
+
+            const salesResult = await Promise.all(
+                storeTypes.map((storeType) => {
+                    return retrieveUserOrders({
+                        uid: session.user.id as string,
+                        timeFrom: defaultTimeFrom,
+                        ebayAccessToken: session.user.connectedAccounts?.ebay?.ebayAccessToken ?? "",
+                        storeType,
+                    }).then((order) => [storeType, order] as const);
+                })
+            );
+            const sales = salesResult[salesResult.length - 1]?.[1] ?? [];
+
+            if (sales) {
+                sortOrderData(sales);
             }
             if (initialLoad) {
                 setLoading(false);
@@ -74,7 +86,7 @@ const Page = () => {
 
     return (
         <LayoutSubscriptionWrapper anySubscriptions={["admin", "member"]}>
-            {session?.user.connectedAccounts?.ebay ? (
+            {session?.user.authentication?.subscribed ? (
                 <div className='flex flex-col md:flex-row gap-4'>
                     <Card title="Ready to ship" className='h-full'>
                         {loading ? (

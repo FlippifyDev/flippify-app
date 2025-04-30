@@ -1,4 +1,4 @@
-import { IListing, IOrder } from "@/models/store-data";
+import { IListing, IOrder, StoreType } from "@/models/store-data";
 import { cacheExpirationTime } from "./constants";
 
 type CachedItem = IOrder | IListing;
@@ -176,4 +176,33 @@ export function getCachedItem(key: string, itemKey: string) {
 
         return parsedData.data[itemKey]
     }
+}
+
+export function storeDataFetched(storeType: StoreType): boolean {
+    const raw = sessionStorage.getItem("store");
+    let cache: StoreType[];
+
+    // 1. Parse existing cache (or start empty)
+    try {
+        cache = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(cache)) {
+            // malformed but parseable JSON—reset
+            cache = [];
+        }
+    } catch {
+        // invalid JSON—reset
+        cache = [];
+    }
+
+    // 2. If it's already in the list, return true
+    if (cache.includes(storeType)) {
+        return true;
+    }
+
+    // 3. Otherwise, add it and persist
+    cache.push(storeType);
+    sessionStorage.setItem("store", JSON.stringify(cache));
+
+    // Indicate we added it
+    return false;
 }

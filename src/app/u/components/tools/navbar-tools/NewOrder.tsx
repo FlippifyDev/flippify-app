@@ -9,15 +9,16 @@ import { formatDateToISO } from '@/utils/format-dates';
 import { currencySymbols } from '@/config/currency-config';
 import { createHistoryItems } from '@/services/firebase/helpers';
 import { createNewOrderItemAdmin } from '@/services/firebase/create-admin';
-import { validateNumberInput, validateTextInput } from '@/utils/input-validation';
 import { IListing, IOrder, OrderStatus } from '@/models/store-data';
+import { fetchUserInventoryAndOrdersCount } from '@/utils/extract-user-data';
+import { inventoryCacheKey, orderCacheKey, subscriptionLimits } from '@/utils/constants';
 import { addCacheData, getCachedData, removeCacheData, updateCacheData } from '@/utils/cache-helpers';
+import { validateAlphaNumericInput, validateNumberInput, validateTextInput } from '@/utils/input-validation';
 import { generateRandomFlippifyOrderId, generateRandomFlippifyTransactionId } from '@/utils/generate-random';
-import { inventoryCacheKey, orderCacheKey, storePlatforms, subscriptionLimits } from '@/utils/constants';
 
 // External Imports
-import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 
 
@@ -36,11 +37,12 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal }) => {
     const [aboveLimit, setAboveLimit] = useState(false);
 
     // General Info
-    const [itemId, setItemId] = useState<string>("")
-    const [itemName, setItemName] = useState<string>("")
+    const [itemId, setItemId] = useState<string>("");
+    const [itemName, setItemName] = useState<string>("");
     const [fileName, setFileName] = useState("Upload Image");
-    const [customTag, setCustomTag] = useState<string>("")
+    const [customTag, setCustomTag] = useState<string>("");
     const [imageUrl, setImageUrl] = useState<string>("");
+    const [storeType, setStoreType] = useState<string>("")
 
     // Listing Info
     const [dateListed, setDateListed] = useState<string>(new Date().toISOString().split('T')[0])
@@ -81,8 +83,8 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal }) => {
                 setAboveLimit(true);
                 return;
             }
-            const manualOrders = session?.user.store?.ebay.numOrders?.manual || 0;
-            if (manualOrders >= subscriptionLimits[plan].manual) {
+            const count = fetchUserInventoryAndOrdersCount(session.user);
+            if (count.manualListings >= subscriptionLimits[plan].manual) {
                 setErrorMessage(`You have reached the maximum number of manual orders for your plan. Please upgrade your plan to add more or wait till next month.`);
                 setAboveLimit(true);
                 return;
@@ -194,10 +196,11 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal }) => {
                 trackingNumber: undefined,
             },
             status: shippingStatus ?? "Active",
+            storeType: storeType,
             transactionId: generateRandomFlippifyTransactionId(20)
         }
 
-        const { success, error, orderExists } = await createNewOrderItemAdmin(session?.user.id ?? "", storePlatforms.ebay, orderItem);
+        const { success, error, orderExists } = await createNewOrderItemAdmin(session?.user.id ?? "", storeType, orderItem);
         if (!success) {
             console.error("Error creating new order item", error)
             if (orderExists) {
@@ -228,6 +231,7 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal }) => {
         // General Info
         setItemId(item.itemId ?? "N/A");
         setItemName(item.name ?? "N/A");
+        setStoreType(item.storeType ?? "");
         setImageUrl(item.image ? item.image[0]: "");
         setCustomTag(item.customTag || "");
 
@@ -256,6 +260,9 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal }) => {
                 handleSearchForListing(value);
                 setListing(value);
                 break;
+            case "storeType":
+                validateAlphaNumericInput(value.toLowerCase(), setStoreType) // Must be lowercase
+                break
             case "saleDate":
                 setSaleDate(value);
                 break;
@@ -296,8 +303,9 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal }) => {
 
             {!aboveLimit && (
                 <form className="w-full max-w-xl flex flex-col gap-4" onSubmit={handleSubmit}>
-                    <div className='relative flex flex-col gap-2 w-full'>
+                    <div className='relative flex flex-col sm:flex-row items-center w-full gap-4'>
                         <Input type="text" placeholder='Enter listing (id or name)' title="Listing (Optional)" value={listing} onChange={(e) => handleChange(e.target.value, "listing")} />
+                        <Input type="text" placeholder="Enter marketplace" title="Marketplace" value={storeType} onChange={(e) => handleChange(e.target.value, "storeType")} />
                         <SelectRelatedListing listingDowndownItems={listingDowndownItems} currencySymbol={currencySymbol} onClick={handleListingClick} />
                     </div>
                     <div className="flex flex-col sm:flex-row items-center w-full gap-4">
@@ -345,7 +353,7 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal }) => {
                         <div>
                             <button
                                 type="submit"
-                                disabled={loading || !saleDate || !salePrice || !quantity || !itemName}
+                                disabled={loading || !saleDate || !salePrice || !quantity || !itemName || !storeType}
                                 className="disabled:bg-gray-600 disabled:pointer-events-none bg-houseBlue text-white text-sm py-2 px-4 rounded-md hover:bg-houseHoverBlue transition duration-200"
                             >
                                 {successMessage ? successMessage : loading ? "Adding..." : "Add Sale"}

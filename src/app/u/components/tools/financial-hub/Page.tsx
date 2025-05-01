@@ -1,9 +1,12 @@
 "use client";
 
 // Local Imports
+import Modal from "../../dom/ui/Modal";
 import OrderInfo from "./OrderInfo";
-import FilterSelector from "./FilterSelector";
+import { IUser } from "@/models/user";
 import { IOrder } from "@/models/store-data";
+import IconButton from "../../dom/ui/IconButton";
+import FilterSelector from "./FilterSelector";
 import CardShippingInfo from "./ShippingInfo";
 import CardCostAverages from "./CostAverages";
 import CardSaleAverages from "./SaleAverages";
@@ -12,21 +15,18 @@ import { formatTimeFrom } from "@/utils/format-dates";
 import CardListingsAmount from "./ListingsAndOrdersAmount";
 import CardProfitsBarChart from "./ProfitsBarChart";
 import { currencySymbols } from "@/config/currency-config";
-import IconButton from "../../dom/ui/IconButton";
+import { fetchUserStores } from "@/utils/extract-user-data";
 import CardPlatformDonutChart from "./PlatformDonutChart";
 import { retrieveUserOrders } from "@/services/firebase/retrieve";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import { formatOrdersForCSVExport } from "@/utils/format";
-import { defaultTimeFrom, exportCSVAllowedSubscriptionPlans } from "@/utils/constants";
+import { exportCSVAllowedSubscriptionPlans } from "@/utils/constants";
 
 // External Imports
 import { useEffect, useState } from "react";
 import { HiOutlineDownload } from "react-icons/hi";
 import { useSession } from "next-auth/react";
-import Modal from "../../dom/ui/Modal";
 import Link from "next/link";
-import { fetchUserStores } from "@/utils/extract-user-data";
-
 
 
 const Page = () => {
@@ -35,9 +35,10 @@ const Page = () => {
     const [orders, setOrders] = useState<IOrder[]>([]);
     const [loading, setLoading] = useState(false);
     const subscribed = session?.user.authentication?.subscribed;
+    const storeTypes = fetchUserStores(session?.user as IUser);
 
     // General Filters
-    const [selectedFilter, setSelectedFilter] = useState("eBay");
+    const [selectedFilter, setSelectedFilter] = useState(storeTypes[0]);
     const [selectedTimeRange, setSelectedTimeRange] = useState("Last 30 days");
     const [timeFrom, setTimeFrom] = useState(formatTimeFrom(30));
     const [timeTo, setTimeTo] = useState<string>(new Date().toISOString());
@@ -59,30 +60,24 @@ const Page = () => {
 
             setLoading(true);
 
-            // grab the storeType keys they actually have
-            const storeTypes = fetchUserStores(session.user);
 
-            const results = await Promise.all(
-                storeTypes.map((storeType) => {
-                    return retrieveUserOrders({
-                        uid: session.user.id as string,
-                        timeFrom: timeFrom,
-                        timeTo: timeTo,
-                        ebayAccessToken: session.user.connectedAccounts?.ebay?.ebayAccessToken ?? "",
-                        storeType,
-                    }).then((order) => [storeType, order] as const);
-                })
-            );
-            const lastOrder = results[results.length - 1]?.[1] ?? [];
+            const orders = await retrieveUserOrders({
+                uid: session.user.id as string,
+                timeFrom: timeFrom,
+                timeTo: timeTo,
+                ebayAccessToken: session.user.connectedAccounts?.ebay?.ebayAccessToken ?? "",
+                storeType: selectedFilter,
+            })
+            const filteredOrders = orders.filter(order => order.storeType === selectedFilter);
 
-            setOrders(lastOrder);  // Set the orders to state
+            setOrders(filteredOrders);  // Set the orders to state
             setLoading(false);
         }
 
         if (subscribed) {
             fetchOrders();
         }
-    }, [session, timeFrom, timeTo, subscribed]);
+    }, [session, selectedFilter, timeFrom, timeTo, subscribed]);
 
 
     const handleTimeRangeChange = (label: string, days: string) => {
@@ -260,7 +255,7 @@ const Page = () => {
                 <div className="relative w-full flex flex-col">
                     <div className="w-full py-2 px-4 bg-white border-t flex items-center">
                         <div>
-                            <FilterSelector value={selectedFilter} onChange={handleFilterChange} />
+                            <FilterSelector value={selectedFilter} filters={storeTypes} onChange={handleFilterChange} />
                         </div>
                         <div className="w-full flex items-center justify-end gap-2">
                             <div>

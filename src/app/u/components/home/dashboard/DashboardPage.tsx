@@ -15,6 +15,7 @@ import IconButton from "../../dom/ui/IconButton";
 import { IOrder } from "@/models/store-data";
 import OnboardingFlow from "./OnboardingFlow";
 import { defaultTimeFrom } from "@/utils/constants";
+import { fetchUserStores } from "@/utils/extract-user-data";
 
 
 const DashboardPage: React.FC = () => {
@@ -42,11 +43,22 @@ const DashboardPage: React.FC = () => {
 
     useEffect(() => {
         const fetchSalesData = async () => {
-            const orders = await retrieveUserOrders({
-                uid: session?.user.id as string,
-                timeFrom: defaultTimeFrom,
-                ebayAccessToken: session?.user.connectedAccounts?.ebay?.ebayAccessToken as string
-            });
+            if (!session) return;
+
+            const storeTypes = fetchUserStores(session.user);
+
+            const orderResults = await Promise.all(
+                storeTypes.map((storeType) => {
+                    return retrieveUserOrders({
+                        uid: session.user.id as string,
+                        timeFrom: defaultTimeFrom,
+                        ebayAccessToken: session.user.connectedAccounts?.ebay?.ebayAccessToken ?? "",
+                        storeType,
+                    }).then((order) => [storeType, order] as const);
+                })
+            );
+            const orders = orderResults[orderResults.length - 1]?.[1] ?? [];
+
             if (orders) {
                 setSalesData(orders);
             }
@@ -55,7 +67,7 @@ const DashboardPage: React.FC = () => {
         if (session?.user.authentication?.subscribed) {
             fetchSalesData();
         }
-    }, [session?.user]);
+    }, [session]);
 
 
     if (!session || !session.user || !session.user.stripeCustomerId) {

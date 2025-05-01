@@ -77,7 +77,7 @@ const Page = () => {
         if (session?.user.authentication?.subscribed) {
             fetchOrderData();
         }
-    }, [session?.user, updatedStatus, initialLoad]);
+    }, [session, updatedStatus, initialLoad]);
 
     const getPaginatedItems = (list: IOrder[], page: number) => {
         const start = (page - 1) * ITEMS_PER_PAGE;

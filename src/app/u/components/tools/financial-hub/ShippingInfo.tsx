@@ -1,17 +1,17 @@
-import { IEbayOrder } from '@/models/store-data';
+import { IOrder } from '@/models/store-data';
 import { differenceInDays, isValid, parseISO } from 'date-fns';
 import React from 'react'
 
 
-const calculateOrderStats = (orders: IEbayOrder[]) => {
+const calculateOrderStats = (orders: IOrder[]) => {
     let totalDaysToSell = 0, totalDaysToList = 0, soldItemsCount = 0, listedItemsCount = 0;
     const serviceCount: Record<string, number> = {};
     let completedOrdersCount = 0;
 
     for (const order of orders) {
         // Time to sell
-        const listingDate = parseISO(order.listingDate);
-        const saleDate = order.sale.date ? parseISO(order.sale.date) : null;
+        const listingDate = parseISO(order.listingDate ?? "");
+        const saleDate = order.sale?.date ? parseISO(order.sale.date) : null;
 
         if (isValid(listingDate) && saleDate && isValid(saleDate)) {
             const daysToSell = differenceInDays(saleDate, listingDate);
@@ -22,7 +22,7 @@ const calculateOrderStats = (orders: IEbayOrder[]) => {
         }
 
         // Time to list
-        const purchaseDate = order.purchase.date ? parseISO(order.purchase.date) : null;
+        const purchaseDate = order.purchase?.date ? parseISO(order.purchase.date) : null;
         if (isValid(listingDate) && purchaseDate && isValid(purchaseDate)) {
             const daysToList = differenceInDays(listingDate, purchaseDate);
             if (daysToList >= 0) {
@@ -37,7 +37,7 @@ const calculateOrderStats = (orders: IEbayOrder[]) => {
         }
 
         // Track shipping services
-        const service = order.shipping.service;
+        const service = order.shipping?.service;
         if (!service) continue; // Skip if service is not defined
         serviceCount[service] = (serviceCount[service] || 0) + 1;
     }
@@ -61,7 +61,7 @@ const calculateOrderStats = (orders: IEbayOrder[]) => {
 };
 
 interface ICardShippingInfo {
-    orders: IEbayOrder[];
+    orders: IOrder[];
     loading: boolean;
 }
 

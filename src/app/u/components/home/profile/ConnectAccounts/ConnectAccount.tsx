@@ -5,6 +5,7 @@ import AmazonConnectButton from "./AmazonConnectButton";
 import EbayConnectButton from "./EbayConnectButton";
 import ShopifyConnectButton from "./ShopifyConnectButton";
 import DiscordConnectButton from './DiscordConnectButton';
+import ConnectButton from './ConnectButton';
 
 interface ConnectAccountProps {
     name: string;
@@ -25,6 +26,7 @@ const ConnectAccount: React.FC<ConnectAccountProps> = ({ name, image }) => {
             <div className='w-full flex justify-end'>
                 {/* Connect/Disconnect Button */}
                 {name === "eBay" && <EbayConnectButton />}
+                {name === "Depop" && <ConnectButton unavailable={true} />}
                 {name === "Amazon" && <AmazonConnectButton />}
                 {name === "Shopify" && <ShopifyConnectButton />}
                 {name === "Discord" && <DiscordConnectButton />}

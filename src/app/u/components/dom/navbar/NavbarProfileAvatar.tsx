@@ -16,7 +16,6 @@ import Image from "next/image";
 const NavbarProfileAvatar = () => {
     const { data: session } = useSession();
     const [billingUrl, setBillingUrl] = useState<string | null>(null);
-    const discordUrl = "https://discord.gg/gNPYfe7YFm"
     const router = useRouter();
     const customerIdRef = useRef<string | null>(null);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -27,7 +26,7 @@ const NavbarProfileAvatar = () => {
     let referral_code = "None";
 
     if (session) {
-        if (session.user?.metaData.image) {
+        if (session.user?.metaData?.image) {
             avatar = session.user.metaData.image;
         }
         if (session?.user.referral?.referralCode) {
@@ -36,8 +35,8 @@ const NavbarProfileAvatar = () => {
     }
 
     const handleSignOut = () => {
-        localStorage.removeItem("apiAccessToken");
-        localStorage.removeItem("apiRefreshToken");
+        sessionStorage.removeItem("apiAccessToken");
+        sessionStorage.removeItem("apiRefreshToken");
         firebaseSignout(auth);
         nextSignOut({ callbackUrl: '/l/home' })
     };
@@ -71,13 +70,6 @@ const NavbarProfileAvatar = () => {
     const handleBillingPortalButtonClick = () => {
         if (billingUrl) {
             window.open(billingUrl, "_blank");
-        }
-    };
-
-
-    const handleDiscordButtonClick = () => {
-        if (discordUrl) {
-            window.open(discordUrl, "_blank");
         }
     };
 
@@ -163,42 +155,36 @@ const NavbarProfileAvatar = () => {
                     className="menu menu-sm dropdown-content bg-darkBackground text-white rounded-lg mt-3 w-52 p-2 shadow"
                 >
                     <button
-                        className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-700 active:bg-gray-300 transform transition duration-200'
+                        className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-700 active:bg-gray-800 transition duration-100'
                         onClick={handleProfileOpen}>
                         <span className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Profile</span>
                     </button>
                     <button
-                        className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-700 active:bg-gray-300 transform transition duration-200'
+                        className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-700 active:bg-gray-800 transition duration-100'
                         onClick={handleSubscriptionsOpen}>
                         <span className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Subscriptions</span>
                     </button>
                     <LayoutSubscriptionWrapper requiredSubscriptions={['admin']}>
                         <button
-                            className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-700 active:bg-gray-300 transform transition duration-200'
+                            className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-700 active:bg-gray-800 transition duration-100'
                             onClick={handleAdminOpen}>
                             <span className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Admin</span>
                         </button>
                     </LayoutSubscriptionWrapper>
                     <LayoutSubscriptionWrapper requiredSubscriptions={['admin']}>
                         <button
-                            className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-700 active:bg-gray-300 transform transition duration-200'
+                            className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-700 active:bg-gray-800 transition duration-100'
                             onClick={handleTestingOpen}>
                             <span className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Testing Area</span>
                         </button>
                     </LayoutSubscriptionWrapper>
                     <button
-                        className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-700 active:bg-gray-300 transform transition duration-200'
+                        className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-700 active:bg-gray-800 transition duration-100'
                         onClick={handleBillingPortalButtonClick}>
                         <span className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Billing Portal</span>
                     </button>
                     <button
-                        onClick={handleDiscordButtonClick}
-                        className="relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-gray-700 active:bg-gray-300 transform transition duration-200"
-                    >
-                        <span className="text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]">Discord</span>
-                    </button>
-                    <button
-                        className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-red-600 hover:text-white active:bg-red-700 transform transition duration-200'
+                        className='relative flex flex-col flex-wrap flex-shrink-0 align-items rounded-md hover:bg-red-600 hover:text-white active:bg-red-700 transition duration-100'
                         onClick={handleSignOut}>
                         <span className='text-start px-[0.75rem] py-[0.25rem] text-[0.875rem]'>Sign Out</span>
                     </button>

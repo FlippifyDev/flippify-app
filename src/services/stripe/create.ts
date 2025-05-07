@@ -75,7 +75,7 @@ const createCheckoutSession = async (
             if (referredUser) {
                 // Check if referredUser has any subscriptions with "member" in the name
                 const hasMemberSubscription = referredUser.subscriptions?.some(subscription =>
-                    subscription.name.toLowerCase().includes('member')
+                    subscription.name?.toLowerCase().includes('member')
                 );
 
                 // Disallow the referral discount if a coupon code is present

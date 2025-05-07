@@ -61,7 +61,7 @@ const Page = () => {
 
     return (
         <LayoutSubscriptionWrapper anySubscriptions={["admin", "member"]}>
-            {session?.user.connectedAccounts.ebay ? (
+            {session?.user.connectedAccounts?.ebay ? (
                 <main className="bg-white rounded-xl">
                     {/* Dropdown for Tab Selection */}
                     <div ref={dropdownRef} className="relative inline-block text-left px-2 py-4">

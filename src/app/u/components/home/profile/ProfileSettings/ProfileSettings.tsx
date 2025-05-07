@@ -46,13 +46,19 @@ async function updateUserEmail(
                 const userRef = doc(firestore, "users", auth.currentUser.uid);
                 const userDoc = await getDoc(userRef);
                 const user = userDoc.data() as IUser;
-                await updateStripeCustomerEmail(user.stripeCustomerId, newEmail);
-                await updateDoc(userRef, {
-                    email: newEmail,
-                });
-                setNewEmailMessage("");
-                setEmailSuccessfullyUpdated();
-                success = true;
+
+                if (user.stripeCustomerId) {
+                    await updateStripeCustomerEmail(user.stripeCustomerId, newEmail);
+                    await updateDoc(userRef, {
+                        email: newEmail,
+                    });
+                    setNewEmailMessage("");
+                    setEmailSuccessfullyUpdated();
+                    success = true;
+                } else {
+                    setNewEmailMessage("Failed to get users stripe customer id");
+                    success = false;
+                }
             }
         }, 5000);
     } catch (err) {
@@ -248,9 +254,9 @@ const UpdatePassword = ({ onClose }: { onClose: () => void }) => {
 // ProfileSettings Component
 const ProfileSettings = () => {
     const { data: session, update: setSession } = useSession();
-    const [currency, setCurrency] = useState<Currency>((session?.user.preferences.currency as Currency) ?? "USD");
+    const [currency, setCurrency] = useState<Currency>((session?.user.preferences?.currency as Currency) ?? "USD");
     const [originalCurrency, setOriginalCurrency] = useState<Currency>(
-        (session?.user.preferences.currency as Currency) ?? "USD"
+        (session?.user.preferences?.currency as Currency) ?? "USD"
     );
     const [feedback, setFeedback] = useState("");
     const [isChanged, setIsChanged] = useState(false);
@@ -263,13 +269,13 @@ const ProfileSettings = () => {
         const loadUserData = async () => {
             if (session && session.user) {
                 try {
-                    const userCurrency = (session.user.preferences.currency as Currency) || "USD";
+                    const userCurrency = (session.user.preferences?.currency as Currency) || "USD";
                     setCurrency(userCurrency);
                     setOriginalCurrency(userCurrency);
                 } catch (error) {
                     console.error("Error loading user data:", error);
-                    setCurrency((session?.user.preferences.currency as Currency) || "USD");
-                    setOriginalCurrency((session?.user.preferences.currency as Currency) || "USD");
+                    setCurrency((session?.user.preferences?.currency as Currency) || "USD");
+                    setOriginalCurrency((session?.user.preferences?.currency as Currency) || "USD");
                 }
             }
         };
@@ -289,7 +295,7 @@ const ProfileSettings = () => {
         }
 
         try {
-            await updateUserPreferences(session.user.id, currency);
+            await updateUserPreferences(session.user.id ?? "", currency);
             setFeedback("Settings updated successfully.");
             setOriginalCurrency(currency);
             setIsChanged(false);

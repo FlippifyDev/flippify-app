@@ -1,5 +1,5 @@
 export type RecordType = "automatic" | "manual";
-
+export type ItemType = "orders" | "inventory"
 
 export type OrderStatus =
     | "Active"        // Order is in progress and not yet finalized. Payment may not be completed.
@@ -11,95 +11,103 @@ export type OrderStatus =
     | "InProcess";    // Order is being processed (e.g., payment or shipping underway), not yet complete.
 
 
-export type StorePlatform = "ebay" | "amazon" | "shopify";
 
-interface IEbayInventoryItem {
-    currency: string;
+export const STORES = ["ebay"] as const;
+export type HardcodedStoreType = typeof STORES[number];
+
+export type StoreType = HardcodedStoreType | string;
+
+interface IListing {
+    currency?: string | null;
     customTag?: string | null;
-    dateListed: string;
-    image: string[];
-    initialQuantity: number;
-    itemId: string;
-    lastModified: string;
-    name: string;
-    price: number;
+    dateListed?: string | null;
+    image?: string[] | null;
+    initialQuantity?: number | null;
+    itemId?: string | null;
+    lastModified?: string | null;
+    name?: string | null;
+    price?: number | null;
     purchase?: {
-        date: string | null;
-        platform: string | null;
-        price: number | null;
-    };
-    quantity: number;
-    recordType: RecordType;
+        date?: string | null;
+        platform?: string | null;
+        price?: number | null;
+    } | null;
+    quantity?: number | null;
+    recordType?: RecordType | null;
+    storeType?: StoreType | null;
 }
 
+
 interface IShipping {
-    fees: number;
-    paymentToShipped?: number;
-    service?: string;
-    timeDays?: number;
-    trackingNumber?: string;
+    fees?: number | null;
+    paymentToShipped?: number | null;
+    service?: string | null;
+    timeDays?: number | null;
+    trackingNumber?: string | null;
 }
 
 interface IPurchase {
-    currency: string;
-    date: string;
-    platform: string | null;
-    price: number | null;
-    quantity: number | null;
+    currency?: string | null;
+    date?: string | null;
+    platform?: string | null;
+    price?: number | null;
+    quantity?: number | null;
 }
 
 interface ISale {
-    buyerUsername?: string;
-    currency: string;
-    date: string;
-    platform: string;
-    price: number;
-    quantity: number;
+    buyerUsername?: string | null;
+    currency?: string | null;
+    date?: string | null;
+    platform?: string | null;
+    price?: number | null;
+    quantity?: number | null;
 }
 
 interface IHistory {
-    title: string;
-    description: string;
-    status: OrderStatus;
-    timestamp: string;
+    title?: string | null;
+    description?: string | null;
+    status?: OrderStatus | null;
+    timestamp?: string | null;
 }
 
 interface IRefund {
-    amaount: number;
-    currency: string;
-    referencedId: string;
-    refundedAt: string;
-    refundedTo: string;
-    status: string;
-    type: string;
+    amount?: number | null;
+    currency?: string | null;
+    referencedId?: string | null;
+    refundedAt?: string | null;
+    refundedTo?: string | null;
+    status?: string | null;
+    type?: string | null;
 }
 
-interface IEbayOrder {
-    additionalFees: number;
-    customTag: string | null;
-    history: IHistory[];
-    image: string[];
-    itemId?: string;
-    lastModified: string;
-    listingDate: string;
-    name: string;
-    orderId: string;
-    purchase: IPurchase;
-    recordType: RecordType;
-    refund: IRefund | null;
-    sale: ISale;
-    shipping: IShipping;
-    status: OrderStatus;
-    transactionId: string;
+interface IOrder {
+    additionalFees?: number | null;
+    customTag?: string | null;
+    history?: IHistory[] | null;
+    image?: string[] | null;
+    itemId?: string | null;
+    lastModified?: string | null;
+    listingDate?: string | null;
+    name?: string | null;
+    orderId?: string | null;
+    purchase?: IPurchase | null;
+    recordType?: RecordType | null;
+    refund?: IRefund | null;
+    sale?: ISale | null;
+    shipping?: IShipping | null;
+    status?: OrderStatus | null;
+    storeType?: StoreType | null;
+    transactionId?: string | null;
 }
 
 
 interface IInventory {
-    ebay: Record<string, IEbayInventoryItem>
+    ebay?: Record<string, IListing> | null;
 }
 
 interface IOrders {
-    ebay: Record<string, IEbayOrder>
+    ebay?: Record<string, IOrder> | null;
+    depop?: Record<string, IOrder> | null;
 }
 
-export type { IEbayInventoryItem, IEbayOrder, IInventory, IOrders, IHistory };
+export type { IListing, IOrder, IInventory, IOrders, IHistory };

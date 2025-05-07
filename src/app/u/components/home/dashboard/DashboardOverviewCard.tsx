@@ -1,4 +1,4 @@
-import { IEbayOrder } from '@/models/store-data';
+import { IOrder } from '@/models/store-data';
 import { currencySymbols } from '@/config/currency-config';
 
 import React, { useEffect, useState } from 'react';
@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import "@/styles/overview-cards.css"
 
 interface DashboardOverviewCardProps {
-    salesData: IEbayOrder[];
+    salesData: IOrder[];
 	currency: string;
 	selectedRange: number;
 }
@@ -48,15 +48,15 @@ const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ salesData
 		let totalCosts = 0;
 		let totalSales = 0;
 
-        salesData.forEach((order: IEbayOrder) => {
-            if (order.status !== 'Completed') return;
+        salesData.forEach((order: IOrder) => {
+            if (order.status !== 'Completed' || !order.sale?.date || !order.purchase?.price || !order.sale.quantity) return;
             const saleDate = new Date(order.sale.date);
 
 			// Only include sales within the calculated range
 			if (saleDate >= rangeStartDate && saleDate <= currentDate) {
                 const salePrice = order.sale.price || 0;
 				const purchasePrice = order.purchase.price || null;
-                const shippingFees = order.shipping.fees || 0;
+                const shippingFees = order.shipping?.fees || 0;
                 const additionalFees = order.additionalFees || 0;
 
                 if (purchasePrice) {

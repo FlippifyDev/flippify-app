@@ -3,17 +3,19 @@
 // Local Imports
 import Card from '../../dom/ui/Card';
 import Shipped from './Shipped';
+import { IOrder } from '@/models/store-data';
 import IconButton from '../../dom/ui/IconButton';
 import ReadyToShip from './ReadyToShip';
-import { IEbayOrder } from '@/models/store-data';
 import LoadingSpinner from '@/app/components/LoadingSpinner';
+import { defaultTimeFrom } from '@/utils/constants';
 import { retrieveUserOrders } from '@/services/firebase/retrieve';
+import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
 
 // External Imports
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react';
-import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
-import { defaultTimeFrom } from '@/utils/constants';
+import { fetchUserStores } from '@/utils/extract-user-data';
+
 
 const ITEMS_PER_PAGE = 5;
 
@@ -24,8 +26,8 @@ const Page = () => {
     const [initialLoad, setInitialLoad] = useState(true);
     const [updatedStatus, setUpdatedStatus] = useState(false);
 
-    const [shippedListings, setShippedListings] = useState<IEbayOrder[]>([]);
-    const [activeListings, setActiveListings] = useState<IEbayOrder[]>([]);
+    const [shippedListings, setShippedListings] = useState<IOrder[]>([]);
+    const [activeListings, setActiveListings] = useState<IOrder[]>([]);
 
     const [activePage, setActivePage] = useState(1);
     const [shippedPage, setShippedPage] = useState(1);
@@ -33,7 +35,7 @@ const Page = () => {
     const totalActivePages = Math.ceil(activeListings.length / ITEMS_PER_PAGE);
     const totalShippedPages = Math.ceil(shippedListings.length / ITEMS_PER_PAGE);
 
-    function sortOrderData(inventoryData: IEbayOrder[]) {
+    function sortOrderData(inventoryData: IOrder[]) {
         const active = inventoryData.filter(item => item.status === 'Active');
         const shipped = inventoryData.filter(item => item.status === 'InProcess');
 
@@ -43,17 +45,28 @@ const Page = () => {
 
     useEffect(() => {
         const fetchOrderData = async () => {
+            if (!session) return;
+
             if (initialLoad) {
                 setLoading(true);
             }
-            const orders = await retrieveUserOrders({
-                uid: session?.user.id as string,
-                timeFrom: defaultTimeFrom,
-                ebayAccessToken: session?.user.connectedAccounts.ebay?.ebayAccessToken as string,
-            });
 
-            if (orders) {
-                sortOrderData(orders);
+            const storeTypes = fetchUserStores(session.user);
+
+            const salesResult = await Promise.all(
+                storeTypes.map((storeType) => {
+                    return retrieveUserOrders({
+                        uid: session.user.id as string,
+                        timeFrom: defaultTimeFrom,
+                        ebayAccessToken: session.user.connectedAccounts?.ebay?.ebayAccessToken ?? "",
+                        storeType,
+                    }).then((order) => [storeType, order] as const);
+                })
+            );
+            const sales = salesResult[salesResult.length - 1]?.[1] ?? [];
+
+            if (sales) {
+                sortOrderData(sales);
             }
             if (initialLoad) {
                 setLoading(false);
@@ -61,19 +74,19 @@ const Page = () => {
             }
         };
 
-        if (session?.user.authentication.subscribed) {
+        if (session?.user.authentication?.subscribed) {
             fetchOrderData();
         }
-    }, [session?.user, updatedStatus, initialLoad]);
+    }, [session, updatedStatus, initialLoad]);
 
-    const getPaginatedItems = (list: IEbayOrder[], page: number) => {
+    const getPaginatedItems = (list: IOrder[], page: number) => {
         const start = (page - 1) * ITEMS_PER_PAGE;
         return list.slice(start, start + ITEMS_PER_PAGE);
     };
 
     return (
         <LayoutSubscriptionWrapper anySubscriptions={["admin", "member"]}>
-            {session?.user.connectedAccounts.ebay ? (
+            {session?.user.authentication?.subscribed ? (
                 <div className='flex flex-col md:flex-row gap-4'>
                     <Card title="Ready to ship" className='h-full'>
                         {loading ? (

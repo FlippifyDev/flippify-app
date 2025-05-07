@@ -1,13 +1,14 @@
 "use client"
 
 // Local Imports
+import { IOrder } from '@/models/store-data';
 import IconButton from '../../dom/ui/IconButton';
-import { IEbayOrder } from '@/models/store-data';
+import { deleteItem } from '@/services/firebase/delete';
 import LoadingSpinner from '@/app/components/LoadingSpinner';
 import UpdateTableField from './UpdateTableField';
-import { getCachedItem } from '@/utils/cache-helpers';
+import { orderCacheKey } from '@/utils/constants';
 import { formatTableDate } from '@/utils/format-dates';
-import { ebayOrderCacheKey } from '@/utils/constants';
+import { getCachedItem, removeCacheData } from '@/utils/cache-helpers';
 
 // External Imports
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -24,11 +25,12 @@ const Order = () => {
     const params = useSearchParams()
     const { data: session } = useSession()
 
-    const cacheKey = `${ebayOrderCacheKey}-${session?.user.id}`;
+    const cacheKey = `${orderCacheKey}-${session?.user.id}`;
 
-    const [order, setOrder] = useState<IEbayOrder>()
+    const [order, setOrder] = useState<IOrder>()
     const [triggerUpdate, setTriggerUpdate] = useState(true);
     const [loading, setLoading] = useState(true);
+    const [deleting, setDeleting] = useState(false);
 
     useEffect(() => {
         if (!triggerUpdate) return;
@@ -66,6 +68,19 @@ const Order = () => {
         )
     }
 
+
+    async function handleDeleteOrder() {
+        setDeleting(true);
+        const tid = params?.get("tid");
+
+        if (session?.user.id && tid && order?.storeType) {
+            await deleteItem({ uid: session.user.id, itemType: "orders", storeType: order.storeType, docId: tid, isAuto: order?.recordType === "automatic" });
+            removeCacheData(cacheKey, tid);
+            router.push(`/u/${session.user.username}/tools/inventory-and-orders#orders`);
+        }
+        setDeleting(false);
+    }
+
     return (
         <div className='flex flex-col'>
             { /* Breadcrump & Title */}
@@ -98,7 +113,7 @@ const Order = () => {
                     <div className='flex justify-center items-center'>
                         <figure className='max-w-96'>
                             <Image
-                                src={order.image[0]}
+                                src={order.image ? order.image[0]: ""}
                                 alt="Order Image"
                                 width={500}
                                 height={500}
@@ -130,15 +145,9 @@ const Order = () => {
                                 className="dropdown-content mt-2 right-0 menu bg-white space-y-1 rounded-lg w-40 border border-gray-200"
                             >
                                 <button
-                                    className='flex items-center gap-3 font-semibold py-2 px-3 rounded-md hover:bg-gray-100 active:bg-gray-200 transition duration-200'
-
-                                >
-                                    <span><MdOutlineCurrencyExchange /></span>
-                                    <span className=''>Currency</span>
-                                </button>
-                                <hr />
-                                <button
-                                    className='flex items-center gap-3 text-red-500 font-semibold py-2 px-3 rounded-md hover:bg-gray-100 active:bg-gray-200 transition duration-200'
+                                    onClick={handleDeleteOrder}
+                                    disabled={deleting}
+                                    className='flex items-center gap-3 disabled:bg-muted text-red-500 font-semibold py-2 px-3 rounded-md hover:bg-gray-100 active:bg-gray-200 transition duration-200'
 
                                 >
                                     <span><FaRegTrashAlt /></span>
@@ -155,29 +164,29 @@ const Order = () => {
 
 
 interface OrderInfoTableProps {
-    order: IEbayOrder;
+    order: IOrder;
     cacheKey: string;
     triggerUpdate: () => void;
 }
 
 const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, triggerUpdate }) => {
-    const { transactionId, sale, purchase, shipping, additionalFees, customTag } = order;
+    const { transactionId, sale, purchase, shipping, additionalFees, customTag, storeType } = order;
 
     let soldFor: number, profit: number | "N/A", roi: number | "N/A";
-    purchase.price = purchase.price ?? 0;
+    const purchasePrice = purchase?.price ?? 0;
 
-    soldFor = sale.price;
+    soldFor = sale?.price ?? 0;
 
-    if (purchase.price) {
-        profit = soldFor - purchase.price;
-        roi = (profit / purchase.price) * 100;
+    if (purchasePrice) {
+        profit = soldFor - purchasePrice;
+        roi = (profit / purchasePrice) * 100;
     } else {
         profit = "N/A";
         roi = "N/A";
     }
 
-    const sellerCosts = order.additionalFees + order.shipping.fees;
-    const currencySymbol = getSymbolFromCurrency(order.sale.currency)
+    const sellerCosts = (order.additionalFees ?? 0) + (order.shipping?.fees ?? 0);
+    const currencySymbol = getSymbolFromCurrency(order.sale?.currency ?? "$")
 
     return (
         <table className='w-full'>
@@ -198,6 +207,24 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                 </tr>
                 <tr className='border-b'>
                     <td className="py-4 px-6 font-medium text-gray-800">
+                        Marketplace
+                    </td>
+                    <UpdateTableField
+                        type="text"
+                        currentValue={storeType}
+                        docId={transactionId}
+                        item={order}
+                        docType='orders'
+                        storeType={order.storeType}
+                        keyType="storeType"
+                        cacheKey={cacheKey}
+                        triggerUpdate={triggerUpdate}
+                        tdClassName='px-3'
+                        className='max-w-64 bg-gray-100 hover:bg-gray-200 text-gray-600 !text-base transition duration-300'
+                    />
+                </tr>
+                <tr className='border-b'>
+                    <td className="py-4 px-6 font-medium text-gray-800">
                         Custom Tag
                     </td>
                     <UpdateTableField
@@ -206,7 +233,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         docId={transactionId}
                         item={order}
                         docType='orders'
-                        storeType='ebay'
+                        storeType={order.storeType}
                         keyType="customTag"
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
@@ -220,11 +247,11 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                     </td>
                     <UpdateTableField
                         type="date"
-                        currentValue={new Date(purchase.date).toISOString().split("T")[0]}
+                        currentValue={new Date(purchase?.date ?? "").toISOString().split("T")[0]}
                         docId={transactionId}
                         item={order}
                         docType='orders'
-                        storeType='ebay'
+                        storeType={order.storeType}
                         keyType="purchase.date"
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
@@ -238,11 +265,11 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                     </td>
                     <UpdateTableField
                         type="date"
-                        currentValue={new Date(sale.date).toISOString().split("T")[0]}
+                        currentValue={new Date(sale?.date ?? "").toISOString().split("T")[0]}
                         docId={transactionId}
                         item={order}
                         docType='orders'
-                        storeType='ebay'
+                        storeType={order.storeType}
                         keyType="sale.date"
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
@@ -255,11 +282,11 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         Quantity Sold
                     </td>
                     <UpdateTableField
-                        currentValue={sale.quantity.toFixed(0)}
+                        currentValue={sale?.quantity?.toFixed(0)}
                         docId={transactionId}
                         item={order}
                         docType='orders'
-                        storeType='ebay'
+                        storeType={order.storeType}
                         keyType="sale.quantity"
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
@@ -272,11 +299,11 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         Purchased from
                     </td>
                     <UpdateTableField
-                        currentValue={purchase.platform}
+                        currentValue={purchase?.platform}
                         docId={transactionId}
                         item={order}
                         docType='orders'
-                        storeType='ebay'
+                        storeType={order.storeType}
                         keyType="purchase.platform"
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
@@ -289,11 +316,11 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         Purchased price ({currencySymbol})
                     </td>
                     <UpdateTableField
-                        currentValue={purchase.price.toFixed(2)}
+                        currentValue={purchasePrice.toFixed(2)}
                         docId={transactionId}
                         item={order}
                         docType='orders'
-                        storeType='ebay'
+                        storeType={order.storeType}
                         keyType="purchase.price"
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
@@ -306,11 +333,11 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         Sale price ({currencySymbol})
                     </td>
                     <UpdateTableField
-                        currentValue={sale.price.toFixed(2)}
+                        currentValue={sale?.price?.toFixed(2)}
                         docId={transactionId}
                         item={order}
                         docType='orders'
-                        storeType='ebay'
+                        storeType={order.storeType}
                         keyType="sale.price"
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
@@ -323,11 +350,11 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         Shipping Costs ({currencySymbol})
                     </td>
                     <UpdateTableField
-                        currentValue={shipping.fees.toFixed(2)}
+                        currentValue={shipping?.fees?.toFixed(2)}
                         docId={transactionId}
                         item={order}
                         docType='orders'
-                        storeType='ebay'
+                        storeType={order.storeType}
                         keyType="shipping.fees"
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
@@ -340,11 +367,11 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         Additional Costs ({currencySymbol})
                     </td>
                     <UpdateTableField
-                        currentValue={additionalFees.toFixed(2)}
+                        currentValue={additionalFees?.toFixed(2)}
                         docId={transactionId}
                         item={order}
                         docType='orders'
-                        storeType='ebay'
+                        storeType={order.storeType}
                         keyType="additionalFees"
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
@@ -357,7 +384,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         Total Costs
                     </td>
                     <td className="py-4 px-6 ">
-                        <span className="text-gray-600">{currencySymbol}{(sellerCosts + purchase.price).toFixed(2)}</span>
+                        <span className="text-gray-600">{currencySymbol}{(sellerCosts + (purchase?.price ?? 0)).toFixed(2)}</span>
                     </td>
                 </tr>
                 <tr className='border-b'>
@@ -381,7 +408,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         Payout
                     </td>
                     <td className="py-4 px-6 ">
-                        <span className="text-gray-600">{currencySymbol}{(soldFor - shipping.fees - additionalFees).toFixed(2)}</span>
+                        <span className="text-gray-600">{currencySymbol}{(soldFor - (shipping?.fees ?? 0) - (additionalFees ?? 0)).toFixed(2)}</span>
                     </td>
                 </tr>
             </tbody>
@@ -391,12 +418,14 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
 }
 
 
-const OrderHistory = ({ order }: { order: IEbayOrder }) => {
+const OrderHistory = ({ order }: { order: IOrder }) => {
     const eBayListingRoot = "https://www.ebay.com/itm/"
     return (
         <div className="p-8">
             <div className="">
-                {[...order.history].reverse().map((event, index) => {
+                {[...order.history ?? []].reverse().map((event, index) => {
+                    if (!event || !event.description || !event.timestamp) return;
+
                     const isSold = event.title === "Sold";
                     let formattedDescription: React.ReactNode | string = event.description;
 
@@ -410,7 +439,7 @@ const OrderHistory = ({ order }: { order: IEbayOrder }) => {
                         formattedDescription = (
                             <span>
                                 Sold on <span className="font-semibold">eBay {country}</span> for{" "}
-                                <span className="font-semibold">{getSymbolFromCurrency(order.sale.currency)}{price}</span>.{" "}
+                                <span className="font-semibold">{getSymbolFromCurrency(order.sale?.currency ?? "$")}{price}</span>.{" "}
                                 Order Id {" "}
                                 <span className="font-semibold">{order.orderId}</span>
                             </span>
@@ -427,7 +456,7 @@ const OrderHistory = ({ order }: { order: IEbayOrder }) => {
                             <div className="text-slate-500 ml-2">
                                 {formattedDescription}
                             </div>
-                            
+
                             <div className="text-sm text-slate-400 font-[550] ml-2 mt-1">
                                 {new Date(event.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                             </div>
@@ -487,7 +516,7 @@ const OrderHistory = ({ order }: { order: IEbayOrder }) => {
                         </div>
                     </div>
                 )}
-                {order.purchase.date && (
+                {order.purchase?.date && (
                     <div className="relative pl-8 sm:pl-32 py-6 group">
                         <div className="font-caveat font-medium text-2xl text-houseHoverBlue mb-1 sm:mb-0 ml-2">Purchased</div>
                         <div className="flex flex-col sm:flex-row items-start mb-1 group-last:before:hidden before:absolute before:left-2 sm:before:left-0 before:h-full before:px-px before:bg-slate-300 sm:before:ml-[7rem] before:self-start before:-translate-x-1/2 before:translate-y-3 after:absolute after:left-2 sm:after:left-0 after:w-2 after:h-2 after:bg-houseHoverBlue after:border-4 after:box-content after:border-slate-50 after:rounded-full sm:after:ml-[7rem] after:-translate-x-1/2 after:translate-y-1.5">
@@ -497,7 +526,7 @@ const OrderHistory = ({ order }: { order: IEbayOrder }) => {
                         <div className="text-slate-500 ml-2">
                             <span>Item puchased </span>
                             <span>{order.purchase.price ? `for` : ""} </span>
-                            <span className='font-semibold'>{order.purchase.price ? `${getSymbolFromCurrency(order.sale.currency)}${order.purchase.price}` : ""} </span>
+                            <span className='font-semibold'>{order.purchase.price ? `${getSymbolFromCurrency(order.sale?.currency ?? "$")}${order.purchase.price}` : ""} </span>
                             <span>{order.purchase.platform ? `from` : ""} </span>
                             <span className='font-semibold'>{order.purchase.platform ? `${order.purchase.platform}` : ""}</span>
                         </div>

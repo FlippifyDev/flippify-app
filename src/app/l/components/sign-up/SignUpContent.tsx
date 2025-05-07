@@ -17,7 +17,6 @@ import { signIn } from "next-auth/react";
 import { Lato } from 'next/font/google';
 import dotenv from "dotenv";
 import Image from "next/image";
-import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 dotenv.config();
 
@@ -348,7 +347,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                 >
                     {loading ? "Processing..." : status ? "Sign Up": 
                     <div className="w-full flex justify-center">
-                        <LoadingSpinner />
+                            Please wait...
                     </div>
                     }
                 </button>

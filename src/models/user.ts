@@ -1,93 +1,91 @@
-export type RecordType = "automatic" | "manual";
+import { StoreType } from "./store-data";
+
 export type CurrencyType = "USD" | "GBP" | "EUR" | "AUD" | "CAD";
 export type EmailVerification = "unverified" | "verifying" | "verified";
-export type StoreType = "ebay" | "amazon" | "shopify";
 
 interface IUser {
-    id: string;
-    connectedAccounts: IConnectedAccounts;
-    email: string;
-    username: string;
-    stripeCustomerId: string;
-    subscriptions: ISubscription[] | null;
-    store: Record<StoreType, IStore> | null;
-    referral: IReferral;
-    preferences: IPreferences;
-    authentication: IAuthentication;
-    metaData: IMetaData;
+    id?: string | null;
+    connectedAccounts?: IConnectedAccounts | null;
+    email?: string | null;
+    username?: string | null;
+    stripeCustomerId?: string | null;
+    subscriptions?: ISubscription[] | null;
+    store?: Record<StoreType | string, IStore> | null;
+    referral?: IReferral | null;
+    preferences?: IPreferences | null;
+    authentication?: IAuthentication | null;
+    metaData?: IMetaData | null;
 }
 
-
 interface INumListings {
-    automatic: number;
-    manual: number;
+    automatic?: number | null;
+    manual?: number | null;
 }
 
 interface INumOrders {
-    resetDate: string;
-    automatic: number;
-    manual: number;
-    totalAutomatic: number;
-    totalManual: number;
+    resetDate?: string | null;
+    automatic?: number | null;
+    manual?: number | null;
+    totalAutomatic?: number | null;
+    totalManual?: number | null;
 }
 
 interface IStore {
-    numListings?: INumListings;
-    numOrders?: INumOrders;
-    lastFetchedDate: ILastFetchedDate | null;
+    numListings?: INumListings | null;
+    numOrders?: INumOrders | null;
+    lastFetchedDate?: ILastFetchedDate | null;
 }
 
-
 interface ILastFetchedDate {
-    inventory?: string;
-    orders?: string;
+    inventory?: string | null;
+    orders?: string | null;
 }
 
 interface IAuthentication {
-    emailVerified: EmailVerification;
-    onboarding?: boolean;
-    subscribed?: "free" | "standard" | "pro" | "enterprise";
+    emailVerified?: EmailVerification;
+    onboarding?: boolean | null;
+    subscribed?: "free" | "standard" | "pro" | "enterprise" | null;
 }
 
 interface IMetaData {
-    image?: string;
-    createdAt: string;
+    image?: string | null;
+    createdAt?: string | null;
 }
 
 interface IConnectedAccounts {
-    discord: IDiscord | null;
-    ebay: IEbay | null;
+    discord?: IDiscord | null;
+    ebay?: IEbay | null;
 }
 
 interface ISubscription {
-    id: string;
-    name: string;
-    override: boolean;
-    createdAt: string;
+    id?: string | null;
+    name?: string | null;
+    override?: boolean | null;
+    createdAt?: string | null;
 }
 
 interface IDiscord {
-    discordId: string;
+    discordId?: string | null;
 }
 
 interface IEbay {
-    ebayAccessToken: string;
-    ebayRefreshToken: string;
-    ebayTokenExpiry: number;
-    error?: string;
-    error_description?: string;
+    ebayAccessToken?: string | null;
+    ebayRefreshToken?: string | null;
+    ebayTokenExpiry?: number | null;
+    error?: string | null;
+    error_description?: string | null;
 }
 
 interface IReferral {
-    referralCode: string;
-    referredBy: string | null;
-    validReferrals: string[];
-    rewardsClaimed: number;
+    referralCode?: string | null;
+    referredBy?: string | null;
+    validReferrals?: string[] | null;
+    rewardsClaimed?: number | null;
 }
 
 interface IPreferences {
-    locale: string;
-    currency: CurrencyType;
+    locale?: string | null;
+    currency?: CurrencyType;
 }
 
-export type { IUser, ISubscription, IEbay, IReferral, IPreferences, IConnectedAccounts };
+export type { IUser, ISubscription, IEbay, IReferral, IPreferences, IConnectedAccounts, IStore };

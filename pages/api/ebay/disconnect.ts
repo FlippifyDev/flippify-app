@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(401).json({ error: 'User not authenticated' });
         }
 
-        const userRef = await retrieveUserRefAdmin(session.user.id);
+        const userRef = await retrieveUserRefAdmin(session.user.id as string);
         if (!userRef) {
             return res.status(404).json({ error: 'User not found' });
         }
@@ -27,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const user = userSnapshot.data() as IUser;
 
         // Ensure eBay data exists
-        if (!user.connectedAccounts.ebay) {
+        if (!user.connectedAccounts?.ebay) {
             return res.status(400).json({ error: 'No eBay data found for this user' });
         }
 

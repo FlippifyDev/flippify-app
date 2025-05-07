@@ -1,6 +1,6 @@
 "use client";
 
-import { IEbayOrder } from "@/models/store-data";
+import { IOrder } from "@/models/store-data";
 import { currencySymbols } from "@/config/currency-config";
 import {
 	startOfDay,
@@ -24,7 +24,7 @@ interface ChartData {
 }
 
 interface DashboardProfitsGraphProps {
-	salesData: IEbayOrder[];
+	salesData: IOrder[];
 	currency: string;
 	selectedRange: number;
 }
@@ -148,7 +148,7 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({
 
 			// Iterate over sales data
 			for (const order of salesData) {
-				if (order.status !== "Completed") continue;
+                if (order.status !== "Completed" || !order.sale?.date || !order.purchase?.price) continue;
 
 				// Parse the order date
 				const saleDate = new Date(order.sale.date);
@@ -160,7 +160,7 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({
 				const saleRevenue = order.sale.price;
 
 				// Calculate costs for the order
-				const saleCost = order.purchase.price + order.shipping.fees + order.additionalFees;
+				const saleCost = order.purchase.price + (order.shipping?.fees ?? 0) + (order.additionalFees ?? 0);
 
 				// Calculate profit for the order
 				const saleProfit = saleRevenue - saleCost;

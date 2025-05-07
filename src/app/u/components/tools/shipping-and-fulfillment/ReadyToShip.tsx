@@ -1,5 +1,5 @@
 // Local Imports
-import { IEbayOrder } from '@/models/store-data'
+import { IOrder } from '@/models/store-data'
 import { shortenText } from '@/utils/format';
 import { handleShortDate } from '@/utils/format-dates';
 import { updateOrderStatus } from '@/services/firebase/update';
@@ -11,7 +11,7 @@ import { FaCheck } from "react-icons/fa";
 import Image from 'next/image';
 
 interface IReadyToShipProps {
-    item: IEbayOrder;
+    item: IOrder;
     uid: string;
     setUpdatedStatus: (status: boolean) => void;
 }
@@ -56,7 +56,7 @@ const ReadyToShip: React.FC<IReadyToShipProps> = ({ item, uid, setUpdatedStatus 
                 <td className="min-w-20">
                     <figure>
                         <Image
-                            src={item.image[0]}
+                            src={item.image ? item.image[0]: ""}
                             width={100}
                             height={100}
                             alt={"image"}
@@ -67,16 +67,16 @@ const ReadyToShip: React.FC<IReadyToShipProps> = ({ item, uid, setUpdatedStatus 
                     </figure>
                 </td>
                 <td>
-                    {shortenText(item.name)}
+                    {shortenText(item.name ?? "N/A")}
                 </td>
                 <td>
-                    {item.sale.quantity}
+                    {item.sale?.quantity}
                 </td>
                 <td className='min-w-20'>
-                    {handleShortDate(item.sale.date)}
+                    {handleShortDate(item.sale?.date ?? "")}
                 </td>
                 <td className='min-w-20'>
-                    {shipIn(item.sale.date)}
+                    {shipIn(item.sale?.date ?? "")}
                 </td>
                 <td>
                     <button

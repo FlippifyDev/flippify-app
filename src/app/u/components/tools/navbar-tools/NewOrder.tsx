@@ -9,45 +9,47 @@ import { formatDateToISO } from '@/utils/format-dates';
 import { currencySymbols } from '@/config/currency-config';
 import { createHistoryItems } from '@/services/firebase/helpers';
 import { createNewOrderItemAdmin } from '@/services/firebase/create-admin';
-import { validateNumberInput, validateTextInput } from '@/utils/input-validation';
-import { IEbayInventoryItem, IEbayOrder, OrderStatus } from '@/models/store-data';
+import { IListing, IOrder, OrderStatus } from '@/models/store-data';
+import { fetchUserInventoryAndOrdersCount } from '@/utils/extract-user-data';
+import { inventoryCacheKey, orderCacheKey, subscriptionLimits } from '@/utils/constants';
 import { addCacheData, getCachedData, removeCacheData, updateCacheData } from '@/utils/cache-helpers';
+import { validateAlphaNumericInput, validateNumberInput, validateTextInput } from '@/utils/input-validation';
 import { generateRandomFlippifyOrderId, generateRandomFlippifyTransactionId } from '@/utils/generate-random';
-import { ebayInventoryCacheKey, ebayOrderCacheKey, storePlatforms, subscriptionLimits } from '@/utils/constants';
 
 // External Imports
-import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 
 
 
-interface NewEbayOrderFormProps {
-    fillItem?: IEbayInventoryItem,
-    setDisplayModal: (value: boolean) => void
+interface NewOrderProps {
+    fillItem?: IListing;
+    setDisplayModal: (value: boolean) => void;
 }
 
 
-const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDisplayModal }) => {
-    const { data: session } = useSession();
-    const currencySymbol = currencySymbols[session?.user.preferences.currency ?? ""]
+const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal }) => {
+    const { data: session, update: updateSession } = useSession();
+    const currencySymbol = currencySymbols[session?.user.preferences?.currency ?? ""]
 
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
     const [aboveLimit, setAboveLimit] = useState(false);
 
     // General Info
-    const [itemId, setItemId] = useState<string>("")
-    const [itemName, setItemName] = useState<string>("")
+    const [itemId, setItemId] = useState<string>("");
+    const [itemName, setItemName] = useState<string>("");
     const [fileName, setFileName] = useState("Upload Image");
-    const [customTag, setCustomTag] = useState<string>("")
+    const [customTag, setCustomTag] = useState<string>("");
     const [imageUrl, setImageUrl] = useState<string>("");
+    const [storeType, setStoreType] = useState<string>("")
 
     // Listing Info
     const [dateListed, setDateListed] = useState<string>(new Date().toISOString().split('T')[0])
     const [quantity, setQuantity] = useState<string>("1")
 
     const [listing, setListing] = useState<string>("")
-    const [listingDowndownItems, setListingDowndownItems] = useState<IEbayInventoryItem[]>([])
+    const [listingDowndownItems, setListingDowndownItems] = useState<IListing[]>([])
 
     // Purchase Info
     const [datePurchased, setDatePurchased] = useState<string>(new Date().toISOString().split('T')[0])
@@ -66,8 +68,8 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
 
     const [loading, setLoading] = useState<boolean>(false);
 
-    const inventoryCacheKey = `${ebayInventoryCacheKey}-${session?.user?.id}`;
-    const cachedListings = getCachedData(inventoryCacheKey) as Record<string, IEbayInventoryItem> | null;
+    const inventoryCache = `${inventoryCacheKey}-${session?.user?.id}`;
+    const cachedListings = getCachedData(inventoryCache) as Record<string, IListing> | null;
 
     // Messages
     const [errorMessage, setErrorMessage] = useState<string>("")
@@ -75,14 +77,14 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
 
     useEffect(() => {
         const checkLimit = () => {
-            const plan = session?.user.authentication.subscribed;
+            const plan = session?.user.authentication?.subscribed;
             if (!plan) {
                 setErrorMessage("Please subscribe to a plan to add orders.");
                 setAboveLimit(true);
                 return;
             }
-            const manualOrders = session?.user.store?.ebay.numOrders?.manual || 0;
-            if (manualOrders >= subscriptionLimits[plan].manual) {
+            const count = fetchUserInventoryAndOrdersCount(session.user);
+            if (count.manualListings >= subscriptionLimits[plan].manual) {
                 setErrorMessage(`You have reached the maximum number of manual orders for your plan. Please upgrade your plan to add more or wait till next month.`);
                 setAboveLimit(true);
                 return;
@@ -100,20 +102,49 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
         handleListingClick(fillItem);
     }, [fillItem])
 
-    function handleCacheUpdate(orderItem: IEbayOrder) {
-        const orderCacheKey = `${ebayOrderCacheKey}-${session?.user.id}`;
-        const inventoryItem = cachedListings?.[itemId] as IEbayInventoryItem;
-        const newQuantity = inventoryItem.quantity - Number(quantity);
+    async function handleCacheAndSessionUpdate(orderItem: IOrder) {
+        const orderCache = `${orderCacheKey}-${session?.user.id}`;
+        const inventoryItem = cachedListings?.[itemId] as IListing;
+        const newQuantity = (inventoryItem.quantity ?? 0) - Number(quantity);
 
         // Step 1: Add the order item to the orders cache
-        addCacheData(orderCacheKey, orderItem);
+        addCacheData(orderCache, orderItem);
+
+        const currentStore = session!.user.store?.ebay || {};
+        const currentNumOrders = currentStore.numOrders?.manual ?? 0;
+        const currentTotalNumOrders = currentStore.numOrders?.manual ?? 0;
+        const currentNumListings = currentStore.numListings?.manual ?? 0;
+        let decrementListingAmount = 0
 
         // Step 2: Update the inventory item in the inventory cache 
-        if (newQuantity <= 0)
-            removeCacheData(inventoryCacheKey, itemId);
-        else {
-            updateCacheData(inventoryCacheKey, { ...inventoryItem, quantity: newQuantity });
+        if (newQuantity <= 0) {
+            removeCacheData(inventoryCache, itemId);
+            decrementListingAmount = 1;
+        } else {
+            updateCacheData(inventoryCache, { ...inventoryItem, quantity: newQuantity });
         }
+
+        await updateSession({
+            ...session!,
+            user: {
+                ...session!.user,
+                store: {
+                    ...session!.user.store,
+                    ebay: {
+                        ...currentStore,
+                        numOrders: {
+                            ...currentStore.numOrders,
+                            manual: currentNumOrders + 1,
+                            totalManual: currentTotalNumOrders + 1
+                        },
+                        numListings: {
+                            ...currentStore.numListings,
+                            manual: currentNumListings - decrementListingAmount
+                        }
+                    },
+                },
+            },
+        });
     }
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -130,7 +161,7 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
         });
         if (!historyItems) return;
 
-        const orderItem: IEbayOrder = {
+        const orderItem: IOrder = {
             additionalFees: 0,
             customTag: customTag,
             image: [imageUrl],
@@ -141,7 +172,7 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
             listingDate: formatDateToISO(new Date(dateListed)),
             orderId: generateRandomFlippifyOrderId(20),
             purchase: {
-                currency: session?.user.preferences.currency ?? "USD",
+                currency: session?.user.preferences?.currency ?? "USD",
                 date: datePurchased ? formatDateToISO(new Date(datePurchased)) : formatDateToISO(new Date(dateListed)),
                 platform: purchasePlatform || null,
                 price: purchasePrice ? Number(purchasePrice) : null,
@@ -151,9 +182,9 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
             refund: null,
             sale: {
                 buyerUsername: "",
-                currency: session?.user.preferences.currency ?? "USD",
+                currency: session?.user.preferences?.currency ?? "USD",
                 date: formatDateToISO(new Date(saleDate)),
-                platform: session?.user.preferences.locale ?? "US",
+                platform: session?.user.preferences?.locale ?? "US",
                 price: Number(salePrice),
                 quantity: Number(quantity),
             },
@@ -165,10 +196,11 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
                 trackingNumber: undefined,
             },
             status: shippingStatus ?? "Active",
+            storeType: storeType,
             transactionId: generateRandomFlippifyTransactionId(20)
         }
 
-        const { success, error, orderExists } = await createNewOrderItemAdmin(session?.user.id ?? "", storePlatforms.ebay, orderItem);
+        const { success, error, orderExists } = await createNewOrderItemAdmin(session?.user.id ?? "", storeType, orderItem);
         if (!success) {
             console.error("Error creating new order item", error)
             if (orderExists) {
@@ -177,7 +209,7 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
                 setErrorMessage("Error creating new order item")
             }
         } else {
-            handleCacheUpdate(orderItem);
+            await handleCacheAndSessionUpdate(orderItem);
             setSuccessMessage("Order Added!")
         }
 
@@ -189,32 +221,33 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
             setListingDowndownItems([]);
             return;
         }
-        const filteredListings = Object.values(cachedListings ?? {})?.filter((listing: IEbayInventoryItem) => {
-            return listing.itemId.toLowerCase().includes(value.toLowerCase()) || listing.name.toLowerCase().includes(value.toLowerCase())
+        const filteredListings = Object.values(cachedListings ?? {})?.filter((listing: IListing) => {
+            return listing.itemId?.toLowerCase().includes(value.toLowerCase()) || listing.name?.toLowerCase().includes(value.toLowerCase())
         }) || [];
         setListingDowndownItems(filteredListings);
     }
 
-    function handleListingClick(item: IEbayInventoryItem) {
+    function handleListingClick(item: IListing) {
         // General Info
-        setItemId(item.itemId);
-        setItemName(item.name);
-        setImageUrl(item.image[0]);
+        setItemId(item.itemId ?? "N/A");
+        setItemName(item.name ?? "N/A");
+        setStoreType(item.storeType ?? "");
+        setImageUrl(item.image ? item.image[0]: "");
         setCustomTag(item.customTag || "");
 
         // Set Listing Info
-        setListing(item.itemId);
-        setDateListed(new Date(item.dateListed).toISOString().split('T')[0]);
+        setListing(item.itemId ?? "N/A");
+        setDateListed(new Date(item.dateListed ?? "").toISOString().split('T')[0]);
 
         // Set Purchase Info
         setPurchasePrice(item.purchase?.price ? item.purchase.price.toString() : "");
         const purchaseDate = item.purchase?.date || item.dateListed;
-        setDatePurchased(new Date(purchaseDate).toISOString().split('T')[0]);
+        setDatePurchased(new Date(purchaseDate ?? "").toISOString().split('T')[0]);
         setPurchasePlatform(item.purchase?.platform || "");
-        setPurchaseQuantity(item.initialQuantity)
+        setPurchaseQuantity(item.initialQuantity ?? 0)
 
         // Set Sale Info
-        setSalePrice(item.price.toString());
+        setSalePrice(item.price?.toString() ?? "N/A");
         setSaleDate(new Date().toISOString().split('T')[0]);
 
 
@@ -227,6 +260,9 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
                 handleSearchForListing(value);
                 setListing(value);
                 break;
+            case "storeType":
+                validateAlphaNumericInput(value.toLowerCase(), setStoreType) // Must be lowercase
+                break
             case "saleDate":
                 setSaleDate(value);
                 break;
@@ -258,7 +294,7 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
     }
 
     return (
-        <Modal title="Add a new eBay order" className="relative max-w-[21rem] sm:max-w-xl flex-grow" setDisplayModal={setDisplayModal}>
+        <Modal title="Add a new order" className="relative max-w-[21rem] sm:max-w-xl flex-grow" setDisplayModal={setDisplayModal}>
             {aboveLimit && (
                 <div className="text-center">
                     <span>Sorry you&apos;ve reach your max manual orders for this month</span>
@@ -267,8 +303,9 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
 
             {!aboveLimit && (
                 <form className="w-full max-w-xl flex flex-col gap-4" onSubmit={handleSubmit}>
-                    <div className='relative flex flex-col gap-2 w-full'>
+                    <div className='relative flex flex-col sm:flex-row items-center w-full gap-4'>
                         <Input type="text" placeholder='Enter listing (id or name)' title="Listing (Optional)" value={listing} onChange={(e) => handleChange(e.target.value, "listing")} />
+                        <Input type="text" placeholder="Enter marketplace" title="Marketplace" value={storeType} onChange={(e) => handleChange(e.target.value, "storeType")} />
                         <SelectRelatedListing listingDowndownItems={listingDowndownItems} currencySymbol={currencySymbol} onClick={handleListingClick} />
                     </div>
                     <div className="flex flex-col sm:flex-row items-center w-full gap-4">
@@ -316,7 +353,7 @@ const NewEbayOrderForm: React.FC<NewEbayOrderFormProps> = ({ fillItem, setDispla
                         <div>
                             <button
                                 type="submit"
-                                disabled={loading || !saleDate || !salePrice || !quantity || !itemName}
+                                disabled={loading || !saleDate || !salePrice || !quantity || !itemName || !storeType}
                                 className="disabled:bg-gray-600 disabled:pointer-events-none bg-houseBlue text-white text-sm py-2 px-4 rounded-md hover:bg-houseHoverBlue transition duration-200"
                             >
                                 {successMessage ? successMessage : loading ? "Adding..." : "Add Sale"}
@@ -397,9 +434,9 @@ const ShippingStatusRadioButtons: React.FC<ShippingStatusRadioButtonsProps> = ({
 
 
 interface SelectRelatedListingProps {
-    listingDowndownItems: IEbayInventoryItem[],
+    listingDowndownItems: IListing[],
     currencySymbol: string,
-    onClick: (item: IEbayInventoryItem) => void
+    onClick: (item: IListing) => void
 }
 
 
@@ -407,20 +444,20 @@ const SelectRelatedListing: React.FC<SelectRelatedListingProps> = ({ listingDown
     return (
         listingDowndownItems.length > 0 && (
             <div className='absolute left-0 top-full mt-1 w-full bg-white shadow-md rounded-lg flex flex-col max-h-48 overflow-y-auto'>
-                {listingDowndownItems.map((item: IEbayInventoryItem) => (
+                {listingDowndownItems.map((item: IListing) => (
                     <div key={item.itemId} onClick={() => { onClick(item) }} className='flex flex-row items-center justify-between gap-2 hover:bg-gray-100 p-4 rounded-lg select-none cursor-pointer'>
                         <div className='flex flex-row items-center gap-2'>
                             <figure className="border-[3px] rounded-full">
                                 <Image
-                                    src={item.image[0]}
-                                    alt={item.name}
+                                    src={item.image ? item.image[0]: ""}
+                                    alt={item.name ?? "N/A"}
                                     className='h-9 w-9 object-cover rounded-full'
                                     width={50}
                                     height={50}
                                 />
                             </figure>
                             <div className='flex flex-col'>
-                                <span className='text-sm font-semibold'>{shortenText(item.name)}</span>
+                                <span className='text-sm font-semibold'>{shortenText(item.name ?? "N/A")}</span>
                                 <span className='text-xs text-gray-500'>{item.itemId}</span>
                             </div>
                         </div>
@@ -434,4 +471,4 @@ const SelectRelatedListing: React.FC<SelectRelatedListingProps> = ({ listingDown
     )
 }
 
-export default NewEbayOrderForm;
+export default NewOrder;

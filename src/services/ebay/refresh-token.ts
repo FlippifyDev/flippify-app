@@ -40,14 +40,14 @@ async function refreshEbayToken(customerId: string): Promise<string> {
         const tokenData = await tokenResponse.json() as IEbay;
 
         // If there was an error from eBay, throw an error
-        if (tokenData.error) {
+        if (tokenData.error || !tokenData.ebayAccessToken || !tokenData.ebayTokenExpiry) {
             throw new Error(tokenData.error_description || 'Error refreshing eBay token');
         }
 
         // Prepare updated eBay token data
         const updatedEbayData = {
             ebayAccessToken: tokenData.ebayAccessToken,
-            ebayTokenExpiry: Date.now() + tokenData.ebayTokenExpiry * 1000,
+            ebayTokenExpiry: Date.now() + tokenData.ebayTokenExpiry,
             ebayRefreshToken: tokenData.ebayRefreshToken || refreshToken
         };
 

@@ -12,7 +12,6 @@ import Image from "next/image";
 import { StatusType } from "@/models/config";
 import UnderMaintenance from "../development/UnderMaintenance";
 import { retrieveStatus } from "@/services/api/request";
-import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
@@ -113,7 +112,7 @@ const LoginContent = () => {
                             >
                                 {loading ? "Processing..." : status ? "Login" : 
                                     <div className="w-full flex justify-center">
-                                        <LoadingSpinner />
+                                        Please wait...
                                     </div>
                                 }
                             </button>

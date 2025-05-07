@@ -1,15 +1,16 @@
-import { IEbayInventoryItem, IEbayOrder } from "@/models/store-data";
+import { IListing, IOrder } from "@/models/store-data";
 import { isAfter, isBefore, isEqual, parseISO } from "date-fns";
 
 
 // Function to filter orders by the given time range
-export const filterOrdersByDateRange = (orders: IEbayOrder[], timeFrom: string, timeTo: string) => {
+export const filterOrdersByDateRange = (orders: IOrder[], timeFrom: string, timeTo: string) => {
     const timeFromDate = new Date(timeFrom);
     const timeToDate = new Date(timeTo);
 
     return orders.filter(order => {
-        const listingDate = new Date(order.listingDate);
-        const saleDate = new Date(order.sale.date);
+        if (!order) return;
+        const listingDate = new Date(order.listingDate ?? "");
+        const saleDate = new Date(order.sale?.date ?? "");
 
         // Check if listingDate or saleDate is within the given time range
         return (listingDate >= timeFromDate && listingDate <= timeToDate) ||
@@ -20,16 +21,16 @@ export const filterOrdersByDateRange = (orders: IEbayOrder[], timeFrom: string, 
 /**
  * Filters orders based on the provided time range.
  * 
- * @param {IEbayOrder[]} orders - The array of orders to be filtered.
+ * @param {IOrder[]} orders - The array of orders to be filtered.
  * @param {string} timeFrom - Start date in ISO format (e.g., "2025-02-28").
  * @param {string} [timeTo] - End date in ISO format, or defaults to the current date.
- * @returns {IEbayOrder[]} - Filtered orders matching the date range.
+ * @returns {IOrder[]} - Filtered orders matching the date range.
  */
 export function filterOrdersByTime(
-    orders: IEbayOrder[],
+    orders: IOrder[],
     timeFrom: string,
     timeTo?: string
-): IEbayOrder[] {
+): IOrder[] {
     // Parse start and end dates and convert them to UTC to avoid timezone mismatch
     const startDate = parseISO(timeFrom);
     const endDate = timeTo ? parseISO(timeTo) : new Date();
@@ -46,7 +47,7 @@ export function filterOrdersByTime(
 
     return orders.filter((order) => {
         // Parse order date and force UTC
-        const orderDate = parseISO(order.sale.date);
+        const orderDate = parseISO(order.sale?.date ?? "");
 
         // Ensure valid date parsing
         if (isNaN(orderDate.getTime())) {
@@ -72,15 +73,15 @@ export function filterOrdersByTime(
 }
 
 export function filterInventoryByTime(
-    inventory: IEbayInventoryItem[],
+    inventory: IListing[],
     timeFrom: string,
     timeTo?: string
-): IEbayInventoryItem[] {
+): IListing[] {
     const timeFromDate = new Date(timeFrom).getTime();
     const timeToDate = timeTo ? new Date(timeTo).getTime() : Date.now(); // Use current date if no timeTo
 
     return inventory.filter((item) => {
-        const itemTimestamp = new Date(item.dateListed).getTime();
+        const itemTimestamp = new Date(item.dateListed ?? "").getTime();
         return itemTimestamp >= timeFromDate && itemTimestamp <= timeToDate;
     });
 }

@@ -3,9 +3,9 @@ import { IUser } from "@/models/user";
 import { firestore } from "@/lib/firebase/config";
 import { createUser } from "./create";
 import { updateStoreInfo } from "../api/request";
-import { getCachedData, setCachedData } from "@/utils/cache-helpers";
-import { IEbayInventoryItem, IEbayOrder } from "@/models/store-data";
-import { ebayInventoryCacheKey, ebayOrderCacheKey } from "@/utils/constants";
+import { IListing, IOrder, StoreType } from "@/models/store-data";
+import { getCachedData, setCachedData, storeDataFetched } from "@/utils/cache-helpers";
+import { inventoryCacheKey, orderCacheKey } from "@/utils/constants";
 import { filterInventoryByTime, filterOrdersByTime } from "@/utils/filters";
 
 // External Imports
@@ -153,7 +153,7 @@ async function retrieveUserRefById(uid: string): Promise<DocumentReference | nul
  * @param {string | null} timeTo - (Optional) The end date (in ISO format) to filter the orders by.
  * @param {{ [key: string]: any }} [filter] - (Optional) Additional filters.
  *
- * @returns {Promise<Record<string, IEbayOrder>>} - A mapping of transactionId to its order data.
+ * @returns {Promise<Record<string, IOrder>>} - A mapping of transactionId to its order data.
  * @throws {Error} - Logs and handles errors if Firestore retrieval fails.
  */
 interface RetrieveUserOrdersFromDBProps {
@@ -161,6 +161,7 @@ interface RetrieveUserOrdersFromDBProps {
     timeFrom: string | null;
     timeTo?: string | null;
     filter?: { [key: string]: any };
+    storeType: StoreType;
 }
 
 async function retrieveUserOrdersFromDB({
@@ -168,10 +169,11 @@ async function retrieveUserOrdersFromDB({
     timeFrom,
     timeTo,
     filter,
-}: RetrieveUserOrdersFromDBProps): Promise<Record<string, IEbayOrder>> {
+    storeType,
+}: RetrieveUserOrdersFromDBProps): Promise<Record<string, IOrder>> {
     try {
         // Reference to the user's orders collection
-        const ordersCollectionRef = collection(firestore, "orders", uid, "ebay");
+        const ordersCollectionRef = collection(firestore, "orders", uid, storeType);
 
         // Build an array of query constraints for clarity
         const constraints: QueryConstraint[] = [orderBy("sale.date", "desc")];
@@ -204,10 +206,13 @@ async function retrieveUserOrdersFromDB({
 
         // Map over the documents and extract order data,
         // using the transactionId as the key in the resulting dictionary.
-        const orders: Record<string, IEbayOrder> = {};
+        const orders: Record<string, IOrder> = {};
         querySnapshot.forEach((doc) => {
-            const order = doc.data() as IEbayOrder;
-            orders[order.transactionId] = order;
+            const order = doc.data() as IOrder;
+
+            if (order.transactionId) {
+                orders[order.transactionId] = order;
+            }
         });
 
         return orders;
@@ -233,6 +238,7 @@ interface RetrieveUserOrdersProps {
     uid: string,
     timeFrom: string,
     ebayAccessToken: string,
+    storeType: StoreType,
     timeTo?: string,
     update?: boolean,
     filter?: { [key: string]: any },
@@ -243,21 +249,23 @@ async function retrieveUserOrders({
     uid,
     timeFrom,
     ebayAccessToken,
+    storeType,
     timeTo,
     update = false,
     filter,
-}: RetrieveUserOrdersProps): Promise<IEbayOrder[]> {
+}: RetrieveUserOrdersProps): Promise<IOrder[]> {
     // Cache key for orders
-    const cacheKey = `${ebayOrderCacheKey}-${uid}`;
+    const cacheKey = `${orderCacheKey}-${uid}`;
+    const isStoreDataFetched = storeDataFetched(storeType)
 
-    let cachedData: Record<string, IEbayOrder> = {};
+    let cachedData: Record<string, IOrder> = {};
     let cacheTimeFrom: Date | undefined;
     let cacheTimeTo: Date | undefined;
 
     // Try to get the cached data first
     try {
         const cache = getCachedData(cacheKey, true);
-        cachedData = cache.data as Record<string, IEbayOrder>;
+        cachedData = cache.data as Record<string, IOrder>;
         cacheTimeFrom = cache.cacheTimeFrom ? new Date(cache.cacheTimeFrom) : undefined;
         cacheTimeTo = cache.cacheTimeTo ? new Date(cache.cacheTimeTo) : undefined;
     } catch (error) {
@@ -268,11 +276,11 @@ async function retrieveUserOrders({
     const timeToDate = timeTo ? new Date(timeTo) : new Date();
 
     // If cache exists and update is not requested
-    if (cachedData && Object.keys(cachedData).length > 0 && !update) {
+    if (cachedData && Object.keys(cachedData).length > 0 && !update && isStoreDataFetched) {
         const cachedItems = Object.values(cachedData);
         // Determine cached boundaries from the stored cache or fallback to order dates
-        const oldestTime = cacheTimeFrom ? cacheTimeFrom : new Date(cachedItems[cachedItems.length - 1].sale.date);
-        const newestTime = cacheTimeTo ? cacheTimeTo : new Date(cachedItems[0].sale.date);
+        const oldestTime = cacheTimeFrom ? cacheTimeFrom : new Date(cachedItems[cachedItems.length - 1].sale?.date ?? "");
+        const newestTime = cacheTimeTo ? cacheTimeTo : new Date(cachedItems[0].sale?.date ?? "");
 
         // If the requested range is fully within the cached boundaries, return filtered cached data.
         if (timeFromDate >= oldestTime && timeToDate <= newestTime) {
@@ -281,12 +289,12 @@ async function retrieveUserOrders({
         }
 
         // Start with the currently cached orders dictionary
-        let ordersToReturn: Record<string, IEbayOrder> = { ...cachedData };
+        let ordersToReturn: Record<string, IOrder> = { ...cachedData };
 
         // If requested timeFrom is earlier than the cached oldest order, fetch older orders.
         if (timeFromDate < oldestTime) {
             console.log("Fetching older orders from Firestore.");
-            const olderData = await retrieveUserOrdersFromDB({ uid: uid, timeFrom: timeFromDate.toISOString(), timeTo: oldestTime.toISOString(), filter });
+            const olderData = await retrieveUserOrdersFromDB({ uid: uid, timeFrom: timeFromDate.toISOString(), timeTo: oldestTime.toISOString(), filter, storeType });
             // Merge older orders with the current cache (older orders override if keys conflict)
             ordersToReturn = { ...olderData, ...ordersToReturn };
         }
@@ -294,25 +302,35 @@ async function retrieveUserOrders({
         // If requested timeTo is later than the cached newest order, fetch newer orders.
         if (timeToDate > newestTime) {
             console.log("Fetching newer orders from Firestore.");
-            const newerData = await retrieveUserOrdersFromDB({ uid: uid, timeFrom: newestTime.toISOString(), timeTo: timeToDate.toISOString(), filter });
+            const newerData = await retrieveUserOrdersFromDB({ uid: uid, timeFrom: newestTime.toISOString(), timeTo: timeToDate.toISOString(), filter, storeType });
             // Merge newer orders with the current cache
             ordersToReturn = { ...ordersToReturn, ...newerData };
         }
 
+        const oldCache = getCachedData(cacheKey)
+        const merged = {
+            ...oldCache,
+            ...ordersToReturn
+        };
         // Update the cache with the merged data and new boundaries
-        setCachedData(cacheKey, ordersToReturn, timeFromDate, timeToDate);
-        return filterOrdersByTime(Object.values(ordersToReturn), timeFrom, timeTo);
+        setCachedData(cacheKey, merged, timeFromDate, timeToDate);
+        return filterOrdersByTime(Object.values(merged), timeFrom, timeTo);
     }
     // If cache is empty or update is requested, update store info before fetching
     else if (update || !cachedData || Object.keys(cachedData).length === 0) {
-        await updateStoreInfo("orders", ebayAccessToken, uid);
+        await updateStoreInfo("orders", storeType, ebayAccessToken, uid);
     }
 
     // If no valid cache exists or update is forced, fetch from Firestore
     try {
-        const data = await retrieveUserOrdersFromDB({ uid: uid, timeFrom: timeFromDate.toISOString(), timeTo: timeToDate.toISOString(), filter });
-        setCachedData(cacheKey, data, timeFromDate, timeToDate);
-        return filterOrdersByTime(Object.values(data), timeFrom, timeTo);
+        const data = await retrieveUserOrdersFromDB({ uid: uid, timeFrom: timeFromDate.toISOString(), timeTo: timeToDate.toISOString(), filter, storeType });
+        const oldCache = getCachedData(cacheKey)
+        const merged = {
+            ...oldCache,
+            ...data
+        };
+        setCachedData(cacheKey, merged, timeFromDate, timeToDate);
+        return filterOrdersByTime(Object.values(merged), timeFrom, timeTo);
     } catch (error) {
         console.error(`Error fetching orders for user with UID=${uid}:`, error);
         return [];
@@ -327,16 +345,17 @@ async function retrieveUserOrders({
  * @param {string | null} timeFrom - The starting date (in ISO format) to filter inventory items.
  * @param {string | null} [timeTo=null] - The end date (in ISO format) to filter inventory items.
  * 
- * @returns {Promise<IEbayInventoryItem[]>} A promise that resolves to an array of filtered inventory items.
+ * @returns {Promise<IListing[]>} A promise that resolves to an array of filtered inventory items.
  */
 async function retrieveUserInventoryFromDB(
     uid: string,
     timeFrom: string | null,
-    timeTo?: string
-): Promise<Record<string, IEbayInventoryItem>> {
+    storeType: StoreType,
+    timeTo?: string,
+): Promise<Record<string, IListing>> {
     try {
         // Reference to the user's inventory collection
-        const inventoryCollectionRef = collection(firestore, "inventory", uid, "ebay");
+        const inventoryCollectionRef = collection(firestore, "inventory", uid, storeType);
 
         // Base query to get all inventory items for the user
         let q = query(inventoryCollectionRef, orderBy("dateListed", "desc"));
@@ -367,11 +386,14 @@ async function retrieveUserInventoryFromDB(
             return {}; // Return empty array if no inventory items found
         }
 
-        // Map over the documents and extract inventory data matching IEbayInventoryItem interface
-        const inventory: Record<string, IEbayInventoryItem> = {};
+        // Map over the documents and extract inventory data matching IListing interface
+        const inventory: Record<string, IListing> = {};
         querySnapshot.forEach((doc) => {
-            const data = doc.data() as IEbayInventoryItem;
-            inventory[data.itemId] = data as IEbayInventoryItem;
+            const data = doc.data() as IListing;
+
+            if (data.itemId) {
+                inventory[data.itemId] = data as IListing;
+            }
         });
 
         return inventory;
@@ -391,25 +413,36 @@ async function retrieveUserInventoryFromDB(
  * @param {boolean} [update=false] - If `true`, updates the inventory by fetching the latest data.
  * @param {string | null} [timeTo=null] - The end date (in ISO format) to filter inventory items.
  * 
- * @returns {Promise<IEbayInventoryItem[]>} A promise that resolves to an array of inventory items filtered by the specified time.
+ * @returns {Promise<IListing[]>} A promise that resolves to an array of inventory items filtered by the specified time.
  */
-async function retrieveUserInventory(
-    uid: string,
-    timeFrom: string,
-    ebayAccessToken: string,
-    update: boolean = false,
-    timeTo?: string
-): Promise<IEbayInventoryItem[]> {
-    const cacheKey = `${ebayInventoryCacheKey}-${uid}`;
 
-    let cachedData: Record<string, IEbayInventoryItem> = {};
+interface IRetrieveUserInventory {
+    uid: string;
+    timeFrom: string;
+    ebayAccessToken: string;
+    update?: boolean;
+    timeTo?: string;
+    storeType: StoreType;
+}
+async function retrieveUserInventory({
+    uid,
+    timeFrom,
+    ebayAccessToken,
+    update = false,
+    timeTo,
+    storeType
+}: IRetrieveUserInventory): Promise<IListing[]> {
+    const cacheKey = `${inventoryCacheKey}-${uid}`;
+    const isStoreDataFetched = storeDataFetched(storeType)
+
+    let cachedData: Record<string, IListing> = {};
     let cacheTimeFrom: Date | undefined;
     let cacheTimeTo: Date | undefined;
 
     // Try to get the cached data first
     try {
         const cache = getCachedData(cacheKey, true);
-        cachedData = cache.data as Record<string, IEbayInventoryItem>;
+        cachedData = cache.data as Record<string, IListing>;
         cacheTimeFrom = cache.cacheTimeFrom ? new Date(cache.cacheTimeFrom) : undefined;
         cacheTimeTo = cache.cacheTimeTo ? new Date(cache.cacheTimeTo) : undefined;
     } catch (error) {
@@ -420,11 +453,11 @@ async function retrieveUserInventory(
     const timeToDate = timeTo ? new Date(timeTo) : new Date();
 
     // If cache exists and update is not requested
-    if (cachedData && Object.keys(cachedData).length > 0 && !update) {
+    if (cachedData && Object.keys(cachedData).length > 0 && !update && isStoreDataFetched) {
         // Determine the cached range
         const cachedItems = Object.values(cachedData);
-        const oldestTime = cacheTimeFrom ?? new Date(cachedItems[cachedItems.length - 1].dateListed);
-        const newestTime = cacheTimeTo ?? new Date(cachedItems[0].dateListed);
+        const oldestTime = cacheTimeFrom ?? new Date(cachedItems[cachedItems.length - 1].dateListed ?? "");
+        const newestTime = cacheTimeTo ?? new Date(cachedItems[0].dateListed ?? "");
 
         // If the requested range is fully within the cached range, return filtered cached data.
         if (timeFromDate >= oldestTime && timeToDate <= newestTime) {
@@ -432,48 +465,57 @@ async function retrieveUserInventory(
             return filterInventoryByTime(Object.values(cachedData), timeFrom, timeTo);
         }
 
-        let inventoryToReturn: Record<string, IEbayInventoryItem> = { ...cachedData };
+        let inventoryToReturn: Record<string, IListing> = { ...cachedData };
 
         // Case 1: Need older inventory (timeFrom is earlier than the oldest cached item)
         if (timeFromDate < oldestTime && timeToDate <= newestTime) {
             console.log("Fetching older inventory from Firestore.");
-            const olderData = await retrieveUserInventoryFromDB(uid, timeFrom, oldestTime.toISOString());
+            const olderData = await retrieveUserInventoryFromDB(uid, timeFrom, storeType, oldestTime.toISOString());
             inventoryToReturn = { ...olderData, ...inventoryToReturn };
         }
         // Case 2: Need newer inventory (timeTo is later than the newest cached item)
         else if (timeFromDate >= oldestTime && timeToDate > newestTime) {
             console.log("Fetching newer inventory from Firestore.");
-            const newerData = await retrieveUserInventoryFromDB(uid, newestTime.toISOString(), timeTo);
+            const newerData = await retrieveUserInventoryFromDB(uid, newestTime.toISOString(), storeType, timeTo);
             inventoryToReturn = { ...inventoryToReturn, ...newerData };
         }
         // Case 3: Need both older and newer inventory
         else if (timeFromDate < oldestTime && timeToDate > newestTime) {
             console.log("Fetching both older and newer inventory from Firestore.");
-            const olderData = await retrieveUserInventoryFromDB(uid, timeFrom, oldestTime.toISOString());
-            const newerData = await retrieveUserInventoryFromDB(uid, newestTime.toISOString(), timeTo);
+            const olderData = await retrieveUserInventoryFromDB(uid, timeFrom, storeType, oldestTime.toISOString());
+            const newerData = await retrieveUserInventoryFromDB(uid, newestTime.toISOString(), storeType, timeTo);
             inventoryToReturn = { ...olderData, ...inventoryToReturn, ...newerData };
         }
 
         if (Object.keys(inventoryToReturn).length > 0) {
+            const oldCache = getCachedData(cacheKey)
+            const merged = {
+                ...oldCache,
+                ...inventoryToReturn
+            };
             // Update the cache with the newly combined data and the new range
-            setCachedData(cacheKey, inventoryToReturn, timeFromDate, timeToDate);
-            return filterInventoryByTime(Object.values(inventoryToReturn), timeFrom, timeTo);
+            setCachedData(cacheKey, merged, timeFromDate, timeToDate);
+            return filterInventoryByTime(Object.values(merged), timeFrom, timeTo);
         }
         return [];
     }
     // If cache is empty or update is requested, update store info before fetching
     else if (update || !cachedData || Object.keys(cachedData).length === 0) {
         console.log("Request to check for new inventory");
-        await updateStoreInfo("inventory", ebayAccessToken, uid);
+        await updateStoreInfo("inventory", storeType, ebayAccessToken, uid);
     }
 
     // If no valid cache exists or update is forced, fetch from Firestore
     try {
-        console.log("No cache exists", timeFromDate, timeToDate);
-        const dataDict = await retrieveUserInventoryFromDB(uid, timeFrom, timeTo);
+        const dataDict = await retrieveUserInventoryFromDB(uid, timeFrom, storeType, timeTo);
 
-        setCachedData(cacheKey, dataDict, timeFromDate, timeTo ? new Date(timeTo) : new Date());
-        return filterInventoryByTime(Object.values(dataDict), timeFrom, timeTo);
+        const oldCache = getCachedData(cacheKey)
+        const merged = {
+            ...oldCache,
+            ...dataDict
+        };
+        setCachedData(cacheKey, merged, timeFromDate, timeTo ? new Date(timeTo) : new Date());
+        return filterInventoryByTime(Object.values(merged), timeFrom, timeTo);
     } catch (error) {
         console.error(`Error fetching inventory for user with UID=${uid}:`, error);
         return [];
@@ -481,9 +523,9 @@ async function retrieveUserInventory(
 }
 
 
-async function retrieveUserOrderItemRef(uid: string, transactionId: string): Promise<DocumentReference | null> {
+async function retrieveUserOrderItemRef(uid: string, storeType: StoreType, transactionId: string): Promise<DocumentReference | null> {
     try {
-        const ordersCollectionRef = collection(firestore, "orders", uid, "ebay");
+        const ordersCollectionRef = collection(firestore, "orders", uid, storeType);
         return doc(ordersCollectionRef, transactionId);
     } catch (error) {
         console.error(`Error retrieving order with ID=${transactionId}:`, error);
@@ -491,10 +533,123 @@ async function retrieveUserOrderItemRef(uid: string, transactionId: string): Pro
     }
 }
 
+/**
+ * Retrieve all eBay orders for a user where purchase.date ∈ [timeFrom, timeTo].
+ *
+ * @param uid      - Firebase user ID
+ * @param timeFrom - ISO string start of period, e.g. "2024-01-01T00:00:00.000Z"
+ * @param timeTo   - ISO string end of period,   e.g. "2024-12-31T23:59:59.999Z"
+ * @returns        - Array of IOrder objects
+ */
+
+interface IRetrieveUserOrdersInPeriod {
+    uid: string;
+    timeFrom: string;
+    timeTo: string;
+    storeType: StoreType
+}
+async function retrieveUserOrdersInPeriod({ uid, timeFrom, timeTo, storeType }: IRetrieveUserOrdersInPeriod): Promise<IOrder[]> {
+    try {
+        // Reference the user's eBay orders sub-collection
+        const ordersRef = collection(firestore, "orders", uid, "ebay");
+
+        // Build a Firestore query on purchase.date
+        const ordersQuery = query(
+            ordersRef,
+            where("purchase.date", ">=", timeFrom),
+            where("purchase.date", "<=", timeTo)
+        );
+
+        // Execute the query
+        const snapshot = await getDocs(ordersQuery);
+
+        // Map documents → IOrder (including the doc ID as orderId/transactionId)
+        const orders: IOrder[] = snapshot.docs.map((docSnap) => {
+            const data = docSnap.data() as DocumentData;
+            return {
+                ...data,
+                transactionId: docSnap.id,
+            } as IOrder;
+        });
+
+        return orders;
+    } catch (error) {
+        console.error(
+            `Error retrieving orders for UID=${uid} between ${timeFrom} and ${timeTo}:`,
+            error
+        );
+        return [];
+    }
+}
+
+
+/**
+ * Fetch the single oldest eBay order (by sale.date) for a given user + store.
+ * @param uid        – the user’s UID
+ * @param storeTypes  – which sub-collection under "orders"/uid to use
+ * @returns          – the oldest order, or null if none/ex on error
+ */
+
+interface RetrieveOldestParams {
+    uid: string;
+    storeTypes: StoreType[];
+}
+
+async function retrieveOldestOrder({
+    uid,
+    storeTypes,
+}: RetrieveOldestParams): Promise<IOrder | null> {
+    let absoluteOldest: IOrder | null = null;
+
+    try {
+        for (const storeType of storeTypes) {
+            // Reference the sub‐collection for this storeType
+            const ordersRef = collection(
+                firestore,
+                "orders",
+                uid,
+                storeType
+            );
+
+            // Build a query: order by sale.date ascending, take only the first doc
+            const oldestQuery = query(
+                ordersRef,
+                orderBy("sale.date", "asc"),
+                limit(1)
+            );
+
+            // Execute
+            const snapshot = await getDocs(oldestQuery);
+            if (snapshot.empty) {
+                continue;
+            }
+
+            const docSnap = snapshot.docs[0];
+            const candidate = {
+                ...(docSnap.data() as Omit<IOrder, "orderId">),
+                orderId: docSnap.id,
+            } as IOrder;
+
+            // Compare to our running “absoluteOldest”
+            const candidateDate = new Date(candidate.sale?.date ?? "");
+            if (
+                !absoluteOldest ||
+                candidateDate < new Date(absoluteOldest.sale?.date ?? "")
+            ) {
+                absoluteOldest = candidate;
+            }
+        }
+
+        return absoluteOldest;
+    } catch (error) {
+        console.error("Error retrieving oldest order:", error);
+        return null;
+    }
+}
 
 async function retrieveProducts() {
     return [];
 }
 
 
-export { retrieveUserAndCreate, retrieveUser, retrieveUserSnapshot, retrieveUserRef, retrieveUserRefById, retrieveProducts, retrieveUserOrders, retrieveUserInventory, retrieveUserOrderItemRef };
+export { retrieveUserAndCreate, retrieveUser, retrieveUserSnapshot, retrieveUserRef, retrieveUserRefById, retrieveProducts, retrieveUserOrders, retrieveUserInventory, retrieveUserOrderItemRef, retrieveUserOrdersInPeriod, retrieveOldestOrder };

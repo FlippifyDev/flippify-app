@@ -1,34 +1,36 @@
 // Local Imports
-import { StoreType } from '@/models/user';
 import { firestore } from '@/lib/firebase/config';
-import { IEbayInventoryItem, IEbayOrder } from '@/models/store-data';
-import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput, validateTextInput } from '@/utils/input-validation';
+import { formatDateToISO } from '@/utils/format-dates';
+import { updateCacheData } from '@/utils/cache-helpers';
+import { IListing, IOrder, StoreType } from '@/models/store-data';
+import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput } from '@/utils/input-validation';
 
 
 // External Imports
+import { deleteDoc, doc, DocumentReference, setDoc, updateDoc } from 'firebase/firestore';
 import React, { useState } from 'react'
 import { useSession } from 'next-auth/react';
-import { doc, updateDoc } from 'firebase/firestore';
 import set from 'lodash/set';
-import { updateCacheData } from '@/utils/cache-helpers';
-import { formatDateToISO } from '@/utils/format-dates';
+import { updateMovedItemAdmin } from '@/services/firebase/create-admin';
 
-type ExtraKey = "customTag"
+
+type ExtraKey = "customTag" | "storeType"
 type PurchaseKey = "purchase.platform" | "purchase.price" | "purchase.date" | "purchase.quantity"
 type InventoryKey = "customTag"
 type OrderKey = "sale.price" | "shipping.fees" | "sale.date" | "additionalFees" | "sale.quantity"
 
+
 interface UpdateTableFieldProps {
     type?: "text" | "date";
     currentValue: string | undefined | null;
-    docId: string;
+    docId?: string | null;
     docType: "inventory" | "orders";
-    item: IEbayOrder | IEbayInventoryItem;
+    item: IOrder | IListing;
     keyType: InventoryKey | OrderKey | PurchaseKey | ExtraKey;
     cacheKey: string;
     tdClassName?: string;
     className?: string;
-    storeType: StoreType;
+    storeType?: StoreType | null;
     triggerUpdate: () => void;
 }
 
@@ -37,11 +39,26 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
 
     const [value, setValue] = useState(currentValue);
 
+    const handleNewStoreType = async (item: IOrder | IListing, value: string | null | undefined) => {
+        const oldStoreType = item.storeType;
+        
+        // Step 1: Add the item to the storeType collection
+        set(item, keyType, value);
+
+        if (!session?.user.id || !item.storeType || !docId) {
+            return;
+        };
+
+        await updateMovedItemAdmin(session.user.id, oldStoreType ?? "ebay", item);
+
+        updateCacheData(cacheKey, item);
+    }
+
     const saveChange = async () => {
-        if (value === currentValue) return;
+        if (value === currentValue || !docId) return;
 
         try {
-            const docRef = doc(firestore, docType, session?.user.id as string, storeType, docId);
+            const docRef = doc(firestore, docType, session?.user.id as string, storeType ?? "ebay", docId);
 
             switch (keyType) {
                 case "purchase.platform":
@@ -62,6 +79,9 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
                 case "sale.date":
                     set(item, keyType, formatDateToISO(new Date(value ?? "")));
                     break;
+                case "storeType":
+                    await handleNewStoreType(item, value)
+                    return;
             }
 
             // Update the database
@@ -73,13 +93,14 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
             // Trigger an update
             triggerUpdate()
         } catch (error) {
-
+            console.log(error)
         }
     };
 
     function handleChange(input: string) {
         switch (keyType) {
             case "purchase.platform":
+            case "storeType":
             case "customTag":
                 validateAlphaNumericInput(input, setValue);
                 break;
@@ -97,6 +118,8 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
                 break;
         }
     }
+
+    if (!docId) return null;
 
     return (
         <td

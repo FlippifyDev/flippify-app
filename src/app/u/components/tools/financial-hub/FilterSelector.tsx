@@ -5,16 +5,14 @@
 import { useState, useRef } from "react";
 
 
-const filters = ["eBay"];
-
-
 interface FilterSelectorProps {
     value: string;
+    filters: string[];
     onChange: (type: string) => void;
 }
 
 
-const FilterSelector: React.FC<FilterSelectorProps> = ({ value, onChange }) => {
+const FilterSelector: React.FC<FilterSelectorProps> = ({ value, filters, onChange }) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 

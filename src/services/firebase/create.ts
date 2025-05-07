@@ -37,7 +37,6 @@ export async function createUser(uid: string, email: string): Promise<IUser | vo
             },
             store: null,
             preferences: {
-                locale: 'GB',
                 currency: 'USD',
             },
             authentication: {

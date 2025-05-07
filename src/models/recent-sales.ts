@@ -1,19 +1,19 @@
 import { OrderStatus } from "./store-data";
 
 interface IHistoryGrid {
-	itemName: string;
-	purchaseDate: string;
-	saleDate: string;
-	quantitySold: number;
-	purchasePricePerUnit: number;
-	salePrice: number;
-	shippingCost: number;
-	otherCosts: number;
-	estimatedProfit: number;
-	salePlatform: string;
-	purchasePlatform: string;
-	totalCosts: number;
-    status: OrderStatus;
+	itemName?: string | null;
+	purchaseDate?: string | null;
+	saleDate?: string | null;
+	quantitySold?: number | null;
+	purchasePricePerUnit?: number | null;
+	salePrice?: number | null;
+	shippingCost?: number | null;
+	otherCosts?: number | null;
+	estimatedProfit?: number | null;
+	salePlatform?: string | null;
+	purchasePlatform?: string | null;
+	totalCosts?: number | null;
+    status?: OrderStatus | null;
 }
 
 

@@ -16,12 +16,7 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
     const subscriptions = user.subscriptions;
     const _id = user.id;
 
-    const referral = user.referral || {
-        referral_code: '',
-        referral_count: 0,
-        valid_referrals: [],
-        rewards_claimed: 0,
-    };
+    const referral = user.referral;
 
     const [newEmail, setNewEmail] = useState(email);
     const [selectedRoles, setSelectedRoles] = useState<ISubscription[]>(
@@ -45,8 +40,8 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
     const checkoutInputRef = useRef<HTMLInputElement>(null); // Ref for input
 
     // Referral state
-    const [referralCode, setReferralCode] = useState(referral.referralCode);
-    const [rewardsClaimed, setRewardsClaimed] = useState(referral.rewardsClaimed);
+    const [referralCode, setReferralCode] = useState(referral?.referralCode);
+    const [rewardsClaimed, setRewardsClaimed] = useState(referral?.rewardsClaimed);
 
     const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => setNewEmail(e.target.value);
 
@@ -63,7 +58,7 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
 
     const handleRoleChange = (role: ISubscription) => {
         setSelectedRoles(prevRoles =>
-            isRoleSelected(role.name)
+            isRoleSelected(role.name as string)
                 ? prevRoles.filter(r => r.name !== role.name) // Deselect the role
                 : [...prevRoles, role] // Select the role
         );
@@ -110,11 +105,11 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
     };
 
     const filteredRoles = unique_subscriptions.filter(role =>
-        role.name.toLowerCase().includes(searchTerm.toLowerCase())
+        role.name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const filteredCheckoutRoles = unique_subscriptions.filter(role =>
-        role.name.toLowerCase().includes("server")
+        role.name?.toLowerCase().includes("server")
     );
 
     const handleRolesFocus = () => setIsRolesDropdownOpen(true);
@@ -205,7 +200,7 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
                         <label className="col-span-6 flex items-center">Referral Code:</label>
                         <input
                             className="input input-bordered col-span-6"
-                            value={referralCode}
+                            value={referralCode as string}
                             onChange={(e) => handleReferralChange(e, 'referralCode')}
                         />
                     </div>
@@ -214,7 +209,7 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
                         <input
                             type="number"
                             className="input input-bordered col-span-6"
-                            value={rewardsClaimed}
+                            value={rewardsClaimed as number}
                             onChange={(e) => handleReferralChange(e, 'rewardsClaimed')}
                         />
                     </div>
@@ -243,7 +238,7 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
                                             <span className="col-span-10 truncate">{role.name}</span>
                                             <input
                                                 type="checkbox"
-                                                checked={isRoleSelected(role.name)}
+                                                checked={isRoleSelected(role.name as string)}
                                                 onChange={() => handleRoleChange(role)} // Keep the dropdown open
                                                 className="checkbox col-span-2"
                                             />
@@ -279,7 +274,7 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
                                             <span className="col-span-10 truncate">{role.name}</span>
                                             <input
                                                 type="checkbox"
-                                                checked={isCheckoutRoleSelected(role.name)}
+                                                checked={isCheckoutRoleSelected(role.name as string)}
                                                 onChange={() => handleCheckoutRoleChange(role)} // Keep the dropdown open
                                                 className="checkbox col-span-2"
                                             />
@@ -299,7 +294,7 @@ const PlansCardAdmin: React.FC<CardProps> = ({ user, unique_subscriptions }) => 
                     <input
                         type="email"
                         className="input input-bordered"
-                        value={newEmail}
+                        value={newEmail as string}
                         onChange={handleEmailChange}
                     />
                     <button

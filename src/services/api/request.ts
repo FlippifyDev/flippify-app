@@ -1,8 +1,13 @@
+import { HardcodedStoreType, STORES, StoreType } from "@/models/store-data";
 import { IFirebaseConfig } from "@/models/config";
 
+const root = "http://127.0.0.1:8000" // https://api.flippify.io
+
 // Function to send request and handle token refresh if necessary
-export async function updateStoreInfo(endpoint: string, ebayAccessToken: string, uid: string): Promise<void> {
+export async function updateStoreInfo(endpoint: string, storeType: StoreType, ebayAccessToken: string, uid: string): Promise<void> {
     // Set up headers with the access token
+    if (!STORES.includes(storeType as HardcodedStoreType)) return;
+
     const headers = {
         Authorization: `Bearer ${ebayAccessToken}`,
         "Accept": "*/*",
@@ -13,9 +18,9 @@ export async function updateStoreInfo(endpoint: string, ebayAccessToken: string,
         "Sec-Fetch-Site": "same-site",
     };
 
-    const url = new URL(`https://api.flippify.io/v1/update/${endpoint}`);
+    const url = new URL(`${root}/v1/update/${endpoint}`);
     url.searchParams.append("uid", uid);
-    url.searchParams.append("store_type", "ebay");
+    url.searchParams.append("store_type", storeType);
 
     try {
         const response = await fetch(url, {

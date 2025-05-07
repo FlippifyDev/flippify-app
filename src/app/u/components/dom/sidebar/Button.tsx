@@ -47,7 +47,7 @@ const SidebarButton: React.FC<SidebarButtonProps> = ({
 		<div className="relative group">
 			{/* Button */}
 			<button
-                className={`relative z-50 w-full flex justify-start items-center gap-4 py-2 ${isSidebarOpen ? 'px-2' : 'pl-2'} active:bg-gray-700 hover:bg-gray-800 rounded-md transition duration-200 ${isActive ? 'text-white' : 'bg-darkBackground text-gray-400'}`}
+                className={`relative z-50 w-full flex justify-start items-center gap-4 py-2 ${isSidebarOpen ? 'px-2' : 'pl-2'} active:bg-gray-700 hover:bg-gray-800 rounded-md transition duration-200 ${isActive ? 'text-white' : 'bg-deepBlue text-gray-400'}`}
 				onClick={handleClick}
 			>
 				{/* Icon */}

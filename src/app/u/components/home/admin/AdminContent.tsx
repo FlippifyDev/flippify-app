@@ -39,13 +39,13 @@ const AdminContent = () => {
         setFilteredUsers(
             users.filter((user) => {
                 const username = user?.username?.toLowerCase() as string;
-                const stripeCustomerId = user?.stripeCustomerId.toLowerCase();
-                const email = user.email.toLowerCase();
+                const stripeCustomerId = user?.stripeCustomerId?.toLowerCase();
+                const email = user.email?.toLowerCase();
 
                 return (
                     username.includes(lowercasedQuery) ||
-                    stripeCustomerId.includes(lowercasedQuery) ||
-                    email.includes(lowercasedQuery)
+                    stripeCustomerId?.includes(lowercasedQuery) ||
+                    email?.includes(lowercasedQuery)
                 );
             })
         );
@@ -80,7 +80,7 @@ const AdminContent = () => {
                     {filteredUsers.length > 0 ? (
                         <div className="flex flex-wrap gap-20 justify-center">
                             {filteredUsers.map((user) => (
-                                <PlansCardAdmin key={user.id.toString()} user={user} unique_subscriptions={subscriptions} />
+                                <PlansCardAdmin key={user.id?.toString()} user={user} unique_subscriptions={subscriptions} />
                             ))}
                         </div>
                     ) : (

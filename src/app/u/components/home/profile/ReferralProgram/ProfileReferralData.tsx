@@ -24,7 +24,7 @@ const ProfileReferralData: React.FC = () => {
 
     const customerId = session?.user?.stripeCustomerId || 'None';
     const referralCode = session?.user?.referral?.referralCode || 'None';
-    const referralCount = session?.user?.referral?.validReferrals.length || 0;
+    const referralCount = session?.user?.referral?.validReferrals?.length || 0;
     const totalRewardsClaimed = session?.user?.referral?.rewardsClaimed || 0;
 
     const availableRewards = referralCount - totalRewardsClaimed > 0 ? referralCount : 0;

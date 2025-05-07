@@ -115,13 +115,13 @@ const PlansCard: React.FC<PlansCardProps> = ({
     const selectedPriceId = priceRange === 0 ? priceIds.monthly : priceIds.yearly;
 
     return (
-        <div className="col-span-1 relative w-full flex justify-center transition duration-200 px-2 sm:mx-auto max-w-md">
+        <div className="col-span-1 relative w-full h-full flex justify-center transition duration-200 px-2 sm:mx-auto max-w-md">
             <div
-                className={`w-full flex flex-col justify-between relative ${className || ""} ${comingSoon ? "opacity-50 pointer-events-none select-none" : ""
+                className={`w-full h-full flex flex-col justify-between relative ${className || ""} ${comingSoon ? "opacity-50 pointer-events-none select-none" : ""
                     }`}
             >
                 {isEnterprise ? (
-                    <div className="bg-white rounded-2xl p-6 flex flex-col justify-between">
+                    <div className="h-full bg-white rounded-2xl p-6 flex flex-col justify-between">
                         <div className="text-center">
                             <h2 className="font-bold text-[24px]">{title}</h2>
                             <p className="text-sm text-gray-600">{description}</p>
@@ -179,8 +179,8 @@ const PlansCard: React.FC<PlansCardProps> = ({
                         )}
                     </div>
                 ) : specialPlan ? (
-                    <BackgroundGradient className="z-30">
-                        <div className="bg-white rounded-2xl p-6 flex flex-col justify-between">
+                        <BackgroundGradient className="z-30 h-full" containerClassName="h-full">
+                        <div className="h-full bg-white rounded-2xl p-6 flex flex-col justify-between">
                             <div className="absolute top-[-10px] left-6 bg-houseBlue text-white px-3 py-1 rounded-full text-xs">
                                 Most Popular
                             </div>
@@ -203,7 +203,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
                         </div>
                     </BackgroundGradient>
                 ) : (
-                    <div className="bg-white border rounded-2xl hover:shadow-md transition duration-200 p-6 flex flex-col justify-between">
+                    <div className="h-full bg-white border rounded-2xl hover:shadow-md transition duration-200 p-6 flex flex-col justify-between">
                         <PlansCardInfo
                             title={title}
                             description={description}

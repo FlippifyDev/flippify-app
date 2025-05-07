@@ -59,6 +59,7 @@ export const authOptions: NextAuthOptions = {
         async session({ session, token }) {
             const { user } = token as IJwtToken;
             try {
+                if (!user.id) return session;
                 const userDoc = await retrieveUserAdmin(user.id);
                 if (userDoc) {
                     session.user = userDoc;

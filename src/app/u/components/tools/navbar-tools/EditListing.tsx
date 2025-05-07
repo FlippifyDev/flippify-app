@@ -31,7 +31,8 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal }) 
     const [itemId, setItemId] = useState<string>("")
     const [itemName, setItemName] = useState<string>("")
     const [imageUrl, setImageUrl] = useState<string>("");
-    const [customTag, setCustomTag] = useState<string>("")
+    const [customTag, setCustomTag] = useState<string>("");
+    const [storeType, setStoreType] = useState<string>("");
 
     // Purchase Info
     const [purchasePrice, setPurchasePrice] = useState<string>("")
@@ -69,8 +70,9 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal }) 
         // General Info
         setItemId(item.itemId ?? "N/A");
         setItemName(item.name ?? "N/A");
-        setImageUrl(item.image ? item.image[0]: "");
+        setImageUrl(item.image ? item.image[0] : "");
         setCustomTag(item.customTag || "");
+        setStoreType(item.storeType || "")
 
         // Set Listing Info
         setDateListed(new Date(item.dateListed ?? "").toISOString().split('T')[0]);
@@ -105,10 +107,11 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal }) 
             },
             quantity: Number(quantity),
             recordType: "manual",
-            lastModified: formatDateToISO(new Date())
+            lastModified: formatDateToISO(new Date()),
+            storeType: storeType
         }
 
-        const { success, error } = await updateListing(session?.user.id ?? "", inventoryItem, "ebay");
+        const { success, error } = await updateListing(session?.user.id ?? "", inventoryItem, storeType);
         if (!success) {
             setErrorMessage(`Error editing item`)
         } else {
@@ -145,6 +148,9 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal }) 
             case "quantity":
                 validateIntegerInput(value, setQuantity)
                 break
+            case "storeType":
+                validateAlphaNumericInput(value, setStoreType)
+                break
         }
     }
 
@@ -158,7 +164,10 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal }) 
     return (
         <Modal title="Edit listing" className="max-w-[21rem] sm:max-w-xl flex-grow" setDisplayModal={setDisplayModal}>
             <form className="w-full max-w-xl flex flex-col gap-4" onSubmit={handleSubmit}>
-                <Input type="text" placeholder="Enter item id" title="Product ID" value={itemId} onChange={(e) => handleChange(e.target.value, "itemId")} />
+                <div className="flex flex-col sm:flex-row items-center w-full gap-4">
+                    <Input type="text" placeholder="Enter item id" title="Product ID" value={itemId} onChange={(e) => handleChange(e.target.value, "itemId")} />
+                    <Input type="text" placeholder="Enter marketplace" title="Marketplace" value={storeType} onChange={(e) => handleChange(e.target.value, "storeType")} />
+                </div>
                 <div className="flex flex-col sm:flex-row items-center w-full gap-4">
                     <Input type="text" placeholder="Enter item name" title="Product Name" value={itemName} onChange={(e) => handleChange(e.target.value, "itemName")} />
                     <Input type="text" placeholder="Enter quantity" title="Quantity" value={quantity} onChange={(e) => handleChange(e.target.value, "quantity")} />

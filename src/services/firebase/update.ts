@@ -233,7 +233,7 @@ async function updateListing(
         const itemDoc = doc(colRef, listing.itemId);
 
         // Write the listing object to Firestore, merging with any existing data
-        await setDoc(itemDoc, listing, { merge: true });
+        await updateDoc(itemDoc, { ...listing });
 
         // Return the payload back to the caller for further use
         return { success: true };

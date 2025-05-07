@@ -73,8 +73,8 @@ const Order = () => {
         setDeleting(true);
         const tid = params?.get("tid");
 
-        if (session?.user.id && tid) {
-            await deleteItem({ uid: session.user.id, itemType: "orders", storeType: "ebay", docId: tid, isAuto: order?.recordType === "automatic" });
+        if (session?.user.id && tid && order?.storeType) {
+            await deleteItem({ uid: session.user.id, itemType: "orders", storeType: order.storeType, docId: tid, isAuto: order?.recordType === "automatic" });
             removeCacheData(cacheKey, tid);
             router.push(`/u/${session.user.username}/tools/inventory-and-orders#orders`);
         }

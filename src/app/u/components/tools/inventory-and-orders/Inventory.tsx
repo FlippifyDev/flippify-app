@@ -135,9 +135,9 @@ const Inventory = () => {
         setContextMenu(null);
     };
 
-    async function handleDeleteListing(itemId: string, isAuto: boolean) {
+    async function handleDeleteListing(itemId: string, storeType: StoreType, isAuto: boolean) {
         if (session?.user.id && itemId) {
-            await deleteItem({ uid: session.user.id, itemType: "inventory", storeType: "ebay", docId: itemId, isAuto: isAuto });
+            await deleteItem({ uid: session.user.id, itemType: "inventory", storeType: storeType, docId: itemId, isAuto: isAuto });
             removeCacheData(cacheKey, itemId);
             setTriggerUpdate(true);
         }
@@ -243,7 +243,7 @@ const Inventory = () => {
                     <li
                         className="px-2 py-1 rounded-sm hover:bg-red-700 text-white cursor-pointer"
                         onClick={() => {
-                            handleDeleteListing(contextMenu.item.itemId, contextMenu.item.recordType === "automatic");
+                            handleDeleteListing(contextMenu.item.itemId, contextMenu.item.storeType, contextMenu.item.recordType === "automatic");
                             handleCloseContextMenu();
                         }}
                     >

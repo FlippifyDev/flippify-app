@@ -11,7 +11,11 @@ export type OrderStatus =
     | "InProcess";    // Order is being processed (e.g., payment or shipping underway), not yet complete.
 
 
-export type StoreType = "ebay" | "amazon" | "shopify" | "depop" | string;
+
+export const STORES = ["ebay"] as const;
+export type HardcodedStoreType = typeof STORES[number];
+
+export type StoreType = HardcodedStoreType | string;
 
 interface IListing {
     currency?: string | null;

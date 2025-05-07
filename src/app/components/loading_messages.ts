@@ -97,7 +97,7 @@ export const jokes = [
     "Computing the secret to life, the universe, and everything.",
     "When nothing is going right, go left!!...",
     "I love my job only when I'm on vacation...",
-    "i'm not lazy, I'm just relaxed!!",
+    "I'm not lazy, I'm just relaxed!!",
     "Never steal. The government hates competition....",
     "Why are they called apartments if they are all stuck together?",
     "Life is Short - Talk Fast!!!!",

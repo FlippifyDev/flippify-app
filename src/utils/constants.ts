@@ -2,8 +2,6 @@ import { StoreType } from "@/models/store-data";
 
 export const storePlatforms: Record<string, StoreType> = {
     "ebay": "ebay",
-    "amazon": "amazon",
-    "shopify": "shopify",
 }
 
 export const cacheExpirationTime = 1000 * 60 * 30; // 30 min in milliseconds

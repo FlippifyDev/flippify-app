@@ -1,7 +1,7 @@
 import { HardcodedStoreType, STORES, StoreType } from "@/models/store-data";
 import { IFirebaseConfig } from "@/models/config";
 
-const root = "http://127.0.0.1:8000" // https://api.flippify.io
+const root = "https://api.flippify.io"
 
 // Function to send request and handle token refresh if necessary
 export async function updateStoreInfo(endpoint: string, storeType: StoreType, ebayAccessToken: string, uid: string): Promise<void> {

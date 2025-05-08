@@ -50,6 +50,7 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
         };
 
         await updateMovedItemAdmin(session.user.id, oldStoreType ?? "ebay", item);
+        console.log(item)
 
         updateCacheData(cacheKey, item);
     }

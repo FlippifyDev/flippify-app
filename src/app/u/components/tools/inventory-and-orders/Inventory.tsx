@@ -195,13 +195,13 @@ const Inventory = () => {
                                     <UpdateTableField currentValue={item?.storeType} docId={item.itemId} item={item} docType='inventory' storeType={item.storeType} keyType="storeType" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
 
                                     <td onClick={() => handleDisplayOrderModal(item)}>{item.quantity}</td>
-                                    <UpdateTableField currentValue={purchase?.platform} docId={item.itemId} item={item} docType='inventory' storeType='ebay' keyType="purchase.platform" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
-                                    <UpdateTableField currentValue={purchase?.price?.toFixed(2)} docId={item.itemId} item={item} docType='inventory' storeType='ebay' keyType="purchase.price" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
+                                    <UpdateTableField currentValue={purchase?.platform} docId={item.itemId} item={item} docType='inventory' storeType={item.storeType} keyType="purchase.platform" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
+                                    <UpdateTableField currentValue={purchase?.price?.toFixed(2)} docId={item.itemId} item={item} docType='inventory' storeType={item.storeType} keyType="purchase.price" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
                                     <td onClick={() => handleDisplayOrderModal(item)}>
                                         {item.price?.toFixed(2)}
                                     </td>
                                     <td className="min-w-32" onClick={() => handleDisplayOrderModal(item)}>{formatTableDate(item.dateListed)}</td>
-                                    <UpdateTableField currentValue={customTag} docId={item.itemId} item={item} docType='inventory' storeType='ebay' keyType="customTag" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
+                                    <UpdateTableField currentValue={customTag} docId={item.itemId} item={item} docType='inventory' storeType={item.storeType} keyType="customTag" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
                                 </tr>
                             );
                         })

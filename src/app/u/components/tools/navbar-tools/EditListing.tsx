@@ -155,7 +155,7 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal }) 
     }
 
     async function handleImageUpload(url?: string | null) {
-        const finalUrl = imageUrl || url;
+        const finalUrl = url || imageUrl;
         if (finalUrl) {
             setImageUrl(finalUrl);
         }

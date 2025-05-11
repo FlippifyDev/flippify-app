@@ -1,12 +1,16 @@
 "use client";
 
-import NavbarAddOrder from "./NavbarAddOrder";
-import NavbarAddListing from "./NavbarAddListing";
+// Local Imports
+import NabarItem from "./NabarItem";
 import NavbarProfileAvatar from "./NavbarProfileAvatar";
 import { getProcessedTitle } from "@/utils/extract-final-url-name";
 
+// External Imports
 import React, { useState, useEffect } from "react";
+import { RiFolderUploadLine } from "react-icons/ri";
 import { useSession } from "next-auth/react";
+import { GrChapterAdd } from "react-icons/gr";
+import { BiBookAdd } from "react-icons/bi";
 
 interface NavbarProps {
     handleDisplayModal: (display: boolean, type: string) => void;
@@ -17,13 +21,17 @@ const Navbar: React.FC<NavbarProps> = ({ handleDisplayModal }) => {
     const customerId = session?.user.stripeCustomerId;
     const [title, setTitle] = useState(getProcessedTitle())
     const isConnected = session?.user.connectedAccounts?.ebay ? true : false;
-    const subscribed = session?.user.authentication?.subscribed ? true: false;
+    const isSubscribed = session?.user.authentication?.subscribed ? true : false;
 
     // Fetch unread notifications count from Firebase
     useEffect(() => {
         setTitle(getProcessedTitle());
     }, [customerId]);
 
+    function handleOnClick(model: string) {
+        if (!isConnected || !isSubscribed) return;
+        handleDisplayModal(true, model);
+    }
 
     return (
         <div className="h-14 w-full flex flex-row items-center">
@@ -32,8 +40,24 @@ const Navbar: React.FC<NavbarProps> = ({ handleDisplayModal }) => {
             </div>
             <div className="w-full flex justify-end pr-2 items-center">
                 <div className="flex justify-end items-center mr-4 gap-4">
-                    <NavbarAddListing handleDisplayModal={handleDisplayModal} isConnected={isConnected} isSubscribed={subscribed}/>
-                    <NavbarAddOrder handleDisplayModal={handleDisplayModal} isConnected={isConnected} isSubscribed={subscribed} />
+                    <NabarItem
+                        title="Upload Sales"
+                        isConnected={isConnected}
+                        isSubscribed={isSubscribed}
+                        icon={<RiFolderUploadLine className="text-xl hover:text-gray-800 text-black" onClick={() => handleOnClick("upload-orders")} />}
+                    />
+                    <NabarItem
+                        title="Add To Inventory"
+                        isConnected={isConnected}
+                        isSubscribed={isSubscribed}
+                        icon={<GrChapterAdd className="text-xl hover:text-gray-800 " onClick={() => handleOnClick("add-listing")} />}
+                    />
+                    <NabarItem
+                        title="Add To Orders"
+                        isConnected={isConnected}
+                        isSubscribed={isSubscribed}
+                        icon={<BiBookAdd className="text-xl hover:text-gray-800 text-black" onClick={() => handleOnClick("add-order")} />}
+                    />
                 </div>
                 <div className="flex justify-end pr-2">
                     <NavbarProfileAvatar />

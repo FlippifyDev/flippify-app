@@ -178,8 +178,8 @@ export function getCachedItem(key: string, itemKey: string) {
     }
 }
 
-export function storeDataFetched(storeType: StoreType): boolean {
-    const raw = sessionStorage.getItem("store");
+export function storeDataFetched(cacheKey: string, storeType: StoreType): boolean {
+    const raw = sessionStorage.getItem(`${cacheKey}-store`);
     let cache: StoreType[];
 
     // 1. Parse existing cache (or start empty)
@@ -201,7 +201,7 @@ export function storeDataFetched(storeType: StoreType): boolean {
 
     // 3. Otherwise, add it and persist
     cache.push(storeType);
-    sessionStorage.setItem("store", JSON.stringify(cache));
+    sessionStorage.setItem(`${cacheKey}-store`, JSON.stringify(cache));
 
     // Indicate we added it
     return false;

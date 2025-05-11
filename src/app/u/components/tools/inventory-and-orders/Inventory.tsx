@@ -9,7 +9,7 @@ import LoadingSpinner from "@/app/components/LoadingSpinner";
 import { shortenText } from "@/utils/format";
 import UpdateTableField from "./UpdateTableField";
 import { formatTableDate } from "@/utils/format-dates";
-import { removeCacheData } from "@/utils/cache-helpers";
+import { getCachedData, removeCacheData } from "@/utils/cache-helpers";
 import { currencySymbols } from "@/config/currency-config";
 import { retrieveUserInventory } from "@/services/firebase/retrieve";
 import { defaultTimeFrom, inventoryCacheKey } from "@/utils/constants";
@@ -58,9 +58,8 @@ const Inventory = () => {
             // grab the storeType keys they actually have
             const storeTypes = fetchUserStores(session.user);
 
-
             // for each storeType, fetch their inventory in parallel
-            const results = await Promise.all(
+            await Promise.all(
                 storeTypes.map((storeType) => {
                     return retrieveUserInventory({
                         uid: session.user.id as string,
@@ -70,8 +69,9 @@ const Inventory = () => {
                     }).then((inventory) => [storeType, inventory] as const);
                 })
             );
-            const lastInventory = results[results.length - 1]?.[1] ?? [];
-            setListedData(lastInventory);
+            
+            const results = Object.values(getCachedData(`${inventoryCacheKey}-${session.user.id}`)) as IListing[];
+            setListedData(results);
 
             setLoading(false);
             setTriggerUpdate(false);
@@ -192,7 +192,7 @@ const Inventory = () => {
                                         </div>
                                     </td>
                                     <td onClick={() => handleDisplayOrderModal(item)}>{shortenText(item.name ?? "N/A")}</td>
-                                    <UpdateTableField currentValue={item?.storeType} docId={item.itemId} item={item} docType='inventory' storeType={item.storeType} keyType="storeType" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
+                                    <UpdateTableField currentValue={item?.storeType} docId={item.itemId} item={item} docType='inventory' storeType={item.storeType} keyType="storeType" cacheKey={cacheKey} tooltip='Warning! Editing this may count towards your monthly inventory.' triggerUpdate={() => setTriggerUpdate(true)} />
 
                                     <td onClick={() => handleDisplayOrderModal(item)}>{item.quantity}</td>
                                     <UpdateTableField currentValue={purchase?.platform} docId={item.itemId} item={item} docType='inventory' storeType={item.storeType} keyType="purchase.platform" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />

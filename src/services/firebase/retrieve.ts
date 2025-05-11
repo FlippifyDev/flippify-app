@@ -4,7 +4,7 @@ import { firestore } from "@/lib/firebase/config";
 import { createUser } from "./create";
 import { updateStoreInfo } from "../api/request";
 import { IListing, IOrder, StoreType } from "@/models/store-data";
-import { getCachedData, setCachedData, storeDataFetched } from "@/utils/cache-helpers";
+import { addCacheData, getCachedData, setCachedData, storeDataFetched } from "@/utils/cache-helpers";
 import { inventoryCacheKey, orderCacheKey } from "@/utils/constants";
 import { filterInventoryByTime, filterOrdersByTime } from "@/utils/filters";
 
@@ -256,7 +256,7 @@ async function retrieveUserOrders({
 }: RetrieveUserOrdersProps): Promise<IOrder[]> {
     // Cache key for orders
     const cacheKey = `${orderCacheKey}-${uid}`;
-    const isStoreDataFetched = storeDataFetched(storeType)
+    const isStoreDataFetched = storeDataFetched(orderCacheKey, storeType)
 
     let cachedData: Record<string, IOrder> = {};
     let cacheTimeFrom: Date | undefined;
@@ -314,7 +314,7 @@ async function retrieveUserOrders({
         };
         // Update the cache with the merged data and new boundaries
         setCachedData(cacheKey, merged, timeFromDate, timeToDate);
-        return filterOrdersByTime(Object.values(merged), timeFrom, timeTo);
+        return filterOrdersByTime(Object.values(ordersToReturn), timeFrom, timeTo);
     }
     // If cache is empty or update is requested, update store info before fetching
     else if (update || !cachedData || Object.keys(cachedData).length === 0) {
@@ -330,7 +330,7 @@ async function retrieveUserOrders({
             ...data
         };
         setCachedData(cacheKey, merged, timeFromDate, timeToDate);
-        return filterOrdersByTime(Object.values(merged), timeFrom, timeTo);
+        return filterOrdersByTime(Object.values(data), timeFrom, timeTo);
     } catch (error) {
         console.error(`Error fetching orders for user with UID=${uid}:`, error);
         return [];
@@ -433,7 +433,7 @@ async function retrieveUserInventory({
     storeType
 }: IRetrieveUserInventory): Promise<IListing[]> {
     const cacheKey = `${inventoryCacheKey}-${uid}`;
-    const isStoreDataFetched = storeDataFetched(storeType)
+    const isStoreDataFetched = storeDataFetched(inventoryCacheKey, storeType)
 
     let cachedData: Record<string, IListing> = {};
     let cacheTimeFrom: Date | undefined;
@@ -442,6 +442,7 @@ async function retrieveUserInventory({
     // Try to get the cached data first
     try {
         const cache = getCachedData(cacheKey, true);
+        console.log("Cache 1", cache)
         cachedData = cache.data as Record<string, IListing>;
         cacheTimeFrom = cache.cacheTimeFrom ? new Date(cache.cacheTimeFrom) : undefined;
         cacheTimeTo = cache.cacheTimeTo ? new Date(cache.cacheTimeTo) : undefined;
@@ -495,7 +496,7 @@ async function retrieveUserInventory({
             };
             // Update the cache with the newly combined data and the new range
             setCachedData(cacheKey, merged, timeFromDate, timeToDate);
-            return filterInventoryByTime(Object.values(merged), timeFrom, timeTo);
+            return filterInventoryByTime(Object.values(inventoryToReturn), timeFrom, timeTo);
         }
         return [];
     }
@@ -515,7 +516,7 @@ async function retrieveUserInventory({
             ...dataDict
         };
         setCachedData(cacheKey, merged, timeFromDate, timeTo ? new Date(timeTo) : new Date());
-        return filterInventoryByTime(Object.values(merged), timeFrom, timeTo);
+        return filterInventoryByTime(Object.values(dataDict), timeFrom, timeTo);
     } catch (error) {
         console.error(`Error fetching inventory for user with UID=${uid}:`, error);
         return [];

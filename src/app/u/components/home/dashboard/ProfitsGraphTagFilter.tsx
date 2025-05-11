@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import CustomDropdown from './DashboardCustomDropdown'; // Adjust the import path to your CustomDropdown
+import Dropdown from '../../dom/ui/Dropdown';
 
 interface ProfitsGraphTagFilterProps {
 	selectedTag: string | null;
@@ -24,7 +24,7 @@ const ProfitsGraphTagFilter = forwardRef<HTMLDivElement, ProfitsGraphTagFilterPr
 
 	return (
 		<div className="relative" ref={ref}>
-			<CustomDropdown
+			<Dropdown
 				value={selectedTag || "all"} // Use "all" when selectedTag is null
 				onChange={handleTagChange}
 				options={tagOptions}

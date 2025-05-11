@@ -31,10 +31,11 @@ interface UpdateTableFieldProps {
     tdClassName?: string;
     className?: string;
     storeType?: StoreType | null;
+    tooltip?: string;
     triggerUpdate: () => void;
 }
 
-const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue, docId, docType, item, keyType, cacheKey, tdClassName, className, storeType, triggerUpdate }) => {
+const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue, docId, docType, item, keyType, cacheKey, tdClassName, className, storeType, tooltip, triggerUpdate }) => {
     const { data: session } = useSession();
 
     const [value, setValue] = useState(currentValue);
@@ -124,7 +125,7 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
 
     return (
         <td
-            className={`${tdClassName} cursor-pointer transition duration-200`}
+            className={`${tdClassName} cursor-pointer transition duration-200 relative group`}
         >
             <input
                 type={type ? type : "text"}
@@ -134,6 +135,11 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
                 onBlur={() => saveChange()}
                 className={`min-w-24 focus:border placeholder:font-semibold text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm ${className}`}
             />
+            {tooltip && (
+                <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 hidden group-hover:block bg-gray-800 text-white text-xs font-medium py-1 px-2 rounded shadow-lg whitespace-nowrap z-10">
+                    {tooltip}
+                </span>
+            )}
         </td>
     )
 }

@@ -220,6 +220,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
                         tdClassName='px-3'
+                        tooltip="Warning! Editing this may count towards your monthly orders."
                         className='max-w-64 bg-gray-100 hover:bg-gray-200 text-gray-600 !text-base transition duration-300'
                     />
                 </tr>

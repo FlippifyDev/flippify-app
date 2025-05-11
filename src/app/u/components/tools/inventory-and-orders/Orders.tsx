@@ -16,6 +16,8 @@ import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { filterInventoryByTime } from '@/utils/filters';
+import { getCachedData } from '@/utils/cache-helpers';
 
 
 const Orders = () => {
@@ -51,7 +53,7 @@ const Orders = () => {
             const storeTypes = fetchUserStores(session.user);
 
             // for each storeType, fetch their orders in parallel
-            const results = await Promise.all(
+            await Promise.all(
                 storeTypes.map((storeType) => {
                     return retrieveUserOrders({
                         uid: session.user.id as string,
@@ -61,8 +63,8 @@ const Orders = () => {
                     }).then((order) => [storeType, order] as const);
                 })
             );
-            const lastOrder = results[results.length - 1]?.[1] ?? [];
-            setOrderData(lastOrder);
+            const results = Object.values(getCachedData(`${orderCacheKey}-${session.user.id}`)) as IOrder[];
+            setOrderData(results);
 
             setLoading(false);
             setTriggerUpdate(false);
@@ -144,7 +146,7 @@ const Orders = () => {
                                         onClick={() => handleRouteToOrderPage(order)}>
                                         {shortenText(order.name ?? "N/A")}
                                     </td>
-                                    <UpdateTableField currentValue={order?.storeType} docId={order.itemId} item={order} docType='orders' storeType={order.storeType} keyType="storeType" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} className='max-w-32 hover:bg-gray-100 transition duration-300' />
+                                    <UpdateTableField currentValue={order?.storeType} docId={order.itemId} item={order} docType='orders' storeType={order.storeType} keyType="storeType" cacheKey={cacheKey} tooltip='Warning! Editing this may count towards your monthly orders.' triggerUpdate={() => setTriggerUpdate(true)} className='max-w-32 hover:bg-gray-100 transition duration-300' />
                                     <td className="w-32">{formatTableDate(order.sale?.date)}</td>
                                     <UpdateTableField currentValue={purchasePrice.toFixed(2)} docId={transactionId} item={order} docType='orders' storeType={order.storeType} keyType="purchase.price" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} className='max-w-32 hover:bg-gray-100 transition duration-300' />
                                     <td>

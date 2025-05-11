@@ -1,17 +1,18 @@
 import { useState, useRef, useEffect } from "react";
 
+
 interface Option {
     label: string;
     value: string;
 }
 
-interface CustomDropdownProps {
+interface DropdownProps {
     value: string;
     onChange: (value: string) => void;
     options: Option[];
 }
 
-export default function CustomDropdown({ value, onChange, options }: CustomDropdownProps) {
+const Dropdown: React.FC<DropdownProps> = ({ value, onChange, options }) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -79,5 +80,7 @@ export default function CustomDropdown({ value, onChange, options }: CustomDropd
                 </ul>
             </div>
         </div>
-    );
+    )
 }
+
+export default Dropdown

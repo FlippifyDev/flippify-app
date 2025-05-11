@@ -68,13 +68,13 @@ async function createNewInventoryItemAdmin(uid: string, StoreType: StoreType | s
  * - If the order already exists, it will be merged with existing data.
  * - If the order has a `itemId`, the function will decrease the manual listing count accordingly.
  */
-async function createNewOrderItemAdmin(uid: string, StoreType: StoreType, order: IOrder): Promise<{ success?: boolean, error?: any, orderExists?: boolean }> {
+async function createNewOrderItemAdmin(uid: string, storeType: StoreType, order: IOrder): Promise<{ success?: boolean, error?: any, orderExists?: boolean }> {
     try {
         if (!order.transactionId) {
             throw Error("Item does not contain an ID")
         }
 
-        const orderRef = firestoreAdmin.collection("orders").doc(uid).collection(StoreType)
+        const orderRef = firestoreAdmin.collection("orders").doc(uid).collection(storeType)
 
         // Use the order's transaction id as the document id in the store collection
         const itemDocRef = orderRef.doc(order.transactionId);
@@ -90,7 +90,7 @@ async function createNewOrderItemAdmin(uid: string, StoreType: StoreType, order:
         await itemDocRef.set(order, { merge: true });
 
         // Increment the user's manual orders count by 1
-        const { success: incrementSuccess } = await updateUserOrdersCountAdmin(uid, StoreType)
+        const { success: incrementSuccess } = await updateUserOrdersCountAdmin(uid, storeType)
         if (!incrementSuccess) {
             console.error("Error incrementing user manual orders count.");
             return { error: "Error incrementing user manual orders count." };
@@ -100,7 +100,7 @@ async function createNewOrderItemAdmin(uid: string, StoreType: StoreType, order:
         // In the case where there is no item id, then there is no listings that matches the order
         // so the order is likely custom
         if (order.itemId && order.sale?.quantity) {
-            await updateListingAdmin(uid, StoreType, order.itemId, order.sale.quantity);
+            await updateListingAdmin(uid, storeType, order.itemId, order.sale.quantity);
         }
 
         console.log(`Order item ${order.transactionId} created/updated successfully.`);

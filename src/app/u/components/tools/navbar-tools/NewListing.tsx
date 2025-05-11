@@ -26,7 +26,7 @@ interface NewListingProps {
 
 
 const NewListing: React.FC<NewListingProps> = ({ setDisplayModal }) => {
-    const { data: session } = useSession();
+    const { data: session, update: updateSession } = useSession();
 
     // General Info
     const [itemId, setItemId] = useState<string>(generateRandomFlippifyListingId(20))
@@ -77,11 +77,33 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal }) => {
     }, [session?.user]);
 
 
-    function handleCacheUpdate(inventoryItem: IListing) {
-        const cacheKey = `${inventoryCacheKey}-${session?.user.id}`;
+    async function handleCacheUpdate(inventoryItem: IListing) {
+        if (!inventoryItem.storeType) return;
 
+        const cacheKey = `${inventoryCacheKey}-${session?.user.id}`;
+        
         // Update the cache with the new item
         addCacheData(cacheKey, inventoryItem);
+        
+        const currentStore = session!.user.store?.[inventoryItem.storeType] || {};
+        const currentNumListings = currentStore.numListings?.manual ?? 0;
+
+        await updateSession({
+            ...session!,
+            user: {
+                ...session!.user,
+                store: {
+                    ...session!.user.store,
+                    [inventoryItem.storeType]: {
+                        ...currentStore,
+                        numListings: {
+                            ...currentStore.numListings,
+                            manual: currentNumListings + 1
+                        }
+                    },
+                },
+            },
+        });
     }
 
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -120,7 +142,7 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal }) => {
                 setErrorMessage(`Error creating new inventory item`)
             }
         } else {
-            handleCacheUpdate(inventoryItem);
+            await handleCacheUpdate(inventoryItem);
             setSuccessMessage("Listing Added!");
         }
 

@@ -103,6 +103,8 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal }) => {
     }, [fillItem])
 
     async function handleCacheAndSessionUpdate(orderItem: IOrder) {
+        if (!orderItem.storeType) return;
+
         const orderCache = `${orderCacheKey}-${session?.user.id}`;
         const inventoryItem = cachedListings?.[itemId] as IListing;
         const newQuantity = (inventoryItem.quantity ?? 0) - Number(quantity);
@@ -110,7 +112,7 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal }) => {
         // Step 1: Add the order item to the orders cache
         addCacheData(orderCache, orderItem);
 
-        const currentStore = session!.user.store?.ebay || {};
+        const currentStore = session!.user.store?.[orderItem.storeType] || {};
         const currentNumOrders = currentStore.numOrders?.manual ?? 0;
         const currentTotalNumOrders = currentStore.numOrders?.manual ?? 0;
         const currentNumListings = currentStore.numListings?.manual ?? 0;
@@ -130,7 +132,7 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal }) => {
                 ...session!.user,
                 store: {
                     ...session!.user.store,
-                    ebay: {
+                    [orderItem.storeType]: {
                         ...currentStore,
                         numOrders: {
                             ...currentStore.numOrders,

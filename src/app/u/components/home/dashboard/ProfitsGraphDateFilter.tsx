@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import CustomDropdown from './DashboardCustomDropdown'; // Adjust the import path to your CustomDropdown
+import Dropdown from '../../dom/ui/Dropdown';
 
 interface ProfitsGraphDateFilterProps {
 	selectedRange: number; // Keep as number to match your existing logic
@@ -22,7 +22,7 @@ const ProfitsGraphDateFilter = forwardRef<HTMLDivElement, ProfitsGraphDateFilter
 		{ label: "All Time", value: "730" },
 	];
 
-	// Wrapper function to adapt CustomDropdown's onChange to handleRangeChange
+	// Wrapper function to adapt Dropdown's onChange to handleRangeChange
 	const onRangeChange = (value: string) => {
 		const selectedOption = timeRangeOptions.find(option => option.value === value);
 		if (selectedOption) {
@@ -32,8 +32,8 @@ const ProfitsGraphDateFilter = forwardRef<HTMLDivElement, ProfitsGraphDateFilter
 
 	return (
 		<div className="relative" ref={ref}>
-			<CustomDropdown
-				value={selectedRange.toString()} // Convert number to string for CustomDropdown
+			<Dropdown
+				value={selectedRange.toString()} // Convert number to string for Dropdown
 				onChange={onRangeChange}
 				options={timeRangeOptions}
 			/>

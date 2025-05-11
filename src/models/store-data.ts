@@ -110,4 +110,4 @@ interface IOrders {
     depop?: Record<string, IOrder> | null;
 }
 
-export type { IListing, IOrder, IInventory, IOrders, IHistory };
+export type { IListing, IOrder, IInventory, IOrders, IHistory, IShipping, IPurchase, ISale };

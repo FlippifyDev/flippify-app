@@ -10,6 +10,7 @@ import NewListing from "../tools/navbar-tools/NewListing";
 import NewOrder from "../tools/navbar-tools/NewOrder";
 import Sidebar from "../dom/sidebar/Sidebar";
 import Navbar from "../dom/navbar/Navbar";
+import UploadOrders from "../tools/navbar-tools/UploadOrders";
 
 
 interface LayoutProps {
@@ -40,6 +41,9 @@ const LayoutContent = ({ removePadding, children }: { removePadding?: boolean, c
                 break;
             case "add-order":
                 setModal(<NewOrder setDisplayModal={setIsModalOpen} />)
+                break;
+            case "upload-orders":
+                setModal(<UploadOrders setDisplayModal={setIsModalOpen} />)
                 break;
             default:
                 setModal(null);

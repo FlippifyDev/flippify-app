@@ -38,7 +38,17 @@ const config: Config = {
 				'93': '23.25rem',
 				'94': '23.5rem',
 				'95': '23.75rem',
-			},
+            },
+            minWidth: {
+                'lg': '32rem',
+                'xl': '36rem',
+                '2xl': '42rem',
+                '3xl': '48rem',
+                '4xl': '56rem',
+                '5xl': '64rem',
+                '6xl': '72rem',
+                '6.5xl': '74rem',
+            },
             maxWidth: {
                 '6.5xl': '74rem',
             },

@@ -88,7 +88,6 @@ const Page = () => {
             const end = new Date(firstSaleDate.getFullYear(), 11, 31, 23, 59, 59, 999);
  
             const ranges = generateTimeRanges(firstSaleDate, end)
-            console.log(ranges)
             setTimeRanges(ranges)
 
             if (ranges.length > 0) {

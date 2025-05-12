@@ -49,8 +49,8 @@ const PlansPage = () => {
 
     function handleDisplayModal(priceId: string, type: string) {
         setPriceId(priceId);
+        setCouponError(null);
         if (type === "coupon") {
-            setCouponError(null);
             setDisplayCouponModal(true);
         } else if (type === "subscriptionChange") {
             setDisplaySubscriptionChangeModal(true);
@@ -117,10 +117,27 @@ const PlansPage = () => {
                         <p className="text-sm text-center mb-4">
                             Are you sure you want to change your subscription? This will update your current plan and may incur additional charges.
                         </p>
+
+                        <input
+                            type="text"
+                            value={couponCode ?? ""}
+                            onChange={(e) => handleInput(e.target.value, "coupon")}
+                            placeholder="Coupon Code (optional)"
+                            className="input input-bordered w-full"
+                            aria-label="Coupon Code"
+                            aria-required="false"
+                        />
+
+                        {couponError && (
+                            <p className="text-red-500 text-sm mt-2 w-full text-center">{couponError}</p>
+                        )}
+                        
                         <ButtonUpgradeSubscription
                             priceId={priceId}
                             handleDisplayModal={handleDisplayModal}
                             displayModal={false}
+                            coupon={couponCode}
+                            setCouponError={setCouponError}
                         />
                     </div>
                 </Modal>
@@ -178,7 +195,6 @@ const PlansPage = () => {
                     priceRange={selectedPlan}
                     currency={currency}
                     conversionRates={conversionRates}
-                    specialPlan
                     handleDisplayModal={handleDisplayModal}
                 />
                 <PlansCard
@@ -196,6 +212,7 @@ const PlansPage = () => {
                     priceRange={selectedPlan}
                     currency={currency}
                     conversionRates={conversionRates}
+                    specialPlan
                     handleDisplayModal={handleDisplayModal}
                 />
                 <PlansCard

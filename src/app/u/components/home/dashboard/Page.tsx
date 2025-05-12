@@ -102,40 +102,36 @@ const DashboardPage: React.FC = () => {
 
             {/* If They Have Subscription */}
             <LayoutSubscriptionWrapper anySubscriptions={["admin", "member"]}>
-                {session.user.connectedAccounts?.ebay ? (
-                    <div className="h-full w-full flex flex-col gap-2 sm:gap-4">
-                        <div className="w-full">
-                            <DashboardOverviewCard
-                                salesData={filteredSalesData}
-                                currency={currency}
-                                selectedRange={selectedRange}
-                            />
-                        </div>
-                        <div className="w-full bg-white rounded-lg dark:bg-gray-800 p-4 md:p-6">
-                            <DashboardProfitsGraph
-                                salesData={filteredSalesData}
-                                currency={currency}
-                                selectedRange={selectedRange}
-                            />
-                            {/* Dropdown for selecting tags */}
-                            <div className="flex flex-row w-full gap-4">
-                                {/* Dropdown for selecting date range */}
-                                <ProfitsGraphDateFilter ref={rangeDropdownRef} selectedLabel={selectedLabel} selectedRange={selectedRange} handleRangeChange={handleRangeChange} />
+                <div className="h-full w-full flex flex-col gap-2 sm:gap-4">
+                    <div className="w-full">
+                        <DashboardOverviewCard
+                            salesData={filteredSalesData}
+                            currency={currency}
+                            selectedRange={selectedRange}
+                        />
+                    </div>
+                    <div className="w-full bg-white rounded-lg dark:bg-gray-800 p-4 md:p-6">
+                        <DashboardProfitsGraph
+                            salesData={filteredSalesData}
+                            currency={currency}
+                            selectedRange={selectedRange}
+                        />
+                        {/* Dropdown for selecting tags */}
+                        <div className="flex flex-row w-full gap-4">
+                            {/* Dropdown for selecting date range */}
+                            <ProfitsGraphDateFilter ref={rangeDropdownRef} selectedLabel={selectedLabel} selectedRange={selectedRange} handleRangeChange={handleRangeChange} />
 
-                                {/* Dropdown for selecting custom tag */}
-                                <ProfitsGraphTagFilter ref={tagDropdownRef} selectedTag={selectedTag} uniqueTags={uniqueTags} setSelectedTag={setSelectedTag} />
-                            </div>
-                        </div>
-                        <div className="w-full">
-                            <DashboardRecentSalesCard
-                                salesData={filteredSalesData}
-                                currency={currency}
-                            />
+                            {/* Dropdown for selecting custom tag */}
+                            <ProfitsGraphTagFilter ref={tagDropdownRef} selectedTag={selectedTag} uniqueTags={uniqueTags} setSelectedTag={setSelectedTag} />
                         </div>
                     </div>
-                ) : (
-                    <IconButton heading="No account connected" animationType="hover-box" subtitle="Go to your profile to connect your eBay account" buttonText="Go to profile" redirect="profile" />
-                )}
+                    <div className="w-full">
+                        <DashboardRecentSalesCard
+                            salesData={filteredSalesData}
+                            currency={currency}
+                        />
+                    </div>
+                </div>
             </LayoutSubscriptionWrapper>
         </div>
     );

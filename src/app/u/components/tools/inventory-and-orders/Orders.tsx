@@ -63,8 +63,12 @@ const Orders = () => {
                     }).then((order) => [storeType, order] as const);
                 })
             );
-            const results = Object.values(getCachedData(`${orderCacheKey}-${session.user.id}`)) as IOrder[];
-            setOrderData(results);
+
+            const cache = getCachedData(`${orderCacheKey}-${session.user.id}`);
+            if (cache) {
+                const results = Object.values(cache) as IOrder[];
+                setOrderData(results);
+            }
 
             setLoading(false);
             setTriggerUpdate(false);

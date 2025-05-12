@@ -1,5 +1,8 @@
 "use server"
 
+// Local Imports
+import { retrieveCouponCodeOrPromotionCode } from "./retrieve";
+
 // External Imports
 import Stripe from "stripe";
 
@@ -25,7 +28,7 @@ export async function updateStripeCustomerEmail(customerId: string, newEmail: st
 }
 
 
-export async function updateStripeUserSubscription(customerId: string, newPriceId: string): Promise<{ success?: boolean, error?: string }> {
+export async function updateStripeUserSubscription(customerId: string, newPriceId: string, coupon?: string): Promise<{ success?: boolean, error?: string }> {
     const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
 
     if (!stripeAPIKey) {
@@ -52,6 +55,18 @@ export async function updateStripeUserSubscription(customerId: string, newPriceI
     }
 
     try {
+        let discounts: Stripe.Checkout.SessionCreateParams.Discount[] = [];
+
+        const { coupon: couponCode, promotionCode, promoId } = await retrieveCouponCodeOrPromotionCode(coupon ?? "");
+        if (!couponCode && !promotionCode) {
+            return { error: "Invalid coupon code" };
+        }
+        if (couponCode) {
+            discounts.push({ coupon: coupon });
+        } else if (promotionCode && promoId) {
+            discounts.push({ promotion_code: promoId });
+        }
+
         await stripe.subscriptions.update(
             currentSubscriptionId, {
             items: [
@@ -61,6 +76,7 @@ export async function updateStripeUserSubscription(customerId: string, newPriceI
                 },
                 {
                     price: newPriceId,
+                    discounts: discounts
                 },
             ],
         });
@@ -68,6 +84,6 @@ export async function updateStripeUserSubscription(customerId: string, newPriceI
         return { success: true };
     } catch (error) {
         console.error('Error updating subscription:', error);
-        return { error: 'Error updating subscription' };
+        return { error: `${error}` };
     }
 }

@@ -226,3 +226,49 @@ export async function updateListingAdmin(uid: string, storePlatform: StoreType, 
         return { error };
     }
 }
+
+
+export async function checkAndUpdateResetDates(uid: string): Promise<{ success?: boolean; error?: any }> {
+    try {
+        const userRef = firestoreAdmin.collection('users').doc(uid);
+        const snap = await userRef.get();
+
+        if (!snap.exists) {
+            console.warn(`User ${uid} not found.`);
+            return { success: false };
+        }
+
+        const userData = snap.data() as { store?: Record<string, any> };
+        const stores = userData.store ?? {};
+
+        const now = new Date();
+        const updates: Record<string, any> = {};
+
+        Object.entries(stores).forEach(([storeKey, storeObj]) => {
+            const numOrders = storeObj.numOrders ?? {};
+            // If no reset date is found, then default it to a month ago so it resets the users orders
+            const resetDateStr = numOrders.resetDate ?? new Date(now.getFullYear(), now.getMonth() - 1, 1);
+
+            const resetDate = new Date(resetDateStr);
+            if (resetDate < now) {
+                // compute first day of next month
+                const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+
+                // prepare nested update path: `store.{storeKey}.numOrders`
+                const base = `store.${storeKey}.numOrders`;
+                updates[`${base}.resetDate`] = formatDateToISO(nextMonth);
+                updates[`${base}.automatic`] = 0;
+                updates[`${base}.manual`] = 0;
+            }
+        });
+
+        if (Object.keys(updates).length > 0) {
+            await userRef.update(updates);
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error('Error updating reset dates:', error);
+        return { error };
+    }
+}

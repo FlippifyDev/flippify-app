@@ -1,7 +1,6 @@
-import { CurrencyType } from "@/models/user";
 import { formatDateToISO } from "@/utils/format-dates";
-import { currencySymbols } from "@/config/currency-config";
 import { IHistory, OrderStatus } from "@/models/store-data";
+import { checkAndUpdateResetDates } from "./update-admin";
 
 interface CreateHistoryItemsProps {
     status: OrderStatus,
@@ -33,7 +32,7 @@ export function createHistoryItems({
         newItems.push({
             title: "Sold",
             description: `Order placed on eBay for ${salePrice}`,
-            status: ["InProcess", "Active"].includes(status) ? status: "Active",
+            status: ["InProcess", "Active"].includes(status) ? status : "Active",
             timestamp: saleDate ? saleDate : currentTime
         });
     }
@@ -70,4 +69,17 @@ export function createHistoryItems({
     });
 
     return mergedHistory;
+}
+
+
+export async function handleLogin(uid: string): Promise<{ success?: boolean, error?: any }> {
+    try {
+        const { error: resetDateError } = await checkAndUpdateResetDates(uid);
+        if (resetDateError) throw resetDateError;
+
+        return { success: true }
+    } catch (error) {
+        console.error("An error occured whilst processing login");
+        return { error };
+    }
 }

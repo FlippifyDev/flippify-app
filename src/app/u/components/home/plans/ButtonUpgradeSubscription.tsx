@@ -17,11 +17,13 @@ interface ButtonUpgradeSubscriptionProps {
     planTitle?: string;
     specialPlan?: boolean;
     displayModal?: boolean;
+    coupon?: string;
     handleDisplayModal: (priceId: string, type: string) => void;
+    setCouponError: (error: string) => void;
 }
 
 
-const ButtonUpgradeSubscription: React.FC<ButtonUpgradeSubscriptionProps> = ({ priceId, currentSubscriptionName, planTitle, specialPlan, displayModal, handleDisplayModal }) => {
+const ButtonUpgradeSubscription: React.FC<ButtonUpgradeSubscriptionProps> = ({ priceId, currentSubscriptionName, planTitle, specialPlan, displayModal, coupon, handleDisplayModal, setCouponError }) => {
     const { data: session } = useSession();
     const [confirmUpdate, setConfirmUpdate] = useState(false);
     const [confirmingUpdate, setConfirmingUpdate] = useState(false);
@@ -44,22 +46,26 @@ const ButtonUpgradeSubscription: React.FC<ButtonUpgradeSubscriptionProps> = ({ p
             const updateSubscription = async () => {
                 if (session?.user?.stripeCustomerId) {
                     try {
-                        const { success, error } = await updateStripeUserSubscription(session.user.stripeCustomerId, priceId);
+                        const { success, error } = await updateStripeUserSubscription(session.user.stripeCustomerId, priceId, coupon);
                         if (success) {
                             setConfirmedUpdate(true);
+                            window.location.reload()
                             console.log("Subscription updated successfully!");
                         } else {
+                            setCouponError(`Error updating subscription: ${error}`)
                             console.error("Error updating subscription:", error);
                         }
                     } catch (error) {
+                        setCouponError(`Error updating subscription: ${error}`)
                         console.error("Error updating subscription:", error);
                     }
                 }
                 setConfirmUpdate(false); // Reset the confirmation state after the update
+                setConfirmingUpdate(false);
             };
             updateSubscription();
         }
-    }, [confirmUpdate, session, priceId]);
+    }, [confirmUpdate, session, priceId, coupon, setCouponError]);
 
     return (
         <div className="relative group w-full flex flex-col justify-end">

@@ -19,7 +19,7 @@ interface ButtonUpgradeSubscriptionProps {
     displayModal?: boolean;
     coupon?: string;
     handleDisplayModal: (priceId: string, type: string) => void;
-    setCouponError: (error: string) => void;
+    setCouponError?: (error: string) => void;
 }
 
 
@@ -52,11 +52,12 @@ const ButtonUpgradeSubscription: React.FC<ButtonUpgradeSubscriptionProps> = ({ p
                             window.location.reload()
                             console.log("Subscription updated successfully!");
                         } else {
-                            setCouponError(`Error updating subscription: ${error}`)
-                            console.error("Error updating subscription:", error);
+                            throw error;
                         }
                     } catch (error) {
-                        setCouponError(`Error updating subscription: ${error}`)
+                        if (setCouponError) {
+                            setCouponError(`Error updating subscription: ${error}`)
+                        }
                         console.error("Error updating subscription:", error);
                     }
                 }

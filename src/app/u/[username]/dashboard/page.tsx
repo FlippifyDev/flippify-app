@@ -1,7 +1,7 @@
 import React from 'react';
 import Layout from '../../components/layout/Layout';
 import ThemeSetter from '@/app/components/ThemeSetter';
-import DashboardPage from '../../components/home/dashboard/DashboardPage';
+import DashboardPage from '../../components/home/dashboard/Page';
 
 export const metadata = {
     title: 'Dashboard - Flippify',

@@ -12,6 +12,7 @@ import Image from "next/image";
 import { StatusType } from "@/models/config";
 import UnderMaintenance from "../development/UnderMaintenance";
 import { retrieveStatus } from "@/services/api/request";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
@@ -110,10 +111,15 @@ const LoginContent = () => {
                                 disabled={loading || !status}
                                 className="w-full mt-4 p-3 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 rounded-lg shadow-lg"
                             >
-                                {loading ? "Processing..." : status ? "Login" : 
-                                    <div className="w-full flex justify-center">
-                                        Please wait...
-                                    </div>
+                                {loading ?
+                                    <div className="relative flex justify-center items-center">
+                                        <span>Processing...</span>
+                                        <span className="absolute right-1"><LoadingSpinner /></span>
+                                    </div> :
+                                    status ? "Login" :
+                                        <div className="w-full flex justify-center">
+                                            Please wait...
+                                        </div>
                                 }
                             </button>
                         </form>

@@ -146,3 +146,20 @@ export const validateEmailInput = (
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailPattern.test(email);
 };
+
+
+export const validateEmail = (
+    email: string,
+    setFunction: (value: string) => void,
+    maxLength: number = 128
+): void => {
+    if (email === "") setFunction(email);
+
+    // Check if the input exceeds the maximum length.
+    if (email.length > maxLength) return;
+
+    const emailPattern = /^(?:[\p{L}\p{N}@\.]+(?: [\p{L}\p{N}@\.]+)* ?)$/u;
+    if (emailPattern.test(email)) {
+        setFunction(email);
+    }
+};

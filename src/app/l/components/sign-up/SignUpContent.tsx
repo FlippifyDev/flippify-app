@@ -2,9 +2,11 @@
 
 // Local Imports
 import { StatusType } from "@/models/config";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 import UnderMaintenance from "../development/UnderMaintenance";
 import { retrieveStatus } from "@/services/api/request";
 import { auth, firestore } from "@/lib/firebase/config";
+import { FaRegCheckCircle } from "react-icons/fa";
 import { updateAccessGrantedAdmin } from "@/services/firebase/update-admin";
 import { retrieveAuthenticatedUserCount } from "@/services/firebase/retrieve-admin";
 
@@ -17,6 +19,7 @@ import { signIn } from "next-auth/react";
 import { Lato } from 'next/font/google';
 import dotenv from "dotenv";
 import Image from "next/image";
+import { validateAlphaNumericInput, validateEmail, validateEmailInput, validatePasswordInput, validateTextInput } from "@/utils/input-validation";
 
 dotenv.config();
 
@@ -70,7 +73,7 @@ const SignUpContent = () => {
                 if (!wasVerifiedBefore && isVerifiedNow) {
                     console.log("Email verification detected, proceeding with sign in");
                     setEmailVerified(true);
-                    
+
                     try {
 
                         // Sign in with NextAuth credentials
@@ -79,7 +82,7 @@ const SignUpContent = () => {
                             password: passwordRef.current,
                             redirect: false,
                         });
-                        
+
                         if (result?.error) {
                             console.error("Error during sign-in:", result.error);
                             return;
@@ -89,7 +92,7 @@ const SignUpContent = () => {
                     }
 
                     try {
-                        
+
                         await setDoc(doc(firestore, "users", auth.currentUser.uid), {
                             username: usernameRef.current,
                             authentication: {
@@ -99,7 +102,7 @@ const SignUpContent = () => {
                     } catch (error) {
                         console.error(error)
                     }
-                    
+
                     try {
                         await updateAccessGrantedAdmin(auth.currentUser.uid);
                     } catch (error) {
@@ -302,6 +305,33 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
     status,
     errorMessage,
 }) => {
+    const [hasEightCharacters, setHasEightCharacters] = useState(false);
+    const [hasOneNumber, setHasOneNumber] = useState(false);
+    const [hasOneSpecial, setHasOneSpecial] = useState(false);
+    const [validEmail, setValidEmail] = useState(false);
+
+    function handlePasswordInput(value: string) {
+        validatePasswordInput(value, setPassword)
+        // At least 8 characters
+        setHasEightCharacters(value.length >= 8);
+
+        // At least one digit
+        setHasOneNumber(/\d/.test(value));
+
+        // At least one special character (adjust the class as you like)
+        setHasOneSpecial(/[!@#$%^&*()_+=]/.test(value));
+    }
+
+    function handleEmailInput(value: string) {
+        if (validateEmailInput(value)) {
+            setValidEmail(true);
+        } else {
+            setValidEmail(false);
+        }
+        validateEmail(value, setEmail);
+    }
+
+
     return (
         <div className="bg-white rounded-3xl shadow-lg w-full max-w-md p-8">
             {/* Logo */}
@@ -319,36 +349,57 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                     type="text"
                     placeholder="Username"
                     value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    onChange={(e) => validateAlphaNumericInput(e.target.value, setUsername)}
                     className="input input-bordered w-full bg-white placeholder-gray-400"
                 />
                 <input
                     type="email"
                     placeholder="Email Address"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => handleEmailInput(e.target.value)}
                     className="input input-bordered w-full bg-white placeholder-gray-400"
                 />
                 <input
                     type="password"
                     placeholder="Password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => handlePasswordInput(e.target.value)}
                     className="input input-bordered w-full bg-white placeholder-gray-400"
                 />
+                <div className="w-full px-1">
+                    {/* Length Check */}
+                    <div className={`flex justify-between items-center text-sm ${hasEightCharacters ? "text-houseBlue" : "text-gray-400"}`}>
+                        <span><FaRegCheckCircle /></span>
+                        <span>Must contain at least 8 characters</span>
+                    </div>
+                    {/* Number Check */}
+                    <div className={`flex justify-between items-center text-sm ${hasOneNumber ? "text-houseBlue" : "text-gray-400"}`}>
+                        <span><FaRegCheckCircle /></span>
+                        <span>Must contain at least 1 number</span>
+                    </div>
+                    {/* Special Character Check */}
+                    <div className={`flex justify-between items-center text-sm ${hasOneSpecial ? "text-houseBlue" : "text-gray-400"}`}>
+                        <span><FaRegCheckCircle /></span>
+                        <span>Must contain at least 1 special character</span>
+                    </div>
+                </div>
                 {errorMessage && (
                     <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
                 )}
 
                 <button
                     type="submit"
-                    disabled={loading || !status}
-                    className="w-full mt-4 p-3 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 rounded-lg shadow-lg"
+                    disabled={loading || !status || !hasEightCharacters || !hasOneNumber || !hasOneSpecial || !validEmail}
+                    className="w-full mt-4 p-3 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white disabled:bg-muted/50 disabled:text-gray-500 transition duration-300 rounded-lg shadow-lg"
                 >
-                    {loading ? "Processing..." : status ? "Sign Up": 
-                    <div className="w-full flex justify-center">
-                            Please wait...
-                    </div>
+                    {loading ?
+                        <div className="relative flex justify-center items-center">
+                            <span>Processing...</span>
+                            <span className="absolute right-1"><LoadingSpinner /></span>
+                        </div> : status ? "Sign Up" :
+                            <div className="w-full flex justify-center">
+                                Please wait...
+                            </div>
                     }
                 </button>
             </form>

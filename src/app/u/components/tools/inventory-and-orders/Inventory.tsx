@@ -69,9 +69,12 @@ const Inventory = () => {
                     }).then((inventory) => [storeType, inventory] as const);
                 })
             );
-            
-            const results = Object.values(getCachedData(`${inventoryCacheKey}-${session.user.id}`)) as IListing[];
-            setListedData(results);
+
+            const cache = getCachedData(`${inventoryCacheKey}-${session.user.id}`);
+            if (cache) {
+                const results = Object.values(cache) as IListing[];
+                setListedData(results);
+            }
 
             setLoading(false);
             setTriggerUpdate(false);
@@ -181,7 +184,7 @@ const Inventory = () => {
                                             style={{ cursor: "context-menu" }}
                                         >
                                             <Image
-                                                src={item.image ? item.image[0]: ""}
+                                                src={item.image ? item.image[0] : ""}
                                                 width={100}
                                                 height={100}
                                                 alt="item image"

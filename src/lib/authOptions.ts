@@ -2,6 +2,7 @@
 import { auth } from "@/lib/firebase/config";
 import { IUser } from "@/models/user";
 import { IJwtToken } from "@/models/jwt-token";
+import { handleLogin } from "@/services/firebase/helpers";
 import { retrieveUserAdmin } from "@/services/firebase/retrieve-admin";
 import { retrieveUserAndCreate } from "@/services/firebase/retrieve";
 
@@ -34,6 +35,10 @@ export const authOptions: NextAuthOptions = {
                         id: userCredential.user.uid,
                         email: userCredential.user.email,
                     };
+                    
+                    // Run any functions required during login
+                    const { error } = await handleLogin(user.id);
+                    if (error) throw error;
 
                     return user;
                 } catch (error) {

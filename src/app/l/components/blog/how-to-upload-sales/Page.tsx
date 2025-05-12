@@ -90,13 +90,13 @@ const Page = () => {
                                     Transaction ID
                                 </td>
                                 <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">Yes</span>
+                                    <span className="text-gray-600">No (Recommended)</span>
                                 </td>
                                 <td className="py-4 px-6 text-center">
                                     <span className="text-gray-600">Text</span>
                                 </td>
                                 <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">None</span>
+                                    <span className="text-gray-600">Random</span>
                                 </td>
                             </tr>
                             <tr className="border-b">
@@ -146,13 +146,13 @@ const Page = () => {
                                     Sale Date
                                 </td>
                                 <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">Yes</span>
+                                    <span className="text-gray-600">No (Recommended)</span>
                                 </td>
                                 <td className="py-4 px-6 text-center">
                                     <span className="text-gray-600">Date</span>
                                 </td>
                                 <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">None</span>
+                                    <span className="text-gray-600">Time of upload</span>
                                 </td>
                             </tr>
                             <tr className="border-b">

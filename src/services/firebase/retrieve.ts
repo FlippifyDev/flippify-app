@@ -442,7 +442,6 @@ async function retrieveUserInventory({
     // Try to get the cached data first
     try {
         const cache = getCachedData(cacheKey, true);
-        console.log("Cache 1", cache)
         cachedData = cache.data as Record<string, IListing>;
         cacheTimeFrom = cache.cacheTimeFrom ? new Date(cache.cacheTimeFrom) : undefined;
         cacheTimeTo = cache.cacheTimeTo ? new Date(cache.cacheTimeTo) : undefined;

@@ -3,22 +3,22 @@
 // Local Imports
 import Modal from '../../dom/ui/Modal'
 import Dropdown from '../../dom/ui/Dropdown';
+import LoadingSpinner from '@/app/components/LoadingSpinner';
+import { shortenText } from '@/utils/format';
+import { addCacheData } from '@/utils/cache-helpers';
+import { ISubscription } from '@/models/user';
+import { formatDateToISO } from '@/utils/format-dates';
+import { createNewOrderItemAdmin } from '@/services/firebase/create-admin';
+import { orderCacheKey, subscriptionLimits } from '@/utils/constants';
+import { IOrder, IPurchase, ISale, IShipping, OrderStatus, StoreType } from '@/models/store-data';
+import { fetchSubscriptionMaxListings, fetchUserInventoryAndOrdersCount, fetchUserSubscription } from '@/utils/extract-user-data';
+import { generateRandomFlippifyListingId, generateRandomFlippifyOrderId, generateRandomFlippifyTransactionId } from '@/utils/generate-random';
 
 // External Imports
-import { useRef, useState } from 'react'
-import Papa from 'papaparse'
-import { IListing, IOrder, IPurchase, ISale, IShipping, OrderStatus, StoreType } from '@/models/store-data';
-import { formatDateToISO } from '@/utils/format-dates';
+import { useEffect, useRef, useState } from 'react'
 import { useSession } from 'next-auth/react';
-import { generateRandomFlippifyListingId, generateRandomFlippifyOrderId } from '@/utils/generate-random';
-import { fetchSubscriptionMaxListings, fetchUserInventoryAndOrdersCount, fetchUserSubscription } from '@/utils/extract-user-data';
-import { createNewOrderItemAdmin } from '@/services/firebase/create-admin';
-import { ISubscription } from '@/models/user';
-import { shortenText } from '@/utils/format';
-import { inventoryCacheKey, orderCacheKey } from '@/utils/constants';
-import { addCacheData, getCachedData } from '@/utils/cache-helpers';
-import LoadingSpinner from '@/app/components/LoadingSpinner';
 import Link from 'next/link';
+import Papa from 'papaparse';
 
 interface UploadOrdersProps {
     setDisplayModal: (value: boolean) => void;
@@ -37,6 +37,14 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
     const [uploading, setUploading] = useState(false);
     const [uploaded, setUploaded] = useState(false);
 
+
+    const [aboveLimit, setAboveLimit] = useState(false);
+
+    // Messages
+    const [errorMessage, setErrorMessage] = useState<string>("")
+    const [successMessage, setSuccessMessage] = useState<string>("")
+
+
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [file, setFile] = useState<File>();
 
@@ -50,13 +58,34 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
         setUploadType(value);
     }
 
+    useEffect(() => {
+        const checkLimit = () => {
+            const plan = session?.user.authentication?.subscribed;
+            if (!plan) {
+                setErrorMessage("Please subscribe to a plan to add orders.");
+                setAboveLimit(true);
+                return;
+            }
+            const count = fetchUserInventoryAndOrdersCount(session.user);
+            if (count.manualOrders >= subscriptionLimits[plan].manual) {
+                setErrorMessage(`You have reached the maximum number of manual orders for your plan. Please upgrade your plan to add more or wait till next month.`);
+                setAboveLimit(true);
+                return;
+            }
+
+            setAboveLimit(false);
+        };
+
+        if (session?.user) checkLimit();
+    }, [session?.user]);
+
 
     const transformRowToOrder = (row: Record<string, string>): { order?: IOrder, error?: string } => {
-        if (!row["Title"] || !row["Transaction ID"] || !row["Sale Date"]) return {};
+        if (!row["Title"]) return {};
         if (uploadType === "custom" && !row["Sale Marketplace"]) return {}
 
         const purchaseDate = row["Purchase Date"] ? formatDateToISO(new Date(row["Purchase Date"])) : null;
-        const saleDate = row["Sale Date"] ? formatDateToISO(new Date(row["Sale Date"])) : null;
+        const saleDate = row["Sale Date"] ? formatDateToISO(new Date(row["Sale Date"])) : formatDateToISO(new Date());
         const listingDate = row["Listing Date"] ? formatDateToISO(new Date(row["Listing Date"])) : null;
 
         if (saleDate?.includes("NaN")) {
@@ -91,7 +120,7 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
         const order: IOrder = {
             name: row["Title"],
             itemId: row["Item ID"] || generateRandomFlippifyListingId(20),
-            transactionId: row["Transaction ID"],
+            transactionId: row["Transaction ID"] || generateRandomFlippifyTransactionId(20),
             orderId: row["Order ID"] || generateRandomFlippifyOrderId(20),
             listingDate: listingDate || null,
             storeType: row["Sale Marketplace"].toLowerCase() || uploadType.toLowerCase(),
@@ -116,7 +145,7 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
         setFile(chosenFile);
     }
 
-    
+
     async function handleCacheAndSessionUpdate(orderItems: IOrder[]) {
         if (!session) return;
 
@@ -208,63 +237,73 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
 
     return (
         <Modal title="Upload Sales" className="relative max-w-[21rem] sm:max-w-xl flex-grow" setDisplayModal={setDisplayModal}>
-            <div className='flex flex-col gap-4'>
-                <div className='w-full flex flex-row justify-between items-center'>
-                    <div>
-                        <Dropdown
-                            value={uploadType}
-                            onChange={onStoreTypeChange}
-                            options={storeOptions}
-                        />
-                    </div>
-
-                    {/* Hidden file input for CSV import */}
-                    <div>
-                        <label className="block bg-gray-800 px-4 py-3 rounded-lg text-white text-center text-sm text-nowrap hover:cursor-pointer">
-                            {file?.name ? shortenText(file.name, 7) : "Select CSV"}
-                            <input
-                                type="file"
-                                accept=".csv"
-                                ref={fileInputRef}
-                                className="hidden"
-                                onChange={handleFileChange}
-                            />
-                        </label>
-                    </div>
+            {aboveLimit && (
+                <div className="text-center">
+                    <span>Sorry you&apos;ve reach your max manual orders for this month</span>
                 </div>
-                <hr />
-                <div className='w-full flex items-center justify-between'>
-                    <div className='text-sm'>
-                        View required <Link href={`/l/blog/how-to-upload-sales#${uploadType}`} target="_blank" className='text-blue-500 hover:underline'>format</Link>
-                    </div>
-                    {/* Button to trigger CSV import */}
-                    <button
-                        type="button"
-                        onClick={handleFileUpload}
-                        disabled={uploaded || uploading}
-                        className={`${uploaded ? "bg-muted" : "bg-houseBlue hover:bg-houseHoverBlue"} min-w-24 px-4 py-2 flex justify-center text-white text-sm rounded-lg transition text-nowrap`}
-                    >
-                        {!uploading ? "Upload" : <LoadingSpinner />}
-                    </button>
-                </div>
-            </div>
-
-            {message && (
-                <hr className='my-4' />
             )}
-            <p className={`${uploaded ? "text-green-500" : "text-red-500"} text-sm`}>{message}</p>
 
-            {uploadErrors.length > 0 && (
+            {!aboveLimit && (
                 <>
-                    <hr className='my-4' />
-                    <div className='bg-gray-100 p-4 rounded-lg space-y-2'>
-                        {uploadErrors.map((err, idx) => (
-                            <p key={idx} className="text-red-600 text-sm">{err}</p>
-                        ))}
-                        <p className="text-red-600 text-sm">Test 1</p>
-                        <p className="text-red-600 text-sm">Test 2</p>
+                    <div className='flex flex-col gap-4'>
+                        <div className='w-full flex flex-row justify-between items-center'>
+                            <div>
+                                <Dropdown
+                                    value={uploadType}
+                                    onChange={onStoreTypeChange}
+                                    options={storeOptions}
+                                />
+                            </div>
 
+                            {/* Hidden file input for CSV import */}
+                            <div>
+                                <label className="block bg-gray-800 px-4 py-3 rounded-lg text-white text-center text-sm text-nowrap hover:cursor-pointer">
+                                    {file?.name ? shortenText(file.name, 7) : "Select CSV"}
+                                    <input
+                                        type="file"
+                                        accept=".csv"
+                                        ref={fileInputRef}
+                                        className="hidden"
+                                        onChange={handleFileChange}
+                                    />
+                                </label>
+                            </div>
+                        </div>
+                        <hr />
+                        <div className='w-full flex items-center justify-between'>
+                            <div className='text-sm'>
+                                View required <Link href={`/l/blog/how-to-upload-sales#${uploadType}`} target="_blank" className='text-blue-500 hover:underline'>format</Link>
+                            </div>
+                            {/* Button to trigger CSV import */}
+                            <button
+                                type="button"
+                                onClick={handleFileUpload}
+                                disabled={uploaded || uploading}
+                                className={`${uploaded ? "bg-muted" : "bg-houseBlue hover:bg-houseHoverBlue"} min-w-24 px-4 py-2 flex justify-center text-white text-sm rounded-lg transition text-nowrap`}
+                            >
+                                {!uploading ? "Upload" : <LoadingSpinner />}
+                            </button>
+                        </div>
                     </div>
+
+                    {message && (
+                        <hr className='my-4' />
+                    )}
+                    <p className={`${uploaded ? "text-green-500" : "text-red-500"} text-sm`}>{message}</p>
+
+                    {uploadErrors.length > 0 && (
+                        <>
+                            <hr className='my-4' />
+                            <div className='bg-gray-100 p-4 rounded-lg space-y-2'>
+                                {uploadErrors.map((err, idx) => (
+                                    <p key={idx} className="text-red-600 text-sm">{err}</p>
+                                ))}
+                                <p className="text-red-600 text-sm">Test 1</p>
+                                <p className="text-red-600 text-sm">Test 2</p>
+
+                            </div>
+                        </>
+                    )}
                 </>
             )}
 

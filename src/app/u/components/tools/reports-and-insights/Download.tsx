@@ -55,7 +55,6 @@ const Download: React.FC<IDownloadProps> = ({ orders, timeFrom, timeTo }) => {
     }, [session, session?.user.id, timeFrom, timeTo, session?.user.authentication?.subscribed])
 
     const handleDownload = async () => {
-        console.log("downloading")
         setLoading(true);
 
         const exports = [

@@ -51,7 +51,13 @@ const PlansCardFreeWhatsIncluded = () => {
 						text="Single eBay Store Management"
 						tooltip="Link and manage one eBay store, syncing your sales and tracking data effortlessly."
 					/>
-				</li>
+                </li>
+                <li className="w-full">
+                    <PlansClickableBulletPoint
+                        text="Manual Store Integration"
+                        tooltip="Manually add inventory and orders from any store."
+                    />
+                </li>
 			</ul>
 
 			<div className="text-black font-semibold ml-2 mb-[-6px]">

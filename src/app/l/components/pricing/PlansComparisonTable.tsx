@@ -215,23 +215,6 @@ const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
                             </td>
                         </tr>
 
-                        {/* AI-Powered Financial Reports */}
-                        <tr className="border-b">
-                            <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
-                                AI-Powered Financial Reports
-                                <div className="text-xs text-gray-600 italic mt-1">Coming soon</div>
-                            </td>
-                            <td className="py-4 px-6 text-center bg-gray-50">
-                                <span className="text-lightModeText">✗</span>
-                            </td>
-                            <td className="py-4 px-6 text-center bg-gray-50">
-                                <span className="text-houseBlue">✓</span>
-                            </td>
-                            <td className="py-4 px-6 text-center bg-gray-50">
-                                <span className="text-houseBlue">✓</span>
-                            </td>
-                        </tr>
-
                         {/* Bulk Editing & Relisting */}
                         <tr className="border-b">
                             <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">

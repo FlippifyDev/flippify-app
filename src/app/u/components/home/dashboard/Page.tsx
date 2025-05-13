@@ -110,7 +110,7 @@ const DashboardPage: React.FC = () => {
                             selectedRange={selectedRange}
                         />
                     </div>
-                    <div className="w-full bg-white rounded-lg dark:bg-gray-800 p-4 md:p-6">
+                    <div className="w-full bg-white shadow rounded-lg dark:bg-gray-800 p-4 md:p-6">
                         <DashboardProfitsGraph
                             salesData={filteredSalesData}
                             currency={currency}

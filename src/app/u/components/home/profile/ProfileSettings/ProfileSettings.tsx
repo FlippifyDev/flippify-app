@@ -316,7 +316,7 @@ const ProfileSettings = () => {
     };
 
     return (
-        <div className="card bg-white rounded-xl h-full flex flex-col">
+        <div className="card bg-white rounded-xl shadow h-full flex flex-col">
             <h2 className="card-title text-black text-lg font-semibold border-b py-4 px-6">Profile Settings</h2>
             <div className="flex flex-col p-6 gap-4">
                 <div>

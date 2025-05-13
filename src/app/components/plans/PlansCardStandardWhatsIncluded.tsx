@@ -42,6 +42,12 @@ const PlansCardStandardWhatsIncluded = () => {
                 </li>
                 <li className="w-full">
                     <PlansClickableBulletPoint
+                        text="Import existing data"
+                        tooltip="Easily import your existing orders directly into Flippify, in just a few simple steps."
+                    />
+                </li>
+                <li className="w-full">
+                    <PlansClickableBulletPoint
                         text="Tax reporting"
                         tooltip="Easily export your inventory, orders, and financials to CSV format for external use."
                     />
@@ -68,20 +74,6 @@ const PlansCardStandardWhatsIncluded = () => {
 				</li>
 				<li className="w-full">
 					<PlansClickableBulletPoint
-						text="Multi-Account Support (Manage 2 eBay Stores)"
-						tooltip="Link and manage two eBay stores, syncing data across both."
-						comingSoon
-					/>
-				</li>
-				<li className="w-full">
-					<PlansClickableBulletPoint
-						text="AI-Powered Financial Reports"
-						tooltip="Unlock advanced financial insights and predictions driven by AI."
-						comingSoon
-					/>
-				</li>
-				<li className="w-full">
-					<PlansClickableBulletPoint
 						text="Bulk Editing & Relisting Automation"
 						tooltip="Edit multiple listings at once and automatically relist unsold items."
 						comingSoon
@@ -91,13 +83,6 @@ const PlansCardStandardWhatsIncluded = () => {
 					<PlansClickableBulletPoint
 						text="Scheduled Listings & Auto-Drafts"
 						tooltip="Set listings to go live on a schedule and auto-save drafts for later."
-						comingSoon
-					/>
-				</li>
-				<li className="w-full">
-					<PlansClickableBulletPoint
-						text="AI-Optimized Shipping Selection"
-						tooltip="Let AI pick the best shipping options based on cost and speed."
 						comingSoon
 					/>
 				</li>

@@ -9,7 +9,7 @@ import { addCacheData } from '@/utils/cache-helpers';
 import { ISubscription } from '@/models/user';
 import { formatDateToISO } from '@/utils/format-dates';
 import { createNewOrderItemAdmin } from '@/services/firebase/create-admin';
-import { orderCacheKey, subscriptionLimits } from '@/utils/constants';
+import { importCSVAllowedSubscriptionPlans, orderCacheKey, subscriptionLimits } from '@/utils/constants';
 import { IOrder, IPurchase, ISale, IShipping, OrderStatus, StoreType } from '@/models/store-data';
 import { fetchSubscriptionMaxListings, fetchUserInventoryAndOrdersCount, fetchUserSubscription } from '@/utils/extract-user-data';
 import { generateRandomFlippifyListingId, generateRandomFlippifyOrderId, generateRandomFlippifyTransactionId } from '@/utils/generate-random';
@@ -27,6 +27,7 @@ interface UploadOrdersProps {
 const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
     const { data: session, update: updateSession } = useSession();
     const [message, setMessage] = useState<string>();
+    const subscribed = session?.user.authentication?.subscribed;
 
     const { manualOrders } = fetchUserInventoryAndOrdersCount(session?.user);
 
@@ -237,74 +238,86 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
 
     return (
         <Modal title="Upload Sales" className="relative max-w-[21rem] sm:max-w-xl flex-grow" setDisplayModal={setDisplayModal}>
-            {aboveLimit && (
-                <div className="text-center">
-                    <span>Sorry you&apos;ve reach your max manual orders for this month</span>
-                </div>
-            )}
-
-            {!aboveLimit && (
+            {subscribed && importCSVAllowedSubscriptionPlans.includes(subscribed) ? (
                 <>
-                    <div className='flex flex-col gap-4'>
-                        <div className='w-full flex flex-row justify-between items-center'>
-                            <div>
-                                <Dropdown
-                                    value={uploadType}
-                                    onChange={onStoreTypeChange}
-                                    options={storeOptions}
-                                />
-                            </div>
-
-                            {/* Hidden file input for CSV import */}
-                            <div>
-                                <label className="block bg-gray-800 px-4 py-3 rounded-lg text-white text-center text-sm text-nowrap hover:cursor-pointer">
-                                    {file?.name ? shortenText(file.name, 7) : "Select CSV"}
-                                    <input
-                                        type="file"
-                                        accept=".csv"
-                                        ref={fileInputRef}
-                                        className="hidden"
-                                        onChange={handleFileChange}
-                                    />
-                                </label>
-                            </div>
+                    {aboveLimit && (
+                        <div className="text-center">
+                            <span>Sorry you&apos;ve reach your max manual orders for this month</span>
                         </div>
-                        <hr />
-                        <div className='w-full flex items-center justify-between'>
-                            <div className='text-sm'>
-                                View required <Link href={`/l/blog/how-to-upload-sales#${uploadType}`} target="_blank" className='text-blue-500 hover:underline'>format</Link>
-                            </div>
-                            {/* Button to trigger CSV import */}
-                            <button
-                                type="button"
-                                onClick={handleFileUpload}
-                                disabled={uploaded || uploading}
-                                className={`${uploaded ? "bg-muted" : "bg-houseBlue hover:bg-houseHoverBlue"} min-w-24 px-4 py-2 flex justify-center text-white text-sm rounded-lg transition text-nowrap`}
-                            >
-                                {!uploading ? "Upload" : <LoadingSpinner />}
-                            </button>
-                        </div>
-                    </div>
-
-                    {message && (
-                        <hr className='my-4' />
                     )}
-                    <p className={`${uploaded ? "text-green-500" : "text-red-500"} text-sm`}>{message}</p>
 
-                    {uploadErrors.length > 0 && (
+                    {!aboveLimit && (
                         <>
-                            <hr className='my-4' />
-                            <div className='bg-gray-100 p-4 rounded-lg space-y-2'>
-                                {uploadErrors.map((err, idx) => (
-                                    <p key={idx} className="text-red-600 text-sm">{err}</p>
-                                ))}
-                                <p className="text-red-600 text-sm">Test 1</p>
-                                <p className="text-red-600 text-sm">Test 2</p>
+                            <div className='flex flex-col gap-4'>
+                                <div className='w-full flex flex-row justify-between items-center'>
+                                    <div>
+                                        <Dropdown
+                                            value={uploadType}
+                                            onChange={onStoreTypeChange}
+                                            options={storeOptions}
+                                        />
+                                    </div>
 
+                                    {/* Hidden file input for CSV import */}
+                                    <div>
+                                        <label className="block bg-gray-800 px-4 py-3 rounded-lg text-white text-center text-sm text-nowrap hover:cursor-pointer">
+                                            {file?.name ? shortenText(file.name, 7) : "Select CSV"}
+                                            <input
+                                                type="file"
+                                                accept=".csv"
+                                                ref={fileInputRef}
+                                                className="hidden"
+                                                onChange={handleFileChange}
+                                            />
+                                        </label>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div className='w-full flex items-center justify-between'>
+                                    <div className='text-sm'>
+                                        View required <Link href={`/l/blog/how-to-upload-sales#${uploadType}`} target="_blank" className='text-blue-500 hover:underline'>format</Link>
+                                    </div>
+                                    {/* Button to trigger CSV import */}
+                                    <button
+                                        type="button"
+                                        onClick={handleFileUpload}
+                                        disabled={uploaded || uploading}
+                                        className={`${uploaded ? "bg-muted" : "bg-houseBlue hover:bg-houseHoverBlue"} min-w-24 px-4 py-2 flex justify-center text-white text-sm rounded-lg transition text-nowrap`}
+                                    >
+                                        {!uploading ? "Upload" : <LoadingSpinner />}
+                                    </button>
+                                </div>
                             </div>
+
+                            {message && (
+                                <hr className='my-4' />
+                            )}
+                            <p className={`${uploaded ? "text-green-500" : "text-red-500"} text-sm`}>{message}</p>
+
+                            {uploadErrors.length > 0 && (
+                                <>
+                                    <hr className='my-4' />
+                                    <div className='bg-gray-100 p-4 rounded-lg space-y-2'>
+                                        {uploadErrors.map((err, idx) => (
+                                            <p key={idx} className="text-red-600 text-sm">{err}</p>
+                                        ))}
+                                        <p className="text-red-600 text-sm">Test 1</p>
+                                        <p className="text-red-600 text-sm">Test 2</p>
+
+                                    </div>
+                                </>
+                            )}
                         </>
                     )}
                 </>
+            ) : (
+                <div className="text-center space-y-4 flex flex-col items-center">
+                    <p className="text-sm text-center">You need a paid subscription to import data</p>
+                    <p className="text-sm text-center">Please upgrade your plan to access this feature</p>
+                    <Link href={`/u/${session?.user.username}/plans`} className="bg-houseBlue max-w-[120px] p-3 hover:bg-houseHoverBlue transition duraction-200 text-white text-sm rounded-lg">
+                        Upgrade Plan
+                    </Link>
+                </div>
             )}
 
         </Modal >

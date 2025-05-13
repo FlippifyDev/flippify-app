@@ -87,7 +87,7 @@ const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ salesData
 	return (
 		<div className="w-full flex flex-col items-center">
 			<div className="grid grid-cols-2 lg:grid-cols-4 font-semibold justify-center gap-2 sm:gap-4 w-full">
-				<div className="stats shadow-sm bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2 rounded-lg">
+				<div className="stats shadow bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2 rounded-lg">
 					<div className="stat">
 						<div className="stat-title text-sm sm:text-base text-houseBlue">Total Revenue</div>
 						<div className="stat-value font-bold text-xl sm:text-2xl text-black">
@@ -95,7 +95,7 @@ const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ salesData
 						</div>
 					</div>
 				</div>
-                <div className="stats shadow-sm bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2 rounded-lg">
+                <div className="stats shadow bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2 rounded-lg">
 					<div className="stat">
 						<div className="stat-title text-sm sm:text-base text-houseBlue">Total Costs</div>
 						<div className="stat-value font-bold text-xl sm:text-2xl text-black">
@@ -103,7 +103,7 @@ const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ salesData
 						</div>
 					</div>
 				</div>
-                <div className="stats shadow-sm bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2 rounded-lg">
+                <div className="stats shadow bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2 rounded-lg">
 					<div className="stat">
 						<div className="stat-title text-sm sm:text-base text-houseBlue">No. Sales</div>
 						<div className="stat-value font-bold text-xl sm:text-2xl text-black">
@@ -111,7 +111,7 @@ const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ salesData
 						</div>
 					</div>
 				</div>
-                <div className="stats shadow-sm bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2 rounded-lg">
+                <div className="stats shadow bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2 rounded-lg">
 					<div className="stat">
 						<div className="stat-title text-sm sm:text-base text-houseBlue">ROI</div>
 						<div className="stat-value font-bold text-xl sm:text-2xl text-black">{roi}%</div>

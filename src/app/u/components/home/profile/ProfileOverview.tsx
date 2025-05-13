@@ -69,7 +69,7 @@ const ProfileOverview = () => {
 
 
     return (
-        <div className="w-full bg-white rounded-xl p-4 md:p-6 justify-start items-start">
+        <div className="w-full bg-white rounded-xl shadow p-4 md:p-6 justify-start items-start">
             <div className="w-full flex flex-row items-center gap-2 sm:gap-4">
                 <div className='w-28 h-full relative'>
                     <ImageModal src={avatar} alt={"Avatar"} width={80} height={80} className="rounded-full" />

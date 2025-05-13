@@ -61,7 +61,7 @@ const Page = () => {
 
     return (
         <LayoutSubscriptionWrapper anySubscriptions={["admin", "member"]}>
-            <main className="bg-white rounded-xl">
+            <main className="bg-white shadow rounded-xl">
                 {/* Dropdown for Tab Selection */}
                 <div ref={dropdownRef} className="relative inline-block text-left px-2 py-4">
                     <div>

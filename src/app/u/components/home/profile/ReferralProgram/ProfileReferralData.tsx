@@ -96,7 +96,7 @@ const ProfileReferralData: React.FC = () => {
             )}
 
             {/* Referral Data Section */}
-            <div className="card bg-white rounded-xl h-full flex flex-col">
+            <div className="card bg-white shadow rounded-xl h-full flex flex-col">
                 <div className="flex justify-between items-center border-b py-4 px-6">
                     <h2 className="card-title text-black text-lg font-semibold">Referral Program</h2>
                     <p className="text-sm text-gray-500 px-2 text-center sm:text-left">

@@ -63,13 +63,6 @@ const PlansCardProWhatsIncluded = () => {
                 </li>
                 <li className="w-full">
                     <PlansClickableBulletPoint
-                        text="Manage up to 5 eBay Stores"
-                        tooltip="Link and manage up to five eBay stores with full tracking and control."
-                        comingSoon
-                    />
-                </li>
-                <li className="w-full">
-                    <PlansClickableBulletPoint
                         text="Priority AI Processing for Faster Listings & Insights"
                         tooltip="Enjoy faster AI-driven listing creation and insights with priority processing."
                         comingSoon

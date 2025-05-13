@@ -17,7 +17,7 @@ import { ImBubble } from "react-icons/im";
 import { IoMdPricetags } from "react-icons/io";
 import { MdAccountBalance } from "react-icons/md";
 import { PiRoadHorizonFill } from "react-icons/pi";
-import { FaBook, FaStore, FaBoxes } from "react-icons/fa";
+import { FaBook, FaStore, FaBoxes, FaFileAlt, FaPenFancy, FaRss } from "react-icons/fa";
 import { FaBoxOpen, FaParachuteBox, FaHandshakeSimple } from "react-icons/fa6";
 import {
     FaShieldAlt,
@@ -81,6 +81,12 @@ const Navbar = () => {
     ];
 
     const resourceLinks = [
+        {
+            label: "Blog",
+            description: "Latest tips, updates & stories from Flippify",
+            href: "/l/blog",
+            icon: <FaFileAlt className="text-lg" />,
+        },
         {
             label: "About Us",
             description: "Learn who we are and what we do",

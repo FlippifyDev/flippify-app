@@ -71,6 +71,7 @@ const Footer = () => {
             {/* About Section */}
             <FooterColumn>
                 <FooterTitle text="Resources" />
+                <FooterLink text="Blog" href="/l/blog" />
                 <FooterLink text="About Us" href="/l/about" />
                 <FooterLink text="Privacy Policy" href="/l/privacy-policy" />
                 <FooterLink text="Terms & Conditions" href="/l/terms-and-conditions" />

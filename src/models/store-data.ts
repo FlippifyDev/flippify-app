@@ -40,6 +40,7 @@ interface IListing {
 
 interface IShipping {
     fees?: number | null;
+    date?: string | null;
     paymentToShipped?: number | null;
     service?: string | null;
     timeDays?: number | null;

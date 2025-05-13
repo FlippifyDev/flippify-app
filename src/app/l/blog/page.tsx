@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import ThemeSetter from '../../components/ThemeSetter';
 import Layout from '../components/layout/Layout';
 import { Metadata } from 'next';
-import ComingSoon from '../components/development/ComingSoon';
+import Page from '../components/blog/Page';
 
 const root = process.env.ROOT as string;
 
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
         url: root.concat('/blog'),
         images: [
             {
-                url: "https://i.imgur.com/xyzExample.png", // Replace with your blog OG image URL
+                url: "https://i.imgur.com/xyzExample.png",
                 width: 2600,
                 height: 1440,
                 alt: "Flippify Blog Overview"
@@ -46,7 +46,7 @@ export default function BlogPage() {
             <ThemeSetter theme="dark" />
             <Suspense fallback={<Loading />}>
                 <Layout>
-                    <ComingSoon />
+                    <Page />
                 </Layout>
             </Suspense>
         </>

@@ -183,7 +183,7 @@ const Page = () => {
                     </div>
                 </Card>
                 {(missingOrderInfoCount > 0) && (
-                    <Card title="Missing Info" className='max-w-lg'>
+                    <Card title="Missing Info" className='max-w-lg shadow!'>
                         <span className='font-semibold'>{missingOrderInfoCount} sold products</span> are missing a purchase date, pricing, or shipping cost.
 
                     </Card>

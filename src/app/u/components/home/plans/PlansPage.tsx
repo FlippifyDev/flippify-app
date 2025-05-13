@@ -156,7 +156,7 @@ const PlansPage = () => {
                 </div>
                 <div className="flex justify-center w-4/5 sm:w-full">
                     <p className="mx-4 mt-[-12px] mb-2 sm:mx-2 text-lightModeText text-md sm:text-lg text-center">
-                        Flexible Plans for Every eBay Seller: From Beginners to Experts
+                        Flexible Plans for every Seller: From Beginners to Experts
                     </p>
                 </div>
                 <div className="flex justify-center w-4/5 sm:w-full">

@@ -8,16 +8,21 @@ import LoadingSpinner from '@/app/components/LoadingSpinner';
 import UpdateTableField from './UpdateTableField';
 import { orderCacheKey } from '@/utils/constants';
 import { formatTableDate } from '@/utils/format-dates';
-import { getCachedItem, removeCacheData } from '@/utils/cache-helpers';
+import { getCachedItem, removeCacheData, updateCacheData } from '@/utils/cache-helpers';
 
 // External Imports
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MdOutlineCurrencyExchange } from "react-icons/md";
 import { useEffect, useState } from 'react'
 import getSymbolFromCurrency from 'currency-symbol-map'
-import { FaRegTrashAlt } from "react-icons/fa";
+import { FaCamera, FaRegTrashAlt } from "react-icons/fa";
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
+import ImageModal from '@/app/components/ImageModal';
+import ImageUpload from '../../dom/ui/ImageUpload';
+import { doc, updateDoc } from 'firebase/firestore';
+import { firestore } from '@/lib/firebase/config';
+import { set } from 'lodash';
 
 
 const Order = () => {
@@ -31,6 +36,11 @@ const Order = () => {
     const [triggerUpdate, setTriggerUpdate] = useState(true);
     const [loading, setLoading] = useState(true);
     const [deleting, setDeleting] = useState(false);
+
+    // Modal state to show/hide the modal for uploading the image
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [fileName, setFileName] = useState("Upload Image");
+    const [url, setUrl] = useState("");
 
     useEffect(() => {
         if (!triggerUpdate) return;
@@ -81,6 +91,29 @@ const Order = () => {
         setDeleting(false);
     }
 
+
+    const handleCameraClick = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleUpload = async (imageUrl?: string | null) => {
+        if (!order.transactionId) return;
+
+        const docRef = doc(firestore, "orders", session?.user.id as string, order.storeType ?? "ebay", order.transactionId);
+
+        set(order, "image", [imageUrl]);
+
+        // Update the database
+        await updateDoc(docRef, order as { [x: string]: any; });
+
+        // Update the users local cache
+        updateCacheData(cacheKey, order);
+
+        // Trigger an update
+        setTriggerUpdate(true)
+    };
+
+
     return (
         <div className='flex flex-col'>
             { /* Breadcrump & Title */}
@@ -110,15 +143,15 @@ const Order = () => {
                 {/* Product details */}
                 <div className='md:w-2/5 flex flex-col p-6 bg-white shadow rounded-md gap-4'>
                     { /* Image */}
-                    <div className='flex justify-center items-center'>
+                    <div className='relative flex justify-center items-center'>
                         <figure className='max-w-96'>
-                            <Image
-                                src={order.image ? order.image[0]: ""}
-                                alt="Order Image"
-                                width={500}
-                                height={500}
-                                className='rounded-md'
-                            />
+                            <ImageModal src={order.image ? order.image[0] : ""} alt={"Order Image"} width={500} height={500} className="rounded-md" />
+                            <div
+                                className='absolute bottom-1 right-1 h-7 w-7 rounded-full bg-gray-500 bg-opacity-50 flex items-center justify-center cursor-pointer z-10'
+                                onClick={handleCameraClick} // Open the modal when clicked
+                            >
+                                <FaCamera className="text-white" />
+                            </div>
                         </figure>
                     </div>
 
@@ -158,6 +191,18 @@ const Order = () => {
                     </div>
                 </div>
             </section>
+
+            {isModalOpen && (
+                <ImageUpload
+                    title="Upload Order Image"
+                    fileName={fileName}
+                    url={url}
+                    setIsModalOpen={setIsModalOpen}
+                    setFileName={setFileName}
+                    setUrl={setUrl}
+                    handleUpload={handleUpload}
+                />
+            )}
         </div>
     )
 }
@@ -170,7 +215,7 @@ interface OrderInfoTableProps {
 }
 
 const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, triggerUpdate }) => {
-    const { transactionId, sale, purchase, shipping, additionalFees, customTag, storeType } = order;
+    const { transactionId, sale, purchase, shipping, additionalFees, customTag, storeType, listingDate } = order;
 
     let soldFor: number, profit: number | "N/A", roi: number | "N/A";
     const purchasePrice = purchase?.price ?? 0;
@@ -244,6 +289,24 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                 </tr>
                 <tr className='border-b'>
                     <td className="py-4 px-6 font-medium text-gray-800">
+                        Buyer
+                    </td>
+                    <UpdateTableField
+                        type="text"
+                        currentValue={sale?.buyerUsername}
+                        docId={transactionId}
+                        item={order}
+                        docType='orders'
+                        storeType={order.storeType}
+                        keyType="sale.buyerUsername"
+                        cacheKey={cacheKey}
+                        triggerUpdate={triggerUpdate}
+                        tdClassName='px-3'
+                        className='max-w-64 bg-gray-100 hover:bg-gray-200 text-gray-600 !text-base transition duration-300'
+                    />
+                </tr>
+                <tr className='border-b'>
+                    <td className="py-4 px-6 font-medium text-gray-800">
                         Purchase date
                     </td>
                     <UpdateTableField
@@ -272,6 +335,42 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         docType='orders'
                         storeType={order.storeType}
                         keyType="sale.date"
+                        cacheKey={cacheKey}
+                        triggerUpdate={triggerUpdate}
+                        tdClassName='px-3'
+                        className='max-w-64 bg-gray-100 hover:bg-gray-200 text-gray-600 !text-base transition duration-300'
+                    />
+                </tr>
+                <tr className='border-b'>
+                    <td className="py-4 px-6 font-medium text-gray-800">
+                        Listing date
+                    </td>
+                    <UpdateTableField
+                        type="date"
+                        currentValue={new Date(listingDate ?? new Date()).toISOString().split("T")[0]}
+                        docId={transactionId}
+                        item={order}
+                        docType='orders'
+                        storeType={order.storeType}
+                        keyType="listingDate"
+                        cacheKey={cacheKey}
+                        triggerUpdate={triggerUpdate}
+                        tdClassName='px-3'
+                        className='max-w-64 bg-gray-100 hover:bg-gray-200 text-gray-600 !text-base transition duration-300'
+                    />
+                </tr>
+                <tr className='border-b'>
+                    <td className="py-4 px-6 font-medium text-gray-800">
+                        Shipping date
+                    </td>
+                    <UpdateTableField
+                        type="date"
+                        currentValue={new Date(shipping?.date ?? new Date()).toISOString().split("T")[0]}
+                        docId={transactionId}
+                        item={order}
+                        docType='orders'
+                        storeType={order.storeType}
+                        keyType="shipping.date"
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
                         tdClassName='px-3'
@@ -423,120 +522,139 @@ const OrderHistory = ({ order }: { order: IOrder }) => {
     const eBayListingRoot = "https://www.ebay.com/itm/"
     return (
         <div className="p-8">
-            <div className="">
-                {[...order.history ?? []].reverse().map((event, index) => {
-                    if (!event || !event.description || !event.timestamp) return;
-
-                    const isSold = event.title === "Sold";
-                    let formattedDescription: React.ReactNode | string = event.description;
-
-                    if (isSold) {
-                        const ebayMatch = event.description.match(/eBay\s([A-Za-z]+)/);
-                        const priceMatch = event.description.match(/for\s(\d+(?:\.\d+)?)/);
-
-                        const country = ebayMatch ? ebayMatch[1] : "";
-                        const price = priceMatch ? priceMatch[1] : "";
-
-                        formattedDescription = (
-                            <span>
-                                Sold on <span className="font-semibold">eBay {country}</span> for{" "}
-                                <span className="font-semibold">{getSymbolFromCurrency(order.sale?.currency ?? "$")}{price}</span>.{" "}
-                                Order Id {" "}
-                                <span className="font-semibold">{order.orderId}</span>
-                            </span>
-                        );
-                    }
-
-                    return (
-                        <div key={index} className="relative pl-8 sm:pl-32 py-6 group">
-                            <div className="font-caveat font-medium text-2xl text-houseHoverBlue mb-1 sm:mb-0 ml-2">{event.title}</div>
-                            <div className="flex flex-col sm:flex-row items-start mb-1 group-last:before:hidden before:absolute before:left-2 sm:before:left-0 before:h-full before:px-px before:bg-slate-300 sm:before:ml-[7rem] before:self-start before:-translate-x-1/2 before:translate-y-3 after:absolute after:left-2 sm:after:left-0 after:w-2 after:h-2 after:bg-houseHoverBlue after:border-4 after:box-content after:border-slate-50 after:rounded-full sm:after:ml-[7rem] after:-translate-x-1/2 after:translate-y-1.5">
-                                <time className="sm:absolute left-0 translate-y-0.5 inline-flex items-center justify-center text-xs font-semibold w-24 h-6 mb-3 sm:mb-0 text-emerald-600 bg-emerald-100 rounded-full">{formatTableDate(event.timestamp)}</time>
-                                <div className="text-xl font-bold text-slate-900 ml-2"></div>
-                            </div>
-                            <div className="text-slate-500 ml-2">
-                                {formattedDescription}
-                            </div>
-
-                            <div className="text-sm text-slate-400 font-[550] ml-2 mt-1">
-                                {new Date(event.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-                            </div>
-                        </div>
-                    )
-                })}
-
-
-                {order.listingDate && (
-                    <div className="relative pl-8 sm:pl-32 py-6 group">
-                        <div className="font-caveat font-medium text-2xl text-houseHoverBlue mb-1 sm:mb-0 ml-2">{order.recordType === "manual" ? "Manually " : ""}Listed</div>
-                        <div className="flex flex-col sm:flex-row items-start mb-1 group-last:before:hidden before:absolute before:left-2 sm:before:left-0 before:h-full before:px-px before:bg-slate-300 sm:before:ml-[7rem] before:self-start before:-translate-x-1/2 before:translate-y-3 after:absolute after:left-2 sm:after:left-0 after:w-2 after:h-2 after:bg-houseHoverBlue after:border-4 after:box-content after:border-slate-50 after:rounded-full sm:after:ml-[7rem] after:-translate-x-1/2 after:translate-y-1.5">
-                            <time className="sm:absolute left-0 translate-y-0.5 inline-flex items-center justify-center text-xs font-semibold w-24 h-6 mb-3 sm:mb-0 text-emerald-600 bg-emerald-100 rounded-full">{formatTableDate(order.listingDate)}</time>
-                            <div className="text-xl font-bold text-slate-900 ml-2"></div>
-                        </div>
-                        <div className="text-slate-500 ml-2">
-                            {order.recordType === "manual" ? (
-                                <div>
-                                    <span>
-                                        <a
-                                            className='text-houseHoverBlue hover:underline'
-                                            href={`${eBayListingRoot}${order.itemId}`}
-                                        >
-                                            Listing
-                                        </a>{" "}
-                                    </span>
-                                    <span>
-                                        recorded on Flippify
-                                    </span>
-                                </div>
-                            ) : (
-                                <div>
-                                    <span>
-                                        <a
-                                            className='text-houseHoverBlue hover:underline'
-                                            href={`${eBayListingRoot}${order.itemId}`}
-                                        >
-                                            Listed
-                                        </a>{" "}
-                                    </span>
-                                    <span>
-                                        on eBay. Item ID
-                                    </span>{" "}
-                                    <span>
-                                        <a
-                                            className='text-houseHoverBlue hover:underline'
-                                            href={`${eBayListingRoot}${order.itemId}`}
-                                        >
-                                            {order.itemId}
-                                        </a>
-                                    </span>
-                                </div>
-                            )}
-                        </div>
-                        <div className="text-sm text-slate-400 font-[550] ml-2 mt-1">
-                            {new Date(order.listingDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-                        </div>
+            {["Completed", "Cancelled"].includes(order.status ?? "") && (
+                <div className="relative pl-8 sm:pl-32 py-6 group">
+                    <div className="font-caveat font-medium text-2xl text-houseHoverBlue mb-1 sm:mb-0 ml-2">{order.status}</div>
+                    <div className="flex flex-col sm:flex-row items-start mb-1 group-last:before:hidden before:absolute before:left-2 sm:before:left-0 before:h-full before:px-px before:bg-slate-300 sm:before:ml-[7rem] before:self-start before:-translate-x-1/2 before:translate-y-3 after:absolute after:left-2 sm:after:left-0 after:w-2 after:h-2 after:bg-houseHoverBlue after:border-4 after:box-content after:border-slate-50 after:rounded-full sm:after:ml-[7rem] after:-translate-x-1/2 after:translate-y-1.5">
+                        <time className="sm:absolute left-0 translate-y-0.5 inline-flex items-center justify-center text-xs font-semibold w-24 h-6 mb-3 sm:mb-0 text-emerald-600 bg-emerald-100 rounded-full">{formatTableDate(new Date(order.lastModified ?? new Date()).toISOString())}</time>
+                        <div className="text-xl font-bold text-slate-900 ml-2"></div>
                     </div>
-                )}
-                {order.purchase?.date && (
-                    <div className="relative pl-8 sm:pl-32 py-6 group">
-                        <div className="font-caveat font-medium text-2xl text-houseHoverBlue mb-1 sm:mb-0 ml-2">Purchased</div>
-                        <div className="flex flex-col sm:flex-row items-start mb-1 group-last:before:hidden before:absolute before:left-2 sm:before:left-0 before:h-full before:px-px before:bg-slate-300 sm:before:ml-[7rem] before:self-start before:-translate-x-1/2 before:translate-y-3 after:absolute after:left-2 sm:after:left-0 after:w-2 after:h-2 after:bg-houseHoverBlue after:border-4 after:box-content after:border-slate-50 after:rounded-full sm:after:ml-[7rem] after:-translate-x-1/2 after:translate-y-1.5">
-                            <time className="sm:absolute left-0 translate-y-0.5 inline-flex items-center justify-center text-xs font-semibold w-24 h-6 mb-3 sm:mb-0 text-emerald-600 bg-emerald-100 rounded-full">{formatTableDate(order.purchase.date)}</time>
-                            <div className="text-xl font-bold text-slate-900 ml-2"></div>
-                        </div>
-                        <div className="text-slate-500 ml-2">
-                            <span>Item puchased </span>
-                            <span>{order.purchase.price ? `for` : ""} </span>
-                            <span className='font-semibold'>{order.purchase.price ? `${getSymbolFromCurrency(order.sale?.currency ?? "$")}${order.purchase.price}` : ""} </span>
-                            <span>{order.purchase.platform ? `from` : ""} </span>
-                            <span className='font-semibold'>{order.purchase.platform ? `${order.purchase.platform}` : ""}</span>
-                        </div>
-                        <div className="text-sm text-slate-400 font-[550] ml-2 mt-1">
-                            {new Date(order.purchase.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-                        </div>
+                    <div className="text-slate-500 ml-2">
+                        <span>Order {order.status}</span>
                     </div>
-                )}
-            </div>
+                    <div className="text-sm text-slate-400 font-[550] ml-2 mt-1">
+                        {new Date(order.lastModified ?? new Date()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                    </div>
+                </div>
+            )}
+            {order.shipping?.date && (
+                <div className="relative pl-8 sm:pl-32 py-6 group">
+                    <div className="font-caveat font-medium text-2xl text-houseHoverBlue mb-1 sm:mb-0 ml-2">Shipped</div>
+                    <div className="flex flex-col sm:flex-row items-start mb-1 group-last:before:hidden before:absolute before:left-2 sm:before:left-0 before:h-full before:px-px before:bg-slate-300 sm:before:ml-[7rem] before:self-start before:-translate-x-1/2 before:translate-y-3 after:absolute after:left-2 sm:after:left-0 after:w-2 after:h-2 after:bg-houseHoverBlue after:border-4 after:box-content after:border-slate-50 after:rounded-full sm:after:ml-[7rem] after:-translate-x-1/2 after:translate-y-1.5">
+                        <time className="sm:absolute left-0 translate-y-0.5 inline-flex items-center justify-center text-xs font-semibold w-24 h-6 mb-3 sm:mb-0 text-emerald-600 bg-emerald-100 rounded-full">{formatTableDate(order.shipping.date)}</time>
+                        <div className="text-xl font-bold text-slate-900 ml-2"></div>
+                    </div>
+                    <div className="text-slate-500 ml-2">
+                        <span>Shipped to {order.storeType} buyer. </span>
+                        <span>{order.shipping.trackingNumber ? `Tracking #${order.shipping.trackingNumber}` : ""}</span>
+                    </div>
+                    <div className="text-sm text-slate-400 font-[550] ml-2 mt-1">
+                        {new Date(order.shipping.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                    </div>
+                </div>
+            )}
+            {order.sale?.date && (
+                <div className="relative pl-8 sm:pl-32 py-6 group">
+                    <div className="font-caveat font-medium text-2xl text-houseHoverBlue mb-1 sm:mb-0 ml-2">Sold</div>
+                    <div className="flex flex-col sm:flex-row items-start mb-1 group-last:before:hidden before:absolute before:left-2 sm:before:left-0 before:h-full before:px-px before:bg-slate-300 sm:before:ml-[7rem] before:self-start before:-translate-x-1/2 before:translate-y-3 after:absolute after:left-2 sm:after:left-0 after:w-2 after:h-2 after:bg-houseHoverBlue after:border-4 after:box-content after:border-slate-50 after:rounded-full sm:after:ml-[7rem] after:-translate-x-1/2 after:translate-y-1.5">
+                        <time className="sm:absolute left-0 translate-y-0.5 inline-flex items-center justify-center text-xs font-semibold w-24 h-6 mb-3 sm:mb-0 text-emerald-600 bg-emerald-100 rounded-full">{formatTableDate(order.sale.date)}</time>
+                        <div className="text-xl font-bold text-slate-900 ml-2"></div>
+                    </div>
+                    <div className="text-slate-500 ml-2">
+                        <span>Sold on </span>
+                        <span className='font-semibold'>{order.storeType} </span>
+                        <span>for </span>
+                        <span className='font-semibold'>{getSymbolFromCurrency(order.sale?.currency ?? "$")}{order.sale.price?.toFixed(2)}. </span>
+                    </div>
+                    <div className="text-sm text-slate-400 font-[550] ml-2 mt-1">
+                        <span>Order Id </span>
+                        <span>{order.orderId}</span>
+                    </div>
+                </div>
+            )}
+            {order.listingDate && (
+                <div className="relative pl-8 sm:pl-32 py-6 group">
+                    <div className="font-caveat font-medium text-2xl text-houseHoverBlue mb-1 sm:mb-0 ml-2">{order.recordType === "manual" ? "Manually " : ""}Listed</div>
+                    <div className="flex flex-col sm:flex-row items-start mb-1 group-last:before:hidden before:absolute before:left-2 sm:before:left-0 before:h-full before:px-px before:bg-slate-300 sm:before:ml-[7rem] before:self-start before:-translate-x-1/2 before:translate-y-3 after:absolute after:left-2 sm:after:left-0 after:w-2 after:h-2 after:bg-houseHoverBlue after:border-4 after:box-content after:border-slate-50 after:rounded-full sm:after:ml-[7rem] after:-translate-x-1/2 after:translate-y-1.5">
+                        <time className="sm:absolute left-0 translate-y-0.5 inline-flex items-center justify-center text-xs font-semibold w-24 h-6 mb-3 sm:mb-0 text-emerald-600 bg-emerald-100 rounded-full">{formatTableDate(order.listingDate)}</time>
+                        <div className="text-xl font-bold text-slate-900 ml-2"></div>
+                    </div>
+                    <div className="text-slate-500 ml-2">
+                        {order.recordType === "manual" ? (
+                            <div>
+                                <span>
+                                    {order.storeType === "ebay" && (
+                                        <>
+                                            <a
+                                                className='text-houseHoverBlue hover:underline'
+                                                href={`${eBayListingRoot}${order.itemId}`}
+                                                target='_blank'
+                                            >
+                                                Listing
+                                            </a>{" "}
+                                        </>
+                                    )}
+                                    {order.storeType !== "ebay" && (
+                                        <>
+                                            <span>Listing </span>
+                                        </>
+                                    )}
+                                </span>
+                                <span>
+                                    recorded on Flippify
+                                </span>
+                            </div>
+                        ) : (
+                            <div>
+                                <span>
+                                    {order.storeType === "ebay" && (
+                                        <>
+                                            <a
+                                                className='text-houseHoverBlue hover:underline'
+                                                href={`${eBayListingRoot}${order.itemId}`}
+                                                target='_blank'
+                                            >
+                                                Listed
+                                            </a>{" "}
+                                        </>
+                                    )}
+                                    {order.storeType !== "ebay" && (
+                                        <>
+                                            <span>Listed </span>
+                                        </>
+                                    )}
+                                </span>
+                                <span>
+                                    on {order.storeType}.
+                                </span>
+                            </div>
+                        )}
+                    </div>
+                    <div className="text-sm text-slate-400 font-[550] ml-2 mt-1">
+                        <span>Item Id </span>
+                        <span>{order.itemId}</span>
+                    </div>
+                </div>
+            )}
+            {order.purchase?.date && (
+                <div className="relative pl-8 sm:pl-32 py-6 group">
+                    <div className="font-caveat font-medium text-2xl text-houseHoverBlue mb-1 sm:mb-0 ml-2">Purchased</div>
+                    <div className="flex flex-col sm:flex-row items-start mb-1 group-last:before:hidden before:absolute before:left-2 sm:before:left-0 before:h-full before:px-px before:bg-slate-300 sm:before:ml-[7rem] before:self-start before:-translate-x-1/2 before:translate-y-3 after:absolute after:left-2 sm:after:left-0 after:w-2 after:h-2 after:bg-houseHoverBlue after:border-4 after:box-content after:border-slate-50 after:rounded-full sm:after:ml-[7rem] after:-translate-x-1/2 after:translate-y-1.5">
+                        <time className="sm:absolute left-0 translate-y-0.5 inline-flex items-center justify-center text-xs font-semibold w-24 h-6 mb-3 sm:mb-0 text-emerald-600 bg-emerald-100 rounded-full">{formatTableDate(order.purchase.date)}</time>
+                        <div className="text-xl font-bold text-slate-900 ml-2"></div>
+                    </div>
+                    <div className="text-slate-500 ml-2">
+                        <span>Item puchased </span>
+                        <span>{order.purchase.price ? `for` : ""} </span>
+                        <span className='font-semibold'>{order.purchase.price ? `${getSymbolFromCurrency(order.sale?.currency ?? "$")}${order.purchase.price.toFixed(2)}` : ""} </span>
+                        <span>{order.purchase.platform ? `from` : ""} </span>
+                        <span className='font-semibold'>{order.purchase.platform ? `${order.purchase.platform}` : ""}</span>
+                    </div>
+                    <div className="text-sm text-slate-400 font-[550] ml-2 mt-1">
+                        {new Date(order.purchase.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

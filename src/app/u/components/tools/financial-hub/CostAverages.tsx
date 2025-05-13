@@ -46,7 +46,7 @@ const CardCostAverages: React.FC<ICardCostAverages> = ({ orders, loading, curren
 
     return (
         <>
-            <div className="col-span-12 lg:col-span-6 flex flex-row bg-white rounded-lg shadow-small p-4 gap-4">
+            <div className="col-span-12 lg:col-span-6 flex flex-row bg-white rounded-lg shadow p-4 gap-4">
                 <div className="w-full text-center">
                     <h1 className="text-2xl font-semibold">
                         {loading ? '...' : `${currencySymbol}${avgPurchasePrice.toFixed(2)}`}
@@ -60,7 +60,7 @@ const CardCostAverages: React.FC<ICardCostAverages> = ({ orders, loading, curren
                     <h3 className="text-sm text-gray-500">Avg shipping cost</h3>
                 </div>
             </div>
-            <div className="col-span-12 lg:col-span-6 flex flex-row bg-white rounded-lg shadow-small p-4 gap-4">
+            <div className="col-span-12 lg:col-span-6 flex flex-row bg-white rounded-lg shadow p-4 gap-4">
                 <div className="w-full text-center">
                     <h1 className="text-2xl font-semibold">
                         {loading ? '...' : `${currencySymbol}${avgAdditionalFees.toFixed(2)}`}

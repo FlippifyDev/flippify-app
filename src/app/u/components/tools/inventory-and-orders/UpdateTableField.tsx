@@ -14,10 +14,10 @@ import set from 'lodash/set';
 import { updateMovedItemAdmin } from '@/services/firebase/create-admin';
 
 
-type ExtraKey = "customTag" | "storeType"
+type ExtraKey = "customTag" | "storeType" | "listingDate"
 type PurchaseKey = "purchase.platform" | "purchase.price" | "purchase.date" | "purchase.quantity"
 type InventoryKey = "customTag"
-type OrderKey = "sale.price" | "shipping.fees" | "sale.date" | "additionalFees" | "sale.quantity"
+type OrderKey = "sale.price" | "shipping.fees" | "shipping.date" | "sale.date" | "additionalFees" | "sale.quantity" | "sale.buyerUsername"
 
 
 interface UpdateTableFieldProps {
@@ -64,6 +64,7 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
 
             switch (keyType) {
                 case "purchase.platform":
+                case "sale.buyerUsername":
                 case "customTag":
                     set(item, keyType, value);
                     break;
@@ -79,6 +80,8 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
                     break;
                 case "purchase.date":
                 case "sale.date":
+                case "shipping.date":
+                case "listingDate":
                     set(item, keyType, formatDateToISO(new Date(value ?? "")));
                     break;
                 case "storeType":
@@ -104,6 +107,7 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
             case "purchase.platform":
             case "storeType":
             case "customTag":
+            case "sale.buyerUsername":
                 validateAlphaNumericInput(input, setValue);
                 break;
             case "sale.quantity":
@@ -116,6 +120,8 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
                 break;
             case "purchase.date":
             case "sale.date":
+            case "shipping.date":
+            case "listingDate":
                 setValue(input);
                 break;
         }

@@ -1,13 +1,10 @@
 // Local Imports
-import { IUser } from '@/models/user';
-import { updateUser } from '@/services/firebase/update';
 import { retrieveUserRefAdmin } from '@/services/firebase/retrieve-admin';
 
 // External Imports
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 import nookies from 'nookies';
-import { retrieveUserAdmin } from '@/services/firebase/retrieve-admin';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -24,10 +21,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         const userSnapshot = await userRef.get();
-        const user = userSnapshot.data() as IUser;
+        const user = userSnapshot.data();
 
         // Ensure eBay data exists
-        if (!user.connectedAccounts?.ebay) {
+        if (!user?.connectedAccounts) {
             return res.status(400).json({ error: 'No eBay data found for this user' });
         }
 

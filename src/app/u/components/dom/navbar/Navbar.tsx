@@ -20,7 +20,6 @@ const Navbar: React.FC<NavbarProps> = ({ handleDisplayModal }) => {
     const { data: session } = useSession();
     const customerId = session?.user.stripeCustomerId;
     const [title, setTitle] = useState(getProcessedTitle())
-    const isConnected = session?.user.connectedAccounts?.ebay ? true : false;
     const isSubscribed = session?.user.authentication?.subscribed ? true : false;
 
     // Fetch unread notifications count from Firebase

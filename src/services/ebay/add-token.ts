@@ -2,6 +2,7 @@
 
 import { IUser } from '@/models/user';
 import { firestoreAdmin } from '@/lib/firebase/config-admin';
+import { retrieveConnectedAccount } from '../firebase/retrieve-admin';
 
 import { Session } from 'next-auth';
 
@@ -22,7 +23,8 @@ async function addEbayTokens(tokenData: { access_token: string, refresh_token: s
         // Ensure connectedAccounts.ebay is an object, not null
         if (userSnapshot.exists) {
             const userData = userSnapshot.data() as IUser;
-            if (!userData.connectedAccounts || userData.connectedAccounts.ebay === null) {
+            const connectedAccount = await retrieveConnectedAccount(userData.id ?? "", "ebay")
+            if (!userData.connectedAccounts || connectedAccount === null) {
                 await userRef.update({
                     "connectedAccounts.ebay": {}
                 })

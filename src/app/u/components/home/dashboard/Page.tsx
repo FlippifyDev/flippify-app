@@ -5,14 +5,14 @@ import React, { useState, useEffect, useRef } from "react";
 
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import DashboardRecentSalesCard from "./DashboardRecentSalesCard";
-import { retrieveUserOrders } from "@/services/firebase/retrieve";
+import { retrieveUserInventory, retrieveUserOrders } from "@/services/firebase/retrieve";
 import ProfitsGraphDateFilter from "./ProfitsGraphDateFilter";
 import LayoutLoadingSkeleton from "../../layout/LayoutLoadingSkeleton";
 import ProfitsGraphTagFilter from "./ProfitsGraphTagFilter";
 import DashboardOverviewCard from "./DashboardOverviewCard";
 import DashboardProfitsGraph from "./DashboardProfitsGraph";
 import IconButton from "../../dom/ui/IconButton";
-import { IOrder } from "@/models/store-data";
+import { IInventory, IListing, IOrder } from "@/models/store-data";
 import OnboardingFlow from "./OnboardingFlow";
 import { defaultTimeFrom } from "@/utils/constants";
 import { fetchUserStores } from "@/utils/extract-user-data";
@@ -21,6 +21,8 @@ import { fetchUserStores } from "@/utils/extract-user-data";
 const DashboardPage: React.FC = () => {
     const { data: session } = useSession();
     const currency = session?.user.preferences?.currency as string;
+
+    const [inventoryData, setInventoryData] = useState<IListing[]>([]);
     const [salesData, setSalesData] = useState<IOrder[]>([]);
     const [selectedRange, setSelectedRange] = useState<number>(30);
     const [selectedLabel, setSelectedLabel] = useState<string>("This Month");
@@ -52,7 +54,6 @@ const DashboardPage: React.FC = () => {
                     return retrieveUserOrders({
                         uid: session.user.id as string,
                         timeFrom: defaultTimeFrom,
-                        ebayAccessToken: session.user.connectedAccounts?.ebay?.ebayAccessToken ?? "",
                         storeType,
                     }).then((order) => [storeType, order] as const);
                 })
@@ -64,8 +65,30 @@ const DashboardPage: React.FC = () => {
             }
         };
 
+        const fetchInventoryData = async () => {
+            if (!session) return;
+            const storeTypes = fetchUserStores(session.user);
+
+            const inventoryResults = await Promise.all(
+                storeTypes.map((storeType) => {
+                    return retrieveUserInventory({
+                        uid: session.user.id as string,
+                        timeFrom: defaultTimeFrom,
+                        storeType,
+                    }).then((item) => [storeType, item] as const);
+                })
+            );
+            const inventory = inventoryResults[inventoryResults.length - 1]?.[1] ?? [];
+
+            if (inventory) {
+                setInventoryData(inventory);
+            }
+
+        };
+
         if (session?.user.authentication?.subscribed) {
             fetchSalesData();
+            fetchInventoryData();
         }
     }, [session]);
 
@@ -106,6 +129,7 @@ const DashboardPage: React.FC = () => {
                     <div className="w-full">
                         <DashboardOverviewCard
                             salesData={filteredSalesData}
+                            inventoryData={inventoryData}
                             currency={currency}
                             selectedRange={selectedRange}
                         />

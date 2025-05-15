@@ -39,7 +39,6 @@ const Download: React.FC<IDownloadProps> = ({ orders, timeFrom, timeTo }) => {
                         uid: session.user.id as string,
                         timeFrom: timeFrom,
                         timeTo: timeTo,
-                        ebayAccessToken: session.user.connectedAccounts?.ebay?.ebayAccessToken ?? "",
                         storeType,
                     }).then((inventory) => [storeType, inventory] as const);
                 })

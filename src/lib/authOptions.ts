@@ -53,7 +53,7 @@ export const authOptions: NextAuthOptions = {
                 token.id = user.id;
                 token.email = user.email;
                 try {
-                    const userDoc: IUser = (await retrieveUserAndCreate(user.id, user.email) ?? {}) as IUser;
+                    const { connectedAccounts, ...userDoc } = (await retrieveUserAndCreate(user.id, user.email) ?? {}) as IUser;
                     token.user = userDoc;
                 } catch (error) {
                     console.error('Error retrieving user:', error);
@@ -65,9 +65,9 @@ export const authOptions: NextAuthOptions = {
             const { user } = token as IJwtToken;
             try {
                 if (!user.id) return session;
-                const userDoc = await retrieveUserAdmin(user.id);
+                const { connectedAccounts, ...userDoc } = await retrieveUserAdmin(user.id) as IUser;
                 if (userDoc) {
-                    session.user = userDoc;
+                    session.user = userDoc as IUser;
                 }
             } catch (error) {
                 console.error('Error retrieving user:', error);

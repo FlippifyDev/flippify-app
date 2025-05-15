@@ -3,22 +3,22 @@
 // Local Imports
 import NewOrder from "../navbar-tools/NewOrder";
 import EditListing from "../navbar-tools/EditListing";
-import { IListing, StoreType } from "@/models/store-data";
 import { deleteItem } from "@/services/firebase/delete";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import { shortenText } from "@/utils/format";
 import UpdateTableField from "./UpdateTableField";
 import { formatTableDate } from "@/utils/format-dates";
-import { getCachedData, removeCacheData } from "@/utils/cache-helpers";
 import { currencySymbols } from "@/config/currency-config";
+import { IListing, StoreType } from "@/models/store-data";
 import { retrieveUserInventory } from "@/services/firebase/retrieve";
+import { getCachedData, removeCacheData } from "@/utils/cache-helpers";
 import { defaultTimeFrom, inventoryCacheKey } from "@/utils/constants";
+import { fetchUserListingsCount, fetchUserStores } from "@/utils/extract-user-data";
 
 // External Imports
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { fetchUserListingsCount, fetchUserStores } from "@/utils/extract-user-data";
 
 
 const Inventory = () => {
@@ -64,7 +64,6 @@ const Inventory = () => {
                     return retrieveUserInventory({
                         uid: session.user.id as string,
                         timeFrom: defaultTimeFrom,
-                        ebayAccessToken: session.user.connectedAccounts?.ebay?.ebayAccessToken ?? "",
                         storeType,
                     }).then((inventory) => [storeType, inventory] as const);
                 })

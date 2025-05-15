@@ -4,6 +4,11 @@ export const storePlatforms: Record<string, StoreType> = {
     "ebay": "ebay",
 }
 
+
+export const storeTokenKeys: Record<string, string> = {
+    "ebay": "ebayAccessToken"
+}
+
 export const cacheExpirationTime = 1000 * 60 * 30; // 30 min in milliseconds
 export const inventoryCacheKey = "inventory"
 export const orderCacheKey = "orders"

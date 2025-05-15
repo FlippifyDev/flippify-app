@@ -117,7 +117,6 @@ const Page = () => {
                         uid: session.user.id as string,
                         timeFrom: periodStart,
                         timeTo: periodEnd,
-                        ebayAccessToken: session.user.connectedAccounts?.ebay?.ebayAccessToken ?? "",
                         storeType,
                     }).then((order) => [storeType, order] as const);
                 })
@@ -148,7 +147,7 @@ const Page = () => {
         if (session?.user.authentication?.subscribed) {
             fetchOrders();
         }
-    }, [session, session?.user.id, periodStart, periodEnd, session?.user.connectedAccounts?.ebay?.ebayAccessToken, session?.user.authentication?.subscribed])
+    }, [session, session?.user.id, periodStart, periodEnd, session?.user.authentication?.subscribed])
 
     return (
         <div className='flex flex-col md:flex-row gap-4'>

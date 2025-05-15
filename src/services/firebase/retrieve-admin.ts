@@ -108,13 +108,7 @@ async function retrieveConnectedAccount(uid: string, storeType: StoreType): Prom
     }
 
     // 3) Check that the requested storeType exists
-    const storeEntry = (accounts as Record<string, any>)[storeType];
-    if (typeof storeEntry !== "object" || storeEntry === null) {
-        throw new Error(
-            `No connectedAccounts entry for store "${storeType}" on user "${uid}".`
-        );
-    }
-    return storeEntry;
+    return (accounts as Record<string, any>)[storeType];
 }
 
 

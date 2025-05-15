@@ -1,7 +1,6 @@
 "use server"
 
 import { firestoreAdmin } from "@/lib/firebase/config-admin";
-import { IEbay } from "@/models/user";
 
 async function refreshEbayToken(customerId: string): Promise<string> {
     try {
@@ -37,7 +36,7 @@ async function refreshEbayToken(customerId: string): Promise<string> {
         }
 
         // Parse the token data
-        const tokenData = await tokenResponse.json() as IEbay;
+        const tokenData = await tokenResponse.json();
 
         // If there was an error from eBay, throw an error
         if (tokenData.error || !tokenData.ebayAccessToken || !tokenData.ebayTokenExpiry) {

@@ -19,7 +19,7 @@ export async function createUser(uid: string, email: string): Promise<IUser | vo
         const userRef = firestoreAdmin.collection('users').doc(uid);
 
         // Create an empty user object with default values
-        const emptyUser: IUser = {
+        const emptyUser = {
             id: uid,
             connectedAccounts: {
                 discord: null,
@@ -52,7 +52,9 @@ export async function createUser(uid: string, email: string): Promise<IUser | vo
         await userRef.set(emptyUser);
 
         console.log('User successfully created in Firestore!');
-        return emptyUser;
+
+        const { connectedAccounts, ...safeUser } = emptyUser;
+        return safeUser as IUser;
     } catch (error) {
         console.error('Error creating user in Firestore:', error);
     }

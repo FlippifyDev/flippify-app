@@ -200,7 +200,7 @@ async function retrieveUserOrdersFromDB({
         const querySnapshot = await getDocs(q);
 
         if (querySnapshot.empty) {
-            console.log(`No orders found for user with UID: ${uid}`);
+            //console.log(`No orders found for user with UID: ${uid}`);
             return {}; // Return an empty dictionary if no orders found
         }
 
@@ -237,7 +237,6 @@ async function retrieveUserOrdersFromDB({
 interface RetrieveUserOrdersProps {
     uid: string,
     timeFrom: string,
-    ebayAccessToken: string,
     storeType: StoreType,
     timeTo?: string,
     update?: boolean,
@@ -248,7 +247,6 @@ interface RetrieveUserOrdersProps {
 async function retrieveUserOrders({
     uid,
     timeFrom,
-    ebayAccessToken,
     storeType,
     timeTo,
     update = false,
@@ -284,7 +282,7 @@ async function retrieveUserOrders({
 
         // If the requested range is fully within the cached boundaries, return filtered cached data.
         if (timeFromDate >= oldestTime && timeToDate <= newestTime) {
-            console.log("Requested date range is within cached orders range.");
+            //console.log("Requested date range is within cached orders range.");
             return filterOrdersByTime(Object.values(cachedData), timeFrom, timeTo);
         }
 
@@ -293,7 +291,7 @@ async function retrieveUserOrders({
 
         // If requested timeFrom is earlier than the cached oldest order, fetch older orders.
         if (timeFromDate < oldestTime) {
-            console.log("Fetching older orders from Firestore.");
+            //console.log("Fetching older orders from Firestore.");
             const olderData = await retrieveUserOrdersFromDB({ uid: uid, timeFrom: timeFromDate.toISOString(), timeTo: oldestTime.toISOString(), filter, storeType });
             // Merge older orders with the current cache (older orders override if keys conflict)
             ordersToReturn = { ...olderData, ...ordersToReturn };
@@ -301,7 +299,7 @@ async function retrieveUserOrders({
 
         // If requested timeTo is later than the cached newest order, fetch newer orders.
         if (timeToDate > newestTime) {
-            console.log("Fetching newer orders from Firestore.");
+            //console.log("Fetching newer orders from Firestore.");
             const newerData = await retrieveUserOrdersFromDB({ uid: uid, timeFrom: newestTime.toISOString(), timeTo: timeToDate.toISOString(), filter, storeType });
             // Merge newer orders with the current cache
             ordersToReturn = { ...ordersToReturn, ...newerData };
@@ -318,7 +316,7 @@ async function retrieveUserOrders({
     }
     // If cache is empty or update is requested, update store info before fetching
     else if (update || !cachedData || Object.keys(cachedData).length === 0) {
-        await updateStoreInfo("orders", storeType, ebayAccessToken, uid);
+        await updateStoreInfo("orders", storeType, uid);
     }
 
     // If no valid cache exists or update is forced, fetch from Firestore
@@ -382,7 +380,7 @@ async function retrieveUserInventoryFromDB(
         const querySnapshot = await getDocs(q);
 
         if (querySnapshot.empty) {
-            console.log(`No inventory items found for user with UID: ${uid}`);
+            //onsole.log(`No inventory items found for user with UID: ${uid}`);
             return {}; // Return empty array if no inventory items found
         }
 
@@ -419,7 +417,6 @@ async function retrieveUserInventoryFromDB(
 interface IRetrieveUserInventory {
     uid: string;
     timeFrom: string;
-    ebayAccessToken: string;
     update?: boolean;
     timeTo?: string;
     storeType: StoreType;
@@ -427,7 +424,6 @@ interface IRetrieveUserInventory {
 async function retrieveUserInventory({
     uid,
     timeFrom,
-    ebayAccessToken,
     update = false,
     timeTo,
     storeType
@@ -461,7 +457,7 @@ async function retrieveUserInventory({
 
         // If the requested range is fully within the cached range, return filtered cached data.
         if (timeFromDate >= oldestTime && timeToDate <= newestTime) {
-            console.log("Requested date range is within cached inventory range.");
+            //console.log("Requested date range is within cached inventory range.");
             return filterInventoryByTime(Object.values(cachedData), timeFrom, timeTo);
         }
 
@@ -469,19 +465,19 @@ async function retrieveUserInventory({
 
         // Case 1: Need older inventory (timeFrom is earlier than the oldest cached item)
         if (timeFromDate < oldestTime && timeToDate <= newestTime) {
-            console.log("Fetching older inventory from Firestore.");
+            //console.log("Fetching older inventory from Firestore.");
             const olderData = await retrieveUserInventoryFromDB(uid, timeFrom, storeType, oldestTime.toISOString());
             inventoryToReturn = { ...olderData, ...inventoryToReturn };
         }
         // Case 2: Need newer inventory (timeTo is later than the newest cached item)
         else if (timeFromDate >= oldestTime && timeToDate > newestTime) {
-            console.log("Fetching newer inventory from Firestore.");
+            //console.log("Fetching newer inventory from Firestore.");
             const newerData = await retrieveUserInventoryFromDB(uid, newestTime.toISOString(), storeType, timeTo);
             inventoryToReturn = { ...inventoryToReturn, ...newerData };
         }
         // Case 3: Need both older and newer inventory
         else if (timeFromDate < oldestTime && timeToDate > newestTime) {
-            console.log("Fetching both older and newer inventory from Firestore.");
+            //console.log("Fetching both older and newer inventory from Firestore.");
             const olderData = await retrieveUserInventoryFromDB(uid, timeFrom, storeType, oldestTime.toISOString());
             const newerData = await retrieveUserInventoryFromDB(uid, newestTime.toISOString(), storeType, timeTo);
             inventoryToReturn = { ...olderData, ...inventoryToReturn, ...newerData };
@@ -501,8 +497,8 @@ async function retrieveUserInventory({
     }
     // If cache is empty or update is requested, update store info before fetching
     else if (update || !cachedData || Object.keys(cachedData).length === 0) {
-        console.log("Request to check for new inventory");
-        await updateStoreInfo("inventory", storeType, ebayAccessToken, uid);
+        //console.log("Request to check for new inventory");
+        await updateStoreInfo("inventory", storeType, uid);
     }
 
     // If no valid cache exists or update is forced, fetch from Firestore

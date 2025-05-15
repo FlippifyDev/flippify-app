@@ -5,9 +5,9 @@ export type EmailVerification = "unverified" | "verifying" | "verified";
 
 interface IUser {
     id?: string | null;
-    connectedAccounts?: IConnectedAccounts | null;
     email?: string | null;
     username?: string | null;
+    connectedAccounts?: null;
     stripeCustomerId?: string | null;
     subscriptions?: ISubscription[] | null;
     store?: Record<StoreType | string, IStore> | null;
@@ -52,28 +52,11 @@ interface IMetaData {
     createdAt?: string | null;
 }
 
-interface IConnectedAccounts {
-    discord?: IDiscord | null;
-    ebay?: IEbay | null;
-}
-
 interface ISubscription {
     id?: string | null;
     name?: string | null;
     override?: boolean | null;
     createdAt?: string | null;
-}
-
-interface IDiscord {
-    discordId?: string | null;
-}
-
-interface IEbay {
-    ebayAccessToken?: string | null;
-    ebayRefreshToken?: string | null;
-    ebayTokenExpiry?: number | null;
-    error?: string | null;
-    error_description?: string | null;
 }
 
 interface IReferral {
@@ -88,4 +71,4 @@ interface IPreferences {
     currency?: CurrencyType;
 }
 
-export type { IUser, ISubscription, IEbay, IReferral, IPreferences, IConnectedAccounts, IStore };
+export type { IUser, ISubscription, IReferral, IPreferences, IStore };

@@ -7,6 +7,7 @@ import ConnectButton from "./ConnectButton";
 // External Imports
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { retrieveConnectedAccount } from "@/services/firebase/retrieve-admin";
 
 
 
@@ -17,8 +18,34 @@ const EbayConnectButton = () => {
 
 
     useEffect(() => {
-        setLoading(status === "loading");
-        setConnected(session?.user?.connectedAccounts?.ebay ? true : false);
+        // whenever session/status change, re-check
+        const checkConnection = async () => {
+            // if still loading NextAuth, bail out
+            if (status === "loading") {
+                setLoading(true);
+                return;
+            }
+
+            // once authenticated, look up connectedAccounts.ebay
+            if (status === "authenticated" && session?.user.id) {
+                try {
+                    const account = await retrieveConnectedAccount(
+                        session.user.id,
+                        "ebay"
+                    );
+                    setConnected(!!account);
+                } catch (err) {
+                    console.error("Error checking eBay connection:", err);
+                    setConnected(false);
+                }
+            } else {
+                setConnected(false);
+            }
+
+            setLoading(false);
+        };
+
+        checkConnection();
     }, [status, session]);
 
 

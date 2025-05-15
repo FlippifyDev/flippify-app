@@ -98,7 +98,6 @@ const DashboardProfitsChart: React.FC<DashboardProfitsChartProps> = ({
 					show: true,
 					formatter: (val: number) => {
 						const dateString = salesData.categories[val - 1];
-                        console.log(dateString)
 
 						if (dateString === undefined) {
 							return "";

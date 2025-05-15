@@ -58,7 +58,6 @@ const Orders = () => {
                     return retrieveUserOrders({
                         uid: session.user.id as string,
                         timeFrom: defaultTimeFrom,
-                        ebayAccessToken: session.user.connectedAccounts?.ebay?.ebayAccessToken ?? "",
                         storeType,
                     }).then((order) => [storeType, order] as const);
                 })

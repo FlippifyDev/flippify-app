@@ -54,7 +54,7 @@ const Page = () => {
     // Using useEffect to initialize the chart only once when the component is mounted
     useEffect(() => {
         async function fetchOrders() {
-            if (!session || !session.user.id || !session.user.connectedAccounts?.ebay?.ebayAccessToken) {
+            if (!session || !session.user.id) {
                 return;
             }
 
@@ -65,7 +65,6 @@ const Page = () => {
                 uid: session.user.id as string,
                 timeFrom: timeFrom,
                 timeTo: timeTo,
-                ebayAccessToken: session.user.connectedAccounts?.ebay?.ebayAccessToken ?? "",
                 storeType: selectedFilter,
             })
             const filteredOrders = orders.filter(order => order.storeType === selectedFilter);

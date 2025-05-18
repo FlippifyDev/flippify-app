@@ -191,6 +191,10 @@ const UpdatePassword = ({ onClose }: { onClose: () => void }) => {
         }
     };
 
+    useEffect(() => {
+        setIsChanged(newPassword !== "" && confirmedPassword !== "" && newPassword === confirmedPassword);
+    }, [newPassword, confirmedPassword])
+
     const handleInput = (value: string, type: string) => {
         if (type === "currentPassword") {
             setCurrentPassword(value);
@@ -199,7 +203,6 @@ const UpdatePassword = ({ onClose }: { onClose: () => void }) => {
         } else if (type === "confirmedPassword") {
             setConfirmedPassword(value);
         }
-        setIsChanged(newPassword !== "" && confirmedPassword !== "" && newPassword === confirmedPassword);
     };
 
     return (

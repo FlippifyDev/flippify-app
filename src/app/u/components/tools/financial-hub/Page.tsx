@@ -5,7 +5,6 @@ import Modal from "../../dom/ui/Modal";
 import OrderInfo from "./OrderInfo";
 import { IUser } from "@/models/user";
 import { IOrder } from "@/models/store-data";
-import IconButton from "../../dom/ui/IconButton";
 import FilterSelector from "./FilterSelector";
 import CardShippingInfo from "./ShippingInfo";
 import CardCostAverages from "./CostAverages";
@@ -222,6 +221,7 @@ const Page = () => {
         setError(undefined);
         // Get the CSV string from formatOrdersForCSVExport
         const csvContent = formatOrdersForCSVExport(orders, exportTimeFrom ?? "", exportTimeTo ?? "");
+
         if (!csvContent) {
             setError("No orders found in the selected time range");
             return;

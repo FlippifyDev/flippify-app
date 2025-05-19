@@ -12,7 +12,7 @@ import { HiOutlineDownload } from "react-icons/hi";
 import { useSession } from 'next-auth/react';
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
-import { fetchUserStores } from '@/utils/extract-user-data';
+import { retrieveUserStoreTypes } from '@/services/firebase/retrieve-admin';
 
 
 interface IDownloadProps {
@@ -31,7 +31,8 @@ const Download: React.FC<IDownloadProps> = ({ orders, timeFrom, timeTo }) => {
         const fetchInventory = async () => {
             if (!session) return;
 
-            const storeTypes = fetchUserStores(session.user);
+            const storeTypes = await retrieveUserStoreTypes(session.user?.id as string, "orders");
+            if (!storeTypes) return;
 
             const inventoryResults = await Promise.all(
                 storeTypes.map((storeType) => {

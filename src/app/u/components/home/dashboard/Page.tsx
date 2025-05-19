@@ -12,10 +12,10 @@ import ProfitsGraphTagFilter from "./ProfitsGraphTagFilter";
 import DashboardOverviewCard from "./DashboardOverviewCard";
 import DashboardProfitsGraph from "./DashboardProfitsGraph";
 import IconButton from "../../dom/ui/IconButton";
-import { IInventory, IListing, IOrder } from "@/models/store-data";
+import { IListing, IOrder } from "@/models/store-data";
 import OnboardingFlow from "./OnboardingFlow";
 import { defaultTimeFrom } from "@/utils/constants";
-import { fetchUserStores } from "@/utils/extract-user-data";
+import { retrieveUserStoreTypes } from "@/services/firebase/retrieve-admin";
 
 
 const DashboardPage: React.FC = () => {
@@ -47,7 +47,8 @@ const DashboardPage: React.FC = () => {
         const fetchSalesData = async () => {
             if (!session) return;
 
-            const storeTypes = fetchUserStores(session.user);
+            const storeTypes = await retrieveUserStoreTypes(session.user?.id as string, "orders");
+            if (!storeTypes) return;
 
             const orderResults = await Promise.all(
                 storeTypes.map((storeType) => {
@@ -67,7 +68,8 @@ const DashboardPage: React.FC = () => {
 
         const fetchInventoryData = async () => {
             if (!session) return;
-            const storeTypes = fetchUserStores(session.user);
+            const storeTypes = await retrieveUserStoreTypes(session.user?.id as string, "orders");
+            if (!storeTypes) return;
 
             const inventoryResults = await Promise.all(
                 storeTypes.map((storeType) => {

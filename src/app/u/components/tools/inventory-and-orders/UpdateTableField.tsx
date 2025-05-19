@@ -2,16 +2,16 @@
 import { firestore } from '@/lib/firebase/config';
 import { formatDateToISO } from '@/utils/format-dates';
 import { updateCacheData } from '@/utils/cache-helpers';
+import { updateMovedItemAdmin } from '@/services/firebase/create-admin';
 import { IListing, IOrder, StoreType } from '@/models/store-data';
 import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput } from '@/utils/input-validation';
 
 
 // External Imports
-import { deleteDoc, doc, DocumentReference, setDoc, updateDoc } from 'firebase/firestore';
 import React, { useState } from 'react'
+import { doc, updateDoc } from 'firebase/firestore';
 import { useSession } from 'next-auth/react';
 import set from 'lodash/set';
-import { updateMovedItemAdmin } from '@/services/firebase/create-admin';
 
 
 type ExtraKey = "customTag" | "storeType" | "listingDate"
@@ -42,7 +42,7 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
 
     const handleNewStoreType = async (item: IOrder | IListing, value: string | null | undefined) => {
         const oldStoreType = item.storeType;
-        
+
         // Step 1: Add the item to the storeType collection
         set(item, keyType, value);
 
@@ -51,7 +51,6 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
         };
 
         await updateMovedItemAdmin(session.user.id, oldStoreType ?? "ebay", item);
-        console.log(item)
 
         updateCacheData(cacheKey, item);
     }

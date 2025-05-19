@@ -70,7 +70,7 @@ const LoginContent = () => {
 
     return (
         <div className="min-h-screen flex flex-col md:flex-row items-center justify-center p-4 -mt-24 gap-16">
-            {(status === "active" || status === null) && (
+            {(status !== "active" || status === null) && (
                 <>
                     <div className="bg-white rounded-3xl shadow-lg w-full max-w-md p-8">
                         {/* Logo */}
@@ -147,7 +147,7 @@ const LoginContent = () => {
                 </>
             )}
 
-            {status === "under maintenance" && (
+            {status !== "under maintenance" && (
                 <UnderMaintenance />
             )}
         </div>

@@ -9,13 +9,13 @@ import { IUser } from '@/models/user'
 import { IOrder } from '@/models/store-data'
 import InventoryAndCogs from './InventoryAndCogs'
 import { formatDateToISO } from '@/utils/format-dates'
-import { fetchUserStores } from '@/utils/extract-user-data'
 import DateRangeSelector, { TimeRange, generateTimeRanges } from './DateRangeSelector'
 import { retrieveOldestOrder, retrieveUserOrders, retrieveUserOrdersInPeriod } from '@/services/firebase/retrieve'
 
 // External Imports
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
+import { retrieveUserStoreTypes } from '@/services/firebase/retrieve-admin'
 
 
 
@@ -75,7 +75,8 @@ const Page = () => {
         if (!session?.user.id) return
 
         async function initTimeRanges() {
-            const storeTypes = fetchUserStores(session?.user as IUser);
+            const storeTypes = await retrieveUserStoreTypes(session?.user?.id as string, "orders");
+            if (!storeTypes) return;
 
             const oldestOrder = await retrieveOldestOrder({
                 uid: session?.user.id ?? "",
@@ -109,7 +110,8 @@ const Page = () => {
             if (!session) return;
             setLoading(true);
 
-            const storeTypes = fetchUserStores(session.user);
+            const storeTypes = await retrieveUserStoreTypes(session.user?.id as string, "orders");
+            if (!storeTypes) return;
 
             const salesResult = await Promise.all(
                 storeTypes.map((storeType) => {

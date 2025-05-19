@@ -32,7 +32,7 @@ async function createNewInventoryItemAdmin(uid: string, StoreType: StoreType | s
         // Create or update the listing document
         await itemDocRef.set(listing, { merge: true });
 
-        const { success: incrementSuccess } = await updateUserListingsCountAdmin(uid, StoreType)
+        const { success: incrementSuccess } = await updateUserListingsCountAdmin(uid)
         if (!incrementSuccess) {
             console.error("Error incrementing user manual listings count.");
             return { error: "Error incrementing user manual listings count." };
@@ -90,7 +90,7 @@ async function createNewOrderItemAdmin(uid: string, storeType: StoreType, order:
         await itemDocRef.set(order, { merge: true });
 
         // Increment the user's manual orders count by 1
-        const { success: incrementSuccess } = await updateUserOrdersCountAdmin(uid, storeType)
+        const { success: incrementSuccess } = await updateUserOrdersCountAdmin(uid)
         if (!incrementSuccess) {
             console.error("Error incrementing user manual orders count.");
             return { error: "Error incrementing user manual orders count." };
@@ -120,10 +120,10 @@ function isOrder(item: IOrder | IListing): item is IOrder {
 async function updateMovedItemAdmin(uid: string, storeType: StoreType, item: IOrder | IListing) {
     try {
         if (storeType === item.storeType) return;
+
         const isItemOrder = isOrder(item);
 
         const itemType = isItemOrder ? "orders" : "inventory";
-        const isAuto = item.recordType === "automatic" ? true : false;
         const idKey = isItemOrder ? item.transactionId : item.itemId;
 
         if (!idKey || !item.storeType) {
@@ -135,14 +135,9 @@ async function updateMovedItemAdmin(uid: string, storeType: StoreType, item: IOr
 
         // Add the new item
         await newItemRef.set(item);
-
-        // Increment the new store count
-        await updateUserItemCountAdmin({ uid, itemType, storeType: item.storeType, amount: 1, isAuto })
         
+        // Delete the old item
         await oldItemRef.delete();
-
-        // Decrement the old store count
-        await updateUserItemCountAdmin({ uid, itemType, storeType: storeType, amount: -1, isAuto })
     } catch (error) {
         console.error("Error moving item between storeTypes:", error);
         throw error;

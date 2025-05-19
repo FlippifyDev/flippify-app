@@ -14,18 +14,19 @@ import { formatTimeFrom } from "@/utils/format-dates";
 import CardListingsAmount from "./ListingsAndOrdersAmount";
 import CardProfitsBarChart from "./ProfitsBarChart";
 import { currencySymbols } from "@/config/currency-config";
-import { fetchUserStores } from "@/utils/extract-user-data";
 import CardPlatformDonutChart from "./PlatformDonutChart";
 import { retrieveUserOrders } from "@/services/firebase/retrieve";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import { formatOrdersForCSVExport } from "@/utils/format";
-import { exportCSVAllowedSubscriptionPlans } from "@/utils/constants";
+import { defaultTimeFrom, exportCSVAllowedSubscriptionPlans, orderCacheKey } from "@/utils/constants";
 
 // External Imports
 import { useEffect, useState } from "react";
 import { HiOutlineDownload } from "react-icons/hi";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { retrieveUserStoreTypes } from "@/services/firebase/retrieve-admin";
+import { getCachedData } from "@/utils/cache-helpers";
 
 
 const Page = () => {
@@ -34,10 +35,10 @@ const Page = () => {
     const [orders, setOrders] = useState<IOrder[]>([]);
     const [loading, setLoading] = useState(false);
     const subscribed = session?.user.authentication?.subscribed;
-    const storeTypes = fetchUserStores(session?.user as IUser);
+    const [storeTypes, setStoreTypes] = useState<string[]>([]);
 
     // General Filters
-    const [selectedFilter, setSelectedFilter] = useState(storeTypes[0]);
+    const [selectedFilter, setSelectedFilter] = useState("All");
     const [selectedTimeRange, setSelectedTimeRange] = useState("Last 30 days");
     const [timeFrom, setTimeFrom] = useState(formatTimeFrom(30));
     const [timeTo, setTimeTo] = useState<string>(new Date().toISOString());
@@ -58,25 +59,60 @@ const Page = () => {
             }
 
             setLoading(true);
+            
+            if (selectedFilter === "All") {
+                // for each storeType, fetch their orders in parallel
+                await Promise.all(
+                    storeTypes.map((storeType) => {
+                        return retrieveUserOrders({
+                            uid: session.user.id as string,
+                            timeFrom: timeFrom,
+                            timeTo: timeTo,
+                            storeType,
+                        }).then((order) => [storeType, order] as const);
+                    })
+                );
+            } else {
+                await retrieveUserOrders({
+                    uid: session.user.id as string,
+                    timeFrom: timeFrom,
+                    timeTo: timeTo,
+                    storeType: selectedFilter,
+                })
+            }
 
 
-            const orders = await retrieveUserOrders({
-                uid: session.user.id as string,
-                timeFrom: timeFrom,
-                timeTo: timeTo,
-                storeType: selectedFilter,
-            })
-            const filteredOrders = orders.filter(order => order.storeType === selectedFilter);
-
-            setOrders(filteredOrders);  // Set the orders to state
-            setLoading(false);
+            const cache = getCachedData(`${orderCacheKey}-${session.user.id}`);
+            if (cache) {
+                const results = Object.values(cache) as IOrder[];
+                
+                const filteredOrders = results.filter(order => order.storeType === selectedFilter || selectedFilter === "All");
+                
+                setOrders(filteredOrders); 
+                setLoading(false);
+            }
         }
 
         if (subscribed) {
             fetchOrders();
         }
-    }, [session, selectedFilter, timeFrom, timeTo, subscribed]);
+    }, [session, selectedFilter, timeFrom, timeTo, subscribed, storeTypes]);
 
+    useEffect(() => {
+        async function fetchStoreTypes() {
+            if (!session || !session.user.id) {
+                return;
+            }
+
+            const storeTypes = await retrieveUserStoreTypes(session.user.id, "orders");
+            if (!storeTypes) return;
+
+            setStoreTypes(storeTypes)
+            setSelectedFilter("All")
+        }
+
+        fetchStoreTypes()
+    }, [session])
 
     const handleTimeRangeChange = (label: string, days: string) => {
         setSelectedTimeRange(label);
@@ -253,7 +289,7 @@ const Page = () => {
             <div className="relative w-full flex flex-col">
                 <div className="w-full py-2 px-4 bg-white border-t flex items-center">
                     <div>
-                        <FilterSelector value={selectedFilter} filters={storeTypes} onChange={handleFilterChange} />
+                        <FilterSelector value={selectedFilter} filters={["All", ...storeTypes]} onChange={handleFilterChange} />
                     </div>
                     <div className="w-full flex items-center justify-end gap-2">
                         <div>

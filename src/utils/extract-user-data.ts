@@ -31,57 +31,31 @@ export function fetchSubscriptionMaxListings(subscription: ISubscription) {
     }
 }
 
-export function fetchUserStores(user: IUser): StoreType[] {
-    // If there's no store map, return an empty array
-    if (!user.store) {
-        return [];
-    }
-
-    // Otherwise, grab all the IStore values from the record
-    return Object.keys(user.store);
-}
-
-
 export function fetchUserOrdersCount(user?: IUser): number {
-    if (!user || !user.store) {
+    if (!user || !user.store?.numOrders) {
         return 0;
     }
 
-    let totalOrders = 0;
+    const numOrders = user.store?.numOrders;
 
-    for (const [, store] of Object.entries(user.store)) {
-        const numOrders = store.numOrders;
-        if (!numOrders) continue;
+    // Prefer the cumulative totals, otherwise fall back to the incremental counts
+    const automaticCount = numOrders.totalAutomatic ?? 0;
+    const manualCount = numOrders.totalManual ?? 0;
 
-        // Prefer the cumulative totals, otherwise fall back to the incremental counts
-        const automaticCount = numOrders.totalAutomatic ?? numOrders.automatic ?? 0;
-        const manualCount = numOrders.totalManual ?? numOrders.manual ?? 0;
-
-        totalOrders += automaticCount + manualCount;
-    }
-
-    return totalOrders;
+    return automaticCount + manualCount;
 }
-
 
 export function fetchUserListingsCount(user?: IUser): number {
-    if (!user || !user.store) {
+    if (!user || !user.store?.numListings) {
         return 0;
     }
 
-    let totalListings = 0;
+    const numListings = user.store.numListings;
 
-    for (const [, store] of Object.entries(user.store)) {
-        const numListings = store.numListings;
-        if (!numListings) continue;
+    const automaticCount = numListings.automatic ?? 0;
+    const manualCount = numListings.manual ?? 0;
 
-        const automaticCount = numListings.automatic ?? 0;
-        const manualCount = numListings.manual ?? 0;
-
-        totalListings += automaticCount + manualCount;
-    }
-
-    return totalListings;
+    return automaticCount + manualCount;
 }
 
 export function fetchUserInventoryAndOrdersCount(
@@ -92,33 +66,11 @@ export function fetchUserInventoryAndOrdersCount(
     automaticOrders: number;
     manualOrders: number;
 } {
-    if (!user?.store) {
-        return { automaticListings: 0, manualListings: 0, automaticOrders: 0, manualOrders: 0 };
-    }
+    const automaticListings = user?.store?.numListings?.automatic ?? 0;
+    const manualListings = user?.store?.numListings?.manual ?? 0;
 
-    let automaticListings = 0;
-    let manualListings = 0;
-    let automaticOrders = 0;
-    let manualOrders = 0;
-
-    for (const [, store] of Object.entries(user.store)) {
-        // --- Listings ---
-        const numListings = store.numListings;
-        if (numListings) {
-            automaticListings += numListings.automatic ?? 0;
-            manualListings += numListings.manual ?? 0;
-        }
-
-        // --- Orders ---
-        const numOrders = store.numOrders;
-        if (numOrders) {
-            // if you prefer the cumulative totals instead, use:
-            //   numOrders.totalAutomatic ?? numOrders.automatic ?? 0
-            //   numOrders.totalManual    ?? numOrders.manual    ?? 0
-            automaticOrders += numOrders.automatic ?? 0;
-            manualOrders += numOrders.manual ?? 0;
-        }
-    }
+    const automaticOrders = user?.store?.numOrders?.automatic ?? 0;
+    const manualOrders = user?.store?.numOrders?.manual ?? 0;
 
     return { automaticListings, manualListings, automaticOrders, manualOrders };
 }

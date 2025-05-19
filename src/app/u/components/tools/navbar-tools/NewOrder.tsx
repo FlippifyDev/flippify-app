@@ -112,7 +112,7 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal }) => {
         // Step 1: Add the order item to the orders cache
         addCacheData(orderCache, orderItem);
 
-        const currentStore = session!.user.store?.[orderItem.storeType] || {};
+        const currentStore = session!.user.store || {};
         const currentNumOrders = currentStore.numOrders?.manual ?? 0;
         const currentTotalNumOrders = currentStore.numOrders?.manual ?? 0;
         const currentNumListings = currentStore.numListings?.manual ?? 0;
@@ -131,19 +131,16 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal }) => {
             user: {
                 ...session!.user,
                 store: {
-                    ...session!.user.store,
-                    [orderItem.storeType]: {
-                        ...currentStore,
-                        numOrders: {
-                            ...currentStore.numOrders,
-                            manual: currentNumOrders + 1,
-                            totalManual: currentTotalNumOrders + 1
-                        },
-                        numListings: {
-                            ...currentStore.numListings,
-                            manual: currentNumListings - decrementListingAmount
-                        }
+                    ...currentStore,
+                    numOrders: {
+                        ...currentStore.numOrders,
+                        manual: currentNumOrders + 1,
+                        totalManual: currentTotalNumOrders + 1
                     },
+                    numListings: {
+                        ...currentStore.numListings,
+                        manual: currentNumListings - decrementListingAmount
+                    }
                 },
             },
         });
@@ -234,7 +231,7 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal }) => {
         setItemId(item.itemId ?? "N/A");
         setItemName(item.name ?? "N/A");
         setStoreType(item.storeType ?? "");
-        setImageUrl(item.image ? item.image[0]: "");
+        setImageUrl(item.image ? item.image[0] : "");
         setCustomTag(item.customTag || "");
 
         // Set Listing Info
@@ -451,7 +448,7 @@ const SelectRelatedListing: React.FC<SelectRelatedListingProps> = ({ listingDown
                         <div className='flex flex-row items-center gap-2'>
                             <figure className="border-[3px] rounded-full">
                                 <Image
-                                    src={item.image ? item.image[0]: ""}
+                                    src={item.image ? item.image[0] : ""}
                                     alt={item.name ?? "N/A"}
                                     className='h-9 w-9 object-cover rounded-full'
                                     width={50}

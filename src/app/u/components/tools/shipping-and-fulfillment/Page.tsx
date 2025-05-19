@@ -4,17 +4,16 @@
 import Card from '../../dom/ui/Card';
 import Shipped from './Shipped';
 import { IOrder } from '@/models/store-data';
-import IconButton from '../../dom/ui/IconButton';
 import ReadyToShip from './ReadyToShip';
 import LoadingSpinner from '@/app/components/LoadingSpinner';
 import { defaultTimeFrom } from '@/utils/constants';
 import { retrieveUserOrders } from '@/services/firebase/retrieve';
 import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
+import { retrieveUserStoreTypes } from '@/services/firebase/retrieve-admin';
 
 // External Imports
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react';
-import { fetchUserStores } from '@/utils/extract-user-data';
 
 
 const ITEMS_PER_PAGE = 5;
@@ -51,7 +50,8 @@ const Page = () => {
                 setLoading(true);
             }
 
-            const storeTypes = fetchUserStores(session.user);
+            const storeTypes = await retrieveUserStoreTypes(session.user?.id as string, "orders");
+            if (!storeTypes) return;
 
             const salesResult = await Promise.all(
                 storeTypes.map((storeType) => {

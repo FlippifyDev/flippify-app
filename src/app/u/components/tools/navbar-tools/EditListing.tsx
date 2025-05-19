@@ -5,9 +5,10 @@
 import Modal from "../../dom/ui/Modal"
 import Input from "../../dom/ui/Input"
 import ImageUpload from "../../dom/ui/ImageUpload"
-import { addCacheData } from "@/utils/cache-helpers"
-import { formatDateToISO } from "@/utils/format-dates"
 import { IListing } from "@/models/store-data"
+import { addCacheData } from "@/utils/cache-helpers"
+import { updateListing } from "@/services/firebase/update"
+import { formatDateToISO } from "@/utils/format-dates"
 import { inventoryCacheKey } from "@/utils/constants"
 import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput } from "@/utils/input-validation"
 
@@ -15,7 +16,7 @@ import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput } f
 import { FormEvent, useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
-import { updateListing } from "@/services/firebase/update"
+import { updateMovedItemAdmin } from "@/services/firebase/create-admin"
 
 
 interface EditListingProps {
@@ -32,6 +33,7 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal }) 
     const [itemName, setItemName] = useState<string>("")
     const [imageUrl, setImageUrl] = useState<string>("");
     const [customTag, setCustomTag] = useState<string>("");
+    const [storeOldType, setStoreOldType] = useState<string>("");
     const [storeType, setStoreType] = useState<string>("");
 
     // Purchase Info
@@ -73,6 +75,7 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal }) 
         setImageUrl(item.image ? item.image[0] : "");
         setCustomTag(item.customTag || "");
         setStoreType(item.storeType || "")
+        setStoreOldType(item.storeType || "")
 
         // Set Listing Info
         setDateListed(new Date(item.dateListed ?? "").toISOString().split('T')[0]);
@@ -111,12 +114,12 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal }) 
             storeType: storeType
         }
 
-        const { success, error } = await updateListing(session?.user.id ?? "", inventoryItem, storeType);
-        if (!success) {
-            setErrorMessage(`Error editing item`)
-        } else {
+        try {
+            await updateMovedItemAdmin(session?.user.id as string, storeOldType, inventoryItem)
             handleCacheUpdate(inventoryItem);
             setSuccessMessage("Listing Edited!");
+        } catch (error) {
+            setErrorMessage("Error editing item")
         }
 
         setLoading(false);

@@ -5,9 +5,10 @@
 import Modal from "../../dom/ui/Modal"
 import Input from "../../dom/ui/Input"
 import ImageUpload from "../../dom/ui/ImageUpload"
-import { addCacheData } from "@/utils/cache-helpers"
-import { formatDateToISO } from "@/utils/format-dates"
 import { IListing } from "@/models/store-data"
+import { addCacheData } from "@/utils/cache-helpers"
+import { updateListing } from "@/services/firebase/update"
+import { formatDateToISO } from "@/utils/format-dates"
 import { inventoryCacheKey } from "@/utils/constants"
 import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput } from "@/utils/input-validation"
 
@@ -15,7 +16,6 @@ import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput } f
 import { FormEvent, useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
-import { updateListing } from "@/services/firebase/update"
 
 
 interface EditListingProps {

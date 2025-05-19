@@ -1,21 +1,23 @@
 "use client";
 
+// External Imports
 import { useSession } from "next-auth/react";
 import React, { useState, useEffect, useRef } from "react";
 
+// Local Imports
+import { retrieveUserInventory, retrieveUserOrders } from "@/services/firebase/retrieve";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import DashboardRecentSalesCard from "./DashboardRecentSalesCard";
-import { retrieveUserInventory, retrieveUserOrders } from "@/services/firebase/retrieve";
 import ProfitsGraphDateFilter from "./ProfitsGraphDateFilter";
 import LayoutLoadingSkeleton from "../../layout/LayoutLoadingSkeleton";
 import ProfitsGraphTagFilter from "./ProfitsGraphTagFilter";
 import DashboardOverviewCard from "./DashboardOverviewCard";
 import DashboardProfitsGraph from "./DashboardProfitsGraph";
-import IconButton from "../../dom/ui/IconButton";
-import { IInventory, IListing, IOrder } from "@/models/store-data";
-import OnboardingFlow from "./OnboardingFlow";
-import { defaultTimeFrom } from "@/utils/constants";
+import { IListing, IOrder } from "@/models/store-data";
 import { fetchUserStores } from "@/utils/extract-user-data";
+import { defaultTimeFrom } from "@/utils/constants";
+import OnboardingFlow from "./OnboardingFlow";
+import IconButton from "../../dom/ui/IconButton";
 
 
 const DashboardPage: React.FC = () => {

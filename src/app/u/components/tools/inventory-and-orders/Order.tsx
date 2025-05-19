@@ -219,18 +219,19 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
 
     let soldFor: number, profit: number | "N/A", roi: number | "N/A";
     const purchasePrice = purchase?.price ?? 0;
+    
+    const sellerCosts = (order.additionalFees ?? 0) + (order.shipping?.fees ?? 0) + (purchase?.price ?? 0);
 
     soldFor = sale?.price ?? 0;
 
     if (purchasePrice) {
-        profit = soldFor - purchasePrice;
+        profit = soldFor - sellerCosts;
         roi = (profit / purchasePrice) * 100;
     } else {
         profit = "N/A";
         roi = "N/A";
     }
 
-    const sellerCosts = (order.additionalFees ?? 0) + (order.shipping?.fees ?? 0);
     const currencySymbol = getSymbolFromCurrency(order.sale?.currency ?? "$")
 
     return (
@@ -484,7 +485,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         Total Costs
                     </td>
                     <td className="py-4 px-6 ">
-                        <span className="text-gray-600">{currencySymbol}{(sellerCosts + (purchase?.price ?? 0)).toFixed(2)}</span>
+                        <span className="text-gray-600">{currencySymbol}{sellerCosts.toFixed(2)}</span>
                     </td>
                 </tr>
                 <tr className='border-b'>

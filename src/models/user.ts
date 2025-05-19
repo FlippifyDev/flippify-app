@@ -69,6 +69,13 @@ interface IReferral {
 interface IPreferences {
     locale?: string | null;
     currency?: CurrencyType;
+    investment?: IInvestmentPreferences | null;
+}
+
+
+interface IInvestmentPreferences {
+    profitPercentTakeHome?: number | null;
+    profitAmountTakeHome?: number | null;
 }
 
 export type { IUser, ISubscription, IReferral, IPreferences, IStore };

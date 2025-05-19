@@ -32,22 +32,22 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
                 />
             </LayoutSubscriptionWrapper>
 
-			{/* Activity Log Button - Public*/}
-			<LayoutSubscriptionWrapper requiredSubscriptions={["!admin"]}>
+			{/* Investment Planner Button - Public */}
+            <LayoutSubscriptionWrapper requiredSubscriptions={["!standard", "!pro", "!admin"]}>
 				<DisabledSideBarButton
-					text="Activity Log"
-					redirect="activity-log"
+                    text="Investment Planner"
+					redirect="tools/investment-planner"
 					isSidebarOpen={isSidebarOpen}
 					symbol={<MdStickyNote2 className="text-lg" />}
 					tooltip="Coming Soon"
 				/>
 			</LayoutSubscriptionWrapper>
 
-			{/* Activity Log Button - Admin*/}
-			<LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
+            {/* Investment Planner Button */}
+            <LayoutSubscriptionWrapper anySubscriptions={["standard", "pro", "admin"]}>
 				<SidebarButton
-					text="Activity Log"
-					redirect="activity-log"
+                    text="Investment Planner"
+                    redirect="tools/investment-planner"
 					isSidebarOpen={isSidebarOpen}
 					symbol={<MdStickyNote2 className="text-xl" />}
 				/>

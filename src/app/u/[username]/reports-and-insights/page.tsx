@@ -12,7 +12,7 @@ export default function ReportsAndInsights() {
     return (
         <>
             <ThemeSetter theme="light" />
-            <Layout requiredSubscriptions={['accessGranted']}>
+            <Layout anySubscriptions={['standard', 'pro', 'admin']}>
                 <Page />
             </Layout>
         </>

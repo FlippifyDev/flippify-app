@@ -13,12 +13,13 @@ import { IListing, StoreType } from "@/models/store-data";
 import { retrieveUserInventory } from "@/services/firebase/retrieve";
 import { getCachedData, removeCacheData } from "@/utils/cache-helpers";
 import { defaultTimeFrom, inventoryCacheKey } from "@/utils/constants";
-import { fetchUserListingsCount, fetchUserStores } from "@/utils/extract-user-data";
+import { fetchUserListingsCount } from "@/utils/extract-user-data";
 
 // External Imports
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { retrieveUserStoreTypes } from "@/services/firebase/retrieve-admin";
 
 
 const Inventory = () => {
@@ -55,8 +56,8 @@ const Inventory = () => {
 
             setLoading(true);
 
-            // grab the storeType keys they actually have
-            const storeTypes = fetchUserStores(session.user);
+            const storeTypes = await retrieveUserStoreTypes(session.user?.id as string, "orders");
+            if (!storeTypes) return;
 
             // for each storeType, fetch their inventory in parallel
             await Promise.all(

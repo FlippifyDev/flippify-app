@@ -2,8 +2,8 @@
 
 import { auth } from "firebase-admin";
 import { IUser } from "@/models/user";
+import { ItemType, StoreType } from "@/models/store-data";
 import { firestoreAdmin } from "@/lib/firebase/config-admin";
-import { StoreType } from "@/models/store-data";
 
 async function retrieveUserAdmin(uid: string): Promise<IUser | void> {
     const userDocRef = firestoreAdmin.collection('users').doc(uid)
@@ -129,4 +129,18 @@ async function retrieveConnectedAccounts(uid: string): Promise<any> {
     return accounts
 }
 
-export { retrieveUserAdmin, retrieveUserRefAdmin, retrieveAuthenticatedUserCount, retrieveUserByKeyAndValueAdmin, retrieveUserSubscriptionCount, retrieveConnectedAccount, retrieveConnectedAccounts };
+
+async function retrieveUserStoreTypes(uid: string, itemType: ItemType) {
+    try {
+        const userItemDocRef = firestoreAdmin.collection(itemType).doc(uid);
+        const subcollections = await userItemDocRef.listCollections();
+
+        const storeTypes = subcollections.map(col => col.id);
+        return storeTypes;
+    } catch (error) {
+        console.error("Error retrieving store types:", error);
+        return null;
+    }
+}
+
+export { retrieveUserAdmin, retrieveUserRefAdmin, retrieveAuthenticatedUserCount, retrieveUserByKeyAndValueAdmin, retrieveUserSubscriptionCount, retrieveConnectedAccount, retrieveConnectedAccounts, retrieveUserStoreTypes };

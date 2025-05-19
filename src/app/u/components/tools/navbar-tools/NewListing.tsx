@@ -81,11 +81,11 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal }) => {
         if (!inventoryItem.storeType) return;
 
         const cacheKey = `${inventoryCacheKey}-${session?.user.id}`;
-        
+
         // Update the cache with the new item
         addCacheData(cacheKey, inventoryItem);
-        
-        const currentStore = session!.user.store?.[inventoryItem.storeType] || {};
+
+        const currentStore = session!.user.store || {};
         const currentNumListings = currentStore.numListings?.manual ?? 0;
 
         await updateSession({
@@ -94,13 +94,11 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal }) => {
                 ...session!.user,
                 store: {
                     ...session!.user.store,
-                    [inventoryItem.storeType]: {
-                        ...currentStore,
-                        numListings: {
-                            ...currentStore.numListings,
-                            manual: currentNumListings + 1
-                        }
-                    },
+                    ...currentStore,
+                    numListings: {
+                        ...currentStore.numListings,
+                        manual: currentNumListings + 1
+                    }
                 },
             },
         });

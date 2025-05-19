@@ -6,6 +6,7 @@ import { firestoreAdmin } from '@/lib/firebase/config-admin';
 import { userProfileImages } from '@/utils/constants';
 import { retrieveStripeCustomer } from '@/services/stripe/retrieve';
 import { generateRandomChars } from '@/utils/generate-random';
+import { formatDateToISO } from '@/utils/format-dates';
 
 
 // This function will run when a new user signs up using Firebase Auth
@@ -18,16 +19,20 @@ export async function createUser(uid: string, email: string): Promise<IUser | vo
         // Get the user document reference
         const userRef = firestoreAdmin.collection('users').doc(uid);
 
+        const now = new Date();
+        const resetDate = formatDateToISO(new Date(now.getFullYear(), now.getMonth() + 1, 1));
+
+
         // Create an empty user object with default values
         const emptyUser = {
             id: uid,
+            username: randomUsername,
+            email: email,
+            stripeCustomerId: customerId,
             connectedAccounts: {
                 discord: null,
                 ebay: null,
             },
-            username: randomUsername,
-            email: email,
-            stripeCustomerId: customerId,
             subscriptions: null,
             referral: {
                 referralCode: referralCode,
@@ -35,7 +40,19 @@ export async function createUser(uid: string, email: string): Promise<IUser | vo
                 validReferrals: [],
                 rewardsClaimed: 0,
             },
-            store: null,
+            store: {
+                numOrders: {
+                    automatic: 0,
+                    manual: 0,
+                    resetDate: resetDate,
+                    totalAutomatic: 0,
+                    totalManual: 0
+                },
+                numListings: {
+                    automatic: 0,
+                    manual: 0
+                }
+            },
             preferences: {
                 currency: 'USD',
             },

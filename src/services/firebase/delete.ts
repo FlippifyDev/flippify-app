@@ -24,7 +24,9 @@ async function deleteItem({ uid, itemType, storeType, docId, isAuto = false }: I
         await deleteDoc(docRef);
 
         // Decrement the item count
-        await updateUserItemCountAdmin({ uid, itemType, storeType, amount: -1, isAuto })
+
+        // For now don't update the count, until a valid solution is found
+        //await updateUserItemCountAdmin({ uid, itemType, amount: -1, isAuto })
         console.log(`Item, with docId ${docId} deleted successfully.`);
     } catch (error) {
         console.error('Error deleting item from Firestore:', error);

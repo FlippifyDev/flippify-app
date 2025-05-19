@@ -3,10 +3,10 @@ import { IUser } from "@/models/user";
 import { firestore } from "@/lib/firebase/config";
 import { createUser } from "./create";
 import { updateStoreInfo } from "../api/request";
-import { IListing, IOrder, StoreType } from "@/models/store-data";
-import { addCacheData, getCachedData, setCachedData, storeDataFetched } from "@/utils/cache-helpers";
+import { IListing, IOrder, ItemType, StoreType } from "@/models/store-data";
 import { inventoryCacheKey, orderCacheKey } from "@/utils/constants";
 import { filterInventoryByTime, filterOrdersByTime } from "@/utils/filters";
+import {  getCachedData, setCachedData, storeDataFetched } from "@/utils/cache-helpers";
 
 // External Imports
 import { collection, doc, DocumentData, DocumentReference, getDoc, getDocs, limit, orderBy, query, QueryConstraint, QueryDocumentSnapshot, startAfter, startAt, where } from 'firebase/firestore';
@@ -643,9 +643,5 @@ async function retrieveOldestOrder({
     }
 }
 
-async function retrieveProducts() {
-    return [];
-}
 
-
-export { retrieveUserAndCreate, retrieveUser, retrieveUserSnapshot, retrieveUserRef, retrieveUserRefById, retrieveProducts, retrieveUserOrders, retrieveUserInventory, retrieveUserOrderItemRef, retrieveUserOrdersInPeriod, retrieveOldestOrder };
+export { retrieveUserAndCreate, retrieveUser, retrieveUserSnapshot, retrieveUserRef, retrieveUserRefById, retrieveUserOrders, retrieveUserInventory, retrieveUserOrderItemRef, retrieveUserOrdersInPeriod, retrieveOldestOrder };

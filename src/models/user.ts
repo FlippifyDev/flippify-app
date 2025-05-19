@@ -10,7 +10,7 @@ interface IUser {
     connectedAccounts?: null;
     stripeCustomerId?: string | null;
     subscriptions?: ISubscription[] | null;
-    store?: Record<StoreType | string, IStore> | null;
+    store?: IStore | null;
     referral?: IReferral | null;
     preferences?: IPreferences | null;
     authentication?: IAuthentication | null;
@@ -33,7 +33,9 @@ interface INumOrders {
 interface IStore {
     numListings?: INumListings | null;
     numOrders?: INumOrders | null;
-    lastFetchedDate?: ILastFetchedDate | null;
+    [key: string]: {
+        lastFetchedDate?: ILastFetchedDate | null;
+    } | INumListings | INumOrders | null | undefined;
 }
 
 interface ILastFetchedDate {

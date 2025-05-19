@@ -5,19 +5,19 @@ import { IOrder } from '@/models/store-data';
 import LoadingSpinner from '@/app/components/LoadingSpinner';
 import { shortenText } from '@/utils/format';
 import UpdateTableField from './UpdateTableField';
+import { getCachedData } from '@/utils/cache-helpers';
 import { formatTableDate } from '@/utils/format-dates';
 import { currencySymbols } from '@/config/currency-config';
 import { retrieveUserOrders } from '@/services/firebase/retrieve';
+import { fetchUserOrdersCount } from '@/utils/extract-user-data';
+import { retrieveUserStoreTypes } from '@/services/firebase/retrieve-admin';
 import { defaultTimeFrom, orderCacheKey } from '@/utils/constants';
-import { fetchUserOrdersCount, fetchUserStores } from '@/utils/extract-user-data';
 
 // External Imports
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { filterInventoryByTime } from '@/utils/filters';
-import { getCachedData } from '@/utils/cache-helpers';
 
 
 const Orders = () => {
@@ -49,8 +49,8 @@ const Orders = () => {
 
             setLoading(true);
 
-            // grab the storeType keys they actually have
-            const storeTypes = fetchUserStores(session.user);
+            const storeTypes = await retrieveUserStoreTypes(session.user?.id as string, "orders");
+            if (!storeTypes) return;
 
             // for each storeType, fetch their orders in parallel
             await Promise.all(
@@ -63,10 +63,17 @@ const Orders = () => {
                 })
             );
 
-            const cache = getCachedData(`${orderCacheKey}-${session.user.id}`);
+            const cache = getCachedData(cacheKey);
             if (cache) {
                 const results = Object.values(cache) as IOrder[];
-                setOrderData(results);
+
+                const sortedResults = results.sort((a, b) => {
+                    const dateA = new Date(a.sale?.date ?? 0).getTime();
+                    const dateB = new Date(b.sale?.date ?? 0).getTime();
+                    return dateB - dateA; // ascending (newest to oldest)
+                });
+
+                setOrderData(sortedResults);
             }
 
             setLoading(false);
@@ -77,7 +84,7 @@ const Orders = () => {
             fetchOrders();
             setTriggerUpdate(false)
         }
-    }, [session?.user, currentPage, orderData, triggerUpdate]);
+    }, [session?.user, currentPage, orderData, triggerUpdate, cacheKey]);
 
     // Handle page change
     const handlePageChange = (newPage: number) => {

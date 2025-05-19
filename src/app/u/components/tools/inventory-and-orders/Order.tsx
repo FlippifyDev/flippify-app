@@ -78,7 +78,6 @@ const Order = () => {
         )
     }
 
-
     async function handleDeleteOrder() {
         setDeleting(true);
         const tid = params?.get("tid");
@@ -90,7 +89,6 @@ const Order = () => {
         }
         setDeleting(false);
     }
-
 
     const handleCameraClick = () => {
         setIsModalOpen(true);

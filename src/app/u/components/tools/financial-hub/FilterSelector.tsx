@@ -6,7 +6,7 @@ import { useState, useRef } from "react";
 
 
 interface FilterSelectorProps {
-    value: string;
+    value: string | null;
     filters: string[];
     onChange: (type: string) => void;
 }
@@ -28,7 +28,7 @@ const FilterSelector: React.FC<FilterSelectorProps> = ({ value, filters, onChang
                 aria-expanded={isOpen}
                 onClick={() => setIsOpen((prev) => !prev)}
             >
-                <span>{value}</span>
+                <span>{value ?? "None"}</span>
                 <svg
                     className={`w-4 h-4 ml-1 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
                     fill="none"
@@ -47,7 +47,7 @@ const FilterSelector: React.FC<FilterSelectorProps> = ({ value, filters, onChang
             >
                 <ul className="" role="listbox">
                     {filters.map((type, index) => (
-                        <div key={index}>
+                        <div key={index} className={`${type === "All" ? "border-b": ""}`}>
                             <li
                                 role="option"
                                 aria-selected={type === value}

@@ -81,7 +81,6 @@ export async function updateReferredByAdmin(uid: string, referredBy: string): Pr
 
 export async function updateUserListingsCountAdmin(
     uid: string,
-    storePlatform: StoreType | string,
     amount: number = 1,
     isAuto: boolean = false
 ): Promise<{ success?: boolean; error?: any }> {
@@ -94,10 +93,8 @@ export async function updateUserListingsCountAdmin(
         // build the dynamic update payload
         const updatePayload = {
             store: {
-                [storePlatform]: {
-                    numListings: {
-                        [counterField]: FieldValue.increment(amount),
-                    },
+                numListings: {
+                    [counterField]: FieldValue.increment(amount),
                 },
             },
         };
@@ -115,24 +112,20 @@ export async function updateUserListingsCountAdmin(
 
 export async function updateUserOrdersCountAdmin(
     uid: string,
-    storePlatform: StoreType,
     amount: number = 1,
     isAuto: boolean = false
 ): Promise<{ success?: boolean; error?: any }> {
     try {
         const userRef = firestoreAdmin.collection('users').doc(uid);
 
-        // pick the right fields
         const counterField = isAuto ? 'automatic' : 'manual';
         const totalCounterField = isAuto ? 'totalAutomatic' : 'totalManual';
 
         const updatePayload = {
             store: {
-                [storePlatform]: {
-                    numOrders: {
-                        [counterField]: FieldValue.increment(amount),
-                        [totalCounterField]: FieldValue.increment(amount),
-                    },
+                numOrders: {
+                    [counterField]: FieldValue.increment(amount),
+                    [totalCounterField]: FieldValue.increment(amount),
                 },
             },
         };
@@ -149,23 +142,21 @@ export async function updateUserOrdersCountAdmin(
 interface IUpdateUserItemCountAdminProps {
     uid: string,
     itemType: ItemType,
-    storeType: StoreType,
     amount: number,
     isAuto: boolean
 }
 export async function updateUserItemCountAdmin({
     uid,
     itemType,
-    storeType,
     amount = 1,
     isAuto = false
 }: IUpdateUserItemCountAdminProps) {
     if (itemType === "inventory") {
-        return await updateUserListingsCountAdmin(uid, storeType, amount, isAuto)
+        return await updateUserListingsCountAdmin(uid, amount, isAuto)
     } else if (itemType === "orders") {
-        return await updateUserOrdersCountAdmin(uid, storeType, amount, isAuto) 
+        return await updateUserOrdersCountAdmin(uid, amount, isAuto)
     }
-}   
+}
 
 /**
  * Updates or deletes a listing in Firestore under `inventory/{uid}/{storePlatform}/{listingId}`.
@@ -208,7 +199,7 @@ export async function updateListingAdmin(uid: string, storePlatform: StoreType, 
             await listingRef.delete();
 
             // Decrement the user's manual listings count when quantity is 0 or less
-            const { success, error } = await updateUserListingsCountAdmin(uid, storePlatform, -1);
+            const { success, error } = await updateUserListingsCountAdmin(uid, -1);
             if (!success) {
                 console.error(`Error decrementing user manual listings count. ${error}`);
                 return { error: `Error decrementing user manual listings count. ${error}` };
@@ -238,31 +229,22 @@ export async function checkAndUpdateResetDates(uid: string): Promise<{ success?:
             return { success: false };
         }
 
-        const userData = snap.data() as { store?: Record<string, any> };
-        const stores = userData.store ?? {};
+        const userData = snap.data() as IUser;
 
         const now = new Date();
         const updates: Record<string, any> = {};
 
-        Object.entries(stores).forEach(([storeKey, storeObj]) => {
-            const numOrders = storeObj.numOrders ?? {};
-            // If no reset date is found, then default it to a month ago so it resets the users orders
-            const resetDateStr = numOrders.resetDate ?? new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        const numOrders = userData.store?.numOrders ?? {};
+        const resetDateStr = numOrders.resetDate ?? new Date(now.getFullYear(), now.getMonth() - 1, 1);
 
-            const resetDate = new Date(resetDateStr);
-            if (resetDate < now) {
-                // compute first day of next month
-                const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+        const resetDate = new Date(resetDateStr);
+        if (resetDate < now) {
+            const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
 
-                // prepare nested update path: `store.{storeKey}.numOrders`
-                const base = `store.${storeKey}.numOrders`;
-                updates[`${base}.resetDate`] = formatDateToISO(nextMonth);
-                updates[`${base}.automatic`] = 0;
-                updates[`${base}.manual`] = 0;
-            }
-        });
+            updates['store.numOrders.resetDate'] = formatDateToISO(nextMonth);
+            updates['store.numOrders.automatic'] = 0;
+            updates['store.numOrders.manual'] = 0;
 
-        if (Object.keys(updates).length > 0) {
             await userRef.update(updates);
         }
 

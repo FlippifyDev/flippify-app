@@ -152,39 +152,25 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
 
         const orderCache = `${orderCacheKey}-${session.user.id}`;
 
-        // Add multiple order items to cache
         orderItems.forEach(item => addCacheData(orderCache, item));
 
-        // Dynamically update counts per store type
-        const updatedStore = { ...session.user.store };
+        const count = orderItems.length;
 
-        // Group items by storeType
-        const countsByStore: Record<string, number> = {};
-        orderItems.forEach(item => {
-            if (!item.storeType) return;
-            countsByStore[item.storeType] = (countsByStore[item.storeType] || 0) + 1;
-        });
+        const manual = session.user.store?.numOrders?.manual ?? 0;
+        const totalManual = session.user.store?.numOrders?.totalManual ?? 0;
 
-        Object.entries(countsByStore).forEach(([storeType, count]) => {
-            const current = session.user.store?.[storeType] || {};
-            const manual = current.numOrders?.manual ?? 0;
-            const totalManual = current.numOrders?.totalManual ?? 0;
-            updatedStore[storeType] = {
-                ...current,
-                numOrders: {
-                    ...current.numOrders,
-                    manual: manual + count,
-                    totalManual: totalManual + count,
-                },
-            };
-        });
+        const updatedNumOrders = {
+            ...session.user.store?.numOrders,
+            manual: manual + count,
+            totalManual: totalManual + count,
+        };
 
         // Commit session update
         await updateSession({
             ...session,
             user: {
                 ...session.user,
-                store: updatedStore,
+                numOrders: updatedNumOrders,
             },
         });
     }

@@ -16,15 +16,19 @@ function escapeCSVField(value: any): string {
 
 // Function to format orders for CSV export
 function formatOrdersForCSVExport(orders: IOrder[], timeFrom: string, timeTo: string): string | null {
+    console.log(orders)
+
     // Create the CSV header with new columns for Profit and ROI
     const csvHeader = [
         "Transaction ID",
         "Order ID",
         "Item Name",
+        "Purchase Platform",
         "Purchase Price",
         "Purchase Quantity",
         "Sale Price",
         "Sale Quantity",
+        "Sale Platform",
         "Shipping Fees",
         "Shipping Time (Days)",
         "Tracking Number",
@@ -80,11 +84,12 @@ function formatOrdersForCSVExport(orders: IOrder[], timeFrom: string, timeTo: st
             `"\'${transactionId}"`,
             `"\'${orderId}"`,
             escapeCSVField(name ?? "N/A"),
-            escapeCSVField(storeType ?? "N/A"),
+            escapeCSVField(purchase?.platform ?? "N/A"),
             purchasePrice, 
             purchase?.quantity ?? "N/A",
             sale?.price ? sale.price.toFixed(2) : "N/A",
             sale?.quantity ? sale.quantity : "N/A",
+            escapeCSVField(sale?.platform ?? "N/A"),
             shipping?.fees ? shipping.fees : "N/A",
             shipping?.timeDays ? shipping.timeDays : "N/A", 
             shipping?.trackingNumber ? shipping.trackingNumber : "N/A",

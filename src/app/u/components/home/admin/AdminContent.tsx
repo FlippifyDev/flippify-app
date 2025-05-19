@@ -1,7 +1,6 @@
 "use client";
 
 // Local Imports
-import { retrieveProducts } from "@/services/firebase/retrieve";
 import PlansCardAdmin from "@/app/u/components/home/admin/AdminUserCards";
 import LayoutProductsSkeleton from "../../layout/LayoutProductsSkeleton";
 import { IUser, ISubscription } from "@/models/user";
@@ -23,9 +22,9 @@ const AdminContent = () => {
                 const res = await fetch("/api/users");
                 if (!res.ok) throw new Error("Network response was not ok");
                 const data = await res.json();
-                const uniqueSubscriptions = await retrieveProducts();
-                setUsers(data.users || []);
-                setSubscriptions(uniqueSubscriptions || []);
+                //const uniqueSubscriptions = await retrieveProducts();
+                //setUsers(data.users || []);
+                //setSubscriptions(uniqueSubscriptions || []);
             } catch (error) {
                 console.error("Error fetching users:", error);
             }

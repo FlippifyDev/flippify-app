@@ -86,7 +86,20 @@ const Page = () => {
             if (cache) {
                 const results = Object.values(cache) as IOrder[];
                 
-                const filteredOrders = results.filter(order => order.storeType === selectedFilter || selectedFilter === "All");
+                const filteredOrders = results.filter(order => {
+                    const matchesStore = selectedFilter === "All" || order.storeType === selectedFilter;
+                    
+                    if (!order.sale?.date) return;
+                    const orderDate = new Date(order.sale.date);
+                    const from = new Date(timeFrom);
+                    const to = new Date(timeTo);
+
+                    const matchesTime =
+                        (!timeFrom || orderDate >= from) &&
+                        (!timeTo || orderDate <= to);
+
+                    return matchesStore && matchesTime;
+                });
                 
                 setOrders(filteredOrders); 
                 setLoading(false);

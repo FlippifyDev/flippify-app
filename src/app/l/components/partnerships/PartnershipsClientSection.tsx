@@ -11,28 +11,6 @@ const inter = Inter({ subsets: ["latin"] });
 const OurPartnersContent = () => {
     return (
         <div className="our-partners-container">
-            <Hero
-                text={[
-                    { text: "Meet our" }, 
-                    { text: "trusted" }, 
-                    { text: "Flippify", isGradient: true }, 
-                    { text: "partners" }
-                ]}
-                description="Discover the community of industry leaders and reselling experts who trust and collaborate with Flippify to empower eBay sellers around the world."
-                button={
-                    <Link 
-                        href="/l/partnerships/become-a-partner" 
-                        className="flex items-center gap-2 bg-houseBlue hover:bg-houseHoverBlue text-white font-semibold py-3 px-6 rounded-full transition duration-300"
-                    >
-                        Become a Partner
-                        <FaArrowRight className="text-sm" />
-                    </Link>
-                }
-                image="/hero/our-partners.svg"
-                imageAlt="Flippify Partner Network"
-                imageContainerClassName="scale-125"
-            />
-            
             <div className="w-full max-w-7xl mx-auto px-6 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-16 sm:py-20 md:py-24">
                 <h2 className={`${inter.className} text-3xl sm:text-4xl md:text-4xl font-bold text-left text-lightModeText mb-4 sm:mb-6 md:mb-8`}>
                     Partner Showcase Coming Soon

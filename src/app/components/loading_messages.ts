@@ -213,7 +213,6 @@ export const jokes = [
     "Digested cookies being baked again.",
     "Live long and prosper.",
     "There is no cow level, but there's a goat one!",
-    "Deleting all your hidden porn...",
     "Running with scissors...",
     "Definitely not a virus...",
     "You may call me Steve.",

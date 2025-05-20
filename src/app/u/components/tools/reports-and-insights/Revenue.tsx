@@ -11,7 +11,7 @@ const Revenue = ({ sales, formatter }: { sales: IOrder[], formatter: Intl.Number
 
     return (
         <div className="space-y-1">
-            <div className='flex flex-row justify-between mb-2 text-green-500'>
+            <div className='flex flex-row justify-between mb-2 text-[#0D3B66]'>
                 <h3 className="text-2xl font-bold">Income</h3>
                 <p className="text-lg font-semibold">{formatter.format(totalRevenue)}</p>
             </div>

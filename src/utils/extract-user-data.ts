@@ -1,6 +1,5 @@
 import * as constants from '@/utils/constants';
-import { IStore, ISubscription, IUser } from "@/models/user";
-import { StoreType } from '@/models/store-data';
+import { ISubscription, IUser } from "@/models/user";
 
 /**
  * Fetches the user's member subscriptions
@@ -18,7 +17,7 @@ export function fetchSubscriptionMaxListings(subscription: ISubscription) {
                 automatic: constants.STANDARD_MAX_AUTOMATIC_LISTINGS,
                 manual: constants.STANDARD_MAX_MANUAL_LISTINGS
             }
-        case 'Premium - member':
+        case 'Pro - member':
             return {
                 automatic: constants.PREMIUM_MAX_AUTOMATIC_LISTINGS,
                 manual: constants.PREMIUM_MAX_MANUAL_LISTINGS

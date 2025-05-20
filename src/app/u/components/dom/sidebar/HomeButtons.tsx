@@ -19,7 +19,7 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
 				text="Dashboard"
 				redirect="dashboard"
 				isSidebarOpen={isSidebarOpen}
-                symbol={<FaGlobe className="text-lg" />}
+                symbol={<FaGlobe className="text-base" />}
 			/>
 
             {/* Plans - Public*/}
@@ -28,7 +28,7 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
                     text="Plans"
                     redirect="plans"
                     isSidebarOpen={isSidebarOpen}
-                    symbol={<FaSearch className="text-lg" />}
+                    symbol={<FaSearch className="text-base" />}
                 />
             </LayoutSubscriptionWrapper>
 
@@ -38,7 +38,7 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
 					text="Activity Log"
 					redirect="activity-log"
 					isSidebarOpen={isSidebarOpen}
-					symbol={<MdStickyNote2 className="text-lg" />}
+                    symbol={<MdStickyNote2 className="text-base" />}
 					tooltip="Coming Soon"
 				/>
 			</LayoutSubscriptionWrapper>
@@ -49,7 +49,7 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
 					text="Activity Log"
 					redirect="activity-log"
 					isSidebarOpen={isSidebarOpen}
-					symbol={<MdStickyNote2 className="text-xl" />}
+					symbol={<MdStickyNote2 className="text-lg" />}
 				/>
 			</LayoutSubscriptionWrapper>
 
@@ -59,7 +59,7 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
 					text="Reports & Insights"
 					redirect="reports-and-insights"
 					isSidebarOpen={isSidebarOpen}
-					symbol={<HiDocumentReport className="text-2xl" />}
+					symbol={<HiDocumentReport className="text-xl" />}
                     tooltip="Your subscription does not include this"
 
 				/>
@@ -71,7 +71,7 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
 					text="Reports & Insights"
 					redirect="reports-and-insights"
 					isSidebarOpen={isSidebarOpen}
-					symbol={<HiDocumentReport className="text-2xl" />}
+					symbol={<HiDocumentReport className="text-xl" />}
 				/>
 			</LayoutSubscriptionWrapper>
 
@@ -81,7 +81,7 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
 					text="Help & Resources"
 					redirect="help-and-resources"
 					isSidebarOpen={isSidebarOpen}
-					symbol={<FaBook className="text-lg" />}
+                    symbol={<FaBook className="text-base" />}
 					tooltip="Coming Soon"
 				/>
 			</LayoutSubscriptionWrapper>
@@ -92,7 +92,7 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
 					text="Help & Resources"
 					redirect="help-and-resources"
 					isSidebarOpen={isSidebarOpen}
-					symbol={<FaBook className="text-lg" />}
+                    symbol={<FaBook className="text-base" />}
 				/>
 			</LayoutSubscriptionWrapper>
     	</div>

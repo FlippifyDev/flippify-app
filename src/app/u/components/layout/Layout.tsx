@@ -4,13 +4,13 @@ import React, { Suspense, useState, useEffect } from "react";
 
 import LayoutSubscriptionWrapper from "./LayoutSubscriptionWrapper";
 import LayoutLoadingSkeleton from "./LayoutLoadingSkeleton";
-import LightHamburgerButton from "@/app/components/LightHamburgerButton";
 import LayoutNoAccess from "./LayoutNoAccess";
 import NewListing from "../tools/navbar-tools/NewListing";
 import NewOrder from "../tools/navbar-tools/NewOrder";
 import Sidebar from "../dom/sidebar/Sidebar";
 import Navbar from "../dom/navbar/Navbar";
 import UploadOrders from "../tools/navbar-tools/UploadOrders";
+import DarkHamburgerButton from "@/app/components/DarkHamburgerButton";
 
 
 interface LayoutProps {
@@ -63,10 +63,10 @@ const LayoutContent = ({ removePadding, children }: { removePadding?: boolean, c
             {/* Content area */}
             <section className={`flex flex-col flex-grow transition-all duration-300 w-full h-screen ${isSidebarOpen ? 'sm:pl-72 2xl:pl-80' : 'sm:pl-16'}`}>
                 {/* Navbar */}
-                <div className="w-full h-14 bg-white z-30 sticky top-0 flex flex-row">
+                <div className="w-full h-14 border-b border-uiBorder bg-black z-30 sticky top-0 flex flex-row">
                     {/* Hamburger Icon for Mobile */}
                     <div className={`sm:hidden transition-all duration-500 ml-1 flex items-center justicy-center ${isSidebarOpen ? 'hidden' : 'block px-1'}`}>
-                        <LightHamburgerButton isActive={isSidebarOpen} onClick={() => setIsSidebarOpen(!isSidebarOpen)} />
+                        <DarkHamburgerButton isActive={isSidebarOpen} onClick={() => setIsSidebarOpen(!isSidebarOpen)} />
                     </div>
                     <Navbar handleDisplayModal={handleDisplayModal} />
                 </div>

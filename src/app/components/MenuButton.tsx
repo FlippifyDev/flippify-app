@@ -13,10 +13,10 @@ interface MenuButtonProps {
 
 const MenuButton: React.FC<MenuButtonProps> = ({ isSidebarOpen, onClick }) => {
     return (
-        <div className={`relative w-full h-full transition-all duration-500 ${isSidebarOpen ? 'pl-2' : 'sm:flex sm:justify-center hidden'}`}>
+        <div className={`relative w-full h-full transition-all duration-500 sm:flex sm:items-center ${isSidebarOpen ? 'pl-2' : 'sm:justify-center hidden'}`}>
             <Link
                 href="/"
-                className={`absolute text-white text-3xl ease-in ${isSidebarOpen ? 'opacity-100 delay-100 transition-all duration-500' : 'opacity-0'} ${lato.className}`}
+                className={`absolute text-white text-2xl ease-in ${isSidebarOpen ? 'opacity-100 delay-100 transition-all duration-500' : 'opacity-0'} ${lato.className}`}
             >
                 flippify
             </Link>

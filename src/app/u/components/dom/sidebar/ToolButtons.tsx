@@ -23,7 +23,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 					text="Financial Hub"
 					redirect="tools/sales-tracker"
 					isSidebarOpen={isSidebarOpen}
-					symbol={<FaChartPie className="text-lg" />}
+                    symbol={<FaChartPie className="text-base" />}
                     tooltip="Subscription Required"
 				/>
 			</LayoutSubscriptionWrapper>
@@ -34,7 +34,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 					text="Financial Hub"
 					redirect="tools/financial-hub"
 					isSidebarOpen={isSidebarOpen}
-					symbol={<FaChartPie className="text-lg" />}
+                    symbol={<FaChartPie className="text-base" />}
 				/>
 			</LayoutSubscriptionWrapper>
 
@@ -44,7 +44,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 					text="Inventory & Orders"
 					redirect="tools/inventory-and-orders"
 					isSidebarOpen={isSidebarOpen}
-					symbol={<FaBoxOpen className="text-xl" />}
+					symbol={<FaBoxOpen className="text-lg" />}
 					tooltip="Subscription Required"
 				/>
 			</LayoutSubscriptionWrapper>
@@ -55,7 +55,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 					text="Inventory & Orders"
 					redirect="tools/inventory-and-orders"
 					isSidebarOpen={isSidebarOpen}
-					symbol={<FaBoxOpen className="text-xl" />}
+					symbol={<FaBoxOpen className="text-lg" />}
 				/>
 			</LayoutSubscriptionWrapper>
 
@@ -65,7 +65,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 					text="Listings Manager"
 					redirect="tools/listings"
 					isSidebarOpen={isSidebarOpen}
-					symbol={<AiFillProduct className="text-xl" />}
+					symbol={<AiFillProduct className="text-lg" />}
 					tooltip="Coming Soon"
 				/>
 			</LayoutSubscriptionWrapper>
@@ -76,7 +76,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 					text="Listings Manager"
 					redirect="tools/listings"
 					isSidebarOpen={isSidebarOpen}
-					symbol={<AiFillProduct className="text-xl" />}
+					symbol={<AiFillProduct className="text-lg" />}
 				/>
 			</LayoutSubscriptionWrapper>
 
@@ -86,7 +86,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 					text="Shipping & Fulfillment"
 					redirect="tools/shipping-and-fulfillment"
 					isSidebarOpen={isSidebarOpen}
-					symbol={<MdLocalShipping className="text-xl" />}
+					symbol={<MdLocalShipping className="text-lg" />}
 					tooltip="Coming Soon"
 				/>
 			</LayoutSubscriptionWrapper>
@@ -97,7 +97,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 					text="Shipping & Fulfillment"
 					redirect="tools/shipping-and-fulfillment"
 					isSidebarOpen={isSidebarOpen}
-					symbol={<MdLocalShipping className="text-xl" />}
+                    symbol={<MdLocalShipping className="text-lg" />}
 				/>
 			</LayoutSubscriptionWrapper>
 
@@ -107,7 +107,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 					text="Account Center"
 					redirect="tools/account-center"
 					isSidebarOpen={isSidebarOpen}
-					symbol={<FaStore className="text-xl" />}
+                    symbol={<FaStore className="text-lg" />}
 					tooltip="Coming Soon"
 				/>
 			</LayoutSubscriptionWrapper>
@@ -118,7 +118,7 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 					text="Account Center"
 					redirect="tools/account-center"
 					isSidebarOpen={isSidebarOpen}
-					symbol={<FaStore className="text-xl" />}
+                    symbol={<FaStore className="text-lg" />}
 				/>
 			</LayoutSubscriptionWrapper>
 		</div>

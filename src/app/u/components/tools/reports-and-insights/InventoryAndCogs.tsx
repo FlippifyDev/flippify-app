@@ -51,7 +51,7 @@ const InventoryAndCogs: React.FC<InventoryAndCogsProps> = ({
 
     return (
         <div className="space-y-1">
-            <div className='flex flex-row justify-between text-red-500 mb-2'>
+            <div className='flex flex-row justify-between text-[#89C2D9] mb-2'>
                 <h3 className="text-2xl font-bold">Inventory and COGS</h3>
                 <p className="text-lg font-semibold">{formatter.format(cogs)}</p>
             </div>

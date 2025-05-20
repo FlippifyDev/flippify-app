@@ -15,7 +15,7 @@ import { IoMenu } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
 import { ImBubble } from "react-icons/im";
 import { IoMdPricetags } from "react-icons/io";
-import { MdAccountBalance } from "react-icons/md";
+import { MdAccountBalance, MdOutlineBubbleChart } from "react-icons/md";
 import { PiRoadHorizonFill } from "react-icons/pi";
 import { FaBook, FaStore, FaBoxes, FaFileAlt, FaPenFancy, FaRss } from "react-icons/fa";
 import { FaBoxOpen, FaParachuteBox, FaHandshakeSimple } from "react-icons/fa6";
@@ -85,7 +85,7 @@ const Navbar = () => {
             label: "Blog",
             description: "Latest tips, updates & stories from Flippify",
             href: "/l/blog",
-            icon: <FaFileAlt className="text-lg" />,
+            icon: <MdOutlineBubbleChart className="text-lg" />,
         },
         {
             label: "About Us",

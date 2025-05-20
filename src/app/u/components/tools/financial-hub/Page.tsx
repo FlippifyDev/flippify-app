@@ -102,8 +102,8 @@ const Page = () => {
                 });
                 
                 setOrders(filteredOrders); 
-                setLoading(false);
             }
+            setLoading(false);
         }
 
         if (subscribed) {

@@ -34,10 +34,10 @@ const DisabledSideBarButton: React.FC<DisabledSideBarButtonProps> = ({
     };
 
     return (
-        <div className="relative group">
+        <div className="relative group flex items-center justify-center">
             <button
-                className={`relative z-50 w-full flex justify-start items-center gap-4 py-2 ${isSidebarOpen ? "px-2" : "pl-2"
-                    } bg-deepBlue text-gray-600 rounded-md cursor-pointer transition duration-200`}
+                className={`relative z-50 flex justify-start items-center gap-4 p-1 ${isSidebarOpen ? "justify-start w-full" : "justify-center"
+                    } bg-black text-gray-600 rounded-md cursor-pointer transition duration-200`}
                 onClick={handleButtonClick}
             >
                 {/* Icon container with fixed dimensions */}

@@ -174,6 +174,7 @@ const PlansContent = () => {
             <PricingComparisonTable
                 selectedPlan={selectedPlan}
                 currency={currency}
+                conversionRates={conversionRates}
                 currencySymbol={currencySymbols[currency]}
             />
         </div>

@@ -1,18 +1,24 @@
 import React from 'react';
 import { Inter } from 'next/font/google';
+import { fetchConversionRates } from '@/utils/currency-api';
 
 const inter = Inter({ subsets: ['latin'] });
 
 interface PricingComparisonTableProps {
     selectedPlan: number;
     currency: string;
+    conversionRates: Record<string, number>;
     currencySymbol: string;
 }
 
 const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
     selectedPlan,
+    currency,
+    conversionRates,
     currencySymbol
 }) => {
+    const rate = conversionRates[currency] ?? 1;
+
     return (
         <div className="w-full max-w-7xl mx-auto px-6 sm:px-6 md:px-8 lg:px-10 xl:px-12 mt-16 animate-fadeInBounce">
             <h2 className={`${inter.className} text-3xl font-bold text-lightModeText mb-6`}>
@@ -36,20 +42,20 @@ const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
                                 <div className="text-xl font-bold">Standard</div>
                                 <div className="text-sm">For growing sellers</div>
                                 <div className="text-lg font-bold mt-2">
-                                    {currencySymbol}{selectedPlan === 0 ? '4.99' : '49.90'}<span className="text-sm font-medium">/{selectedPlan === 0 ? 'mo' : 'yr'}</span>
+                                    {currencySymbol}{selectedPlan === 0 ? (4.99 * rate).toFixed(2) : (49.90 * rate).toFixed(2)}<span className="text-sm font-medium">/{selectedPlan === 0 ? 'mo' : 'yr'}</span>
                                 </div>
                                 <div className="text-xs text-gray-500 line-through">
-                                    {currencySymbol}{selectedPlan === 0 ? '9.99' : '99.90'}
+                                    {currencySymbol}{selectedPlan === 0 ? (9.99 * rate).toFixed(2) : (99.90 * rate).toFixed(2)}
                                 </div>
                             </th>
                             <th className="w-1/4 py-5 px-6 text-center text-gray-700 bg-gray-50">
                                 <div className="text-xl font-bold">Pro</div>
                                 <div className="text-sm">For experts</div>
                                 <div className="text-lg font-bold mt-2">
-                                    {currencySymbol}{selectedPlan === 0 ? '9.99' : '99.90'}<span className="text-sm font-medium">/{selectedPlan === 0 ? 'mo' : 'yr'}</span>
+                                    {currencySymbol}{selectedPlan === 0 ? (9.99 * rate).toFixed(2) : (99.90 * rate).toFixed(2)}<span className="text-sm font-medium">/{selectedPlan === 0 ? 'mo' : 'yr'}</span>
                                 </div>
                                 <div className="text-xs text-gray-500 line-through">
-                                    {currencySymbol}{selectedPlan === 0 ? '19.99' : '199.90'}
+                                    {currencySymbol}{selectedPlan === 0 ? (19.99 * rate).toFixed(2) : (199.90 * rate).toFixed(2)}
                                 </div>
                             </th>
                         </tr>

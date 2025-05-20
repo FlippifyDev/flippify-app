@@ -69,6 +69,8 @@ const config: Config = {
 				'right-lg': '10px 0 15px -3px rgba(0, 0, 0, 0.3), 4px 0 6px -2px rgba(0, 0, 0, 0.2)',
 			},
 			colors: {
+                offWhite: '#b8bdc5',
+                uiBorder: '#1E242D',
 				primary: '#5865F2',
 				white: '#ffffff',
                 darkGrey: "#1c1c1c",

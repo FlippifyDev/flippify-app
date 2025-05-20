@@ -111,10 +111,10 @@ const Page = () => {
                                         ))}
                                     </table>
                                     <div className='mt-4 flex justify-end'>
-                                        <div className="join h-10">
-                                            <button className='join-item btn' onClick={() => setActivePage(prev => Math.max(prev - 1, 1))} disabled={activePage === 1}>«</button>
-                                            <button className="join-item btn">{activePage} / {totalActivePages}</button>
-                                            <button className='join-item btn' onClick={() => setActivePage(prev => Math.min(prev + 1, totalActivePages))} disabled={activePage === totalActivePages}>»</button>
+                                            <div className="flex flex-row items-center">
+                                                <button className='rounded-l flex items-center justify-center p-2 h-8 w-8 bg-gray-200 hover:bg-gray-300 active:bg-gray-200' onClick={() => setActivePage(prev => Math.max(prev - 1, 1))} disabled={activePage === 1}>«</button>
+                                                <button className="p-2 h-8 flex items-center justify-center bg-gray-200 text-sm font-semibold">{activePage} / {totalActivePages}</button>
+                                                <button className='rounded-r flex items-center justify-center p-2 h-8 w-8 bg-gray-200 hover:bg-gray-300 active:bg-gray-200' onClick={() => setActivePage(prev => Math.min(prev + 1, totalActivePages))} disabled={activePage === totalActivePages}>»</button>
                                         </div>
                                     </div>
                                 </>
@@ -152,10 +152,10 @@ const Page = () => {
                                         ))}
                                     </table>
                                     <div className='mt-4 flex justify-end'>
-                                        <div className="join h-10">
-                                            <button className='join-item btn' onClick={() => setShippedPage(prev => Math.max(prev - 1, 1))} disabled={shippedPage === 1}>«</button>
-                                            <button className="join-item btn">{shippedPage} / {totalShippedPages}</button>
-                                            <button className='join-item btn' onClick={() => setShippedPage(prev => Math.min(prev + 1, totalShippedPages))} disabled={shippedPage === totalShippedPages}>»</button>
+                                        <div className="flex flex-row items-center">
+                                            <button className='rounded-l flex items-center justify-center p-2 h-8 w-8 bg-gray-200 hover:bg-gray-300 active:bg-gray-200' onClick={() => setShippedPage(prev => Math.max(prev - 1, 1))} disabled={shippedPage === 1}>«</button>
+                                            <button className='p-2 h-8 flex items-center justify-center bg-gray-200 text-sm font-semibold'>{shippedPage} / {totalShippedPages}</button>
+                                            <button className='rounded-r flex items-center justify-center p-2 h-8 w-8 bg-gray-200 hover:bg-gray-300 active:bg-gray-200' onClick={() => setShippedPage(prev => Math.min(prev + 1, totalShippedPages))} disabled={shippedPage === totalShippedPages}>»</button>
                                         </div>
                                     </div>
                                 </>

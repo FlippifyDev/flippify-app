@@ -34,25 +34,25 @@ const Navbar: React.FC<NavbarProps> = ({ handleDisplayModal }) => {
 
     return (
         <div className="h-14 w-full flex flex-row items-center">
-            <div className="w-full pl-4 sm:pl-12 font-semibold text-lg">
+            <div className="hidden sm:block w-full pl-4 sm:pl-12 font-semibold text-base text-white">
                 {title.replace("And", "&")}
             </div>
             <div className="w-full flex justify-end pr-2 items-center">
-                <div className="flex justify-end items-center mr-4 gap-4">
+                <div className="flex justify-end items-center mr-4 gap-1 text-offWhite text-[33px]">
                     <NabarItem
                         title="Upload Sales"
                         isSubscribed={isSubscribed}
-                        icon={<RiFolderUploadLine className="text-xl hover:text-gray-800 text-black" onClick={() => handleOnClick("upload-orders")} />}
+                        icon={<RiFolderUploadLine className="p-2 hover:bg-muted/10 rounded" onClick={() => handleOnClick("upload-orders")} />}
                     />
                     <NabarItem
                         title="Add To Inventory"
                         isSubscribed={isSubscribed}
-                        icon={<GrChapterAdd className="text-xl hover:text-gray-800 " onClick={() => handleOnClick("add-listing")} />}
+                        icon={<GrChapterAdd className="p-2 hover:bg-muted/10 rounded" onClick={() => handleOnClick("add-listing")} />}
                     />
                     <NabarItem
                         title="Add To Orders"
                         isSubscribed={isSubscribed}
-                        icon={<BiBookAdd className="text-xl hover:text-gray-800 text-black" onClick={() => handleOnClick("add-order")} />}
+                        icon={<BiBookAdd className="p-2 hover:bg-muted/10 rounded" onClick={() => handleOnClick("add-order")} />}
                     />
                 </div>
                 <div className="flex justify-end pr-2">

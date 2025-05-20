@@ -44,22 +44,22 @@ const SidebarButton: React.FC<SidebarButtonProps> = ({
 	};
 
 	return (
-		<div className="relative group">
+        <div className="relative group flex items-center justify-center">
 			{/* Button */}
 			<button
-                className={`relative z-50 w-full flex justify-start items-center gap-4 py-2 ${isSidebarOpen ? 'px-2' : 'pl-2'} active:bg-gray-700 hover:bg-gray-800 rounded-md transition duration-200 ${isActive ? 'text-white' : 'bg-deepBlue text-gray-400'}`}
+                className={`relative z-50 flex items-center gap-4 p-1 ${isSidebarOpen ? 'justify-start w-full' : 'justify-center'} active:bg-muted/30 hover:bg-muted/10 rounded-md transition duration-200 ${isActive ? 'text-white' : 'bg-black text-gray-400'}`}
 				onClick={handleClick}
 			>
 				{/* Icon */}
 				<span
-					className={`w-8 h-8 flex justify-center items-center ${isActive ? 'text-houseBlue' : 'text-gray-400'}`}
+					className={`w-8 h-8 flex justify-center items-center ${isActive ? 'text-houseBlue' : 'text-offWhite'}`}
 				>
 					{symbol}
 				</span>
 
 				{/* Text */}
 				<span
-                    className={`absolute left-14 text-base text-left ${isActive ? 'font-semibold' : 'font-medium'} ${isSidebarOpen ? 'opacity-100 max-w-full delay-100' : 'opacity-0 max-w-0'} transition-all duration-150 ease-in-out overflow-hidden`}
+                    className={`absolute left-14 text-sm text-left ${isActive ? 'font-semibold' : 'font-medium'} ${isSidebarOpen ? 'opacity-100 max-w-full delay-100' : 'opacity-0 max-w-0'} transition-all duration-150 ease-in-out overflow-hidden`}
 					style={{
 						whiteSpace: 'nowrap',
 					}}

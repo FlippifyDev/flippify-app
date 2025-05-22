@@ -7,7 +7,6 @@ import Input from "../../dom/ui/Input"
 import ImageUpload from "../../dom/ui/ImageUpload"
 import { IListing } from "@/models/store-data"
 import { addCacheData } from "@/utils/cache-helpers"
-import { updateListing } from "@/services/firebase/update"
 import { formatDateToISO } from "@/utils/format-dates"
 import { inventoryCacheKey } from "@/utils/constants"
 import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput } from "@/utils/input-validation"
@@ -17,15 +16,17 @@ import { FormEvent, useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
 import { updateMovedItemAdmin } from "@/services/firebase/create-admin"
+import { MdImageNotSupported } from "react-icons/md"
 
 
 interface EditListingProps {
     fillItem: IListing;
     setDisplayModal: (value: boolean) => void;
+    setTriggerUpdate: (value: boolean) => void;
 }
 
 
-const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal }) => {
+const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal, setTriggerUpdate }) => {
     const { data: session } = useSession();
 
     // General Info
@@ -123,6 +124,8 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal }) 
         }
 
         setLoading(false);
+        setTriggerUpdate(true);
+        setDisplayModal(false);
     }
 
     function handleChange(value: string, type: string) {
@@ -190,16 +193,8 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal }) 
                 <hr />
                 <div className="w-full flex flex-row gap-4 justify-between items-center">
                     <div className="flex flex-row gap-2">
-                        <div className='flex items-center'>
-                            <button
-                                type="button"
-                                className="bg-houseBlue text-white text-sm py-2 px-4 rounded-md hover:bg-houseHoverBlue transition duration-200"
-                                onClick={() => setIsModalOpen(true)}>
-                                {imageUrl ? "Change Image" : "Upload Image"}
-                            </button>
-                        </div>
                         {imageUrl && (
-                            <figure className="border-[3px] rounded-full">
+                            <figure className="cursor-pointer hover:scale-105 transition duration-100 border-[3px] rounded-full" onClick={() => setIsModalOpen(true)}>
                                 <Image
                                     src={imageUrl}
                                     alt="Uploaded Image"
@@ -209,12 +204,17 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal }) 
                                 />
                             </figure>
                         )}
+                            {!imageUrl && (
+                                <div className='cursor-pointer hover:scale-105 transition duration-100 border-[3px] w-10 h-10 rounded-full flex justify-center items-center' onClick={() => setIsModalOpen(true)}>
+                                    <MdImageNotSupported className='text-gray-200' />
+                                </div>
+                            )}
                     </div>
                     <div>
                         <button
                             type="submit"
                             disabled={loading || !itemName || !itemId || !listingPrice || !quantity || !dateListed}
-                            className="disabled:bg-gray-600 disabled:pointer-events-none bg-houseBlue text-white text-sm py-2 px-4 rounded-md hover:bg-houseHoverBlue transition duration-200"
+                            className="disabled:bg-muted disabled:pointer-events-none bg-houseBlue text-white text-sm py-2 px-4 rounded-md hover:bg-houseHoverBlue transition duration-200"
                         >
                             {successMessage ? successMessage : loading ? "Updating..." : "Edit Listing"}
                         </button>

@@ -142,23 +142,7 @@ const PlansPage = () => {
                     </div>
                 </Modal>
             )}
-            <div className="flex flex-col items-center space-y-5 text-center mt-6">
-                <div className="flex flex-wrap justify-center">
-                    <p
-                        className={`${lato.className} text-4xl sm:text-5xl w-4/5 sm:w-full text-gradient bg-gradient-to-tr from-houseBlue to-houseHoverBlue bg-clip-text text-transparent py-1`}
-                    >
-                        Pricing
-                        <a className={`${inter.className} text-lightModeText text-4xl sm:text-5xl font-bold`}>
-                            {" "}
-                            Made Easy
-                        </a>
-                    </p>
-                </div>
-                <div className="flex justify-center w-4/5 sm:w-full">
-                    <p className="mx-4 mt-[-12px] mb-2 sm:mx-2 text-lightModeText text-md sm:text-lg text-center">
-                        Flexible Plans for every Seller: From Beginners to Experts
-                    </p>
-                </div>
+            <div className="w-full flex flex-col items-center space-y-5 mt-6">
                 <div className="flex justify-center w-4/5 sm:w-full">
                     <label className="inline-flex items-center cursor-pointer">
                         <input

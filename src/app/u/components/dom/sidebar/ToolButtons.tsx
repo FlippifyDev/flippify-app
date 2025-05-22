@@ -3,7 +3,7 @@ import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import SidebarButton from "./Button";
 import { AiFillProduct } from "react-icons/ai";
 import { FaBoxOpen } from "react-icons/fa6";
-import { FaStore, FaChartPie } from "react-icons/fa";
+import { FaStore, FaChartPie, FaDatabase } from "react-icons/fa";
 import { MdLocalShipping } from "react-icons/md";
 
 interface SidebarToolButtonsProps {
@@ -58,6 +58,28 @@ const SidebarToolButtons: React.FC<SidebarToolButtonsProps> = ({
 					symbol={<FaBoxOpen className="text-lg" />}
 				/>
 			</LayoutSubscriptionWrapper>
+
+
+            {/* Expenses Button - Public */}
+            <LayoutSubscriptionWrapper requiredSubscriptions={["!admin", "!member"]}>
+                <DisabledSideBarButton
+                    text="Expenses"
+                    redirect="tools/expenses"
+                    isSidebarOpen={isSidebarOpen}
+                    symbol={<FaDatabase className="text-base" />}
+                    tooltip="Subscription Required"
+                />
+            </LayoutSubscriptionWrapper>
+
+            { }
+            <LayoutSubscriptionWrapper anySubscriptions={["admin", "member"]}>
+                <SidebarButton
+                    text="Expenses"
+                    redirect="tools/expenses"
+                    isSidebarOpen={isSidebarOpen}
+                    symbol={<FaDatabase className="text-base" />}
+                />
+            </LayoutSubscriptionWrapper>
 
 			{/* Listings Manager Button - Public*/}
 			<LayoutSubscriptionWrapper requiredSubscriptions={["!admin"]}>

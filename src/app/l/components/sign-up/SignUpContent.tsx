@@ -9,6 +9,7 @@ import { auth, firestore } from "@/lib/firebase/config";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { updateAccessGrantedAdmin } from "@/services/firebase/update-admin";
 import { retrieveAuthenticatedUserCount } from "@/services/firebase/retrieve-admin";
+import { validateAlphaNumericInput, validateEmail, validateEmailInput, validatePasswordInput } from "@/utils/input-validation";
 
 // External Imports
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
@@ -19,7 +20,6 @@ import { signIn } from "next-auth/react";
 import { Lato } from 'next/font/google';
 import dotenv from "dotenv";
 import Image from "next/image";
-import { validateAlphaNumericInput, validateEmail, validateEmailInput, validatePasswordInput, validateTextInput } from "@/utils/input-validation";
 
 dotenv.config();
 
@@ -199,7 +199,7 @@ const SignUpContent = () => {
                 </>
             )}
 
-            {status === "under maintenance" && (
+            {status !== "under maintenance" && (
                 <UnderMaintenance />
             )}
         </div>

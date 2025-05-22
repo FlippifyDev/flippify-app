@@ -145,7 +145,7 @@ const NavbarProfileAvatar = () => {
     }
 
     return (
-        <div className="dropdown dropdown-end border-l border-uiBorder pl-6">
+        <div className="dropdown dropdown-end h-6 border-l border-uiBorder pl-6">
             <div
                 tabIndex={0}
                 role="button"

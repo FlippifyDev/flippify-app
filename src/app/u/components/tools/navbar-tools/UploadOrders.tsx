@@ -259,7 +259,7 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
                                     </div>
                                 </div>
                                 <hr />
-                                <div className='w-full flex items-center justify-between'>
+                                <div className='w-full flex items-end justify-between'>
                                     <div className='text-sm'>
                                         View required <Link href={`/l/blog/how-to-upload-sales#${uploadType}`} target="_blank" className='text-blue-500 hover:underline'>format</Link>
                                     </div>

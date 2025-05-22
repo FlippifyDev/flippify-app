@@ -83,7 +83,7 @@ const Order = () => {
         const tid = params?.get("tid");
 
         if (session?.user.id && tid && order?.storeType) {
-            await deleteItem({ uid: session.user.id, itemType: "orders", storeType: order.storeType, docId: tid, isAuto: order?.recordType === "automatic" });
+            await deleteItem({ uid: session.user.id, itemType: "orders", storeType: order.storeType, docId: tid, isAuto: order?.recordType === "automatic", createdAt: order.createdAt });
             removeCacheData(cacheKey, tid);
             router.push(`/u/${session.user.username}/tools/inventory-and-orders#orders`);
         }
@@ -487,6 +487,14 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                 </tr>
                 <tr className='border-b'>
                     <td className="py-4 px-6 font-medium text-gray-800">
+                        Order Total
+                    </td>
+                    <td className="py-4 px-6 ">
+                        <span className="text-gray-600">{currencySymbol}{(soldFor + (additionalFees ?? 0) + (shipping?.fees ?? 0)).toFixed(2)}</span>
+                    </td>
+                </tr>
+                <tr className='border-b'>
+                    <td className="py-4 px-6 font-medium text-gray-800">
                         Profit
                     </td>
                     <td className="py-4 px-6 ">
@@ -506,7 +514,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         Payout
                     </td>
                     <td className="py-4 px-6 ">
-                        <span className="text-gray-600">{currencySymbol}{(soldFor - (shipping?.fees ?? 0) - (additionalFees ?? 0)).toFixed(2)}</span>
+                        <span className="text-gray-600">{currencySymbol}{soldFor.toFixed(2)}</span>
                     </td>
                 </tr>
             </tbody>

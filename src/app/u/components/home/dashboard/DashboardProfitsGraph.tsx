@@ -14,6 +14,7 @@ import {
 import { enGB } from 'date-fns/locale';
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { IOneTimeExpense } from "@/models/expenses";
 
 const Chart = dynamic(() => import("./DashboardProfitsChart"), { ssr: false });
 
@@ -25,12 +26,14 @@ interface ChartData {
 
 interface DashboardProfitsGraphProps {
 	salesData: IOrder[];
+    oneTimeExpensesData: IOneTimeExpense[];
 	currency: string;
 	selectedRange: number;
 }
 
 const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({
 	salesData,
+    oneTimeExpensesData,
 	currency,
 	selectedRange
 }) => {
@@ -39,17 +42,10 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({
 		series: [],
 	});
 
-	// Revenue
-	const [revenue, setRevenue] = useState(0);
-	const [previousRevenue, setPreviousRevenue] = useState(0);
-
 	// Profits
 	const [netProfit, setNetProfit] = useState(0);
 	const [previousNetProfit, setPreviousNetProfit] = useState(0);
 
-	// Costs
-	const [costs, setCosts] = useState(0);
-	const [previousCosts, setPreviousCosts] = useState(0);
 
 	// Calculate percentage change based on previous net profit
 	const percentageChange =
@@ -145,7 +141,6 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({
 			const costsByDate = new Map<string, number>();
 			const costsByMonth = new Map<string, number>();
 
-
 			// Iterate over sales data
 			for (const order of salesData) {
                 if (order.status !== "Completed" || !order.sale?.date || !order.purchase?.price) continue;
@@ -190,12 +185,32 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({
 				}
 			}
 
+            for (const oneTimeExpense of oneTimeExpensesData) {
+                if (!oneTimeExpense.date || !oneTimeExpense.amount) continue;
+
+                const expenseDate = new Date(oneTimeExpense.date);
+
+                if (isWithinInterval(expenseDate, { start: currentRangeStartDate, end: currentRangeEndDate })) {
+                    currentRangeCosts += oneTimeExpense.amount;
+                    currentRangeNetProfit -= oneTimeExpense.amount;
+
+                    if (selectedRange !== 365 && selectedRange !== 180 && selectedRange !== 730) {
+                        // Accumulate revenue and cost by date for daily and monthly range
+                        const expenseDateKey = format(expenseDate, 'dd MM yyyy', { locale: enGB });
+                        revenueByDate.set(expenseDateKey, (revenueByDate.get(expenseDateKey) || 0));
+                        costsByDate.set(expenseDateKey, (costsByDate.get(expenseDateKey) || 0) + oneTimeExpense.amount);
+                        profitByDate.set(expenseDateKey, (profitByDate.get(expenseDateKey) || 0) - oneTimeExpense.amount);
+                    } else {
+                        const expenseMonthKey = format(expenseDate, 'MM yyyy', { locale: enGB });
+                        revenueByMonth.set(expenseMonthKey, (revenueByMonth.get(expenseMonthKey) || 0));
+                        costsByMonth.set(expenseMonthKey, (costsByMonth.get(expenseMonthKey) || 0) + oneTimeExpense.amount);
+                        profitByMonth.set(expenseMonthKey, (profitByMonth.get(expenseMonthKey) || 0) - oneTimeExpense.amount);
+                    }
+                } 
+            }
+
 			// Set the calculated values for Revenue, Costs, and Net Profit
-			setRevenue(currentRangeRevenue);
-			setCosts(currentRangeCosts);
 			setNetProfit(currentRangeNetProfit);
-			setPreviousRevenue(previousRangeRevenue);
-			setPreviousCosts(previousRangeCosts);
 			setPreviousNetProfit(previousRangeNetProfit);
 
 			// Determine categories based on the populated map (daily or monthly)
@@ -225,7 +240,7 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({
 		};
 
 		calculateRevenueProfitsAndCosts();
-	}, [salesData, selectedRange]);
+    }, [salesData, selectedRange, oneTimeExpensesData]);
 
 
 	return (
@@ -239,31 +254,6 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({
 					<span className="inline-flex items-center text-md mt-2 font-normal text-gray-500 dark:text-gray-400">
 						Net profit this period
 					</span>
-				</div>
-				<div
-					className={`flex items-center px-2.5 py-0.5 text-base font-semibold ${percentageChange >= 0 ? "text-houseBlue" : "text-red-500"
-						} text-center`}
-				>
-					{percentageChange >= 1000
-						? `${(percentageChange / 1000).toFixed(2)}k`
-						: percentageChange.toFixed(2)}
-					%
-					<svg
-						className={`w-3 h-3 ms-1 ${percentageChange >= 0 ? "" : "rotate-180"
-							}`}
-						aria-hidden="true"
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 10 14"
-					>
-						<path
-							stroke="currentColor"
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth="2"
-							d="M5 13V1m0 0L1 5m4-4 4 4"
-						/>
-					</svg>
 				</div>
 			</div>
 

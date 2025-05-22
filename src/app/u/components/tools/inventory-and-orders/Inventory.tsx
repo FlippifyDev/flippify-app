@@ -11,15 +11,15 @@ import { formatTableDate } from "@/utils/format-dates";
 import { currencySymbols } from "@/config/currency-config";
 import { IListing, StoreType } from "@/models/store-data";
 import { retrieveUserInventory } from "@/services/firebase/retrieve";
+import { fetchUserListingsCount } from "@/utils/extract-user-data";
+import { retrieveUserStoreTypes } from "@/services/firebase/retrieve-admin";
 import { getCachedData, removeCacheData } from "@/utils/cache-helpers";
 import { defaultTimeFrom, inventoryCacheKey } from "@/utils/constants";
-import { fetchUserListingsCount } from "@/utils/extract-user-data";
 
 // External Imports
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { retrieveUserStoreTypes } from "@/services/firebase/retrieve-admin";
 
 
 const Inventory = () => {
@@ -138,9 +138,9 @@ const Inventory = () => {
         setContextMenu(null);
     };
 
-    async function handleDeleteListing(itemId: string, storeType: StoreType, isAuto: boolean) {
+    async function handleDeleteListing(itemId: string, storeType: StoreType, isAuto: boolean, createdAt?: string | null) {
         if (session?.user.id && itemId) {
-            await deleteItem({ uid: session.user.id, itemType: "inventory", storeType: storeType, docId: itemId, isAuto: isAuto });
+            await deleteItem({ uid: session.user.id, itemType: "inventory", storeType: storeType, docId: itemId, isAuto: isAuto, createdAt });
             removeCacheData(cacheKey, itemId);
             setTriggerUpdate(true);
         }
@@ -152,14 +152,14 @@ const Inventory = () => {
                 <thead>
                     <tr className="bg-tableHeaderBackground">
                         <th></th>
-                        <th>Product</th>
-                        <th>Marketplace</th>
-                        <th>Quantity</th>
-                        <th>Purchase Platform</th>
-                        <th>Cost ({currencySymbols[currency]})</th>
-                        <th>Listed Price ({currencySymbols[currency]})</th>
-                        <th>Date Listed</th>
-                        <th>Custom Tag</th>
+                        <th>PRODUCT</th>
+                        <th>MARKETPLACE</th>
+                        <th>QUANTITY</th>
+                        <th>PURCHASE PLATFORM</th>
+                        <th>COST ({currencySymbols[currency]})</th>
+                        <th>LISTED PRICE ({currencySymbols[currency]})</th>
+                        <th>DATE LISTED</th>
+                        <th>TAG</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -176,7 +176,7 @@ const Inventory = () => {
                                     onContextMenu={(e) => handleContextMenu(e, item)}
                                     className="cursor-pointer hover:bg-gray-50"
                                 >
-                                    <td className="min-w-20">
+                                    <td className={`min-w-20 ${index + 1 === paginatedData.length ? "rounded-bl-xl" : ""}`}>
                                         <div
                                             onContextMenu={(e) => handleContextMenu(e, item)}
                                             onClick={(e) => handleContextMenu(e, item)}
@@ -204,7 +204,7 @@ const Inventory = () => {
                                         {item.price?.toFixed(2)}
                                     </td>
                                     <td className="min-w-32" onClick={() => handleDisplayOrderModal(item)}>{formatTableDate(item.dateListed)}</td>
-                                    <UpdateTableField currentValue={customTag} docId={item.itemId} item={item} docType='inventory' storeType={item.storeType} keyType="customTag" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
+                                    <UpdateTableField tdClassName={index + 1 === paginatedData.length ? "rounded-br-xl" : ""} currentValue={customTag} docId={item.itemId} item={item} docType='inventory' storeType={item.storeType} keyType="customTag" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
                                 </tr>
                             );
                         })
@@ -222,11 +222,11 @@ const Inventory = () => {
 
             {contextMenu && (
                 <ul
-                    className="menu menu-sm absolute z-50 bg-deepBlue text-white rounded-lg shadow-md text-sm w-48"
+                    className="menu menu-sm absolute z-50 bg-black text-white rounded-lg shadow-md text-sm w-48"
                     style={{ top: contextMenu.mouseY, left: contextMenu.mouseX }}
                 >
                     <li
-                        className="px-2 py-1 rounded-sm hover:bg-gray-700 cursor-pointer"
+                        className="px-2 py-1 rounded-sm hover:bg-muted/10 cursor-pointer"
                         onClick={() => {
                             handleDisplayEditModal(contextMenu.item);
                             handleCloseContextMenu();
@@ -235,7 +235,7 @@ const Inventory = () => {
                         Edit
                     </li>
                     <li
-                        className="px-2 py-1 rounded-sm hover:bg-gray-700 cursor-pointer"
+                        className="px-2 py-1 rounded-sm hover:bg-muted/10 cursor-pointer"
                         onClick={() => {
                             handleDisplayOrderModal(contextMenu.item);
                             handleCloseContextMenu();
@@ -244,9 +244,9 @@ const Inventory = () => {
                         Create Order
                     </li>
                     <li
-                        className="px-2 py-1 rounded-sm hover:bg-red-700 text-white cursor-pointer"
+                        className="px-2 py-1 rounded-sm hover:bg-muted/10 text-white cursor-pointer"
                         onClick={() => {
-                            handleDeleteListing(contextMenu.item.itemId, contextMenu.item.storeType, contextMenu.item.recordType === "automatic");
+                            handleDeleteListing(contextMenu.item.itemId, contextMenu.item.storeType, contextMenu.item.recordType === "automatic", contextMenu.item.createdAt);
                             handleCloseContextMenu();
                         }}
                     >
@@ -295,11 +295,11 @@ const Inventory = () => {
             )}
 
             {addNewOrderModalOpen && (
-                <NewOrder fillItem={fillItem} setDisplayModal={setAddNewOrderModalOpen} />
+                <NewOrder fillItem={fillItem} setDisplayModal={setAddNewOrderModalOpen} setTriggerUpdate={setTriggerUpdate} />
             )}
 
             {(editListingModalOpen && fillItem) && (
-                <EditListing fillItem={fillItem} setDisplayModal={setEditListingModalOpen} />
+                <EditListing fillItem={fillItem} setDisplayModal={setEditListingModalOpen} setTriggerUpdate={setTriggerUpdate} />
             )}
         </div>
     );

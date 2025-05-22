@@ -18,14 +18,16 @@ import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput } f
 import { FormEvent, useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
+import { MdImageNotSupported } from "react-icons/md"
 
 
 interface NewListingProps {
     setDisplayModal: (value: boolean) => void;
+    setTriggerUpdate?: (value: boolean) => void;
 }
 
 
-const NewListing: React.FC<NewListingProps> = ({ setDisplayModal }) => {
+const NewListing: React.FC<NewListingProps> = ({ setDisplayModal, setTriggerUpdate }) => {
     const { data: session, update: updateSession } = useSession();
 
     // General Info
@@ -112,6 +114,7 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal }) => {
         if (aboveLimit) return;
 
         const inventoryItem: IListing = {
+            createdAt: formatDateToISO(new Date()),
             currency: session?.user.preferences?.currency ?? "USD",
             customTag: customTag,
             dateListed: formatDateToISO(new Date(dateListed)),
@@ -145,6 +148,8 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal }) => {
         }
 
         setLoading(false);
+        setTriggerUpdate?.(true);
+        setDisplayModal(false);
     }
 
     function handleChange(value: string, type: string) {
@@ -222,16 +227,8 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal }) => {
                     <hr />
                     <div className="w-full flex flex-row gap-4 justify-between items-center">
                         <div className="flex flex-row gap-2">
-                            <div className='flex items-center'>
-                                <button
-                                    type="button"
-                                    className="bg-houseBlue text-white text-sm py-2 px-4 rounded-md hover:bg-houseHoverBlue transition duration-200"
-                                    onClick={() => setIsModalOpen(true)}>
-                                    {imageUrl ? "Change Image" : "Upload Image"}
-                                </button>
-                            </div>
                             {imageUrl && (
-                                <figure className="border-[3px] rounded-full">
+                                <figure className="cursor-pointer hover:scale-105 transition duration-100 border-[3px] rounded-full" onClick={() => setIsModalOpen(true)}>
                                     <Image
                                         src={imageUrl}
                                         alt="Uploaded Image"
@@ -241,12 +238,17 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal }) => {
                                     />
                                 </figure>
                             )}
+                            {!imageUrl && (
+                                <div className='cursor-pointer hover:scale-105 transition duration-100 border-[3px] w-10 h-10 rounded-full flex justify-center items-center' onClick={() => setIsModalOpen(true)}>
+                                    <MdImageNotSupported className='text-gray-200' />
+                                </div>
+                            )}
                         </div>
                         <div>
                             <button
                                 type="submit"
                                 disabled={loading || !itemName || !itemId || !listingPrice || !quantity || !dateListed || !storeType}
-                                className="disabled:bg-gray-600 disabled:pointer-events-none bg-houseBlue text-white text-sm py-2 px-4 rounded-md hover:bg-houseHoverBlue transition duration-200"
+                                className="disabled:bg-muted disabled:pointer-events-none bg-houseBlue text-white text-sm py-2 px-4 rounded-md hover:bg-houseHoverBlue transition duration-200"
                             >
                                 {successMessage ? successMessage : loading ? "Adding..." : "Add Listing"}
                             </button>

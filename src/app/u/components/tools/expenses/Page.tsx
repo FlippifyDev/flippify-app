@@ -1,16 +1,15 @@
 "use client"
 
 // Local Imports
-
-import Orders from './Orders';
-import Inventory from './Inventory';
+import OneTime from './OneTime';
+import Subscriptions from './Subscriptions';
 import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
 
 // External Imports
 import React, { useEffect, useState, useRef } from 'react'
-import { FaShoppingCart } from 'react-icons/fa';
-import { FaBox } from "react-icons/fa";
-import { fetchUserInventoryAndOrdersCount } from '@/utils/extract-user-data';
+import { FaDatabase } from 'react-icons/fa';
+import { ImLoop2 } from 'react-icons/im';
+import { fetchSubscriptionMaxListings, fetchUserExpensesCount } from '@/utils/extract-user-data';
 import { useSession } from 'next-auth/react';
 import { subscriptionLimits } from '@/utils/constants';
 
@@ -18,12 +17,12 @@ import { subscriptionLimits } from '@/utils/constants';
 const Page = () => {
     const { data: session } = useSession();
 
-    const [initialTab, setInitialTab] = useState("inventory");
+    const [initialTab, setInitialTab] = useState("one-time");
 
     // Determine initial tab based on the URL parameter
     useEffect(() => {
         const hash = window.location.hash;
-        const tab = hash === "#orders" ? "orders" : hash === "#inventory" ? "inventory" : "inventory";
+        const tab = hash === "#subscriptions" ? "subscriptions" : hash === "#one-time" ? "one-time" : "one-time";
         setInitialTab(tab);
         setActiveTab(tab);
     }, []);
@@ -34,9 +33,8 @@ const Page = () => {
 
     const dropdownRef = useRef<HTMLDivElement>(null); // Reference for dropdown
 
-    const { automaticListings, automaticOrders, manualListings, manualOrders } = fetchUserInventoryAndOrdersCount(session?.user);
-    const limits = session?.user.authentication?.subscribed ? subscriptionLimits[session?.user.authentication?.subscribed] : { automatic: 0, manual: 0 }
-    const totalLimit = limits.automatic + limits.manual;
+    const { oneTime: totalOneTime } = fetchUserExpensesCount(session?.user);
+    const limits = session?.user.authentication?.subscribed ? subscriptionLimits[session?.user.authentication?.subscribed] : { oneTimeExpenses: 0, subscriptionExpenses: 0 }
 
     useEffect(() => {
         // Close dropdown if clicked outside
@@ -65,17 +63,19 @@ const Page = () => {
         setIsOpen(false);
     };
 
+
+
     return (
         <LayoutSubscriptionWrapper anySubscriptions={["admin", "member"]}>
             <main className="bg-white shadow rounded-xl">
                 {/* Dropdown for Tab Selection */}
-                <div ref={dropdownRef} className="flex justify-between items-center px-2 py-4">
+                <div ref={dropdownRef} className="flex justify-between items-center px-2 py-4 w-full">
                     <div className='relative'>
                         <button
                             onClick={() => setIsOpen(!isOpen)}
                             className="bg-transparent text-gray-700 font-semibold py-2 px-4 rounded inline-flex items-center"
                         >
-                            <span className="ml-1">{activeTab === 'inventory' ? 'Inventory' : 'Orders'}</span>
+                            <span className="ml-1">{activeTab === 'one-time' ? 'One Time' : 'Subscriptions'}</span>
                             <svg
                                 className={`fill-current h-4 w-4 transform transition-transform duration-300 ${isOpen ? 'rotate-90' : ''}`}
                                 xmlns="http://www.w3.org/2000/svg"
@@ -90,39 +90,38 @@ const Page = () => {
                             <ul className="absolute left-0 ml-6 z-10 w-48 bg-white shadow-lg rounded-md ring-1 ring-black ring-opacity-5">
                                 <li>
                                     <a
-                                        href="#inventory"
-                                        onClick={() => handleTabChange('inventory')}
+                                        href="#one-time"
+                                        onClick={() => handleTabChange('one-time')}
                                         className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 rounded-t"
                                     >
-                                        <span><FaBox /> </span>
-                                        <span>Inventory</span>
+                                        <span><FaDatabase /> </span>
+                                        <span>One Time</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a
-                                        href="#orders"
-                                        onClick={() => handleTabChange('orders')}
+                                        href="#subscriptions"
+                                        onClick={() => handleTabChange('subscriptions')}
                                         className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
                                     >
-                                        <span><FaShoppingCart /></span>
-                                        <span>Orders</span>
+                                        <span><ImLoop2 /></span>
+                                        <span>Subscriptions</span>
                                     </a>
                                 </li>
                             </ul>
                         )}
                     </div>
-
                     <div className='px-4 ml-1'>
-                        {activeTab === 'inventory' ?
-                            <span className='text-xs text-gray-500'>You have {automaticListings + manualListings} / {totalLimit} listings</span> :
-                            <span className='text-xs text-gray-500'>You have {automaticOrders + manualOrders} / {totalLimit} orders</span>
+                        {activeTab === 'one-time' ?
+                            <span className='text-xs text-gray-500'>You have {totalOneTime} / {limits.oneTimeExpenses} one time expenses</span> :
+                            null
                         }
                     </div>
                 </div>
 
                 {/* Conditional Content Rendering with Fade Transition */}
                 <div className={`transition-opacity duration-300 rounded-b-xl ${fadeIn ? 'opacity-100' : 'opacity-0'}`}>
-                    {activeTab === "inventory" ? <Inventory /> : <Orders />}
+                    {activeTab === "one-time" ? <OneTime /> : <Subscriptions />}
                 </div>
             </main>
         </LayoutSubscriptionWrapper>

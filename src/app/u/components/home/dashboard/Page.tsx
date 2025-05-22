@@ -5,7 +5,7 @@ import React, { useState, useEffect, useRef } from "react";
 
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import DashboardRecentSalesCard from "./DashboardRecentSalesCard";
-import { retrieveUserInventory, retrieveUserOrders } from "@/services/firebase/retrieve";
+import { retrieveUserInventory, retrieveUserOneTimeExpenses, retrieveUserOrders } from "@/services/firebase/retrieve";
 import ProfitsGraphDateFilter from "./ProfitsGraphDateFilter";
 import LayoutLoadingSkeleton from "../../layout/LayoutLoadingSkeleton";
 import ProfitsGraphTagFilter from "./ProfitsGraphTagFilter";
@@ -16,6 +16,8 @@ import { IListing, IOrder } from "@/models/store-data";
 import OnboardingFlow from "./OnboardingFlow";
 import { defaultTimeFrom } from "@/utils/constants";
 import { retrieveUserStoreTypes } from "@/services/firebase/retrieve-admin";
+import { IOneTimeExpense } from "@/models/expenses";
+import { formatTimeFrom } from "@/utils/format-dates";
 
 
 const DashboardPage: React.FC = () => {
@@ -24,6 +26,7 @@ const DashboardPage: React.FC = () => {
 
     const [inventoryData, setInventoryData] = useState<IListing[]>([]);
     const [salesData, setSalesData] = useState<IOrder[]>([]);
+    const [oneTimeExpensesData, setOneTimeExpensesData] = useState<IOneTimeExpense[]>([]);
     const [selectedRange, setSelectedRange] = useState<number>(30);
     const [selectedLabel, setSelectedLabel] = useState<string>("This Month");
 
@@ -33,7 +36,77 @@ const DashboardPage: React.FC = () => {
     // State for the selected custom tag
     const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
+    const [timeFrom, setTimeFrom] = useState(formatTimeFrom(30));
+    const [timeTo, setTimeTo] = useState(new Date().toISOString());
+
     const handleRangeChange = (range: string, label: string) => {
+        // Get today's date for timeTo
+        const today = new Date();
+        let timeFromDate = new Date(); // Default: today
+        let timeToDate = today; // Default: today as timeTo
+
+        // Set start and end of the day for the date range
+        const setStartOfDay = (date: Date) => {
+            date.setHours(0, 0, 0, 0); // Set to start of the day (00:00:00)
+        };
+
+        const setEndOfDay = (date: Date) => {
+            date.setHours(23, 59, 59, 999); // Set to end of the day (23:59:59)
+        };
+
+        switch (label) {
+            case "Today":
+                timeFromDate = today;
+                setStartOfDay(timeFromDate);
+                timeToDate = today;
+                setEndOfDay(timeToDate);
+                break;
+            case "This Week":
+                // Start of the current week (Sunday)
+                timeFromDate.setDate(today.getDate() - today.getDay());
+                setStartOfDay(timeFromDate);
+                timeToDate = today;
+                setEndOfDay(timeToDate);
+                break;
+            case "This Month":
+                // Start of the current month
+                timeFromDate.setDate(1);
+                setStartOfDay(timeFromDate);
+                timeToDate = today;
+                setEndOfDay(timeToDate);
+                break;
+            case "Last 3 Months":
+                timeFromDate.setDate(today.getDate() - 90);
+                setStartOfDay(timeFromDate);
+                timeToDate = today;
+                setEndOfDay(timeToDate);
+                break;
+
+            case "Last 6 Months":
+                timeFromDate.setDate(today.getDate() - 180);
+                setStartOfDay(timeFromDate);
+                timeToDate = today;
+                setEndOfDay(timeToDate);
+                break;
+
+            case "This Year":
+                // Start of the current year
+                timeFromDate = new Date(today.getFullYear(), 0, 1);
+                setStartOfDay(timeFromDate);
+                timeToDate = today;
+                setEndOfDay(timeToDate);
+                break;
+            case "All Time":
+                // Set timeFrom to a date far in the past
+                timeFromDate = new Date(2020, 0, 1);
+                setStartOfDay(timeFromDate);
+                timeToDate = today;
+                setEndOfDay(timeToDate);
+                break;
+        }
+
+        setTimeFrom(timeFromDate.toISOString());
+        setTimeTo(timeToDate.toISOString());
         setSelectedLabel(label)
         setSelectedRange(Number(range));
     };
@@ -54,7 +127,8 @@ const DashboardPage: React.FC = () => {
                 storeTypes.map((storeType) => {
                     return retrieveUserOrders({
                         uid: session.user.id as string,
-                        timeFrom: defaultTimeFrom,
+                        timeFrom: timeFrom,
+                        timeTo: timeTo,
                         storeType,
                     }).then((order) => [storeType, order] as const);
                 })
@@ -85,14 +159,26 @@ const DashboardPage: React.FC = () => {
             if (inventory) {
                 setInventoryData(inventory);
             }
-
         };
+
+        const fetchOneTimeExpenseData = async () => {
+            if (!session) return;
+
+            const items = await retrieveUserOneTimeExpenses({
+                uid: session?.user.id as string,
+                timeFrom: timeFrom,
+                timeTo: timeTo,
+            })
+
+            setOneTimeExpensesData(items);
+        }
 
         if (session?.user.authentication?.subscribed) {
             fetchSalesData();
             fetchInventoryData();
+            fetchOneTimeExpenseData();
         }
-    }, [session]);
+    }, [session, timeFrom, timeTo]);
 
 
     if (!session || !session.user || !session.user.stripeCustomerId) {
@@ -132,6 +218,7 @@ const DashboardPage: React.FC = () => {
                         <DashboardOverviewCard
                             salesData={filteredSalesData}
                             inventoryData={inventoryData}
+                            oneTimeExpensesData={oneTimeExpensesData}
                             currency={currency}
                             selectedRange={selectedRange}
                         />
@@ -139,6 +226,7 @@ const DashboardPage: React.FC = () => {
                     <div className="w-full bg-white shadow rounded-lg dark:bg-gray-800 p-4 md:p-6">
                         <DashboardProfitsGraph
                             salesData={filteredSalesData}
+                            oneTimeExpensesData={oneTimeExpensesData}
                             currency={currency}
                             selectedRange={selectedRange}
                         />

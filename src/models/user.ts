@@ -30,12 +30,20 @@ interface INumOrders {
     totalManual?: number | null;
 }
 
+interface IExpenses {
+    subscriptions?: number | null;
+    oneTime?: number | null;
+    totalOneTime?: number | null;
+    resetDate?: string | null;
+}
+
 interface IStore {
     numListings?: INumListings | null;
     numOrders?: INumOrders | null;
+    numExpenses?: IExpenses | null;
     [key: string]: {
         lastFetchedDate?: ILastFetchedDate | null;
-    } | INumListings | INumOrders | null | undefined;
+    } | INumListings | INumOrders | IExpenses | null | undefined;
 }
 
 interface ILastFetchedDate {

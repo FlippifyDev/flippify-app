@@ -2,7 +2,8 @@
 
 import { firestoreAdmin } from "@/lib/firebase/config-admin";
 import { IListing, IOrder, ItemType, StoreType } from "@/models/store-data";
-import { updateListingAdmin, updateUserItemCountAdmin, updateUserListingsCountAdmin, updateUserOrdersCountAdmin } from "./update-admin";
+import { updateListingAdmin, updateUserItemCountAdmin, updateUserListingsCountAdmin, updateUserOneTimeExpenseCountAdmin, updateUserOrdersCountAdmin } from "./update-admin";
+import { IOneTimeExpense } from "@/models/expenses";
 
 
 /**
@@ -79,14 +80,14 @@ async function createNewOrderItemAdmin(uid: string, storeType: StoreType, order:
         // Use the order's transaction id as the document id in the store collection
         const itemDocRef = orderRef.doc(order.transactionId);
 
-        // Check if the listing already exists
+        // Check if the order already exists
         const docSnapshot = await itemDocRef.get();
         if (docSnapshot.exists) {
             console.warn(`Order ${order.transactionId} already exists.`);
             return { error: `Order ${order.transactionId} already exists.`, orderExists: true };
         }
 
-        // Create or update the listing document
+        // Create or update the order document
         await itemDocRef.set(order, { merge: true });
 
         // Increment the user's manual orders count by 1
@@ -107,6 +108,40 @@ async function createNewOrderItemAdmin(uid: string, storeType: StoreType, order:
         return { success: true };
     } catch (error) {
         console.error("Error creating/updating order item:", error);
+        return { error: error };
+    }
+}
+
+
+async function createNewOneTimeExpenseAdmin(uid: string, item: IOneTimeExpense): Promise<{ success?: boolean, error?: any }> {
+    try {
+        if (!item.id) {
+            throw Error("Item does not contain an ID")
+        }
+        const colRef = firestoreAdmin.collection("expenses").doc(uid).collection("oneTime");
+
+        const itemDocRef = colRef.doc(item.id);
+
+        // Check if the item already exists
+        const docSnapshot = await itemDocRef.get();
+        if (docSnapshot.exists) {
+            console.warn(`Item ${item.id} already exists.`);
+            return { error: `Item ${item.id} already exists.` };
+        }
+
+        // Create or update the item document
+        await itemDocRef.set(item, { merge: true });
+
+        const { success: incrementSuccess } = await updateUserOneTimeExpenseCountAdmin(uid)
+        if (!incrementSuccess) {
+            console.error("Error incrementing user one time expenses count.");
+            return { error: "Error incrementing user one time expenses count." };
+        }
+
+        console.log(`One time expense ${item.id} created/updated successfully.`);
+        return { success: true };
+    } catch (error) {
+        console.error("Error creating/updating one time expense item:", error);
         return { error: error };
     }
 }
@@ -135,7 +170,7 @@ async function updateMovedItemAdmin(uid: string, storeType: StoreType, item: IOr
 
         // Add the new item
         await newItemRef.set(item);
-        
+
         // Delete the old item
         await oldItemRef.delete();
     } catch (error) {
@@ -145,4 +180,4 @@ async function updateMovedItemAdmin(uid: string, storeType: StoreType, item: IOr
 }
 
 
-export { createNewInventoryItemAdmin, createNewOrderItemAdmin, updateMovedItemAdmin };
+export { createNewInventoryItemAdmin, createNewOrderItemAdmin, updateMovedItemAdmin, createNewOneTimeExpenseAdmin };

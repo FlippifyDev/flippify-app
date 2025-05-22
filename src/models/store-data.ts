@@ -1,5 +1,5 @@
 export type RecordType = "automatic" | "manual";
-export type ItemType = "orders" | "inventory"
+export type ItemType = "orders" | "inventory" | "expenses"
 
 export type OrderStatus =
     | "Active"        // Order is in progress and not yet finalized. Payment may not be completed.
@@ -18,6 +18,7 @@ export type HardcodedStoreType = typeof STORES[number];
 export type StoreType = HardcodedStoreType | string;
 
 interface IListing {
+    createdAt?: string | null;
     currency?: string | null;
     customTag?: string | null;
     dateListed?: string | null;
@@ -83,6 +84,7 @@ interface IRefund {
 
 interface IOrder {
     additionalFees?: number | null;
+    createdAt?: string | null;
     customTag?: string | null;
     history?: IHistory[] | null;
     image?: string[] | null;

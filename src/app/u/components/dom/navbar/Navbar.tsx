@@ -11,6 +11,7 @@ import { RiFolderUploadLine } from "react-icons/ri";
 import { useSession } from "next-auth/react";
 import { GrChapterAdd } from "react-icons/gr";
 import { BiBookAdd } from "react-icons/bi";
+import { BsDatabaseAdd } from "react-icons/bs";
 
 interface NavbarProps {
     handleDisplayModal: (display: boolean, type: string) => void;
@@ -39,6 +40,12 @@ const Navbar: React.FC<NavbarProps> = ({ handleDisplayModal }) => {
             </div>
             <div className="w-full flex justify-end pr-2 items-center">
                 <div className="flex justify-end items-center mr-4 gap-1 text-offWhite text-[33px]">
+                    <NabarItem
+                        title="Add One Time Expenese"
+                        isSubscribed={isSubscribed}
+                        icon={<BsDatabaseAdd className="p-2 hover:bg-muted/10 rounded" onClick={() => handleOnClick("add-one-time-expense")} />}
+                    />
+                    <div className="h-6 mx-2 border-r border-uiBorder"></div>
                     <NabarItem
                         title="Upload Sales"
                         isSubscribed={isSubscribed}

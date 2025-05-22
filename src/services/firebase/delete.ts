@@ -12,10 +12,11 @@ interface IDeleteItemProps {
     itemType: ItemType,
     storeType: StoreType,
     docId: string;
-    isAuto: boolean;
+    createdAt?: string | null;
+    isAuto?: boolean;
 }
 
-async function deleteItem({ uid, itemType, storeType, docId, isAuto = false }: IDeleteItemProps): Promise<void> {
+async function deleteItem({ uid, itemType, storeType, docId, createdAt, isAuto = false }: IDeleteItemProps): Promise<void> {
     try {
         // Reference to the specific item document
         const docRef = doc(firestore, itemType, uid, storeType, docId);
@@ -23,10 +24,17 @@ async function deleteItem({ uid, itemType, storeType, docId, isAuto = false }: I
         // Delete the document
         await deleteDoc(docRef);
 
-        // Decrement the item count
+        let createdThisMonth = undefined;
+        if (createdAt) {
+            const createdDate = new Date(createdAt);
+            const now = new Date();
 
-        // For now don't update the count, until a valid solution is found
-        //await updateUserItemCountAdmin({ uid, itemType, amount: -1, isAuto })
+            createdThisMonth =
+                createdDate.getFullYear() === now.getFullYear() &&
+                createdDate.getMonth() === now.getMonth();
+        }
+
+        await updateUserItemCountAdmin({ uid, itemType, amount: -1, isAuto, createdThisMonth })
         console.log(`Item, with docId ${docId} deleted successfully.`);
     } catch (error) {
         console.error('Error deleting item from Firestore:', error);

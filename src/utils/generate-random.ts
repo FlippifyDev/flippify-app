@@ -20,3 +20,11 @@ export const generateRandomFlippifyOrderId = (numChar: number) => {
 export const generateRandomFlippifyListingId = (numChar: number) => {
     return `flid-${generateRandomChars(numChar)}`;
 }
+
+export const generateRandomFlippifyOneTimeExpenseId = (numChar: number) => {
+    return `foteid-${generateRandomChars(numChar)}`;
+}
+
+export const generateRandomFlippifySubscriptionExpenseId = (numChar: number) => {
+    return `fseid-${generateRandomChars(numChar)}`;
+}

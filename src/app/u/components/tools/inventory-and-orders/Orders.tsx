@@ -104,15 +104,15 @@ const Orders = () => {
                 <thead>
                     <tr className="bg-tableHeaderBackground">
                         <th></th>
-                        <th>Product</th>
-                        <th>Marketplace</th>
-                        <th>Sold</th>
-                        <th>Purchased For ({currencySymbols[currency]})</th>
-                        <th>Sold For ({currencySymbols[currency]})</th>
-                        <th>Profit ({currencySymbols[currency]})</th>
+                        <th>PRODUCT</th>
+                        <th>MARKETPLACE</th>
+                        <th>SOLD</th>
+                        <th>PURCHASED FOR ({currencySymbols[currency]})</th>
+                        <th>SOLD FOR ({currencySymbols[currency]})</th>
+                        <th>PROFIT ({currencySymbols[currency]})</th>
                         <th>ROI</th>
-                        <th>Status</th>
-                        <th>Custom Tag</th>
+                        <th>STATUS</th>
+                        <th>TAG</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -140,7 +140,7 @@ const Orders = () => {
                                 >
                                     <td
                                         onClick={() => handleRouteToOrderPage(order)}
-                                        className="min-w-20 cursor-pointer">
+                                        className={`min-w-20 cursor-pointer ${index + 1 === paginatedData.length ? "rounded-bl-xl" : ""}`}>
                                         <Image
                                             src={order.image ? order.image[0]: ""}
                                             width={100}
@@ -171,7 +171,7 @@ const Orders = () => {
                                     <td className={`${status === "Completed" ? "text-houseBlue" : ""} font-semibold`}>
                                         {status}
                                     </td>
-                                    <UpdateTableField currentValue={customTag} docId={transactionId} item={order} docType='orders' storeType={order.storeType} keyType="customTag" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} className='hover:bg-gray-100 transition duration-300' />
+                                    <UpdateTableField tdClassName={index + 1 === paginatedData.length ? "rounded-br-xl" : ""} currentValue={customTag} docId={transactionId} item={order} docType='orders' storeType={order.storeType} keyType="customTag" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} className='hover:bg-gray-100 transition duration-300' />
                                 </tr>
                             );
                         })

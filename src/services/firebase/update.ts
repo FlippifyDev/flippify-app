@@ -11,6 +11,7 @@ import { retrieveUserOrderItemRef, retrieveUserRefById } from "./retrieve";
 // External Imports
 import { collection, deleteField, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { firestore } from "@/lib/firebase/config";
+import { IOneTimeExpense } from "@/models/expenses";
 
 
 
@@ -244,4 +245,30 @@ async function updateListing(
 }
 
 
-export { updateUser, updateUserPreferences, completeOnboarding, incrementRewardsClaimed, updateOrderStatus, updateListing };
+async function updateExpense(
+    uid: string,
+    item: IOneTimeExpense,
+    expenseType: "oneTime" | "subscriptions"
+): Promise<{ success?: boolean, error?: any }> {
+    try {
+        if (!item.id) {
+            throw Error("Item did not contain an ID")
+        }
+
+        // Reference to /expenses/{uid}/{expenseType}/{itemId}
+        const colRef = collection(firestore, "expenses", uid, expenseType);
+        const itemDoc = doc(colRef, item.id);
+
+        // Write the item object to Firestore, merging with any existing data
+        await updateDoc(itemDoc, { ...item });
+
+        // Return the payload back to the caller for further use
+        return { success: true };
+    } catch (error) {
+        console.error(`Error updating item with ID=${item.id}:`, error);
+        return { error: `Error updating item with ID=${item.id}: ${error}` };
+    }
+}
+
+
+export { updateUser, updateUserPreferences, completeOnboarding, incrementRewardsClaimed, updateOrderStatus, updateListing, updateExpense };

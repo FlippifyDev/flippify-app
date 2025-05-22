@@ -7,7 +7,6 @@ import ImageUpload from '../../dom/ui/ImageUpload';
 import { shortenText } from '@/utils/format';
 import { formatDateToISO } from '@/utils/format-dates';
 import { currencySymbols } from '@/config/currency-config';
-import { createHistoryItems } from '@/services/firebase/helpers';
 import { createNewOrderItemAdmin } from '@/services/firebase/create-admin';
 import { IListing, IOrder, OrderStatus } from '@/models/store-data';
 import { fetchUserInventoryAndOrdersCount } from '@/utils/extract-user-data';
@@ -20,16 +19,18 @@ import { generateRandomFlippifyOrderId, generateRandomFlippifyTransactionId } fr
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
+import { MdImageNotSupported } from 'react-icons/md';
 
 
 
 interface NewOrderProps {
     fillItem?: IListing;
     setDisplayModal: (value: boolean) => void;
+    setTriggerUpdate?: (value: boolean) => void;
 }
 
 
-const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal }) => {
+const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTriggerUpdate }) => {
     const { data: session, update: updateSession } = useSession();
     const currencySymbol = currencySymbols[session?.user.preferences?.currency ?? ""]
 
@@ -147,24 +148,17 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal }) => {
     }
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault()
-        setErrorMessage("")
+        e.preventDefault();
+        setErrorMessage("");
         setLoading(true);
 
         if (aboveLimit) return;
 
-        const historyItems = createHistoryItems({
-            status: shippingStatus,
-            salePrice: Number(salePrice),
-            saleDate: formatDateToISO(new Date(saleDate))
-        });
-        if (!historyItems) return;
-
         const orderItem: IOrder = {
             additionalFees: 0,
+            createdAt: formatDateToISO(new Date()),
             customTag: customTag,
             image: [imageUrl],
-            history: historyItems,
             name: itemName,
             itemId: itemId ?? null,
             lastModified: formatDateToISO(new Date()),
@@ -213,6 +207,8 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal }) => {
         }
 
         setLoading(false);
+        setTriggerUpdate?.(true);
+        setDisplayModal(false);
     }
 
     function handleSearchForListing(value: string) {
@@ -328,17 +324,8 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal }) => {
                     <hr />
                     <div className="w-full flex flex-row gap-4 justify-between items-center">
                         <div className='flex flex-row gap-2'>
-                            <div className='flex items-center'>
-                                <button
-                                    type="button"
-                                    className="bg-houseBlue text-white text-sm py-2 px-4 rounded-md hover:bg-houseHoverBlue transition duration-200"
-                                    onClick={() => setIsModalOpen(true)}>
-                                    {imageUrl ? "Change" : "Upload Image"}
-                                </button>
-                            </div>
-
                             {imageUrl && (
-                                <figure className="border-[3px] rounded-full">
+                                <figure className="cursor-pointer hover:scale-105 transition duration-100 border-[3px] rounded-full" onClick={() => setIsModalOpen(true)}>
                                     <Image
                                         src={imageUrl}
                                         alt="Uploaded Image"
@@ -348,12 +335,17 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal }) => {
                                     />
                                 </figure>
                             )}
+                            {!imageUrl && (
+                                <div className='cursor-pointer hover:scale-105 transition duration-100 border-[3px] w-10 h-10 rounded-full flex justify-center items-center' onClick={() => setIsModalOpen(true)}>
+                                    <MdImageNotSupported className='text-gray-200' />
+                                </div>
+                            )}
                         </div>
                         <div>
                             <button
                                 type="submit"
                                 disabled={loading || !saleDate || !salePrice || !quantity || !itemName || !storeType}
-                                className="disabled:bg-gray-600 disabled:pointer-events-none bg-houseBlue text-white text-sm py-2 px-4 rounded-md hover:bg-houseHoverBlue transition duration-200"
+                                className="disabled:bg-muted disabled:pointer-events-none bg-houseBlue text-white text-sm py-2 px-4 rounded-md hover:bg-houseHoverBlue transition duration-200"
                             >
                                 {successMessage ? successMessage : loading ? "Adding..." : "Add Sale"}
                             </button>

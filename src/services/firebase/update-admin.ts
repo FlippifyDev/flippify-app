@@ -112,6 +112,7 @@ export async function updateUserListingsCountAdmin(
 
 export async function updateUserOrdersCountAdmin(
     uid: string,
+    createdThisMonth?: boolean,
     amount: number = 1,
     isAuto: boolean = false
 ): Promise<{ success?: boolean; error?: any }> {
@@ -121,10 +122,12 @@ export async function updateUserOrdersCountAdmin(
         const counterField = isAuto ? 'automatic' : 'manual';
         const totalCounterField = isAuto ? 'totalAutomatic' : 'totalManual';
 
+        const counterFieldAmount = createdThisMonth === undefined ? amount : createdThisMonth === false ? 0 : amount
+
         const updatePayload = {
             store: {
                 numOrders: {
-                    [counterField]: FieldValue.increment(amount),
+                    [counterField]: FieldValue.increment(counterFieldAmount),
                     [totalCounterField]: FieldValue.increment(amount),
                 },
             },
@@ -139,22 +142,58 @@ export async function updateUserOrdersCountAdmin(
     }
 }
 
+export async function updateUserOneTimeExpenseCountAdmin(
+    uid: string,
+    createdThisMonth?: boolean,
+    amount: number = 1,
+): Promise<{ success?: boolean; error?: any }> {
+    try {
+        const userRef = firestoreAdmin.collection('users').doc(uid);
+
+        const counterField = 'oneTime';
+        const totalCounterField = 'totalOneTime';
+
+        const counterFieldAmount = createdThisMonth === undefined ? amount : createdThisMonth === false ? 0 : amount
+
+        const updatePayload = {
+            store: {
+                numExpenses: {
+                    [counterField]: FieldValue.increment(counterFieldAmount),
+                    [totalCounterField]: FieldValue.increment(amount),
+                },
+            },
+        };
+
+        await userRef.set(updatePayload, { merge: true });
+
+        return { success: true };
+    } catch (error) {
+        console.error("Error updating orders count:", error);
+        return { error };
+    }
+}
+
+
 interface IUpdateUserItemCountAdminProps {
     uid: string,
     itemType: ItemType,
+    createdThisMonth?: boolean,
     amount: number,
     isAuto: boolean
 }
 export async function updateUserItemCountAdmin({
     uid,
     itemType,
+    createdThisMonth,
     amount = 1,
     isAuto = false
 }: IUpdateUserItemCountAdminProps) {
     if (itemType === "inventory") {
         return await updateUserListingsCountAdmin(uid, amount, isAuto)
     } else if (itemType === "orders") {
-        return await updateUserOrdersCountAdmin(uid, amount, isAuto)
+        return await updateUserOrdersCountAdmin(uid, createdThisMonth, amount, isAuto)
+    } else if (itemType === "expenses") {
+        return await updateUserOneTimeExpenseCountAdmin(uid, createdThisMonth, -1)
     }
 }
 
@@ -234,19 +273,26 @@ export async function checkAndUpdateResetDates(uid: string): Promise<{ success?:
         const now = new Date();
         const updates: Record<string, any> = {};
 
-        const numOrders = userData.store?.numOrders ?? {};
-        const resetDateStr = numOrders.resetDate ?? new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        async function updateResetDate(key: "numOrders" | "numExpenses", resetKeys: string[]) {
+            const num = userData.store?.[key] ?? {};
+            const resetDateStr = num.resetDate ?? new Date(now.getFullYear(), now.getMonth() - 1, 1);
 
-        const resetDate = new Date(resetDateStr);
-        if (resetDate < now) {
-            const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+            const resetDate = new Date(resetDateStr);
+            if (resetDate < now) {
+                const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
 
-            updates['store.numOrders.resetDate'] = formatDateToISO(nextMonth);
-            updates['store.numOrders.automatic'] = 0;
-            updates['store.numOrders.manual'] = 0;
+                updates[`store.${key}.resetDate`] = formatDateToISO(nextMonth);
 
-            await userRef.update(updates);
+                for (const resetKey of resetKeys) {
+                    updates[`store.${key}.${resetKey}`] = 0;
+                }
+            }
         }
+
+        await updateResetDate("numOrders", ["automatic", "manual"]);
+        await updateResetDate("numExpenses", ["oneTime"]);
+
+        await userRef.update(updates);
 
         return { success: true };
     } catch (error) {

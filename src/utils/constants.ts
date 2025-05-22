@@ -12,6 +12,8 @@ export const storeTokenKeys: Record<string, string> = {
 export const cacheExpirationTime = 1000 * 60 * 30; // 30 min in milliseconds
 export const inventoryCacheKey = "inventory"
 export const orderCacheKey = "orders"
+export const oneTimeExpensesCacheKey = "one-time-expenses"
+export const subscriptionsExpensesCacheKey = "subscriptions-expenses"
 export const statusCacheKey = "HsdaIDF89S"
 export const statusCacheExpirationTime = 1000 * 60 * 2 // 2 min in milliseconds
 
@@ -23,31 +25,46 @@ export const defaultTimeFrom = "2023-01-01T00:00:00Z";
 // Free
 export const FREE_MAX_AUTOMATIC_LISTINGS = 12;
 export const FREE_MAX_MANUAL_LISTINGS = 12;
+export const FREE_ONE_TIME_EXPENSES = 12;
+export const FREE_SUBSCRIPTION_EXPENSES = 6;
 
 // Standard
 export const STANDARD_MAX_AUTOMATIC_LISTINGS = 48;
 export const STANDARD_MAX_MANUAL_LISTINGS = 48;
+export const STANDARD_ONE_TIME_EXPENSES = 100;
+export const STANDARD_SUBSCRIPTION_EXPENSES = 12;
+
 
 // Pro
-export const PREMIUM_MAX_AUTOMATIC_LISTINGS = 96;
-export const PREMIUM_MAX_MANUAL_LISTINGS = 96;
+export const PRO_MAX_AUTOMATIC_LISTINGS = 96;
+export const PRO_MAX_MANUAL_LISTINGS = 96;
+export const PRO_ONE_TIME_EXPENSES = 200;
+export const PRO_SUBSCRIPTION_EXPENSES = 24;
 
 export const subscriptionLimits = {
     "free": {
         "automatic": FREE_MAX_AUTOMATIC_LISTINGS,
         "manual": FREE_MAX_MANUAL_LISTINGS,
+        "oneTimeExpenses": FREE_ONE_TIME_EXPENSES,
+        "subscriptionExpenses": FREE_SUBSCRIPTION_EXPENSES
     },
     "standard": {
         "automatic": STANDARD_MAX_AUTOMATIC_LISTINGS,
         "manual": STANDARD_MAX_MANUAL_LISTINGS,
+        "oneTimeExpenses": STANDARD_ONE_TIME_EXPENSES,
+        "subscriptionExpenses": STANDARD_SUBSCRIPTION_EXPENSES  
     },
     "pro": {
-        "automatic": PREMIUM_MAX_AUTOMATIC_LISTINGS,
-        "manual": PREMIUM_MAX_MANUAL_LISTINGS,
+        "automatic": PRO_MAX_AUTOMATIC_LISTINGS,
+        "manual": PRO_MAX_MANUAL_LISTINGS,
+        "oneTimeExpenses": PRO_ONE_TIME_EXPENSES,
+        "subscriptionExpenses": PRO_SUBSCRIPTION_EXPENSES
     },
     "enterprise": {
         "automatic": 1000,
         "manual": 1000,
+        "oneTimeExpenses": 400,
+        "subscriptionExpenses": 36
     },
 }
 

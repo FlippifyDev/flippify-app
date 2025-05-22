@@ -4,12 +4,13 @@ import { firestore } from "@/lib/firebase/config";
 import { createUser } from "./create";
 import { updateStoreInfo } from "../api/request";
 import { IListing, IOrder, ItemType, StoreType } from "@/models/store-data";
-import { inventoryCacheKey, orderCacheKey } from "@/utils/constants";
+import { inventoryCacheKey, oneTimeExpensesCacheKey, orderCacheKey, subscriptionsExpensesCacheKey } from "@/utils/constants";
 import { filterInventoryByTime, filterOrdersByTime } from "@/utils/filters";
-import {  getCachedData, setCachedData, storeDataFetched } from "@/utils/cache-helpers";
+import { getCachedData, setCachedData, storeDataFetched } from "@/utils/cache-helpers";
 
 // External Imports
 import { collection, doc, DocumentData, DocumentReference, getDoc, getDocs, limit, orderBy, query, QueryConstraint, QueryDocumentSnapshot, startAfter, startAt, where } from 'firebase/firestore';
+import { IOneTimeExpense, ISubscriptionExpense } from "@/models/expenses";
 
 
 
@@ -519,6 +520,318 @@ async function retrieveUserInventory({
 }
 
 
+async function retrieveUserSubscriptionExpensesFromDB(
+    uid: string,
+    timeFrom: string | null,
+    timeTo?: string,
+): Promise<Record<string, ISubscriptionExpense>> {
+    try {
+        // Reference to the user's collection
+        const collectionRef = collection(firestore, "expenses", uid, "subscriptions");
+
+        // Base query to get all items for the user
+        let q = query(collectionRef, orderBy("createdAt", "desc"));
+
+        // Apply timeFrom filter if provided
+        if (timeFrom) {
+            const timeFromDate = new Date(timeFrom).toISOString();
+            if (timeFromDate.toString() === "Invalid Date") {
+                throw new Error("Invalid timeFrom date format. Please provide a valid ISO date.");
+            }
+            q = query(q, where("createdAt", ">=", timeFromDate));
+        }
+
+        // Apply timeTo filter if provided
+        if (timeTo) {
+            const timeToDate = new Date(timeTo).toISOString();
+            if (timeToDate.toString() === "Invalid Date") {
+                throw new Error("Invalid timeTo date format. Please provide a valid ISO date.");
+            }
+            q = query(q, where("createdAt", "<=", timeToDate));
+        }
+
+        // Query Firestore with filters applied
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+            //console.log(`No subscription expenses items found for user with UID: ${uid}`);
+            return {}; // Return empty array if no subscription expenses items found
+        }
+
+        // Map over the documents and extract subscription expenses data matching ISubscriptionExpense interface
+        const subscriptionExpenses: Record<string, ISubscriptionExpense> = {};
+        querySnapshot.forEach((doc) => {
+            const data = doc.data() as ISubscriptionExpense;
+
+            if (data.id) {
+                subscriptionExpenses[data.id] = data as ISubscriptionExpense;
+            }
+        });
+
+        return subscriptionExpenses;
+    } catch (error) {
+        console.error(`Error retrieving subscription expenses for user with UID=${uid}:`, error);
+        throw new Error("Failed to retrieve user subscription expenses");
+    }
+}
+
+
+interface IRetrieveUserSubscriptionExpenses {
+    uid: string;
+    timeFrom: string;
+    update?: boolean;
+    timeTo?: string;
+}
+async function retrieveUserSubscriptionExpenses({
+    uid,
+    timeFrom,
+    update = false,
+    timeTo,
+}: IRetrieveUserSubscriptionExpenses): Promise<ISubscriptionExpense[]> {
+    const cacheKey = `${subscriptionsExpensesCacheKey}-${uid}`;
+
+    let cachedData: Record<string, ISubscriptionExpense> = {};
+    let cacheTimeFrom: Date | undefined;
+    let cacheTimeTo: Date | undefined;
+
+    // Try to get the cached data first
+    try {
+        const cache = getCachedData(cacheKey, true);
+        cachedData = cache.data as Record<string, ISubscriptionExpense>;
+        cacheTimeFrom = cache.cacheTimeFrom ? new Date(cache.cacheTimeFrom) : undefined;
+        cacheTimeTo = cache.cacheTimeTo ? new Date(cache.cacheTimeTo) : undefined;
+    } catch (error) {
+        console.error(`Error retrieving cached subscription expenses for user with UID=${uid}:`, error);
+    }
+
+    const timeFromDate = new Date(timeFrom);
+    const timeToDate = timeTo ? new Date(timeTo) : new Date();
+
+    // If cache exists and update is not requested
+    if (cachedData && Object.keys(cachedData).length > 0 && !update) {
+        // Determine the cached range
+        const cachedItems = Object.values(cachedData);
+        const oldestTime = cacheTimeFrom ?? new Date(cachedItems[cachedItems.length - 1].createdAt ?? "");
+        const newestTime = cacheTimeTo ?? new Date(cachedItems[0].createdAt ?? "");
+
+        // If the requested range is fully within the cached range, return filtered cached data.
+        if (timeFromDate >= oldestTime && timeToDate <= newestTime) {
+            //console.log("Requested date range is within cached subscription expenses range.");
+            return Object.values(cachedData);
+        }
+
+        let itemsToReturn: Record<string, ISubscriptionExpense> = { ...cachedData };
+
+        // Case 1: Need older subscription expenses (timeFrom is earlier than the oldest cached item)
+        if (timeFromDate < oldestTime && timeToDate <= newestTime) {
+            //console.log("Fetching older subscription expenses from Firestore.");
+            const olderData = await retrieveUserSubscriptionExpensesFromDB(uid, timeFrom, oldestTime.toISOString());
+            itemsToReturn = { ...olderData, ...itemsToReturn };
+        }
+        // Case 2: Need newer subscription expenses (timeTo is later than the newest cached item)
+        else if (timeFromDate >= oldestTime && timeToDate > newestTime) {
+            //console.log("Fetching newer subscription expenses from Firestore.");
+            const newerData = await retrieveUserSubscriptionExpensesFromDB(uid, newestTime.toISOString(), timeTo);
+            itemsToReturn = { ...itemsToReturn, ...newerData };
+        }
+        // Case 3: Need both older and newer subscription expenses
+        else if (timeFromDate < oldestTime && timeToDate > newestTime) {
+            //console.log("Fetching both older and newer subscription expenses from Firestore.");
+            const olderData = await retrieveUserSubscriptionExpensesFromDB(uid, timeFrom, oldestTime.toISOString());
+            const newerData = await retrieveUserSubscriptionExpensesFromDB(uid, newestTime.toISOString(), timeTo);
+            itemsToReturn = { ...olderData, ...itemsToReturn, ...newerData };
+        }
+
+        if (Object.keys(itemsToReturn).length > 0) {
+            const oldCache = getCachedData(cacheKey)
+            const merged = {
+                ...oldCache,
+                ...itemsToReturn
+            };
+            // Update the cache with the newly combined data and the new range
+            setCachedData(cacheKey, merged, timeFromDate, timeToDate);
+            return Object.values(itemsToReturn);
+        }
+        return [];
+    }
+    else if (!cachedData || Object.keys(cachedData).length === 0) {
+        // Add users Flippify Subscription
+    }
+
+    // If no valid cache exists or update is forced, fetch from Firestore
+    try {
+        const dataDict = await retrieveUserSubscriptionExpensesFromDB(uid, timeFrom, timeTo);
+
+        const oldCache = getCachedData(cacheKey)
+        const merged = {
+            ...oldCache,
+            ...dataDict
+        };
+        setCachedData(cacheKey, merged, timeFromDate, timeTo ? new Date(timeTo) : new Date());
+        return Object.values(dataDict);
+    } catch (error) {
+        console.error(`Error fetching subscription expenses for user with UID=${uid}:`, error);
+        return [];
+    }
+}
+
+
+async function retrieveUserOneTimeExpensesFromDB(
+    uid: string,
+    timeFrom: string | null,
+    timeTo?: string,
+): Promise<Record<string, IOneTimeExpense>> {
+    try {
+        // Reference to the user's collection
+        const collectionRef = collection(firestore, "expenses", uid, "oneTime");
+
+        // Base query to get all items for the user
+        let q = query(collectionRef, orderBy("createdAt", "desc"));
+
+        // Apply timeFrom filter if provided
+        if (timeFrom) {
+            const timeFromDate = new Date(timeFrom).toISOString();
+            if (timeFromDate.toString() === "Invalid Date") {
+                throw new Error("Invalid timeFrom date format. Please provide a valid ISO date.");
+            }
+            q = query(q, where("createdAt", ">=", timeFromDate));
+        }
+
+        // Apply timeTo filter if provided
+        if (timeTo) {
+            const timeToDate = new Date(timeTo).toISOString();
+            if (timeToDate.toString() === "Invalid Date") {
+                throw new Error("Invalid timeTo date format. Please provide a valid ISO date.");
+            }
+            q = query(q, where("createdAt", "<=", timeToDate));
+        }
+
+        // Query Firestore with filters applied
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+            //console.log(`No oneTime expenses items found for user with UID: ${uid}`);
+            return {}; // Return empty array if no oneTime expenses items found
+        }
+
+        // Map over the documents and extract oneTime expenses data matching IOneTimeExpense interface
+        const expenses: Record<string, IOneTimeExpense> = {};
+        querySnapshot.forEach((doc) => {
+            const data = doc.data() as IOneTimeExpense;
+
+            if (data.id) {
+                expenses[data.id] = data as IOneTimeExpense;
+            }
+        });
+
+        return expenses;
+    } catch (error) {
+        console.error(`Error retrieving oneTime expenses for user with UID=${uid}:`, error);
+        throw new Error("Failed to retrieve user oneTime expenses");
+    }
+}
+
+
+interface IRetrieveUserOneTimeExpenses {
+    uid: string;
+    timeFrom: string;
+    update?: boolean;
+    timeTo?: string;
+}
+async function retrieveUserOneTimeExpenses({
+    uid,
+    timeFrom,
+    update = false,
+    timeTo,
+}: IRetrieveUserOneTimeExpenses): Promise<IOneTimeExpense[]> {
+    const cacheKey = `${oneTimeExpensesCacheKey}-${uid}`;
+
+    let cachedData: Record<string, IOneTimeExpense> = {};
+    let cacheTimeFrom: Date | undefined;
+    let cacheTimeTo: Date | undefined;
+
+    // Try to get the cached data first
+    try {
+        const cache = getCachedData(cacheKey, true);
+        cachedData = cache.data as Record<string, IOneTimeExpense>;
+        cacheTimeFrom = cache.cacheTimeFrom ? new Date(cache.cacheTimeFrom) : undefined;
+        cacheTimeTo = cache.cacheTimeTo ? new Date(cache.cacheTimeTo) : undefined;
+    } catch (error) {
+        console.error(`Error retrieving cached subscription expenses for user with UID=${uid}:`, error);
+    }
+
+    const timeFromDate = new Date(timeFrom);
+    const timeToDate = timeTo ? new Date(timeTo) : new Date();
+
+    // If cache exists and update is not requested
+    if (cachedData && Object.keys(cachedData).length > 0 && !update) {
+        // Determine the cached range
+        const cachedItems = Object.values(cachedData);
+        const oldestTime = cacheTimeFrom ?? new Date(cachedItems[cachedItems.length - 1].createdAt ?? "");
+        const newestTime = cacheTimeTo ?? new Date(cachedItems[0].createdAt ?? "");
+
+        // If the requested range is fully within the cached range, return filtered cached data.
+        if (timeFromDate >= oldestTime && timeToDate <= newestTime) {
+            //console.log("Requested date range is within cached subscription expenses range.");
+            return Object.values(cachedData);
+        }
+
+        let itemsToReturn: Record<string, IOneTimeExpense> = { ...cachedData };
+
+        // Case 1: Need older subscription expenses (timeFrom is earlier than the oldest cached item)
+        if (timeFromDate < oldestTime && timeToDate <= newestTime) {
+            //console.log("Fetching older subscription expenses from Firestore.");
+            const olderData = await retrieveUserOneTimeExpensesFromDB(uid, timeFrom, oldestTime.toISOString());
+            itemsToReturn = { ...olderData, ...itemsToReturn };
+        }
+        // Case 2: Need newer subscription expenses (timeTo is later than the newest cached item)
+        else if (timeFromDate >= oldestTime && timeToDate > newestTime) {
+            //console.log("Fetching newer subscription expenses from Firestore.");
+            const newerData = await retrieveUserOneTimeExpensesFromDB(uid, newestTime.toISOString(), timeTo);
+            itemsToReturn = { ...itemsToReturn, ...newerData };
+        }
+        // Case 3: Need both older and newer subscription expenses
+        else if (timeFromDate < oldestTime && timeToDate > newestTime) {
+            //console.log("Fetching both older and newer subscription expenses from Firestore.");
+            const olderData = await retrieveUserOneTimeExpensesFromDB(uid, timeFrom, oldestTime.toISOString());
+            const newerData = await retrieveUserOneTimeExpensesFromDB(uid, newestTime.toISOString(), timeTo);
+            itemsToReturn = { ...olderData, ...itemsToReturn, ...newerData };
+        }
+
+        if (Object.keys(itemsToReturn).length > 0) {
+            const oldCache = getCachedData(cacheKey)
+            const merged = {
+                ...oldCache,
+                ...itemsToReturn
+            };
+            // Update the cache with the newly combined data and the new range
+            setCachedData(cacheKey, merged, timeFromDate, timeToDate);
+            return Object.values(itemsToReturn);
+        }
+        return [];
+    }
+    else if (!cachedData || Object.keys(cachedData).length === 0) {
+        // Add users Flippify Subscription
+    }
+
+    // If no valid cache exists or update is forced, fetch from Firestore
+    try {
+        const dataDict = await retrieveUserOneTimeExpensesFromDB(uid, timeFrom, timeTo);
+
+        const oldCache = getCachedData(cacheKey)
+        const merged = {
+            ...oldCache,
+            ...dataDict
+        };
+        setCachedData(cacheKey, merged, timeFromDate, timeTo ? new Date(timeTo) : new Date());
+        return Object.values(dataDict);
+    } catch (error) {
+        console.error(`Error fetching subscription expenses for user with UID=${uid}:`, error);
+        return [];
+    }
+}
+
+
 async function retrieveUserOrderItemRef(uid: string, storeType: StoreType, transactionId: string): Promise<DocumentReference | null> {
     try {
         const ordersCollectionRef = collection(firestore, "orders", uid, storeType);
@@ -644,4 +957,4 @@ async function retrieveOldestOrder({
 }
 
 
-export { retrieveUserAndCreate, retrieveUser, retrieveUserSnapshot, retrieveUserRef, retrieveUserRefById, retrieveUserOrders, retrieveUserInventory, retrieveUserOrderItemRef, retrieveUserOrdersInPeriod, retrieveOldestOrder };
+export { retrieveUserAndCreate, retrieveUser, retrieveUserSnapshot, retrieveUserRef, retrieveUserRefById, retrieveUserOrders, retrieveUserInventory, retrieveUserOrderItemRef, retrieveUserOrdersInPeriod, retrieveOldestOrder, retrieveUserSubscriptionExpenses, retrieveUserOneTimeExpenses };

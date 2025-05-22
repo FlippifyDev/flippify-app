@@ -19,8 +19,8 @@ export function fetchSubscriptionMaxListings(subscription: ISubscription) {
             }
         case 'Pro - member':
             return {
-                automatic: constants.PREMIUM_MAX_AUTOMATIC_LISTINGS,
-                manual: constants.PREMIUM_MAX_MANUAL_LISTINGS
+                automatic: constants.PRO_MAX_AUTOMATIC_LISTINGS,
+                manual: constants.PRO_MAX_MANUAL_LISTINGS
             }
         default:
             return {
@@ -72,4 +72,11 @@ export function fetchUserInventoryAndOrdersCount(
     const manualOrders = user?.store?.numOrders?.manual ?? 0;
 
     return { automaticListings, manualListings, automaticOrders, manualOrders };
+}
+
+export function fetchUserExpensesCount(user?: IUser) {
+    const subscriptions = user?.store?.numExpenses?.subscriptions ?? 0;
+    const oneTime = user?.store?.numExpenses?.oneTime ?? 0;
+
+    return { subscriptions, oneTime };
 }

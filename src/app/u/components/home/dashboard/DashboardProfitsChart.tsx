@@ -32,6 +32,7 @@ const DashboardProfitsChart: React.FC<DashboardProfitsChartProps> = ({
 			xaxis: {
 				categories: salesData.categories,
 				labels: {
+                    type: 'category', 
 					show: true,
 					formatter: (val: string) => {
 

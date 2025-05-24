@@ -134,10 +134,7 @@ const DashboardPage: React.FC = () => {
                 })
             );
             const orders = orderResults[orderResults.length - 1]?.[1] ?? [];
-
-            if (orders) {
-                setSalesData(orders);
-            }
+            setSalesData(orders);
         };
 
         const fetchInventoryData = async () => {

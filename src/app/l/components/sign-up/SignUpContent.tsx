@@ -199,7 +199,7 @@ const SignUpContent = () => {
                 </>
             )}
 
-            {status !== "under maintenance" && (
+            {status === "under maintenance" && (
                 <UnderMaintenance />
             )}
         </div>

@@ -256,7 +256,7 @@ const NavbarProfileAvatar = () => {
                         <div className="w-full border-b border-uiBorder my-1"></div>
                         <button
                             className='relative w-full grid grid-cols-12 py-1 gap-5 items-center flex-wrap flex-shrink-0 align-items rounded-b-md hover:bg-muted/10 active:bg-muted/30 transition duration-100'
-                            onClick={() => handleOpen("/l/blog")}>
+                            onClick={() => handleSignOut()}>
                             <span className='col-span-2 px-[0.75rem]'><PiSignOutBold /></span>
                             <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Sign Out</span>
                         </button>

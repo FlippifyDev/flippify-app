@@ -13,6 +13,8 @@ import { StatusType } from "@/models/config";
 import UnderMaintenance from "../development/UnderMaintenance";
 import { retrieveStatus } from "@/services/api/request";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
+import { validateEmailInput } from "@/utils/input-validation";
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
@@ -20,6 +22,7 @@ const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 const LoginContent = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [hidePassword, setHidePassword] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState<StatusType | null>(null);
@@ -68,6 +71,7 @@ const LoginContent = () => {
         fetchStatus()
     }, [])
 
+
     return (
         <div className="min-h-screen flex flex-col md:flex-row items-center justify-center p-4 -mt-24 gap-16">
             {(status === "active" || status === null) && (
@@ -95,21 +99,39 @@ const LoginContent = () => {
                                 onChange={(e) => setEmail(e.target.value)}
                                 className="input input-bordered w-full bg-white placeholder-gray-400"
                             />
-                            <input
-                                type="password"
-                                placeholder="Password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="input input-bordered w-full bg-white placeholder-gray-400"
-                                aria-required="false"
-                            />
+                            <div className="relative">
+                                <input
+                                    type={hidePassword ? 'password' : 'text'}
+                                    placeholder="Password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="input input-bordered w-full bg-white placeholder-gray-400"
+                                    aria-required="false"
+                                />
+                                <div className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded hover:bg-muted/80 text-lg" onClick={() => setHidePassword(!hidePassword)}>
+                                    {hidePassword ? (
+                                        <IoMdEye />
+                                    ) : (
+                                        <IoMdEyeOff />
+                                    )}
+                                </div>
+                            </div>
                             {errorMessage && (
                                 <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
                             )}
+                            <div className="flex flex-row gap-1 mt-5 justify-center">
+                                <button
+                                    type="button"
+                                    onClick={() => router.push("/l/reset-password")}
+                                    className="text-houseBlue hover:underline text-sm"
+                                >
+                                    Forgot your password?
+                                </button>
+                            </div>
                             <button
                                 type="submit"
-                                disabled={loading || !status}
-                                className="w-full mt-4 p-3 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 rounded-lg shadow-lg"
+                                disabled={loading || !status || !validateEmailInput(email) || !password}
+                                className="select-none disabled:bg-muted/50 disabled:text-gray-500 w-full mt-4 p-3 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 rounded-lg shadow-lg"
                             >
                                 {loading ?
                                     <div className="relative flex justify-center items-center">

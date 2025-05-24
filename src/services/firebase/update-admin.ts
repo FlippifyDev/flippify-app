@@ -291,8 +291,10 @@ export async function checkAndUpdateResetDates(uid: string): Promise<{ success?:
 
         await updateResetDate("numOrders", ["automatic", "manual"]);
         await updateResetDate("numExpenses", ["oneTime"]);
-
-        await userRef.update(updates);
+        
+        if (updates.length > 0) {
+            await userRef.update(updates);
+        }
 
         return { success: true };
     } catch (error) {

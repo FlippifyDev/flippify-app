@@ -168,100 +168,102 @@ const NavbarProfileAvatar = () => {
                 </div>
             </div>
             {isDropdownOpen && ( // Conditionally render the dropdown menu
-                <ul
-                    tabIndex={0}
-                    className="fixed top-10 !left-[-9.3rem] menu menu-sm p-0 dropdown-content bg-black border border-uiBorder text-white w-72 shadow rounded-bl-md"
-                >
-                    <div className="border-b border-uiBorder p-4 flex items-center">
-                        <div className="w-10 rounded-full mr-2 border border-uiBorder">
-                            <Image
-                                alt="Avatar"
-                                src={avatar}
-                                width={50}
-                                height={50}
-                                loading="lazy"
-                                className="rounded-full"
-                            />
+                <div className="fixed top-14 right-0">
+                    <ul
+                        tabIndex={0}
+                        className="menu menu-sm p-0 dropdown-content bg-black border border-uiBorder text-white w-72 shadow rounded-bl-md"
+                    >
+                        <div className="border-b border-uiBorder p-4 flex items-center">
+                            <div className="w-10 rounded-full mr-2 border border-uiBorder">
+                                <Image
+                                    alt="Avatar"
+                                    src={avatar}
+                                    width={50}
+                                    height={50}
+                                    loading="lazy"
+                                    className="rounded-full"
+                                />
+                            </div>
+                            <div className="text-sm flex flex-col">
+                                <span className="mr-2 text-white">{session?.user.username}</span>
+                                <span className="mr-2 text-gray-500 text-xs">{session?.user.email}</span>
+                            </div>
                         </div>
-                        <div className="text-sm flex flex-col">
-                            <span className="mr-2 text-white">{session?.user.username}</span>
-                            <span className="mr-2 text-gray-500 text-xs">{session?.user.email}</span>
-                        </div>
-                    </div>
-                    <div className="w-full">
-                        <div className="px-[0.75rem] my-2">
-                            <span className="text-white font-semibold">Account</span>
-                        </div>
-                        <button
-                            className='relative w-full grid grid-cols-12 py-1 gap-5 items-center flex-wrap flex-shrink-0 align-items hover:bg-muted/10 active:bg-muted/30 transition duration-100'
-                            onClick={handleProfileOpen}>
-                            <span className='col-span-2 px-[0.75rem]'><MdPersonOutline className="text-lg" /></span>
-                            <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Profile</span>
-                        </button>
-                        <button
-                            className='relative w-full grid grid-cols-12 py-1 gap-5 items-center flex-wrap flex-shrink-0 align-items hover:bg-muted/10 active:bg-muted/30 transition duration-100'
-                            onClick={handleSubscriptionsOpen}>
-                            <span className='col-span-2 px-[0.75rem]'><FaMagnifyingGlass /></span>
-                            <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Subscriptions</span>
-                        </button>
-                        <LayoutSubscriptionWrapper requiredSubscriptions={['admin']}>
+                        <div className="w-full">
+                            <div className="px-[0.75rem] my-2">
+                                <span className="text-white font-semibold">Account</span>
+                            </div>
                             <button
                                 className='relative w-full grid grid-cols-12 py-1 gap-5 items-center flex-wrap flex-shrink-0 align-items hover:bg-muted/10 active:bg-muted/30 transition duration-100'
-                                onClick={handleAdminOpen}>
-                                <span className='col-span-2 px-[0.75rem]'><MdOutlineAdminPanelSettings /></span>
-                                <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Admin</span>
+                                onClick={handleProfileOpen}>
+                                <span className='col-span-2 px-[0.75rem]'><MdPersonOutline className="text-lg" /></span>
+                                <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Profile</span>
                             </button>
-                        </LayoutSubscriptionWrapper>
-                        <LayoutSubscriptionWrapper requiredSubscriptions={['admin']}>
                             <button
                                 className='relative w-full grid grid-cols-12 py-1 gap-5 items-center flex-wrap flex-shrink-0 align-items hover:bg-muted/10 active:bg-muted/30 transition duration-100'
-                                onClick={handleTestingOpen}>
-                                <span className='col-span-2 px-[0.75rem]'><TbTestPipe /></span>
-                                <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Testing</span>
+                                onClick={handleSubscriptionsOpen}>
+                                <span className='col-span-2 px-[0.75rem]'><FaMagnifyingGlass /></span>
+                                <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Subscriptions</span>
                             </button>
-                        </LayoutSubscriptionWrapper>
-                        <button
-                            className='relative w-full grid grid-cols-12 py-1 gap-5 items-center flex-wrap flex-shrink-0 align-items hover:bg-muted/10 active:bg-muted/30 transition duration-100'
-                            onClick={handleBillingPortalButtonClick}>
-                            <span className='col-span-2 px-[0.75rem]'><PiWalletBold className="text-lg" /></span>
-                            <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Billing</span>
-                        </button>
-                        <div className="px-[0.75rem] my-2">
-                            <span className="text-white font-semibold">Resources</span>
+                            <LayoutSubscriptionWrapper requiredSubscriptions={['admin']}>
+                                <button
+                                    className='relative w-full grid grid-cols-12 py-1 gap-5 items-center flex-wrap flex-shrink-0 align-items hover:bg-muted/10 active:bg-muted/30 transition duration-100'
+                                    onClick={handleAdminOpen}>
+                                    <span className='col-span-2 px-[0.75rem]'><MdOutlineAdminPanelSettings /></span>
+                                    <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Admin</span>
+                                </button>
+                            </LayoutSubscriptionWrapper>
+                            <LayoutSubscriptionWrapper requiredSubscriptions={['admin']}>
+                                <button
+                                    className='relative w-full grid grid-cols-12 py-1 gap-5 items-center flex-wrap flex-shrink-0 align-items hover:bg-muted/10 active:bg-muted/30 transition duration-100'
+                                    onClick={handleTestingOpen}>
+                                    <span className='col-span-2 px-[0.75rem]'><TbTestPipe /></span>
+                                    <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Testing</span>
+                                </button>
+                            </LayoutSubscriptionWrapper>
+                            <button
+                                className='relative w-full grid grid-cols-12 py-1 gap-5 items-center flex-wrap flex-shrink-0 align-items hover:bg-muted/10 active:bg-muted/30 transition duration-100'
+                                onClick={handleBillingPortalButtonClick}>
+                                <span className='col-span-2 px-[0.75rem]'><PiWalletBold className="text-lg" /></span>
+                                <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Billing</span>
+                            </button>
+                            <div className="px-[0.75rem] my-2">
+                                <span className="text-white font-semibold">Resources</span>
+                            </div>
+                            <button
+                                className='relative w-full grid grid-cols-12 py-1 gap-5 items-center flex-wrap flex-shrink-0 align-items hover:bg-muted/10 active:bg-muted/30 transition duration-100'
+                                onClick={() => handleOpen("/l/blog")}>
+                                <span className='col-span-2 px-[0.75rem]'><MdOutlineBubbleChart className="text-lg" /></span>
+                                <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Blog</span>
+                            </button>
+                            <button
+                                className='relative w-full grid grid-cols-12 py-1 gap-5 items-center flex-wrap flex-shrink-0 align-items rounded-b-md hover:bg-muted/10 active:bg-muted/30 transition duration-100'
+                                onClick={() => handleOpen(discordLink)}>
+                                <span className='col-span-2 px-[0.75rem]'><RiDiscordLine className="text-lg" /></span>
+                                <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Discord</span>
+                            </button>
+                            <button
+                                className='relative w-full grid grid-cols-12 py-1 gap-5 items-center flex-wrap flex-shrink-0 align-items rounded-b-md hover:bg-muted/10 active:bg-muted/30 transition duration-100'
+                                onClick={() => handleOpen(discordSupportLink)}>
+                                <span className='col-span-2 px-[0.75rem]'><IoChatboxEllipsesOutline className="text-lg" /></span>
+                                <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Support</span>
+                            </button>
+                            <button
+                                className='relative w-full grid grid-cols-12 py-1 gap-5 items-center flex-wrap flex-shrink-0 align-items rounded-b-md hover:bg-muted/10 active:bg-muted/30 transition duration-100'
+                                onClick={() => handleOpen("/l/privacy-policy")}>
+                                <span className='col-span-2 px-[0.75rem]'><MdOutlinePrivacyTip className="text-lg" /></span>
+                                <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Privacy Policy</span>
+                            </button>
+                            <div className="w-full border-b border-uiBorder my-1"></div>
+                            <button
+                                className='relative w-full grid grid-cols-12 py-1 gap-5 items-center flex-wrap flex-shrink-0 align-items rounded-b-md hover:bg-muted/10 active:bg-muted/30 transition duration-100'
+                                onClick={() => handleSignOut()}>
+                                <span className='col-span-2 px-[0.75rem]'><PiSignOutBold /></span>
+                                <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Sign Out</span>
+                            </button>
                         </div>
-                        <button
-                            className='relative w-full grid grid-cols-12 py-1 gap-5 items-center flex-wrap flex-shrink-0 align-items hover:bg-muted/10 active:bg-muted/30 transition duration-100'
-                            onClick={() => handleOpen("/l/blog")}>
-                            <span className='col-span-2 px-[0.75rem]'><MdOutlineBubbleChart className="text-lg" /></span>
-                            <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Blog</span>
-                        </button>
-                        <button
-                            className='relative w-full grid grid-cols-12 py-1 gap-5 items-center flex-wrap flex-shrink-0 align-items rounded-b-md hover:bg-muted/10 active:bg-muted/30 transition duration-100'
-                            onClick={() => handleOpen(discordLink)}>
-                            <span className='col-span-2 px-[0.75rem]'><RiDiscordLine className="text-lg" /></span>
-                            <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Discord</span>
-                        </button>
-                        <button
-                            className='relative w-full grid grid-cols-12 py-1 gap-5 items-center flex-wrap flex-shrink-0 align-items rounded-b-md hover:bg-muted/10 active:bg-muted/30 transition duration-100'
-                            onClick={() => handleOpen(discordSupportLink)}>
-                            <span className='col-span-2 px-[0.75rem]'><IoChatboxEllipsesOutline className="text-lg" /></span>
-                            <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Support</span>
-                        </button>
-                        <button
-                            className='relative w-full grid grid-cols-12 py-1 gap-5 items-center flex-wrap flex-shrink-0 align-items rounded-b-md hover:bg-muted/10 active:bg-muted/30 transition duration-100'
-                            onClick={() => handleOpen("/l/privacy-policy")}>
-                            <span className='col-span-2 px-[0.75rem]'><MdOutlinePrivacyTip className="text-lg" /></span>
-                            <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Privacy Policy</span>
-                        </button>
-                        <div className="w-full border-b border-uiBorder my-1"></div>
-                        <button
-                            className='relative w-full grid grid-cols-12 py-1 gap-5 items-center flex-wrap flex-shrink-0 align-items rounded-b-md hover:bg-muted/10 active:bg-muted/30 transition duration-100'
-                            onClick={() => handleSignOut()}>
-                            <span className='col-span-2 px-[0.75rem]'><PiSignOutBold /></span>
-                            <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Sign Out</span>
-                        </button>
-                    </div>
-                </ul>
+                    </ul>
+                </div>
             )}
         </div>
     );

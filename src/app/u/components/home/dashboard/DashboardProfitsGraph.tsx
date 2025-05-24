@@ -9,7 +9,8 @@ import {
 	endOfMonth,
 	format,
 	subDays,
-	isWithinInterval
+	isWithinInterval,
+    parse
 } from "date-fns";
 import { enGB } from 'date-fns/locale';
 import React, { useEffect, useState } from "react";
@@ -146,7 +147,7 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({
                 if (order.status !== "Completed" || !order.sale?.date || !order.purchase?.price) continue;
 
 				// Parse the order date
-				const saleDate = new Date(order.sale.date);
+                const saleDate = new Date(order.sale.date);
 
 				// Ensure order has a purchase price and order price
 				if (!order.purchase.price || !order.sale.price) continue;
@@ -214,29 +215,41 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({
 			setPreviousNetProfit(previousRangeNetProfit);
 
 			// Determine categories based on the populated map (daily or monthly)
-			const categories =
-				Array.from(revenueByDate.keys()).length === 0
-					? Array.from(revenueByMonth.keys()).reverse()
-					: Array.from(revenueByDate.keys()).reverse();
+
+            const usingDaily = Array.from(revenueByDate.keys()).length > 0;
+
+
+            const revenueMap = usingDaily ? revenueByDate : revenueByMonth;
+            const costsMap = usingDaily ? costsByDate : costsByMonth;
+            const profitMap = usingDaily ? profitByDate : profitByMonth;
+
+            // Sort entries by parsed date
+            const sortedRevenueEntries = Array.from(revenueMap.entries()).sort(
+                ([a], [b]) => parse(a, 'dd MM yyyy', new Date()).getTime() - parse(b, 'dd MM yyyy', new Date()).getTime()
+            );
+
+            const sortedCostsEntries = Array.from(costsMap.entries()).sort(
+                ([a], [b]) => parse(a, 'dd MM yyyy', new Date()).getTime() - parse(b, 'dd MM yyyy', new Date()).getTime()
+            );
+
+            const sortedProfitEntries = Array.from(profitMap.entries()).sort(
+                ([a], [b]) => parse(a, 'dd MM yyyy', new Date()).getTime() - parse(b, 'dd MM yyyy', new Date()).getTime()
+              );
+
+            const categories = sortedRevenueEntries.map(([date]) => date);
+            const revenueData = sortedRevenueEntries.map(([_, value]) => value);
+            const costsData = sortedCostsEntries.map(([_, value]) => value);
+            const profitData = sortedProfitEntries.map(([_, value]) => value);
 
 			// Set chart data
-			setChartData({
-				categories,
-				series: [
-					{
-						name: "Revenue",
-						data: Array.from(revenueByDate.values()).length === 0 ? Array.from(revenueByMonth.values()) : Array.from(revenueByDate.values()),
-					},
-					{
-						name: "Costs",
-						data: Array.from(costsByDate.values()).length === 0 ? Array.from(costsByMonth.values()) : Array.from(costsByDate.values()),
-					},
-					{
-						name: "Profit",
-						data: Array.from(profitByDate.values()).length === 0 ? Array.from(profitByMonth.values()) : Array.from(profitByDate.values()),
-					},
-				],
-			});
+            setChartData({
+                categories,
+                series: [
+                    { name: "Revenue", data: revenueData },
+                    { name: "Costs", data: costsData },
+                    { name: "Profit", data: profitData },
+                ],
+            });
 		};
 
 		calculateRevenueProfitsAndCosts();

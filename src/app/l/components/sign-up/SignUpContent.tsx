@@ -20,6 +20,7 @@ import { signIn } from "next-auth/react";
 import { Lato } from 'next/font/google';
 import dotenv from "dotenv";
 import Image from "next/image";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 
 dotenv.config();
 
@@ -310,6 +311,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
     const [hasOneSpecial, setHasOneSpecial] = useState(false);
     const [validEmail, setValidEmail] = useState(false);
 
+    const [hidePassword, setHidePassword] = useState(true);
+
     function handlePasswordInput(value: string) {
         validatePasswordInput(value, setPassword)
         // At least 8 characters
@@ -330,6 +333,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
         }
         validateEmail(value, setEmail);
     }
+
 
 
     return (
@@ -359,13 +363,23 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                     onChange={(e) => handleEmailInput(e.target.value)}
                     className="input input-bordered w-full bg-white placeholder-gray-400"
                 />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => handlePasswordInput(e.target.value)}
-                    className="input input-bordered w-full bg-white placeholder-gray-400"
-                />
+                <div className="relative">
+                    <input
+                        type={hidePassword ? 'password' : 'text'}
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => handlePasswordInput(e.target.value)}
+                        className="input input-bordered w-full bg-white placeholder-gray-400"
+                        aria-required="false"
+                    />
+                    <div className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded hover:bg-muted/80 text-lg" onClick={() => setHidePassword(!hidePassword)}>
+                        {hidePassword ? (
+                            <IoMdEye />
+                        ) : (
+                            <IoMdEyeOff />
+                        )}
+                    </div>
+                </div>
                 <div className="w-full px-1">
                     {/* Length Check */}
                     <div className={`flex justify-between items-center text-sm ${hasEightCharacters ? "text-houseBlue" : "text-gray-400"}`}>

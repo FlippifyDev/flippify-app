@@ -276,6 +276,11 @@ const Navbar = () => {
                                 {sidebarSubMenu === 1 && (
                                     <ul className="px-2 transition-all duration-200">
                                         <SidebarSubItem
+                                            text="Blog"
+                                            href="/l/blog"
+                                            icon={<MdOutlineBubbleChart />}
+                                        />
+                                        <SidebarSubItem
                                             text="About Us"
                                             href="/l/about"
                                             icon={<ImBubble />}
@@ -299,11 +304,6 @@ const Navbar = () => {
                                             text="Attributions"
                                             href="/l/attributions"
                                             icon={<FaBalanceScale />}
-                                        />
-                                        <SidebarSubItem
-                                            text="Sitemap"
-                                            href="/l/sitemap"
-                                            icon={<FaSitemap />}
                                         />
                                     </ul>
                                 )}

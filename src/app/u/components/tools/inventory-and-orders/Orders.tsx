@@ -8,7 +8,7 @@ import UpdateTableField from './UpdateTableField';
 import { getCachedData } from '@/utils/cache-helpers';
 import { formatTableDate } from '@/utils/format-dates';
 import { currencySymbols } from '@/config/currency-config';
-import { retrieveUserOrders } from '@/services/firebase/retrieve';
+import { retrieveIdToken, retrieveUserOrders } from '@/services/firebase/retrieve';
 import { fetchUserOrdersCount } from '@/utils/extract-user-data';
 import { retrieveUserStoreTypes } from '@/services/firebase/retrieve-admin';
 import { defaultTimeFrom, orderCacheKey } from '@/utils/constants';
@@ -49,7 +49,10 @@ const Orders = () => {
 
             setLoading(true);
 
-            const storeTypes = await retrieveUserStoreTypes(session.user?.id as string, "orders");
+            const idToken = await retrieveIdToken();
+            if (!idToken) return;
+
+            const storeTypes = await retrieveUserStoreTypes({ idToken, itemType: "orders" });
             if (!storeTypes) return;
 
             // for each storeType, fetch their orders in parallel
@@ -142,7 +145,7 @@ const Orders = () => {
                                         onClick={() => handleRouteToOrderPage(order)}
                                         className={`min-w-20 cursor-pointer ${index + 1 === paginatedData.length ? "rounded-bl-xl" : ""}`}>
                                         <Image
-                                            src={order.image ? order.image[0]: ""}
+                                            src={order.image ? order.image[0] : ""}
                                             width={100}
                                             height={100}
                                             alt={"image"}

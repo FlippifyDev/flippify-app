@@ -13,7 +13,7 @@ import Modal from "../../dom/ui/Modal";
 import ButtonUpgradeSubscription from "./ButtonUpgradeSubscription";
 import { fetchConversionRates } from "@/utils/currency-api";
 import { validateAlphaNumericInput } from "@/utils/input-validation";
-import { MAX_INPUT_LENGTH } from "@/utils/constants";
+import { ENTERPRISE_MONTHLY_PID, ENTERPRISE_YEARLY_PID, FREE_MONTHLY_PID, FREE_YEARLY_PID, MAX_INPUT_LENGTH, PRO_MONTHLY_PID, PRO_YEARLY_PID, STANDARD_MONTHLY_PID, STANDARD_YEARLY_PID } from "@/utils/constants";
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
@@ -170,8 +170,8 @@ const PlansPage = () => {
                     prices={{ monthly: 0, yearly: 0 }}
                     discountedPrices={{ monthly: 0, yearly: 0 }}
                     priceIds={{
-                        monthly: "price_1R6umYJJRepiHZ8duYSajDvz",
-                        yearly: "price_1R6umYJJRepiHZ8d7eBwpE78",
+                        monthly: FREE_MONTHLY_PID,
+                        yearly: FREE_YEARLY_PID,
                     }}
                     isOnboarding={isOnboarding}
                     currentSubscriptionName={currentSubscriptionName}
@@ -187,8 +187,8 @@ const PlansPage = () => {
                     prices={{ monthly: 9.99, yearly: 99.90 }}
                     discountedPrices={{ monthly: 4.99, yearly: 49.90 }}
                     priceIds={{
-                        monthly: "price_1R6umXJJRepiHZ8dXNPscGu8",
-                        yearly: "price_1R6umXJJRepiHZ8d473LpjVZ",
+                        monthly: STANDARD_MONTHLY_PID,
+                        yearly: STANDARD_YEARLY_PID,
                     }}
                     isOnboarding={isOnboarding}
                     currentSubscriptionName={currentSubscriptionName}
@@ -205,8 +205,8 @@ const PlansPage = () => {
                     prices={{ monthly: 19.99, yearly: 199.90 }}
                     discountedPrices={{ monthly: 9.99, yearly: 99.90 }}
                     priceIds={{
-                        monthly: "price_1R6umUJJRepiHZ8dEZib7Bd1",
-                        yearly: "price_1R6umUJJRepiHZ8dUeqJXo5d",
+                        monthly: PRO_MONTHLY_PID,
+                        yearly: PRO_YEARLY_PID,
                     }}
                     isOnboarding={isOnboarding}
                     currentSubscriptionName={currentSubscriptionName}
@@ -222,8 +222,8 @@ const PlansPage = () => {
                     prices={{ monthly: 199.99, yearly: 1999.90 }}
                     discountedPrices={{ monthly: 99.99, yearly: 999.90 }}
                     priceIds={{
-                        monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
-                        yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
+                        monthly: ENTERPRISE_MONTHLY_PID,
+                        yearly: ENTERPRISE_YEARLY_PID,
                     }}
                     isOnboarding={isOnboarding}
                     currentSubscriptionName={currentSubscriptionName}

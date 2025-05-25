@@ -56,15 +56,17 @@ export async function updateStripeUserSubscription(customerId: string, newPriceI
 
     try {
         let discounts: Stripe.Checkout.SessionCreateParams.Discount[] = [];
-
-        const { coupon: couponCode, promotionCode, promoId } = await retrieveCouponCodeOrPromotionCode(coupon ?? "");
-        if (!couponCode && !promotionCode) {
-            return { error: "Invalid coupon code" };
-        }
-        if (couponCode) {
-            discounts.push({ coupon: coupon });
-        } else if (promotionCode && promoId) {
-            discounts.push({ promotion_code: promoId });
+        
+        if (coupon) {
+            const { coupon: couponCode, promotionCode, promoId } = await retrieveCouponCodeOrPromotionCode(coupon ?? "");
+            if (!couponCode && !promotionCode) {
+                return { error: "Invalid coupon code" };
+            }
+            if (couponCode) {
+                discounts.push({ coupon: coupon });
+            } else if (promotionCode && promoId) {
+                discounts.push({ promotion_code: promoId });
+            }
         }
 
         await stripe.subscriptions.update(

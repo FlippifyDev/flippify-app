@@ -10,7 +10,7 @@ import { IOrder } from '@/models/store-data'
 import InventoryAndCogs from './InventoryAndCogs'
 import { formatDateToISO } from '@/utils/format-dates'
 import DateRangeSelector, { TimeRange, generateTimeRanges } from './DateRangeSelector'
-import { retrieveOldestOrder, retrieveUserOrders, retrieveUserOrdersInPeriod } from '@/services/firebase/retrieve'
+import { retrieveIdToken, retrieveOldestOrder, retrieveUserOrders, retrieveUserOrdersInPeriod } from '@/services/firebase/retrieve'
 
 // External Imports
 import { useEffect, useState } from 'react'
@@ -75,7 +75,10 @@ const Page = () => {
         if (!session?.user.id) return
 
         async function initTimeRanges() {
-            const storeTypes = await retrieveUserStoreTypes(session?.user?.id as string, "orders");
+            const idToken = await retrieveIdToken();
+            if (!idToken) return;
+
+            const storeTypes = await retrieveUserStoreTypes({ idToken, itemType: "orders" });
             if (!storeTypes) return;
 
             const oldestOrder = await retrieveOldestOrder({
@@ -87,7 +90,7 @@ const Page = () => {
                 : new Date()
 
             const end = new Date(firstSaleDate.getFullYear(), 11, 31, 23, 59, 59, 999);
- 
+
             const ranges = generateTimeRanges(firstSaleDate, end)
             setTimeRanges(ranges)
 
@@ -110,7 +113,10 @@ const Page = () => {
             if (!session) return;
             setLoading(true);
 
-            const storeTypes = await retrieveUserStoreTypes(session.user?.id as string, "orders");
+            const idToken = await retrieveIdToken();
+            if (!idToken) return;
+
+            const storeTypes = await retrieveUserStoreTypes({ idToken, itemType: "orders" });
             if (!storeTypes) return;
 
             const salesResult = await Promise.all(
@@ -175,7 +181,7 @@ const Page = () => {
                                 timeRanges={timeRanges}
                             />
                         )}
-                        <Download 
+                        <Download
                             orders={sales ?? []}
                             timeFrom={periodStart}
                             timeTo={periodEnd}

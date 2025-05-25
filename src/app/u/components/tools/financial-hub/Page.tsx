@@ -15,7 +15,7 @@ import CardListingsAmount from "./ListingsAndOrdersAmount";
 import CardProfitsBarChart from "./ProfitsBarChart";
 import { currencySymbols } from "@/config/currency-config";
 import CardPlatformDonutChart from "./PlatformDonutChart";
-import { retrieveUserOrders } from "@/services/firebase/retrieve";
+import { retrieveIdToken, retrieveUserOrders } from "@/services/firebase/retrieve";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import { formatOrdersForCSVExport } from "@/utils/format";
 import { defaultTimeFrom, exportCSVAllowedSubscriptionPlans, orderCacheKey } from "@/utils/constants";
@@ -59,7 +59,7 @@ const Page = () => {
             }
 
             setLoading(true);
-            
+
             if (selectedFilter === "All") {
                 // for each storeType, fetch their orders in parallel
                 await Promise.all(
@@ -85,10 +85,10 @@ const Page = () => {
             const cache = getCachedData(`${orderCacheKey}-${session.user.id}`);
             if (cache) {
                 const results = Object.values(cache) as IOrder[];
-                
+
                 const filteredOrders = results.filter(order => {
                     const matchesStore = selectedFilter === "All" || order.storeType === selectedFilter;
-                    
+
                     if (!order.sale?.date) return;
                     const orderDate = new Date(order.sale.date);
                     const from = new Date(timeFrom);
@@ -100,8 +100,8 @@ const Page = () => {
 
                     return matchesStore && matchesTime;
                 });
-                
-                setOrders(filteredOrders); 
+
+                setOrders(filteredOrders);
             }
             setLoading(false);
         }
@@ -117,7 +117,10 @@ const Page = () => {
                 return;
             }
 
-            const storeTypes = await retrieveUserStoreTypes(session.user.id, "orders");
+            const idToken = await retrieveIdToken();
+            if (!idToken) return;
+
+            const storeTypes = await retrieveUserStoreTypes({ idToken, itemType: "orders" });
             if (!storeTypes) return;
 
             setStoreTypes(storeTypes)

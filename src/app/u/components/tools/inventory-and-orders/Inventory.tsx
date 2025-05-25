@@ -10,7 +10,7 @@ import UpdateTableField from "./UpdateTableField";
 import { formatTableDate } from "@/utils/format-dates";
 import { currencySymbols } from "@/config/currency-config";
 import { IListing, StoreType } from "@/models/store-data";
-import { retrieveUserInventory } from "@/services/firebase/retrieve";
+import { retrieveIdToken, retrieveUserInventory } from "@/services/firebase/retrieve";
 import { fetchUserListingsCount } from "@/utils/extract-user-data";
 import { retrieveUserStoreTypes } from "@/services/firebase/retrieve-admin";
 import { getCachedData, removeCacheData } from "@/utils/cache-helpers";
@@ -56,7 +56,10 @@ const Inventory = () => {
 
             setLoading(true);
 
-            const storeTypes = await retrieveUserStoreTypes(session.user?.id as string, "orders");
+            const idToken = await retrieveIdToken();
+            if (!idToken) return;
+
+            const storeTypes = await retrieveUserStoreTypes({ idToken, itemType: "orders" });
             if (!storeTypes) return;
 
             // for each storeType, fetch their inventory in parallel

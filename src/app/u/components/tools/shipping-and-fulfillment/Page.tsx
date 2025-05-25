@@ -7,7 +7,7 @@ import { IOrder } from '@/models/store-data';
 import ReadyToShip from './ReadyToShip';
 import LoadingSpinner from '@/app/components/LoadingSpinner';
 import { defaultTimeFrom } from '@/utils/constants';
-import { retrieveUserOrders } from '@/services/firebase/retrieve';
+import { retrieveIdToken, retrieveUserOrders } from '@/services/firebase/retrieve';
 import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
 import { retrieveUserStoreTypes } from '@/services/firebase/retrieve-admin';
 
@@ -49,8 +49,10 @@ const Page = () => {
             if (initialLoad) {
                 setLoading(true);
             }
+            const idToken = await retrieveIdToken();
+            if (!idToken) return;
 
-            const storeTypes = await retrieveUserStoreTypes(session.user?.id as string, "orders");
+            const storeTypes = await retrieveUserStoreTypes({ idToken, itemType: "orders" });
             if (!storeTypes) return;
 
             const salesResult = await Promise.all(
@@ -111,10 +113,10 @@ const Page = () => {
                                         ))}
                                     </table>
                                     <div className='mt-4 flex justify-end'>
-                                            <div className="flex flex-row items-center">
-                                                <button className='rounded-l flex items-center justify-center p-2 h-8 w-8 bg-gray-200 hover:bg-gray-300 active:bg-gray-200' onClick={() => setActivePage(prev => Math.max(prev - 1, 1))} disabled={activePage === 1}>«</button>
-                                                <button className="p-2 h-8 flex items-center justify-center bg-gray-200 text-sm font-semibold">{activePage} / {totalActivePages}</button>
-                                                <button className='rounded-r flex items-center justify-center p-2 h-8 w-8 bg-gray-200 hover:bg-gray-300 active:bg-gray-200' onClick={() => setActivePage(prev => Math.min(prev + 1, totalActivePages))} disabled={activePage === totalActivePages}>»</button>
+                                        <div className="flex flex-row items-center">
+                                            <button className='rounded-l flex items-center justify-center p-2 h-8 w-8 bg-gray-200 hover:bg-gray-300 active:bg-gray-200' onClick={() => setActivePage(prev => Math.max(prev - 1, 1))} disabled={activePage === 1}>«</button>
+                                            <button className="p-2 h-8 flex items-center justify-center bg-gray-200 text-sm font-semibold">{activePage} / {totalActivePages}</button>
+                                            <button className='rounded-r flex items-center justify-center p-2 h-8 w-8 bg-gray-200 hover:bg-gray-300 active:bg-gray-200' onClick={() => setActivePage(prev => Math.min(prev + 1, totalActivePages))} disabled={activePage === totalActivePages}>»</button>
                                         </div>
                                     </div>
                                 </>

@@ -5,7 +5,7 @@ import React, { useState, useEffect, useRef } from "react";
 
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import DashboardRecentSalesCard from "./DashboardRecentSalesCard";
-import { retrieveUserInventory, retrieveUserOneTimeExpenses, retrieveUserOrders } from "@/services/firebase/retrieve";
+import { retrieveIdToken, retrieveUserInventory, retrieveUserOneTimeExpenses, retrieveUserOrders } from "@/services/firebase/retrieve";
 import ProfitsGraphDateFilter from "./ProfitsGraphDateFilter";
 import LayoutLoadingSkeleton from "../../layout/LayoutLoadingSkeleton";
 import ProfitsGraphTagFilter from "./ProfitsGraphTagFilter";
@@ -120,7 +120,9 @@ const DashboardPage: React.FC = () => {
         const fetchSalesData = async () => {
             if (!session) return;
 
-            const storeTypes = await retrieveUserStoreTypes(session.user?.id as string, "orders");
+            const idToken = await retrieveIdToken();
+            if (!idToken) return;
+            const storeTypes = await retrieveUserStoreTypes({ idToken, itemType: "orders" });
             if (!storeTypes) return;
 
             const orderResults = await Promise.all(
@@ -139,7 +141,11 @@ const DashboardPage: React.FC = () => {
 
         const fetchInventoryData = async () => {
             if (!session) return;
-            const storeTypes = await retrieveUserStoreTypes(session.user?.id as string, "orders");
+
+            const idToken = await retrieveIdToken();
+            if (!idToken) return;
+            
+            const storeTypes = await retrieveUserStoreTypes({ idToken, itemType: "inventory" });
             if (!storeTypes) return;
 
             const inventoryResults = await Promise.all(

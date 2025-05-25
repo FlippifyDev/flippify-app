@@ -41,6 +41,4 @@ async function deleteItem({ uid, itemType, storeType, docId, createdAt, isAuto =
     }
 }
 
-
-
 export { deleteItem }

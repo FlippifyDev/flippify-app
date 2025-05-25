@@ -403,7 +403,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
 
                 <button
                     type="submit"
-                    disabled={loading || !status || !hasEightCharacters || !hasOneNumber || !hasOneSpecial || !validEmail}
+                    disabled={loading || !status || !hasEightCharacters || !hasOneNumber || !hasOneSpecial || !validEmail || !username}
                     className="w-full mt-4 p-3 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white disabled:bg-muted/50 disabled:text-gray-500 transition duration-300 rounded-lg shadow-lg"
                 >
                     {loading ?

@@ -7,6 +7,8 @@ import { retrieveCouponCodeOrPromotionCode } from './retrieve';
 
 // External Imports
 import Stripe from 'stripe';
+import { updateStripeUserSubscription } from './update';
+import { FREE_MONTHLY_PID } from '@/utils/constants';
 
 
 const createBillingPortalUrl = async (username: string, customerId: string) => {
@@ -188,6 +190,60 @@ const createAndApplyCoupon = async (subscriptionName: string | null, customerId:
         throw error;
     }
 };
+
+
+export async function createRefund(customerId: string): Promise<{ success?: boolean, error?: any }> {
+    const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
+
+    if (!stripeAPIKey) {
+        createRefund
+        throw new Error('Stripe api key not found (createRefund)');
+    }
+
+    const stripe = new Stripe(stripeAPIKey);
+
+    try {
+        // Step 1: List the most recent charges for the customer
+        const charges = await stripe.charges.list({
+            customer: customerId,
+            limit: 1,
+        });
+
+        if (charges.data.length === 0) {
+            throw new Error("No charges found for this customer.");
+        }
+
+        const charge = charges.data[0];
+
+        // Step 2: Get the latest charge from the payment intent
+        const chargeId = charge.id;
+
+        if (!chargeId) {
+            throw new Error("No charge found for this payment intent.");
+        }
+
+        // Step 3: Check if the charge occured in the previous 7 days
+        const createdAt = charge.created
+        const sevenDaysAgo = Math.floor(Date.now() / 1000) - 7 * 24 * 60 * 60;
+        if (createdAt < sevenDaysAgo) {
+            throw new Error('Charge is older than 7 days and cannot be refunded automatically.');
+        }
+
+        // Step 4: Create the refund
+        await stripe.refunds.create({
+            charge: chargeId,
+        });
+        
+        // Step 5: Update users subscription to the free plan
+        const { error } = await updateStripeUserSubscription(customerId, FREE_MONTHLY_PID);
+        if (error) throw error;
+
+        return { success: true };
+    } catch (error) {
+        console.error("Refund error:", error);
+        return { error: `${error}` }
+    }
+}
 
 
 export { createBillingPortalUrl, createCheckoutSession, createAndApplyCoupon };

@@ -41,6 +41,19 @@ export const PRO_MAX_MANUAL_LISTINGS = 96;
 export const PRO_ONE_TIME_EXPENSES = 200;
 export const PRO_SUBSCRIPTION_EXPENSES = 24;
 
+// Product IDs
+export const FREE_MONTHLY_PID = "price_1R6umYJJRepiHZ8duYSajDvz";
+export const FREE_YEARLY_PID = "price_1R6umYJJRepiHZ8d7eBwpE78";
+
+export const STANDARD_MONTHLY_PID = "price_1R6umXJJRepiHZ8dXNPscGu8";
+export const STANDARD_YEARLY_PID = "price_1R6umXJJRepiHZ8d473LpjVZ";
+
+export const PRO_MONTHLY_PID = "price_1R6umUJJRepiHZ8dEZib7Bd1";
+export const PRO_YEARLY_PID = "price_1R6umUJJRepiHZ8dUeqJXo5d";
+
+export const ENTERPRISE_MONTHLY_PID = "price_1PfJ9YJJRepiHZ8d9ejubfba";
+export const ENTERPRISE_YEARLY_PID = "price_1PfJ9YJJRepiHZ8dXJSNvIx6";
+
 export const subscriptionLimits = {
     "free": {
         "automatic": FREE_MAX_AUTOMATIC_LISTINGS,

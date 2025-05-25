@@ -3,7 +3,7 @@
 // Local Imports
 import LoadingSpinner from '@/app/components/LoadingSpinner';
 import { IListing, IOrder } from '@/models/store-data';
-import { retrieveUserInventory } from '@/services/firebase/retrieve';
+import { retrieveIdToken, retrieveUserInventory } from '@/services/firebase/retrieve';
 import { formatSalesForCSVExport, formatCOGSForCSVExport, formatInventoryForCSVExport, formatRefundsForCSVExport } from '@/utils/format';
 
 // External Imports
@@ -31,7 +31,10 @@ const Download: React.FC<IDownloadProps> = ({ orders, timeFrom, timeTo }) => {
         const fetchInventory = async () => {
             if (!session) return;
 
-            const storeTypes = await retrieveUserStoreTypes(session.user?.id as string, "orders");
+            const idToken = await retrieveIdToken();
+            if (!idToken) return;
+
+            const storeTypes = await retrieveUserStoreTypes({ idToken, itemType: "orders" });
             if (!storeTypes) return;
 
             const inventoryResults = await Promise.all(

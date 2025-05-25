@@ -1,17 +1,31 @@
 // Local Imports
 import { IUser } from "@/models/user";
-import { firestore } from "@/lib/firebase/config";
 import { createUser } from "./create";
 import { updateStoreInfo } from "../api/request";
-import { IListing, IOrder, ItemType, StoreType } from "@/models/store-data";
-import { inventoryCacheKey, oneTimeExpensesCacheKey, orderCacheKey, subscriptionsExpensesCacheKey } from "@/utils/constants";
+import { firestore, auth } from "@/lib/firebase/config";
+import { IListing, IOrder, StoreType } from "@/models/store-data";
 import { filterInventoryByTime, filterOrdersByTime } from "@/utils/filters";
 import { getCachedData, setCachedData, storeDataFetched } from "@/utils/cache-helpers";
+import { inventoryCacheKey, oneTimeExpensesCacheKey, orderCacheKey, subscriptionsExpensesCacheKey } from "@/utils/constants";
 
 // External Imports
 import { collection, doc, DocumentData, DocumentReference, getDoc, getDocs, limit, orderBy, query, QueryConstraint, QueryDocumentSnapshot, startAfter, startAt, where } from 'firebase/firestore';
 import { IOneTimeExpense, ISubscriptionExpense } from "@/models/expenses";
 
+
+async function retrieveIdToken() {
+    try {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        const idToken = await user?.getIdToken();
+        if (!idToken) return;
+
+        return idToken;
+    } catch (error) {
+        console.error(error)
+    }
+}
 
 
 /**
@@ -957,4 +971,4 @@ async function retrieveOldestOrder({
 }
 
 
-export { retrieveUserAndCreate, retrieveUser, retrieveUserSnapshot, retrieveUserRef, retrieveUserRefById, retrieveUserOrders, retrieveUserInventory, retrieveUserOrderItemRef, retrieveUserOrdersInPeriod, retrieveOldestOrder, retrieveUserSubscriptionExpenses, retrieveUserOneTimeExpenses };
+export { retrieveIdToken, retrieveUserAndCreate, retrieveUser, retrieveUserSnapshot, retrieveUserRef, retrieveUserRefById, retrieveUserOrders, retrieveUserInventory, retrieveUserOrderItemRef, retrieveUserOrdersInPeriod, retrieveOldestOrder, retrieveUserSubscriptionExpenses, retrieveUserOneTimeExpenses };

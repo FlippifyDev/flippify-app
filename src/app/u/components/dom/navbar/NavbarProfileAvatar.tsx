@@ -1,25 +1,23 @@
 "use client";
 
 // Local Imoports
-import { auth } from "@/lib/firebase/config";
+import { handleSignOut } from "@/services/sign-out";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import { createBillingPortalUrl } from "@/services/stripe/create";
+import { discordLink, discordSupportLink } from "@/utils/constants";
 
 // External Imports
-import { signOut as nextSignOut, useSession } from "next-auth/react";
-import { useState, useRef, useEffect } from "react";
-import { signOut as firebaseSignout } from "firebase/auth";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { MdOutlineAdminPanelSettings, MdOutlineBubbleChart, MdOutlineKeyboardArrowDown, MdOutlinePrivacyTip, MdPersonOutline } from "react-icons/md";
-import { RxPerson } from "react-icons/rx";
 import { PiSignOutBold, PiWalletBold } from "react-icons/pi";
-import { TbTestPipe } from "react-icons/tb";
+import { useState, useRef, useEffect } from "react";
+import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { RiDiscordLine } from "react-icons/ri";
-import { FaFileAlt } from "react-icons/fa";
-import { IoChatboxEllipsesOutline } from "react-icons/io5";
-import { discordLink, discordSupportLink } from "@/utils/constants";
+import { useSession } from "next-auth/react";
+import { TbTestPipe } from "react-icons/tb";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+
 
 
 const NavbarProfileAvatar = () => {
@@ -42,13 +40,6 @@ const NavbarProfileAvatar = () => {
             referral_code = session.user.referral.referralCode;
         }
     }
-
-    const handleSignOut = () => {
-        sessionStorage.removeItem("apiAccessToken");
-        sessionStorage.removeItem("apiRefreshToken");
-        firebaseSignout(auth);
-        nextSignOut({ callbackUrl: '/l/home' })
-    };
 
     useEffect(() => {
         const fetchCheckoutUrl = async () => {

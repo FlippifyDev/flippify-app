@@ -2,6 +2,7 @@ import { storeTokenKeys } from "@/utils/constants";
 import { IFirebaseConfig } from "@/models/config";
 import { retrieveConnectedAccount } from "../firebase/retrieve-admin";
 import { HardcodedStoreType, STORES, StoreType } from "@/models/store-data";
+import { retrieveIdToken } from "../firebase/retrieve";
 
 const root = "https://api.flippify.io"
 
@@ -10,8 +11,12 @@ export async function updateStoreInfo(endpoint: string, storeType: StoreType, ui
     // Set up headers with the access token
     if (!STORES.includes(storeType as HardcodedStoreType)) return;
 
-    const account = await retrieveConnectedAccount(uid, storeType);
+    const idToken = await retrieveIdToken();
+    if (!idToken) return;
+    const account = await retrieveConnectedAccount({ idToken, storeType });
+    if (!account) return;
     const accessToken = account[storeTokenKeys[storeType]];
+    if (!accessToken) return;
 
     const headers = {
         Authorization: `Bearer ${accessToken}`,

@@ -4,6 +4,17 @@ import { auth } from "firebase-admin";
 import { IUser } from "@/models/user";
 import { ItemType, StoreType } from "@/models/store-data";
 import { firestoreAdmin } from "@/lib/firebase/config-admin";
+import { getAuth } from "firebase-admin/auth";
+
+
+async function retrieveUserIdAdmin({ idToken }: { idToken: string }) {
+    try {
+        const decodedToken = await getAuth().verifyIdToken(idToken);
+        return decodedToken.uid;
+    } catch (error) {
+        throw error;
+    }
+}
 
 async function retrieveUserAdmin(uid: string): Promise<IUser | void> {
     const userDocRef = firestoreAdmin.collection('users').doc(uid)
@@ -93,33 +104,41 @@ async function retrieveUserByKeyAndValueAdmin(key: string, value: string): Promi
  * @param storeType The store key (e.g. "ebay", "shopify", etc.)
  * @returns         The stored token string
  */
-async function retrieveConnectedAccount(uid: string, storeType: StoreType): Promise<any> {
-    // 1) Grab the user document
+async function retrieveConnectedAccount({ idToken, storeType }: { idToken: string, storeType: StoreType }): Promise<any> {
+    // Step 1: Retrieve the user id
+    const uid = await retrieveUserIdAdmin({ idToken });
+    if (!uid) return;
+
+    // Step 2: Grab the user document
     const userSnap = await firestoreAdmin.collection("users").doc(uid).get();
     if (!userSnap.exists) {
         throw new Error(`User with UID "${uid}" not found.`);
     }
 
-    // 2) Pull out the connectedAccounts object
+    // Step 3: Pull out the connectedAccounts object
     const data = userSnap.data();
     const accounts = data?.connectedAccounts;
     if (typeof accounts !== "object" || accounts === null) {
         throw new Error(`No connectedAccounts found on user "${uid}".`);
     }
 
-    // 3) Check that the requested storeType exists
+    // Step 4: Check that the requested storeType exists
     return (accounts as Record<string, any>)[storeType];
 }
 
 
-async function retrieveConnectedAccounts(uid: string): Promise<any> {
-    // 1) Grab the user document
+async function retrieveConnectedAccounts({ idToken }: { idToken: string }): Promise<any> {
+    // Step 1: Retrieve the user id
+    const uid = await retrieveUserIdAdmin({ idToken });
+    if (!uid) return;
+
+    // Step 2: Grab the user document
     const userSnap = await firestoreAdmin.collection("users").doc(uid).get();
     if (!userSnap.exists) {
         throw new Error(`User with UID "${uid}" not found.`);
     }
 
-    // 2) Pull out the connectedAccounts object
+    // Step 3: Pull out the connectedAccounts object
     const data = userSnap.data();
     const accounts = data?.connectedAccounts;
     if (typeof accounts !== "object" || accounts === null) {
@@ -130,8 +149,11 @@ async function retrieveConnectedAccounts(uid: string): Promise<any> {
 }
 
 
-async function retrieveUserStoreTypes(uid: string, itemType: ItemType) {
+async function retrieveUserStoreTypes({ idToken, itemType }: { idToken: string, itemType: ItemType }) {
     try {
+        const uid = await retrieveUserIdAdmin({ idToken });
+        if (!uid) return;
+        
         const userItemDocRef = firestoreAdmin.collection(itemType).doc(uid);
         const subcollections = await userItemDocRef.listCollections();
 
@@ -143,4 +165,4 @@ async function retrieveUserStoreTypes(uid: string, itemType: ItemType) {
     }
 }
 
-export { retrieveUserAdmin, retrieveUserRefAdmin, retrieveAuthenticatedUserCount, retrieveUserByKeyAndValueAdmin, retrieveUserSubscriptionCount, retrieveConnectedAccount, retrieveConnectedAccounts, retrieveUserStoreTypes };
+export { retrieveUserIdAdmin, retrieveUserAdmin, retrieveUserRefAdmin, retrieveAuthenticatedUserCount, retrieveUserByKeyAndValueAdmin, retrieveUserSubscriptionCount, retrieveConnectedAccount, retrieveConnectedAccounts, retrieveUserStoreTypes };

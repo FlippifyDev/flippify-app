@@ -9,10 +9,10 @@ import { shortenText } from "@/utils/format";
 import UpdateTableField from "./UpdateTableField";
 import { formatTableDate } from "@/utils/format-dates";
 import { currencySymbols } from "@/config/currency-config";
-import { IListing, StoreType } from "@/models/store-data";
+import { IListing, STORES, StoreType } from "@/models/store-data";
 import { retrieveIdToken, retrieveUserInventory } from "@/services/firebase/retrieve";
 import { fetchUserListingsCount } from "@/utils/extract-user-data";
-import { retrieveUserStoreTypes } from "@/services/firebase/retrieve-admin";
+import { retrieveConnectedAccounts, retrieveUserStoreTypes } from "@/services/firebase/retrieve-admin";
 import { getCachedData, removeCacheData } from "@/utils/cache-helpers";
 import { defaultTimeFrom, inventoryCacheKey } from "@/utils/constants";
 
@@ -59,12 +59,29 @@ const Inventory = () => {
             const idToken = await retrieveIdToken();
             if (!idToken) return;
 
-            const storeTypes = await retrieveUserStoreTypes({ idToken, itemType: "orders" });
+            const lookupStores = [];
+
+            const connectedAccounts = await retrieveConnectedAccounts({ idToken });
+            const accountNames = Object.keys(connectedAccounts);
+
+            for (const name of accountNames) {
+                if (STORES.includes(name)) {
+                    lookupStores.push(name)
+                }
+            }
+
+            const storeTypes = await retrieveUserStoreTypes({ idToken, itemType: "inventory" });
             if (!storeTypes) return;
+
+            for (const type of storeTypes) {
+                if (!lookupStores.includes(type)) {
+                    lookupStores.push(type);
+                }
+            }
 
             // for each storeType, fetch their inventory in parallel
             await Promise.all(
-                storeTypes.map((storeType) => {
+                lookupStores.map((storeType) => {
                     return retrieveUserInventory({
                         uid: session.user.id as string,
                         timeFrom: defaultTimeFrom,

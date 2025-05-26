@@ -13,8 +13,10 @@ export async function updateStoreInfo(endpoint: string, storeType: StoreType, ui
 
     const idToken = await retrieveIdToken();
     if (!idToken) return;
+
     const account = await retrieveConnectedAccount({ idToken, storeType });
     if (!account) return;
+    
     const accessToken = account[storeTokenKeys[storeType]];
     if (!accessToken) return;
 

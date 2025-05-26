@@ -1,7 +1,7 @@
 "use client"
 
 // Local Imports
-import { IOrder } from '@/models/store-data';
+import { IOrder, STORES } from '@/models/store-data';
 import LoadingSpinner from '@/app/components/LoadingSpinner';
 import { shortenText } from '@/utils/format';
 import UpdateTableField from './UpdateTableField';
@@ -10,7 +10,7 @@ import { formatTableDate } from '@/utils/format-dates';
 import { currencySymbols } from '@/config/currency-config';
 import { retrieveIdToken, retrieveUserOrders } from '@/services/firebase/retrieve';
 import { fetchUserOrdersCount } from '@/utils/extract-user-data';
-import { retrieveUserStoreTypes } from '@/services/firebase/retrieve-admin';
+import { retrieveConnectedAccounts, retrieveUserStoreTypes } from '@/services/firebase/retrieve-admin';
 import { defaultTimeFrom, orderCacheKey } from '@/utils/constants';
 
 // External Imports
@@ -51,13 +51,30 @@ const Orders = () => {
 
             const idToken = await retrieveIdToken();
             if (!idToken) return;
+            
+            const lookupStores = [];
+
+            const connectedAccounts = await retrieveConnectedAccounts({ idToken });
+            const accountNames = Object.keys(connectedAccounts);
+
+            for (const name of accountNames) {
+                if (STORES.includes(name)) {
+                    lookupStores.push(name)
+                }
+            }
 
             const storeTypes = await retrieveUserStoreTypes({ idToken, itemType: "orders" });
             if (!storeTypes) return;
 
+            for (const type of storeTypes) {
+                if (!lookupStores.includes(type)) {
+                    lookupStores.push(type);
+                }
+            }
+
             // for each storeType, fetch their orders in parallel
             await Promise.all(
-                storeTypes.map((storeType) => {
+                lookupStores.map((storeType) => {
                     return retrieveUserOrders({
                         uid: session.user.id as string,
                         timeFrom: defaultTimeFrom,

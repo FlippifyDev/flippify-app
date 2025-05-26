@@ -117,17 +117,19 @@ const Page = () => {
                     </div>
 
                     <div className='flex flex-row items-center'>
-                        <div className='text-xs flex flex-row'>
+                        {activeTab === 'orders' && (
+                            <div className='text-xs flex flex-row'>
                             {orderFilters.map((filter, index) => (
                                 <button
                                     key={filter}
                                     onClick={() => setOrderFilter(filter)}
                                     className={`px-3 py-1 font-semibold transition-all border duration-150 ${orderFilter === filter ? "text-houseBlue bg-gray-200" : "bg-gray-100 text-gray-700 hover:bg-gray-100"} ${index === 0 ? "rounded-l" : ""} ${index === orderFilters.length - 1 ? "rounded-r": ""}`}
-                                >
+                                    >
                                     {filter}
                                 </button>
                             ))}
                         </div>
+                        )}
                         <div className='px-4 ml-1'>
                             {activeTab === 'inventory' ?
                                 <span className='text-xs text-gray-500'>You have {automaticListings + manualListings} / {totalLimit} listings</span> :

@@ -5,6 +5,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 // Local Imports
 import { createEbayToken } from '@/services/ebay/create-token';
 import { addEbayTokens } from '@/services/ebay/add-token';
+import { retrieveIdToken } from '@/services/firebase/retrieve';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -27,10 +28,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			return res.status(401).json({ error: 'User not authenticated' });
 		}
 
+        const idToken = await retrieveIdToken();
+        if (!idToken) return res.status(404).json({ error: "Token ID could not be found" });
+
 		// Add the new tokens to the users doc in the database
-		const tokenAdditionResponse = await addEbayTokens(tokenData, session);
+        const tokenAdditionResponse = await addEbayTokens(tokenData, session, idToken);
         if (tokenAdditionResponse && tokenAdditionResponse.error) {
-			return res.status(404).json({ "Error": tokenAdditionResponse.error });
+            return res.status(404).json({ error: tokenAdditionResponse.error });
 		}
 
 		// Redirect to the connecting ebay page

@@ -1,7 +1,6 @@
 // Local Imports
 import { IOrder } from '@/models/store-data'
 import { shortenText } from '@/utils/format';
-import { handleShortDate } from '@/utils/format-dates';
 import { updateOrderStatus } from '@/services/firebase/update';
 
 // External Imports
@@ -73,7 +72,7 @@ const ReadyToShip: React.FC<IReadyToShipProps> = ({ item, uid, setUpdatedStatus 
                     {item.sale?.quantity}
                 </td>
                 <td className='min-w-20'>
-                    {handleShortDate(item.sale?.date ?? "")}
+                    {item.storageLocation ? item.storageLocation: "N/A"}
                 </td>
                 <td className='min-w-20'>
                     {shipIn(item.sale?.date ?? "")}

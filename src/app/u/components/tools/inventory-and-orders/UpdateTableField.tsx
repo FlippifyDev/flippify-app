@@ -13,8 +13,8 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { useSession } from 'next-auth/react';
 import set from 'lodash/set';
 
-
-type ExtraKey = "customTag" | "storeType" | "listingDate"
+export const orderFilters = ["All", "Active", "Missing data"] as const;
+type ExtraKey = "customTag" | "storeType" | "listingDate" | "storageLocation" | "condition"
 type PurchaseKey = "purchase.platform" | "purchase.price" | "purchase.date" | "purchase.quantity"
 type InventoryKey = "customTag"
 type OrderKey = "sale.price" | "shipping.fees" | "shipping.date" | "sale.date" | "additionalFees" | "sale.quantity" | "sale.buyerUsername"
@@ -65,6 +65,8 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
                 case "purchase.platform":
                 case "sale.buyerUsername":
                 case "customTag":
+                case "storageLocation":
+                case "condition":
                     set(item, keyType, value);
                     break;
                 case "sale.quantity":
@@ -106,6 +108,8 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
             case "purchase.platform":
             case "storeType":
             case "customTag":
+            case "storageLocation":
+            case "condition":
             case "sale.buyerUsername":
                 validateAlphaNumericInput(input, setValue);
                 break;
@@ -135,7 +139,7 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
             <input
                 type={type ? type : "text"}
                 value={value ?? ""}
-                placeholder={value === "" ? "N/A" : undefined}
+                placeholder={!value ? "N/A" : undefined}
                 onChange={(e) => handleChange(e.target.value)}
                 onBlur={() => saveChange()}
                 className={`min-w-24 focus:border placeholder:font-semibold text-black hover:cursor-pointer hover:select-none w-full focus:outline-none focus:ring-2 focus:ring-gray-500 rounded border-none text-sm ${className}`}

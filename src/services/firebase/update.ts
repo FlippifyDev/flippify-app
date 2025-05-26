@@ -184,24 +184,11 @@ async function updateOrderStatus(uid: string, order: IOrder, status: OrderStatus
             return;
         }
 
-        const historyItems = createHistoryItems(
-            {
-                status,
-                salePrice: order.sale.price,
-                dbHistory: order.history,
-                saleDate: order.sale.date
-            }
-        );
-
         await updateDoc(orderRef, {
             status: status,
-            history: historyItems
         });
 
         order.status = status;
-        if (historyItems) {
-            order.history = historyItems
-        }
         updateCacheData(`${orderCacheKey}-${uid}`, order)
 
         console.log(`Order ${order.transactionId} status updated to ${status}`);

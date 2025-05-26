@@ -133,7 +133,13 @@ const Order = () => {
                         </li>
                     </ul>
                 </div>
-                <h1 className='text-2xl font-semibold'>{order.name}</h1>
+                <div className='flex justify-between items-center'>
+                    <h1 className='text-2xl font-semibold'>{order.name}</h1>
+                    <div className='text-center text-sm'>
+                        <p>Storage</p>
+                        <p className='text-gray-600 font-semibold'>{order.storageLocation}</p>
+                    </div>
+                </div>
             </section>
 
             {/* Order Info */}
@@ -213,7 +219,7 @@ interface OrderInfoTableProps {
 }
 
 const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, triggerUpdate }) => {
-    const { transactionId, sale, purchase, shipping, additionalFees, customTag, storeType, listingDate } = order;
+    const { transactionId, sale, purchase, shipping, additionalFees, customTag, storeType, listingDate, storageLocation, condition } = order;
 
     let soldFor: number, profit: number | "N/A", roi: number | "N/A";
     const purchasePrice = purchase?.price ?? 0;
@@ -269,6 +275,24 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                 </tr>
                 <tr className='border-b'>
                     <td className="py-4 px-6 font-medium text-gray-800">
+                        Storage
+                    </td>
+                    <UpdateTableField
+                        type="text"
+                        currentValue={storageLocation}
+                        docId={transactionId}
+                        item={order}
+                        docType='orders'
+                        storeType={order.storeType}
+                        keyType="storageLocation"
+                        cacheKey={cacheKey}
+                        triggerUpdate={triggerUpdate}
+                        tdClassName='px-3'
+                        className='max-w-64 bg-gray-100 hover:bg-gray-200 text-gray-600 !text-base transition duration-300'
+                    />
+                </tr>
+                <tr className='border-b'>
+                    <td className="py-4 px-6 font-medium text-gray-800">
                         Custom Tag
                     </td>
                     <UpdateTableField
@@ -279,6 +303,24 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         docType='orders'
                         storeType={order.storeType}
                         keyType="customTag"
+                        cacheKey={cacheKey}
+                        triggerUpdate={triggerUpdate}
+                        tdClassName='px-3'
+                        className='max-w-64 bg-gray-100 hover:bg-gray-200 text-gray-600 !text-base transition duration-300'
+                    />
+                </tr>
+                <tr className='border-b'>
+                    <td className="py-4 px-6 font-medium text-gray-800">
+                        Condition
+                    </td>
+                    <UpdateTableField
+                        type="text"
+                        currentValue={condition}
+                        docId={transactionId}
+                        item={order}
+                        docType='orders'
+                        storeType={order.storeType}
+                        keyType="condition"
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
                         tdClassName='px-3'
@@ -309,7 +351,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                     </td>
                     <UpdateTableField
                         type="date"
-                        currentValue={new Date(purchase?.date ?? "").toISOString().split("T")[0]}
+                        currentValue={purchase?.date ? new Date(purchase?.date).toISOString().split("T")[0]: ""}
                         docId={transactionId}
                         item={order}
                         docType='orders'
@@ -327,7 +369,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                     </td>
                     <UpdateTableField
                         type="date"
-                        currentValue={new Date(sale?.date ?? "").toISOString().split("T")[0]}
+                        currentValue={sale?.date ? new Date(sale?.date).toISOString().split("T")[0]: ""}
                         docId={transactionId}
                         item={order}
                         docType='orders'
@@ -345,7 +387,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                     </td>
                     <UpdateTableField
                         type="date"
-                        currentValue={new Date(listingDate ?? new Date()).toISOString().split("T")[0]}
+                        currentValue={listingDate ? new Date(listingDate).toISOString().split("T")[0]: ""}
                         docId={transactionId}
                         item={order}
                         docType='orders'
@@ -363,7 +405,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                     </td>
                     <UpdateTableField
                         type="date"
-                        currentValue={new Date(shipping?.date ?? new Date()).toISOString().split("T")[0]}
+                        currentValue={shipping?.date ? new Date(shipping?.date).toISOString().split("T")[0]: ""}
                         docId={transactionId}
                         item={order}
                         docType='orders'

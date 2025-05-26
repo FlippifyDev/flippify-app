@@ -7,7 +7,7 @@ import Input from "../../dom/ui/Input"
 import ImageUpload from "../../dom/ui/ImageUpload"
 import { addCacheData } from "@/utils/cache-helpers"
 import { formatDateToISO } from "@/utils/format-dates"
-import { IListing } from "@/models/store-data"
+import { Condition, IListing } from "@/models/store-data"
 import { createNewInventoryItemAdmin } from "@/services/firebase/create-admin"
 import { generateRandomFlippifyListingId } from "@/utils/generate-random"
 import { fetchUserInventoryAndOrdersCount } from "@/utils/extract-user-data"
@@ -32,15 +32,17 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal, setTriggerUpda
 
     // General Info
     const [itemId, setItemId] = useState<string>(generateRandomFlippifyListingId(20))
-    const [itemName, setItemName] = useState<string>("")
+    const [itemName, setItemName] = useState<string>("");
     const [imageUrl, setImageUrl] = useState<string>("");
-    const [customTag, setCustomTag] = useState<string>("")
-    const [storeType, setStoreType] = useState<string>("")
+    const [customTag, setCustomTag] = useState<string>("");
+    const [storeType, setStoreType] = useState<string>("");
+    const [condition, setCondition] = useState<Condition>("");
+    const [storageLocation, setStorageLocation] = useState<string>("");
 
     // Purchase Info
-    const [purchasePrice, setPurchasePrice] = useState<string>("")
-    const [purchasePlatform, setPurchasePlatform] = useState<string>("")
-    const [datePurchased, setDatePurchased] = useState<string>(new Date().toISOString().split('T')[0])
+    const [purchasePrice, setPurchasePrice] = useState<string>("");
+    const [purchasePlatform, setPurchasePlatform] = useState<string>("");
+    const [datePurchased, setDatePurchased] = useState<string>(new Date().toISOString().split('T')[0]);
 
     // Listing Info
     const [listingPrice, setListingPrice] = useState<string>("")
@@ -116,6 +118,7 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal, setTriggerUpda
         const inventoryItem: IListing = {
             createdAt: formatDateToISO(new Date()),
             currency: session?.user.preferences?.currency ?? "USD",
+            condition: condition,
             customTag: customTag,
             dateListed: formatDateToISO(new Date(dateListed)),
             image: [imageUrl],
@@ -131,7 +134,8 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal, setTriggerUpda
             quantity: Number(quantity),
             recordType: "manual",
             lastModified: formatDateToISO(new Date()),
-            storeType: storeType
+            storeType: storeType,
+            storageLocation: storageLocation
         }
 
         const { success, error, listingExists } = await createNewInventoryItemAdmin(session?.user.id ?? "", storeType, inventoryItem);
@@ -152,37 +156,29 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal, setTriggerUpda
         setDisplayModal(false);
     }
 
-    function handleChange(value: string, type: string) {
-        switch (type) {
+    function handleChange(value: string, type: string, setFunction: (value: any) => void) {
+        switch (type) { 
             case "customTag":
-                validateAlphaNumericInput(value, setCustomTag)
+            case "itemName":
+            case "purchasePlatform":
+            case "customTag":
+            case "storageLocation":
+            case "condition":
+                validateAlphaNumericInput(value, setFunction)
                 break
             case "storeType":
-                validateAlphaNumericInput(value.toLowerCase(), setStoreType) // Must be lowercase
+                validateAlphaNumericInput(value.toLowerCase(), setFunction) // Must be lowercase
                 break
             case "dateListed":
-                setDateListed(value)
-                break
             case "datePurchased":
-                setDatePurchased(value)
-                break
-            case "itemId":
-                setItemId(value)
-                break
-            case "itemName":
-                validateAlphaNumericInput(value, setItemName)
+                setFunction(value)
                 break
             case "listingPrice":
-                validatePriceInput(value, setListingPrice)
-                break
-            case "purchasePlatform":
-                validateAlphaNumericInput(value, setPurchasePlatform)
-                break
             case "purchasePrice":
-                validatePriceInput(value, setPurchasePrice)
+                validatePriceInput(value, setFunction)
                 break
             case "quantity":
-                validateIntegerInput(value, setQuantity)
+                validateIntegerInput(value, setFunction)
                 break
         }
     }
@@ -205,24 +201,28 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal, setTriggerUpda
             {!aboveLimit && (
                 <form className="w-full max-w-xl flex flex-col gap-4" onSubmit={handleSubmit}>
                     <div className="flex flex-col sm:flex-row items-center w-full gap-4">
-                        <Input type="text" placeholder="Enter item id" title="Product ID" value={itemId} onChange={(e) => handleChange(e.target.value, "itemId")} />
-                        <Input type="text" placeholder="Enter marketplace" title="Marketplace" value={storeType} onChange={(e) => handleChange(e.target.value, "storeType")} />
+                        <Input type="text" placeholder="Enter item id" title="Product ID" value={itemId} readOnly />
+                        <Input type="text" placeholder="Enter marketplace" title="Marketplace" value={storeType} onChange={(e) => handleChange(e.target.value, "storeType", setStoreType)} />
                     </div>
                     <div className="flex flex-col sm:flex-row items-center w-full gap-4">
-                        <Input type="text" placeholder="Enter item name" title="Product Name" value={itemName} onChange={(e) => handleChange(e.target.value, "itemName")} />
-                        <Input type="text" placeholder="Enter quantity" title="Quantity" value={quantity} onChange={(e) => handleChange(e.target.value, "quantity")} />
+                        <Input type="text" placeholder="Enter item name" title="Product Name" value={itemName} onChange={(e) => handleChange(e.target.value, "itemName", setItemName)} />
+                        <Input type="text" placeholder="Enter quantity" title="Quantity" value={quantity} onChange={(e) => handleChange(e.target.value, "quantity", setQuantity)} />
                     </div>
                     <div className="flex flex-col sm:flex-row items-center w-full gap-4">
-                        <Input type="text" placeholder="Enter listing price" title="Listing Price" value={listingPrice} onChange={(e) => handleChange(e.target.value, "listingPrice")} />
-                        <Input type="text" placeholder="Enter purchase price" title="Purchase Price (Optional)" value={purchasePrice} onChange={(e) => handleChange(e.target.value, "purchasePrice")} />
+                        <Input type="text" placeholder="Enter listing price" title="Listing Price" value={listingPrice} onChange={(e) => handleChange(e.target.value, "listingPrice", setListingPrice)} />
+                        <Input type="text" placeholder="Enter purchase price" title="Purchase Price (Optional)" value={purchasePrice} onChange={(e) => handleChange(e.target.value, "purchasePrice", setPurchasePrice)} />
                     </div>
                     <div className="flex flex-col sm:flex-row items-center w-full gap-4">
-                        <Input type="text" placeholder="Enter purchase platform" title="Purchase Platform (Optional)" value={purchasePlatform} onChange={(e) => handleChange(e.target.value, "purchasePlatform")} />
-                        <Input type="text" placeholder="Enter custom tag" title="Custom Tag (Optional)" value={customTag} onChange={(e) => handleChange(e.target.value, "customTag")} />
+                        <Input type="text" placeholder="Enter purchase platform" title="Purchase Platform (Optional)" value={purchasePlatform} onChange={(e) => handleChange(e.target.value, "purchasePlatform", setPurchasePlatform)} />
+                        <Input type="text" placeholder="Enter custom tag" title="Custom Tag (Optional)" value={customTag} onChange={(e) => handleChange(e.target.value, "customTag", setCustomTag)} />
                     </div>
                     <div className="flex flex-col sm:flex-row items-center w-full gap-4">
-                        <Input type="date" placeholder="Enter listing date" title="Listing Date" className="w-full" value={dateListed} onChange={(e) => handleChange(e.target.value, "dateListed")} />
-                        <Input type="date" placeholder="Enter purchase date" title="Purchase Date" className="w-full" value={datePurchased} onChange={(e) => handleChange(e.target.value, "datePurchased")} />
+                        <Input type="text" placeholder="Enter storage location" title="Storage Location (Optional)" value={storageLocation} onChange={(e) => handleChange(e.target.value, "storageLocation", setStorageLocation)} />
+                        <Input type="text" placeholder="Enter condition" title="Condition (Optional)" value={condition} onChange={(e) => handleChange(e.target.value, "condition", setCondition)} />
+                    </div>
+                    <div className="flex flex-col sm:flex-row items-center w-full gap-4">
+                        <Input type="date" placeholder="Enter listing date" title="Listing Date" className="w-full" value={dateListed} onChange={(e) => handleChange(e.target.value, "dateListed", setDateListed)} />
+                        <Input type="date" placeholder="Enter purchase date" title="Purchase Date" className="w-full" value={datePurchased} onChange={(e) => handleChange(e.target.value, "datePurchased", setDatePurchased)} />
                     </div>
                     <hr />
                     <div className="w-full flex flex-row gap-4 justify-between items-center">

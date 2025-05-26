@@ -2,23 +2,27 @@
 
 // Local Imports
 
+
 import Orders from './Orders';
 import Inventory from './Inventory';
+import { subscriptionLimits } from '@/utils/constants';
 import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
+import { fetchUserInventoryAndOrdersCount } from '@/utils/extract-user-data';
 
 // External Imports
 import React, { useEffect, useState, useRef } from 'react'
 import { FaShoppingCart } from 'react-icons/fa';
-import { FaBox } from "react-icons/fa";
-import { fetchUserInventoryAndOrdersCount } from '@/utils/extract-user-data';
 import { useSession } from 'next-auth/react';
-import { subscriptionLimits } from '@/utils/constants';
+import { FaBox } from "react-icons/fa";
+import { orderFilters } from './UpdateTableField';
 
 
 const Page = () => {
     const { data: session } = useSession();
 
     const [initialTab, setInitialTab] = useState("inventory");
+
+    const [orderFilter, setOrderFilter] = useState<(typeof orderFilters)[number]>("All");
 
     // Determine initial tab based on the URL parameter
     useEffect(() => {
@@ -112,17 +116,30 @@ const Page = () => {
                         )}
                     </div>
 
-                    <div className='px-4 ml-1'>
-                        {activeTab === 'inventory' ?
-                            <span className='text-xs text-gray-500'>You have {automaticListings + manualListings} / {totalLimit} listings</span> :
-                            <span className='text-xs text-gray-500'>You have {automaticOrders + manualOrders} / {totalLimit} orders</span>
-                        }
+                    <div className='flex flex-row items-center'>
+                        <div className='text-xs flex flex-row'>
+                            {orderFilters.map((filter, index) => (
+                                <button
+                                    key={filter}
+                                    onClick={() => setOrderFilter(filter)}
+                                    className={`px-3 py-1 font-semibold transition-all border duration-150 ${orderFilter === filter ? "text-houseBlue bg-gray-200" : "bg-gray-100 text-gray-700 hover:bg-gray-100"} ${index === 0 ? "rounded-l" : ""} ${index === orderFilters.length - 1 ? "rounded-r": ""}`}
+                                >
+                                    {filter}
+                                </button>
+                            ))}
+                        </div>
+                        <div className='px-4 ml-1'>
+                            {activeTab === 'inventory' ?
+                                <span className='text-xs text-gray-500'>You have {automaticListings + manualListings} / {totalLimit} listings</span> :
+                                <span className='text-xs text-gray-500'>You have {automaticOrders + manualOrders} / {totalLimit} orders</span>
+                            }
+                        </div>
                     </div>
                 </div>
 
                 {/* Conditional Content Rendering with Fade Transition */}
                 <div className={`transition-opacity duration-300 rounded-b-xl ${fadeIn ? 'opacity-100' : 'opacity-0'}`}>
-                    {activeTab === "inventory" ? <Inventory /> : <Orders />}
+                    {activeTab === "inventory" ? <Inventory /> : <Orders filter={orderFilter} />}
                 </div>
             </main>
         </LayoutSubscriptionWrapper>

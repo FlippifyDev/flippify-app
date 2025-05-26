@@ -11,7 +11,7 @@ export type OrderStatus =
     | "InProcess";    // Order is being processed (e.g., payment or shipping underway), not yet complete.
 
 
-export type Condition = "new" | "used" | "open-box" | "refurbished";
+export type Condition = "new" | "used" | "opened" | "unopened" | "refurbished" | string;
 
 
 export const STORES = ["ebay"];

@@ -1,17 +1,17 @@
 "use client"
 
 // Local Imports
-import { IOrder, STORES } from '@/models/store-data';
 import LoadingSpinner from '@/app/components/LoadingSpinner';
 import { shortenText } from '@/utils/format';
-import UpdateTableField from './UpdateTableField';
 import { getCachedData } from '@/utils/cache-helpers';
+import { IOrder, STORES } from '@/models/store-data';
 import { formatTableDate } from '@/utils/format-dates';
 import { currencySymbols } from '@/config/currency-config';
-import { retrieveIdToken, retrieveUserOrders } from '@/services/firebase/retrieve';
 import { fetchUserOrdersCount } from '@/utils/extract-user-data';
-import { retrieveConnectedAccounts, retrieveUserStoreTypes } from '@/services/firebase/retrieve-admin';
 import { defaultTimeFrom, orderCacheKey } from '@/utils/constants';
+import UpdateTableField, { orderFilters } from './UpdateTableField';
+import { retrieveIdToken, retrieveUserOrders } from '@/services/firebase/retrieve';
+import { retrieveConnectedAccounts, retrieveUserStoreTypes } from '@/services/firebase/retrieve-admin';
 
 // External Imports
 import { useEffect, useState } from 'react'
@@ -20,13 +20,18 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 
-const Orders = () => {
+interface OrdersProps {
+    filter: (typeof orderFilters)[number];
+}
+
+const Orders: React.FC<OrdersProps> = ({ filter }) => {
     const router = useRouter();
     const { data: session } = useSession();
     const cacheKey = `${orderCacheKey}-${session?.user.id}`;
     const currency = session?.user.preferences?.currency || "USD";
 
     const [orderData, setOrderData] = useState<IOrder[]>([]);
+    const [filteredOrderData, setFilteredOrderData] = useState<IOrder[]>([]);
 
     // Page Config
     const itemsPerPage = 12;
@@ -34,13 +39,33 @@ const Orders = () => {
     const totalOrders = fetchUserOrdersCount(session?.user)
     const totalPages = Math.ceil(totalOrders / itemsPerPage);
 
-    const paginatedData = orderData.slice(
+    const paginatedData = filteredOrderData.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
 
     const [triggerUpdate, setTriggerUpdate] = useState(true);
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        function filterOrders() {
+            if (filter === "All") {
+                setFilteredOrderData(orderData);
+            } else if (filter === "Missing data") {
+                const filtered = orderData.filter(order => {
+                    return !order.purchase?.date || !order.purchase.price;
+                });
+                setFilteredOrderData(filtered);
+            } else if (filter === "Active") {
+                const filtered = orderData.filter(order => {
+                    return order.status === "Active";
+                });
+                setFilteredOrderData(filtered);
+            }
+        }
+
+        filterOrders()
+    }, [filter, orderData])
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -51,7 +76,7 @@ const Orders = () => {
 
             const idToken = await retrieveIdToken();
             if (!idToken) return;
-            
+
             const lookupStores = [];
 
             const connectedAccounts = await retrieveConnectedAccounts({ idToken });
@@ -104,7 +129,7 @@ const Orders = () => {
             fetchOrders();
             setTriggerUpdate(false)
         }
-    }, [session?.user, currentPage, orderData, triggerUpdate, cacheKey]);
+    }, [session?.user, currentPage, orderData, triggerUpdate, cacheKey, filter]);
 
     // Handle page change
     const handlePageChange = (newPage: number) => {
@@ -130,7 +155,7 @@ const Orders = () => {
                         <th>PURCHASED FOR ({currencySymbols[currency]})</th>
                         <th>SOLD FOR ({currencySymbols[currency]})</th>
                         <th>PROFIT ({currencySymbols[currency]})</th>
-                        <th>ROI</th>
+                        <th>STORAGE</th>
                         <th>STATUS</th>
                         <th>TAG</th>
                     </tr>
@@ -138,7 +163,7 @@ const Orders = () => {
                 <tbody>
                     {paginatedData.length > 0 ? (
                         paginatedData.map((order, index) => {
-                            const { transactionId, sale, purchase, customTag, status } = order;
+                            const { transactionId, sale, purchase, customTag, status, storageLocation } = order;
 
                             let soldFor: number, profit: number | "N/A", roi: number | "N/A";
                             const purchasePrice = purchase?.price ?? 0;
@@ -185,9 +210,7 @@ const Orders = () => {
                                     <td>
                                         {profit === "N/A" ? profit : profit.toFixed(2)}
                                     </td>
-                                    <td>
-                                        {roi === "N/A" ? roi : roi.toFixed(2)}{roi === "N/A" ? "" : "%"}
-                                    </td>
+                                    <UpdateTableField currentValue={storageLocation} docId={transactionId} item={order} docType='orders' storeType={order.storeType} keyType="storageLocation" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} className='hover:bg-gray-100 transition duration-300' />
                                     <td className={`${status === "Completed" ? "text-houseBlue" : ""} font-semibold`}>
                                         {status}
                                     </td>

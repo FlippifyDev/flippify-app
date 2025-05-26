@@ -2,11 +2,11 @@
 
 import { IUser } from '@/models/user';
 import { firestoreAdmin } from '@/lib/firebase/config-admin';
-import { retrieveConnectedAccount } from '../firebase/retrieve-admin';
+import { retrieveConnectedAccountAdmin } from '../firebase/retrieve-admin';
 
 import { Session } from 'next-auth';
 
-async function addEbayTokens(tokenData: { access_token: string, refresh_token: string, expires_in: number, error?: string, error_description?: string }, session: Session, idToken: string) {
+async function addEbayTokens(tokenData: { access_token: string, refresh_token: string, expires_in: number, error?: string, error_description?: string }, session: Session) {
     try {
         if (!session?.user?.id) {
             throw new Error("User is not authenticated");
@@ -24,7 +24,7 @@ async function addEbayTokens(tokenData: { access_token: string, refresh_token: s
         if (userSnapshot.exists) {
             const userData = userSnapshot.data() as IUser;
 
-            const connectedAccount = await retrieveConnectedAccount({ idToken, storeType: "ebay" })
+            const connectedAccount = await retrieveConnectedAccountAdmin({ uid: session.user.id, storeType: "ebay" })
             if (!userData.connectedAccounts || connectedAccount === null) {
                 await userRef.update({
                     "connectedAccounts.ebay": {}

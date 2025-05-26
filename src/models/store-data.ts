@@ -11,8 +11,10 @@ export type OrderStatus =
     | "InProcess";    // Order is being processed (e.g., payment or shipping underway), not yet complete.
 
 
+export type Condition = "new" | "used" | "open-box" | "refurbished";
 
-export const STORES = ["ebay"] as const;
+
+export const STORES = ["ebay"];
 export type HardcodedStoreType = typeof STORES[number];
 
 export type StoreType = HardcodedStoreType | string;
@@ -28,6 +30,8 @@ interface IListing {
     lastModified?: string | null;
     name?: string | null;
     price?: number | null;
+    condition?: Condition | null;
+    storageLocation?: string | null;
     purchase?: {
         date?: string | null;
         platform?: string | null;
@@ -86,6 +90,8 @@ interface IOrder {
     additionalFees?: number | null;
     createdAt?: string | null;
     customTag?: string | null;
+    condition?: Condition | null;
+    storageLocation?: string | null;
     history?: IHistory[] | null;
     image?: string[] | null;
     itemId?: string | null;

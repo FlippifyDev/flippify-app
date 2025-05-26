@@ -5,18 +5,19 @@
 import Modal from "../../dom/ui/Modal"
 import Input from "../../dom/ui/Input"
 import ImageUpload from "../../dom/ui/ImageUpload"
-import { IListing } from "@/models/store-data"
 import { addCacheData } from "@/utils/cache-helpers"
 import { formatDateToISO } from "@/utils/format-dates"
 import { inventoryCacheKey } from "@/utils/constants"
+import { Condition, IListing } from "@/models/store-data"
+import { updateMovedItemAdmin } from "@/services/firebase/create-admin"
 import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput } from "@/utils/input-validation"
 
 // External Imports
 import { FormEvent, useEffect, useState } from "react"
+import { MdImageNotSupported } from "react-icons/md"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
-import { updateMovedItemAdmin } from "@/services/firebase/create-admin"
-import { MdImageNotSupported } from "react-icons/md"
+import { updateListing } from "@/services/firebase/update"
 
 
 interface EditListingProps {
@@ -36,6 +37,8 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal, se
     const [customTag, setCustomTag] = useState<string>("");
     const [storeOldType, setStoreOldType] = useState<string>("");
     const [storeType, setStoreType] = useState<string>("");
+    const [condition, setCondition] = useState<Condition>("")
+    const [storageLocation, setStorageLocation] = useState<string>("")
 
     // Purchase Info
     const [purchasePrice, setPurchasePrice] = useState<string>("")
@@ -75,8 +78,10 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal, se
         setItemName(item.name ?? "N/A");
         setImageUrl(item.image ? item.image[0] : "");
         setCustomTag(item.customTag || "");
-        setStoreType(item.storeType || "")
-        setStoreOldType(item.storeType || "")
+        setStoreType(item.storeType || "");
+        setStoreOldType(item.storeType || "");
+        setStorageLocation(item.storageLocation || "");
+        setCondition(item.condition || "");
 
         // Set Listing Info
         setDateListed(new Date(item.dateListed ?? "").toISOString().split('T')[0]);
@@ -96,6 +101,7 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal, se
         setLoading(true);
 
         const inventoryItem: IListing = {
+            condition: condition,
             currency: session?.user.preferences?.currency ?? "USD",
             customTag: customTag,
             dateListed: formatDateToISO(new Date(dateListed)),
@@ -112,11 +118,16 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal, se
             quantity: Number(quantity),
             recordType: "manual",
             lastModified: formatDateToISO(new Date()),
-            storeType: storeType
+            storeType: storeType,
+            storageLocation: storageLocation
         }
 
         try {
-            await updateMovedItemAdmin(session?.user.id as string, storeOldType, inventoryItem)
+            if (inventoryItem.storeType !== storeOldType) {
+                await updateMovedItemAdmin(session?.user.id as string, storeOldType, inventoryItem)
+            } else {
+                await updateListing(session?.user.id as string, inventoryItem, inventoryItem.storeType)
+            }
             handleCacheUpdate(inventoryItem);
             setSuccessMessage("Listing Edited!");
         } catch (error) {
@@ -128,34 +139,29 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal, se
         setDisplayModal(false);
     }
 
-    function handleChange(value: string, type: string) {
+    function handleChange(value: string, type: string, setFunction: (value: any) => void) {
         switch (type) {
             case "customTag":
-                validateAlphaNumericInput(value, setCustomTag)
-                break
-            case "dateListed":
-                setDateListed(value)
-                break
-            case "datePurchased":
-                setDatePurchased(value)
-                break
             case "itemName":
-                validateAlphaNumericInput(value, setItemName)
-                break
-            case "listingPrice":
-                validatePriceInput(value, setListingPrice)
-                break
             case "purchasePlatform":
-                validateAlphaNumericInput(value, setPurchasePlatform)
-                break
-            case "purchasePrice":
-                validatePriceInput(value, setPurchasePrice)
-                break
-            case "quantity":
-                validateIntegerInput(value, setQuantity)
+            case "customTag":
+            case "storageLocation":
+            case "condition":
+                validateAlphaNumericInput(value, setFunction)
                 break
             case "storeType":
-                validateAlphaNumericInput(value, setStoreType)
+                validateAlphaNumericInput(value.toLowerCase(), setFunction) // Must be lowercase
+                break
+            case "dateListed":
+            case "datePurchased":
+                setFunction(value)
+                break
+            case "listingPrice":
+            case "purchasePrice":
+                validatePriceInput(value, setFunction)
+                break
+            case "quantity":
+                validateIntegerInput(value, setFunction)
                 break
         }
     }
@@ -171,24 +177,28 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal, se
         <Modal title="Edit listing" className="max-w-[21rem] sm:max-w-xl flex-grow" setDisplayModal={setDisplayModal}>
             <form className="w-full max-w-xl flex flex-col gap-4" onSubmit={handleSubmit}>
                 <div className="flex flex-col sm:flex-row items-center w-full gap-4">
-                    <Input type="text" placeholder="Enter item id" title="Product ID" value={itemId} onChange={(e) => handleChange(e.target.value, "itemId")} />
-                    <Input type="text" placeholder="Enter marketplace" title="Marketplace" value={storeType} onChange={(e) => handleChange(e.target.value, "storeType")} />
+                    <Input type="text" placeholder="Enter item id" title="Product ID" value={itemId} readOnly />
+                    <Input type="text" placeholder="Enter marketplace" title="Marketplace" value={storeType} onChange={(e) => handleChange(e.target.value, "storeType", setStoreType)} />
                 </div>
                 <div className="flex flex-col sm:flex-row items-center w-full gap-4">
-                    <Input type="text" placeholder="Enter item name" title="Product Name" value={itemName} onChange={(e) => handleChange(e.target.value, "itemName")} />
-                    <Input type="text" placeholder="Enter quantity" title="Quantity" value={quantity} onChange={(e) => handleChange(e.target.value, "quantity")} />
+                    <Input type="text" placeholder="Enter item name" title="Product Name" value={itemName} onChange={(e) => handleChange(e.target.value, "itemName", setItemName)} />
+                    <Input type="text" placeholder="Enter quantity" title="Quantity" value={quantity} onChange={(e) => handleChange(e.target.value, "quantity", setQuantity)} />
                 </div>
                 <div className="flex flex-col sm:flex-row items-center w-full gap-4">
-                    <Input type="text" placeholder="Enter listing price" title="Listing Price" value={listingPrice} onChange={(e) => handleChange(e.target.value, "listingPrice")} />
-                    <Input type="text" placeholder="Enter purchase price" title="Purchase Price (Optional)" value={purchasePrice} onChange={(e) => handleChange(e.target.value, "purchasePrice")} />
+                    <Input type="text" placeholder="Enter listing price" title="Listing Price" value={listingPrice} onChange={(e) => handleChange(e.target.value, "listingPrice", setListingPrice)} />
+                    <Input type="text" placeholder="Enter purchase price" title="Purchase Price (Optional)" value={purchasePrice} onChange={(e) => handleChange(e.target.value, "purchasePrice", setPurchasePrice)} />
                 </div>
                 <div className="flex flex-col sm:flex-row items-center w-full gap-4">
-                    <Input type="text" placeholder="Enter purchase platform" title="Purchase Platform (Optional)" value={purchasePlatform} onChange={(e) => handleChange(e.target.value, "purchasePlatform")} />
-                    <Input type="text" placeholder="Enter custom tag" title="Custom Tag (Optional)" value={customTag} onChange={(e) => handleChange(e.target.value, "customTag")} />
+                    <Input type="text" placeholder="Enter purchase platform" title="Purchase Platform (Optional)" value={purchasePlatform} onChange={(e) => handleChange(e.target.value, "purchasePlatform", setPurchasePlatform)} />
+                    <Input type="text" placeholder="Enter custom tag" title="Custom Tag (Optional)" value={customTag} onChange={(e) => handleChange(e.target.value, "customTag", setCustomTag)} />
                 </div>
                 <div className="flex flex-col sm:flex-row items-center w-full gap-4">
-                    <Input type="date" placeholder="Enter listing date" title="Listing Date" className="w-full" value={dateListed} onChange={(e) => handleChange(e.target.value, "dateListed")} />
-                    <Input type="date" placeholder="Enter purchase date" title="Purchase Date" className="w-full" value={datePurchased} onChange={(e) => handleChange(e.target.value, "datePurchased")} />
+                    <Input type="text" placeholder="Enter storage location" title="Storage Location (Optional)" value={storageLocation} onChange={(e) => handleChange(e.target.value, "storageLocation", setStorageLocation)} />
+                    <Input type="text" placeholder="Enter condition" title="Condition (Optional)" value={condition} onChange={(e) => handleChange(e.target.value, "condition", setCondition)} />
+                </div>
+                <div className="flex flex-col sm:flex-row items-center w-full gap-4">
+                    <Input type="date" placeholder="Enter listing date" title="Listing Date" className="w-full" value={dateListed} onChange={(e) => handleChange(e.target.value, "dateListed", setDateListed)} />
+                    <Input type="date" placeholder="Enter purchase date" title="Purchase Date" className="w-full" value={datePurchased} onChange={(e) => handleChange(e.target.value, "datePurchased", setDatePurchased)} />
                 </div>
                 <hr />
                 <div className="w-full flex flex-row gap-4 justify-between items-center">
@@ -204,11 +214,11 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal, se
                                 />
                             </figure>
                         )}
-                            {!imageUrl && (
-                                <div className='cursor-pointer hover:scale-105 transition duration-100 border-[3px] w-10 h-10 rounded-full flex justify-center items-center' onClick={() => setIsModalOpen(true)}>
-                                    <MdImageNotSupported className='text-gray-200' />
-                                </div>
-                            )}
+                        {!imageUrl && (
+                            <div className='cursor-pointer hover:scale-105 transition duration-100 border-[3px] w-10 h-10 rounded-full flex justify-center items-center' onClick={() => setIsModalOpen(true)}>
+                                <MdImageNotSupported className='text-gray-200' />
+                            </div>
+                        )}
                     </div>
                     <div>
                         <button

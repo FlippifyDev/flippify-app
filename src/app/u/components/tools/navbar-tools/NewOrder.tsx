@@ -8,7 +8,7 @@ import { shortenText } from '@/utils/format';
 import { formatDateToISO } from '@/utils/format-dates';
 import { currencySymbols } from '@/config/currency-config';
 import { createNewOrderItemAdmin } from '@/services/firebase/create-admin';
-import { IListing, IOrder, OrderStatus } from '@/models/store-data';
+import { Condition, IListing, IOrder, OrderStatus } from '@/models/store-data';
 import { fetchUserInventoryAndOrdersCount } from '@/utils/extract-user-data';
 import { inventoryCacheKey, orderCacheKey, subscriptionLimits } from '@/utils/constants';
 import { addCacheData, getCachedData, removeCacheData, updateCacheData } from '@/utils/cache-helpers';
@@ -43,7 +43,9 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
     const [fileName, setFileName] = useState("Upload Image");
     const [customTag, setCustomTag] = useState<string>("");
     const [imageUrl, setImageUrl] = useState<string>("");
-    const [storeType, setStoreType] = useState<string>("")
+    const [storeType, setStoreType] = useState<string>("");
+    const [condition, setCondition] = useState<Condition>("");
+    const [storageLocation, setStorageLocation] = useState<string>("");
 
     // Listing Info
     const [dateListed, setDateListed] = useState<string>(new Date().toISOString().split('T')[0])
@@ -158,6 +160,7 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
             additionalFees: 0,
             createdAt: formatDateToISO(new Date()),
             customTag: customTag,
+            condition: condition,
             image: [imageUrl],
             name: itemName,
             itemId: itemId ?? null,
@@ -190,7 +193,8 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
             },
             status: shippingStatus ?? "Active",
             storeType: storeType,
-            transactionId: generateRandomFlippifyTransactionId(20)
+            transactionId: generateRandomFlippifyTransactionId(20),
+            storageLocation: storageLocation
         }
 
         const { success, error, orderExists } = await createNewOrderItemAdmin(session?.user.id ?? "", storeType, orderItem);
@@ -229,6 +233,8 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
         setStoreType(item.storeType ?? "");
         setImageUrl(item.image ? item.image[0] : "");
         setCustomTag(item.customTag || "");
+        setStorageLocation(item.storageLocation || "");
+        setCondition(item.condition || "");
 
         // Set Listing Info
         setListing(item.itemId ?? "N/A");
@@ -249,32 +255,30 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
         setListingDowndownItems([]);
     }
 
-    function handleChange(value: string, type: string) {
+    function handleChange(value: string, type: string, setFunction: (value: string) => void) {
         switch (type) {
             case "listing":
                 handleSearchForListing(value);
-                setListing(value);
+                setFunction(value);
                 break;
+            case "storageLocation":
+            case "condition":
+                validateAlphaNumericInput(value, setFunction)
+                break
             case "storeType":
-                validateAlphaNumericInput(value.toLowerCase(), setStoreType) // Must be lowercase
+                validateAlphaNumericInput(value.toLowerCase(), setFunction) // Must be lowercase
                 break
             case "saleDate":
-                setSaleDate(value);
+                setFunction(value);
                 break;
             case "itemName":
-                validateTextInput(value, setItemName);
+            case "shippingCompany":
+                validateTextInput(value, setFunction);
                 break;
             case "quantity":
-                validateNumberInput(value, setQuantity);
-                break;
             case "salePrice":
-                validateNumberInput(value, setSalePrice);
-                break;
             case "shippingFees":
-                validateNumberInput(value, setShippingFees);
-                break;
-            case "shippingCompany":
-                validateTextInput(value, setShippingCompany);
+                validateNumberInput(value, setFunction);
                 break;
             default:
                 break;
@@ -299,25 +303,29 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
             {!aboveLimit && (
                 <form className="w-full max-w-xl flex flex-col gap-4" onSubmit={handleSubmit}>
                     <div className='relative flex flex-col sm:flex-row items-center w-full gap-4'>
-                        <Input type="text" placeholder='Enter listing (id or name)' title="Listing (Optional)" value={listing} onChange={(e) => handleChange(e.target.value, "listing")} />
-                        <Input type="text" placeholder="Enter marketplace" title="Marketplace" value={storeType} onChange={(e) => handleChange(e.target.value, "storeType")} />
+                        <Input type="text" placeholder='Enter listing (id or name)' title="Listing (Optional)" value={listing} onChange={(e) => handleChange(e.target.value, "listing", setListing)} />
+                        <Input type="text" placeholder="Enter marketplace" title="Marketplace" value={storeType} onChange={(e) => handleChange(e.target.value, "storeType", setStoreType)} />
                         <SelectRelatedListing listingDowndownItems={listingDowndownItems} currencySymbol={currencySymbol} onClick={handleListingClick} />
                     </div>
                     <div className="flex flex-col sm:flex-row items-center w-full gap-4">
-                        <Input type="text" placeholder="Enter item name" title="Product Name" value={itemName} onChange={(e) => handleChange(e.target.value, "itemName")} />
-                        <Input type="text" placeholder="Enter quantity" title="Quantity" value={quantity} onChange={(e) => handleChange(e.target.value, "quantity")} />
+                        <Input type="text" placeholder="Enter item name" title="Product Name" value={itemName} onChange={(e) => handleChange(e.target.value, "itemName", setItemName)} />
+                        <Input type="text" placeholder="Enter quantity" title="Quantity" value={quantity} onChange={(e) => handleChange(e.target.value, "quantity", setQuantity)} />
                     </div>
                     <div className="flex flex-col sm:flex-row items-center w-full gap-4">
-                        <Input type="text" placeholder="Enter sale price" title={`Sale Price (${currencySymbol})`} value={salePrice} onChange={(e) => handleChange(e.target.value, "salePrice")} />
-                        <Input type="date" placeholder="Enter sale date" title="Sale Date" className="w-full" value={saleDate} onChange={(e) => handleChange(e.target.value, "saleDate")} />
+                        <Input type="text" placeholder="Enter sale price" title={`Sale Price (${currencySymbol})`} value={salePrice} onChange={(e) => handleChange(e.target.value, "salePrice", setSalePrice)} />
+                        <Input type="date" placeholder="Enter sale date" title="Sale Date" className="w-full" value={saleDate} onChange={(e) => handleChange(e.target.value, "saleDate", setSaleDate)} />
+                    </div>
+                    <div className="flex flex-col sm:flex-row items-center w-full gap-4">
+                        <Input type="text" placeholder="Enter storage location" title="Storage Location (Optional)" value={storageLocation} onChange={(e) => handleChange(e.target.value, "storageLocation", setStorageLocation)} />
+                        <Input type="text" placeholder="Enter condition" title="Condition (Optional)" value={condition} onChange={(e) => handleChange(e.target.value, "condition", setCondition)} />
                     </div>
                     {/* Radio Buttons which select shipping status */}
                     <ShippingStatusRadioButtons shippingStatus={shippingStatus} setShippingStatus={setShippingStatus} />
 
                     {(shippingStatus === "InProcess" || shippingStatus === "Completed") && (
                         <div className="flex flex-col sm:flex-row items-center w-full gap-4">
-                            <Input type="text" placeholder="Enter shipping fees" title="Shipping Fees" value={shippingFees} onChange={(e) => handleChange(e.target.value, "shippingFees")} />
-                            <Input type="text" placeholder="Enter shipping company" title="Shipping Company" className="w-full" value={shippingCompany} onChange={(e) => handleChange(e.target.value, "shippingCompany")} />
+                            <Input type="text" placeholder="Enter shipping fees" title="Shipping Fees" value={shippingFees} onChange={(e) => handleChange(e.target.value, "shippingFees", setShippingFees)} />
+                            <Input type="text" placeholder="Enter shipping company" title="Shipping Company" className="w-full" value={shippingCompany} onChange={(e) => handleChange(e.target.value, "shippingCompany", setShippingCompany)} />
                         </div>
                     )}
 

@@ -103,7 +103,7 @@ const Page = () => {
                                                 <th></th>
                                                 <th>Item</th>
                                                 <th>Quantity</th>
-                                                <th>Sale Date</th>
+                                                <th>Storage</th>
                                                 <th>Ship In</th>
                                                 <th className='text-center'>Mark Shipped</th>
                                             </tr>

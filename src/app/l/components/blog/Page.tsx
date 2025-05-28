@@ -24,7 +24,18 @@ const Page = () => {
 
             <div className='min-h-screen max-w-6.5xl px-6 sm:px-6 md:px-8 lg:px-10 xl:px-12 animate-fadeInBounce mt-[250px] xs:mt-[200px] sm:mt-[200px] md:mt-[250px] lg:mt-[270px] 2xl:mt-[320px] mb-12'>
                 <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
-                    <BlogItem title="How To Upload Sales Data" description="A step‑by‑step guide to importing your sales records into Flippify—get up and running in minutes." link="how-to-upload-sales" date="May 11, 2025" />
+                    <BlogItem
+                        title="Getting Started with Flippify"
+                        description="An introduction to Flippify’s core features—learn how to navigate the platform, manage listings, and upload sales with ease."
+                        link="introduction"
+                        date="May 28, 2025"
+                    />
+                    <BlogItem
+                        title="How To Upload Sales Data"
+                        description="A step‑by‑step guide to importing your sales records into Flippify—get up and running in minutes."
+                        link="how-to-upload-sales"
+                        date="May 11, 2025"
+                    />
                 </div>
             </div>
         </div>

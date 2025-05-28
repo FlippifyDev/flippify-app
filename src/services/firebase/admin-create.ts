@@ -1,16 +1,56 @@
 "use server";
 
 // Local Imports
-import { IUser } from '@/models/user';
-import { firestoreAdmin } from '@/lib/firebase/config-admin';
-import { userProfileImages } from '@/utils/constants';
-import { retrieveStripeCustomer } from '@/services/stripe/retrieve';
-import { generateRandomChars } from '@/utils/generate-random';
-import { formatDateToISO } from '@/utils/format-dates';
+import { IUser } from "@/models/user";
+import { extractItemId } from "./extract";
+import { firestoreAdmin } from "@/lib/firebase/config-admin";
+import { updateItemCount } from "./admin-update";
+import { formatDateToISO } from "@/utils/format-dates";
+import { retrieveUIDAdmin } from "./admin-retrieve";
+import { userProfileImages } from "@/utils/constants";
+import { generateRandomChars } from "@/utils/generate-random";
+import { retrieveStripeCustomer } from "../stripe/retrieve";
+import { ItemType, RootColType, SubColType } from "./models";
 
 
-// This function will run when a new user signs up using Firebase Auth
-export async function createUser(uid: string, email: string): Promise<IUser | void> {
+interface CreateItemProps {
+    idToken: string;
+    rootCol: RootColType;
+    subCol: SubColType;
+    item: ItemType;
+}
+export async function createItem({ idToken, rootCol, subCol, item }: CreateItemProps): Promise<{ success?: boolean, error?: any }> {
+    try {
+        // Step 1: Extract Item ID
+        const id = extractItemId({ item });
+        if (!id) throw Error(`Item does not contain an ID`);
+
+        // Step 2: Retrieve UID
+        const uid = await retrieveUIDAdmin({ idToken });
+        if (!uid) throw Error("User could not be found");
+
+        // Step 3: Get the related document reference
+        const docRef = firestoreAdmin.collection(rootCol).doc(uid).collection(subCol).doc(id);
+
+        // Step 4: Check if the item already exists
+        const docSnapshot = await docRef.get();
+        if (docSnapshot.exists) throw Error(`Item ${id} already exists.`);
+
+        // Step 5: Create the document
+        await docRef.set(item, { merge: true });
+
+        // Step 6: Update item count
+        await updateItemCount({ idToken, item, rootCol, isNewItem: true })
+
+        return { success: true };
+    } catch (error) {
+        console.error(`Error in createItem: ${error}`);
+        return { error: `${error}` };
+    }
+}
+
+
+export async function createUser({ uid, email }: { uid: string, email: string }): Promise<IUser | void> {
     try {
         const referralCode = generateRandomChars(7);
         const randomUsername = generateRandomChars(10);
@@ -41,6 +81,12 @@ export async function createUser(uid: string, email: string): Promise<IUser | vo
                 rewardsClaimed: 0,
             },
             store: {
+                numExpenses: {
+                    oneTime: 0,
+                    totalOneTime: 0,
+                    resetDate: resetDate,
+                    subscriptions: 0,
+                },
                 numOrders: {
                     automatic: 0,
                     manual: 0,
@@ -67,8 +113,6 @@ export async function createUser(uid: string, email: string): Promise<IUser | vo
 
         // Use Firestore Admin to write to Firestore (bypasses security rules)
         await userRef.set(emptyUser);
-
-        console.log('User successfully created in Firestore!');
 
         const { connectedAccounts, ...safeUser } = emptyUser;
         return safeUser as IUser;

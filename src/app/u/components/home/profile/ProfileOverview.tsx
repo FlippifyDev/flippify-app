@@ -3,7 +3,6 @@
 // Local Imports
 import ImageModal from '@/app/components/ImageModal';
 import ImageUpload from '../../dom/ui/ImageUpload';
-import { updateUser } from '@/services/firebase/update';
 import ProfileSupportButton from "./ProfileSupportButton";
 import ProfileBillingPortalButton from "./ProfileBillingPortalButton";
 
@@ -11,6 +10,7 @@ import ProfileBillingPortalButton from "./ProfileBillingPortalButton";
 import { useSession } from "next-auth/react";
 import { FaCamera } from "react-icons/fa";
 import { useState } from "react";
+import { updateUser } from '@/services/firebase/update';
 
 
 const ProfileOverview = () => {
@@ -52,7 +52,7 @@ const ProfileOverview = () => {
         const finalUrl = imageUrl || url;
 
         if (finalUrl) {
-            await updateUser(session.user.id, { metaData: { image: finalUrl } });
+            await updateUser({ uid: session.user.id, data: { metaData: { image: finalUrl } } });
             setSession({
                 ...session,
                 user: {

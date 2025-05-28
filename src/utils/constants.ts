@@ -65,7 +65,7 @@ export const subscriptionLimits = {
         "automatic": STANDARD_MAX_AUTOMATIC_LISTINGS,
         "manual": STANDARD_MAX_MANUAL_LISTINGS,
         "oneTimeExpenses": STANDARD_ONE_TIME_EXPENSES,
-        "subscriptionExpenses": STANDARD_SUBSCRIPTION_EXPENSES  
+        "subscriptionExpenses": STANDARD_SUBSCRIPTION_EXPENSES
     },
     "pro": {
         "automatic": PRO_MAX_AUTOMATIC_LISTINGS,
@@ -89,6 +89,40 @@ export const subscriptionPlans = {
     "Pro - member": 2,
     "Enterprise - member": 3,
 }
+
+
+export const billingCycleOptions = [{ label: "Daily", value: "daily" }, { label: "Weekly", value: "weekly" }, { label: "Monthly", value: "monthly" }, { label: "Yearly", value: "yearly" }]
+
+
+export const weeklyRenewalOptions = [
+    { label: "Monday", value: "monday" },
+    { label: "Tuesday", value: "tuesday" },
+    { label: "Wednesday", value: "wednesday" },
+    { label: "Thursday", value: "thursday" },
+    { label: "Friday", value: "friday" },
+    { label: "Saturday", value: "saturday" },
+    { label: "Sunday", value: "sunday" },
+];
+
+export const monthlyRenewalOptions = Array.from({ length: 31 }, (_, i) => {
+    const day = i + 1;
+    return {
+        label: `${day}${getOrdinalSuffix(day)}`,
+        value: day.toString()
+    };
+})
+
+
+function getOrdinalSuffix(n: number) {
+    if (n > 3 && n < 21) return 'th';
+    switch (n % 10) {
+        case 1: return 'st';
+        case 2: return 'nd';
+        case 3: return 'rd';
+        default: return 'th';
+    }
+}
+
 
 
 export const discordSupportLink = "https://discord.com/channels/1236428617962229830/1236436288442466394"

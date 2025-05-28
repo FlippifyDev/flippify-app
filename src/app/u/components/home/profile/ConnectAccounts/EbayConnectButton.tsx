@@ -2,13 +2,12 @@
 
 // Local Imports
 import ConnectButton from "./ConnectButton";
+import { retrieveConnectedAccount } from "@/services/firebase/retrieve";
 import { handleConnectEbay, handleDisconnect } from "@/lib/ebay/ebay-connection";
-import { retrieveConnectedAccount } from "@/services/firebase/retrieve-admin";
 
 // External Imports
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { retrieveIdToken } from "@/services/firebase/retrieve";
 
 
 
@@ -27,14 +26,11 @@ const EbayConnectButton = () => {
                 return;
             }
 
-            const idToken = await retrieveIdToken()
-            if (!idToken) return;
-
             // once authenticated, look up connectedAccounts.ebay
             if (status === "authenticated" && session?.user.id) {
                 try {
                     const account = await retrieveConnectedAccount({
-                        idToken,
+                        uid: session.user.id as string,
                         storeType: "ebay"
                     });
                     setConnected(!!account);

@@ -2,8 +2,10 @@
 
 // Local Imports
 import { shortenText } from '@/utils/format';
-import { updateOrderStatus } from '@/services/firebase/update';
-import { IOrder, OrderStatus } from '@/models/store-data';
+import { IOrder, OrderStatus, StoreType } from '@/models/store-data';
+import { updateItem } from '@/services/firebase/update';
+import { ordersCol } from '@/services/firebase/constants';
+import { orderCacheKey } from '@/utils/constants';
 
 // External Imports
 import { RiHomeOfficeFill } from "react-icons/ri";
@@ -11,6 +13,7 @@ import { useState } from 'react'
 import { FaTruck } from "react-icons/fa6";
 import { FaCheck } from "react-icons/fa";
 import Image from 'next/image';
+
 
 interface IShipppedProps {
     item: IOrder;
@@ -24,8 +27,9 @@ const Shipped: React.FC<IShipppedProps> = ({ item, uid, setUpdatedStatus }) => {
 
     async function handleUpdateStatus(status: OrderStatus) {
         // Cache is updated in this function
-        await updateOrderStatus(uid, item, status);
-        if (status === "InProcess") {
+        item.status = status;
+        await updateItem({ uid, item, rootCol: ordersCol, subCol: item.storeType as StoreType, cacheKey: orderCacheKey });
+        if (status === "Active") {
             setShipped(true);
         } else if (status === "Completed") {
             setCompleted(true);
@@ -35,7 +39,7 @@ const Shipped: React.FC<IShipppedProps> = ({ item, uid, setUpdatedStatus }) => {
             setShipped(false);
             setCompleted(false);
             setUpdatedStatus(false);
-        }, 2000);
+        }, 900);
     }
 
 
@@ -45,7 +49,7 @@ const Shipped: React.FC<IShipppedProps> = ({ item, uid, setUpdatedStatus }) => {
                 <td className="min-w-20">
                     <figure>
                         <Image
-                            src={item.image ? item.image[0]: ""}
+                            src={item.image ? item.image[0] : ""}
                             width={100}
                             height={100}
                             alt={"image"}
@@ -67,7 +71,7 @@ const Shipped: React.FC<IShipppedProps> = ({ item, uid, setUpdatedStatus }) => {
                         className='w-full flex justify-center text-lg'
                     >
                         <span className='hover:bg-gray-100 p-3 rounded-lg'>
-                            {!shipped ? <FaTruck className='scale-x-[-1]'/> : <FaCheck />}
+                            {!shipped ? <FaTruck className='scale-x-[-1]' /> : <FaCheck />}
                         </span>
                     </button>
                 </td>
@@ -77,7 +81,7 @@ const Shipped: React.FC<IShipppedProps> = ({ item, uid, setUpdatedStatus }) => {
                         className='w-full flex justify-center text-lg'
                     >
                         <span className='hover:bg-gray-100 p-3 rounded-lg'>
-                            {!completed ? <RiHomeOfficeFill className='text-xl'/> : <FaCheck />}
+                            {!completed ? <RiHomeOfficeFill className='text-xl' /> : <FaCheck />}
                         </span>
                     </button>
                 </td>

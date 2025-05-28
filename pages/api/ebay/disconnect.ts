@@ -1,7 +1,7 @@
 // Local Imports
-import { retrieveUserRefAdmin } from '@/services/firebase/retrieve-admin';
 
 // External Imports
+import { retrieveUserRefAdmin } from '@/services/firebase/admin-retrieve';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 import nookies from 'nookies';
@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(401).json({ error: 'User not authenticated' });
         }
 
-        const userRef = await retrieveUserRefAdmin(session.user.id as string);
+        const userRef = await retrieveUserRefAdmin({ uid: session.user.id as string });
         if (!userRef) {
             return res.status(404).json({ error: 'User not found' });
         }

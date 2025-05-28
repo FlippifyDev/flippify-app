@@ -1,5 +1,4 @@
 export type RecordType = "automatic" | "manual";
-export type ItemType = "orders" | "inventory" | "expenses"
 
 export type OrderStatus =
     | "Active"        // Order is in progress and not yet finalized. Payment may not be completed.

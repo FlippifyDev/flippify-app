@@ -3,28 +3,31 @@
 // Local Imports
 import NewOrder from "../navbar-tools/NewOrder";
 import EditListing from "../navbar-tools/EditListing";
-import { deleteItem } from "@/services/firebase/delete";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import { shortenText } from "@/utils/format";
 import UpdateTableField from "./UpdateTableField";
 import { formatTableDate } from "@/utils/format-dates";
 import { currencySymbols } from "@/config/currency-config";
-import { IListing, STORES, StoreType } from "@/models/store-data";
-import { retrieveIdToken, retrieveUserInventory } from "@/services/firebase/retrieve";
+import { retrieveInventory } from "@/services/bridges/retrieve";
+import { IListing, StoreType } from "@/models/store-data";
 import { fetchUserListingsCount } from "@/utils/extract-user-data";
-import { retrieveConnectedAccounts, retrieveUserStoreTypes } from "@/services/firebase/retrieve-admin";
-import { getCachedData, removeCacheData } from "@/utils/cache-helpers";
 import { defaultTimeFrom, inventoryCacheKey } from "@/utils/constants";
 
 // External Imports
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { deleteItem } from "@/services/firebase/delete";
+import { retrieveIdToken } from "@/services/firebase/retrieve";
+import { inventoryCol } from "@/services/firebase/constants";
+import { removeCacheData } from "@/utils/cache-helpers";
+import NoResultsFound from "../../dom/ui/NoResultsFound";
 
 
 const Inventory = () => {
     const { data: session } = useSession();
-    const cacheKey = `${inventoryCacheKey}-${session?.user.id}`;
+    const uid = session?.user.id as string;
+    const cacheKey = `${inventoryCacheKey}-${uid}`
 
     const currency = session?.user.preferences?.currency || "USD";
     const [addNewOrderModalOpen, setAddNewOrderModalOpen] = useState(false);
@@ -44,6 +47,7 @@ const Inventory = () => {
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
+    const [nextPage, setNextPage] = useState(false);
 
     const [triggerUpdate, setTriggerUpdate] = useState(true);
     const [loading, setLoading] = useState(false);
@@ -51,65 +55,32 @@ const Inventory = () => {
     const [contextMenu, setContextMenu] = useState<{ mouseX: number; mouseY: number; item: any } | null>(null);
 
     useEffect(() => {
-        const fetchAllInventories = async () => {
+        const fetchInventory = async () => {
             if (!session?.user.authentication?.subscribed || listedData.length >= currentPage * itemsPerPage) return;
 
             setLoading(true);
 
-            const idToken = await retrieveIdToken();
-            if (!idToken) return;
-
-            const lookupStores = [];
-
-            const connectedAccounts = await retrieveConnectedAccounts({ idToken });
-            const accountNames = Object.keys(connectedAccounts);
-
-            for (const name of accountNames) {
-                if (STORES.includes(name)) {
-                    lookupStores.push(name)
-                }
-            }
-
-            const storeTypes = await retrieveUserStoreTypes({ idToken, itemType: "inventory" });
-            if (!storeTypes) return;
-
-            for (const type of storeTypes) {
-                if (!lookupStores.includes(type)) {
-                    lookupStores.push(type);
-                }
-            }
-
-            // for each storeType, fetch their inventory in parallel
-            await Promise.all(
-                lookupStores.map((storeType) => {
-                    return retrieveUserInventory({
-                        uid: session.user.id as string,
-                        timeFrom: defaultTimeFrom,
-                        storeType,
-                    }).then((inventory) => [storeType, inventory] as const);
-                })
-            );
-
-            const cache = getCachedData(`${inventoryCacheKey}-${session.user.id}`);
-            if (cache) {
-                const results = Object.values(cache) as IListing[];
-                setListedData(results);
-            }
+            const items = await retrieveInventory({ uid, timeFrom: defaultTimeFrom, pagenate: true, nextPage });
+            setListedData(items ?? [])
 
             setLoading(false);
             setTriggerUpdate(false);
         };
 
 
-        if (session?.user.authentication?.subscribed && triggerUpdate) {
-            fetchAllInventories();
-            setTriggerUpdate(false)
+        if ((session?.user.authentication?.subscribed && triggerUpdate) || nextPage) {
+            fetchInventory();
+            setTriggerUpdate(false);
+            setNextPage(false);
         }
-    }, [session?.user, currentPage, listedData, triggerUpdate]);
+    }, [session?.user, currentPage, listedData, triggerUpdate, uid, nextPage]);
 
     // Handle page change
     const handlePageChange = (newPage: number) => {
         setTriggerUpdate(true);
+        if (newPage > currentPage) {
+            setNextPage(true);
+        }
         if (newPage > 0 && newPage <= totalPages) {
             setCurrentPage(newPage);
         }
@@ -158,12 +129,14 @@ const Inventory = () => {
         setContextMenu(null);
     };
 
-    async function handleDeleteListing(itemId: string, storeType: StoreType, isAuto: boolean, createdAt?: string | null) {
-        if (session?.user.id && itemId) {
-            await deleteItem({ uid: session.user.id, itemType: "inventory", storeType: storeType, docId: itemId, isAuto: isAuto, createdAt });
-            removeCacheData(cacheKey, itemId);
-            setTriggerUpdate(true);
-        }
+    async function handleDeleteListing(item: IListing, storeType: StoreType, isAuto: boolean, createdAt?: string | null) {
+        const idToken = await retrieveIdToken();
+        if (!idToken) return;
+
+        await deleteItem({ idToken, rootCol: inventoryCol, subCol: storeType, item })
+
+        removeCacheData(cacheKey, item.itemId as string);
+        setTriggerUpdate(true);
     }
 
     return (
@@ -215,16 +188,16 @@ const Inventory = () => {
                                         </div>
                                     </td>
                                     <td onClick={() => handleDisplayOrderModal(item)}>{shortenText(item.name ?? "N/A")}</td>
-                                    <UpdateTableField currentValue={item?.storeType} docId={item.itemId} item={item} docType='inventory' storeType={item.storeType} keyType="storeType" cacheKey={cacheKey} tooltip='Warning! Editing this may count towards your monthly inventory.' triggerUpdate={() => setTriggerUpdate(true)} />
+                                    <UpdateTableField currentValue={item?.storeType} docId={item.itemId} item={item} docType={inventoryCol} storeType={item.storeType} keyType="storeType" cacheKey={cacheKey} tooltip='Warning! Editing this may count towards your monthly inventory.' triggerUpdate={() => setTriggerUpdate(true)} />
 
                                     <td onClick={() => handleDisplayOrderModal(item)}>{item.quantity}</td>
-                                    <UpdateTableField currentValue={purchase?.platform} docId={item.itemId} item={item} docType='inventory' storeType={item.storeType} keyType="purchase.platform" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
-                                    <UpdateTableField currentValue={purchase?.price?.toFixed(2)} docId={item.itemId} item={item} docType='inventory' storeType={item.storeType} keyType="purchase.price" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
+                                    <UpdateTableField currentValue={purchase?.platform} docId={item.itemId} item={item} docType={inventoryCol} storeType={item.storeType} keyType="purchase.platform" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
+                                    <UpdateTableField currentValue={purchase?.price?.toFixed(2)} docId={item.itemId} item={item} docType={inventoryCol} storeType={item.storeType} keyType="purchase.price" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
                                     <td onClick={() => handleDisplayOrderModal(item)}>
                                         {item.price?.toFixed(2)}
                                     </td>
                                     <td className="min-w-32" onClick={() => handleDisplayOrderModal(item)}>{formatTableDate(item.dateListed)}</td>
-                                    <UpdateTableField tdClassName={index + 1 === paginatedData.length ? "rounded-br-xl" : ""} currentValue={customTag} docId={item.itemId} item={item} docType='inventory' storeType={item.storeType} keyType="customTag" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
+                                    <UpdateTableField tdClassName={index + 1 === paginatedData.length ? "rounded-br-xl" : ""} currentValue={customTag} docId={item.itemId} item={item} docType={inventoryCol} storeType={item.storeType} keyType="customTag" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
                                 </tr>
                             );
                         })
@@ -232,7 +205,7 @@ const Inventory = () => {
                         <tr>
                             <td colSpan={12}>
                                 <div className="w-full flex justify-center items-center">
-                                    {loading ? <LoadingSpinner /> : "No inventory available."}
+                                        {loading ? <LoadingSpinner /> : <div className="py-6"><NoResultsFound /></div>}
                                 </div>
                             </td>
                         </tr>
@@ -266,7 +239,7 @@ const Inventory = () => {
                     <li
                         className="px-2 py-1 rounded-sm hover:bg-muted/10 text-white cursor-pointer"
                         onClick={() => {
-                            handleDeleteListing(contextMenu.item.itemId, contextMenu.item.storeType, contextMenu.item.recordType === "automatic", contextMenu.item.createdAt);
+                            handleDeleteListing(contextMenu.item, contextMenu.item.storeType, contextMenu.item.recordType === "automatic", contextMenu.item.createdAt);
                             handleCloseContextMenu();
                         }}
                     >
@@ -299,7 +272,7 @@ const Inventory = () => {
                                     {Math.min(currentPage * itemsPerPage, listedData.length)}
                                 </span>
                                 <span>of</span>
-                                <span className="font-semibold text-white">{listedData.length}</span>
+                                <span className="font-semibold text-white">{totalListings}</span>
                             </div>
                             {/* Next Button */}
                             <button

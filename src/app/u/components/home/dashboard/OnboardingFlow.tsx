@@ -1,9 +1,5 @@
 // Local Imports
 import { CurrencyType } from '@/models/user';
-import { retrieveUserRefById } from '@/services/firebase/retrieve';
-import { updateUserPreferences } from '@/services/firebase/update';
-import { updateReferredByAdmin } from '@/services/firebase/update-admin';
-import { retrieveUserByKeyAndValueAdmin } from '@/services/firebase/retrieve-admin';
 
 // External Imports
 import { useSession } from 'next-auth/react';
@@ -12,6 +8,11 @@ import { Lato } from 'next/font/google';
 import { useRouter } from 'next/navigation';
 import { deleteField, setDoc } from 'firebase/firestore';
 import { validateAlphaNumericInput, validateEmailInput } from '@/utils/input-validation';
+import { retrieveRefereeUserExists } from '@/services/firebase/admin-retrieve';
+import { updateUserPreferences } from '@/services/firebase/update';
+import { deleteUserOnboarding } from '@/services/firebase/delete';
+import { updateReferredBy } from '@/services/firebase/admin-update';
+import { retrieveIdToken } from '@/services/firebase/retrieve';
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
@@ -81,7 +82,7 @@ const OnboardingFlow: React.FC = () => {
                 setReferralError('You cannot use your own referral code.');
                 return;
             }
-            const isValid = await retrieveUserByKeyAndValueAdmin("referral.referralCode", referralCode);
+            const isValid = await retrieveRefereeUserExists({ referralCode })
             if (!isValid) {
                 setReferralError('Invalid referral code. Please try again.');
                 return;
@@ -99,18 +100,12 @@ const OnboardingFlow: React.FC = () => {
 
     const handleStep2Next = async () => {
         if (session?.user) {
-            await updateUserPreferences(session.user.id ?? "", currency);
+            const idToken = await retrieveIdToken();
+            if (!idToken) return;
+            await updateUserPreferences({ uid: session.user.id as string, currency });
+            await deleteUserOnboarding({ uid: session.user.id as string })
+            await updateReferredBy({ idToken, referredBy: validReferralCode as string });
             setStep(3);
-            const userRef = await retrieveUserRefById(session?.user.id ?? "");
-            if (!userRef) return;
-            await setDoc(
-                userRef,
-                {
-                    authentication: { onboarding: deleteField() }
-                },
-                { merge: true }
-            );
-            await updateReferredByAdmin(session.user.id ?? "", validReferralCode ?? "");
         }
 
         window.location.reload()

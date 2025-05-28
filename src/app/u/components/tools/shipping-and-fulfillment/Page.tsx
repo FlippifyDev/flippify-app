@@ -6,20 +6,20 @@ import Shipped from './Shipped';
 import { IOrder } from '@/models/store-data';
 import ReadyToShip from './ReadyToShip';
 import LoadingSpinner from '@/app/components/LoadingSpinner';
+import { retrieveOrders } from '@/services/bridges/retrieve';
 import { defaultTimeFrom } from '@/utils/constants';
-import { retrieveIdToken, retrieveUserOrders } from '@/services/firebase/retrieve';
 import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
-import { retrieveUserStoreTypes } from '@/services/firebase/retrieve-admin';
 
 // External Imports
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react';
 
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 10;
 
 const Page = () => {
     const { data: session } = useSession();
+    const uid = session?.user.id as string;
 
     const [loading, setLoading] = useState(false);
     const [initialLoad, setInitialLoad] = useState(true);
@@ -34,9 +34,9 @@ const Page = () => {
     const totalActivePages = Math.ceil(activeListings.length / ITEMS_PER_PAGE);
     const totalShippedPages = Math.ceil(shippedListings.length / ITEMS_PER_PAGE);
 
-    function sortOrderData(inventoryData: IOrder[]) {
-        const active = inventoryData.filter(item => item.status === 'Active');
-        const shipped = inventoryData.filter(item => item.status === 'InProcess');
+    function sortOrderData(items: IOrder[]) {
+        const active = items.filter(item => item.status === 'Active');
+        const shipped = items.filter(item => item.status === 'InProcess');
 
         setShippedListings(shipped);
         setActiveListings(active);
@@ -49,26 +49,10 @@ const Page = () => {
             if (initialLoad) {
                 setLoading(true);
             }
-            const idToken = await retrieveIdToken();
-            if (!idToken) return;
 
-            const storeTypes = await retrieveUserStoreTypes({ idToken, itemType: "orders" });
-            if (!storeTypes) return;
+            const items = await retrieveOrders({ uid, timeFrom: defaultTimeFrom });
+            sortOrderData(items ?? [])
 
-            const salesResult = await Promise.all(
-                storeTypes.map((storeType) => {
-                    return retrieveUserOrders({
-                        uid: session.user.id as string,
-                        timeFrom: defaultTimeFrom,
-                        storeType,
-                    }).then((order) => [storeType, order] as const);
-                })
-            );
-            const sales = salesResult[salesResult.length - 1]?.[1] ?? [];
-
-            if (sales) {
-                sortOrderData(sales);
-            }
             if (initialLoad) {
                 setLoading(false);
                 setInitialLoad(false);
@@ -78,12 +62,13 @@ const Page = () => {
         if (session?.user.authentication?.subscribed) {
             fetchOrderData();
         }
-    }, [session, updatedStatus, initialLoad]);
+    }, [session, updatedStatus, initialLoad, uid]);
 
     const getPaginatedItems = (list: IOrder[], page: number) => {
         const start = (page - 1) * ITEMS_PER_PAGE;
         return list.slice(start, start + ITEMS_PER_PAGE);
     };
+
 
     return (
         <LayoutSubscriptionWrapper anySubscriptions={["admin", "member"]}>
@@ -101,11 +86,11 @@ const Page = () => {
                                         <thead>
                                             <tr>
                                                 <th></th>
-                                                <th>Item</th>
-                                                <th>Quantity</th>
-                                                <th>Storage</th>
-                                                <th>Ship In</th>
-                                                <th className='text-center'>Mark Shipped</th>
+                                                <th>ITEM</th>
+                                                <th>QUANTITY</th>
+                                                <th>STORAGE</th>
+                                                <th>SHIP IN</th>
+                                                <th className='text-center'>SHIPPED</th>
                                             </tr>
                                         </thead>
                                         {getPaginatedItems(activeListings, activePage).map((item) => (
@@ -114,16 +99,16 @@ const Page = () => {
                                     </table>
                                     <div className='mt-4 flex justify-end'>
                                         <div className="flex flex-row items-center">
-                                            <button className='rounded-l flex items-center justify-center p-2 h-8 w-8 bg-gray-200 hover:bg-gray-300 active:bg-gray-200' onClick={() => setActivePage(prev => Math.max(prev - 1, 1))} disabled={activePage === 1}>«</button>
-                                            <button className="p-2 h-8 flex items-center justify-center bg-gray-200 text-sm font-semibold">{activePage} / {totalActivePages}</button>
-                                            <button className='rounded-r flex items-center justify-center p-2 h-8 w-8 bg-gray-200 hover:bg-gray-300 active:bg-gray-200' onClick={() => setActivePage(prev => Math.min(prev + 1, totalActivePages))} disabled={activePage === totalActivePages}>»</button>
+                                            <button className='rounded-l flex items-center justify-center p-2 h-8 w-8 bg-gray-200 hover:bg-gray-300 active:bg-gray-200 transition duration-100' onClick={() => setActivePage(prev => Math.max(prev - 1, 1))} disabled={activePage === 1}>«</button>
+                                            <button className="p-2 h-8 flex items-center justify-center bg-gray-200 text-sm font-semibold cursor-default">{activePage} / {totalActivePages}</button>
+                                            <button className='rounded-r flex items-center justify-center p-2 h-8 w-8 bg-gray-200 hover:bg-gray-300 active:bg-gray-200 transition duration-100' onClick={() => setActivePage(prev => Math.min(prev + 1, totalActivePages))} disabled={activePage === totalActivePages}>»</button>
                                         </div>
                                     </div>
                                 </>
                             )}
 
                             {activeListings.length === 0 && (
-                                <div className='text-center'>
+                                <div className='text-center text-sm'>
                                     <p className='text-lightModeText font-semibold'>No items ready to ship</p>
                                 </div>
                             )}
@@ -143,10 +128,10 @@ const Page = () => {
                                         <thead>
                                             <tr>
                                                 <th></th>
-                                                <th>Item</th>
-                                                <th>Quantity</th>
-                                                <th className='text-center'>Mark Not Shipped</th>
-                                                <th className='text-center'>Mark Delivered</th>
+                                                <th>ITEM</th>
+                                                <th>QUANTITY</th>
+                                                <th className='text-center'>NOT SHIPPED</th>
+                                                <th className='text-center'>DELIVERED</th>
                                             </tr>
                                         </thead>
                                         {getPaginatedItems(shippedListings, shippedPage).map((item) => (
@@ -155,15 +140,15 @@ const Page = () => {
                                     </table>
                                     <div className='mt-4 flex justify-end'>
                                         <div className="flex flex-row items-center">
-                                            <button className='rounded-l flex items-center justify-center p-2 h-8 w-8 bg-gray-200 hover:bg-gray-300 active:bg-gray-200' onClick={() => setShippedPage(prev => Math.max(prev - 1, 1))} disabled={shippedPage === 1}>«</button>
-                                            <button className='p-2 h-8 flex items-center justify-center bg-gray-200 text-sm font-semibold'>{shippedPage} / {totalShippedPages}</button>
-                                            <button className='rounded-r flex items-center justify-center p-2 h-8 w-8 bg-gray-200 hover:bg-gray-300 active:bg-gray-200' onClick={() => setShippedPage(prev => Math.min(prev + 1, totalShippedPages))} disabled={shippedPage === totalShippedPages}>»</button>
+                                            <button className='rounded-l flex items-center justify-center p-2 h-8 w-8 bg-gray-200 hover:bg-gray-300 active:bg-gray-200 transition duration-100' onClick={() => setShippedPage(prev => Math.max(prev - 1, 1))} disabled={shippedPage === 1}>«</button>
+                                            <button className='p-2 h-8 flex items-center justify-center bg-gray-200 text-sm font-semibold cursor-default'>{shippedPage} / {totalShippedPages}</button>
+                                            <button className='rounded-r flex items-center justify-center p-2 h-8 w-8 bg-gray-200 hover:bg-gray-300 active:bg-gray-200 transition duration-100' onClick={() => setShippedPage(prev => Math.min(prev + 1, totalShippedPages))} disabled={shippedPage === totalShippedPages}>»</button>
                                         </div>
                                     </div>
                                 </>
                             )}
                             {shippedListings.length === 0 && (
-                                <div className='text-center'>
+                                <div className='text-center text-sm'>
                                     <p className='text-lightModeText font-semibold'>No items being shipped</p>
                                 </div>
                             )}

@@ -8,11 +8,13 @@ interface Option {
 
 interface DropdownProps {
     value: string;
+    labelClassName?: string;
+    buttonClassName?: string;
     onChange: (value: string) => void;
     options: Option[];
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ value, onChange, options }) => {
+const Dropdown: React.FC<DropdownProps> = ({ value, labelClassName, buttonClassName, onChange, options }) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -41,12 +43,12 @@ const Dropdown: React.FC<DropdownProps> = ({ value, onChange, options }) => {
         >
             <button
                 type="button"
-                className="min-w-32 py-3 px-6 rounded-lg bg-white border border-gray-300 text-sm flex items-center gap-2"
+                className={`${buttonClassName} min-w-32 py-3 px-6 rounded-lg bg-white border border-gray-300 text-sm flex justify-between items-center gap-2`}
                 aria-haspopup="listbox"
                 aria-expanded={isOpen}
                 onClick={() => setIsOpen((prev) => !prev)}
             >
-                <span>{selectedLabel}</span>
+                <span className={`${labelClassName}`}>{selectedLabel}</span>
                 <svg
                     className={`w-4 h-4 ml-1 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
                     fill="none"

@@ -13,7 +13,7 @@ export function generateTimeRanges(startDate: Date, endDate: Date = new Date()):
 
     for (let year = startYear; year <= endYear; year++) {
         ranges.push({
-            label: `${year} - ${year + 1}`,
+            label: `${year}`,
             value: `${year}-${year + 1}`,
         });
     }

@@ -9,10 +9,11 @@ import ConnectButton from './ConnectButton';
 
 interface ConnectAccountProps {
     name: string;
+    description?: string;
     image: string;
 }
 
-const ConnectAccount: React.FC<ConnectAccountProps> = ({ name, image }) => {
+const ConnectAccount: React.FC<ConnectAccountProps> = ({ name, description, image }) => {
     return (
         <div className="col-span-1 flex flex-row items-center p-4 gap-4">
             {/* Account logo */}
@@ -21,9 +22,12 @@ const ConnectAccount: React.FC<ConnectAccountProps> = ({ name, image }) => {
             </div>
 
             {/* Account name */}
-            <div className="text-md font-semibold text-gray-800">{name}</div>
+            <div className='w-full'>
+                <p className="text-md font-semibold text-gray-800">{name}</p>
+                <p className='text-xs font-[530] text-gray-600'>{description}</p>
+            </div>
 
-            <div className='w-full flex justify-end'>
+            <div className='flex justify-end'>
                 {/* Connect/Disconnect Button */}
                 {name === "eBay" && <EbayConnectButton />}
                 {name === "Depop" && <ConnectButton unavailable={true} />}

@@ -1,6 +1,29 @@
+// Local Imports
+import { DateFilterKeyType, ItemType } from "@/services/firebase/models";
 import { IListing, IOrder } from "@/models/store-data";
-import { isAfter, isBefore, isEqual, parseISO } from "date-fns";
 
+// External Imports
+import { isAfter, isBefore, isEqual, parseISO } from "date-fns";
+import { extractItemDateByFilter } from "@/services/firebase/extract";
+
+
+export function filterItemsByDate({ items, filterKey, timeFrom, timeTo }: { items: ItemType[], filterKey: DateFilterKeyType, timeFrom: string, timeTo?: string }) {
+    const fromDate = new Date(timeFrom);
+    const toDate = timeTo ? new Date(timeTo) : null;
+
+    return items.filter((item) => {
+        const dateStr = extractItemDateByFilter({ item, filterKey });
+        if (!dateStr) return false;
+
+        const itemDate = new Date(dateStr);
+        if (isNaN(itemDate.getTime())) return false;
+
+        const isAfterFrom = itemDate >= fromDate;
+        const isBeforeTo = toDate ? itemDate <= toDate : true;
+
+        return isAfterFrom && isBeforeTo;
+    });
+}
 
 // Function to filter orders by the given time range
 export const filterOrdersByDateRange = (orders: IOrder[], timeFrom: string, timeTo: string) => {

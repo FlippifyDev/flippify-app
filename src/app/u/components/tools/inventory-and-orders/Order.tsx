@@ -1,34 +1,35 @@
 "use client"
 
 // Local Imports
-import { IOrder } from '@/models/store-data';
+import { IOrder, StoreType } from '@/models/store-data';
 import IconButton from '../../dom/ui/IconButton';
+import ImageModal from '@/app/components/ImageModal';
+import ImageUpload from '../../dom/ui/ImageUpload';
+import { firestore } from '@/lib/firebase/config';
 import { deleteItem } from '@/services/firebase/delete';
 import LoadingSpinner from '@/app/components/LoadingSpinner';
 import UpdateTableField from './UpdateTableField';
 import { orderCacheKey } from '@/utils/constants';
 import { formatTableDate } from '@/utils/format-dates';
+import { retrieveIdToken } from '@/services/firebase/retrieve';
 import { getCachedItem, removeCacheData, updateCacheData } from '@/utils/cache-helpers';
 
 // External Imports
 import { useRouter, useSearchParams } from 'next/navigation';
-import { MdOutlineCurrencyExchange } from "react-icons/md";
+import { FaCamera, FaRegTrashAlt } from "react-icons/fa";
 import { useEffect, useState } from 'react'
 import getSymbolFromCurrency from 'currency-symbol-map'
-import { FaCamera, FaRegTrashAlt } from "react-icons/fa";
-import { useSession } from 'next-auth/react';
-import Image from 'next/image';
-import ImageModal from '@/app/components/ImageModal';
-import ImageUpload from '../../dom/ui/ImageUpload';
 import { doc, updateDoc } from 'firebase/firestore';
-import { firestore } from '@/lib/firebase/config';
+import { useSession } from 'next-auth/react';
 import { set } from 'lodash';
+import { ordersCol } from '@/services/firebase/constants';
 
 
 const Order = () => {
     const router = useRouter()
     const params = useSearchParams()
     const { data: session } = useSession()
+    const uid = session?.user.id as string;
 
     const cacheKey = `${orderCacheKey}-${session?.user.id}`;
 
@@ -80,11 +81,12 @@ const Order = () => {
 
     async function handleDeleteOrder() {
         setDeleting(true);
-        const tid = params?.get("tid");
+        const idToken = await retrieveIdToken();
+        if (!idToken) return;
 
-        if (session?.user.id && tid && order?.storeType) {
-            await deleteItem({ uid: session.user.id, itemType: "orders", storeType: order.storeType, docId: tid, isAuto: order?.recordType === "automatic", createdAt: order.createdAt });
-            removeCacheData(cacheKey, tid);
+        if (session?.user && order) {
+            await deleteItem({ idToken, rootCol: ordersCol, subCol: order?.storeType as StoreType, item: order });
+            removeCacheData(cacheKey, order.transactionId as string);
             router.push(`/u/${session.user.username}/tools/inventory-and-orders#orders`);
         }
         setDeleting(false);
@@ -95,9 +97,9 @@ const Order = () => {
     };
 
     const handleUpload = async (imageUrl?: string | null) => {
-        if (!order.transactionId) return;
+        if (!order.transactionId || !order.storeType) return;
 
-        const docRef = doc(firestore, "orders", session?.user.id as string, order.storeType ?? "ebay", order.transactionId);
+        const docRef = doc(firestore, ordersCol, uid, order.storeType, order.transactionId);
 
         set(order, "image", [imageUrl]);
 
@@ -351,7 +353,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                     </td>
                     <UpdateTableField
                         type="date"
-                        currentValue={purchase?.date ? new Date(purchase?.date).toISOString().split("T")[0]: ""}
+                        currentValue={purchase?.date ? new Date(purchase?.date).toISOString().split("T")[0] : ""}
                         docId={transactionId}
                         item={order}
                         docType='orders'
@@ -369,7 +371,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                     </td>
                     <UpdateTableField
                         type="date"
-                        currentValue={sale?.date ? new Date(sale?.date).toISOString().split("T")[0]: ""}
+                        currentValue={sale?.date ? new Date(sale?.date).toISOString().split("T")[0] : ""}
                         docId={transactionId}
                         item={order}
                         docType='orders'
@@ -387,7 +389,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                     </td>
                     <UpdateTableField
                         type="date"
-                        currentValue={listingDate ? new Date(listingDate).toISOString().split("T")[0]: ""}
+                        currentValue={listingDate ? new Date(listingDate).toISOString().split("T")[0] : ""}
                         docId={transactionId}
                         item={order}
                         docType='orders'
@@ -405,7 +407,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                     </td>
                     <UpdateTableField
                         type="date"
-                        currentValue={shipping?.date ? new Date(shipping?.date).toISOString().split("T")[0]: ""}
+                        currentValue={shipping?.date ? new Date(shipping?.date).toISOString().split("T")[0] : ""}
                         docId={transactionId}
                         item={order}
                         docType='orders'

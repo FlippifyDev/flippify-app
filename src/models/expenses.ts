@@ -4,7 +4,7 @@ export type WeeklyRenewal = "monday" | "tuesday" | "wednesday" | "thursday" | "f
 export type MonthlyRenewal = string;
 export type YearlyRenewal = string;
 export type Renewal = "daily" | WeeklyRenewal | MonthlyRenewal | YearlyRenewal;
-export type BllingCycle = "daily" | "weekly" | "monthly" | "yearly"
+export type BillingCycle = "daily" | "weekly" | "monthly" | "yearly"
 
 interface IExpenseBase {
     id?: string | null;
@@ -25,7 +25,7 @@ interface IOneTimeExpense extends IExpenseBase {
 interface ISubscriptionExpense extends IExpenseBase {
     type?: "subscription" | null;
     active?: boolean | null;
-    billingCycle?: BllingCycle | null;
+    billingCycle?: BillingCycle | null;
     renewalDate?: Renewal | null;
     startDate?: string | null;
     endDate?: "indefinite" | string | null;

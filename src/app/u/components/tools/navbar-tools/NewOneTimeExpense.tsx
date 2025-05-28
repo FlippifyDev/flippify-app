@@ -1,22 +1,23 @@
 "use client"
 
-import { useEffect, useState } from 'react';
 // Local Imports
-import Modal from '../../dom/ui/Modal'
-import { useSession } from 'next-auth/react';
-import { oneTimeExpensesCacheKey, subscriptionLimits } from '@/utils/constants';
-import { fetchUserExpensesCount } from '@/utils/extract-user-data';
-import { generateRandomFlippifyOneTimeExpenseId } from '@/utils/generate-random';
-import { validateAlphaNumericInput, validatePriceInput } from '@/utils/input-validation';
+import Modal from '../../dom/ui/Modal';
 import Input from '../../dom/ui/Input';
-import { IOneTimeExpense } from '@/models/expenses';
-import { createNewOneTimeExpenseAdmin } from '@/services/firebase/create-admin';
-import { addCacheData, removeCacheData, updateCacheData } from '@/utils/cache-helpers';
+import { addCacheData } from '@/utils/cache-helpers';
 import { formatDateToISO } from '@/utils/format-dates';
 import { currencySymbols } from '@/config/currency-config';
+import { IOneTimeExpense } from '@/models/expenses';
+import { fetchUserExpensesCount } from '@/utils/extract-user-data';
+import { generateRandomFlippifyOneTimeExpenseId } from '@/utils/generate-random';
+import { oneTimeExpensesCacheKey, subscriptionLimits } from '@/utils/constants';
+import { validateAlphaNumericInput, validatePriceInput } from '@/utils/input-validation';
 
 // External Imports
-
+import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { createItem } from '@/services/firebase/admin-create';
+import { expensesCol, oneTimeCol } from '@/services/firebase/constants';
+import { retrieveIdToken } from '@/services/firebase/retrieve';
 
 interface NewOneTimeExpenseProps {
     setDisplayModal: (value: boolean) => void;
@@ -65,7 +66,7 @@ const NewOneTimeExpense: React.FC<NewOneTimeExpenseProps> = ({ setDisplayModal }
     async function handleCacheAndSessionUpdate(item: IOneTimeExpense) {
         const cacheKey = `${oneTimeExpensesCacheKey}-${session?.user.id}`;
 
-        addCacheData(cacheKey, item);
+        addCacheData(cacheKey, { [item.id as string]: item });
 
         const currentStore = session!.user.store || {};
         const currentNumOneTime = currentStore.numExpenses?.oneTime ?? 0;
@@ -92,7 +93,7 @@ const NewOneTimeExpense: React.FC<NewOneTimeExpenseProps> = ({ setDisplayModal }
 
         const item: IOneTimeExpense = {
             amount: Number(amount),
-            date: formatDateToISO(new Date(date)),
+            date: formatDateToISO(new Date(date), true),
             createdAt: formatDateToISO(new Date()),
             currency,
             id: generateRandomFlippifyOneTimeExpenseId(20),
@@ -101,7 +102,10 @@ const NewOneTimeExpense: React.FC<NewOneTimeExpenseProps> = ({ setDisplayModal }
             type: "one-time"
         }
 
-        const { success, error } = await createNewOneTimeExpenseAdmin(session?.user.id as string, item)
+        const idToken = await retrieveIdToken();
+        if (!idToken) return;
+
+        const { success, error } = await createItem({ idToken, rootCol: expensesCol, subCol: oneTimeCol, item })
         if (!success) {
             console.error("Error creating new one time expense item", error)
             setErrorMessage(error);
@@ -134,7 +138,7 @@ const NewOneTimeExpense: React.FC<NewOneTimeExpenseProps> = ({ setDisplayModal }
         <Modal title="Add new one time expense" className="max-w-[21rem] sm:max-w-xl flex-grow" setDisplayModal={setDisplayModal}>
             {aboveLimit && (
                 <div className="text-center">
-                    <span>Sorry you&apos;ve reach your max one time expenses for this month</span>
+                    <span>Sorry you&apos;ve reach your max one time expenses for this month.</span>
                 </div>
             )}
             {!aboveLimit && (

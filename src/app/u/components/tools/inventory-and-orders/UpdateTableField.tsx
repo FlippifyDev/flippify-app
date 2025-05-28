@@ -1,11 +1,12 @@
 // Local Imports
 import { firestore } from '@/lib/firebase/config';
+import { inventoryCol, ordersCol } from '@/services/firebase/constants';
 import { formatDateToISO } from '@/utils/format-dates';
 import { updateCacheData } from '@/utils/cache-helpers';
-import { updateMovedItemAdmin } from '@/services/firebase/create-admin';
+import { retrieveIdToken } from '@/services/firebase/retrieve';
+import { updateMovedItem } from '@/services/firebase/admin-update';
 import { IListing, IOrder, StoreType } from '@/models/store-data';
 import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput } from '@/utils/input-validation';
-
 
 // External Imports
 import React, { useState } from 'react'
@@ -46,20 +47,23 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
         // Step 1: Add the item to the storeType collection
         set(item, keyType, value);
 
-        if (!session?.user.id || !item.storeType || !docId) {
+        if (!session?.user.id || !item.storeType || !docId || !oldStoreType) {
             return;
         };
 
-        await updateMovedItemAdmin(session.user.id, oldStoreType ?? "ebay", item);
+        const idToken = await retrieveIdToken();
+        if (!idToken) return;
+        console.log(docType)
+        await updateMovedItem({ idToken, rootCol: docType, oldStoreType, item })
 
         updateCacheData(cacheKey, item);
     }
 
     const saveChange = async () => {
-        if (value === currentValue || !docId) return;
+        if (value === currentValue || !docId || !storeType) return;
 
         try {
-            const docRef = doc(firestore, docType, session?.user.id as string, storeType ?? "ebay", docId);
+            const docRef = doc(firestore, docType, session?.user.id as string, storeType, docId);
 
             switch (keyType) {
                 case "purchase.platform":
@@ -83,7 +87,7 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
                 case "sale.date":
                 case "shipping.date":
                 case "listingDate":
-                    set(item, keyType, formatDateToISO(new Date(value ?? "")));
+                    set(item, keyType, formatDateToISO(new Date(value ?? ""), true));
                     break;
                 case "storeType":
                     await handleNewStoreType(item, value)

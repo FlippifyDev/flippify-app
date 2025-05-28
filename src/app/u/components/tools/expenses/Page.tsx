@@ -12,6 +12,9 @@ import { ImLoop2 } from 'react-icons/im';
 import { fetchSubscriptionMaxListings, fetchUserExpensesCount } from '@/utils/extract-user-data';
 import { useSession } from 'next-auth/react';
 import { subscriptionLimits } from '@/utils/constants';
+import { RiLoopLeftLine } from 'react-icons/ri';
+import { HiOutlineViewGridAdd, HiViewGridAdd } from 'react-icons/hi';
+import Beta from '../../dom/ui/Beta';
 
 
 const Page = () => {
@@ -33,7 +36,7 @@ const Page = () => {
 
     const dropdownRef = useRef<HTMLDivElement>(null); // Reference for dropdown
 
-    const { oneTime: totalOneTime } = fetchUserExpensesCount(session?.user);
+    const { oneTime: totalOneTime, subscriptions: totalSubscriptions } = fetchUserExpensesCount(session?.user);
     const limits = session?.user.authentication?.subscribed ? subscriptionLimits[session?.user.authentication?.subscribed] : { oneTimeExpenses: 0, subscriptionExpenses: 0 }
 
     useEffect(() => {
@@ -85,6 +88,12 @@ const Page = () => {
                             </svg>
                         </button>
 
+                        {activeTab === "subscriptions" && (
+                            <div className='absolute top-0 left-40'>
+                                <Beta />
+                            </div>
+                        )}
+
                         {/* Dropdown menu, show/hide based on `isOpen` state */}
                         {isOpen && (
                             <ul className="absolute left-0 ml-6 z-10 w-48 bg-white shadow-lg rounded-md ring-1 ring-black ring-opacity-5">
@@ -92,20 +101,20 @@ const Page = () => {
                                     <a
                                         href="#one-time"
                                         onClick={() => handleTabChange('one-time')}
-                                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 rounded-t"
+                                        className="grid grid-cols-12 items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 rounded-t"
                                     >
-                                        <span><FaDatabase /> </span>
-                                        <span>One Time</span>
+                                        <span className='col-span-2 flex justify-center'><FaDatabase /></span>
+                                        <span className='col-span-10'>One Time</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a
                                         href="#subscriptions"
                                         onClick={() => handleTabChange('subscriptions')}
-                                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
+                                        className="grid grid-cols-12 items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
                                     >
-                                        <span><ImLoop2 /></span>
-                                        <span>Subscriptions</span>
+                                        <span className='col-span-2 flex justify-center'><HiViewGridAdd className='text-lg' /></span>
+                                        <span className='col-span-10'>Subscriptions</span>
                                     </a>
                                 </li>
                             </ul>
@@ -114,7 +123,7 @@ const Page = () => {
                     <div className='px-4 ml-1'>
                         {activeTab === 'one-time' ?
                             <span className='text-xs text-gray-500'>You have {totalOneTime} / {limits.oneTimeExpenses} one time expenses</span> :
-                            null
+                            <span className='text-xs text-gray-500'>You have {totalSubscriptions} / {limits.subscriptionExpenses} subscriptions</span>
                         }
                     </div>
                 </div>

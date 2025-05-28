@@ -10,12 +10,14 @@ import { IOrder } from '@/models/store-data'
 import InventoryAndCogs from './InventoryAndCogs'
 import { formatDateToISO } from '@/utils/format-dates'
 import DateRangeSelector, { TimeRange, generateTimeRanges } from './DateRangeSelector'
-import { retrieveIdToken, retrieveOldestOrder, retrieveUserOrders, retrieveUserOrdersInPeriod } from '@/services/firebase/retrieve'
+import { retrieveInventory, retrieveOrders, retrieveOrderStoreTypes } from '@/services/bridges/retrieve'
 
 // External Imports
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import { retrieveUserStoreTypes } from '@/services/firebase/retrieve-admin'
+import { retrieveOldestOrder } from '@/services/firebase/retrieve'
+import LoadingSpinner from '@/app/components/LoadingSpinner'
+import NoResultsFound from '../../dom/ui/NoResultsFound'
 
 
 
@@ -45,6 +47,7 @@ function missingOrderInfo(items: IOrder[]) {
 
 const Page = () => {
     const { data: session } = useSession()
+    const uid = session?.user.id as string;
     const currency = session?.user.preferences?.currency || "USD";
     const [timeFrom, timeTo] = getLastYearBounds();
 
@@ -72,17 +75,12 @@ const Page = () => {
 
     // Initialize time ranges based on oldest order
     useEffect(() => {
-        if (!session?.user.id) return
-
         async function initTimeRanges() {
-            const idToken = await retrieveIdToken();
-            if (!idToken) return;
-
-            const storeTypes = await retrieveUserStoreTypes({ idToken, itemType: "orders" });
+            const storeTypes = await retrieveOrderStoreTypes();
             if (!storeTypes) return;
 
             const oldestOrder = await retrieveOldestOrder({
-                uid: session?.user.id ?? "",
+                uid,
                 storeTypes
             })
             const firstSaleDate = oldestOrder
@@ -106,56 +104,27 @@ const Page = () => {
         }
 
         initTimeRanges()
-    }, [session?.user])
+    }, [uid])
 
     useEffect(() => {
-        const fetchOrders = async () => {
-            if (!session) return;
+        const fetchItems = async () => {
             setLoading(true);
 
-            const idToken = await retrieveIdToken();
-            if (!idToken) return;
+            const sales = await retrieveOrders({ uid, timeFrom: periodStart, timeTo: periodEnd });
+            const inventory = await retrieveInventory({ uid, timeFrom: periodStart, timeTo: periodEnd });
+            const missingInfo = missingOrderInfo(sales ?? []);
 
-            const storeTypes = await retrieveUserStoreTypes({ idToken, itemType: "orders" });
-            if (!storeTypes) return;
+            setSales(sales ?? []);
+            setInventoryBought(inventory ?? []);
+            setMissingOrderInfoCount(missingInfo);
 
-            const salesResult = await Promise.all(
-                storeTypes.map((storeType) => {
-                    return retrieveUserOrders({
-                        uid: session.user.id as string,
-                        timeFrom: periodStart,
-                        timeTo: periodEnd,
-                        storeType,
-                    }).then((order) => [storeType, order] as const);
-                })
-            );
-            const sales = salesResult[salesResult.length - 1]?.[1] ?? [];
-
-
-            const inventoryResult = await Promise.all(
-                storeTypes.map((storeType) => {
-                    return retrieveUserOrdersInPeriod({
-                        uid: session.user.id as string,
-                        timeFrom: periodStart,
-                        timeTo: periodEnd,
-                        storeType,
-                    }).then((order) => [storeType, order] as const);
-                })
-            );
-
-            const inventory = inventoryResult[inventoryResult.length - 1]?.[1] ?? [];
-
-            setSales(sales);
-            setInventoryBought(inventory)
-
-            setMissingOrderInfoCount(missingOrderInfo(sales))
             setLoading(false);
         };
 
         if (session?.user.authentication?.subscribed) {
-            fetchOrders();
+            fetchItems();
         }
-    }, [session, session?.user.id, periodStart, periodEnd, session?.user.authentication?.subscribed])
+    }, [uid, periodStart, periodEnd, session?.user.authentication?.subscribed])
 
     return (
         <div className='flex flex-col md:flex-row gap-4'>
@@ -168,36 +137,40 @@ const Page = () => {
             </Card>
             <div className="space-y-4">
                 <Card title="Options" className='max-w-lg'>
-                    <div className='flex flex-row justify-between'>
-                        {timeRanges.length > 0 && (
-                            <DateRangeSelector
-                                value={selectedLabel}
-                                onChange={(label, value) => {
-                                    setSelectedLabel(label)
-                                    const [startYear, endYear] = value.split('-').map(Number)
-                                    setPeriodStart(formatDateToISO(new Date(startYear, 0, 1)))
-                                    setPeriodEnd(formatDateToISO(new Date(endYear, 11, 31, 23, 59, 59, 999)))
-                                }}
-                                timeRanges={timeRanges}
-                            />
+                    <div className='w-full flex flex-row justify-between'>
+                        {timeRanges.length > 0 ? (
+                            <>
+                                <DateRangeSelector
+                                    value={selectedLabel}
+                                    onChange={(label, value) => {
+                                        setSelectedLabel(label);
+                                        const [startYear, endYear] = value.split("-").map(Number);
+                                        setPeriodStart(formatDateToISO(new Date(startYear, 0, 1)));
+                                        setPeriodEnd(formatDateToISO(new Date(endYear, 11, 31, 23, 59, 59, 999)));
+                                    }}
+                                    timeRanges={timeRanges}
+                                />
+                                <Download
+                                    orders={sales ?? []}
+                                    timeFrom={periodStart}
+                                    timeTo={periodEnd}
+                                />
+                            </>
+                        ) : (
+                            <div className='w-full flex justify-center'>
+                                {loading ? <LoadingSpinner /> : <div className='py-6'><NoResultsFound /></div>}
+                            </div>
                         )}
-                        <Download
-                            orders={sales ?? []}
-                            timeFrom={periodStart}
-                            timeTo={periodEnd}
-
-                        />
                     </div>
+                </Card>
+                <Card title="Disclaimer" className='max-w-lg'>
+                    The Tax Report in Flippify lets you neatly compile your buying, selling, and inventory data to streamline year-end tax prep. Please note that Flippify is not a substitute for professional tax software or advice. Always consult a qualified CPA or tax professional to confirm your filings are accurate and compliant.
                 </Card>
                 {(missingOrderInfoCount > 0) && (
                     <Card title="Missing Info" className='max-w-lg shadow!'>
                         <span className='font-semibold'>{missingOrderInfoCount} sold products</span> are missing a purchase date, pricing, or shipping cost.
-
                     </Card>
                 )}
-                <Card title="Disclaimer" className='max-w-lg'>
-                    The Tax Report in Flippify lets you neatly compile your buying, selling, and inventory data to streamline year-end tax prep. Please note that Flippify is not a substitute for professional tax software or advice. Always consult a qualified CPA or tax professional to confirm your filings are accurate and compliant.
-                </Card>
             </div>
         </div>
     )

@@ -7,8 +7,7 @@ import ImageUpload from '../../dom/ui/ImageUpload';
 import { shortenText } from '@/utils/format';
 import { formatDateToISO } from '@/utils/format-dates';
 import { currencySymbols } from '@/config/currency-config';
-import { createNewOrderItemAdmin } from '@/services/firebase/create-admin';
-import { Condition, IListing, IOrder, OrderStatus } from '@/models/store-data';
+import { Condition, IListing, IOrder, OrderStatus, StoreType } from '@/models/store-data';
 import { fetchUserInventoryAndOrdersCount } from '@/utils/extract-user-data';
 import { inventoryCacheKey, orderCacheKey, subscriptionLimits } from '@/utils/constants';
 import { addCacheData, getCachedData, removeCacheData, updateCacheData } from '@/utils/cache-helpers';
@@ -20,6 +19,8 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { MdImageNotSupported } from 'react-icons/md';
+import { retrieveIdToken } from '@/services/firebase/retrieve';
+import { createNewOrder } from '@/services/bridges/create';
 
 
 
@@ -72,7 +73,7 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
     const [loading, setLoading] = useState<boolean>(false);
 
     const inventoryCache = `${inventoryCacheKey}-${session?.user?.id}`;
-    const cachedListings = getCachedData(inventoryCache) as Record<string, IListing> | null;
+    const cachedListings = getCachedData(inventoryCache);
 
     // Messages
     const [errorMessage, setErrorMessage] = useState<string>("")
@@ -109,11 +110,12 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
         if (!orderItem.storeType) return;
 
         const orderCache = `${orderCacheKey}-${session?.user.id}`;
-        const inventoryItem = cachedListings?.[itemId] as IListing;
-        const newQuantity = (inventoryItem.quantity ?? 0) - Number(quantity);
+
+        const inventoryItem = cachedListings?.data?.[itemId] as IListing | undefined;
+        const newQuantity = (inventoryItem?.quantity ?? 0) - Number(quantity);
 
         // Step 1: Add the order item to the orders cache
-        addCacheData(orderCache, orderItem);
+        addCacheData(orderCache, { [orderItem.transactionId as string]: orderItem });
 
         const currentStore = session!.user.store || {};
         const currentNumOrders = currentStore.numOrders?.manual ?? 0;
@@ -165,11 +167,11 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
             name: itemName,
             itemId: itemId ?? null,
             lastModified: formatDateToISO(new Date()),
-            listingDate: formatDateToISO(new Date(dateListed)),
+            listingDate: formatDateToISO(new Date(dateListed), true),
             orderId: generateRandomFlippifyOrderId(20),
             purchase: {
                 currency: session?.user.preferences?.currency ?? "USD",
-                date: datePurchased ? formatDateToISO(new Date(datePurchased)) : formatDateToISO(new Date(dateListed)),
+                date: datePurchased ? formatDateToISO(new Date(datePurchased), true) : formatDateToISO(new Date(dateListed), true),
                 platform: purchasePlatform || null,
                 price: purchasePrice ? Number(purchasePrice) : null,
                 quantity: purchaseQuantity
@@ -179,12 +181,13 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
             sale: {
                 buyerUsername: "",
                 currency: session?.user.preferences?.currency ?? "USD",
-                date: formatDateToISO(new Date(saleDate)),
+                date: formatDateToISO(new Date(saleDate), true),
                 platform: session?.user.preferences?.locale ?? "US",
                 price: Number(salePrice),
                 quantity: Number(quantity),
             },
             shipping: {
+                date: formatDateToISO(new Date()),
                 fees: shippingFees ? Number(shippingFees) : 0,
                 paymentToShipped: undefined,
                 service: shippingCompany || undefined,
@@ -197,14 +200,13 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
             storageLocation: storageLocation
         }
 
-        const { success, error, orderExists } = await createNewOrderItemAdmin(session?.user.id ?? "", storeType, orderItem);
+        const idToken = await retrieveIdToken();
+        if (!idToken) return;
+        const { success, error } = await createNewOrder({ idToken, item: orderItem })
+
         if (!success) {
-            console.error("Error creating new order item", error)
-            if (orderExists) {
-                setErrorMessage(error);
-            } else {
-                setErrorMessage("Error creating new order item")
-            }
+            console.error("Error creating new order item", error);
+            setErrorMessage(error);
         } else {
             await handleCacheAndSessionUpdate(orderItem);
             setSuccessMessage("Order Added!")
@@ -220,7 +222,7 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
             setListingDowndownItems([]);
             return;
         }
-        const filteredListings = Object.values(cachedListings ?? {})?.filter((listing: IListing) => {
+        const filteredListings = Object.values(cachedListings?.data ?? {})?.filter((listing: IListing) => {
             return listing.itemId?.toLowerCase().includes(value.toLowerCase()) || listing.name?.toLowerCase().includes(value.toLowerCase())
         }) || [];
         setListingDowndownItems(filteredListings);
@@ -263,6 +265,8 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
                 break;
             case "storageLocation":
             case "condition":
+            case "itemName":
+            case "shippingCompany":
                 validateAlphaNumericInput(value, setFunction)
                 break
             case "storeType":
@@ -270,10 +274,6 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
                 break
             case "saleDate":
                 setFunction(value);
-                break;
-            case "itemName":
-            case "shippingCompany":
-                validateTextInput(value, setFunction);
                 break;
             case "quantity":
             case "salePrice":

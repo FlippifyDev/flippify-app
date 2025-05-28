@@ -1,13 +1,15 @@
 // Local Imports
-import { IOrder } from '@/models/store-data'
+import { IOrder, StoreType } from '@/models/store-data'
 import { shortenText } from '@/utils/format';
-import { updateOrderStatus } from '@/services/firebase/update';
 
 // External Imports
 import { useState } from 'react'
 import { FaTruck } from "react-icons/fa6";
 import { FaCheck } from "react-icons/fa";
 import Image from 'next/image';
+import { updateItem } from '@/services/firebase/update';
+import { ordersCol } from '@/services/firebase/constants';
+import { orderCacheKey } from '@/utils/constants';
 
 interface IReadyToShipProps {
     item: IOrder;
@@ -17,6 +19,8 @@ interface IReadyToShipProps {
 
 const ReadyToShip: React.FC<IReadyToShipProps> = ({ item, uid, setUpdatedStatus }) => {
     const [shipped, setShipped] = useState(false);
+
+    const shipInValue = shipIn(item.sale?.date as string)
 
     function shipIn(saleDate: string): string {
         const sale = new Date(saleDate);
@@ -39,13 +43,14 @@ const ReadyToShip: React.FC<IReadyToShipProps> = ({ item, uid, setUpdatedStatus 
 
     async function handleMarkAsShipped() {
         // Cache is updated in this function
-        await updateOrderStatus(uid, item, "InProcess");
+        item.status = "InProcess";
+        await updateItem({ uid, item, rootCol: ordersCol, subCol: item.storeType as StoreType, cacheKey: orderCacheKey });
         setShipped(true);
         setUpdatedStatus(true);
         setTimeout(() => {
             setShipped(false);
             setUpdatedStatus(false);
-        }, 2000);
+        }, 900);
     }
 
 
@@ -55,7 +60,7 @@ const ReadyToShip: React.FC<IReadyToShipProps> = ({ item, uid, setUpdatedStatus 
                 <td className="min-w-20">
                     <figure>
                         <Image
-                            src={item.image ? item.image[0]: ""}
+                            src={item.image ? item.image[0] : ""}
                             width={100}
                             height={100}
                             alt={"image"}
@@ -71,11 +76,11 @@ const ReadyToShip: React.FC<IReadyToShipProps> = ({ item, uid, setUpdatedStatus 
                 <td>
                     {item.sale?.quantity}
                 </td>
-                <td className='min-w-20'>
-                    {item.storageLocation ? item.storageLocation: "N/A"}
+                <td className='min-w-20 font-semibold'>
+                    {item.storageLocation ? item.storageLocation : "N/A"}
                 </td>
-                <td className='min-w-20'>
-                    {shipIn(item.sale?.date ?? "")}
+                <td className={`${shipInValue === "Today" ? "text-amber-600": ""} min-w-20`}>
+                    {shipInValue}
                 </td>
                 <td>
                     <button

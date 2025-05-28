@@ -10,10 +10,11 @@ const ProfileMarketplaceConnect = () => {
             <div className='w-full border-b py-4 px-6 text-lg font-semibold'>
                 Connect Accounts
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 max-h-[500px] overflow-y-auto">
                 {/* eBay Connect Account Card */}
                 <ConnectAccount
                     name="eBay"
+                    description="Automatically tracks inventory & order changes"
                     image="/ebayLogo.png"
                 />
 

@@ -1,27 +1,27 @@
+import Page from '../../components/blog/introduction/Page';
 import Loading from '@/app/components/Loading';
-import { Suspense } from 'react';
-import ThemeSetter from '../../components/ThemeSetter';
-import Layout from '../components/layout/Layout';
-import Page from '../components/blog/Page';
+import { Suspense } from 'react'
+import ThemeSetter from '../../../components/ThemeSetter';
+import Layout from '../../components/layout/Layout';
 import { Metadata } from 'next';
 
 const root = process.env.ROOT as string;
 
 export const metadata: Metadata = {
-    title: "Blog | Flippify - Tips, Updates & Insights for Sellers",
+    title: "Getting Started with Flippify | Flippify - Platform Features & Seller Guide",
     description:
-        "Explore the Flippify Blog for the latest tips, product updates, seller insights, and success stories. Stay informed and grow your reselling business.",
+        "New to Flippify? Learn how to navigate the platform, manage inventory, upload sales, and streamline your reselling workflow. Get started with our step-by-step introduction.",
     openGraph: {
-        title: "Blog | Flippify - Tips, Updates & Insights for Sellers",
+        title: "Getting Started with Flippify | Flippify - Platform Features & Seller Guide",
         description:
-            "Dive into expert tips, feature announcements, and inspiring stories on the Flippify Blog. Learn how top resellers use Flippify to streamline inventory and maximize profits.",
+            "Discover how to get the most out of Flippify. This guide walks new users through every essential feature—from uploading sales to managing listings. Simplify your reselling journey today.",
         url: root.concat('/blog'),
         images: [
             {
-                url: "https://i.imgur.com/xyzExample.png",
+                url: "https://i.imgur.com/1momgPu.png",
                 width: 2600,
                 height: 1440,
-                alt: "Flippify Blog Overview"
+                alt: "Flippify Getting Started Overview"
             }
         ]
     },

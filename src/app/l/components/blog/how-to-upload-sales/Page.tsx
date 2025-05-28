@@ -1,22 +1,10 @@
-"use client"
-
-import React, { useEffect } from 'react'
+import React from 'react'
 import Hero from '../../dom/Hero'
 import Image from 'next/image';
+import Link from 'next/link';
 
 const Page = () => {
 
-    useEffect(() => {
-        const hash = window.location.hash;
-        if (hash) {
-            const el = document.getElementById(hash.substring(1));
-            if (el) {
-                const yOffset = -100; // adjust based on your header height or margin
-                const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-                window.scrollTo({ top: y, behavior: 'smooth' });
-            }
-        }
-    }, []);
     return (
         <div className="min-h-screen w-full flex flex-col items-center overflow-x-auto scrollbar-hide">
             <div>
@@ -34,8 +22,8 @@ const Page = () => {
                 />
             </div>
 
-            <div className='max-w-6.5xl mx-auto px-6 sm:px-6 md:px-8 lg:px-10 xl:px-12 animate-fadeInBounce mt-[250px] xs:mt-[200px] sm:mt-[200px] md:mt-[250px] lg:mt-[270px] 2xl:mt-[320px]'>
-                <h1 id="custom" className='text-3xl mb-5 font-semibold'>Custom Upload</h1>
+            <div className='w-full max-w-6.5xl mx-auto px-6 sm:px-6 md:px-8 lg:px-10 xl:px-12 animate-fadeInBounce mt-[250px] xs:mt-[200px] sm:mt-[200px] md:mt-[250px] lg:mt-[270px] 2xl:mt-[320px] mb-12'>
+                <Link href="#custom" scroll className='text-3xl mb-5 font-semibold'>Custom Upload</Link>
                 <p className='mb-5'>Think of the table below as a direct representation of a spreadsheet or CSV file you’ll be uploading. Each row corresponds to a column in your file—like "Title" or "Sale Price"—and each column in this table explains whether that field is required, what kind of data it should contain, and what value is used if it's left blank or not included. Use this guide to structure your spreadsheet correctly before uploading it.</p>
                 <div className="bg-white flex flex-col border">
                     <table className="w-full">
@@ -358,7 +346,7 @@ const Page = () => {
 
                 <h2 className='mt-7 mb-5 text-2xl font-semibold'>Example CSV Document</h2>
 
-                <div className="mb-12 border-2 border-white bg-gray-100/80 p-3 rounded-4xl shadow-lg">
+                <div className="border-2 border-white bg-gray-100/80 p-3 rounded-4xl shadow-lg">
                     <figure>
                         <Image
                             src="https://i.imgur.com/krM3B8i.png"

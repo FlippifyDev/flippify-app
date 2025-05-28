@@ -95,7 +95,7 @@ const DangerZone = () => {
                 <div className='flex flex-col gap-4'>
                     <span className='text-gray-600'>Refunds are only guaranteed if requested within 7 days of the original payment date. After this period, eligibility is subject to review.</span>
                     <button type="button" onClick={() => handleDisplayModal("refund")} className='text-sm w-36 flex justify-center items-center rounded-lg bg-red-600 hover:bg-red-500 py-2 px-3 text-white transition duration-100'>
-                        Create Refund
+                        Issue Refund
                     </button>
                 </div>
                 <div className='flex flex-col gap-4'>

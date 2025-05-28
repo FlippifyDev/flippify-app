@@ -157,6 +157,7 @@ const config: Config = {
 				},
 			},
 			animation: {
+                'spin-fast': 'spin 0.5s linear infinite',
 				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
 				"fadeInPrimary": "fade-in-settings 0.8s ease-out forwards",

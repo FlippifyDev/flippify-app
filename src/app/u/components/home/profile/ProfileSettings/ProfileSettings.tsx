@@ -12,10 +12,10 @@ import {
 } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { updateStripeCustomerEmail } from "@/services/stripe/update";
-import { updateUserPreferences } from "@/services/firebase/update";
 import { validateEmailInput } from "@/utils/input-validation";
 import CurrencySelector from "./ProfileCurrencySelector";
 import Modal from "../../../dom/ui/Modal";
+import { updateUserPreferences } from "@/services/firebase/update";
 
 type Currency = "GBP" | "USD" | "EUR" | "AUD" | "CAD" | "JPY" | "NZD";
 
@@ -298,7 +298,7 @@ const ProfileSettings = () => {
         }
 
         try {
-            await updateUserPreferences(session.user.id ?? "", currency);
+            await updateUserPreferences({ uid: session.user.id as string, currency });
             setFeedback("Settings updated successfully.");
             setOriginalCurrency(currency);
             setIsChanged(false);

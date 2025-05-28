@@ -2,8 +2,7 @@
 
 
 import { IOneTimeExpense } from '@/models/expenses';
-import { updateExpense } from '@/services/firebase/update';
-import { addCacheData } from '@/utils/cache-helpers';
+import { addCacheData, updateCacheData } from '@/utils/cache-helpers';
 import { oneTimeExpensesCacheKey } from '@/utils/constants';
 import { formatDateToISO } from '@/utils/format-dates';
 import { validateAlphaNumericInput, validatePriceInput } from '@/utils/input-validation';
@@ -11,6 +10,8 @@ import { useSession } from 'next-auth/react';
 import React, { FormEvent, useEffect, useState } from 'react'
 import Modal from '../../dom/ui/Modal';
 import Input from '../../dom/ui/Input';
+import { updateItem } from '@/services/firebase/update';
+import { expensesCol, oneTimeCol } from '@/services/firebase/constants';
 
 
 
@@ -22,6 +23,7 @@ interface EditOneTimeExpenseProps {
 
 const EditOneTimeExpense: React.FC<EditOneTimeExpenseProps> = ({ fillItem, setDisplayModal, setTriggerUpdate }) => {
     const { data: session } = useSession();
+    const uid = session?.user.id as string;
 
     const [amount, setAmount] = useState("");
     const [name, setName] = useState("");
@@ -38,14 +40,6 @@ const EditOneTimeExpense: React.FC<EditOneTimeExpenseProps> = ({ fillItem, setDi
 
         handleItemClick(fillItem);
     }, [fillItem]);
-
-
-    function handleCacheUpdate(item: IOneTimeExpense) {
-        const cacheKey = `${oneTimeExpensesCacheKey}-${session?.user.id}`;
-
-        // Update the cache with the new item
-        addCacheData(cacheKey, item);
-    }
 
 
     function handleItemClick(item: IOneTimeExpense) {
@@ -79,7 +73,7 @@ const EditOneTimeExpense: React.FC<EditOneTimeExpenseProps> = ({ fillItem, setDi
 
         const item: IOneTimeExpense = {
             amount: Number(amount),
-            date: formatDateToISO(new Date(date)),
+            date: formatDateToISO(new Date(date), true),
             createdAt: formatDateToISO(new Date()),
             currency: fillItem.currency,
             id: fillItem.id,
@@ -89,8 +83,7 @@ const EditOneTimeExpense: React.FC<EditOneTimeExpenseProps> = ({ fillItem, setDi
         }
 
         try {
-            await updateExpense(session?.user.id as string, item, "oneTime")
-            handleCacheUpdate(item);
+            await updateItem({ uid, item, rootCol: expensesCol, subCol: oneTimeCol, cacheKey: oneTimeExpensesCacheKey })
             setSuccessMessage("Item Edited!");
         } catch (error) {
             setErrorMessage("Error editing item")

@@ -3,13 +3,14 @@
 // Local Imports
 import { ISubscription } from '@/models/user';
 import { createAndApplyCoupon } from '@/services/stripe/create';
-import { incrementRewardsClaimed } from '@/services/firebase/update';
 import { checkForExistingDiscount } from '@/services/stripe/retrieve';
 
 // External Imports
 import { useState, useEffect } from 'react';
 import { FaClipboard } from 'react-icons/fa';
 import { useSession } from 'next-auth/react';
+import { incrementRewardsClaimed } from '@/services/firebase/admin-increment';
+import { retrieveIdToken } from '@/services/firebase/retrieve';
 
 const ProfileReferralData: React.FC = () => {
     const { data: session } = useSession();
@@ -69,8 +70,11 @@ const ProfileReferralData: React.FC = () => {
     };
 
     const applyRewardToSubscription = async () => {
+        const idToken = await retrieveIdToken();
+        if (!idToken) return;
+
         await createAndApplyCoupon(selectedSubscription, customerId, Object.values(selectedRewards)[0]);
-        await incrementRewardsClaimed(customerId);
+        await incrementRewardsClaimed({ idToken });
         setIsTimelineOpen(false);
         setShowDiscountRewardModal(false);
         setShowCongratulations(true);

@@ -1,3 +1,4 @@
+import LoadingSpinner from '@/app/components/LoadingSpinner';
 import { uploadImage } from '@/services/imgur/upload';
 import { validateUrlInput } from '@/utils/input-validation';
 import React, { useState } from 'react'
@@ -14,8 +15,8 @@ interface ImageUploadProps {
     handleUpload?: (imageUrl?: string | null) => void;
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = ({ 
-    title,  
+const ImageUpload: React.FC<ImageUploadProps> = ({
+    title,
     fileName,
     url,
     setFileName,
@@ -28,6 +29,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [validUrl, setValidUrl] = useState(false);
     const [localUrl, setLocalUrl] = useState<string>("");
+    const [loading, setLoading] = useState(false);
 
     function shortenFileName(fileName: string) {
         if (fileName.length <= 14) return fileName;
@@ -57,6 +59,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     };
 
     const handleLocalUpload = async () => {
+        setLoading(true);
         let imageUrl = localUrl as string | null;
         if (selectedImage) {
             try {
@@ -64,19 +67,21 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                 imageUrl = await uploadImage(Buffer.from(imageBuffer).toString("base64"));
                 if (!imageUrl) {
                     setError("Image failed to upload. Please try again.");
+                    setLoading(false);
                     return;
                 }
-                console.log("imgur url", imageUrl)
                 setUrl(imageUrl);
             } catch (error) {
                 console.error("Image upload failed:", error);
                 setError("Image failed to upload. Please try again.");
+                setLoading(false);
                 return;
             }
         }
         // Pass the imageUrl directly
         handleUpload?.(imageUrl);
 
+        setLoading(false);
         setIsModalOpen(false);
         setSelectedImage(null);
         setFileName("Upload Image");
@@ -114,7 +119,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                             disabled={!validImage && !validUrl}
                             className='hover:text-gray-700 disabled:cursor-not-allowed transition duration-200 flex flex-row gap-2 items-center justify-center'
                         >
-                            <span><MdInsertPhoto /></span>
+                            <span>{loading ? <LoadingSpinner size={4}/> : <MdInsertPhoto />}</span>
                             <span className='text-sm'>Upload Photo</span>
                         </button>
                     </div>
@@ -137,7 +142,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                 </div>
 
             </div>
-        </div>
+        </div >
     )
 }
 

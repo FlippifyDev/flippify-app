@@ -12,6 +12,7 @@ import Navbar from "../dom/navbar/Navbar";
 import UploadOrders from "../tools/navbar-tools/UploadOrders";
 import DarkHamburgerButton from "@/app/components/DarkHamburgerButton";
 import NewOneTimeExpense from "../tools/navbar-tools/NewOneTimeExpense";
+import NewSubscriptionExpense from "../tools/navbar-tools/NewSubscriptionExpense";
 
 
 interface LayoutProps {
@@ -48,7 +49,10 @@ const LayoutContent = ({ removePadding, children }: { removePadding?: boolean, c
                 break;
             case "add-one-time-expense":
                 setModal(<NewOneTimeExpense setDisplayModal={setIsModalOpen} />)
-                    break;
+                break;
+            case "add-subscription-expense":
+                setModal(<NewSubscriptionExpense setDisplayModal={setIsModalOpen} />)
+                break;
             default:
                 setModal(null);
                 break;

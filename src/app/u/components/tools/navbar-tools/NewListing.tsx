@@ -5,10 +5,13 @@
 import Modal from "../../dom/ui/Modal"
 import Input from "../../dom/ui/Input"
 import ImageUpload from "../../dom/ui/ImageUpload"
+import { createItem } from "@/services/firebase/admin-create"
 import { addCacheData } from "@/utils/cache-helpers"
+import { inventoryCol } from "@/services/firebase/constants"
 import { formatDateToISO } from "@/utils/format-dates"
-import { Condition, IListing } from "@/models/store-data"
-import { createNewInventoryItemAdmin } from "@/services/firebase/create-admin"
+import { retrieveIdToken } from "@/services/firebase/retrieve"
+import { MdImageNotSupported } from "react-icons/md"
+import { Condition, IListing, StoreType } from "@/models/store-data"
 import { generateRandomFlippifyListingId } from "@/utils/generate-random"
 import { fetchUserInventoryAndOrdersCount } from "@/utils/extract-user-data"
 import { inventoryCacheKey, subscriptionLimits } from "@/utils/constants"
@@ -18,7 +21,7 @@ import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput } f
 import { FormEvent, useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
-import { MdImageNotSupported } from "react-icons/md"
+
 
 
 interface NewListingProps {
@@ -87,7 +90,7 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal, setTriggerUpda
         const cacheKey = `${inventoryCacheKey}-${session?.user.id}`;
 
         // Update the cache with the new item
-        addCacheData(cacheKey, inventoryItem);
+        addCacheData(cacheKey, { [inventoryItem.itemId as string]: inventoryItem });
 
         const currentStore = session!.user.store || {};
         const currentNumListings = currentStore.numListings?.manual ?? 0;
@@ -120,14 +123,14 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal, setTriggerUpda
             currency: session?.user.preferences?.currency ?? "USD",
             condition: condition,
             customTag: customTag,
-            dateListed: formatDateToISO(new Date(dateListed)),
+            dateListed: formatDateToISO(new Date(dateListed), true),
             image: [imageUrl],
             initialQuantity: Number(quantity),
             itemId: itemId,
             name: itemName,
             price: Number(listingPrice),
             purchase: {
-                date: datePurchased ? formatDateToISO(new Date(datePurchased)) : formatDateToISO(new Date(dateListed)),
+                date: datePurchased ? formatDateToISO(new Date(datePurchased), true) : formatDateToISO(new Date(dateListed), true),
                 platform: purchasePlatform || null,
                 price: purchasePrice ? Number(purchasePrice) : null,
             },
@@ -138,14 +141,13 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal, setTriggerUpda
             storageLocation: storageLocation
         }
 
-        const { success, error, listingExists } = await createNewInventoryItemAdmin(session?.user.id ?? "", storeType, inventoryItem);
+        const idToken = await retrieveIdToken();
+        if (!idToken) return;
+        const { success, error } = await createItem({ idToken, item: inventoryItem, rootCol: inventoryCol, subCol: inventoryItem.storeType as StoreType })
+
         if (!success) {
             console.error("Error creating new inventory item", error)
-            if (listingExists) {
-                setErrorMessage(error)
-            } else {
-                setErrorMessage(`Error creating new inventory item`)
-            }
+            setErrorMessage(error)
         } else {
             await handleCacheUpdate(inventoryItem);
             setSuccessMessage("Listing Added!");
@@ -157,7 +159,7 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal, setTriggerUpda
     }
 
     function handleChange(value: string, type: string, setFunction: (value: any) => void) {
-        switch (type) { 
+        switch (type) {
             case "customTag":
             case "itemName":
             case "purchasePlatform":

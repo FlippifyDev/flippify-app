@@ -44,12 +44,10 @@ const LayoutSubscriptionWrapper: React.FC<LayoutSubscriptionWrapperProps> = ({
     }, [session, requiredSubscriptions, anySubscriptions, redirectPath, router, status]);
 
     if (status === 'loading') {
-        console.log("Session Loading")
         return null
     };
 
     if (!session?.user?.subscriptions) {
-        console.log("Session not found", session)
         window.location.reload()
         return null
     };

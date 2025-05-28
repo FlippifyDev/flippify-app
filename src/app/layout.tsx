@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import "@/styles/user-sidebar.css"
 import { Inter } from "next/font/google";
 import Providers from "./providers";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";

@@ -1,5 +1,3 @@
-import { StoreType } from "./store-data";
-
 export type CurrencyType = "USD" | "GBP" | "EUR" | "AUD" | "CAD";
 export type EmailVerification = "unverified" | "verifying" | "verified";
 

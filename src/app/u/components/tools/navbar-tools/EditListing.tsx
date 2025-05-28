@@ -5,11 +5,14 @@
 import Modal from "../../dom/ui/Modal"
 import Input from "../../dom/ui/Input"
 import ImageUpload from "../../dom/ui/ImageUpload"
-import { addCacheData } from "@/utils/cache-helpers"
+import { updateItem } from "@/services/firebase/update"
+import { inventoryCol } from "@/services/firebase/constants"
 import { formatDateToISO } from "@/utils/format-dates"
+import { retrieveIdToken } from "@/services/firebase/retrieve"
+import { updateMovedItem } from "@/services/firebase/admin-update"
 import { inventoryCacheKey } from "@/utils/constants"
 import { Condition, IListing } from "@/models/store-data"
-import { updateMovedItemAdmin } from "@/services/firebase/create-admin"
+import { addCacheData, updateCacheData } from "@/utils/cache-helpers"
 import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput } from "@/utils/input-validation"
 
 // External Imports
@@ -17,7 +20,7 @@ import { FormEvent, useEffect, useState } from "react"
 import { MdImageNotSupported } from "react-icons/md"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
-import { updateListing } from "@/services/firebase/update"
+
 
 
 interface EditListingProps {
@@ -29,6 +32,8 @@ interface EditListingProps {
 
 const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal, setTriggerUpdate }) => {
     const { data: session } = useSession();
+    const uid = session?.user.id as string;
+    const cacheKey = `${inventoryCacheKey}-${session?.user.id}`;
 
     // General Info
     const [itemId, setItemId] = useState<string>("")
@@ -66,10 +71,7 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal, se
     }, [fillItem])
 
     function handleCacheUpdate(inventoryItem: IListing) {
-        const cacheKey = `${inventoryCacheKey}-${session?.user.id}`;
-
-        // Update the cache with the new item
-        addCacheData(cacheKey, inventoryItem);
+        updateCacheData(cacheKey, { [inventoryItem.itemId as string]: inventoryItem });
     }
 
     function handleListingClick(item: IListing) {
@@ -104,14 +106,14 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal, se
             condition: condition,
             currency: session?.user.preferences?.currency ?? "USD",
             customTag: customTag,
-            dateListed: formatDateToISO(new Date(dateListed)),
+            dateListed: formatDateToISO(new Date(dateListed), true),
             image: [imageUrl],
             initialQuantity: Number(quantity),
             itemId: itemId,
             name: itemName,
             price: Number(listingPrice),
             purchase: {
-                date: datePurchased ? formatDateToISO(new Date(datePurchased)) : formatDateToISO(new Date(dateListed)),
+                date: datePurchased ? formatDateToISO(new Date(datePurchased), true) : formatDateToISO(new Date(dateListed), true),
                 platform: purchasePlatform || null,
                 price: purchasePrice ? Number(purchasePrice) : null,
             },
@@ -124,18 +126,20 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal, se
 
         try {
             if (inventoryItem.storeType !== storeOldType) {
-                await updateMovedItemAdmin(session?.user.id as string, storeOldType, inventoryItem)
+                const idToken = await retrieveIdToken();
+                if (!idToken) return;
+                await updateMovedItem({ idToken, rootCol: inventoryCol, oldStoreType: storeOldType, item: inventoryItem })
+                handleCacheUpdate(inventoryItem);
             } else {
-                await updateListing(session?.user.id as string, inventoryItem, inventoryItem.storeType)
+                await updateItem({ uid, item: inventoryItem, rootCol: inventoryCol, subCol: inventoryItem.storeType, cacheKey: inventoryCacheKey })
             }
-            handleCacheUpdate(inventoryItem);
             setSuccessMessage("Listing Edited!");
         } catch (error) {
             setErrorMessage("Error editing item")
         }
 
-        setLoading(false);
         setTriggerUpdate(true);
+        setLoading(false);
         setDisplayModal(false);
     }
 

@@ -15,9 +15,10 @@ import CardListingsAmount from "./ListingsAndOrdersAmount";
 import CardProfitsBarChart from "./ProfitsBarChart";
 import { currencySymbols } from "@/config/currency-config";
 import CardPlatformDonutChart from "./PlatformDonutChart";
-import { retrieveIdToken, retrieveUserOrders } from "@/services/firebase/retrieve";
+
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import { formatOrdersForCSVExport } from "@/utils/format";
+import { retrieveOrders, retrieveOrderStoreTypes } from "@/services/bridges/retrieve";
 import { defaultTimeFrom, exportCSVAllowedSubscriptionPlans, orderCacheKey } from "@/utils/constants";
 
 // External Imports
@@ -25,12 +26,11 @@ import { useEffect, useState } from "react";
 import { HiOutlineDownload } from "react-icons/hi";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { retrieveUserStoreTypes } from "@/services/firebase/retrieve-admin";
-import { getCachedData } from "@/utils/cache-helpers";
 
 
 const Page = () => {
     const { data: session } = useSession();
+    const uid = session?.user.id as string;
 
     const [orders, setOrders] = useState<IOrder[]>([]);
     const [loading, setLoading] = useState(false);
@@ -54,76 +54,30 @@ const Page = () => {
     // Using useEffect to initialize the chart only once when the component is mounted
     useEffect(() => {
         async function fetchOrders() {
-            if (!session || !session.user.id) {
-                return;
-            }
-
             setLoading(true);
 
+            let items;
             if (selectedFilter === "All") {
-                // for each storeType, fetch their orders in parallel
-                await Promise.all(
-                    storeTypes.map((storeType) => {
-                        return retrieveUserOrders({
-                            uid: session.user.id as string,
-                            timeFrom: timeFrom,
-                            timeTo: timeTo,
-                            storeType,
-                        }).then((order) => [storeType, order] as const);
-                    })
-                );
+                items = await retrieveOrders({ uid, timeFrom, timeTo });
             } else {
-                await retrieveUserOrders({
-                    uid: session.user.id as string,
-                    timeFrom: timeFrom,
-                    timeTo: timeTo,
-                    storeType: selectedFilter,
-                })
+                items = await retrieveOrders({ uid, timeFrom, timeTo, subCol: selectedFilter });
+            }
+            if (items) {
+                setOrders(items)
             }
 
-
-            const cache = getCachedData(`${orderCacheKey}-${session.user.id}`);
-            if (cache) {
-                const results = Object.values(cache) as IOrder[];
-
-                const filteredOrders = results.filter(order => {
-                    const matchesStore = selectedFilter === "All" || order.storeType === selectedFilter;
-
-                    if (!order.sale?.date) return;
-                    const orderDate = new Date(order.sale.date);
-                    const from = new Date(timeFrom);
-                    const to = new Date(timeTo);
-
-                    const matchesTime =
-                        (!timeFrom || orderDate >= from) &&
-                        (!timeTo || orderDate <= to);
-
-                    return matchesStore && matchesTime;
-                });
-
-                setOrders(filteredOrders);
-            }
             setLoading(false);
         }
 
         if (subscribed) {
             fetchOrders();
         }
-    }, [session, selectedFilter, timeFrom, timeTo, subscribed, storeTypes]);
+    }, [session, selectedFilter, timeFrom, timeTo, subscribed, storeTypes, uid]);
 
     useEffect(() => {
         async function fetchStoreTypes() {
-            if (!session || !session.user.id) {
-                return;
-            }
-
-            const idToken = await retrieveIdToken();
-            if (!idToken) return;
-
-            const storeTypes = await retrieveUserStoreTypes({ idToken, itemType: "orders" });
-            if (!storeTypes) return;
-
-            setStoreTypes(storeTypes)
+            const storeTypes = await retrieveOrderStoreTypes();
+            setStoreTypes(storeTypes ?? [])
             setSelectedFilter("All")
         }
 

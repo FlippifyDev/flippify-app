@@ -3,14 +3,16 @@
 // Local Imports
 import Modal from '../../dom/ui/Modal'
 import Dropdown from '../../dom/ui/Dropdown';
+import { ordersCol } from '@/services/firebase/constants';
 import LoadingSpinner from '@/app/components/LoadingSpinner';
+import { createItem } from '@/services/firebase/admin-create';
 import { shortenText } from '@/utils/format';
 import { addCacheData } from '@/utils/cache-helpers';
 import { ISubscription } from '@/models/user';
 import { formatDateToISO } from '@/utils/format-dates';
-import { createNewOrderItemAdmin } from '@/services/firebase/create-admin';
-import { importCSVAllowedSubscriptionPlans, orderCacheKey, subscriptionLimits } from '@/utils/constants';
+import { retrieveIdToken } from '@/services/firebase/retrieve';
 import { IOrder, IPurchase, ISale, IShipping, OrderStatus, StoreType } from '@/models/store-data';
+import { importCSVAllowedSubscriptionPlans, orderCacheKey, subscriptionLimits } from '@/utils/constants';
 import { fetchSubscriptionMaxListings, fetchUserInventoryAndOrdersCount, fetchUserSubscription } from '@/utils/extract-user-data';
 import { generateRandomFlippifyListingId, generateRandomFlippifyOrderId, generateRandomFlippifyTransactionId } from '@/utils/generate-random';
 
@@ -19,6 +21,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import Papa from 'papaparse';
+
 
 interface UploadOrdersProps {
     setDisplayModal: (value: boolean) => void;
@@ -85,9 +88,9 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
         if (!row["Title"]) return {};
         if (uploadType === "custom" && !row["Sale Marketplace"]) return {}
 
-        const purchaseDate = row["Purchase Date"] ? formatDateToISO(new Date(row["Purchase Date"])) : null;
-        const saleDate = row["Sale Date"] ? formatDateToISO(new Date(row["Sale Date"])) : formatDateToISO(new Date());
-        const listingDate = row["Listing Date"] ? formatDateToISO(new Date(row["Listing Date"])) : null;
+        const purchaseDate = row["Purchase Date"] ? formatDateToISO(new Date(row["Purchase Date"]), true) : null;
+        const saleDate = row["Sale Date"] ? formatDateToISO(new Date(row["Sale Date"]), true) : formatDateToISO(new Date());
+        const listingDate = row["Listing Date"] ? formatDateToISO(new Date(row["Listing Date"]), true) : null;
 
         if (saleDate?.includes("NaN")) {
             return { error: `Transaction ID -> ${row["Transaction ID"]} | Invalid sale date | ${row["Sale Date"]} interpreted as ${saleDate}` };
@@ -152,7 +155,7 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
 
         const orderCache = `${orderCacheKey}-${session.user.id}`;
 
-        orderItems.forEach(item => addCacheData(orderCache, item));
+        orderItems.forEach(item => addCacheData(orderCache, { [item.transactionId as string]: item }));
 
         const count = orderItems.length;
 
@@ -198,9 +201,12 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
 
                         const order = orderDict.order;
 
-                        const { success, error, orderExists } = await createNewOrderItemAdmin(session?.user.id as string, order.storeType as StoreType, order);
+                        const idToken = await retrieveIdToken();
+                        if (!idToken) return;
+                        const { success, error } = await createItem({ idToken, item: order, rootCol: ordersCol, subCol: order.storeType as StoreType })
+
                         if (!success) {
-                            console.error('Order upload failed', { order, error, orderExists });
+                            console.error('Order upload failed', error);
                         } else {
                             count += 1
                             ordersToAddToSession.push(order)

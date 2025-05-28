@@ -1,6 +1,6 @@
 "use client";
 
-import { resetPassword } from '@/services/firebase/reset';
+import { resetPassword } from '@/services/firebase/admin-reset';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 

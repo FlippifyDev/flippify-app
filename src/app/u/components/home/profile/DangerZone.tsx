@@ -6,7 +6,6 @@ import Modal from '../../dom/ui/Modal';
 import { auth } from "@/lib/firebase/config";
 import LoadingSpinner from '@/app/components/LoadingSpinner';
 import { createRefund } from '@/services/stripe/create'
-import { deleteUserAdmin } from '@/services/firebase/delete-admin';
 import { cancelUserSubscription } from '@/services/stripe/cancel';
 
 // External Imports
@@ -15,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react'
 import { handleSignOut } from '@/services/sign-out';
 import { retrieveIdToken } from '@/services/firebase/retrieve';
+import { deleteUserAdmin } from '@/services/firebase/admin-delete';
 
 const DangerZone = () => {
     const { data: session } = useSession();
@@ -78,7 +78,7 @@ const DangerZone = () => {
             setSuccess(false);
             setMessage(deleteError);
             setLoading(false);
-           return;
+            return;
         }
 
         setSuccess(true);

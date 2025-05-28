@@ -1,14 +1,13 @@
 "use server"
 
 // Local Imports
-import { retrieveUserByKeyAndValueAdmin } from '../firebase/retrieve-admin';
+import { FREE_MONTHLY_PID } from '@/utils/constants';
+import { retrieveRefereeUser } from '../firebase/admin-retrieve';
+import { updateStripeUserSubscription } from './update';
 import { retrieveCouponCodeOrPromotionCode } from './retrieve';
-;
 
 // External Imports
 import Stripe from 'stripe';
-import { updateStripeUserSubscription } from './update';
-import { FREE_MONTHLY_PID } from '@/utils/constants';
 
 
 const createBillingPortalUrl = async (username: string, customerId: string) => {
@@ -72,7 +71,7 @@ const createCheckoutSession = async (
 
         // If a coupon code is present, then disallow
         if (referredBy) {
-            const referredUser = await retrieveUserByKeyAndValueAdmin("referral.referralCode", referredBy);
+            const referredUser = await retrieveRefereeUser({ referralCode: referredBy });
 
             if (referredUser) {
                 // Check if referredUser has any subscriptions with "member" in the name
@@ -233,7 +232,7 @@ export async function createRefund(customerId: string): Promise<{ success?: bool
         await stripe.refunds.create({
             charge: chargeId,
         });
-        
+
         // Step 5: Update users subscription to the free plan
         const { error } = await updateStripeUserSubscription(customerId, FREE_MONTHLY_PID);
         if (error) throw error;

@@ -1,35 +1,20 @@
 // Local Imports
-import { IUser } from "@/models/user";
-import { orderCacheKey } from "@/utils/constants";
-import { formatDateToISO } from "@/utils/format-dates";
-import { updateCacheData } from "@/utils/cache-helpers";
-import { createHistoryItems } from "./helpers";
-import { updateReferreeUserAdmin } from "./update-admin";
-import { IListing, IOrder, OrderStatus, StoreType } from "@/models/store-data";
-import { retrieveUserOrderItemRef, retrieveUserRefById } from "./retrieve";
+import { usersCol } from "./constants";
+import { firestore } from "@/lib/firebase/config";
+import { updateStoreInfo } from "../api/request";
+import { retrieveItemsFromDB, retrieveUserRef, retrieveUserRefById } from "./retrieve";
+import { extractItemDateByFilter, extractItemId } from "./extract";
+import { getCachedData, getLastVisibleCacheData, setCachedData, setLastVisibleCacheData, colDataFetched, updateCacheData } from "@/utils/cache-helpers";
+import { DateFilterKeyType, ItemType, RootColType, SubColType } from "./models";
 
 // External Imports
-import { collection, deleteField, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { firestore } from "@/lib/firebase/config";
-import { IOneTimeExpense } from "@/models/expenses";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { formatDateToISO } from "@/utils/format-dates";
 
 
-
-/**
- * Updates a user's document in Firestore based on a filter key and value.
- *
- * This function searches for a user document in Firestore based on the specified `filter_key` and `filter_value`.
- * If a user document is found, it merges the provided `data` into the document. If no matching user is found,
- * an error message is logged.
- *
- * @param {string} filter_key - The field to filter the user by (e.g., 'uid', 'email', etc.).
- * @param {string} filter_value - The value of the field to match (e.g., the actual uid or email).
- * @param {any} data - The data to update in the user's document.
- * @returns {Promise<void>} A promise that resolves when the document update is complete.
- */
-async function updateUser(uid: string, data: any): Promise<boolean> {
+export async function updateUser({ uid, data }: { uid: string, data: any }): Promise<boolean> {
     try {
-        const userRef = await retrieveUserRefById(uid);
+        const userRef = await retrieveUserRefById({ uid });
 
         if (!userRef) {
             console.error(`No user found with uid: ${uid}`);
@@ -46,216 +31,146 @@ async function updateUser(uid: string, data: any): Promise<boolean> {
     }
 }
 
-/**
- * Updates a user's preferences in Firestore based on their Stripe customer ID.
- *
- * This function updates the user's preferences (email and currency) in Firestore by matching the provided
- * `customerId` with the user's `stripeCustomerId` in the Firestore document. If a matching user is found,
- * their preferences are updated with the provided values.
- *
- * @param {string} customerId - The Stripe customer ID of the user to update.
- * @param {string} currency - The currency to set for the user.
- * @returns {Promise<void>} A promise that resolves when the document update is complete.
- */
-async function updateUserPreferences(uid: string, currency: string) {
+export async function updateUserPreferences({ uid, currency }: { uid: string, currency: string }) {
     try {
-        const userRef = await retrieveUserRefById(uid);
-        if (userRef) {
-            await setDoc(
-                userRef,
-                {
-                    preferences: {
-                        currency
-                    }
-                },
-                { merge: true }
-            );
-        }
+        // Step 1: Retrieve document reference
+        const docRef = doc(firestore, usersCol, uid);
+        if (!docRef) return
+
+        // Step 2: Update preferences
+        await setDoc(
+            docRef,
+            {
+                preferences: {
+                    currency
+                }
+            },
+            { merge: true }
+        );
+
     } catch (error) {
         console.error("Error updating Firestore user:", error);
         throw error;
     }
 }
 
-/**
- * Completes the onboarding process for a user, optionally handling referrals.
- *
- * @param {string} uid - The user's unique ID.
- * @param {string | null} referralCode - The referral code used during signup, if any.
- * @returns {Promise<void>} Resolves when the onboarding is complete.
- */
-async function completeOnboarding(uid: string, referralCode: string | null): Promise<IUser | null> {
+
+export async function updateItem({ uid, item, rootCol, subCol, cacheKey }: { uid: string, item: ItemType, rootCol: RootColType, subCol: SubColType, cacheKey: string }) {
     try {
-        const userRef = await retrieveUserRefById(uid);
-        if (!userRef) return null;
+        // Step 1: Extract Item ID
+        const id = extractItemId({ item });
+        if (!id) throw Error(`Item does not contain an ID`);
 
-        // Step 1: Handle referral if a referral code is provided
-        if (referralCode) {
-            const { success } = await updateReferreeUserAdmin(uid, referralCode);
-            if (success) {
-                await setDoc(userRef, { referral: { referredBy: referralCode } }, { merge: true });
-            }
-        }
+        // Step 2: Retrieve document reference
+        const docRef = doc(firestore, rootCol, uid, subCol, id);
+        if (!docRef) throw Error(`No item found with ID: ${id}`)
 
-        // Step 2: Handle subscriptions
-        const userSnap = await getDoc(userRef);
-        if (userSnap.exists()) {
-            const userData = userSnap.data() as IUser;
-            const existingSubscriptions = userData.subscriptions || [];
-            const subscriptionExists = existingSubscriptions.some(sub => sub.name === "accessGranted");
+        // Step 3: Update item
+        await updateDoc(docRef, { ...item });
 
-            if (!subscriptionExists) {
-                existingSubscriptions.push({ name: "accessGranted", id: "0", override: true, createdAt: formatDateToISO(new Date()) });
-                await setDoc(userRef, { subscriptions: existingSubscriptions }, { merge: true });
-            }
-
-            await setDoc(
-                userRef,
-                {
-                    authentication: {
-                        onboarding: deleteField()
-                    }
-                },
-                { merge: true }
-            );
-        }
-
-        // 🔄 Fetch and return the updated user document
-        const updatedUserSnap = await getDoc(userRef);
-        if (updatedUserSnap.exists()) {
-            return updatedUserSnap.data() as IUser;
-        } else {
-            console.error("User document not found after updating.");
-            return null;
-        }
-
+        // Step 4: Update item in cache
+        updateCacheData(`${cacheKey}-${uid}`, item)
     } catch (error) {
-        console.error("Error completing onboarding:", error);
-        return null;
-    }
-}
-
-/**
- * Increments the "rewardsClaimed" field for a user in Firestore by 1.
- * If the user does not have a rewardsClaimed field, it initializes it to 0 and then increments.
- *
- * @param {string} uid - The UID of the user whose rewardsClaimed count will be incremented.
- * @returns {Promise<void>} A promise that resolves when the user's rewardsClaimed field is updated.
- */
-async function incrementRewardsClaimed(uid: string): Promise<void> {
-    try {
-        // Reference to the user's document in Firestore
-        const userRef = await retrieveUserRefById(uid);
-        if (!userRef) return;
-
-        // Get the current user document
-        const userDoc = await getDoc(userRef);
-
-        if (userDoc.exists()) {
-            // Get the current rewardsClaimed value (defaults to 0 if it doesn't exist)
-            const currentRewardsClaimed = userDoc.data()?.rewardsClaimed || 0;
-
-            // Increment the rewardsClaimed by 1
-            const newRewardsClaimed = currentRewardsClaimed + 1;
-
-            // Update the rewardsClaimed field in Firestore
-            await setDoc(userRef, { rewardsClaimed: newRewardsClaimed }, { merge: true });
-
-            console.log(`Successfully incremented rewardsClaimed for user ${uid}. New value: ${newRewardsClaimed}`);
-        } else {
-            console.log(`No user found with uid: ${uid}`);
-        }
-    } catch (error) {
-        console.error("Error incrementing rewards claimed:", error);
-    }
-}
-
-
-async function updateOrderStatus(uid: string, order: IOrder, status: OrderStatus): Promise<void> {
-    try {
-        if (!order.transactionId || !order.sale?.price || !order.sale.date || !order.storeType) {
-            throw Error("error")
-        }
-
-        const orderRef = await retrieveUserOrderItemRef(uid, order.storeType, order.transactionId);
-
-        if (!orderRef) {
-            console.error(`No order found with ID: ${order.transactionId}`);
-            return;
-        }
-
-        await updateDoc(orderRef, {
-            status: status,
-        });
-
-        order.status = status;
-        updateCacheData(`${orderCacheKey}-${uid}`, order)
-
-        console.log(`Order ${order.transactionId} status updated to ${status}`);
-    } catch (error) {
-        console.error("Error updating Firestore order status:", error);
+        console.error("Error updateItem:", error);
         throw error;
     }
 }
 
 
-/**
- * Updates (or creates) an eBay inventory item in Firestore.
- * @param uid       – the user’s UID
- * @param listing   – the full listing payload to write
- * @param storeType – which sub‐collection under "inventory"/uid to use
- * @returns         – the saved listing, or null on error
- */
-async function updateListing(
-    uid: string,
-    listing: IListing,
-    storeType: StoreType
-): Promise<{ success?: boolean, error?: any }> {
+interface UpdateCachedItemsProps {
+    uid: string;
+    rootCol: RootColType;
+    subCol: SubColType;
+    cacheKey: string;
+    filterKey: DateFilterKeyType;
+    timeFrom: string;
+    timeTo?: string;
+    update?: boolean;
+    pagenate?: boolean;
+    nextPage?: boolean;
+}
+export async function updateCachedItems({ uid, rootCol, subCol, cacheKey, filterKey, timeFrom, timeTo, update, pagenate, nextPage }: UpdateCachedItemsProps): Promise<ItemType[]> {
     try {
-        if (!listing.itemId) {
-            throw Error("Listing did not contain an ID")
+        // Step 1: Retrieve cache
+        const cacheData = getCachedData(cacheKey, true);
+        const isColDataFetched = colDataFetched(cacheKey, subCol);
+
+        // Step 2: Extract cache data
+        const cache = cacheData?.data ? Object.values(cacheData.data) : [];
+        const cacheTimeFrom = cacheData?.cacheTimeFrom ? new Date(cacheData.cacheTimeFrom) : undefined;
+        const cacheTimeTo = cacheData?.cacheTimeTo ? new Date(cacheData.cacheTimeTo) : undefined;
+
+        // Step 3: Create date objects with timeFrom and timeTo
+        const timeFromDate = new Date(timeFrom);
+        const timeToDate = timeTo ? new Date(timeTo) : new Date();
+
+        let newTimeFrom = timeFrom;
+        let newTimeTo = timeTo ? timeTo : formatDateToISO(new Date());
+
+        // Step 4: If cache exists then only request new data if timeFrom & timeTo are out of range of the cache
+        if (cache && cache.length > 0 && !update && !nextPage && isColDataFetched) {
+            // Step 5: Extract cache items
+            const firstItem = cache[0];
+            const lastItem = cache[cache.length - 1];
+
+            // Step 6: Determine the oldest & newest filter dates in the cache
+            const oldestTime = cacheTimeFrom ?? new Date(extractItemDateByFilter({ item: lastItem, filterKey }));
+            const newestTime = cacheTimeTo ?? new Date(extractItemDateByFilter({ item: firstItem, filterKey }));
+
+            // Step 7: Check if requested times are within the cached data range
+            if (timeFromDate >= oldestTime && timeToDate <= newestTime) return [];
+
+            // Step 8: Check if timeFrom is older then the oldest cached data item
+            if (timeFromDate < oldestTime && timeToDate <= newestTime) {
+                newTimeFrom = timeFrom;
+                newTimeTo = oldestTime.toISOString();
+            }
+
+            // Step 9: Check if timeTo is newer then the newest cached data item
+            else if (timeFromDate >= oldestTime && timeToDate > newestTime) {
+                newTimeFrom = newestTime.toISOString();
+                newTimeTo = timeTo ? timeTo : formatDateToISO(new Date());
+            }
+
+            // Step 10: Check if timeFrom is older & timeTo is newer
+            else if (timeFromDate < oldestTime && timeToDate > newestTime) {
+                newTimeFrom = timeFrom;
+                newTimeTo = timeTo ? timeTo : formatDateToISO(new Date());
+            }
+
+        }
+        // Step 11: If the next page is requested
+        else if (nextPage) {
+            newTimeFrom = timeFrom;
+            newTimeTo = timeTo ? timeTo : formatDateToISO(new Date());
+        }
+        // Step 12: If no cache exists or an update was requested
+        else if (update || !cache || cache.length === 0) {
+            // Step 13: Request API for new data
+            await updateStoreInfo(rootCol, subCol, uid);
+
+            // Step 14: Set the new times to the requested ones
+            newTimeFrom = timeFrom;
+            newTimeTo = timeTo ? timeTo : formatDateToISO(new Date());
         }
 
-        // Reference to /inventory/{uid}/{storeType}/{itemId}
-        const colRef = collection(firestore, "inventory", uid, storeType);
-        const itemDoc = doc(colRef, listing.itemId);
-
-        // Write the listing object to Firestore, merging with any existing data
-        await updateDoc(itemDoc, { ...listing });
-
-        // Return the payload back to the caller for further use
-        return { success: true };
-    } catch (error) {
-        console.error(`Error updating item with ID=${listing.itemId}:`, error);
-        return { error: `Error updating item with ID=${listing.itemId}: ${error}`};
-    }
-}
-
-
-async function updateExpense(
-    uid: string,
-    item: IOneTimeExpense,
-    expenseType: "oneTime" | "subscriptions"
-): Promise<{ success?: boolean, error?: any }> {
-    try {
-        if (!item.id) {
-            throw Error("Item did not contain an ID")
+        // Step 15: Retrieve last visible document snapshot from cache
+        let lastVisibleSnapshot;
+        if (nextPage) {
+            lastVisibleSnapshot = getLastVisibleCacheData(`snapshot-${subCol}-${cacheKey}`);
         }
 
-        // Reference to /expenses/{uid}/{expenseType}/{itemId}
-        const colRef = collection(firestore, "expenses", uid, expenseType);
-        const itemDoc = doc(colRef, item.id);
+        // Step 16: Retrieve the new items from the database using the new times
+        const { items, lastVisible } = await retrieveItemsFromDB({ uid, rootCol, subCol, filterKey, timeFrom: newTimeFrom, timeTo: newTimeTo, pagenate, lastDoc: lastVisibleSnapshot });
 
-        // Write the item object to Firestore, merging with any existing data
-        await updateDoc(itemDoc, { ...item });
+        // Step 17: Update the last visible snapshot in cache
+        if (lastVisible) {
+            setLastVisibleCacheData(`snapshot-${subCol}-${cacheKey}`, lastVisible);
+        }
 
-        // Return the payload back to the caller for further use
-        return { success: true };
+        return Object.values(items);
     } catch (error) {
-        console.error(`Error updating item with ID=${item.id}:`, error);
-        return { error: `Error updating item with ID=${item.id}: ${error}` };
+        console.error(`Error in retrieveItemsFromDB`, error);
+        throw new Error(`${error}`);
     }
 }
-
-
-export { updateUser, updateUserPreferences, completeOnboarding, incrementRewardsClaimed, updateOrderStatus, updateListing, updateExpense };

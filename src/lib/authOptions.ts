@@ -2,14 +2,15 @@
 import { auth } from "@/lib/firebase/config";
 import { IUser } from "@/models/user";
 import { IJwtToken } from "@/models/jwt-token";
-import { handleLogin } from "@/services/firebase/helpers";
-import { retrieveUserAdmin } from "@/services/firebase/retrieve-admin";
+import { handleLogin } from "@/services/handlers";
+import { retrieveUserAdmin } from "@/services/firebase/admin-retrieve";
 import { retrieveUserAndCreate } from "@/services/firebase/retrieve";
 
 // External Imports
 import { signInWithEmailAndPassword } from "firebase/auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { NextAuthOptions } from "next-auth";
+
 
 
 export const authOptions: NextAuthOptions = {
@@ -35,7 +36,7 @@ export const authOptions: NextAuthOptions = {
                         id: userCredential.user.uid,
                         email: userCredential.user.email,
                     };
-                    
+
                     // Run any functions required during login
                     const { error } = await handleLogin(user.id);
                     if (error) throw error;
@@ -53,7 +54,7 @@ export const authOptions: NextAuthOptions = {
                 token.id = user.id;
                 token.email = user.email;
                 try {
-                    const { connectedAccounts, ...userDoc } = (await retrieveUserAndCreate(user.id, user.email) ?? {}) as IUser;
+                    const { connectedAccounts, ...userDoc } = (await retrieveUserAndCreate({ uid: user.id, email: user.email }) ?? {}) as IUser;
                     token.user = userDoc;
                 } catch (error) {
                     console.error('Error retrieving user:', error);
@@ -65,7 +66,7 @@ export const authOptions: NextAuthOptions = {
             const { user } = token as IJwtToken;
             try {
                 if (!user.id) return session;
-                const { connectedAccounts, ...userDoc } = await retrieveUserAdmin(user.id) as IUser;
+                const { connectedAccounts, ...userDoc } = await retrieveUserAdmin({ uid: user.id }) as IUser;
                 if (userDoc) {
                     session.user = userDoc as IUser;
                 }

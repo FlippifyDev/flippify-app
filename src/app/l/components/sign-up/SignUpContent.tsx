@@ -7,8 +7,6 @@ import UnderMaintenance from "../development/UnderMaintenance";
 import { retrieveStatus } from "@/services/api/request";
 import { auth, firestore } from "@/lib/firebase/config";
 import { FaRegCheckCircle } from "react-icons/fa";
-import { updateAccessGrantedAdmin } from "@/services/firebase/update-admin";
-import { retrieveAuthenticatedUserCount } from "@/services/firebase/retrieve-admin";
 import { validateAlphaNumericInput, validateEmail, validateEmailInput, validatePasswordInput } from "@/utils/input-validation";
 
 // External Imports
@@ -21,6 +19,9 @@ import { Lato } from 'next/font/google';
 import dotenv from "dotenv";
 import Image from "next/image";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
+import { updateAccessGranted } from "@/services/firebase/admin-update";
+import { usersCol } from "@/services/firebase/constants";
+import { retrieveIdToken } from "@/services/firebase/retrieve";
 
 dotenv.config();
 
@@ -94,7 +95,7 @@ const SignUpContent = () => {
 
                     try {
 
-                        await setDoc(doc(firestore, "users", auth.currentUser.uid), {
+                        await setDoc(doc(firestore, usersCol, auth.currentUser.uid), {
                             username: usernameRef.current,
                             authentication: {
                                 onboarding: true,
@@ -105,7 +106,9 @@ const SignUpContent = () => {
                     }
 
                     try {
-                        await updateAccessGrantedAdmin(auth.currentUser.uid);
+                        const idToken = await retrieveIdToken();
+                        if (!idToken) return;
+                        await updateAccessGranted({ idToken });
                     } catch (error) {
                         console.error(error)
                     }
@@ -125,12 +128,6 @@ const SignUpContent = () => {
         try {
             setLoading(true);
             setErrorMessage("");
-            const userCount = await retrieveAuthenticatedUserCount();
-            const maxUserCount = Number(process.env.MAX_USER_COUNT ?? 100);
-            if (userCount >= maxUserCount) {
-                setErrorMessage("User limit reached. Please try again later.");
-                return;
-            }
             const { user } = await createUserWithEmailAndPassword(auth, email, password);
             usernameRef.current = username;
             emailRef.current = email;

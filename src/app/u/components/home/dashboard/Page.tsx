@@ -1,27 +1,27 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import React, { useState, useEffect, useRef } from "react";
-
-import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
-import DashboardRecentSalesCard from "./DashboardRecentSalesCard";
-import { retrieveIdToken, retrieveUserInventory, retrieveUserOneTimeExpenses, retrieveUserOrders } from "@/services/firebase/retrieve";
-import ProfitsGraphDateFilter from "./ProfitsGraphDateFilter";
+// Local Imports
+import IconButton from "../../dom/ui/IconButton";
+import OnboardingFlow from "./OnboardingFlow";
+import { formatTimeFrom } from "@/utils/format-dates";
+import { IOneTimeExpense } from "@/models/expenses";
+import { IListing, IOrder } from "@/models/store-data";
+import DashboardProfitsGraph from "./DashboardProfitsGraph";
 import LayoutLoadingSkeleton from "../../layout/LayoutLoadingSkeleton";
 import ProfitsGraphTagFilter from "./ProfitsGraphTagFilter";
 import DashboardOverviewCard from "./DashboardOverviewCard";
-import DashboardProfitsGraph from "./DashboardProfitsGraph";
-import IconButton from "../../dom/ui/IconButton";
-import { IListing, IOrder } from "@/models/store-data";
-import OnboardingFlow from "./OnboardingFlow";
-import { defaultTimeFrom } from "@/utils/constants";
-import { retrieveUserStoreTypes } from "@/services/firebase/retrieve-admin";
-import { IOneTimeExpense } from "@/models/expenses";
-import { formatTimeFrom } from "@/utils/format-dates";
+import ProfitsGraphDateFilter from "./ProfitsGraphDateFilter";
+import DashboardRecentSalesCard from "./DashboardRecentSalesCard";
+import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
+import { retrieveInventory, retrieveOneTimeExpenses, retrieveOrders } from "@/services/bridges/retrieve";
 
+// External Imports
+import React, { useState, useEffect, useRef } from "react";
+import { useSession } from "next-auth/react";
 
 const DashboardPage: React.FC = () => {
     const { data: session } = useSession();
+    const uid = session?.user.id as string;
     const currency = session?.user.preferences?.currency as string;
 
     const [inventoryData, setInventoryData] = useState<IListing[]>([]);
@@ -113,67 +113,25 @@ const DashboardPage: React.FC = () => {
 
     // Extract unique custom tags from sales data for filtering
     const uniqueTags = Array.from(
-        new Set(salesData.map((order) => order.customTag))
-    ).filter((tag) => tag != null);
+        new Set(
+            salesData.map((order) => order.customTag || "Unknown")
+        )
+    );
 
     useEffect(() => {
         const fetchSalesData = async () => {
-            if (!session) return;
-
-            const idToken = await retrieveIdToken();
-            if (!idToken) return;
-            const storeTypes = await retrieveUserStoreTypes({ idToken, itemType: "orders" });
-            if (!storeTypes) return;
-
-            const orderResults = await Promise.all(
-                storeTypes.map((storeType) => {
-                    return retrieveUserOrders({
-                        uid: session.user.id as string,
-                        timeFrom: timeFrom,
-                        timeTo: timeTo,
-                        storeType,
-                    }).then((order) => [storeType, order] as const);
-                })
-            );
-            const orders = orderResults[orderResults.length - 1]?.[1] ?? [];
-            setSalesData(orders);
+            const items = await retrieveOrders({ uid, timeFrom, timeTo })
+            setSalesData(items ?? []);
         };
 
         const fetchInventoryData = async () => {
-            if (!session) return;
-
-            const idToken = await retrieveIdToken();
-            if (!idToken) return;
-            
-            const storeTypes = await retrieveUserStoreTypes({ idToken, itemType: "inventory" });
-            if (!storeTypes) return;
-
-            const inventoryResults = await Promise.all(
-                storeTypes.map((storeType) => {
-                    return retrieveUserInventory({
-                        uid: session.user.id as string,
-                        timeFrom: defaultTimeFrom,
-                        storeType,
-                    }).then((item) => [storeType, item] as const);
-                })
-            );
-            const inventory = inventoryResults[inventoryResults.length - 1]?.[1] ?? [];
-
-            if (inventory) {
-                setInventoryData(inventory);
-            }
+            const items = await retrieveInventory({ uid, timeFrom, timeTo })
+            setInventoryData(items ?? []);
         };
 
         const fetchOneTimeExpenseData = async () => {
-            if (!session) return;
-
-            const items = await retrieveUserOneTimeExpenses({
-                uid: session?.user.id as string,
-                timeFrom: timeFrom,
-                timeTo: timeTo,
-            })
-
-            setOneTimeExpensesData(items);
+            const items = await retrieveOneTimeExpenses({ uid, timeFrom, timeTo })
+            setOneTimeExpensesData(items ?? []);
         }
 
         if (session?.user.authentication?.subscribed) {
@@ -181,7 +139,7 @@ const DashboardPage: React.FC = () => {
             fetchInventoryData();
             fetchOneTimeExpenseData();
         }
-    }, [session, timeFrom, timeTo]);
+    }, [session, timeFrom, timeTo, uid]);
 
 
     if (!session || !session.user || !session.user.stripeCustomerId) {

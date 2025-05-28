@@ -1,24 +1,28 @@
 "use client"
 
+// Local Imports
+import { deleteItem } from '@/services/firebase/delete';
 import LoadingSpinner from '@/app/components/LoadingSpinner';
+import EditOneTimeExpense from '../navbar-tools/EditOneTimeExpense';
 import { currencySymbols } from '@/config/currency-config';
 import { IOneTimeExpense } from '@/models/expenses';
-import { deleteItem } from '@/services/firebase/delete';
-import { retrieveUserOneTimeExpenses } from '@/services/firebase/retrieve';
-import { removeCacheData } from '@/utils/cache-helpers';
-// Local Imports
-import { defaultTimeFrom, oneTimeExpensesCacheKey } from '@/utils/constants';
-import { fetchUserExpensesCount } from '@/utils/extract-user-data';
 import { formatTableDate } from '@/utils/format-dates';
+import { removeCacheData } from '@/utils/cache-helpers';
+import { retrieveIdToken } from '@/services/firebase/retrieve';
+import { fetchUserExpensesCount } from '@/utils/extract-user-data';
+import { retrieveOneTimeExpenses } from '@/services/bridges/retrieve';
+import { expensesCol, oneTimeCol } from '@/services/firebase/constants';
+import { defaultTimeFrom, oneTimeExpensesCacheKey } from '@/utils/constants';
 
 // External Imports
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react'
-import EditOneTimeExpense from '../navbar-tools/EditOneTimeExpense';
+import NoResultsFound from '../../dom/ui/NoResultsFound';
 
 const OneTime = () => {
     const { data: session } = useSession();
-    const cacheKey = `${oneTimeExpensesCacheKey}-${session?.user.id}`;
+    const uid = session?.user.id as string
+    const cacheKey = `${oneTimeExpensesCacheKey}-${uid}`;
 
     const [fillItem, setFillItem] = useState<IOneTimeExpense>();
     const [editModelOpen, setEditModalOpen] = useState(false);
@@ -35,6 +39,7 @@ const OneTime = () => {
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
+    const [nextPage, setNextPage] = useState(false);
 
     const [triggerUpdate, setTriggerUpdate] = useState(true);
     const [loading, setLoading] = useState(false);
@@ -45,20 +50,23 @@ const OneTime = () => {
         async function fetchExpenses() {
             setLoading(true);
 
-            const items = await retrieveUserOneTimeExpenses({
-                uid: session?.user.id as string,
+            const items = await retrieveOneTimeExpenses({
+                uid,
                 timeFrom: defaultTimeFrom,
+                pagenate: true,
+                nextPage
             })
 
-            setData(items);
+            setData(items ?? []);
             setLoading(false);
         }
 
-        if (session?.user.authentication?.subscribed && triggerUpdate) {
+        if ((session?.user.authentication?.subscribed && triggerUpdate) || nextPage) {
             fetchExpenses();
-            setTriggerUpdate(false)
+            setTriggerUpdate(false);
+            setNextPage(false);
         }
-    }, [session, triggerUpdate])
+    }, [session, triggerUpdate, nextPage, uid])
 
     useEffect(() => {
         const handleClick = () => {
@@ -70,6 +78,9 @@ const OneTime = () => {
 
     const handlePageChange = (newPage: number) => {
         setTriggerUpdate(true);
+        if (newPage > currentPage) {
+            setNextPage(true);
+        }
         if (newPage > 0 && newPage <= totalPages) {
             setCurrentPage(newPage);
         }
@@ -107,7 +118,11 @@ const OneTime = () => {
 
     async function handleDeleteItem(item: IOneTimeExpense) {
         if (session?.user.id && item.id) {
-            await deleteItem({ uid: session.user.id, itemType: "expenses", storeType: "oneTime", docId: item.id, createdAt: item.createdAt });
+            const idToken = await retrieveIdToken();
+            if (!idToken) return;
+
+            await deleteItem({ idToken, rootCol: expensesCol, subCol: oneTimeCol, item })
+
             removeCacheData(cacheKey, item.id);
             setTriggerUpdate(true);
         }
@@ -144,7 +159,7 @@ const OneTime = () => {
                         <tr>
                             <td colSpan={12}>
                                 <div className="w-full flex justify-center items-center">
-                                    {loading ? <LoadingSpinner /> : "No results found."}
+                                    {loading ? <LoadingSpinner /> : <div className="py-6"><NoResultsFound /></div>}
                                 </div>
                             </td>
                         </tr>
@@ -214,7 +229,7 @@ const OneTime = () => {
             )}
 
             {(editModelOpen && fillItem) && (
-                <EditOneTimeExpense fillItem={fillItem} setDisplayModal={setEditModalOpen} setTriggerUpdate={setTriggerUpdate}/>
+                <EditOneTimeExpense fillItem={fillItem} setDisplayModal={setEditModalOpen} setTriggerUpdate={setTriggerUpdate} />
             )}
         </div>
     )

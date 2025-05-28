@@ -2,7 +2,7 @@
 import ProfileOverview from './ProfileOverview';
 import ProfileSettings from './ProfileSettings/ProfileSettings';
 import ProfileReferralData from './ReferralProgram/ProfileReferralData';
-import ProfileMarketplaceConnect from './ConnectAccounts/ProfileMarketplaceConnect';
+import ProfileMarketplaceConnect from './ConnectAccounts/ConnectAccounts';
 import DangerZone from './DangerZone';
 
 const ProfileContent = () => {

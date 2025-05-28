@@ -13,7 +13,7 @@ const SubConnectButton: React.FC<SubConnectButtonProps> = ({ text, custom_class,
         <button
             onClick={onClick}
             type="button"
-            className={`btn rounded-full text-white w-[8rem] text-center border-0 transition duration-300 ${custom_class}`}
+            className={`text-sm rounded-lg py-2 px-3 text-white w-[8rem] text-center border-0 transition duration-300 ${custom_class}`}
         >
             {loading ? (
                 <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

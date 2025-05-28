@@ -1,29 +1,32 @@
 import { IListing, IOrder, StoreType } from "@/models/store-data";
 import { cacheExpirationTime } from "./constants";
+import { ItemType } from "@/services/firebase/models";
+import { extractItemDate, extractItemId } from "@/services/firebase/extract";
 
-type CachedItem = IOrder | IListing;
+type ItemCacheType = { data: Record<string, ItemType>, cacheTimeFrom?: Date, cacheTimeTo?: Date, timestamp?: Date }
+
 
 // Function to check if cached data is still valid
-export function getCachedData(key: string, returnCacheTimes?: boolean) {
+export function getCachedData(key: string, returnCacheTimes?: boolean): ItemCacheType | void {
     const cachedData = sessionStorage.getItem(key);
     if (cachedData) {
         const parsedData = JSON.parse(cachedData);
         if (!parsedData) {
-            return null;
+            return;
         }
 
         // Check if the cached data is still valid based on expiration time
         if (Date.now() - parsedData.timestamp >= cacheExpirationTime) {
-            return null
+            return
         }
 
         if (returnCacheTimes) {
             return parsedData;
         } else {
-            return parsedData.data;
+            return { data: parsedData.data };
         }
     }
-    return null;
+    return;
 };
 
 
@@ -49,7 +52,7 @@ export function getCachedTimes(key: string): { cacheTimeFrom?: Date, cacheTimeTo
 }
 
 // Function to store data in sessionStorage with a timestamp
-export function setCachedData(key: string, data: any, cacheTimeFrom?: Date, cacheTimeTo?: Date) {
+export function setCachedData(key: string, data: Record<string, ItemType>, cacheTimeFrom?: Date, cacheTimeTo?: Date) {
     const cachedTimes = getCachedTimes(key);
     const timeFrom = cacheTimeFrom ? cacheTimeFrom : cachedTimes?.cacheTimeFrom;
     const timeTo = cacheTimeTo ? cacheTimeTo : cachedTimes?.cacheTimeTo;
@@ -66,70 +69,68 @@ export function setCachedData(key: string, data: any, cacheTimeFrom?: Date, cach
 };
 
 
-function isOrder(item: CachedItem): item is IOrder {
-    return 'sale' in item && !!item.sale;
-}
-
-export function addCacheData(key: string, data: any) {
+export function addCacheData(key: string, data: Record<string, ItemType>) {
     const cachedData = getCachedData(key, true);
 
-    // Determine key
-    const dataKey = data.transactionId ?? data.itemId;
+    // Merge into existing cache
+    const existingData: Record<string, ItemType> = cachedData?.data ?? {};
 
-    if (cachedData) {
-        cachedData.data[dataKey] = data;
-
-        // Convert object to array for sorting
-        const sortedArray = Object.values(cachedData.data as Record<string, CachedItem>)
-            .sort((a, b) => {
-                const dateA = isOrder(a) ? new Date(a.sale?.date ?? "").getTime() : new Date(a.dateListed ?? "").getTime();
-                const dateB = isOrder(b) ? new Date(b.sale?.date ?? "").getTime() : new Date(b.dateListed ?? "").getTime();
-                return dateB - dateA;
-            });
-
-        // Convert back to object using transactionId/itemId as key
-        const sortedData: Record<string, CachedItem> = {};
-        sortedArray.forEach(item => {
-            const key = isOrder(item) ? item.transactionId : item.itemId;
-            if (key) {
-                sortedData[key] = item;
-            }
-        });
-
-        const newCache = {
-            data: sortedData,
-            timestamp: cachedData.timestamp,
-            cacheTimeFrom: cachedData.cacheTimeFrom,
-            cacheTimeTo: cachedData.cacheTimeTo,
-        };
-
-        setCachedTimes(key, cachedData.cacheTimeFrom, cachedData.cacheTimeTo);
-        sessionStorage.setItem(key, JSON.stringify(newCache));
-    } else {
-        // Initialize as a new object
-        const dataKey = data.transactionId ?? data.itemId;
-        const newData = { [dataKey]: data };
-        setCachedData(key, newData);
-    }
-}
-
-
-export function updateCacheData(key: string, data: any) {
-    const cachedData = getCachedData(key, true);
-    if (cachedData) {
-
-        // Check if the incoming data is an order or a listing
-        let dataKey;
-        if (data.transactionId) {
-            dataKey = data.transactionId;
-        } else {
-            dataKey = data.itemId
+    // Add or update incoming items
+    for (const itemId in data) {
+        if (data.hasOwnProperty(itemId)) {
+            existingData[itemId] = data[itemId];
         }
+    }
 
+    // Sort by date descending
+    const sortedArray = Object.values(existingData).sort((a, b) => {
+        const dateAStr = extractItemDate({ item: a });
+        const dateBStr = extractItemDate({ item: b });
+
+        // Handle missing dates safely
+        if (!dateAStr && !dateBStr) return 0;
+        if (!dateAStr) return 1;
+        if (!dateBStr) return -1;
+
+        const dateA = new Date(dateAStr);
+        const dateB = new Date(dateBStr);
+        return dateB.getTime() - dateA.getTime();
+    });
+
+    // Reconstruct dictionary after sorting
+    const sortedData: Record<string, ItemType> = {};
+    for (const item of sortedArray) {
+        const itemId = extractItemId({ item });
+        if (itemId) {
+            sortedData[itemId] = item;
+        }
+    }
+
+    // Create new cache object
+    const newCache = {
+        data: sortedData,
+        timestamp: Date.now(),
+        cacheTimeFrom: cachedData?.cacheTimeFrom,
+        cacheTimeTo: cachedData?.cacheTimeTo
+    };
+
+    // Update cache
+    setCachedTimes(key, newCache.cacheTimeFrom, newCache.cacheTimeTo);
+    sessionStorage.setItem(key, JSON.stringify(newCache));
+}
+
+
+export function updateCacheData(key: string, data: ItemType) {
+    // Check if the incoming data is an order or a listing
+    const id = extractItemId({ item: data })
+    if (!id) return;
+    
+    const cachedData = getCachedData(key, true);
+    if (cachedData) {
         // Update the existing dictionary with the new data, keyed by data.id
         const updatedCacheData = {
             ...cachedData.data,
-            [dataKey]: data,
+            [id]: data,
         };
 
         const newCache = {
@@ -142,7 +143,7 @@ export function updateCacheData(key: string, data: any) {
         sessionStorage.setItem(key, JSON.stringify(newCache));
     } else {
         // If there's no existing cache, create a new cache with this item.
-        setCachedData(key, { [data.id]: data });
+        setCachedData(key, { [id]: data });
     }
 }
 
@@ -178,7 +179,8 @@ export function getCachedItem(key: string, itemKey: string) {
     }
 }
 
-export function storeDataFetched(cacheKey: string, storeType: StoreType): boolean {
+
+export function colDataFetched(cacheKey: string, storeType: StoreType): boolean {
     const raw = sessionStorage.getItem(`${cacheKey}-store`);
     let cache: StoreType[];
 
@@ -205,4 +207,42 @@ export function storeDataFetched(cacheKey: string, storeType: StoreType): boolea
 
     // Indicate we added it
     return false;
+}
+
+
+export function setLastVisibleCacheData(cacheKey: string, data: any) {
+    const raw = sessionStorage.getItem(cacheKey);
+
+    let parsed: Record<string, any> = {};
+
+    if (raw) {
+        try {
+            parsed = JSON.parse(raw);
+        } catch (error) {
+            console.error(`Failed to parse sessionStorage data for ${cacheKey}:`, error);
+        }
+    }
+
+    parsed.lastVisible = data;
+
+    try {
+        sessionStorage.setItem(cacheKey, JSON.stringify(parsed));
+    } catch (error) {
+        console.error(`Failed to save lastVisible to sessionStorage for ${cacheKey}:`, error);
+    }
+}
+
+
+export function getLastVisibleCacheData(cacheKey: string): any | null {
+    const raw = sessionStorage.getItem(cacheKey);
+
+    if (!raw) return null;
+
+    try {
+        const parsed = JSON.parse(raw);
+        return parsed.lastVisible ?? null;
+    } catch (error) {
+        console.error(`Failed to parse sessionStorage data for ${cacheKey}:`, error);
+        return null;
+    }
 }

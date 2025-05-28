@@ -3,7 +3,7 @@
 // Local Imports
 import LoadingSpinner from '@/app/components/LoadingSpinner';
 import { IListing, IOrder } from '@/models/store-data';
-import { retrieveIdToken, retrieveUserInventory } from '@/services/firebase/retrieve';
+import { retrieveInventory } from '@/services/bridges/retrieve';
 import { formatSalesForCSVExport, formatCOGSForCSVExport, formatInventoryForCSVExport, formatRefundsForCSVExport } from '@/utils/format';
 
 // External Imports
@@ -12,7 +12,6 @@ import { HiOutlineDownload } from "react-icons/hi";
 import { useSession } from 'next-auth/react';
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
-import { retrieveUserStoreTypes } from '@/services/firebase/retrieve-admin';
 
 
 interface IDownloadProps {
@@ -22,40 +21,22 @@ interface IDownloadProps {
 }
 
 const Download: React.FC<IDownloadProps> = ({ orders, timeFrom, timeTo }) => {
-    const { data: session } = useSession()
+    const { data: session } = useSession();
+    const uid = session?.user.id as string;
 
     const [inventory, setInventory] = useState<IListing[]>();
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchInventory = async () => {
-            if (!session) return;
-
-            const idToken = await retrieveIdToken();
-            if (!idToken) return;
-
-            const storeTypes = await retrieveUserStoreTypes({ idToken, itemType: "orders" });
-            if (!storeTypes) return;
-
-            const inventoryResults = await Promise.all(
-                storeTypes.map((storeType) => {
-                    return retrieveUserInventory({
-                        uid: session.user.id as string,
-                        timeFrom: timeFrom,
-                        timeTo: timeTo,
-                        storeType,
-                    }).then((inventory) => [storeType, inventory] as const);
-                })
-            );
-            const inventory = inventoryResults[inventoryResults.length - 1]?.[1] ?? [];
-
-            setInventory(inventory);
+            const items = await retrieveInventory({ uid, timeFrom, timeTo })
+            setInventory(items ?? []);
         };
 
         if (session?.user.authentication?.subscribed) {
             fetchInventory();
         }
-    }, [session, session?.user.id, timeFrom, timeTo, session?.user.authentication?.subscribed])
+    }, [session, uid, timeFrom, timeTo, session?.user.authentication?.subscribed])
 
     const handleDownload = async () => {
         setLoading(true);

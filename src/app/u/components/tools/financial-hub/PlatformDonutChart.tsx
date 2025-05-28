@@ -9,6 +9,8 @@ import { useHorizontalScroll } from "@/utils/useHorizontalScroll";
 // External Imports
 import { useEffect, useRef, useState } from "react";
 import ApexCharts from "apexcharts";
+import LoadingSpinner from '@/app/components/LoadingSpinner';
+import NoResultsFound from '../../dom/ui/NoResultsFound';
 
 interface CardPlatformDonutChartProps {
     orders: IOrder[];
@@ -79,7 +81,7 @@ const CardPlatformDonutChart: React.FC<CardPlatformDonutChartProps> = ({ orders,
             <div className="h-[500px]">
                 {/* Chart Options */}
                 {loading ? (
-                    <div>Loading...</div>
+                    <div className="h-full flex items-center justify-center"><LoadingSpinner /></div>
                 ) : (
                     <div className="flex overflow-x-auto scrollbar-hide mb-5" id="devices" ref={scrollRef}>
                         {Array.from(
@@ -113,8 +115,8 @@ const CardPlatformDonutChart: React.FC<CardPlatformDonutChartProps> = ({ orders,
                 )}
 
                 {orders.length === 0 && !loading && (
-                    <div className="text-center">
-                        No orders found in this range
+                    <div className='flex justify-center'>
+                        <NoResultsFound />
                     </div>
                 )}
             </div>

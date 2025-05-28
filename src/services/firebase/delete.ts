@@ -1,44 +1,62 @@
 // Local Imports
 import { firestore } from "@/lib/firebase/config";
-import { ItemType, StoreType } from "@/models/store-data";
-import { updateUserItemCountAdmin } from "./update-admin";
+import { extractItemId } from "./extract";
+import { updateItemCount } from "./admin-update";
+import { ItemType, RootColType, SubColType } from "./models";
 
 // External Imports
-import { doc, deleteDoc } from 'firebase/firestore';
+import { deleteDoc, deleteField, doc, setDoc } from "firebase/firestore";
+import { usersCol } from "./constants";
+import { retrieveUIDAdmin } from "./admin-retrieve";
 
 
-interface IDeleteItemProps {
-    uid: string;
-    itemType: ItemType,
-    storeType: StoreType,
-    docId: string;
-    createdAt?: string | null;
-    isAuto?: boolean;
+interface DeleteItemProps {
+    idToken: string;
+    rootCol: RootColType;
+    subCol: SubColType;
+    item: ItemType;
 }
-
-async function deleteItem({ uid, itemType, storeType, docId, createdAt, isAuto = false }: IDeleteItemProps): Promise<void> {
+export async function deleteItem({ idToken, rootCol, subCol, item }: DeleteItemProps) {
     try {
-        // Reference to the specific item document
-        const docRef = doc(firestore, itemType, uid, storeType, docId);
+        // Step 1: Extract Item ID
+        const id = extractItemId({ item });
+        if (!id) throw Error(`Item does not contain an ID`);
 
-        // Delete the document
+        // Step 2: Retrieve UID
+        const uid = await retrieveUIDAdmin({ idToken })
+
+        // Step 3: Get the related document reference
+        const docRef = doc(firestore, rootCol, uid, subCol, id);
+
+        // Step 4: Delete the document
         await deleteDoc(docRef);
 
-        let createdThisMonth = undefined;
-        if (createdAt) {
-            const createdDate = new Date(createdAt);
-            const now = new Date();
+        // Step 5: Decrement the item count
+        await updateItemCount({ idToken, item, rootCol, isNegated: true })
 
-            createdThisMonth =
-                createdDate.getFullYear() === now.getFullYear() &&
-                createdDate.getMonth() === now.getMonth();
-        }
-
-        await updateUserItemCountAdmin({ uid, itemType, amount: -1, isAuto, createdThisMonth })
-        console.log(`Item, with docId ${docId} deleted successfully.`);
     } catch (error) {
-        console.error('Error deleting item from Firestore:', error);
+        console.error(`Error in deleteItem: ${error}`);
+        return { error: `${error}` };
     }
 }
 
-export { deleteItem }
+
+export async function deleteUserOnboarding({ uid }: { uid: string }) {
+    try {
+        // Step 1: Retrieve document reference
+        const docRef = doc(firestore, usersCol, uid);
+        if (!docRef) return;
+
+        await setDoc(
+            docRef,
+            {
+                authentication: { onboarding: deleteField() }
+            },
+            { merge: true }
+        );
+
+    } catch (error) {
+        console.error(`Error in deleteUserOnboarding: ${error}`);
+        return { error: `${error}` };
+    }
+}

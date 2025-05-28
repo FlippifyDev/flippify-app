@@ -15,10 +15,10 @@ export const metadata: Metadata = {
         title: "Getting Started with Flippify | Flippify - Platform Features & Seller Guide",
         description:
             "Discover how to get the most out of Flippify. This guide walks new users through every essential feature—from uploading sales to managing listings. Simplify your reselling journey today.",
-        url: root.concat('/blog'),
+        url: root.concat('/blog/introduction'),
         images: [
             {
-                url: "https://i.imgur.com/1momgPu.png",
+                url: "https://i.imgur.com/2fiOTh7.png",
                 width: 2600,
                 height: 1440,
                 alt: "Flippify Getting Started Overview"

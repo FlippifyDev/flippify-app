@@ -131,6 +131,7 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
             status: row["Sale Status"] as OrderStatus || "Completed",
             additionalFees: row["Additional Fees"] ? parseFloat(row["Additional Fees"]) : null,
             customTag: row["Custom Tag"] || null,
+            createdAt: formatDateToISO(new Date()),
             sale,
             purchase,
             shipping,

@@ -15,7 +15,7 @@ export const metadata: Metadata = {
         title: "How To Upload Sales | Flippify - Tips, Updates & Insights for Sellers",
         description:
             "Dive into expert tips, feature announcements, and inspiring stories on the Flippify Blog. Learn how top resellers use Flippify to streamline inventory and maximize profits.",
-        url: root.concat('/blog'),
+        url: root.concat('/blog/how-to-upload-sales'),
         images: [
             {
                 url: "https://i.imgur.com/1momgPu.png",

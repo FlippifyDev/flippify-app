@@ -18,7 +18,7 @@ import CardPlatformDonutChart from "./PlatformDonutChart";
 
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import { formatOrdersForCSVExport } from "@/utils/format";
-import { retrieveOrders, retrieveOrderStoreTypes } from "@/services/bridges/retrieve";
+import { retrieveOneTimeExpenses, retrieveOrders, retrieveOrderStoreTypes } from "@/services/bridges/retrieve";
 import { defaultTimeFrom, exportCSVAllowedSubscriptionPlans, orderCacheKey } from "@/utils/constants";
 
 // External Imports
@@ -26,6 +26,7 @@ import { useEffect, useState } from "react";
 import { HiOutlineDownload } from "react-icons/hi";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { IOneTimeExpense } from "@/models/expenses";
 
 
 const Page = () => {
@@ -51,9 +52,8 @@ const Page = () => {
     const [exportTimeTo, setExportTimeTo] = useState<string>(timeTo);
     const [error, setError] = useState<string | undefined>(undefined);
 
-    // Using useEffect to initialize the chart only once when the component is mounted
     useEffect(() => {
-        async function fetchOrders() {
+        async function fetchItems() {
             setLoading(true);
 
             let items;
@@ -70,7 +70,7 @@ const Page = () => {
         }
 
         if (subscribed) {
-            fetchOrders();
+            fetchItems();
         }
     }, [session, selectedFilter, timeFrom, timeTo, subscribed, storeTypes, uid]);
 

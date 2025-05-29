@@ -4,7 +4,7 @@
 import LoadingSpinner from '@/app/components/LoadingSpinner';
 import { IListing, IOrder } from '@/models/store-data';
 import { retrieveInventory } from '@/services/bridges/retrieve';
-import { formatSalesForCSVExport, formatCOGSForCSVExport, formatInventoryForCSVExport, formatRefundsForCSVExport } from '@/utils/format';
+import { formatSalesForCSVExport, formatCOGSForCSVExport, formatInventoryForCSVExport, formatRefundsForCSVExport, formatOneTimeExpensesForCSVExport } from '@/utils/format';
 
 // External Imports
 import React, { useEffect, useState } from 'react'
@@ -12,15 +12,17 @@ import { HiOutlineDownload } from "react-icons/hi";
 import { useSession } from 'next-auth/react';
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
+import { IOneTimeExpense } from '@/models/expenses';
 
 
 interface IDownloadProps {
     orders: IOrder[];
+    expenses: IOneTimeExpense[];
     timeFrom: string;
     timeTo: string;
 }
 
-const Download: React.FC<IDownloadProps> = ({ orders, timeFrom, timeTo }) => {
+const Download: React.FC<IDownloadProps> = ({ orders, expenses, timeFrom, timeTo }) => {
     const { data: session } = useSession();
     const uid = session?.user.id as string;
 
@@ -46,6 +48,7 @@ const Download: React.FC<IDownloadProps> = ({ orders, timeFrom, timeTo }) => {
             { content: formatCOGSForCSVExport(orders, timeFrom, timeTo), name: 'cogs' },
             { content: formatInventoryForCSVExport(inventory ?? [], timeFrom, timeTo), name: 'inventory' },
             { content: formatRefundsForCSVExport(inventory ?? [], timeFrom, timeTo), name: 'refunds' },
+            { content: formatOneTimeExpensesForCSVExport(expenses, timeFrom, timeTo), name: 'one-time-expenses' },
         ].filter((x) => x.content);
 
         if (exports.length === 0) {

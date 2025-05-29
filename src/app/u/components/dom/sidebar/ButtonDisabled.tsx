@@ -47,7 +47,7 @@ const DisabledSideBarButton: React.FC<DisabledSideBarButtonProps> = ({
 
                 {/* Text – visibility controlled by isSidebarOpen */}
                 <span
-                    className={`absolute left-14 text-base text-left ${isActive ? "font-semibold" : "font-medium"
+                    className={`absolute left-14 text-sm text-left ${isActive ? "font-semibold" : "font-medium"
                         } ${isSidebarOpen ? "opacity-100 max-w-full" : "opacity-0 max-w-0"} transition-all duration-300 ease-in-out overflow-hidden`}
                     style={{ whiteSpace: "nowrap" }}
                 >

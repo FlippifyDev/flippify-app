@@ -15,31 +15,31 @@ const ProfileMarketplaceConnect = () => {
                 <ConnectAccount
                     name="eBay"
                     description="Automatically tracks inventory & order changes"
-                    image="/ebayLogo.png"
+                    image="/connect-accounts/ebayLogo.png"
                 />
 
                 <ConnectAccount
+                    name="StockX"
+                    image="/connect-accounts/StockXLogo.png"
+                />
+
+                {/* Shopify Connect Account Card */}
+                <ConnectAccount
+                    name="Shopify"
+                    image="/connect-accounts/ShopifyLogo.png"
+                />
+
+
+                <ConnectAccount
                     name="Depop"
-                    image="/DepopLogo.svg"
+                    image="/connect-accounts/DepopLogo.svg"
                 />
 
 
                 {/* Amazon Connect Account Card */}
                 <ConnectAccount
                     name="Amazon"
-                    image="/AmazonLogo.png"
-                />
-
-                {/* Shopify Connect Account Card */}
-                <ConnectAccount
-                    name="Shopify"
-                    image="/ShopifyLogo.png"
-                />
-
-                {/* Discord Connect Account Card */}
-                <ConnectAccount
-                    name="Discord"
-                    image="/DiscordLogo.png"
+                    image="/connect-accounts/AmazonLogo.png"
                 />
             </div>
         </div>

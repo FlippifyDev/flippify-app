@@ -1,5 +1,6 @@
 import { IListing, IOrder } from "@/models/store-data";
 import { filterOrdersByDateRange } from "./filters";
+import { IOneTimeExpense } from "@/models/expenses";
 
 // Helper function to format dates to readable format
 export const formatDate = (date: string) => {
@@ -16,8 +17,6 @@ function escapeCSVField(value: any): string {
 
 // Function to format orders for CSV export
 function formatOrdersForCSVExport(orders: IOrder[], timeFrom: string, timeTo: string): string | null {
-    console.log(orders)
-
     // Create the CSV header with new columns for Profit and ROI
     const csvHeader = [
         "Transaction ID",
@@ -118,7 +117,6 @@ export function formatSalesForCSVExport(
     timeFrom: string,
     timeTo: string
 ): string | null {
-    console.log("formatSalesForCSVExport", orders);
     const header = [
         "Sale Date",
         "Transaction ID",
@@ -158,8 +156,6 @@ export function formatCOGSForCSVExport(
     timeFrom: string,
     timeTo: string
 ): string | null {
-    console.log("formatCOGSForCSVExport", orders);
-
     const header = [
         "Purchase Date",
         "Transaction ID",
@@ -277,6 +273,43 @@ export function formatRefundsForCSVExport(
 
     return [header.join(","), ...rows].join("\n");
 }
+
+// —— 3) ONE-TIME EXPENSES ——
+export function formatOneTimeExpensesForCSVExport(
+    expenses: IOneTimeExpense[],
+    timeFrom: string,
+    timeTo: string
+): string | null {
+    const header = [
+        "Date",
+        "ID",
+        "Name",
+        "Amount",
+        "Provider",
+        "Currency",
+    ];
+
+    // Filter expenses by date (inclusive)
+    const filtered = expenses
+        .filter(exp => {
+            if (!exp.date) return false;
+            const d = new Date(exp.date).toISOString().slice(0, 10);
+            return d >= timeFrom && d <= timeTo;
+        });
+
+    if (!filtered.length) return null;
+
+    const rows = filtered.map(exp => [
+        exp.date ? formatDate(exp.date) : "N/A",
+        exp.id ? `"'${exp.id}"` : "N/A",
+        escapeCSVField(exp.name ?? "N/A"),
+        (exp.amount != null ? exp.amount.toFixed(2) : "0.00"),
+        escapeCSVField(exp.provider ?? "N/A"),
+        exp.currency ?? "N/A",
+    ].join(","));
+
+    return [header.join(","), ...rows].join("\n");
+  }
 
 
 function shortenText(name: string, length: number = 20): string {

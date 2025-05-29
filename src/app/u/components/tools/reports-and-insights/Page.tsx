@@ -6,11 +6,11 @@ import Revenue from './Revenue'
 import Expenses from './Expenses'
 import Download from './Download'
 import { IUser } from '@/models/user'
-import { IOrder } from '@/models/store-data'
+import { IListing, IOrder } from '@/models/store-data'
 import InventoryAndCogs from './InventoryAndCogs'
 import { formatDateToISO } from '@/utils/format-dates'
 import DateRangeSelector, { TimeRange, generateTimeRanges } from './DateRangeSelector'
-import { retrieveInventory, retrieveOrders, retrieveOrderStoreTypes } from '@/services/bridges/retrieve'
+import { retrieveInventory, retrieveOneTimeExpenses, retrieveOrders, retrieveOrderStoreTypes } from '@/services/bridges/retrieve'
 
 // External Imports
 import { useEffect, useState } from 'react'
@@ -18,6 +18,7 @@ import { useSession } from 'next-auth/react'
 import { retrieveOldestOrder } from '@/services/firebase/retrieve'
 import LoadingSpinner from '@/app/components/LoadingSpinner'
 import NoResultsFound from '../../dom/ui/NoResultsFound'
+import { IOneTimeExpense } from '@/models/expenses'
 
 
 
@@ -66,7 +67,7 @@ const Page = () => {
 
     // Data state
     const [sales, setSales] = useState<IOrder[]>()
-    const [inventoryBought, setInventoryBought] = useState<IOrder[]>()
+    const [oneTimeExpenses, setOneTimeExpenses] = useState<IOneTimeExpense[]>()
     const [loading, setLoading] = useState(true);
 
 
@@ -110,12 +111,12 @@ const Page = () => {
         const fetchItems = async () => {
             setLoading(true);
 
-            const sales = await retrieveOrders({ uid, timeFrom: periodStart, timeTo: periodEnd });
-            const inventory = await retrieveInventory({ uid, timeFrom: periodStart, timeTo: periodEnd });
+            const orders = await retrieveOrders({ uid, timeFrom: periodStart, timeTo: periodEnd });
+            const oneTime = await retrieveOneTimeExpenses({ uid, timeFrom: periodStart, timeTo: periodEnd });
             const missingInfo = missingOrderInfo(sales ?? []);
 
-            setSales(sales ?? []);
-            setInventoryBought(inventory ?? []);
+            setSales(orders ?? []);
+            setOneTimeExpenses(oneTime ?? [])
             setMissingOrderInfoCount(missingInfo);
 
             setLoading(false);
@@ -131,8 +132,8 @@ const Page = () => {
             <Card title='Tax report' className='max-w-xl'>
                 <div className='flex flex-col gap-10'>
                     <Revenue sales={sales ?? []} formatter={formatter} />
-                    <InventoryAndCogs sales={sales ?? []} formatter={formatter} inventoryBought={inventoryBought ?? []} periodStart={new Date(timeFrom)} periodEnd={new Date(timeTo)} />
-                    <Expenses sales={sales ?? []} formatter={formatter} />
+                    <InventoryAndCogs sales={sales ?? []} formatter={formatter} inventoryBought={sales ?? []} periodStart={new Date(timeFrom)} periodEnd={new Date(timeTo)} />
+                    <Expenses sales={sales ?? []} expenses={oneTimeExpenses ?? []} formatter={formatter} />
                 </div>
             </Card>
             <div className="space-y-4">
@@ -152,6 +153,7 @@ const Page = () => {
                                 />
                                 <Download
                                     orders={sales ?? []}
+                                    expenses={oneTimeExpenses ?? []}
                                     timeFrom={periodStart}
                                     timeTo={periodEnd}
                                 />

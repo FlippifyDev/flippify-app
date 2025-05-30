@@ -1,5 +1,6 @@
 export type CurrencyType = "USD" | "GBP" | "EUR" | "AUD" | "CAD";
 export type EmailVerification = "unverified" | "verifying" | "verified";
+export type Enterprise = "enterprise 1" | "enterprise 2" | "enterprise 3" | "enterprise 4"
 
 interface IUser {
     id?: string | null;
@@ -52,7 +53,7 @@ interface ILastFetchedDate {
 interface IAuthentication {
     emailVerified?: EmailVerification;
     onboarding?: boolean | null;
-    subscribed?: "free" | "standard" | "pro" | "enterprise" | null;
+    subscribed?: "free" | "standard" | "pro" | Enterprise | null;
 }
 
 interface IMetaData {

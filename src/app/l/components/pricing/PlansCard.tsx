@@ -44,7 +44,7 @@ interface PriceDisplayProps {
     value: number;
     currencySymbol: string;
 }
-const PriceDisplay: React.FC<PriceDisplayProps> = ({ value, currencySymbol }) => {
+export const PriceDisplay: React.FC<PriceDisplayProps> = ({ value, currencySymbol }) => {
     const props = useSpring({
         number: value,
         from: { number: 0 },
@@ -57,12 +57,6 @@ const PriceDisplay: React.FC<PriceDisplayProps> = ({ value, currencySymbol }) =>
     );
 };
 
-const calculateEnterprisePrice = (value: number): number => {
-    const base = 99.99;
-    const maxPrice = 199.99;
-    const multiplier = (maxPrice - base) / (1500 - 200);
-    return base + (value - 200) * multiplier;
-};
 
 const PlansCard: React.FC<PlansCardProps> = ({
     title,
@@ -160,84 +154,11 @@ const PlansCard: React.FC<PlansCardProps> = ({
         </>
     );
 
-    // Enterprise card content
-    const EnterpriseContent = (
-        <>
-            <div className="text-center">
-                <h2 className="font-bold text-[24px]">{title}</h2>
-                <p className="text-sm text-gray-600">{description}</p>
-            </div>
-            {/* Enterprise Price Display */}
-            <div className="flex flex-col items-center justify-center mt-4">
-                <div className="flex items-baseline">
-                    {enterpriseListings !== undefined ? (
-                        <>
-                            {priceRange === 0 ? (
-                                // Monthly: discounted price = 90% of base price
-                                <PriceDisplay value={calculateEnterprisePrice(enterpriseListings) * 0.5} currencySymbol={currencySymbol} />
-                            ) : (
-                                // Yearly: discounted price = 90% of (10x base price + 0.09)
-                                <PriceDisplay value={(calculateEnterprisePrice(enterpriseListings) * 10 + 0.09) * 0.5} currencySymbol={currencySymbol} />
-                            )}
-                        </>
-                    ) : (
-                        <span className="font-extrabold text-[40px] text-gray-900">Custom Pricing</span>
-                    )}
-                    <span className="ml-1 text-lg text-black font-semibold">
-                        /{priceRange === 0 ? "mo" : "yr"}
-                    </span>
-                </div>
-                {/* Crossed-out original price */}
-                {enterpriseListings !== undefined && (
-                    <span className="text-md text-gray-500 line-through">
-                        {priceRange === 0
-                            ? `${currencySymbol}${calculateEnterprisePrice(enterpriseListings).toFixed(2)}`
-                            : `${currencySymbol}${(calculateEnterprisePrice(enterpriseListings) * 10 + 0.09).toFixed(2)}`}
-                    </span>
-                )}
-            </div>
-            {/* Features Section */}
-            <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
-            {/* Enterprise Slider at the Bottom */}
-            <div className="flex flex-col items-center justify-end mt-4">
-                <label className="block text-gray-700 mb-2">
-                    AI-Automated Listings:{" "}
-                    {enterpriseListings !== undefined &&
-                        (enterpriseListings === 1500 ? "Unlimited" : enterpriseListings)}
-                </label>
-                <input
-                    type="range"
-                    min={100}
-                    max={1500}
-                    step={50}
-                    value={enterpriseListings}
-                    onChange={(e) => setEnterpriseListings && setEnterpriseListings(Number(e.target.value))}
-                    className="w-full slider-custom-thumb"
-                />
-            </div>
-            {/* Contact Us Button */}
-            <section className="mt-4">
-                <div className="flex">
-                    <a
-                        href={enterpriseContactUrl || discordSupportLink}
-                        className="btn border-0 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 text-opacity-100 w-2/3 mx-auto rounded-lg shadow-lg"
-                    >
-                        Contact Us
-                    </a>
-                </div>
-            </section>
-        </>
-    );
 
     return (
         <div className="col-span-1 flex justify-center w-full h-full mx-auto max-w-md">
             <div className={`relative w-full h-full rounded-2xl ${comingSoon ? "overflow-hidden select-none pointer-events-none" : ""}`}>
-                {isEnterprise ? (
-                    // Enterprise plan content with slider at the bottom and "Contact Us" button.
-                    <div className="bg-white rounded-2xl h-full p-6 flex flex-col justify-between">
-                        {EnterpriseContent}
-                    </div>
-                ) : specialPlan ? (
+                {specialPlan ? (
                     // Special plan with gradient background - FIXED to match height
                     <div className="h-full w-full flex">
                         <div className="w-full h-full">

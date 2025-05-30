@@ -7,22 +7,19 @@ import PlansCard from "./PlansCard";
 import PlansCardFreeWhatsIncluded from "@/app/components/plans/PlansCardFreeWhatsIncluded";
 import PlansCardStandardWhatsIncluded from "@/app/components/plans/PlansCardStandardWhatsIncluded";
 import PlansCardProWhatsIncluded from "@/app/components/plans/PlansCardProWhatsIncluded";
-import PlansCardEnterpriseWhatsIncluded from "@/app/components/plans/PlansCardEnterpriseWhatsIncluded";
 import PlansSubscribeNow from "./ButtonGetStarted";
 import Modal from "../../dom/ui/Modal";
 import ButtonUpgradeSubscription from "./ButtonUpgradeSubscription";
 import { fetchConversionRates } from "@/utils/currency-api";
 import { validateAlphaNumericInput } from "@/utils/input-validation";
-import { ENTERPRISE_MONTHLY_PID, ENTERPRISE_YEARLY_PID, FREE_MONTHLY_PID, FREE_YEARLY_PID, MAX_INPUT_LENGTH, PRO_MONTHLY_PID, PRO_YEARLY_PID, STANDARD_MONTHLY_PID, STANDARD_YEARLY_PID } from "@/utils/constants";
-
-const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
-const inter = Inter({ subsets: ["latin"] });
+import { FREE_MONTHLY_PID, FREE_YEARLY_PID, MAX_INPUT_LENGTH, PRO_MONTHLY_PID, PRO_YEARLY_PID, STANDARD_MONTHLY_PID, STANDARD_YEARLY_PID } from "@/utils/constants";
+import EnterpriseCard from "./EnterpriseCard";
 
 type Currency = "GBP" | "USD" | "EUR" | "AUD" | "CAD" | "JPY" | "NZD";
 
 const PlansPage = () => {
     const { data: session } = useSession();
-    const currency = (session?.user.preferences?.currency as Currency) || "GBP";
+    const currency = (session?.user.preferences?.currency as Currency) || "USD";
     const [selectedPlan, setSelectedPlan] = useState<number>(0); // 0 for monthly, 1 for yearly
     const [enterpriseListings, setEnterpriseListings] = useState<number>(200);
     const [displayCouponModal, setDisplayCouponModal] = useState<boolean>(false);
@@ -77,7 +74,7 @@ const PlansPage = () => {
             validateAlphaNumericInput(value, setCouponCode);
         }
     }
-    
+
     return (
         <div className="w-full h-full flex flex-col items-center relative p-2 sm:p-4">
             {displayCouponModal && (
@@ -131,7 +128,7 @@ const PlansPage = () => {
                         {couponError && (
                             <p className="text-red-500 text-sm mt-2 w-full text-center">{couponError}</p>
                         )}
-                        
+
                         <ButtonUpgradeSubscription
                             priceId={priceId}
                             handleDisplayModal={handleDisplayModal}
@@ -216,27 +213,13 @@ const PlansPage = () => {
                     conversionRates={conversionRates}
                     handleDisplayModal={handleDisplayModal}
                 />
-                <PlansCard
-                    title="Enterprise"
-                    description="For Large Scale Operations"
-                    prices={{ monthly: 199.99, yearly: 1999.90 }}
-                    discountedPrices={{ monthly: 99.99, yearly: 999.90 }}
-                    priceIds={{
-                        monthly: ENTERPRISE_MONTHLY_PID,
-                        yearly: ENTERPRISE_YEARLY_PID,
-                    }}
-                    isOnboarding={isOnboarding}
-                    currentSubscriptionName={currentSubscriptionName}
-                    whatsIncludedComponent={<PlansCardEnterpriseWhatsIncluded />}
+                <EnterpriseCard
                     priceRange={selectedPlan}
                     currency={currency}
                     conversionRates={conversionRates}
-                    isEnterprise={true}
-                    enterpriseListings={enterpriseListings}
-                    setEnterpriseListings={setEnterpriseListings}
-                    enterpriseContactUrl="/contact"
-                    comingSoon
+                    currentSubscriptionName={currentSubscriptionName}
                     handleDisplayModal={handleDisplayModal}
+                    isOnboarding={isOnboarding}
                 />
             </div>
         </div>

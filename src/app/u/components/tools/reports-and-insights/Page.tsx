@@ -19,6 +19,7 @@ import { retrieveOldestOrder } from '@/services/firebase/retrieve'
 import LoadingSpinner from '@/app/components/LoadingSpinner'
 import NoResultsFound from '../../dom/ui/NoResultsFound'
 import { IOneTimeExpense } from '@/models/expenses'
+import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper'
 
 
 
@@ -113,7 +114,7 @@ const Page = () => {
 
             const orders = await retrieveOrders({ uid, timeFrom: periodStart, timeTo: periodEnd });
             const oneTime = await retrieveOneTimeExpenses({ uid, timeFrom: periodStart, timeTo: periodEnd });
-            const missingInfo = missingOrderInfo(sales ?? []);
+            const missingInfo = missingOrderInfo(orders ?? []);
 
             setSales(orders ?? []);
             setOneTimeExpenses(oneTime ?? [])
@@ -128,53 +129,55 @@ const Page = () => {
     }, [uid, periodStart, periodEnd, session?.user.authentication?.subscribed])
 
     return (
-        <div className='flex flex-col md:flex-row gap-4'>
-            <Card title='Tax report' className='max-w-xl'>
-                <div className='flex flex-col gap-10'>
-                    <Revenue sales={sales ?? []} formatter={formatter} />
-                    <InventoryAndCogs sales={sales ?? []} formatter={formatter} inventoryBought={sales ?? []} periodStart={new Date(timeFrom)} periodEnd={new Date(timeTo)} />
-                    <Expenses sales={sales ?? []} expenses={oneTimeExpenses ?? []} formatter={formatter} />
-                </div>
-            </Card>
-            <div className="space-y-4">
-                <Card title="Options" className='max-w-lg'>
-                    <div className='w-full flex flex-row justify-between'>
-                        {timeRanges.length > 0 ? (
-                            <>
-                                <DateRangeSelector
-                                    value={selectedLabel}
-                                    onChange={(label, value) => {
-                                        setSelectedLabel(label);
-                                        const [startYear, endYear] = value.split("-").map(Number);
-                                        setPeriodStart(formatDateToISO(new Date(startYear, 0, 1)));
-                                        setPeriodEnd(formatDateToISO(new Date(endYear, 11, 31, 23, 59, 59, 999)));
-                                    }}
-                                    timeRanges={timeRanges}
-                                />
-                                <Download
-                                    orders={sales ?? []}
-                                    expenses={oneTimeExpenses ?? []}
-                                    timeFrom={periodStart}
-                                    timeTo={periodEnd}
-                                />
-                            </>
-                        ) : (
-                            <div className='w-full flex justify-center'>
-                                {loading ? <LoadingSpinner /> : <div className='py-6'><NoResultsFound /></div>}
-                            </div>
-                        )}
+        <LayoutSubscriptionWrapper anySubscriptions={["admin", "standard", "pro", "enterprise"]}>
+            <div className='flex flex-col md:flex-row gap-4'>
+                <Card title='Tax report' className='max-w-xl'>
+                    <div className='flex flex-col gap-10'>
+                        <Revenue sales={sales ?? []} formatter={formatter} />
+                        <InventoryAndCogs sales={sales ?? []} formatter={formatter} inventoryBought={sales ?? []} periodStart={new Date(timeFrom)} periodEnd={new Date(timeTo)} />
+                        <Expenses sales={sales ?? []} expenses={oneTimeExpenses ?? []} formatter={formatter} />
                     </div>
                 </Card>
-                <Card title="Disclaimer" className='max-w-lg'>
-                    The Tax Report in Flippify lets you neatly compile your buying, selling, and inventory data to streamline year-end tax prep. Please note that Flippify is not a substitute for professional tax software or advice. Always consult a qualified CPA or tax professional to confirm your filings are accurate and compliant.
-                </Card>
-                {(missingOrderInfoCount > 0) && (
-                    <Card title="Missing Info" className='max-w-lg shadow!'>
-                        <span className='font-semibold'>{missingOrderInfoCount} sold products</span> are missing a purchase date, pricing, or shipping cost.
+                <div className="space-y-4">
+                    <Card title="Options" className='max-w-lg'>
+                        <div className='w-full flex flex-row justify-between'>
+                            {timeRanges.length > 0 ? (
+                                <>
+                                    <DateRangeSelector
+                                        value={selectedLabel}
+                                        onChange={(label, value) => {
+                                            setSelectedLabel(label);
+                                            const [startYear, endYear] = value.split("-").map(Number);
+                                            setPeriodStart(formatDateToISO(new Date(startYear, 0, 1)));
+                                            setPeriodEnd(formatDateToISO(new Date(endYear, 11, 31, 23, 59, 59, 999)));
+                                        }}
+                                        timeRanges={timeRanges}
+                                    />
+                                    <Download
+                                        orders={sales ?? []}
+                                        expenses={oneTimeExpenses ?? []}
+                                        timeFrom={periodStart}
+                                        timeTo={periodEnd}
+                                    />
+                                </>
+                            ) : (
+                                <div className='w-full flex justify-center'>
+                                    {loading ? <LoadingSpinner /> : <div className='py-6'><NoResultsFound /></div>}
+                                </div>
+                            )}
+                        </div>
                     </Card>
-                )}
+                    <Card title="Disclaimer" className='max-w-lg'>
+                        The Tax Report in Flippify lets you neatly compile your buying, selling, and inventory data to streamline year-end tax prep. Please note that Flippify is not a substitute for professional tax software or advice. Always consult a qualified CPA or tax professional to confirm your filings are accurate and compliant.
+                    </Card>
+                    {(missingOrderInfoCount > 0) && (
+                        <Card title="Missing Info" className='max-w-lg shadow!'>
+                            <span className='font-semibold'>{missingOrderInfoCount} sold products</span> are missing a purchase date, pricing, or shipping cost.
+                        </Card>
+                    )}
+                </div>
             </div>
-        </div>
+        </LayoutSubscriptionWrapper>
     )
 }
 

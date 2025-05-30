@@ -54,7 +54,7 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
 			</LayoutSubscriptionWrapper>
 
 			{/* Reports & Insights Button - Public*/}
-            <LayoutSubscriptionWrapper requiredSubscriptions={["!standard", "!pro", "!admin"]}>
+            <LayoutSubscriptionWrapper requiredSubscriptions={["!standard", "!pro", "!enterprise", "!admin"]}>
 				<DisabledSideBarButton
 					text="Reports & Insights"
 					redirect="reports-and-insights"
@@ -66,7 +66,7 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
 			</LayoutSubscriptionWrapper>
 
 			{/* Reports & Insights Button */}
-			<LayoutSubscriptionWrapper anySubscriptions={["standard", "pro", "admin"]}>
+			<LayoutSubscriptionWrapper anySubscriptions={["standard", "pro", "enterprise", "admin"]}>
 				<SidebarButton
 					text="Reports & Insights"
 					redirect="reports-and-insights"

@@ -20,6 +20,7 @@ const ProfileMarketplaceConnect = () => {
 
                 <ConnectAccount
                     name="StockX"
+                    description="Automatically tracks inventory & order changes"
                     image="/connect-accounts/StockXLogo.png"
                 />
 

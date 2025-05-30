@@ -34,6 +34,18 @@ const PlansCardProWhatsIncluded = () => {
                         tooltip="Manually add up to 96 listings at any time. Add custom information such as purchase price, platform, etc. When this listing sells, or you move it to sold then the listing is removed from your total and you can add another listing."
                     />
                 </li>
+                <li className="w-full">
+                    <PlansClickableBulletPoint
+                        text={`200 One Time Expense Entries /Month`}
+                        tooltip={`Record up to 200 individual one-time expenses, such as shipping supplies, equipment, or other non-recurring costs. These help calculate your net profit more accurately.`}
+                    />
+                </li>
+                <li className="w-full">
+                    <PlansClickableBulletPoint
+                        text={`9 Subscription Expense Entries`}
+                        tooltip={`Track up to 9 recurring expenses like monthly software, platform fees, or memberships. These entries are included in your ongoing expense calculations.`}
+                    />
+                </li>
             </ul>
 
             <div className="text-black font-semibold ml-2 mb-[-6px]">
@@ -49,22 +61,8 @@ const PlansCardProWhatsIncluded = () => {
                 </li>
                 <li className="w-full">
                     <PlansClickableBulletPoint
-                        text="Multi-Store Inventory Sync"
-                        tooltip="Keep inventory in sync across multiple stores to avoid overselling."
-                        comingSoon
-                    />
-                </li>
-                <li className="w-full">
-                    <PlansClickableBulletPoint
                         text="Advanced AI Listing Optimization & Smart Price Adjustments"
                         tooltip="Let AI fine-tune listings and adjust prices dynamically based on market trends."
-                        comingSoon
-                    />
-                </li>
-                <li className="w-full">
-                    <PlansClickableBulletPoint
-                        text="Priority AI Processing for Faster Listings & Insights"
-                        tooltip="Enjoy faster AI-driven listing creation and insights with priority processing."
                         comingSoon
                     />
                 </li>

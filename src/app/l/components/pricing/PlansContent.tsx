@@ -4,13 +4,12 @@ import PlansCard from "./PlansCard";
 import PlansCardFreeWhatsIncluded from "@/app/components/plans/PlansCardFreeWhatsIncluded";
 import PlansCardStandardWhatsIncluded from "@/app/components/plans/PlansCardStandardWhatsIncluded";
 import PlansCardProWhatsIncluded from "@/app/components/plans/PlansCardProWhatsIncluded";
-import PlansCardEnterpriseWhatsIncluded from "@/app/components/plans/PlansCardEnterpriseWhatsIncluded";
 import PricingComparisonTable from "./PlansComparisonTable";
 import React, { useState, useEffect, useCallback } from "react";
 import { Lato, Inter } from "next/font/google";
 import { fetchConversionRates } from "@/utils/currency-api";
 import CurrencyDropdown from "./PlansCardCurrencyDropdown";
-import { discordSupportLink } from "@/utils/constants";
+import EnterpriseCard from "./EnterpriseCard";
 
 
 const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
@@ -53,42 +52,24 @@ const PlansContent = () => {
 
     return (
         <div className="w-full h-full flex flex-col justify-center items-center mb-12 relative pb-20">
-            <div className="flex flex-col items-center space-y-5 text-center mt-2 md:mt-6">
-                <div className="flex flex-wrap justify-center animate-fadeInPrimary">
-                    <p
-                        className={`${lato.className} text-5xl w-4/5 sm:w-full text-gradient bg-gradient-to-tr from-textGradStart to-textGradEnd bg-clip-text text-transparent py-1`}
-                    >
-                        Pricing
-                        <a className={`${inter.className} text-white text-5xl font-bold`}>
-                            {" "}
-                            Made Easy
-                        </a>
-                    </p>
-                </div>
-                <div className="flex justify-center w-4/5 sm:w-full animate-fadeInSecondary">
-                    <p className="mx-4 mt-[-12px] mb-2 sm:mx-2 text-gray-300 text-md sm:text-lg text-center">
-                        Flexible Plans for Every eBay Seller: From Beginners to Experts
-                    </p>
-                </div>
-                <div className="flex justify-center w-4/5 sm:w-full items-center space-x-4">
-                    {/* Monthly/Yearly Toggle */}
-                    <label className="inline-flex items-center cursor-pointer">
-                        <input
-                            type="checkbox"
-                            value=""
-                            className="sr-only peer"
-                            checked={selectedPlan === 1}
-                            onChange={handleToggleChange}
-                        />
-                        <span className="mr-3 text-sm font-medium text-gray-300 select-none">
-                            Monthly
-                        </span>
-                        <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                        <span className="ms-3 text-sm font-medium text-gray-300 select-none">
-                            Yearly
-                        </span>
-                    </label>
-                </div>
+            <div className="flex justify-center w-4/5 sm:w-full items-center space-x-4">
+                {/* Monthly/Yearly Toggle */}
+                <label className="inline-flex items-center cursor-pointer">
+                    <input
+                        type="checkbox"
+                        value=""
+                        className="sr-only peer"
+                        checked={selectedPlan === 1}
+                        onChange={handleToggleChange}
+                    />
+                    <span className="mr-3 text-sm font-medium text-gray-300 select-none">
+                        Monthly
+                    </span>
+                    <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                    <span className="ms-3 text-sm font-medium text-gray-300 select-none">
+                        Yearly
+                    </span>
+                </label>
             </div>
 
             {/* Subscription Cards Grid - Using grid with equal heights in each row */}
@@ -142,27 +123,11 @@ const PlansContent = () => {
                         conversionRates={conversionRates}
                     />
                 </div>
-                <div className="h-full">
-                    <PlansCard
-                        title="Enterprise"
-                        description="For Large Scale Operations"
-                        prices={{ monthly: 199.99, yearly: 1999.90 }}
-                        discountedPrices={{ monthly: 99.99, yearly: 999.90 }}
-                        priceIds={{
-                            monthly: "price_1PfJ9YJJRepiHZ8d9ejubfba",
-                            yearly: "price_1PfJ9YJJRepiHZ8dXJSNvIx6",
-                        }}
-                        whatsIncludedComponent={<PlansCardEnterpriseWhatsIncluded />}
-                        priceRange={selectedPlan}
-                        currency={currency}
-                        conversionRates={conversionRates}
-                        isEnterprise={true}
-                        enterpriseListings={enterpriseListings}
-                        setEnterpriseListings={setEnterpriseListings}
-                        enterpriseContactUrl={discordSupportLink}
-                        comingSoon
-                    />
-                </div>
+                <EnterpriseCard
+                    priceRange={selectedPlan}
+                    currency={currency}
+                    conversionRates={conversionRates}
+                />
             </div>
 
             {/* Custom Currency Dropdown from Flowbite */}

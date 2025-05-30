@@ -17,8 +17,9 @@ export const subscriptionsExpensesCacheKey = "subscriptions-expenses"
 export const statusCacheKey = "HsdaIDF89S"
 export const statusCacheExpirationTime = 1000 * 60 * 2 // 2 min in milliseconds
 
-export const exportCSVAllowedSubscriptionPlans = ["standard", "pro", "enterprise"];
-export const importCSVAllowedSubscriptionPlans = ["standard", "pro", "enterprise"];
+export const enterpriseNames = ["enterprise 1", "enterprise 2", "enterprise 3", "enterprise 4"]
+export const exportCSVAllowedSubscriptionPlans = ["standard", "pro", ...enterpriseNames];
+export const importCSVAllowedSubscriptionPlans = ["standard", "pro", ...enterpriseNames];
 
 export const defaultTimeFrom = "2023-01-01T00:00:00Z";
 
@@ -26,20 +27,20 @@ export const defaultTimeFrom = "2023-01-01T00:00:00Z";
 export const FREE_MAX_AUTOMATIC_LISTINGS = 12;
 export const FREE_MAX_MANUAL_LISTINGS = 12;
 export const FREE_ONE_TIME_EXPENSES = 12;
-export const FREE_SUBSCRIPTION_EXPENSES = 6;
+export const FREE_SUBSCRIPTION_EXPENSES = 3;
 
 // Standard
 export const STANDARD_MAX_AUTOMATIC_LISTINGS = 48;
 export const STANDARD_MAX_MANUAL_LISTINGS = 48;
 export const STANDARD_ONE_TIME_EXPENSES = 100;
-export const STANDARD_SUBSCRIPTION_EXPENSES = 12;
+export const STANDARD_SUBSCRIPTION_EXPENSES = 6;
 
 
 // Pro
 export const PRO_MAX_AUTOMATIC_LISTINGS = 96;
 export const PRO_MAX_MANUAL_LISTINGS = 96;
 export const PRO_ONE_TIME_EXPENSES = 200;
-export const PRO_SUBSCRIPTION_EXPENSES = 24;
+export const PRO_SUBSCRIPTION_EXPENSES = 9;
 
 // Product IDs
 export const FREE_MONTHLY_PID = "price_1R6umYJJRepiHZ8duYSajDvz";
@@ -51,8 +52,19 @@ export const STANDARD_YEARLY_PID = "price_1R6umXJJRepiHZ8d473LpjVZ";
 export const PRO_MONTHLY_PID = "price_1R6umUJJRepiHZ8dEZib7Bd1";
 export const PRO_YEARLY_PID = "price_1R6umUJJRepiHZ8dUeqJXo5d";
 
-export const ENTERPRISE_MONTHLY_PID = "price_1PfJ9YJJRepiHZ8d9ejubfba";
-export const ENTERPRISE_YEARLY_PID = "price_1PfJ9YJJRepiHZ8dXJSNvIx6";
+export const ENTERPRISE_MONTHLY_PIDS = [
+    ["price_1RUUATJJRepiHZ8dq9X0ohAt", 19.99, 29.99],
+    ["price_1RUUATJJRepiHZ8dqWaMK9dL", 29.99, 39.99],
+    ["price_1RUUATJJRepiHZ8dvdTq7k60", 39.99, 49.99],
+    ["price_1RUUATJJRepiHZ8dAmJGNKcM", 49.99, 59.99]
+]
+
+export const ENTERPRISE_YEARLY_PIDS = [
+    ["price_1RUUATJJRepiHZ8dH0nhGGP3", 199.90, 299.90],
+    ["price_1RUUATJJRepiHZ8diwwFMeKS", 299.90, 399.90],
+    ["price_1RUUATJJRepiHZ8duKjoPTb2", 399.90, 499.90],
+    ["price_1RUUATJJRepiHZ8d4CeCmheX", 499.90, 599.90]
+]
 
 export const subscriptionLimits = {
     "free": {
@@ -73,11 +85,29 @@ export const subscriptionLimits = {
         "oneTimeExpenses": PRO_ONE_TIME_EXPENSES,
         "subscriptionExpenses": PRO_SUBSCRIPTION_EXPENSES
     },
-    "enterprise": {
+    "enterprise 1": {
+        "automatic": 500,
+        "manual": 500,
+        "oneTimeExpenses": 400,
+        "subscriptionExpenses": 12
+    },
+    "enterprise 2": {
         "automatic": 1000,
         "manual": 1000,
-        "oneTimeExpenses": 400,
-        "subscriptionExpenses": 36
+        "oneTimeExpenses": 600,
+        "subscriptionExpenses": 15
+    },
+    "enterprise 3": {
+        "automatic": 2000,
+        "manual": 2000,
+        "oneTimeExpenses": 800,
+        "subscriptionExpenses": 18
+    },
+    "enterprise 4": {
+        "automatic": 5000,
+        "manual": 5000,
+        "oneTimeExpenses": 1000,
+        "subscriptionExpenses": 21
     },
 }
 

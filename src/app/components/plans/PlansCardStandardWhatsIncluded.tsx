@@ -36,6 +36,18 @@ const PlansCardStandardWhatsIncluded = () => {
                 </li>
                 <li className="w-full">
                     <PlansClickableBulletPoint
+                        text={`100 One Time Expense Entries /Month`}
+                        tooltip={`Record up to 100 individual one-time expenses, such as shipping supplies, equipment, or other non-recurring costs. These help calculate your net profit more accurately.`}
+                    />
+                </li>
+                <li className="w-full">
+                    <PlansClickableBulletPoint
+                        text={`6 Subscription Expense Entries`}
+                        tooltip={`Track up to 6 recurring expenses like monthly software, platform fees, or memberships. These entries are included in your ongoing expense calculations.`}
+                    />
+                </li>
+                <li className="w-full">
+                    <PlansClickableBulletPoint
                         text="Export to CSV"
                         tooltip="Easily export your inventory, orders, and financials to CSV format for external use."
                     />
@@ -62,27 +74,6 @@ const PlansCardStandardWhatsIncluded = () => {
 					<PlansClickableBulletPoint
 						text="20 AI Automated Listings"
 						tooltip="Provide a product link, and our AI will create, list, and manage 25 listings for you, tracking them through to sale."
-						comingSoon
-					/>
-				</li>
-				<li className="w-full">
-					<PlansClickableBulletPoint
-						text="Shipping Label Generator"
-						tooltip="Print shipping labels directly from the platform for faster order processing."
-						comingSoon
-					/>
-				</li>
-				<li className="w-full">
-					<PlansClickableBulletPoint
-						text="Bulk Editing & Relisting Automation"
-						tooltip="Edit multiple listings at once and automatically relist unsold items."
-						comingSoon
-					/>
-				</li>
-				<li className="w-full">
-					<PlansClickableBulletPoint
-						text="Scheduled Listings & Auto-Drafts"
-						tooltip="Set listings to go live on a schedule and auto-save drafts for later."
 						comingSoon
 					/>
 				</li>

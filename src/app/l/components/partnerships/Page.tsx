@@ -8,7 +8,7 @@ import PartnershipsApplySection from "./PartnershipsApplySection";
 import PartnershipsSuccessSection from "./PartnershipsSuccessSection";
 import PartnershipsApplyButton from "./PartnershipsApplyButton";
 
-const PartnershipsContent = () => {
+const Page = () => {
     return (
         <div className="partnerships-details-container">
             <Hero
@@ -47,4 +47,4 @@ const PartnershipsContent = () => {
     );
 };
 
-export default PartnershipsContent;
+export default Page;

@@ -1,6 +1,6 @@
 import React from 'react';
 import Layout from '../components/layout/Layout';
-import PartnershipsContent from '../components/partnerships/PartnershipsContent';
+import Page from '../components/partnerships/Page';
 import Loading from '@/app/components/Loading';
 import { Suspense } from 'react';
 import ThemeSetter from '../../components/ThemeSetter';
@@ -46,7 +46,7 @@ export default function PartnershipsPage() {
             <ThemeSetter theme="dark" />
             <Suspense fallback={<Loading />}>
                 <Layout>
-                    <PartnershipsContent />
+                    <Page />
                 </Layout>
             </Suspense>
         </>

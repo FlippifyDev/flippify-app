@@ -135,7 +135,7 @@ const Navbar = () => {
         {
             label: "Partner Login",
             description: "Access your partner dashboard.",
-            href: "https://partnerships.flippify.io/",
+            href: "https://flippify.endorsely.com/login",
             icon: <FaSignInAlt className="text-lg" />,
         },
     ];

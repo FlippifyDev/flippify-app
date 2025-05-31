@@ -15,6 +15,7 @@ import { retrieveStatus } from "@/services/api/request";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { validateEmailInput } from "@/utils/input-validation";
+import { usersCol } from "@/services/firebase/constants";
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
@@ -40,7 +41,7 @@ const LoginContent = () => {
                 setErrorMessage("Invalid email or password");
             } else {
                 await firebaseSignIn(auth, email, password);
-                const userRef = doc(firestore, "users", auth.currentUser?.uid ?? "");
+                const userRef = doc(firestore, usersCol, auth.currentUser?.uid ?? "");
                 const userDoc = await getDoc(userRef);
                 const userData = userDoc.data() as IUser;
                 router.push(`/u/${userData.username}/dashboard`);

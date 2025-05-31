@@ -1,8 +1,6 @@
 "use server"
 
-import { IUser } from '@/models/user';
 import { firestoreAdmin } from '@/lib/firebase/config-admin';
-import { retrieveConnectedAccount } from '../firebase/retrieve';
 
 import { Session } from 'next-auth';
 import { usersCol } from '../firebase/constants';
@@ -10,7 +8,7 @@ import { usersCol } from '../firebase/constants';
 
 interface Props {
     store: string;
-    tokenData: { access_token: string, refresh_token?: string, expires_in: number, error?: string, error_description?: string }
+    tokenData: { access_token: string, refresh_token: string, id_token?: string, expires_in: number, error?: string, error_description?: string }
     session: Session
 }
 async function addToken({ store, tokenData, session }: Props) {
@@ -21,20 +19,19 @@ async function addToken({ store, tokenData, session }: Props) {
 
         const updatedData = {
             [`${store}AccessToken`]: tokenData.access_token,
+            [`${store}RefreshToken`]: tokenData.refresh_token,
             [`${store}TokenExpiry`]: Date.now() + tokenData.expires_in * 1000
         };
 
         // Ensure tokenData fields exist
-        if (store === "ebay") {
-            if (!tokenData.access_token || !tokenData.refresh_token || !tokenData.expires_in) {
-                throw new Error(`Invalid token data: Missing required fields.`);
-            }
-            updatedData[`${store}RefreshToken`] = tokenData.refresh_token
-        } else {
-            if (!tokenData.access_token || !tokenData.expires_in) {
-                throw new Error(`Invalid token data: Missing required fields.`);
-            }    
+        if (!tokenData.access_token || !tokenData.refresh_token || !tokenData.expires_in) {
+            throw new Error(`Invalid token data: Missing required fields.`);
         }
+
+        if (store === "stockx" && tokenData.id_token) {
+            updatedData[`${store}IdToken`] = tokenData.id_token;
+        }
+
 
         const userRef = firestoreAdmin.collection(usersCol).doc(session.user.id);
         const userSnapshot = await userRef.get();

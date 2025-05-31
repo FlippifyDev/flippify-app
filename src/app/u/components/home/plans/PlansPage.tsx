@@ -21,7 +21,6 @@ const PlansPage = () => {
     const { data: session } = useSession();
     const currency = (session?.user.preferences?.currency as Currency) || "USD";
     const [selectedPlan, setSelectedPlan] = useState<number>(0); // 0 for monthly, 1 for yearly
-    const [enterpriseListings, setEnterpriseListings] = useState<number>(200);
     const [displayCouponModal, setDisplayCouponModal] = useState<boolean>(false);
     const [displaySubscriptionChangeModal, setDisplaySubscriptionChangeModal] = useState<boolean>(false);
     const [priceId, setPriceId] = useState<string>("");
@@ -181,8 +180,8 @@ const PlansPage = () => {
                 <PlansCard
                     title="Standard"
                     description="For growing resellers"
-                    prices={{ monthly: 9.99, yearly: 99.90 }}
-                    discountedPrices={{ monthly: 4.99, yearly: 49.90 }}
+                    prices={{ monthly: 19.99, yearly: 199.90 }}
+                    discountedPrices={{ monthly: 9.99, yearly: 99.90 }}
                     priceIds={{
                         monthly: STANDARD_MONTHLY_PID,
                         yearly: STANDARD_YEARLY_PID,
@@ -199,8 +198,8 @@ const PlansPage = () => {
                 <PlansCard
                     title="Pro"
                     description="For experts"
-                    prices={{ monthly: 19.99, yearly: 199.90 }}
-                    discountedPrices={{ monthly: 9.99, yearly: 99.90 }}
+                    prices={{ monthly: 29.99, yearly: 299.90 }}
+                    discountedPrices={{ monthly: 19.99, yearly: 199.90 }}
                     priceIds={{
                         monthly: PRO_MONTHLY_PID,
                         yearly: PRO_YEARLY_PID,

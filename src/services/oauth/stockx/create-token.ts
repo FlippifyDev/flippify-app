@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 
-export async function createStockXToken(code: string): Promise<{ access_token: string, expires_in: number, error?: string, error_description?: string }> {
+export async function createStockXToken(code: string): Promise<{ access_token: string, refresh_token: string, id_token: string, expires_in: number, error?: string, error_description?: string }> {
     const CLIENT_ID = process.env.NEXT_PUBLIC_STOCKX_CLIENT_ID;
     const CLIENT_SECRET = process.env.STOCKX_CLIENT_SECRET;
     const REDIRECT_URI = process.env.NEXT_PUBLIC_STOCKX_REDIRECT_URI;
@@ -13,6 +13,8 @@ export async function createStockXToken(code: string): Promise<{ access_token: s
     if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI) {
         return {
             access_token: "",
+            refresh_token: "",
+            id_token: "",
             expires_in: 0,
             error: "Missing client credentials.",
             error_description: "Could not find client credentials."
@@ -37,6 +39,8 @@ export async function createStockXToken(code: string): Promise<{ access_token: s
             const errorData = await response.json();
             return {
                 access_token: "",
+                refresh_token: "",
+                id_token: "",
                 expires_in: 0,
                 error: errorData.error || "Unknown error",
                 error_description: errorData.error_description || "Failed to fetch token from StockX."
@@ -44,12 +48,15 @@ export async function createStockXToken(code: string): Promise<{ access_token: s
         }
 
         const tokenData = await response.json();
-        return tokenData as { access_token: string, expires_in: number };
+
+        return tokenData as { access_token: string, refresh_token: string, id_token: string, expires_in: number };
     } catch (error) {
         console.error('Error while creating StockX token:', error);
         return {
             access_token: "",
             expires_in: 0,
+            refresh_token: "",
+            id_token: "",
             error: "An error occurred while requesting the StockX token.",
             error_description: error instanceof Error ? error.message : "Unknown error"
         };

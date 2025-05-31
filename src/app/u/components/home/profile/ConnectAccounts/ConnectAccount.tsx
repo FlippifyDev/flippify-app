@@ -1,10 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
 
-import AmazonConnectButton from "./AmazonConnectButton";
-import EbayConnectButton from "./EbayConnectButton";
-import ShopifyConnectButton from "./ShopifyConnectButton";
 import ConnectButton from './ConnectButton';
+import Connect from "./Connect";
 
 interface ConnectAccountProps {
     name: string;
@@ -30,11 +28,11 @@ const ConnectAccount: React.FC<ConnectAccountProps> = ({ name, description, imag
 
             <div className='flex justify-end'>
                 {/* Connect/Disconnect Button */}
-                {name === "eBay" && <EbayConnectButton />}
-                {name === "StockX" && <ConnectButton unavailable={true} />}
+                {name === "eBay" && <Connect store="ebay" />}
+                {name === "StockX" && <Connect store="stockx" />}
                 {name === "Depop" && <ConnectButton unavailable={true} />}
-                {name === "Amazon" && <AmazonConnectButton />}
-                {name === "Shopify" && <ShopifyConnectButton />}
+                {name === "Amazon" && <ConnectButton unavailable={true} />}
+                {name === "Shopify" && <ConnectButton unavailable={true} />}
             </div>
         </div>
     );

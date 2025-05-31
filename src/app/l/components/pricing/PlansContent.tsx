@@ -94,8 +94,8 @@ const PlansContent = () => {
                     <PlansCard
                         title="Standard"
                         description="For growing sellers"
-                        prices={{ monthly: 9.99, yearly: 99.90 }}
-                        discountedPrices={{ monthly: 4.99, yearly: 49.90 }}
+                        prices={{ monthly: 19.99, yearly: 199.90 }}
+                        discountedPrices={{ monthly: 9.99, yearly: 99.90 }}
                         priceIds={{
                             monthly: "price_1R6umXJJRepiHZ8dXNPscGu8",
                             yearly: "price_1R6umXJJRepiHZ8d473LpjVZ",
@@ -111,8 +111,8 @@ const PlansContent = () => {
                     <PlansCard
                         title="Pro"
                         description="For experts"
-                        prices={{ monthly: 19.99, yearly: 199.90 }}
-                        discountedPrices={{ monthly: 9.99, yearly: 99.90 }}
+                        prices={{ monthly: 29.99, yearly: 299.90 }}
+                        discountedPrices={{ monthly: 19.99, yearly: 199.90 }}
                         priceIds={{
                             monthly: "price_1R6umUJJRepiHZ8dEZib7Bd1",
                             yearly: "price_1R6umUJJRepiHZ8dUeqJXo5d",

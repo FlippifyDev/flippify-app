@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 
-export type CurrentSubscriptionName = "Free - member" | "Standard - member" | "Pro - member" | "Enterprise - member";
+export type CurrentSubscriptionName = "Free - member" | "Standard - member" | "Pro - member" | "Enterprise 1 - member" | "Enterprise 2 - member" | "Enterprise 3 - member" | "Enterprise 4 - member";
 
 interface ButtonUpgradeSubscriptionProps {
     priceId: string;

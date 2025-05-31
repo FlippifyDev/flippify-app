@@ -42,16 +42,6 @@ const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
                                 <div className="text-xl font-bold">Standard</div>
                                 <div className="text-sm">For growing sellers</div>
                                 <div className="text-lg font-bold mt-2">
-                                    {currencySymbol}{selectedPlan === 0 ? (4.99 * rate).toFixed(2) : (49.90 * rate).toFixed(2)}<span className="text-sm font-medium">/{selectedPlan === 0 ? 'mo' : 'yr'}</span>
-                                </div>
-                                <div className="text-xs text-gray-500 line-through">
-                                    {currencySymbol}{selectedPlan === 0 ? (9.99 * rate).toFixed(2) : (99.90 * rate).toFixed(2)}
-                                </div>
-                            </th>
-                            <th className="w-1/5 py-5 px-6 text-center text-gray-700 bg-gray-50">
-                                <div className="text-xl font-bold">Pro</div>
-                                <div className="text-sm">For experts</div>
-                                <div className="text-lg font-bold mt-2">
                                     {currencySymbol}{selectedPlan === 0 ? (9.99 * rate).toFixed(2) : (99.90 * rate).toFixed(2)}<span className="text-sm font-medium">/{selectedPlan === 0 ? 'mo' : 'yr'}</span>
                                 </div>
                                 <div className="text-xs text-gray-500 line-through">
@@ -59,13 +49,23 @@ const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
                                 </div>
                             </th>
                             <th className="w-1/5 py-5 px-6 text-center text-gray-700 bg-gray-50">
-                                <div className="text-xl font-bold">Enterprise</div>
-                                <div className="text-sm">For businesses</div>
+                                <div className="text-xl font-bold">Pro</div>
+                                <div className="text-sm">For experts</div>
                                 <div className="text-lg font-bold mt-2">
                                     {currencySymbol}{selectedPlan === 0 ? (19.99 * rate).toFixed(2) : (199.90 * rate).toFixed(2)}<span className="text-sm font-medium">/{selectedPlan === 0 ? 'mo' : 'yr'}</span>
                                 </div>
                                 <div className="text-xs text-gray-500 line-through">
                                     {currencySymbol}{selectedPlan === 0 ? (29.99 * rate).toFixed(2) : (299.90 * rate).toFixed(2)}
+                                </div>
+                            </th>
+                            <th className="w-1/5 py-5 px-6 text-center text-gray-700 bg-gray-50">
+                                <div className="text-xl font-bold">Enterprise</div>
+                                <div className="text-sm">For businesses</div>
+                                <div className="text-lg font-bold mt-2">
+                                    {currencySymbol}{selectedPlan === 0 ? (49.99 * rate).toFixed(2) : (499.90 * rate).toFixed(2)}<span className="text-sm font-medium">/{selectedPlan === 0 ? 'mo' : 'yr'}</span>
+                                </div>
+                                <div className="text-xs text-gray-500 line-through">
+                                    {currencySymbol}{selectedPlan === 0 ? (79.99 * rate).toFixed(2) : (799.90 * rate).toFixed(2)}
                                 </div>
                             </th>
                         </tr>

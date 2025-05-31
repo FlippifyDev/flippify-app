@@ -13,7 +13,7 @@ export type OrderStatus =
 export type Condition = "new" | "used" | "opened" | "unopened" | "refurbished" | string;
 
 
-export const STORES = ["ebay"];
+export const STORES = ["ebay", "stockx"];
 export type HardcodedStoreType = typeof STORES[number];
 
 export type StoreType = HardcodedStoreType | string;

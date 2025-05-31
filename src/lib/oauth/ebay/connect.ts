@@ -1,5 +1,3 @@
-// Function argument types
-type SetConnected = React.Dispatch<React.SetStateAction<boolean>>;
 
 // OAuth scopes to give us permission to access users ebay information
 const SCOPES = [
@@ -43,17 +41,4 @@ const handleConnectEbay = () => {
 };
 
 
-const handleDisconnect = async (setConnected: SetConnected) => {
-	try {
-		const response = await fetch("/api/ebay/disconnect", { method: "POST" });
-		if (response.ok) {
-			setConnected(false);
-		}
-	} catch (error) {
-		console.error("Error disconnecting eBay:", error);
-	}
-};
-
-
-
-export { handleConnectEbay, handleDisconnect };
+export { handleConnectEbay };

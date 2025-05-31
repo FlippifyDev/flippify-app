@@ -1,11 +1,6 @@
-"use client";
+import { Inter } from 'next/font/google';
+import PartnershipsApplyButton from "./PartnershipsApplyButton";
 
-import Hero from "../dom/Hero";
-import Link from "next/link";
-import { FaArrowRight } from "react-icons/fa";
-import { Lato, Inter } from 'next/font/google';
-
-const lato = Lato({ weight: "900", style: "italic", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
 
 const OurPartnersContent = () => {
@@ -130,13 +125,7 @@ const OurPartnersContent = () => {
                 </div>
                 
                 <div className="mt-12 text-center">
-                    <Link 
-                        href="/l/partnerships/become-a-partner" 
-                        className="inline-flex items-center gap-2 bg-houseBlue hover:bg-houseHoverBlue text-white font-semibold py-3 px-6 rounded-full transition duration-300"
-                    >
-                        Join our partner network
-                        <FaArrowRight className="text-sm" />
-                    </Link>
+                    <PartnershipsApplyButton />
                 </div>
             </div>
 

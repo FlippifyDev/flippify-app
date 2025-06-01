@@ -211,8 +211,8 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal, setTriggerUpda
                         <Input type="text" placeholder="Enter quantity" title="Quantity" value={quantity} onChange={(e) => handleChange(e.target.value, "quantity", setQuantity)} />
                     </div>
                     <div className="flex flex-col sm:flex-row items-center w-full gap-4">
-                        <Input type="text" placeholder="Enter listing price" title="Listing Price" value={listingPrice} onChange={(e) => handleChange(e.target.value, "listingPrice", setListingPrice)} />
-                        <Input type="text" placeholder="Enter purchase price" title="Purchase Price (Optional)" value={purchasePrice} onChange={(e) => handleChange(e.target.value, "purchasePrice", setPurchasePrice)} />
+                        <Input type="text" placeholder="Enter listing price" title="Listing Price / unit" value={listingPrice} onChange={(e) => handleChange(e.target.value, "listingPrice", setListingPrice)} />
+                        <Input type="text" placeholder="Enter purchase price" title="Purchase Price  / unit (Optional)" value={purchasePrice} onChange={(e) => handleChange(e.target.value, "purchasePrice", setPurchasePrice)} />
                     </div>
                     <div className="flex flex-col sm:flex-row items-center w-full gap-4">
                         <Input type="text" placeholder="Enter purchase platform" title="Purchase Platform (Optional)" value={purchasePlatform} onChange={(e) => handleChange(e.target.value, "purchasePlatform", setPurchasePlatform)} />

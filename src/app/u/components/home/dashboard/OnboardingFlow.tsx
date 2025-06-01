@@ -13,6 +13,7 @@ import { updateUserPreferences } from '@/services/firebase/update';
 import { deleteUserOnboarding } from '@/services/firebase/delete';
 import { updateReferredBy } from '@/services/firebase/admin-update';
 import { retrieveIdToken } from '@/services/firebase/retrieve';
+import CurrencySelector from '../profile/ProfileSettings/CurrencySelector';
 
 const lato = Lato({ weight: '900', style: 'italic', subsets: ['latin'] });
 
@@ -52,6 +53,7 @@ const OnboardingProgressBar: React.FC<{ currentStep: number }> = ({ currentStep 
         </div>
     );
 };
+
 
 // Onboarding Flow Component
 const OnboardingFlow: React.FC = () => {
@@ -123,6 +125,7 @@ const OnboardingFlow: React.FC = () => {
         }
     }
 
+
     return (
         <div className="flex items-center justify-center pt-40">
             <div className="bg-white py-8 px-6 rounded-3xl shadow-md border-2 max-w-lg w-full">
@@ -189,17 +192,9 @@ const OnboardingFlow: React.FC = () => {
                         <p className="text-md text-black mb-1 font-semibold text-left animate-fadeInPrimary">
                             Currency
                         </p>
+
                         <div className="mb-6">
-                            <select
-                                value={currency}
-                                onChange={(e) => setCurrency(e.target.value as 'GBP' | 'USD' | 'EUR')}
-                                className="input input-bordered w-full animate-fadeInSecondary"
-                                aria-label="Preferred Currency"
-                            >
-                                <option value="GBP">GBP (£)</option>
-                                <option value="USD">USD ($)</option>
-                                <option value="EUR">EUR (€)</option>
-                            </select>
+                            <CurrencySelector value={currency} onChange={setCurrency} className="border !border-gray-300 bg-white py-3"/>
                         </div>
                         <button
                             disabled={!validInputs}

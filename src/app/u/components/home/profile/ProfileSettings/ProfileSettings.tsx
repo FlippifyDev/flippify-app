@@ -13,7 +13,7 @@ import {
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { updateStripeCustomerEmail } from "@/services/stripe/update";
 import { validateEmailInput } from "@/utils/input-validation";
-import CurrencySelector from "./ProfileCurrencySelector";
+import CurrencySelector from "./CurrencySelector";
 import Modal from "../../../dom/ui/Modal";
 import { updateUserPreferences } from "@/services/firebase/update";
 

@@ -125,15 +125,16 @@ const Orders: React.FC<OrdersProps> = ({ filter }) => {
                 <tbody>
                     {paginatedData.length > 0 ? (
                         paginatedData.map((order, index) => {
-                            const { transactionId, sale, purchase, customTag, status, storageLocation } = order;
+                            const { transactionId, sale, purchase, customTag, status, storageLocation, shipping } = order;
 
                             let soldFor: number, profit: number | "N/A", roi: number | "N/A";
                             const purchasePrice = purchase?.price ?? 0;
+                            const quantity = sale?.quantity ?? 0;
 
                             soldFor = sale?.price ?? 0;
 
                             if (purchasePrice) {
-                                profit = soldFor - purchasePrice;
+                                profit = (soldFor - purchasePrice) * quantity;
                                 roi = (profit / purchasePrice) * 100;
                             } else {
                                 profit = "N/A";
@@ -166,9 +167,7 @@ const Orders: React.FC<OrdersProps> = ({ filter }) => {
                                     <UpdateTableField currentValue={order?.storeType} docId={transactionId} item={order} docType={ordersCol} storeType={order.storeType} keyType="storeType" cacheKey={cacheKey} tooltip='Warning! Editing this may count towards your monthly orders.' triggerUpdate={() => setTriggerUpdate(true)} className='max-w-32 hover:bg-gray-100 transition duration-300' />
                                     <td className="w-32">{formatTableDate(order.sale?.date)}</td>
                                     <UpdateTableField currentValue={purchasePrice.toFixed(2)} docId={transactionId} item={order} docType={ordersCol} storeType={order.storeType} keyType="purchase.price" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} className='max-w-32 hover:bg-gray-100 transition duration-300' />
-                                    <td>
-                                        {soldFor.toFixed(2)}
-                                    </td>
+                                    <UpdateTableField currentValue={soldFor.toFixed(2)} docId={transactionId} item={order} docType={ordersCol} storeType={order.storeType} keyType="sale.price" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} className='max-w-32 hover:bg-gray-100 transition duration-300' />
                                     <td>
                                         {profit === "N/A" ? profit : profit.toFixed(2)}
                                     </td>

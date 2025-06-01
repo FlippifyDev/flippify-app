@@ -53,7 +53,7 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
 
         const idToken = await retrieveIdToken();
         if (!idToken) return;
-        console.log(docType)
+
         await updateMovedItem({ idToken, rootCol: docType, oldStoreType, item })
 
         updateCacheData(cacheKey, item);
@@ -80,6 +80,7 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
                 case "additionalFees":
                 case "purchase.price":
                 case "shipping.fees":
+                case "sale.price":
                     setValue(Number(value).toFixed(2))
                     set(item, keyType, Number(value));
                     break;
@@ -123,6 +124,7 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
             case "additionalFees":
             case "purchase.price":
             case "shipping.fees":
+            case "sale.price":
                 validatePriceInput(input, setValue);
                 break;
             case "purchase.date":

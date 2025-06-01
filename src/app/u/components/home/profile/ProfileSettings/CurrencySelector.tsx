@@ -1,9 +1,9 @@
+import { CurrencyType } from "@/models/user";
 import { useState, useRef, useEffect } from "react";
 import Flag from "react-world-flags";
 
-type Currency = "GBP" | "USD" | "EUR" | "AUD" | "CAD" | "JPY" | "NZD";
 
-const flagCodes: Record<Currency, string> = {
+const flagCodes: Record<CurrencyType, string> = {
     GBP: "GB",
     USD: "US",
     EUR: "EU",
@@ -14,13 +14,15 @@ const flagCodes: Record<Currency, string> = {
 };
 
 interface CurrencySelectorProps {
-    value: Currency;
-    onChange: (currency: Currency) => void;
+    value: CurrencyType;
+    onChange: (currency: CurrencyType) => void;
+    className?: string;
 }
 
 export default function CurrencySelector({
     value,
     onChange,
+    className
 }: CurrencySelectorProps) {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -44,7 +46,7 @@ export default function CurrencySelector({
                 id="dropdownCurrencyButton"
                 data-dropdown-toggle="dropdownCurrency"
                 data-dropdown-delay="500"
-                className="w-full py-2 px-4 rounded-lg bg-gray-50 border border-gray-500 text-sm flex items-center gap-2"
+                className={`${className} w-full py-2 px-4 rounded-lg bg-gray-50 border border-gray-500 text-sm flex items-center gap-2`}
                 aria-haspopup="listbox"
                 aria-expanded={isOpen}
                 onClick={() => setIsOpen((prev) => !prev)}
@@ -75,7 +77,7 @@ export default function CurrencySelector({
                             className={`px-4 py-2 text-sm cursor-pointer flex items-center gap-2 hover:bg-gray-100 ${curr === value ? "bg-gray-50" : ""
                                 }`}
                             onClick={() => {
-                                onChange(curr as Currency);
+                                onChange(curr as CurrencyType);
                                 setIsOpen(false);
                             }}
                         >

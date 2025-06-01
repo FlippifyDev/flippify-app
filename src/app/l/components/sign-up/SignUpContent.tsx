@@ -357,7 +357,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                     type="email"
                     placeholder="Email Address"
                     value={email}
-                    onChange={(e) => handleEmailInput(e.target.value)}
+                    onChange={(e) => handleEmailInput(e.target.value.toLowerCase())}
                     className="input input-bordered w-full bg-white placeholder-gray-400"
                 />
                 <div className="relative">

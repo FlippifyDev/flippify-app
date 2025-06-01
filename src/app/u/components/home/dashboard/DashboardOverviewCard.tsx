@@ -109,7 +109,7 @@ const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ salesData
                         </div>
                     </div>
                 </div>
-                <div className="stats shadow bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2 rounded-lg">
+                <div className="col-span-2 lg:col-span-1 stats shadow bg-white w-full flex-shrink-0 overflow-x-auto p-0 sm:p-2 rounded-lg">
                     <div className="stat">
                         <div className="stat-title text-sm sm:text-base text-houseBlue">ROI</div>
                         <div className="stat-value font-bold text-xl sm:text-2xl text-black">{roi}%</div>

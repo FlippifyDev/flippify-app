@@ -12,7 +12,6 @@ import { retrieveConnectedAccounts, retrieveIdToken } from "../firebase/retrieve
 import { DateFilterKeyType, ItemType, RootColType, STORES, SubColFilter, SubColType } from "../firebase/models";
 import { inventoryCacheKey, oneTimeExpensesCacheKey, orderCacheKey, subscriptionsExpensesCacheKey } from "@/utils/constants";
 import { expensesCol, expensesFilterKey, inventoryCol, inventoryFilterKey, oneTimeCol, ordersCol, ordersFilterKey, subscriptionsExpenseCol } from "../firebase/constants";
-import { formatDateToISO } from "@/utils/format-dates";
 
 
 interface RetrieveProps {
@@ -154,8 +153,16 @@ export async function retrieveItems({ uid, rootCol, cacheKey, filterKey, timeFro
         // Step 7: Write the full merged cache back once
         setCachedData(cacheKey, mergedData, new Date(timeFrom), timeTo ? new Date(timeTo) : new Date());
 
-        // Step 8: Filter cache by date
-        return filterItemsByDate({ items: mergedArray, filterKey, timeFrom, timeTo });
+        // Step 8: Convert to array
+        let filteredItems = Object.values(mergedData);
+
+        // Step 9 Filter items by storeType === subCol if subCol is provided
+        if (subCol) {
+            filteredItems = filteredItems.filter((item) => (item as any)?.storeType === subCol);
+        }
+
+        // Step 10: Filter by date
+        return filterItemsByDate({ items: filteredItems, filterKey, timeFrom, timeTo });
     } catch (error) {
         console.log(`Error in retrieveItems: ${error}`);
     }

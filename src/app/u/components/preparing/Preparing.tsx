@@ -47,7 +47,10 @@ const Preparing = () => {
 
 
     return (
-        <div className="w-full h-screen bg flex flex-col justify-center items-center">
+        <div className="w-full h-screen bg flex flex-col justify-center items-center text-center">
+            <div className="mb-24">
+                <p className="text-lg font-bold text-gray-700">Please do not close this tab or exit until complete.</p>
+            </div>
             <div>
                 <LoadingAnimation text={joke} type="stack-loader" />
             </div>

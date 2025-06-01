@@ -45,13 +45,13 @@ const DashboardOverviewCard: React.FC<DashboardOverviewCardProps> = ({ salesData
 
         salesData.forEach((order: IOrder) => {
             if (order.status !== 'Completed' || !order.sale?.date || !order.purchase?.price || !order.sale.quantity) return;
-            const salePrice = order.sale.price || 0;
-            const purchasePrice = order.purchase.price || 0;
-            const shippingFees = order.shipping?.fees || 0;
+            const quantity = order.sale.quantity || 0;
+            const salePrice = (order.sale.price || 0) * quantity;
+            const purchasePrice = (order.purchase.price || 0) * quantity;
             const additionalFees = order.additionalFees || 0;
 
             totalRevenue += salePrice;
-            totalCosts += purchasePrice + shippingFees + additionalFees;
+            totalCosts += purchasePrice + additionalFees;
             totalSales += order.sale.quantity;
         });
 

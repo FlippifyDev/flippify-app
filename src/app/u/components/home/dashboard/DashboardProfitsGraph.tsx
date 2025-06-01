@@ -157,7 +157,7 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({
 				const saleRevenue = order.sale.price * quantity;
 
 				// Calculate costs for the order (Ignore shipping fees, covered by user)
-				const saleCost = order.purchase.price + (order.additionalFees ?? 0);
+				const saleCost = (order.purchase.price * quantity) + (order.additionalFees ?? 0);
 
 				// Calculate profit for the order
 				const saleProfit = saleRevenue - saleCost;

@@ -153,15 +153,12 @@ export async function retrieveItems({ uid, rootCol, cacheKey, filterKey, timeFro
         // Step 7: Write the full merged cache back once
         setCachedData(cacheKey, mergedData, new Date(timeFrom), timeTo ? new Date(timeTo) : new Date());
 
-        // Step 8: Convert to array
-        let filteredItems = Object.values(mergedData);
+        // Step 8: Filter by subCol if provided
+        const filteredItems = subCol
+            ? mergedArray.filter((item) => (item as any)?.storeType === subCol)
+            : mergedArray;
 
-        // Step 9 Filter items by storeType === subCol if subCol is provided
-        if (subCol) {
-            filteredItems = filteredItems.filter((item) => (item as any)?.storeType === subCol);
-        }
-
-        // Step 10: Filter by date
+        // Step 9: Filter by date range
         return filterItemsByDate({ items: filteredItems, filterKey, timeFrom, timeTo });
     } catch (error) {
         console.log(`Error in retrieveItems: ${error}`);

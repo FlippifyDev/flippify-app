@@ -136,7 +136,7 @@ const NavbarProfileAvatar = () => {
     }
 
     return (
-        <div className="dropdown dropdown-end h-6 border-l border-uiBorder pl-6">
+        <div className="dropdown dropdown-end h-6 border-l border-uiBorder pl-2 lg:pl-6">
             <div
                 tabIndex={0}
                 role="button"
@@ -202,14 +202,6 @@ const NavbarProfileAvatar = () => {
                                     onClick={handleAdminOpen}>
                                     <span className='col-span-2 px-[0.75rem]'><MdOutlineAdminPanelSettings /></span>
                                     <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Admin</span>
-                                </button>
-                            </LayoutSubscriptionWrapper>
-                            <LayoutSubscriptionWrapper requiredSubscriptions={['admin']}>
-                                <button
-                                    className='relative w-full grid grid-cols-12 py-1 gap-5 items-center flex-wrap flex-shrink-0 align-items hover:bg-muted/10 active:bg-muted/30 transition duration-100'
-                                    onClick={handleTestingOpen}>
-                                    <span className='col-span-2 px-[0.75rem]'><TbTestPipe /></span>
-                                    <span className='col-span-10 text-start py-[0.25rem] text-[0.875rem]'>Testing</span>
                                 </button>
                             </LayoutSubscriptionWrapper>
                             <button

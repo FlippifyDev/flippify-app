@@ -9,13 +9,14 @@ interface InputProps {
     title?: string,
     titleClassName?: string,
     readOnly?: boolean;
-    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
-    onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void
-    onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+    onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 
-const Input: React.FC<InputProps> = ({ type, placeholder, value, className, readOnly, title, titleClassName, onChange, onBlur, onFocus }) => {
+const Input: React.FC<InputProps> = ({ type, placeholder, value, className, readOnly, title, titleClassName, onKeyDown, onChange, onBlur, onFocus }) => {
     return (
         <div className='flex flex-col gap-2 w-full'>
             <span className={`${titleClassName} text-gray-700`}>{title}</span>
@@ -26,6 +27,7 @@ const Input: React.FC<InputProps> = ({ type, placeholder, value, className, read
                 onChange={onChange}
                 onBlur={onBlur}
                 onFocus={onFocus}
+                onKeyDown={onKeyDown}
                 readOnly={readOnly}
                 className={`${className} input input-bordered`}
             />

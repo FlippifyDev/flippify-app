@@ -4,7 +4,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 // Local Imports
 import { createEbayToken } from '@/services/oauth/ebay/create-token';
-import { addEbayTokens } from '@/services/oauth/ebay/add-token';
+import { addToken } from '@/services/oauth/add-token';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         // Add the new tokens to the users doc in the database
-        const tokenAdditionResponse = await addEbayTokens(tokenData, session);
+        const tokenAdditionResponse = await addToken({ store: "stockx", tokenData, uid: session.user.id as string });
         if (tokenAdditionResponse && tokenAdditionResponse.error) {
             return res.status(404).json({ error: tokenAdditionResponse.error });
         }

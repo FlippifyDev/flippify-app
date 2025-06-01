@@ -2,20 +2,16 @@
 
 import { firestoreAdmin } from '@/lib/firebase/config-admin';
 
-import { Session } from 'next-auth';
 import { usersCol } from '../firebase/constants';
 
 
 interface Props {
     store: string;
     tokenData: { access_token: string, refresh_token: string, id_token?: string, expires_in: number, error?: string, error_description?: string }
-    session: Session
+    uid: string
 }
-async function addToken({ store, tokenData, session }: Props) {
+async function addToken({ store, tokenData, uid }: Props) {
     try {
-        if (!session?.user?.id) {
-            throw new Error("User is not authenticated");
-        }
 
         const updatedData = {
             [`${store}AccessToken`]: tokenData.access_token,
@@ -32,8 +28,7 @@ async function addToken({ store, tokenData, session }: Props) {
             updatedData[`${store}IdToken`] = tokenData.id_token;
         }
 
-
-        const userRef = firestoreAdmin.collection(usersCol).doc(session.user.id);
+        const userRef = firestoreAdmin.collection(usersCol).doc(uid);
         const userSnapshot = await userRef.get();
 
         // Ensure connectedAccounts is an object, not null

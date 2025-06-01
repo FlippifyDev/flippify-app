@@ -1,8 +1,14 @@
 import { IListing, IOrder } from "@/models/store-data";
 import { IOneTimeExpense, ISubscriptionExpense } from "@/models/expenses";
 
-export type HardcodedStoreType = typeof STORES[number];
-export const STORES = ["ebay"];
+export const STORES = ["ebay", "stockx"];
+
+export const storeToStoreName = {
+    "ebay": "eBay",
+    "stockx": "StockX"
+}
+
+export type HardcodedStoreType = keyof typeof storeToStoreName;
 
 export type ItemType = ISubscriptionExpense | IOneTimeExpense | IOrder | IListing;
 export type SubColType = "oneTime" | "subscriptions" | HardcodedStoreType | string;

@@ -2,13 +2,13 @@
 
 // Local Imports
 import { usersCol } from "./constants";
-import { StoreType } from "@/models/store-data";
 import { RootColType } from "./models";
 import { firestoreAdmin } from "@/lib/firebase/config-admin";
 
 // External Imports
 import { getAuth } from "firebase-admin/auth";
 import { IUser } from "@/models/user";
+import { StoreType } from "@/models/store-data";
 
 
 export async function retrieveUIDAdmin({ idToken }: { idToken: string }) {
@@ -112,5 +112,34 @@ export async function retrieveRefereeUser({ referralCode }: { referralCode: stri
         return doc.data() as IUser;
     } catch (error) {
         console.error("Error retrieveRefereeUser:", error);
+    }
+}
+
+
+export async function retrieveConnectedAccount({ uid, storeType }: { uid: string; storeType: StoreType }): Promise<any | undefined> {
+    try {
+        const accounts = await retrieveConnectedAccounts({ uid });
+        if (!accounts || typeof accounts !== "object") return undefined;
+
+        return (accounts as Record<string, unknown>)[storeType];
+    } catch (error) {
+        console.error(`Error in retrieveConnectedAccount: ${error}`);
+        return undefined;
+    }
+}
+
+export async function retrieveConnectedAccounts({ uid }: { uid: string }): Promise<Record<string, unknown> | undefined> {
+    try {
+        const docRef = firestoreAdmin.collection(usersCol).doc(uid);
+        const snapshot = await docRef.get();
+        if (!snapshot.exists) {
+            throw new Error(`User with UID "${uid}" not found.`);
+        }
+        const data = snapshot.data();
+        
+        return data?.connectedAccounts as Record<string, unknown> | undefined;
+    } catch (error) {
+        console.error(`Error in retrieveConnectedAccounts: ${error}`);
+        return undefined;
     }
 }

@@ -2,15 +2,17 @@
 
 // Local Imports
 import { IUser } from "@/models/user";
+import { addToken } from "../oauth/add-token";
 import { FieldValue } from "firebase-admin/firestore";
 import { extractItemId } from "./extract";
 import { firestoreAdmin } from "@/lib/firebase/config-admin";
 import { formatDateToISO } from "@/utils/format-dates";
 import { retrieveUIDAdmin } from "./admin-retrieve";
-import { ItemType, RootColType } from "./models";
+import { accountToRefreshFunc } from "../oauth/utils";
 import { inventoryCol, usersCol } from "./constants";
 import { incrementItemCountFields } from "./admin-increment";
 import { IListing, IOrder, StoreType } from "@/models/store-data";
+import { HardcodedStoreType, ItemType, RootColType } from "./models";
 
 
 interface UpdateUserItemCountProps {
@@ -139,6 +141,66 @@ export async function updateResetDates({ uid }: { uid: string }): Promise<{ succ
         return { success: true };
     } catch (error) {
         console.error('Error updating reset dates:', error);
+        return { error: `${error}` };
+    }
+}
+
+export async function checkAndRefreshTokens({ uid }: { uid: string }): Promise<{ success?: boolean; error?: any }> {
+    try {
+        // Step 1: Retrieve document reference
+        const userRef = firestoreAdmin.collection(usersCol).doc(uid);
+        const snap = await userRef.get();
+        if (!snap.exists) {
+            console.warn(`User ${uid} not found.`);
+            return { success: false, error: `User ${uid} not found.` };
+        }
+
+        // Step 2: Extract data from reference
+        const user = snap.data();
+        if (!user) return { error: "User not found" };
+
+        // Step 3: Extract connected accounts
+        const accounts = user?.connectedAccounts as Record<string, unknown> | undefined;
+        if (!accounts) return { success: true };
+
+        // Step 5:
+        for (const [store, data] of Object.entries(accounts)) {
+            if (!data) continue;
+
+            const expiresData = (data as { [key: string]: any })[`${store}TokenExpiry`];
+            const refreshToken = (data as { [key: string]: any })[`${store}RefreshToken`];
+            if (!refreshToken) continue;
+
+            // Skip if token does not expire within the next 30 minutes
+            const now = Date.now(); // in milliseconds
+            const expiry = typeof expiresData === 'number' && expiresData < 1e12
+                ? expiresData * 1000 // convert seconds to ms if necessary
+                : expiresData;
+
+            const THIRTY_MINUTES = 30 * 60 * 1000;
+            if (expiry && expiry > now + THIRTY_MINUTES) {
+                continue; // token still valid, no need to refresh
+            }
+
+            const typedPlatform = store as HardcodedStoreType;
+            const refreshFn = accountToRefreshFunc[typedPlatform];
+            if (!refreshFn) continue;
+
+            try {
+                const tokenData = await refreshFn({ refresh_token: refreshToken });
+                if (tokenData) {
+                    const { error: addTokenError } = await addToken({ uid: user.id as string, store, tokenData });
+                    if (addTokenError) throw addTokenError;
+                }
+            } catch (error) {
+                console.error('Error refreshing tokens:', error);
+                continue
+            }
+        }
+
+        return { success: true }
+    } catch (error) {
+        console.error('Error refreshing tokens:', error);
         return { error: `${error}` };
     }
 }

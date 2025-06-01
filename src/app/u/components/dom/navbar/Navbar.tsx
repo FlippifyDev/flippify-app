@@ -40,7 +40,7 @@ const Navbar: React.FC<NavbarProps> = ({ handleDisplayModal }) => {
                 {title.replace("And", "&")}
             </div>
             <div className="w-full flex justify-end pr-2 items-center">
-                <div className="flex justify-end items-center mr-4 gap-1 text-offWhite text-[33px]">
+                <div className="flex justify-end items-center lg:mr-4 gap-1 text-offWhite text-[33px]">
                     <NabarItem
                         title="Add One Time Expenese"
                         isSubscribed={isSubscribed}
@@ -51,7 +51,7 @@ const Navbar: React.FC<NavbarProps> = ({ handleDisplayModal }) => {
                         isSubscribed={isSubscribed}
                         icon={<HiOutlineViewGridAdd className="p-2 hover:bg-muted/10 rounded" onClick={() => handleOnClick("add-subscription-expense")} />}
                     />
-                    <div className="h-6 mx-2 border-r border-uiBorder"></div>
+                    <div className="h-6 sm:mx-2 border-r border-uiBorder"></div>
                     <NabarItem
                         title="Upload Sales"
                         isSubscribed={isSubscribed}

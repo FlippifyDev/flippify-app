@@ -152,13 +152,14 @@ const Inventory = () => {
                         <th>COST ({currencySymbols[currency]})</th>
                         <th>LISTED PRICE ({currencySymbols[currency]})</th>
                         <th>DATE LISTED</th>
+                        <th>STORAGE</th>
                         <th>TAG</th>
                     </tr>
                 </thead>
                 <tbody>
                     {paginatedData.length > 0 ? (
                         paginatedData.map((item, index) => {
-                            const { purchase, customTag } = item;
+                            const { purchase, customTag, storageLocation } = item;
                             let purchasePrice = purchase?.price !== undefined ? purchase.price?.toFixed(2) : "0";
                             if (purchasePrice === undefined) {
                                 purchasePrice = "0";
@@ -197,6 +198,7 @@ const Inventory = () => {
                                         {item.price?.toFixed(2)}
                                     </td>
                                     <td className="min-w-32" onClick={() => handleDisplayOrderModal(item)}>{formatTableDate(item.dateListed)}</td>
+                                    <UpdateTableField currentValue={storageLocation} docId={item.itemId} item={item} docType={inventoryCol} storeType={item.storeType} keyType="storageLocation" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
                                     <UpdateTableField tdClassName={index + 1 === paginatedData.length ? "rounded-br-xl" : ""} currentValue={customTag} docId={item.itemId} item={item} docType={inventoryCol} storeType={item.storeType} keyType="customTag" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
                                 </tr>
                             );

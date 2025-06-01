@@ -1,65 +1,49 @@
 "use server"
 
-import { firestoreAdmin } from "@/lib/firebase/config-admin";
+async function refreshEbayToken({ refresh_token }: { refresh_token: string }): Promise<{ access_token: string, refresh_token: string, id_token: string, expires_in: number, error?: string, error_description?: string }> {
+    const CLIENT_ID = process.env.NEXT_PUBLIC_EBAY_CLIENT_ID;
+    const CLIENT_SECRET = process.env.EBAY_CLIENT_SECRET;
 
-async function refreshEbayToken(customerId: string): Promise<string> {
     try {
-        // Retrieve the user from Firestore
-        const userRef = firestoreAdmin.collection('users').doc(customerId);
-        const userSnapshot = await userRef.get();
-        const user = userSnapshot.data();
-
-        if (!user || !user.connectedAccounts?.ebay?.ebayRefreshToken) {
-            throw new Error('User or eBay refresh token not found');
-        }
-
-        const refreshToken = user.connectedAccounts.ebay.ebayRefreshToken;
-        const CLIENT_ID = process.env.NEXT_PUBLIC_EBAY_CLIENT_ID;
-        const CLIENT_SECRET = process.env.EBAY_CLIENT_SECRET;
-
         const basicAuth = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64');
 
         // Make the request to eBay to refresh the token
-        const tokenResponse = await fetch('https://api.ebay.com/identity/v1/oauth2/token', {
+        const response = await fetch('https://api.ebay.com/identity/v1/oauth2/token', {
             method: 'POST',
             headers: {
                 'Authorization': `Basic ${basicAuth}`,
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: `grant_type=refresh_token&refresh_token=${refreshToken}`,
+            body: `grant_type=refresh_token&refresh_token=${refresh_token}`,
         });
 
         // Check if the response is successful
-        if (!tokenResponse.ok) {
-            const errorData = await tokenResponse.json();
-            throw new Error(errorData.error_description || 'Error refreshing eBay token');
+        if (!response.ok) {
+            const errorData = await response.json();
+            return {
+                access_token: "",
+                refresh_token,
+                id_token: "",
+                expires_in: 0,
+                error: errorData.error || "Unknown error",
+                error_description: errorData.error_description || "Failed to refresh token from eBay."
+            };
         }
 
         // Parse the token data
-        const tokenData = await tokenResponse.json();
+        const tokenData = await response.json();
 
-        // If there was an error from eBay, throw an error
-        if (tokenData.error || !tokenData.ebayAccessToken || !tokenData.ebayTokenExpiry) {
-            throw new Error(tokenData.error_description || 'Error refreshing eBay token');
-        }
-
-        // Prepare updated eBay token data
-        const updatedEbayData = {
-            ebayAccessToken: tokenData.ebayAccessToken,
-            ebayTokenExpiry: Date.now() + tokenData.ebayTokenExpiry,
-            ebayRefreshToken: tokenData.ebayRefreshToken || refreshToken
-        };
-
-        // Save the updated tokens back to Firestore
-        await userRef.update({
-            connectedAccounts: { "ebay": updatedEbayData }
-        });
-
-        // Return the new access token
-        return tokenData.ebayAccessToken;
+        return tokenData as { access_token: string, refresh_token: string, id_token: string, expires_in: number };
     } catch (error) {
         console.error('Error refreshing eBay token:', error);
-        throw error; // Rethrow error to handle it further up the call stack if necessary
+        return {
+            access_token: "",
+            refresh_token,
+            expires_in: 0,
+            id_token: "",
+            error: "An error occurred while requesting the eBay token via refresh.",
+            error_description: error instanceof Error ? error.message : "Unknown error"
+        };
     }
 }
 

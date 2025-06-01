@@ -34,6 +34,31 @@ export const validateIntegerInput = (
 };
 
 
+export const validateSafeInput = (
+    value: string,
+    setFunction: (value: string) => void,
+    maxLength: number = 100
+): void => {
+    // Allow clearing the field
+    if (value === "") {
+        setFunction(value);
+        return;
+    }
+
+    // Reject if it exceeds the maximum length
+    if (value.length > maxLength) {
+        return;
+    }
+
+    // Only permit letters, numbers, spaces, hyphens, and underscores.
+    // This regex disallows typical "injection" characters like < > ' " ; \ / & etc.
+    const safeRegex = /^[\p{L}\p{N}\s_-]*$/u;
+
+    if (safeRegex.test(value)) {
+        setFunction(value);
+    }
+  };
+
 export const validateAlphaNumericInput = (
     value: string,
     setFunction: (value: string) => void,

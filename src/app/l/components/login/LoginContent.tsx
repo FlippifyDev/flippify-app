@@ -74,10 +74,10 @@ const LoginContent = () => {
 
 
     return (
-        <div className="min-h-screen flex flex-col md:flex-row items-center justify-center p-4 -mt-24 gap-16">
+        <div className="min-h-screen w-full lg:w-fit flex flex-col lg:flex-row items-center justify-center p-4 lg:-mt-24 gap-16">
             {(status === "active" || status === null) && (
                 <>
-                    <div className="bg-white rounded-3xl shadow-lg w-full max-w-md p-8">
+                    <div className="bg-white rounded-3xl shadow-lg w-full max-w-xl lg:max-w-md p-8">
                         {/* Logo */}
                         <h2 className={`${lato.className} pb-1 text-[40px] flex justify-center font-bold mb-4 text-black`}>
                             flippify

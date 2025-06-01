@@ -28,7 +28,7 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ sal
 			const shippingCost = order.shipping?.fees || 0;
 			const otherCosts = order.additionalFees || 0;
 
-            const totalCosts = purchasePrice + shippingCost + otherCosts;
+            const totalCosts = purchasePrice + otherCosts;
             const estimatedProfit = salePrice - totalCosts;
 
 			return {

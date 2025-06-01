@@ -148,15 +148,16 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({
 
 				// Parse the order date
                 const saleDate = new Date(order.sale.date);
+                const quantity = order.sale.quantity;
 
 				// Ensure order has a purchase price and order price
-				if (!order.purchase.price || !order.sale.price) continue;
+                if (!order.purchase.price || !order.sale.price || !quantity) continue;
 
 				// Calculate revenue for the order
-				const saleRevenue = order.sale.price;
+				const saleRevenue = order.sale.price * quantity;
 
-				// Calculate costs for the order
-				const saleCost = order.purchase.price + (order.shipping?.fees ?? 0) + (order.additionalFees ?? 0);
+				// Calculate costs for the order (Ignore shipping fees, covered by user)
+				const saleCost = order.purchase.price + (order.additionalFees ?? 0);
 
 				// Calculate profit for the order
 				const saleProfit = saleRevenue - saleCost;

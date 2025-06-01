@@ -1,4 +1,4 @@
-export type CurrencyType = "USD" | "GBP" | "EUR" | "AUD" | "CAD";
+export type CurrencyType = "GBP" | "USD" | "EUR" | "AUD" | "CAD" | "JPY" | "NZD";;
 export type EmailVerification = "unverified" | "verifying" | "verified";
 export type Enterprise = "enterprise 1" | "enterprise 2" | "enterprise 3" | "enterprise 4"
 

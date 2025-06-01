@@ -224,9 +224,10 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
     const { transactionId, sale, purchase, shipping, additionalFees, customTag, storeType, listingDate, storageLocation, condition } = order;
 
     let soldFor: number, profit: number | "N/A", roi: number | "N/A";
-    const purchasePrice = purchase?.price ?? 0;
+    const quantity = sale?.quantity ?? 0
+    const purchasePrice = (purchase?.price ?? 0) * quantity;
 
-    soldFor = sale?.price ?? 0;
+    soldFor = (sale?.price ?? 0) * quantity;
 
     if (purchasePrice) {
         profit = soldFor - purchasePrice;
@@ -455,10 +456,10 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                 </tr>
                 <tr className='border-b'>
                     <td className="py-4 px-6 font-medium text-gray-800">
-                        Purchased price ({currencySymbol})
+                        Purchased price ({currencySymbol}) / unit
                     </td>
                     <UpdateTableField
-                        currentValue={purchasePrice.toFixed(2)}
+                        currentValue={purchase?.price?.toFixed(2)}
                         docId={transactionId}
                         item={order}
                         docType='orders'
@@ -472,7 +473,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                 </tr>
                 <tr className='border-b'>
                     <td className="py-4 px-6 font-medium text-gray-800">
-                        Sale price ({currencySymbol})
+                        Sale price ({currencySymbol}) / unit
                     </td>
                     <UpdateTableField
                         currentValue={sale?.price?.toFixed(2)}
@@ -526,7 +527,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         Total Costs
                     </td>
                     <td className="py-4 px-6 ">
-                        <span className="text-gray-600">{currencySymbol}{(sellerCosts + (purchase?.price ?? 0)).toFixed(2)}</span>
+                        <span className="text-gray-600">{currencySymbol}{(sellerCosts + purchasePrice).toFixed(2)}</span>
                     </td>
                 </tr>
                 <tr className='border-b'>

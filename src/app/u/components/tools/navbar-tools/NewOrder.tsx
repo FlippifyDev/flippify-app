@@ -275,11 +275,22 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
             case "saleDate":
                 setFunction(value);
                 break;
-            case "quantity":
+
             case "salePrice":
             case "shippingFees":
                 validateNumberInput(value, setFunction);
                 break;
+            case "quantity":
+                if (fillItem) {
+                    const maxQuantity = fillItem.quantity ?? 0;
+                    if (Number(value) > maxQuantity) {
+                        setFunction(maxQuantity.toString());
+                        return
+                    }
+                }
+                validateNumberInput(value, setFunction);
+                break;
+
             default:
                 break;
         }
@@ -309,10 +320,10 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
                     </div>
                     <div className="flex flex-col sm:flex-row items-center w-full gap-4">
                         <Input type="text" placeholder="Enter item name" title="Product Name" value={itemName} onChange={(e) => handleChange(e.target.value, "itemName", setItemName)} />
-                        <Input type="text" placeholder="Enter quantity" title="Quantity" value={quantity} onChange={(e) => handleChange(e.target.value, "quantity", setQuantity)} />
+                        <Input type="text" placeholder="Enter quantity" title={fillItem ? `Quantity (Available ${fillItem.quantity})` : "Quantity"} value={quantity} onChange={(e) => handleChange(e.target.value, "quantity", setQuantity)} />
                     </div>
                     <div className="flex flex-col sm:flex-row items-center w-full gap-4">
-                        <Input type="text" placeholder="Enter sale price" title={`Sale Price (${currencySymbol})`} value={salePrice} onChange={(e) => handleChange(e.target.value, "salePrice", setSalePrice)} />
+                        <Input type="text" placeholder="Enter sale price" title={`Sale Price / unit`} value={salePrice} onChange={(e) => handleChange(e.target.value, "salePrice", setSalePrice)} />
                         <Input type="date" placeholder="Enter sale date" title="Sale Date" className="w-full" value={saleDate} onChange={(e) => handleChange(e.target.value, "saleDate", setSaleDate)} />
                     </div>
                     <div className="flex flex-col sm:flex-row items-center w-full gap-4">

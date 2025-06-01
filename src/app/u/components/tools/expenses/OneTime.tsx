@@ -151,7 +151,7 @@ const OneTime = () => {
                                     <td className={index + 1 === paginatedData.length ? "rounded-bl-xl" : ""}>{item.provider}</td>
                                     <td>{item.name}</td>
                                     <td>{currencySymbols[item.currency ?? "USD"]}{item.amount?.toFixed(2)}</td>
-                                    <td className={index + 1 === paginatedData.length ? "rounded-br-xl" : ""}>{formatTableDate(item.createdAt)}</td>
+                                    <td className={index + 1 === paginatedData.length ? "rounded-br-xl" : ""}>{formatTableDate(item.date)}</td>
                                 </tr>
                             );
                         })

@@ -6,7 +6,7 @@ import MarketItemSold from './MarketItemSold';
 import NoResultsFound from '../../dom/ui/NoResultsFound';
 import LoadingSpinner from '@/app/components/LoadingSpinner';
 import MarketItemListed from './MarketItemListed';
-import { fetchFunctions } from '@/services/market-compare/handler';
+import { fetchFunctions } from '@/services/market-compare/utils';
 import { validateSafeInput } from '@/utils/input-validation';
 import { retrieveConnectedAccounts } from '@/services/firebase/retrieve';
 import { IMarketListedItem, IMarketSoldItem } from '@/models/market-compare';
@@ -37,6 +37,7 @@ const Page = () => {
     }, [session?.user.id])
 
     async function handleCompareMarkets(type: "Listed" | "Sold") {
+        if (!query) return;
         if (!connectedAccounts?.length) return;
 
         setLoading(true);
@@ -87,6 +88,8 @@ const Page = () => {
             console.error(error)
         }
     }
+    const hasValidListedResults = Object.values(listedResults).some((v) => v !== undefined && v !== null);
+    const hasValidSoldResults = Object.values(soldResults).some((v) => v !== undefined && v !== null);
 
     return (
         <LayoutSubscriptionWrapper anySubscriptions={["admin", "standard", "pro", "enterprise"]}>
@@ -118,27 +121,35 @@ const Page = () => {
                 </section>
 
                 <section className="bg-white rounded-b-lg xs:rounded-tr-lg shadow-md">
-                    {(Object.keys(listedResults).length === 0 || Object.keys(soldResults).length === 0) ? (
-                        <div className='w-full flex justify-center py-16'>
-                            <NoResultsFound />
+                    {loading ? (
+                        <div className='w-full py-6 flex justify-center items-center'>
+                            <LoadingSpinner />
                         </div>
                     ) : (
                         <>
-                            {Object.keys(listedResults).length !== 0 &&
-                                (<div className='pt-4'>
-                                    <h1 className='px-4 text-sm font-semibold text-gray-500'>Listed</h1>
-                                    {Object.entries(listedResults).map(([platform, result]) => (
-                                        <MarketItemListed key={platform} platform={platform} item={result} currency={session?.user.preferences?.currency ?? "USD"} />
-                                    ))}
-                                </div>)
-                            }
-                            {Object.keys(soldResults).length !== 0 && (
-                                <div className='pt-4'>
-                                    <h1 className='px-4 text-sm font-semibold text-gray-500'>Sold</h1>
-                                    {Object.entries(soldResults).map(([platform, result]) => (
-                                        <MarketItemSold key={platform} platform={platform} item={result} currency={session?.user.preferences?.currency ?? "USD"} />
-                                    ))}
+                            {(!hasValidListedResults && !hasValidSoldResults) ? (
+                                <div className='w-full flex justify-center py-16'>
+                                    <NoResultsFound />
                                 </div>
+                            ) : (
+                                <>
+                                    {hasValidListedResults &&
+                                        (<div className='pt-4'>
+                                            <h1 className='px-4 text-sm font-semibold text-gray-500'>Listed</h1>
+                                            {Object.entries(listedResults).map(([platform, result]) => (
+                                                <MarketItemListed key={platform} platform={platform} item={result} currency={session?.user.preferences?.currency ?? "USD"} />
+                                            ))}
+                                        </div>)
+                                    }
+                                    {hasValidSoldResults && (
+                                        <div className='pt-4'>
+                                            <h1 className='px-4 text-sm font-semibold text-gray-500'>Sold</h1>
+                                            {Object.entries(soldResults).map(([platform, result]) => (
+                                                <MarketItemSold key={platform} platform={platform} item={result} currency={session?.user.preferences?.currency ?? "USD"} />
+                                            ))}
+                                        </div>
+                                    )}
+                                </>
                             )}
                         </>
                     )}

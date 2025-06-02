@@ -32,6 +32,7 @@ async function refreshEbayToken({ refresh_token }: { refresh_token: string }): P
 
         // Parse the token data
         const tokenData = await response.json();
+        tokenData["refresh_token"] = refresh_token;
 
         return tokenData as { access_token: string, refresh_token: string, id_token: string, expires_in: number };
     } catch (error) {

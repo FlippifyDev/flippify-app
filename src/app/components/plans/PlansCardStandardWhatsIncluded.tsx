@@ -64,6 +64,12 @@ const PlansCardStandardWhatsIncluded = () => {
                         tooltip="Easily export your inventory, orders, and financials to CSV format for external use."
                     />
                 </li>
+                <li className="w-full">
+                    <PlansClickableBulletPoint
+                        text="Market Comparison"
+                        tooltip="Instantly compare listing and sold prices across multiple marketplaces to identify the best deals and trends."
+                    />
+                </li>
 			</ul>
 
 			<div className="text-black font-semibold ml-2 mb-[-6px]">

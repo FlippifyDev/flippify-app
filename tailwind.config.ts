@@ -166,6 +166,8 @@ const config: Config = {
 			},
 			fontFamily: {
 				sans: ['Rubik', 'sans-serif'],
+                geist: ['"Geist Fallback"', 'sans-serif'],
+                inter: ['var(--font-inter)', 'sans-serif'],
 			},
 			screens: {
 				'xs': '480px',  // custom extra small    

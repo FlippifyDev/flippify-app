@@ -404,8 +404,8 @@ interface ShippingStatusRadioButtonsProps {
 
 const ShippingStatusRadioButtons: React.FC<ShippingStatusRadioButtonsProps> = ({ shippingStatus, setShippingStatus }) => {
     return (
-        <div className='flex flex-row items-center w-full'>
-            <label className="flex items-center p-2 gap-2 border rounded-l-md w-full">
+        <div className='flex flex-row items-center w-full text-sm sm:text-base'>
+            <label className="flex items-center p-2 gap-2 border rounded-l-md w-full h-full">
                 <input
                     type="radio"
                     name="shippingStatus"
@@ -416,7 +416,7 @@ const ShippingStatusRadioButtons: React.FC<ShippingStatusRadioButtonsProps> = ({
                 />
                 Not fulfilled
             </label>
-            <label className="flex items-center p-2 gap-2 border-y w-full">
+            <label className="flex items-center p-2 gap-2 border-y w-full h-full">
                 <input
                     type="radio"
                     name="shippingStatus"
@@ -427,7 +427,7 @@ const ShippingStatusRadioButtons: React.FC<ShippingStatusRadioButtonsProps> = ({
                 />
                 Shipped
             </label>
-            <label className="flex items-center p-2 gap-2 border rounded-r w-full">
+            <label className="flex items-center p-2 gap-2 border rounded-r w-full h-full">
                 <input
                     type="radio"
                     name="shippingStatus"

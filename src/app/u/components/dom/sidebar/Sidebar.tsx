@@ -46,14 +46,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, setIsSidebarOpen }) =>
 			<div className="p-2 h-full flex flex-col justify-between gap-4 overflow-y-auto scrollbar-hide pb-16">
 				<div className="flex flex-col">
                     <div className='pb-4'>
-                        <h2 className={`text-white text-base font-bold px-2 transition-all duration-150 ${isSidebarOpen ? 'opacity-100 delay-100' : 'opacity-0'}`} style={{ overflow: 'hidden' }}>
+                        <h2 className={`text-white text-base font-bold px-2 mb-1 transition-all duration-150 ${isSidebarOpen ? 'opacity-100 delay-100' : 'opacity-0'}`} style={{ overflow: 'hidden' }}>
 							Home
 						</h2>
 						<SidebarHomeButtons showAlert={showAlert} isSidebarOpen={isSidebarOpen} />
 					</div>
                     <div className={`w-full ${isSidebarOpen ? '' : 'border-b border-uiBorder'}`}></div>
                     <div className='pb-4'>
-                        <h2 className={`text-white text-base font-bold px-2 transition-all duration-150 ${isSidebarOpen ? 'opacity-100 delay-100' : 'opacity-0'}`} style={{ overflow: 'hidden' }}>
+                        <h2 className={`text-white text-base font-bold px-2 mb-1 transition-all duration-150 ${isSidebarOpen ? 'opacity-100 delay-100' : 'opacity-0'}`} style={{ overflow: 'hidden' }}>
 							Tools
 						</h2>
 						<SidebarToolButtons showAlert={showAlert} isSidebarOpen={isSidebarOpen} />

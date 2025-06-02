@@ -7,12 +7,12 @@ export async function handleLogin(uid: string): Promise<{ success?: boolean, err
         if (resetDateError) throw resetDateError;
 
         // Step 2: Check and refresh the users tokens
-        const { error: refreshTokensError } = await checkAndRefreshTokens({ uid });
-        if (refreshTokensError) throw refreshTokensError;
+        //const { error: refreshTokensError } = await checkAndRefreshTokens({ uid });
+        //if (refreshTokensError) throw refreshTokensError;
 
         return { success: true }
     } catch (error) {
-        console.error("An error occured whilst processing login");
-        return { error };
+        console.error("An error occured whilst processing login", error);
+        return { success: true, error };
     }
 }

@@ -57,7 +57,7 @@ export const authOptions: NextAuthOptions = {
                     const { connectedAccounts, ...userDoc } = (await retrieveUserAndCreate({ uid: user.id, email: user.email }) ?? {}) as IUser;
                     token.user = userDoc;
                 } catch (error) {
-                    console.error('Error retrieving user:', error);
+                    console.error('Error retrieving user (jwt):', error);
                 }
             }
             return token;
@@ -71,7 +71,7 @@ export const authOptions: NextAuthOptions = {
                     session.user = userDoc as IUser;
                 }
             } catch (error) {
-                console.error('Error retrieving user:', error);
+                console.error('Error retrieving user (session):', error);
             }
             return session;
         },

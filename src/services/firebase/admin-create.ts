@@ -11,6 +11,7 @@ import { userProfileImages } from "@/utils/constants";
 import { generateRandomChars } from "@/utils/generate-random";
 import { retrieveStripeCustomer } from "../stripe/retrieve";
 import { ItemType, RootColType, SubColType } from "./models";
+import { usersCol } from "./constants";
 
 
 interface CreateItemProps {
@@ -52,12 +53,13 @@ export async function createItem({ idToken, rootCol, subCol, item }: CreateItemP
 
 export async function createUser({ uid, email }: { uid: string, email: string }): Promise<IUser | void> {
     try {
+        console.log("Creating new user", uid, email)
         const referralCode = generateRandomChars(7);
         const randomUsername = generateRandomChars(10);
         const customerId = await retrieveStripeCustomer(null, email, referralCode);
 
         // Get the user document reference
-        const userRef = firestoreAdmin.collection('users').doc(uid);
+        const userRef = firestoreAdmin.collection(usersCol).doc(uid);
 
         const now = new Date();
         const resetDate = formatDateToISO(new Date(now.getFullYear(), now.getMonth() + 1, 1));

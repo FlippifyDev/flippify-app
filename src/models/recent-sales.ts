@@ -11,7 +11,7 @@ interface IHistoryGrid {
 	otherCosts?: number | null;
 	estimatedProfit?: number | null;
 	salePlatform?: string | null;
-	purchasePlatform?: string | null;
+	storageLocation?: string | null;
 	totalCosts?: number | null;
     status?: OrderStatus | null;
 }

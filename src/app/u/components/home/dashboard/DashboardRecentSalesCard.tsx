@@ -42,7 +42,7 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ sal
 				totalCosts: totalCosts,
 				estimatedProfit: estimatedProfit,
 				salePlatform: order.sale?.platform || 'N/A',
-				purchasePlatform: order.purchase?.platform || 'N/A',
+                storageLocation: order.storageLocation || 'N/A',
 				shippingCost: shippingCost,
 				otherCosts: otherCosts,
                 status: order.status,
@@ -66,14 +66,14 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ sal
 				<table className="table w-full">
 					<thead>
 						<tr className="text-lightModeText">
-							<th colSpan={2}>Date</th>
-							<th colSpan={3}>Product Name</th>
-							<th colSpan={1}>Quantity Sold</th>
-							<th colSpan={1}>Cost</th>
-							<th colSpan={1}>Sold For</th>
-							<th colSpan={1}>Profit</th>
-							<th colSpan={2}>Purchase Platform</th>
-                            <th colSpan={1}>Status</th>
+							<th colSpan={2}>DATE</th>
+							<th colSpan={3}>PRODUCT NAME</th>
+							<th colSpan={1}>QUANTITY SOLD</th>
+							<th colSpan={1}>COST</th>
+							<th colSpan={1}>SOLD FOR</th>
+							<th colSpan={1}>PROFIT</th>
+							<th colSpan={2}>STORAGE</th>
+                            <th colSpan={1}>STATUS</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -86,8 +86,8 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ sal
 									<td colSpan={1}>{currencySymbol}{order.totalCosts?.toFixed(2)}</td>
 									<td colSpan={1}>{currencySymbol}{order.salePrice?.toFixed(2)}</td>
 									<td colSpan={1}>{currencySymbol}{order.estimatedProfit?.toFixed(2)}</td>
-                                    <td className="" colSpan={2}>{order.purchasePlatform}</td>
-                                    <td className={`${order.status === 'Completed' ? "text-houseBlue font-[500]": ""}`} colSpan={1}>{order.status}</td>
+                                    <td colSpan={2}>{order.storageLocation}</td>
+                                    <td className={`${order.status === 'Completed' ? "text-houseBlue font-semibold": ""}`} colSpan={1}>{order.status}</td>
 								</tr>
 							))
 						) : (

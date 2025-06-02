@@ -1,7 +1,7 @@
 import DisabledSideBarButton from "./ButtonDisabled";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import SidebarButton from "./Button";
-import { FaBook, FaSearch } from "react-icons/fa";
+import { FaBalanceScaleLeft, FaBook, FaSearch } from "react-icons/fa";
 import { MdStickyNote2 } from "react-icons/md";
 import { HiDocumentReport } from "react-icons/hi";
 import { FaGlobe } from "react-icons/fa";
@@ -12,8 +12,10 @@ interface SidebarHomeButtonsProps {
 }
 
 const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, showAlert }) => {	
+    const allowedAnySubscriptions = ["standard", "pro", "enterprise", "admin"];
+    const unallowedRequiredSubscriptions = ["!standard", "!pro", "!enterprise", "!admin"];
 	return (
-		<div className="w-full flex flex-col">
+		<div className="w-full flex flex-col gap-1">
 			{/* Dashboard Button - Public*/}
 			<SidebarButton
 				text="Dashboard"
@@ -32,41 +34,40 @@ const SidebarHomeButtons: React.FC<SidebarHomeButtonsProps> = ({ isSidebarOpen, 
                 />
             </LayoutSubscriptionWrapper>
 
-			{/* Activity Log Button - Public*/}
-			<LayoutSubscriptionWrapper requiredSubscriptions={["!admin"]}>
+			{/* Market Comparison - Public*/}
+            <LayoutSubscriptionWrapper requiredSubscriptions={unallowedRequiredSubscriptions}>
 				<DisabledSideBarButton
-					text="Activity Log"
-					redirect="activity-log"
+					text="Market Comparison"
+					redirect="market-comparison"
 					isSidebarOpen={isSidebarOpen}
-                    symbol={<MdStickyNote2 className="text-base" />}
-					tooltip="Coming Soon"
+                    symbol={<FaBalanceScaleLeft className="text-base" />}
+                    tooltip="Your subscription does not include this"
 				/>
 			</LayoutSubscriptionWrapper>
 
-			{/* Activity Log Button - Admin*/}
-			<LayoutSubscriptionWrapper requiredSubscriptions={["admin"]}>
+			{/* Market Comparison - Admin*/}
+            <LayoutSubscriptionWrapper anySubscriptions={allowedAnySubscriptions}>
 				<SidebarButton
-					text="Activity Log"
-					redirect="activity-log"
+                    text="Market Comparison"
+                    redirect="market-comparison"
 					isSidebarOpen={isSidebarOpen}
-					symbol={<MdStickyNote2 className="text-lg" />}
+                    symbol={<FaBalanceScaleLeft className="text-lg" />}
 				/>
 			</LayoutSubscriptionWrapper>
 
 			{/* Reports & Insights Button - Public*/}
-            <LayoutSubscriptionWrapper requiredSubscriptions={["!standard", "!pro", "!enterprise", "!admin"]}>
+            <LayoutSubscriptionWrapper requiredSubscriptions={unallowedRequiredSubscriptions}>
 				<DisabledSideBarButton
 					text="Reports & Insights"
 					redirect="reports-and-insights"
 					isSidebarOpen={isSidebarOpen}
 					symbol={<HiDocumentReport className="text-xl" />}
                     tooltip="Your subscription does not include this"
-
 				/>
 			</LayoutSubscriptionWrapper>
 
 			{/* Reports & Insights Button */}
-			<LayoutSubscriptionWrapper anySubscriptions={["standard", "pro", "enterprise", "admin"]}>
+            <LayoutSubscriptionWrapper anySubscriptions={allowedAnySubscriptions}>
 				<SidebarButton
 					text="Reports & Insights"
 					redirect="reports-and-insights"

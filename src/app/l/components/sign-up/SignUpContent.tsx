@@ -86,11 +86,11 @@ const SignUpContent = () => {
                         });
 
                         if (result?.error) {
-                            console.error("Error during sign-in:", result.error);
+                            console.error("Error during sign-in (1):", result.error);
                             return;
                         }
                     } catch (error) {
-                        console.error(error)
+                        console.error("Error during sign-in (2):", error)
                     }
 
                     try {
@@ -102,7 +102,7 @@ const SignUpContent = () => {
                             }
                         }, { merge: true });
                     } catch (error) {
-                        console.error(error)
+                        console.error("Error setting onboarding: ", error)
                     }
 
                     try {
@@ -110,7 +110,7 @@ const SignUpContent = () => {
                         if (!idToken) return;
                         await updateAccessGranted({ idToken });
                     } catch (error) {
-                        console.error(error)
+                        console.error("Error update access granted: ", error)
                     }
 
                     clearInterval(checkVerificationInterval);

@@ -172,7 +172,7 @@ const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
                         {/* Subscription Expenses Entries */}
                         <tr className="border-b">
                             <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
-                            Subscription Expenses
+                                Subscription Expenses
                             </td>
                             <td className="py-4 px-6 text-center bg-gray-50">
                                 <span className="text-gray-600">3</span>
@@ -212,6 +212,26 @@ const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
                         <tr className="border-b">
                             <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
                                 Tax Report
+                            </td>
+                            <td className="py-4 px-6 text-center">
+                                <span className="text-lightModeText">✗</span>
+                            </td>
+                            <td className="py-4 px-6 text-center">
+                                <span className="text-houseBlue">✓</span>
+                            </td>
+                            <td className="py-4 px-6 text-center">
+                                <span className="text-houseBlue">✓</span>
+                            </td>
+                            <td className="py-4 px-6 text-center">
+                                <span className="text-houseBlue">✓</span>
+                            </td>
+                        </tr>
+
+
+                        {/* Market Comparison */}
+                        <tr className="border-b">
+                            <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
+                                Market Comparison
                             </td>
                             <td className="py-4 px-6 text-center">
                                 <span className="text-lightModeText">✗</span>

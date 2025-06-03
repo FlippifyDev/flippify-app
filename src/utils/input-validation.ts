@@ -57,7 +57,30 @@ export const validateSafeInput = (
     if (safeRegex.test(value)) {
         setFunction(value);
     }
-  };
+};
+
+
+export const validateMarketComparisonInput = (
+    value: string,
+    setFunction: (value: string) => void,
+    maxLength: number = 100
+): void => {
+    if (value === "") {
+        setFunction(value);
+        return;
+    }
+
+    if (value.length > maxLength) {
+        return;
+    }
+
+    const safeRegex = /^[\p{L}\p{N}\s:()\-—–&]+$/u;
+
+    if (safeRegex.test(value)) {
+        setFunction(value);
+    }
+};
+
 
 export const validateAlphaNumericInput = (
     value: string,

@@ -7,7 +7,7 @@ import NoResultsFound from '../../dom/ui/NoResultsFound';
 import LoadingSpinner from '@/app/components/LoadingSpinner';
 import MarketItemListed from './MarketItemListed';
 import { fetchFunctions } from '@/services/market-compare/utils';
-import { validateSafeInput } from '@/utils/input-validation';
+import { validateMarketComparisonInput, validateSafeInput } from '@/utils/input-validation';
 import { retrieveConnectedAccounts } from '@/services/firebase/retrieve';
 import { IMarketListedItem, IMarketSoldItem } from '@/models/market-compare';
 
@@ -66,7 +66,7 @@ const Page = () => {
     }
 
     function handleInput(value: string) {
-        validateSafeInput(value, setQuery)
+        validateMarketComparisonInput(value, setQuery)
     }
 
     async function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {

@@ -74,7 +74,7 @@ const LoginContent = () => {
 
 
     return (
-        <div className="min-h-screen w-full lg:w-fit flex flex-col lg:flex-row items-center justify-center p-4 lg:-mt-24 gap-16">
+        <div className="min-h-screen w-full flex flex-col lg:flex-row items-center justify-center p-4 lg:-mt-12 2xl:-mt-24 gap-16">
             {(status === "active" || status === null) && (
                 <>
                     <div className="bg-white rounded-3xl shadow-lg w-full max-w-xl lg:max-w-md p-8">

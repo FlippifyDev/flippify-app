@@ -163,7 +163,7 @@ const SignUpContent = () => {
     }, [])
 
     return (
-        <div className="min-h-screen w-full flex flex-col lg:flex-row items-center justify-center p-4 lg:-mt-24 gap-16">
+        <div className="min-h-screen w-full flex flex-col lg:flex-row items-center justify-center p-4 lg:-mt-12 gap-16">
             {(status === "active" || status === null) && (
                 <>
                     {!emailVerifying ? (

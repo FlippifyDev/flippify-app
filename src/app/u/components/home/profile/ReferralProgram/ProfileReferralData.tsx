@@ -113,11 +113,10 @@ const ProfileReferralData: React.FC = () => {
                         <button
                             className="flex items-center px-2 py-1 bg-gray-100 border rounded-lg hover:bg-gray-200 transition duration-200"
                             onClick={() => {
-                                navigator.clipboard.writeText(referralCode);
                                 alert('Referral code copied to clipboard!');
                             }}
                         >
-                            <span className="mr-2">{referralCode}</span>
+                            <span className="mr-2">A1B2C3</span>
                             <FaClipboard className="text-gray-900" />
                         </button>
                     </div>

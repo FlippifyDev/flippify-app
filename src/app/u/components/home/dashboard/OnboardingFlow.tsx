@@ -6,7 +6,6 @@ import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { Lato } from 'next/font/google';
 import { useRouter } from 'next/navigation';
-import { deleteField, setDoc } from 'firebase/firestore';
 import { validateAlphaNumericInput, validateEmailInput } from '@/utils/input-validation';
 import { retrieveRefereeUserExists } from '@/services/firebase/admin-retrieve';
 import { updateUserPreferences } from '@/services/firebase/update';
@@ -149,6 +148,9 @@ const OnboardingFlow: React.FC = () => {
                                 aria-label="Referral Code"
                                 aria-required="false"
                             />
+                            <p className="text-gray-400 text-xs text-left mt-1 ml-1 animate-fadeInPrimary">
+                                Note: Referral code is not the same as a coupon/promotional code.
+                            </p>
                             {referralError && (
                                 <p className="text-red-500 text-sm mt-2">{referralError}</p>
                             )}

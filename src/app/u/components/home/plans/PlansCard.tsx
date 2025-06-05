@@ -10,6 +10,7 @@ import { BackgroundGradient } from "@/components/ui/background-gradient";
 import { useSpring, animated } from "react-spring";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import ButtonUpgradeSubscription from "./ButtonUpgradeSubscription";
+import { SubscriptionName } from "@/models/store-data";
 
 
 // PriceDisplay component for animated prices
@@ -38,7 +39,7 @@ interface PlansCardProps {
     priceIds: { monthly: string; yearly: string };
     whatsIncludedComponent: React.ReactNode;
     isOnboarding: boolean;
-    currentSubscriptionName: string | null;
+    currentSubscriptionName: SubscriptionName | null;
     specialPlan?: boolean;
     priceRange: number;
     className?: string;
@@ -135,7 +136,7 @@ const PlansCard: React.FC<PlansCardProps> = ({
 interface PlansCardInfoProps {
     title: string;
     description: string;
-    currentSubscriptionName: string | null;
+    currentSubscriptionName: SubscriptionName | null;
     isOnboarding: boolean;
     isFreePlan: boolean;
     displayPrice: number;

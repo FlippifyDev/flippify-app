@@ -7,13 +7,12 @@ import { updateStripeUserSubscription } from "@/services/stripe/update";
 // External Imports
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { SubscriptionName } from "@/models/store-data";
 
-
-export type CurrentSubscriptionName = "Free - member" | "Standard - member" | "Pro - member" | "Enterprise 1 - member" | "Enterprise 2 - member" | "Enterprise 3 - member" | "Enterprise 4 - member";
 
 interface ButtonUpgradeSubscriptionProps {
     priceId: string;
-    currentSubscriptionName?: string;
+    currentSubscriptionName?: SubscriptionName;
     planTitle?: string;
     specialPlan?: boolean;
     displayModal?: boolean;
@@ -34,8 +33,10 @@ const ButtonUpgradeSubscription: React.FC<ButtonUpgradeSubscriptionProps> = ({ p
         ? 'btn border-0 bg-houseBlue hover:bg-houseHoverBlue text-white w-2/3 mx-auto rounded-lg shadow-lg' // Special plan button with houseBlue
         : 'btn border-0 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 text-opacity-100 w-2/3 mx-auto rounded-lg shadow-lg'; // Default button styles for non-special plans
 
-    const currentSubscriptionLevel = subscriptionPlans[currentSubscriptionName as CurrentSubscriptionName] || 0;
-    const planSubscriptionLevel = subscriptionPlans[`${planTitle} - member` as CurrentSubscriptionName] || 0;
+    const currentSubscriptionLevel = subscriptionPlans[currentSubscriptionName as SubscriptionName] || 0;
+    const planSubscriptionLevel = subscriptionPlans[`${planTitle} - member` as SubscriptionName] || 0;
+
+    console.log(currentSubscriptionName, planTitle, currentSubscriptionLevel, planSubscriptionLevel)
 
     const buttonText = currentSubscriptionLevel < planSubscriptionLevel ? "Upgrade Subscription" : "Downgrade Subscription";
 

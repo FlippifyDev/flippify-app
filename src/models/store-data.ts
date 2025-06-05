@@ -11,6 +11,7 @@ export type OrderStatus =
 
 
 export type Condition = "new" | "used" | "opened" | "unopened" | "refurbished" | string;
+export type SubscriptionName = "Free - member" | "Standard - member" | "Pro - member" | "Enterprise 1 - member" | "Enterprise 2 - member" | "Enterprise 3 - member" | "Enterprise 4 - member";
 
 
 export const STORES = ["ebay", "stockx"];

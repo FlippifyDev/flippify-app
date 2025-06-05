@@ -8,6 +8,7 @@ import { retrieveCouponCodeOrPromotionCode } from './retrieve';
 
 // External Imports
 import Stripe from 'stripe';
+import { validGroupCouponCodes } from './valid-group-coupon-codes.server';
 
 
 const createBillingPortalUrl = async (username: string, customerId: string) => {
@@ -55,6 +56,7 @@ const createCheckoutSession = async (
         const cancelUrl = `${root}/u/${username}/plans`;
 
         let discounts: Stripe.Checkout.SessionCreateParams.Discount[] = [];
+        let subscription_data = {};
 
         // Check if the code is valid
         if (code) {
@@ -66,6 +68,12 @@ const createCheckoutSession = async (
                 discounts.push({ coupon: code });
             } else if (promotionCode && promoId) {
                 discounts.push({ promotion_code: promoId });
+            }
+
+            if (validGroupCouponCodes.includes(code)) {
+                subscription_data = {
+                    "trial_period_days": 14,
+                }
             }
         }
 
@@ -102,6 +110,7 @@ const createCheckoutSession = async (
             mode: 'subscription',
             success_url: successUrl,
             cancel_url: cancelUrl,
+            subscription_data,
             // Apply the discounts if the coupon is added
             discounts: discounts.length > 0 ? discounts : undefined,
         });

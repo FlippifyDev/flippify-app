@@ -71,19 +71,6 @@ const PlansCardStandardWhatsIncluded = () => {
                     />
                 </li>
 			</ul>
-
-			<div className="text-black font-semibold ml-2 mb-[-6px]">
-				<p>Coming Soon:</p>
-			</div>
-			<ul className={rootClass}>
-				<li className="w-full">
-					<PlansClickableBulletPoint
-						text="20 AI Automated Listings"
-						tooltip="Provide a product link, and our AI will create, list, and manage 25 listings for you, tracking them through to sale."
-						comingSoon
-					/>
-				</li>
-			</ul>
 		</div>
 	);
 };

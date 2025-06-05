@@ -22,8 +22,6 @@ const EnterpriseCard: React.FC<EnterpriseCardProps> = ({
     const description = "For large scale operations";
     const [discountedPriceMonthly, setDiscountedPriceMonthly] = useState(19.99);
     const [discountedPriceYearly, setDiscountedPriceYearly] = useState(199.90);
-    const [priceMonthly, setPriceMonthly] = useState(29.99);
-    const [priceYearly, setPriceYearly] = useState(299.90);
 
     const [index, setIndex] = useState(0);
     const [listings, setListings] = useState(subscriptionLimits["enterprise 1"].automatic);
@@ -33,8 +31,6 @@ const EnterpriseCard: React.FC<EnterpriseCardProps> = ({
     useEffect(() => {
         setDiscountedPriceMonthly(ENTERPRISE_MONTHLY_PIDS[index][1] as number);
         setDiscountedPriceYearly(ENTERPRISE_YEARLY_PIDS[index][1] as number);
-        setPriceMonthly(ENTERPRISE_MONTHLY_PIDS[index][2] as number);
-        setPriceYearly(ENTERPRISE_YEARLY_PIDS[index][2] as number);
 
         const key = `enterprise ${index + 1}` as keyof typeof subscriptionLimits;
         const limits = subscriptionLimits[key]
@@ -47,10 +43,6 @@ const EnterpriseCard: React.FC<EnterpriseCardProps> = ({
 
     // Price calculations: Convert from GBP to target currency
     const rateToUSD = conversionRates['USD'];
-    const pricesConverted = {
-        monthly: priceMonthly * (conversionRates[currency] / rateToUSD),
-        yearly: priceYearly * (conversionRates[currency] / rateToUSD),
-    };
 
     const discountedPricesConverted = {
         monthly: discountedPriceMonthly * (conversionRates[currency] / rateToUSD),
@@ -58,7 +50,6 @@ const EnterpriseCard: React.FC<EnterpriseCardProps> = ({
     };
 
     const displayPrice = priceRange === 0 ? discountedPricesConverted.monthly : discountedPricesConverted.yearly;
-    const displayOriginalPrice = priceRange === 0 ? pricesConverted.monthly : pricesConverted.yearly;
 
     return (
         <div className="col-span-1 w-full px-2 sm:mx-auto max-w-md">
@@ -67,10 +58,6 @@ const EnterpriseCard: React.FC<EnterpriseCardProps> = ({
                     <h2 className="font-bold text-[24px]">{title}</h2>
                     <p className="text-sm text-gray-600">{description}</p>
                 </div>
-                <div className="flex items-center justify-center text-houseBlue font-semibold text-md mt-4">
-                    <AiOutlineTag className="mr-2" />
-                    Early Access Discount
-                </div>
                 <div className="flex flex-col items-center justify-center mt-4">
                     <div className="flex items-baseline">
                         <PriceDisplay value={displayPrice} currencySymbol={currencySymbol} />
@@ -78,12 +65,6 @@ const EnterpriseCard: React.FC<EnterpriseCardProps> = ({
                             /{priceRange === 0 ? "mo" : "yr"}
                         </span>
                     </div>
-                    {Number(displayPrice) !== Number(displayOriginalPrice) && (
-                        <span className="text-md text-gray-500 line-through">
-                            {currencySymbol}
-                            {displayOriginalPrice.toFixed(2)}
-                        </span>
-                    )}
                 </div>
                 <section className="flex-grow mt-5">{<PlansCardEnterpriseWhatsIncluded listings={listings} oneTimeExpenses={oneTimeExpenses} subscriptionExpenses={subscriptionExpenses}/>}</section>
                 <div className="flex flex-col items-center justify-center my-12 px-8">

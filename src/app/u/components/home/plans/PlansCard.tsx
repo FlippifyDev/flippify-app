@@ -34,7 +34,6 @@ export const PriceDisplay: React.FC<PriceDisplayProps> = ({ value, currencySymbo
 interface PlansCardProps {
     title: string;
     description: string;
-    prices: { monthly: number; yearly: number };
     discountedPrices: { monthly: number; yearly: number };
     priceIds: { monthly: string; yearly: string };
     whatsIncludedComponent: React.ReactNode;
@@ -51,7 +50,6 @@ interface PlansCardProps {
 const PlansCard: React.FC<PlansCardProps> = ({
     title,
     description,
-    prices,
     discountedPrices,
     priceIds,
     isOnboarding,
@@ -69,10 +67,6 @@ const PlansCard: React.FC<PlansCardProps> = ({
 
     // Price calculations: Convert from GBP to target currency
     const rateToUSD = conversionRates['USD'];
-    const originalPricesConverted = {
-        monthly: prices.monthly * (conversionRates[currency] / rateToUSD),
-        yearly: prices.yearly * (conversionRates[currency] / rateToUSD),
-    };
 
     const discountedPricesConverted = {
         monthly: discountedPrices.monthly * (conversionRates[currency] / rateToUSD),
@@ -80,10 +74,8 @@ const PlansCard: React.FC<PlansCardProps> = ({
     };
 
     const displayPrice = priceRange === 0 ? discountedPricesConverted.monthly : discountedPricesConverted.yearly;
-    const displayOriginalPrice = priceRange === 0 ? originalPricesConverted.monthly : originalPricesConverted.yearly;
 
-
-    const isFreePlan = prices.monthly === 0 && prices.yearly === 0;
+    const isFreePlan = discountedPrices.monthly === 0 && discountedPrices.yearly === 0;
     const selectedPriceId = priceRange === 0 ? priceIds.monthly : priceIds.yearly;
 
     return (
@@ -107,7 +99,6 @@ const PlansCard: React.FC<PlansCardProps> = ({
                                 displayPrice={displayPrice}
                                 currencySymbol={currencySymbol}
                                 priceRange={priceRange}
-                                displayOriginalPrice={displayOriginalPrice}
                                 whatsIncludedComponent={whatsIncludedComponent}
                                 specialPlan={specialPlan}
                                 selectedPriceId={selectedPriceId}
@@ -127,7 +118,6 @@ const PlansCard: React.FC<PlansCardProps> = ({
                             displayPrice={displayPrice}
                             currencySymbol={currencySymbol}
                             priceRange={priceRange}
-                            displayOriginalPrice={displayOriginalPrice}
                             whatsIncludedComponent={whatsIncludedComponent}
                             specialPlan={specialPlan}
                             selectedPriceId={selectedPriceId}
@@ -151,7 +141,6 @@ interface PlansCardInfoProps {
     displayPrice: number;
     currencySymbol: string;
     priceRange: number;
-    displayOriginalPrice: number;
     whatsIncludedComponent: React.ReactNode;
     specialPlan?: boolean;
     selectedPriceId: string;
@@ -167,7 +156,6 @@ export const PlansCardInfo: React.FC<PlansCardInfoProps> = ({
     displayPrice,
     currencySymbol,
     priceRange,
-    displayOriginalPrice,
     whatsIncludedComponent,
     specialPlan,
     selectedPriceId,
@@ -179,10 +167,6 @@ export const PlansCardInfo: React.FC<PlansCardInfoProps> = ({
             <div className="text-center">
                 <h2 className="font-bold text-[24px]">{title}</h2>
                 <p className="text-sm text-gray-600">{description}</p>
-            </div>
-            <div className="flex items-center justify-center text-houseBlue font-semibold text-md mt-4">
-                <AiOutlineTag className="mr-2" />
-                Early Access Discount
             </div>
             <div className="flex flex-col items-center justify-center mt-4">
                 <div className="flex items-baseline">
@@ -197,12 +181,6 @@ export const PlansCardInfo: React.FC<PlansCardInfoProps> = ({
                         </>
                     )}
                 </div>
-                {!isFreePlan && Number(displayPrice) !== Number(displayOriginalPrice) && (
-                    <span className="text-md text-gray-500 line-through">
-                        {currencySymbol}
-                        {displayOriginalPrice.toFixed(2)}
-                    </span>
-                )}
             </div>
             <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
             <section className="mt-auto">

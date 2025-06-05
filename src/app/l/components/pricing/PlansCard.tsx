@@ -5,12 +5,10 @@ import { AiOutlineTag } from "react-icons/ai";
 import PlansGetAccessButton from "./PlansGetAccessButton";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
 import { useSpring, animated } from "react-spring";
-import { discordSupportLink } from "@/utils/constants";
 
 interface PlansCardProps {
     title: string;
     description: string;
-    prices: { monthly: number; yearly: number };
     discountedPrices: { monthly: number; yearly: number };
     priceIds: { monthly: string; yearly: string };
     whatsIncludedComponent: any;
@@ -61,19 +59,13 @@ export const PriceDisplay: React.FC<PriceDisplayProps> = ({ value, currencySymbo
 const PlansCard: React.FC<PlansCardProps> = ({
     title,
     description,
-    prices,
     discountedPrices,
     whatsIncludedComponent,
     specialPlan,
     priceRange,
-    className,
     currency,
     conversionRates,
     comingSoon = false,
-    isEnterprise = false,
-    enterpriseListings,
-    setEnterpriseListings,
-    enterpriseContactUrl,
 }) => {
     const [currencySymbol, setCurrencySymbol] = useState("$");
 
@@ -84,12 +76,6 @@ const PlansCard: React.FC<PlansCardProps> = ({
     // Fallback rate if conversionRates[currency] is undefined
     const rate = conversionRates[currency] ?? 1;
 
-    // For non-enterprise plans, use original calculations:
-    const originalPricesConverted = {
-        monthly: (prices.monthly * rate).toFixed(2),
-        yearly: (prices.yearly * rate).toFixed(2),
-    };
-
     const discountedPricesConverted = {
         monthly: (discountedPrices.monthly * rate).toFixed(2),
         yearly: (discountedPrices.yearly * rate).toFixed(2),
@@ -97,8 +83,6 @@ const PlansCard: React.FC<PlansCardProps> = ({
 
     const displayPrice =
         priceRange === 0 ? discountedPricesConverted.monthly : discountedPricesConverted.yearly;
-    const displayOriginalPrice =
-        priceRange === 0 ? originalPricesConverted.monthly : originalPricesConverted.yearly;
 
     // Convert displayPrice to number if possible
     const priceNumber = !isNaN(Number(displayPrice)) ? Number(displayPrice) : null;
@@ -109,10 +93,6 @@ const PlansCard: React.FC<PlansCardProps> = ({
             <div className="text-center">
                 <h2 className="font-bold text-[24px]">{title}</h2>
                 <p className="text-sm text-gray-600">{description}</p>
-            </div>
-            <div className="flex items-center justify-center text-houseBlue font-semibold text-md mt-4">
-                <AiOutlineTag className="mr-2" />
-                Early Access Discount
             </div>
             <div className="flex flex-col items-center justify-center mt-4">
                 <div className="flex items-baseline">
@@ -134,11 +114,6 @@ const PlansCard: React.FC<PlansCardProps> = ({
                         </>
                     )}
                 </div>
-                {priceNumber !== 0 && Number(displayPrice) !== Number(displayOriginalPrice) && (
-                    <span className="text-md text-gray-500 line-through">
-                        {`${currencySymbol}${displayOriginalPrice}`}
-                    </span>
-                )}
             </div>
             <section className="flex-grow mt-5">{whatsIncludedComponent}</section>
             <section className="mt-auto">

@@ -159,28 +159,10 @@ const PlansPage = () => {
                 </div>
             </div>
 
-            <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-4 gap-8 w-full mx-auto px-2 sm:px-4 pb-2 sm:pb-4">
-                <PlansCard
-                    title="Free"
-                    description="For beginners"
-                    prices={{ monthly: 0, yearly: 0 }}
-                    discountedPrices={{ monthly: 0, yearly: 0 }}
-                    priceIds={{
-                        monthly: FREE_MONTHLY_PID,
-                        yearly: FREE_YEARLY_PID,
-                    }}
-                    isOnboarding={isOnboarding}
-                    currentSubscriptionName={currentSubscriptionName}
-                    whatsIncludedComponent={<PlansCardFreeWhatsIncluded />}
-                    priceRange={selectedPlan}
-                    currency={currency}
-                    conversionRates={conversionRates}
-                    handleDisplayModal={handleDisplayModal}
-                />
+            <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-8 w-full mx-auto px-2 sm:px-4 pb-2 sm:pb-4">
                 <PlansCard
                     title="Standard"
                     description="For growing resellers"
-                    prices={{ monthly: 19.99, yearly: 199.90 }}
                     discountedPrices={{ monthly: 9.99, yearly: 99.90 }}
                     priceIds={{
                         monthly: STANDARD_MONTHLY_PID,
@@ -198,7 +180,6 @@ const PlansPage = () => {
                 <PlansCard
                     title="Pro"
                     description="For experts"
-                    prices={{ monthly: 29.99, yearly: 299.90 }}
                     discountedPrices={{ monthly: 19.99, yearly: 199.90 }}
                     priceIds={{
                         monthly: PRO_MONTHLY_PID,

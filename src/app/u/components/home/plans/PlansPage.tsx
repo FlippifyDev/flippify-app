@@ -12,8 +12,9 @@ import Modal from "../../dom/ui/Modal";
 import ButtonUpgradeSubscription from "./ButtonUpgradeSubscription";
 import { fetchConversionRates } from "@/utils/currency-api";
 import { validateAlphaNumericInput } from "@/utils/input-validation";
-import { FREE_MONTHLY_PID, FREE_YEARLY_PID, MAX_INPUT_LENGTH, PRO_MONTHLY_PID, PRO_YEARLY_PID, STANDARD_MONTHLY_PID, STANDARD_YEARLY_PID } from "@/utils/constants";
+import { MAX_INPUT_LENGTH, PRO_MONTHLY_PID, PRO_YEARLY_PID, STANDARD_MONTHLY_PID, STANDARD_YEARLY_PID } from "@/utils/constants";
 import EnterpriseCard from "./EnterpriseCard";
+import { SubscriptionName } from "@/models/store-data";
 
 type Currency = "GBP" | "USD" | "EUR" | "AUD" | "CAD" | "JPY" | "NZD";
 
@@ -26,7 +27,7 @@ const PlansPage = () => {
     const [priceId, setPriceId] = useState<string>("");
     const [couponCode, setCouponCode] = useState<string | undefined>(undefined);
     const [couponError, setCouponError] = useState<string | null>(null);
-    const [currentSubscriptionName, setCurrentSubscriptionName] = useState<string | null>(null);
+    const [currentSubscriptionName, setCurrentSubscriptionName] = useState<SubscriptionName | null>(null);
     const [isOnboarding, setIsOnboarding] = useState<boolean>(false);
     const [conversionRates, setConversionRates] = useState<Record<string, number>>({});
 
@@ -57,7 +58,7 @@ const PlansPage = () => {
         if (session?.user.subscriptions) {
             const subscription = session.user.subscriptions.find((sub: any) => sub.name.includes("member"));
             if (subscription && subscription.name) {
-                setCurrentSubscriptionName(subscription.name);
+                setCurrentSubscriptionName(subscription.name as SubscriptionName);
             }
             if (session.user.authentication?.onboarding) {
                 setIsOnboarding(true);

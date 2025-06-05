@@ -8,12 +8,12 @@ import ButtonGetAccess from './ButtonGetAccess';
 import ButtonManageMembership from './ButtonManageMembership';
 import ButtonUpgradeSubscription from './ButtonUpgradeSubscription';
 import ButtonGetStarted from './ButtonGetStarted';
-import { AiOutlineTag } from 'react-icons/ai';
 import { ENTERPRISE_MONTHLY_PIDS, ENTERPRISE_YEARLY_PIDS, subscriptionLimits } from '@/utils/constants';
 import PlansCardEnterpriseWhatsIncluded from '@/app/components/plans/PlansCardEnterpriseWhatsIncluded';
+import { SubscriptionName } from '@/models/store-data';
 
 interface EnterpriseCardProps {
-    currentSubscriptionName: string | null;
+    currentSubscriptionName: SubscriptionName | null;
     isOnboarding: boolean;
     currency: string;
     conversionRates: Record<string, number>;
@@ -28,12 +28,12 @@ const EnterpriseCard: React.FC<EnterpriseCardProps> = ({
     priceRange,
     handleDisplayModal
 }) => {
-    const title = "Enterprise";
     const description = "For large scale operations";
     const [discountedPriceMonthly, setDiscountedPriceMonthly] = useState(19.99);
     const [discountedPriceYearly, setDiscountedPriceYearly] = useState(199.90);
-
+    
     const [index, setIndex] = useState(0);
+    const title = `Enterprise ${index+1}`;
     const [listings, setListings] = useState(subscriptionLimits["enterprise 1"].automatic);
     const [oneTimeExpenses, setOneTimeExpenses] = useState(subscriptionLimits["enterprise 1"].oneTimeExpenses);
     const [subscriptionExpenses, setSubscriptionExpenses] = useState(subscriptionLimits["enterprise 1"].subscriptionExpenses);

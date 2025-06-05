@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         // Add the new tokens to the users doc in the database
-        const tokenAdditionResponse = await addToken({ store: "stockx", tokenData, uid: session.user.id as string });
+        const tokenAdditionResponse = await addToken({ store: "ebay", tokenData, uid: session.user.id as string });
         if (tokenAdditionResponse && tokenAdditionResponse.error) {
             return res.status(404).json({ error: tokenAdditionResponse.error });
         }

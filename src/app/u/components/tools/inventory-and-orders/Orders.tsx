@@ -48,6 +48,7 @@ const Orders: React.FC<OrdersProps> = ({ filter }) => {
 
     const [triggerUpdate, setTriggerUpdate] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [slowLoading, setSlowLoading] = useState(false);
 
     useEffect(() => {
         function filterOrders() {
@@ -89,6 +90,23 @@ const Orders: React.FC<OrdersProps> = ({ filter }) => {
 
         }
     }, [session?.user, currentPage, orderData, triggerUpdate, cacheKey, filter, nextPage, uid]);
+
+    useEffect(() => {
+        let timer: NodeJS.Timeout;
+        if (loading) {
+            // As soon as “loading” becomes true, start a 10s timer
+            timer = setTimeout(() => {
+                setSlowLoading(true);
+            }, 10_000);
+        } else {
+            // If loading is false (i.e. data arrived / spinner is removed), clear and reset
+            setSlowLoading(false);
+        }
+        return () => {
+            clearTimeout(timer);
+        };
+    }, [loading]);
+
 
     // Handle page change
     const handlePageChange = (newPage: number) => {
@@ -183,7 +201,17 @@ const Orders: React.FC<OrdersProps> = ({ filter }) => {
                         <tr>
                             <td colSpan={12}>
                                 <div className="w-full flex justify-center items-center">
-                                    {loading ? <LoadingSpinner /> : <div className="py-6"><NoResultsFound /></div>}
+                                    {loading ? (
+                                        <div className="flex flex-col justify-center items-center">
+                                            <LoadingSpinner />
+                                            {slowLoading && (
+                                                <p className="mt-2 text-sm text-gray-500 text-center">
+                                                    This is taking longer than normal. If you have just
+                                                    connected an account, please allow some time for us to
+                                                    collect your store data.
+                                                </p>
+                                            )}
+                                        </div>) : <div className="py-6"><NoResultsFound /></div>}
                                 </div>
                             </td>
                         </tr>

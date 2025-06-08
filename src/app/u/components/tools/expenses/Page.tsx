@@ -122,8 +122,8 @@ const Page = () => {
                     </div>
                     <div className='px-4 ml-1'>
                         {activeTab === 'one-time' ?
-                            <span className='text-xs text-gray-500'>You have {totalOneTime} / {limits.oneTimeExpenses} one time expenses</span> :
-                            <span className='text-xs text-gray-500'>You have {totalSubscriptions} / {limits.subscriptionExpenses} subscriptions</span>
+                            <span className='text-xs text-gray-500'>You have {totalOneTime} one time expenses</span> :
+                            <span className='text-xs text-gray-500'>You have {totalSubscriptions} subscriptions</span>
                         }
                     </div>
                 </div>

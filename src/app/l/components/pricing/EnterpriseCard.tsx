@@ -25,8 +25,6 @@ const EnterpriseCard: React.FC<EnterpriseCardProps> = ({
 
     const [index, setIndex] = useState(0);
     const [listings, setListings] = useState(subscriptionLimits["enterprise 1"].automatic);
-    const [oneTimeExpenses, setOneTimeExpenses] = useState(subscriptionLimits["enterprise 1"].oneTimeExpenses);
-    const [subscriptionExpenses, setSubscriptionExpenses] = useState(subscriptionLimits["enterprise 1"].subscriptionExpenses);
 
     useEffect(() => {
         setDiscountedPriceMonthly(ENTERPRISE_MONTHLY_PIDS[index][1] as number);
@@ -35,8 +33,6 @@ const EnterpriseCard: React.FC<EnterpriseCardProps> = ({
         const key = `enterprise ${index + 1}` as keyof typeof subscriptionLimits;
         const limits = subscriptionLimits[key]
         setListings(limits.automatic);
-        setOneTimeExpenses(limits.oneTimeExpenses);
-        setSubscriptionExpenses(limits.subscriptionExpenses);
     }, [index]);
 
     const currencySymbol = currencySymbols[currency as keyof typeof currencySymbols] || "$";
@@ -55,7 +51,7 @@ const EnterpriseCard: React.FC<EnterpriseCardProps> = ({
         <div className="col-span-1 w-full px-2 sm:mx-auto max-w-md">
             <div className="w-full bg-white border rounded-2xl hover:shadow-md transition duration-200 p-6 flex flex-col justify-between">
                 <div className="text-center">
-                    <h2 className="font-bold text-[24px]">{title}</h2>
+                    <h2 className="font-bold text-[24px]">Enterprise</h2>
                     <p className="text-sm text-gray-600">{description}</p>
                 </div>
                 <div className="flex flex-col items-center justify-center mt-4">
@@ -66,7 +62,7 @@ const EnterpriseCard: React.FC<EnterpriseCardProps> = ({
                         </span>
                     </div>
                 </div>
-                <section className="flex-grow mt-5">{<PlansCardEnterpriseWhatsIncluded listings={listings} oneTimeExpenses={oneTimeExpenses} subscriptionExpenses={subscriptionExpenses}/>}</section>
+                <section className="flex-grow mt-5">{<PlansCardEnterpriseWhatsIncluded listings={listings} />}</section>
                 <div className="flex flex-col items-center justify-center my-12 px-8">
                     <input
                         type="range"

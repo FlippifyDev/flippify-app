@@ -71,7 +71,7 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal, setTriggerUpda
                 return;
             }
             const count = fetchUserInventoryAndOrdersCount(session.user);
-            if (count.manualListings >= subscriptionLimits[plan].manual) {
+            if (plan === "free" && count.manualListings >= subscriptionLimits[plan].manual) {
                 setErrorMessage(`You have reached the maximum number of manual listings for your plan. Please upgrade your plan to add more or wait till next month.`);
                 setAboveLimit(true);
                 return;

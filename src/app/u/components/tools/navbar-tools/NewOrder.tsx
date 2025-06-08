@@ -88,7 +88,7 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
                 return;
             }
             const count = fetchUserInventoryAndOrdersCount(session.user);
-            if (count.manualOrders >= subscriptionLimits[plan].manual) {
+            if (plan === "free" && count.manualOrders >= subscriptionLimits[plan].manual) {
                 setErrorMessage(`You have reached the maximum number of manual orders for your plan. Please upgrade your plan to add more or wait till next month.`);
                 setAboveLimit(true);
                 return;

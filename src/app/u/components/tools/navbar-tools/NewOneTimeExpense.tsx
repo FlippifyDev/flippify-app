@@ -50,7 +50,7 @@ const NewOneTimeExpense: React.FC<NewOneTimeExpenseProps> = ({ setDisplayModal }
                 return;
             }
             const count = fetchUserExpensesCount(session.user);
-            if (count.oneTime >= subscriptionLimits[plan].oneTimeExpenses) {
+            if (plan === "free" && count.oneTime >= subscriptionLimits[plan].oneTimeExpenses) {
                 setErrorMessage(`You have reached the maximum number of one time expenses for your plan. Please upgrade your plan to add more or wait till next month.`);
                 setAboveLimit(true);
                 return;

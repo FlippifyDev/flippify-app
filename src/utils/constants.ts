@@ -34,15 +34,12 @@ export const FREE_SUBSCRIPTION_EXPENSES = 3;
 // Standard
 export const STANDARD_MAX_AUTOMATIC_LISTINGS = 48;
 export const STANDARD_MAX_MANUAL_LISTINGS = 48;
-export const STANDARD_ONE_TIME_EXPENSES = 100;
 export const STANDARD_SUBSCRIPTION_EXPENSES = 6;
 
 
 // Pro
 export const PRO_MAX_AUTOMATIC_LISTINGS = 96;
 export const PRO_MAX_MANUAL_LISTINGS = 96;
-export const PRO_ONE_TIME_EXPENSES = 200;
-export const PRO_SUBSCRIPTION_EXPENSES = 9;
 
 // Product IDs
 export const FREE_MONTHLY_PID = "price_1R6umYJJRepiHZ8duYSajDvz";
@@ -78,38 +75,27 @@ export const subscriptionLimits = {
     "standard": {
         "automatic": STANDARD_MAX_AUTOMATIC_LISTINGS,
         "manual": STANDARD_MAX_MANUAL_LISTINGS,
-        "oneTimeExpenses": STANDARD_ONE_TIME_EXPENSES,
         "subscriptionExpenses": STANDARD_SUBSCRIPTION_EXPENSES
     },
     "pro": {
         "automatic": PRO_MAX_AUTOMATIC_LISTINGS,
         "manual": PRO_MAX_MANUAL_LISTINGS,
-        "oneTimeExpenses": PRO_ONE_TIME_EXPENSES,
-        "subscriptionExpenses": PRO_SUBSCRIPTION_EXPENSES
     },
     "enterprise 1": {
         "automatic": 200,
         "manual": 200,
-        "oneTimeExpenses": 400,
-        "subscriptionExpenses": 12
     },
     "enterprise 2": {
         "automatic": 500,
         "manual": 500,
-        "oneTimeExpenses": 600,
-        "subscriptionExpenses": 15
     },
     "enterprise 3": {
         "automatic": 750,
         "manual": 750,
-        "oneTimeExpenses": 800,
-        "subscriptionExpenses": 18
     },
     "enterprise 4": {
         "automatic": 1000,
         "manual": 1000,
-        "oneTimeExpenses": 1000,
-        "subscriptionExpenses": 21
     },
 }
 

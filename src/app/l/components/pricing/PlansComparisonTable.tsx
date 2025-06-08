@@ -33,22 +33,26 @@ const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
                     {/* Table Header */}
                     <thead>
                         <tr className="border-b">
-                            <th className="w-1/4 py-5 px-6 text-left text-gray-800 bg-gray-200 font-bold">Features</th>
-                            <th className="w-1/4 py-5 px-6 text-center text-gray-700 bg-gray-50">
+                            <th className="w-1/5 py-5 px-6 text-left text-gray-800 bg-gray-200 font-bold">Features</th>
+                            <th className="w-1/5 py-5 px-6 text-center text-gray-700 bg-gray-50">
+                                <div className="text-xl font-bold">Free</div>
+                                <div className="text-sm">For beginners</div>
+                            </th>
+                            <th className="w-1/5 py-5 px-6 text-center text-gray-700 bg-gray-50">
                                 <div className="text-xl font-bold">Standard</div>
                                 <div className="text-sm">For growing sellers</div>
                                 <div className="text-lg font-bold mt-2">
                                     {currencySymbol}{selectedPlan === 0 ? (9.99 * rate).toFixed(2) : (99.90 * rate).toFixed(2)}<span className="text-sm font-medium">/{selectedPlan === 0 ? 'mo' : 'yr'}</span>
                                 </div>
                             </th>
-                            <th className="w-1/4 py-5 px-6 text-center text-gray-700 bg-gray-50">
+                            <th className="w-1/5 py-5 px-6 text-center text-gray-700 bg-gray-50">
                                 <div className="text-xl font-bold">Pro</div>
                                 <div className="text-sm">For experts</div>
                                 <div className="text-lg font-bold mt-2">
                                     {currencySymbol}{selectedPlan === 0 ? (19.99 * rate).toFixed(2) : (199.90 * rate).toFixed(2)}<span className="text-sm font-medium">/{selectedPlan === 0 ? 'mo' : 'yr'}</span>
                                 </div>
                             </th>
-                            <th className="w-1/4 py-5 px-6 text-center text-gray-700 bg-gray-50">
+                            <th className="w-1/5 py-5 px-6 text-center text-gray-700 bg-gray-50">
                                 <div className="text-xl font-bold">Enterprise</div>
                                 <div className="text-sm">For businesses</div>
                                 <div className="text-lg font-bold mt-2">
@@ -64,6 +68,9 @@ const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
                         <tr className="border-b">
                             <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
                                 Auto-Tracked Sales
+                            </td>
+                            <td className="py-4 px-6 text-center">
+                                <span className="text-gray-600">12/month</span>
                             </td>
                             <td className="py-4 px-6 text-center">
                                 <span className="text-gray-600">48/month</span>
@@ -82,6 +89,9 @@ const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
                                 Auto-Tracked Listings
                             </td>
                             <td className="py-4 px-6 text-center bg-gray-50">
+                                <span className="text-gray-600">12</span>
+                            </td>
+                            <td className="py-4 px-6 text-center bg-gray-50">
                                 <span className="text-gray-600">48</span>
                             </td>
                             <td className="py-4 px-6 text-center bg-gray-50">
@@ -98,13 +108,16 @@ const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
                                 Manual Sales Entries
                             </td>
                             <td className="py-4 px-6 text-center bg-gray-50">
-                                <span className="text-gray-600">48/month</span>
+                                <span className="text-gray-600">12/month</span>
                             </td>
                             <td className="py-4 px-6 text-center bg-gray-50">
-                                <span className="text-gray-600">96/month</span>
+                                <span className="text-gray-600">Unlimited</span>
                             </td>
                             <td className="py-4 px-6 text-center bg-gray-50">
-                                <span className="text-gray-600">100+/month</span>
+                                <span className="text-gray-600">Unlimited</span>
+                            </td>
+                            <td className="py-4 px-6 text-center bg-gray-50">
+                                <span className="text-gray-600">Unlimited</span>
                             </td>
                         </tr>
 
@@ -114,13 +127,16 @@ const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
                                 Manual Listing Entries
                             </td>
                             <td className="py-4 px-6 text-center bg-gray-50">
-                                <span className="text-gray-600">48</span>
+                                <span className="text-gray-600">12</span>
                             </td>
                             <td className="py-4 px-6 text-center bg-gray-50">
-                                <span className="text-gray-600">96</span>
+                                <span className="text-gray-600">Unlimited</span>
                             </td>
                             <td className="py-4 px-6 text-center bg-gray-50">
-                                <span className="text-gray-600">100+</span>
+                                <span className="text-gray-600">Unlimited</span>
+                            </td>
+                            <td className="py-4 px-6 text-center bg-gray-50">
+                                <span className="text-gray-600">Unlimited</span>
                             </td>
                         </tr>
 
@@ -131,13 +147,16 @@ const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
                                 One Time Expenses
                             </td>
                             <td className="py-4 px-6 text-center bg-gray-50">
-                                <span className="text-gray-600">100/month</span>
+                                <span className="text-gray-600">12/month</span>
                             </td>
                             <td className="py-4 px-6 text-center bg-gray-50">
-                                <span className="text-gray-600">200/month</span>
+                                <span className="text-gray-600">Unlimited</span>
                             </td>
                             <td className="py-4 px-6 text-center bg-gray-50">
-                                <span className="text-gray-600">400+/month</span>
+                                <span className="text-gray-600">Unlimited</span>
+                            </td>
+                            <td className="py-4 px-6 text-center bg-gray-50">
+                                <span className="text-gray-600">Unlimited</span>
                             </td>
                         </tr>
 
@@ -147,13 +166,16 @@ const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
                                 Subscription Expenses
                             </td>
                             <td className="py-4 px-6 text-center bg-gray-50">
+                                <span className="text-gray-600">3</span>
+                            </td>
+                            <td className="py-4 px-6 text-center bg-gray-50">
                                 <span className="text-gray-600">6</span>
                             </td>
                             <td className="py-4 px-6 text-center bg-gray-50">
-                                <span className="text-gray-600">9</span>
+                                <span className="text-gray-600">Unlimited</span>
                             </td>
                             <td className="py-4 px-6 text-center bg-gray-50">
-                                <span className="text-gray-600">12+</span>
+                                <span className="text-gray-600">Unlimited</span>
                             </td>
                         </tr>
 
@@ -161,6 +183,9 @@ const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
                         <tr className="border-b">
                             <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
                                 Export to CSV
+                            </td>
+                            <td className="py-4 px-6 text-center">
+                                <span className="text-lightModeText">✗</span>
                             </td>
                             <td className="py-4 px-6 text-center">
                                 <span className="text-houseBlue">✓</span>
@@ -180,21 +205,7 @@ const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
                                 Tax Report
                             </td>
                             <td className="py-4 px-6 text-center">
-                                <span className="text-houseBlue">✓</span>
-                            </td>
-                            <td className="py-4 px-6 text-center">
-                                <span className="text-houseBlue">✓</span>
-                            </td>
-                            <td className="py-4 px-6 text-center">
-                                <span className="text-houseBlue">✓</span>
-                            </td>
-                        </tr>
-
-
-                        {/* Market Comparison */}
-                        <tr className="border-b">
-                            <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
-                                Market Comparison
+                                <span className="text-lightModeText">✗</span>
                             </td>
                             <td className="py-4 px-6 text-center">
                                 <span className="text-houseBlue">✓</span>
@@ -216,6 +227,9 @@ const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
                                 <div className="text-xs text-gray-600 italic mt-1">Coming soon</div>
                             </td>
                             <td className="py-4 px-6 text-center">
+                                <span className="text-gray-600">5</span>
+                            </td>
+                            <td className="py-4 px-6 text-center">
                                 <span className="text-gray-600">20</span>
                             </td>
                             <td className="py-4 px-6 text-center">
@@ -231,6 +245,9 @@ const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
                             <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
                                 Bulk Editing & Relisting
                                 <div className="text-xs text-gray-600 italic mt-1">Coming soon</div>
+                            </td>
+                            <td className="py-4 px-6 text-center">
+                                <span className="text-lightModeText">✗</span>
                             </td>
                             <td className="py-4 px-6 text-center">
                                 <span className="text-houseBlue">✓</span>
@@ -253,6 +270,9 @@ const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
                                 <span className="text-lightModeText">✗</span>
                             </td>
                             <td className="py-4 px-6 text-center">
+                                <span className="text-lightModeText">✗</span>
+                            </td>
+                            <td className="py-4 px-6 text-center">
                                 <span className="text-houseBlue">✓</span>
                             </td>
                             <td className="py-4 px-6 text-center">
@@ -265,6 +285,9 @@ const PricingComparisonTable: React.FC<PricingComparisonTableProps> = ({
                             <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
                                 Priority AI Processing
                                 <div className="text-xs text-gray-600 italic mt-1">Coming soon</div>
+                            </td>
+                            <td className="py-4 px-6 text-center bg-gray-50">
+                                <span className="text-lightModeText">✗</span>
                             </td>
                             <td className="py-4 px-6 text-center bg-gray-50">
                                 <span className="text-lightModeText">✗</span>

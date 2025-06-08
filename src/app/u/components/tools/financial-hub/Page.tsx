@@ -26,7 +26,6 @@ import { useEffect, useState } from "react";
 import { HiOutlineDownload } from "react-icons/hi";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { IOneTimeExpense } from "@/models/expenses";
 
 
 const Page = () => {

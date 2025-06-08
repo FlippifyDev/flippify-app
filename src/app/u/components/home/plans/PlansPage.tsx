@@ -12,7 +12,7 @@ import Modal from "../../dom/ui/Modal";
 import ButtonUpgradeSubscription from "./ButtonUpgradeSubscription";
 import { fetchConversionRates } from "@/utils/currency-api";
 import { validateAlphaNumericInput } from "@/utils/input-validation";
-import { MAX_INPUT_LENGTH, PRO_MONTHLY_PID, PRO_YEARLY_PID, STANDARD_MONTHLY_PID, STANDARD_YEARLY_PID } from "@/utils/constants";
+import { FREE_MONTHLY_PID, FREE_YEARLY_PID, MAX_INPUT_LENGTH, PRO_MONTHLY_PID, PRO_YEARLY_PID, STANDARD_MONTHLY_PID, STANDARD_YEARLY_PID } from "@/utils/constants";
 import EnterpriseCard from "./EnterpriseCard";
 import { SubscriptionName } from "@/models/store-data";
 
@@ -160,7 +160,23 @@ const PlansPage = () => {
                 </div>
             </div>
 
-            <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-8 w-full mx-auto px-2 sm:px-4 pb-2 sm:pb-4">
+            <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-4 gap-8 w-full mx-auto px-2 sm:px-4 pb-2 sm:pb-4">
+                <PlansCard
+                    title="Free"
+                    description="For beginners"
+                    discountedPrices={{ monthly: 0, yearly: 0 }}
+                    priceIds={{
+                        monthly: FREE_MONTHLY_PID,
+                        yearly: FREE_YEARLY_PID,
+                    }}
+                    isOnboarding={isOnboarding}
+                    currentSubscriptionName={currentSubscriptionName}
+                    whatsIncludedComponent={<PlansCardFreeWhatsIncluded />}
+                    priceRange={selectedPlan}
+                    currency={currency}
+                    conversionRates={conversionRates}
+                    handleDisplayModal={handleDisplayModal}
+                />
                 <PlansCard
                     title="Standard"
                     description="For growing resellers"

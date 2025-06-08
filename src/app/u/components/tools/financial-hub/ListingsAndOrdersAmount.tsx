@@ -33,17 +33,6 @@ const CardListingsAmount = () => {
                 </div>
             </div>
 
-            {/* Manual Listings */}
-            <div className='mt-2'>
-                <span>Manual Listings</span>
-                <div className="grid grid-cols-12 items-center mt-7">
-                    <div className="col-span-11">
-                        <ProgressBar value={manualListings} maxValue={maxManual} />
-                    </div>
-                    <span className="col-span-1 ml-1">{maxManual}</span>
-                </div>
-            </div>
-
             {/* Automatic Orders */}
             <div className='mt-2'>
                 <span>Automatic Orders</span>
@@ -52,17 +41,6 @@ const CardListingsAmount = () => {
                         <ProgressBar value={automaticOrders} maxValue={maxAutomatic} />
                     </div>
                     <span className="col-span-1 ml-1">{maxAutomatic}</span>
-                </div>
-            </div>
-
-            {/* Manual Orders */}
-            <div className='mt-2'>
-                <span className=''>Manual Orders</span>
-                <div className="grid grid-cols-12 items-center mt-7">
-                    <div className="col-span-11">
-                        <ProgressBar value={manualOrders} maxValue={maxManual} />
-                    </div>
-                    <span className="col-span-1 ml-1">{maxManual}</span>
                 </div>
             </div>
         </Card>

@@ -59,7 +59,7 @@ const NewSubscriptionExpense: React.FC<NewSubscriptionExpenseProps> = ({ setDisp
                 return;
             }
             const count = fetchUserExpensesCount(session.user);
-            if (count.subscriptions >= subscriptionLimits[plan].subscriptionExpenses) {
+            if ((plan === "free" || plan === "standard") && count.subscriptions >= subscriptionLimits[plan].subscriptionExpenses) {
                 setErrorMessage(`You have reached the maximum number of subscriptions for your plan. Please upgrade your plan to add more.`);
                 setAboveLimit(true);
                 return;

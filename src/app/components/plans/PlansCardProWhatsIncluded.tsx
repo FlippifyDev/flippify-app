@@ -24,26 +24,8 @@ const PlansCardProWhatsIncluded = () => {
                 </li>
                 <li className="w-full">
                     <PlansClickableBulletPoint
-                        text="96 Manual Sales Entries /Month"
-                        tooltip="Manually log sales to track them in your orders, and financials. You manage the item&apos;s status, such as moving it between inventory and orders, without automated tracking."
-                    />
-                </li>
-                <li className="w-full">
-                    <PlansClickableBulletPoint
-                        text="96 Manual Listing Entries"
-                        tooltip="Manually add up to 96 listings at any time. Add custom information such as purchase price, platform, etc. When this listing sells, or you move it to sold then the listing is removed from your total and you can add another listing."
-                    />
-                </li>
-                <li className="w-full">
-                    <PlansClickableBulletPoint
-                        text={`200 One Time Expense Entries /Month`}
-                        tooltip={`Record up to 200 individual one-time expenses, such as shipping supplies, equipment, or other non-recurring costs. These help calculate your net profit more accurately.`}
-                    />
-                </li>
-                <li className="w-full">
-                    <PlansClickableBulletPoint
-                        text={`9 Subscription Expense Entries`}
-                        tooltip={`Track up to 9 recurring expenses like monthly software, platform fees, or memberships. These entries are included in your ongoing expense calculations.`}
+                        text={`Unlimited Subscription Expense Entries`}
+                        tooltip={`Track recurring expenses like monthly software, platform fees, or memberships. These entries are included in your ongoing expense calculations.`}
                     />
                 </li>
             </ul>

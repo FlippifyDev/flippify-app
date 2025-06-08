@@ -132,8 +132,8 @@ const Page = () => {
                         )}
                         <div className='px-4 ml-1'>
                             {activeTab === 'inventory' ?
-                                <span className='text-xs text-gray-500'>You have {automaticListings + manualListings} / {totalLimit} listings</span> :
-                                <span className='text-xs text-gray-500'>You have {automaticOrders + manualOrders} / {totalLimit} orders</span>
+                                <span className='text-xs text-gray-500'>You have {automaticListings} / {limits.automatic} listings</span> :
+                                <span className='text-xs text-gray-500'>You have {automaticOrders} / {limits.automatic} orders</span>
                             }
                         </div>
                     </div>

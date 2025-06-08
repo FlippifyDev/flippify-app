@@ -73,7 +73,22 @@ const PlansContent = () => {
             </div>
 
             {/* Subscription Cards Grid - Using grid with equal heights in each row */}
-            <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-8 md:px-[60px] w-full animate-fadeInBounce p-4 grid-flow-row-dense h-full">
+            <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-4 gap-8 md:px-[60px] w-full animate-fadeInBounce p-4 grid-flow-row-dense h-full">
+                <div className="h-full">
+                    <PlansCard
+                        title="Free"
+                        description="For beginners"
+                        discountedPrices={{ monthly: 0, yearly: 0 }}
+                        priceIds={{
+                            monthly: "price_1R6umYJJRepiHZ8duYSajDvz",
+                            yearly: "price_1R6umYJJRepiHZ8d7eBwpE78",
+                        }}
+                        whatsIncludedComponent={<PlansCardFreeWhatsIncluded />}
+                        priceRange={selectedPlan}
+                        currency={currency}
+                        conversionRates={conversionRates}
+                    />
+                </div>
                 <div className="h-full">
                     <PlansCard
                         title="Standard"

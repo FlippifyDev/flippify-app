@@ -5,15 +5,14 @@ import Modal from '../../dom/ui/Modal'
 import Dropdown from '../../dom/ui/Dropdown';
 import { ordersCol } from '@/services/firebase/constants';
 import LoadingSpinner from '@/app/components/LoadingSpinner';
-import { createItem, createItemsBatch } from '@/services/firebase/admin-create';
+import { createItemsBatch } from '@/services/firebase/admin-create';
 import { shortenText } from '@/utils/format';
 import { addCacheData } from '@/utils/cache-helpers';
-import { ISubscription } from '@/models/user';
 import { formatDateToISO } from '@/utils/format-dates';
 import { retrieveIdToken } from '@/services/firebase/retrieve';
 import { IOrder, IPurchase, ISale, IShipping, OrderStatus, StoreType } from '@/models/store-data';
 import { importCSVAllowedSubscriptionPlans, orderCacheKey, subscriptionLimits } from '@/utils/constants';
-import { fetchSubscriptionMaxListings, fetchUserInventoryAndOrdersCount, fetchUserSubscription } from '@/utils/extract-user-data';
+import { fetchUserInventoryAndOrdersCount, fetchUserSubscription } from '@/utils/extract-user-data';
 import { generateRandomFlippifyListingId, generateRandomFlippifyOrderId, generateRandomFlippifyTransactionId } from '@/utils/generate-random';
 
 // External Imports
@@ -45,7 +44,6 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
 
     // Messages
     const [errorMessage, setErrorMessage] = useState<string>("")
-    const [successMessage, setSuccessMessage] = useState<string>("")
 
 
     const fileInputRef = useRef<HTMLInputElement>(null);

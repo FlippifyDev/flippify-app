@@ -23,6 +23,7 @@ interface INumListings {
 
 interface INumOrders {
     resetDate?: string | null;
+    lastUploaded?: string | null;
     automatic?: number | null;
     manual?: number | null;
     totalAutomatic?: number | null;

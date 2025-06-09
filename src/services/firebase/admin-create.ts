@@ -88,7 +88,7 @@ export async function createItemsBatch({
     await batch.commit();
 
     // Step 6: Update item count
-    await updateItemCount({ idToken, item: items[0], rootCol, isNewItem: true })
+    await updateItemCount({ idToken, item: items[0], rootCol, isNewItem: true, isUpload: true });
 
     return { successCount: items.length - errors.length, errors };
 }

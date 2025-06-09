@@ -32,8 +32,7 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
     const [message, setMessage] = useState<string>();
     const subscribed = session?.user.authentication?.subscribed;
     const plan = session?.user.authentication?.subscribed;
-
-    const userSubscription = fetchUserSubscription(session?.user.subscriptions ?? []);
+    const lastUploaded = session?.user.store?.numOrders?.lastUploaded;
 
     const [uploadType, setUploadType] = useState<string>("custom");
     const [uploading, setUploading] = useState(false);
@@ -73,11 +72,23 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
                 return;
             }
 
+            if (lastUploaded) {
+                const last = new Date(lastUploaded).getTime();
+                const now = Date.now();
+                const hoursSince = (now - last) / (1000 * 60 * 60);
+                if (hoursSince < 24) {
+                    const hoursLeft = Math.ceil(24 - hoursSince);
+                    setErrorMessage(`You last uploaded ${Math.floor(hoursSince)} hour(s) ago. Please wait another ${hoursLeft} hour(s) before uploading again.`);
+                    setAboveLimit(true);
+                    return;
+                }
+              }
+
             setAboveLimit(false);
         };
 
         if (session?.user) checkLimit();
-    }, [session?.user, plan]);
+    }, [session?.user, plan, lastUploaded]);
 
 
     const transformRowToOrder = (row: Record<string, string>): { order?: IOrder, error?: string } => {
@@ -250,7 +261,7 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
                 <>
                     {aboveLimit && (
                         <div className="text-center">
-                            <span>Sorry you&apos;ve reach your max manual orders for this month</span>
+                            <span>{errorMessage}</span>
                         </div>
                     )}
 

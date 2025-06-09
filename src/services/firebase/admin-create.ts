@@ -51,6 +51,48 @@ export async function createItem({ idToken, rootCol, subCol, item }: CreateItemP
 }
 
 
+export async function createItemsBatch({
+    idToken,
+    rootCol,
+    subCol,
+    items,
+}: {
+    idToken: string;
+    rootCol: RootColType;
+    subCol: SubColType;
+    items: ItemType[];
+}): Promise<{ successCount: number; errors: any[] }> {
+    // Initialize admin SDK client (only works in Node/cloudfn)
+    const uid = await retrieveUIDAdmin({ idToken });
+    if (!uid) throw new Error("User could not be found");
+
+    const batch = firestoreAdmin.batch();
+    const errors: any[] = [];
+
+    items.forEach(item => {
+        try {
+            const id = extractItemId({ item });
+            if (!id) throw new Error("Missing ID");
+            const docRef = firestoreAdmin
+                .collection(rootCol)
+                .doc(uid)
+                .collection(subCol)
+                .doc(id);
+            // If you really need to check existence, you could do a get() first—
+            // but that defeats the point of a batch. We'll just upsert:
+            batch.set(docRef, item, { merge: true });
+        } catch (e) {
+            errors.push(e);
+        }
+    });
+
+    // Fire the batch
+    await batch.commit();
+    return { successCount: items.length - errors.length, errors };
+}
+  
+
+
 export async function createUser({ uid, email }: { uid: string, email: string }): Promise<IUser | void> {
     try {
         console.log("Creating new user", uid, email)

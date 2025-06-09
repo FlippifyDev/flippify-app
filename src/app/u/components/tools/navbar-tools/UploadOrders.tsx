@@ -5,7 +5,7 @@ import Modal from '../../dom/ui/Modal'
 import Dropdown from '../../dom/ui/Dropdown';
 import { ordersCol } from '@/services/firebase/constants';
 import LoadingSpinner from '@/app/components/LoadingSpinner';
-import { createItem } from '@/services/firebase/admin-create';
+import { createItem, createItemsBatch } from '@/services/firebase/admin-create';
 import { shortenText } from '@/utils/format';
 import { addCacheData } from '@/utils/cache-helpers';
 import { ISubscription } from '@/models/user';
@@ -21,6 +21,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import Papa from 'papaparse';
+import { ItemType, SubColType } from '@/services/firebase/models';
 
 
 interface UploadOrdersProps {
@@ -31,16 +32,14 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
     const { data: session, update: updateSession } = useSession();
     const [message, setMessage] = useState<string>();
     const subscribed = session?.user.authentication?.subscribed;
-
-    const { manualOrders } = fetchUserInventoryAndOrdersCount(session?.user);
+    const plan = session?.user.authentication?.subscribed;
 
     const userSubscription = fetchUserSubscription(session?.user.subscriptions ?? []);
-    const { manual: maxManual } = fetchSubscriptionMaxListings(userSubscription as ISubscription);
 
     const [uploadType, setUploadType] = useState<string>("custom");
     const [uploading, setUploading] = useState(false);
     const [uploaded, setUploaded] = useState(false);
-
+    const uploadLimit = subscriptionLimits[plan!]["upload-limit"];
 
     const [aboveLimit, setAboveLimit] = useState(false);
 
@@ -64,14 +63,13 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
 
     useEffect(() => {
         const checkLimit = () => {
-            const plan = session?.user.authentication?.subscribed;
             if (!plan) {
                 setErrorMessage("Please subscribe to a plan to add orders.");
                 setAboveLimit(true);
                 return;
             }
             const count = fetchUserInventoryAndOrdersCount(session.user);
-            if (count.manualOrders >= subscriptionLimits[plan].manual) {
+            if (plan === "free" && count.manualOrders >= subscriptionLimits[plan].manual) {
                 setErrorMessage(`You have reached the maximum number of manual orders for your plan. Please upgrade your plan to add more or wait till next month.`);
                 setAboveLimit(true);
                 return;
@@ -81,7 +79,7 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
         };
 
         if (session?.user) checkLimit();
-    }, [session?.user]);
+    }, [session?.user, plan]);
 
 
     const transformRowToOrder = (row: Record<string, string>): { order?: IOrder, error?: string } => {
@@ -188,45 +186,64 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
             header: true,
             skipEmptyLines: true,
             complete: async ({ data }) => {
-                const orders = data.map(transformRowToOrder);
-                let count = 0;
                 try {
-                    const ordersToAddToSession = [];
-                    for (const orderDict of orders) {
-                        if (count + manualOrders >= maxManual) return;
+                    // 1. Transform & limit
+                    const allOrders = data.map(transformRowToOrder);
+                    const idToken = await retrieveIdToken();
+                    if (!idToken) throw new Error("Not authenticated");
 
-                        if (!orderDict.order || orderDict.error) {
-                            uploadErrors.push(orderDict.error ?? `Uncaught error`);
-                            continue
-                        }
+                    // 2. Filter valid & enforce plan limit
+                    const validOrders = allOrders
+                        .filter(r => r.order && !r.error)
+                        .map(r => r.order!)   // now guaranteed ItemType
+                        .slice(0, uploadLimit);
 
-                        const order = orderDict.order;
+                    // 3. Group by subCol (storeType)
+                    const byStore: Record<string, ItemType[]> = {};
+                    validOrders.forEach(order => {
+                        const sub = order.storeType as SubColType;
+                        byStore[sub] = byStore[sub] || [];
+                        byStore[sub].push(order);
+                    });
 
-                        const idToken = await retrieveIdToken();
-                        if (!idToken) return;
-                        const { success, error } = await createItem({ idToken, item: order, rootCol: ordersCol, subCol: order.storeType as StoreType })
+                    // 4. For each group, fire a batch
+                    let totalUploaded = 0;
+                    const batchErrors: any[] = [];
+                    await Promise.all(
+                        Object.entries(byStore).map(async ([subCol, items]) => {
+                            const { successCount, errors } = await createItemsBatch({
+                                idToken,
+                                rootCol: ordersCol,
+                                subCol: subCol as SubColType,
+                                items,
+                            });
+                            totalUploaded += successCount;
+                            batchErrors.push(...errors);
+                        })
+                    );
 
-                        if (!success) {
-                            console.error('Order upload failed', error);
-                        } else {
-                            count += 1
-                            ordersToAddToSession.push(order)
-                        }
-                    }
-                    await handleCacheAndSessionUpdate(ordersToAddToSession)
+                    // 5. Update session/cache & UI
+                    await handleCacheAndSessionUpdate(validOrders.slice(0, totalUploaded));
                     setUploaded(true);
-                    setMessage(`Uploaded ${count} of ${orders.length}`)
+                    setMessage(
+                        `Uploaded ${totalUploaded} of ${allOrders.length}.` +
+                        (batchErrors.length
+                            ? ` ${batchErrors.length} failed.`
+                            : "")
+                    );
                 } catch (err) {
-                    console.error(err);
+                    console.error("Bulk upload failed", err);
+                    setMessage("Bulk upload encountered an error. See console.");
+                } finally {
+                    setUploading(false);
                 }
             },
-            error: (err) => {
-                console.error('CSV parse error:', err);
+            error: err => {
+                console.error("CSV parse error:", err);
+                setUploading(false);
             },
         });
-
-        setUploading(false);
-    };
+      };
 
 
     return (
@@ -249,6 +266,7 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
                                             onChange={onStoreTypeChange}
                                             options={storeOptions}
                                         />
+                                    
                                     </div>
 
                                     {/* Hidden file input for CSV import */}
@@ -264,6 +282,9 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal }) => {
                                             />
                                         </label>
                                     </div>
+                                </div>
+                                <div>
+                                    <p className='text-xs ml-1 text-gray-500'>Your upload limit is {uploadLimit}</p>
                                 </div>
                                 <hr />
                                 <div className='w-full flex items-end justify-between'>

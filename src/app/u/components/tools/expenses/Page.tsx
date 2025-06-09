@@ -8,12 +8,10 @@ import LayoutSubscriptionWrapper from '../../layout/LayoutSubscriptionWrapper';
 // External Imports
 import React, { useEffect, useState, useRef } from 'react'
 import { FaDatabase } from 'react-icons/fa';
-import { ImLoop2 } from 'react-icons/im';
-import { fetchSubscriptionMaxListings, fetchUserExpensesCount } from '@/utils/extract-user-data';
+import { fetchUserExpensesCount } from '@/utils/extract-user-data';
 import { useSession } from 'next-auth/react';
 import { subscriptionLimits } from '@/utils/constants';
-import { RiLoopLeftLine } from 'react-icons/ri';
-import { HiOutlineViewGridAdd, HiViewGridAdd } from 'react-icons/hi';
+import { HiViewGridAdd } from 'react-icons/hi';
 import Beta from '../../dom/ui/Beta';
 
 

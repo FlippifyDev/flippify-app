@@ -1,9 +1,10 @@
 "use client"
 
 
+import { subscriptionLimits } from '@/utils/constants';
 // Local Imports
 import Card from '../../dom/ui/Card';
-import { fetchUserSubscription, fetchSubscriptionMaxListings, fetchUserInventoryAndOrdersCount } from '@/utils/extract-user-data';
+import { fetchUserSubscription, fetchUserInventoryAndOrdersCount } from '@/utils/extract-user-data';
 
 // External Imports
 import { useSession } from 'next-auth/react'
@@ -15,10 +16,10 @@ const CardListingsAmount = () => {
 
     const { automaticListings, automaticOrders, manualListings, manualOrders } = fetchUserInventoryAndOrdersCount(session?.user);
 
-    const userSubscription = fetchUserSubscription(session?.user.subscriptions ?? []);
-    if (!userSubscription) return null;
+    const plan = session?.user.authentication?.subscribed;
+    if (!plan) return;
 
-    const { manual: maxManual, automatic: maxAutomatic } = fetchSubscriptionMaxListings(userSubscription);
+    const maxAutomatic = subscriptionLimits[plan].automatic
 
     return (
         <Card title="Listings Remaining" className='h-full'>

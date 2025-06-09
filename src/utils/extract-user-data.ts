@@ -10,26 +10,6 @@ export function fetchUserSubscription(subscriptions: ISubscription[]): ISubscrip
 }
 
 
-export function fetchSubscriptionMaxListings(subscription: ISubscription) {
-    switch (subscription.name) {
-        case 'Standard - member':
-            return {
-                automatic: constants.STANDARD_MAX_AUTOMATIC_LISTINGS,
-                manual: constants.STANDARD_MAX_MANUAL_LISTINGS
-            }
-        case 'Pro - member':
-            return {
-                automatic: constants.PRO_MAX_AUTOMATIC_LISTINGS,
-                manual: constants.PRO_MAX_MANUAL_LISTINGS
-            }
-        default:
-            return {
-                automatic: constants.FREE_MAX_AUTOMATIC_LISTINGS,
-                manual: constants.FREE_MAX_MANUAL_LISTINGS
-            }
-    }
-}
-
 export function fetchUserOrdersCount(user?: IUser): number {
     if (!user || !user.store?.numOrders) {
         return 0;

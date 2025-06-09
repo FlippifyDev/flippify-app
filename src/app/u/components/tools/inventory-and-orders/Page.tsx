@@ -11,7 +11,7 @@ import { fetchUserInventoryAndOrdersCount } from '@/utils/extract-user-data';
 
 // External Imports
 import React, { useEffect, useState, useRef } from 'react'
-import { FaSearch, FaShoppingCart } from 'react-icons/fa';
+import { FaShoppingCart } from 'react-icons/fa';
 import { useSession } from 'next-auth/react';
 import { FaBox } from "react-icons/fa";
 import { orderFilters } from './UpdateTableField';

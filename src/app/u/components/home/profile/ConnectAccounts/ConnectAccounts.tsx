@@ -24,6 +24,11 @@ const ProfileMarketplaceConnect = () => {
                     image="/connect-accounts/StockXLogo.png"
                 />
 
+                <ConnectAccount
+                    name="Viagogo"
+                    image="/connect-accounts/ViagogoLogo.png"
+                />
+
                 {/* Shopify Connect Account Card */}
                 <ConnectAccount
                     name="Shopify"

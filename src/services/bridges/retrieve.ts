@@ -19,11 +19,13 @@ interface RetrieveProps {
     timeFrom: string;
     timeTo?: string;
     subCol?: string;
+    searchFields?: string[];
+    searchText?: string;
     pagenate?: boolean;
     nextPage?: boolean;
 }
 
-export async function retrieveOrders({ uid, timeFrom, timeTo, subCol, pagenate, nextPage }: RetrieveProps): Promise<IOrder[] | void> {
+export async function retrieveOrders({ uid, timeFrom, timeTo, subCol, searchFields, searchText, pagenate, nextPage }: RetrieveProps): Promise<IOrder[] | void> {
     return await retrieveItems({
         uid,
         rootCol: ordersCol,
@@ -33,12 +35,14 @@ export async function retrieveOrders({ uid, timeFrom, timeTo, subCol, pagenate, 
         timeTo,
         subColFilter: ordersCol,
         subCol,
+        searchFields,
+        searchText,
         pagenate,
         nextPage
     }) as IOrder[];
 }
 
-export async function retrieveInventory({ uid, timeFrom, timeTo, subCol, pagenate, nextPage }: RetrieveProps): Promise<IListing[] | void> {
+export async function retrieveInventory({ uid, timeFrom, timeTo, subCol, searchFields, searchText, pagenate, nextPage }: RetrieveProps): Promise<IListing[] | void> {
     return await retrieveItems({
         uid,
         rootCol: inventoryCol,
@@ -48,12 +52,14 @@ export async function retrieveInventory({ uid, timeFrom, timeTo, subCol, pagenat
         timeTo,
         subColFilter: inventoryCol,
         subCol,
+        searchFields,
+        searchText,
         pagenate,
         nextPage
     });
 }
 
-export async function retrieveOneTimeExpenses({ uid, timeFrom, timeTo, subCol, pagenate, nextPage }: RetrieveProps): Promise<IOneTimeExpense[] | void> {
+export async function retrieveOneTimeExpenses({ uid, timeFrom, timeTo, subCol, searchFields, searchText, pagenate, nextPage }: RetrieveProps): Promise<IOneTimeExpense[] | void> {
     return await retrieveItems({
         uid,
         rootCol: expensesCol,
@@ -63,12 +69,14 @@ export async function retrieveOneTimeExpenses({ uid, timeFrom, timeTo, subCol, p
         timeTo,
         subColFilter: oneTimeCol,
         subCol,
+        searchFields,
+        searchText,
         pagenate,
         nextPage
     }) as IOneTimeExpense[];
 }
 
-export async function retrieveSubscriptionExpenses({ uid, timeFrom, timeTo, subCol, pagenate, nextPage }: RetrieveProps): Promise<ISubscriptionExpense[] | void> {
+export async function retrieveSubscriptionExpenses({ uid, timeFrom, timeTo, subCol, searchFields, searchText, pagenate, nextPage }: RetrieveProps): Promise<ISubscriptionExpense[] | void> {
     return await retrieveItems(
         {
             uid,
@@ -79,6 +87,8 @@ export async function retrieveSubscriptionExpenses({ uid, timeFrom, timeTo, subC
             timeTo,
             subColFilter: subscriptionsExpenseCol,
             subCol,
+            searchFields,
+            searchText,
             pagenate,
             nextPage
         }) as ISubscriptionExpense[];
@@ -93,10 +103,12 @@ interface RetrieveItemsProps {
     timeFrom: string;
     timeTo?: string;
     subCol?: string;
+    searchFields?: string[];
+    searchText?: string;    
     pagenate?: boolean;
     nextPage?: boolean;
 }
-export async function retrieveItems({ uid, rootCol, cacheKey, filterKey, timeFrom, timeTo, subColFilter, subCol, pagenate, nextPage }: RetrieveItemsProps): Promise<ItemType[] | void> {
+export async function retrieveItems({ uid, rootCol, cacheKey, filterKey, timeFrom, timeTo, subColFilter, subCol, searchFields, searchText, pagenate, nextPage }: RetrieveItemsProps): Promise<ItemType[] | void> {
     try {
         // Step 1: Retrieve sub collections
         const { cols: subCols, error } = await retrieveSubCols({ uid, subColFilter, subCol });
@@ -113,6 +125,8 @@ export async function retrieveItems({ uid, rootCol, cacheKey, filterKey, timeFro
                     filterKey,
                     timeFrom,
                     timeTo,
+                    searchFields,
+                    searchText,
                     pagenate,
                     nextPage,
                 })
@@ -159,7 +173,20 @@ export async function retrieveItems({ uid, rootCol, cacheKey, filterKey, timeFro
             : mergedArray;
 
         // Step 9: Filter by date range
-        return filterItemsByDate({ items: filteredItems, filterKey, timeFrom, timeTo });
+        const dateFiltered = filterItemsByDate({ items: filteredItems, filterKey, timeFrom, timeTo });
+
+        // 9.2: *Then* run in-memory search filter (substring, case-insensitive)
+        const final = searchText && searchFields?.length
+            ? dateFiltered.filter(item => {
+                const lower = searchText.toLowerCase();
+                return searchFields.some(field => {
+                    const val = (item as any)[field];
+                    return typeof val === "string" && val.toLowerCase().includes(lower);
+                });
+            })
+            : dateFiltered;
+
+        return final;
     } catch (error) {
         console.log(`Error in retrieveItems: ${error}`);
     }
@@ -225,4 +252,3 @@ export async function retrieveOrderStoreTypes(): Promise<string[] | void> {
         console.log(`Error in retrieveOrderStoreTypes: ${error}`);
     }
 }
-

@@ -24,7 +24,7 @@ import { removeCacheData } from "@/utils/cache-helpers";
 import NoResultsFound from "../../dom/ui/NoResultsFound";
 
 
-const Inventory = () => {
+const Inventory = ({ searchText }: { searchText?: string }) => {
     const { data: session } = useSession();
     const uid = session?.user.id as string;
     const cacheKey = `${inventoryCacheKey}-${uid}`
@@ -56,12 +56,16 @@ const Inventory = () => {
     const [contextMenu, setContextMenu] = useState<{ mouseX: number; mouseY: number; item: any } | null>(null);
 
     useEffect(() => {
+        setTriggerUpdate(true);
+    }, [searchText])
+
+    useEffect(() => {
         const fetchInventory = async () => {
-            if (!session?.user.authentication?.subscribed || listedData.length >= currentPage * itemsPerPage) return;
+            if (!searchText && (!session?.user.authentication?.subscribed || listedData.length >= currentPage * itemsPerPage)) return;
 
             setLoading(true);
 
-            const items = await retrieveInventory({ uid, timeFrom: defaultTimeFrom, pagenate: true, nextPage });
+            const items = await retrieveInventory({ uid, timeFrom: defaultTimeFrom, searchText, searchFields: ["customTag", "itemId", "storeType", "name", "purchase.platform", "storageLocation", "sku"], pagenate: true, nextPage });
             setListedData(items ?? [])
 
             setLoading(false);
@@ -74,7 +78,7 @@ const Inventory = () => {
             setTriggerUpdate(false);
             setNextPage(false);
         }
-    }, [session?.user, currentPage, listedData, triggerUpdate, uid, nextPage]);
+    }, [session?.user, currentPage, listedData, triggerUpdate, uid, nextPage, searchText]);
 
     // Handle page change
     const handlePageChange = (newPage: number) => {
@@ -170,13 +174,14 @@ const Inventory = () => {
                         <th>LISTED PRICE ({currencySymbols[currency]})</th>
                         <th>DATE LISTED</th>
                         <th>STORAGE</th>
+                        <th>SKU</th>
                         <th>TAG</th>
                     </tr>
                 </thead>
                 <tbody>
                     {paginatedData.length > 0 ? (
                         paginatedData.map((item, index) => {
-                            const { purchase, customTag, storageLocation } = item;
+                            const { purchase, customTag, storageLocation, sku } = item;
                             let purchasePrice = purchase?.price !== undefined ? purchase.price?.toFixed(2) : "0";
                             if (purchasePrice === undefined) {
                                 purchasePrice = "0";
@@ -216,6 +221,7 @@ const Inventory = () => {
                                     </td>
                                     <td className="min-w-32" onClick={() => handleDisplayOrderModal(item)}>{formatTableDate(item.dateListed)}</td>
                                     <UpdateTableField currentValue={storageLocation} docId={item.itemId} item={item} docType={inventoryCol} storeType={item.storeType} keyType="storageLocation" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
+                                    <UpdateTableField currentValue={sku} docId={item.itemId} item={item} docType={inventoryCol} storeType={item.storeType} keyType="sku" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
                                     <UpdateTableField tdClassName={index + 1 === paginatedData.length ? "rounded-br-xl" : ""} currentValue={customTag} docId={item.itemId} item={item} docType={inventoryCol} storeType={item.storeType} keyType="customTag" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
                                 </tr>
                             );

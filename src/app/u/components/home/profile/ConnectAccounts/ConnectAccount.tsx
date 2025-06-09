@@ -30,6 +30,7 @@ const ConnectAccount: React.FC<ConnectAccountProps> = ({ name, description, imag
                 {/* Connect/Disconnect Button */}
                 {name === "eBay" && <Connect store="ebay" />}
                 {name === "StockX" && <Connect store="stockx" />}
+                {name === "Viagogo" && <ConnectButton unavailable={true} />}
                 {name === "Depop" && <ConnectButton unavailable={true} />}
                 {name === "Amazon" && <ConnectButton unavailable={true} />}
                 {name === "Shopify" && <ConnectButton unavailable={true} />}

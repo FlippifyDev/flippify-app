@@ -22,9 +22,10 @@ import { ordersCol } from '@/services/firebase/constants';
 
 interface OrdersProps {
     filter: (typeof orderFilters)[number];
+    searchText?: string;
 }
 
-const Orders: React.FC<OrdersProps> = ({ filter }) => {
+const Orders: React.FC<OrdersProps> = ({ filter, searchText }) => {
     const router = useRouter();
     const { data: session } = useSession();
     const uid = session?.user.id as string;
@@ -71,13 +72,21 @@ const Orders: React.FC<OrdersProps> = ({ filter }) => {
     }, [filter, orderData])
 
     useEffect(() => {
+        setTriggerUpdate(true);
+        console.log("Triggering?")
+    }, [searchText])
+
+    useEffect(() => {
         const fetchOrders = async () => {
             // Already fetched enough for this page
-            if (!session?.user.authentication?.subscribed || orderData.length >= currentPage * itemsPerPage) return;
+            
+            if (!searchText && (!session?.user.authentication?.subscribed || orderData.length >= currentPage * itemsPerPage)) return;
+
+            console.log(searchText)
 
             setLoading(true);
 
-            const items = await retrieveOrders({ uid, timeFrom: defaultTimeFrom, pagenate: true, nextPage });
+            const items = await retrieveOrders({ uid, timeFrom: defaultTimeFrom, searchText, searchFields: ["customTag", "itemId", "storeType", "name", "orderId", "status", "transactionId", "storageLocation", "sku"], pagenate: true, nextPage });
             setOrderData(items ?? [])
             setLoading(false);
             setTriggerUpdate(false);
@@ -89,7 +98,7 @@ const Orders: React.FC<OrdersProps> = ({ filter }) => {
             setNextPage(false);
 
         }
-    }, [session?.user, currentPage, orderData, triggerUpdate, cacheKey, filter, nextPage, uid]);
+    }, [session?.user, currentPage, orderData, triggerUpdate, cacheKey, filter, nextPage, uid, searchText]);
 
     useEffect(() => {
         let timer: NodeJS.Timeout;
@@ -137,13 +146,14 @@ const Orders: React.FC<OrdersProps> = ({ filter }) => {
                         <th>PROFIT ({currencySymbols[currency]})</th>
                         <th>STORAGE</th>
                         <th>STATUS</th>
+                        <th>SKU</th>
                         <th>TAG</th>
                     </tr>
                 </thead>
                 <tbody>
                     {paginatedData.length > 0 ? (
                         paginatedData.map((order, index) => {
-                            const { transactionId, sale, purchase, customTag, status, storageLocation, shipping } = order;
+                            const { transactionId, sale, purchase, customTag, status, storageLocation, sku } = order;
 
                             let soldFor: number, profit: number | "N/A", roi: number | "N/A";
                             const purchasePrice = purchase?.price ?? 0;
@@ -193,6 +203,7 @@ const Orders: React.FC<OrdersProps> = ({ filter }) => {
                                     <td className={`${status === "Completed" ? "text-houseBlue" : ""} font-semibold`}>
                                         {status}
                                     </td>
+                                    <UpdateTableField currentValue={sku} docId={transactionId} item={order} docType={ordersCol} storeType={order.storeType} keyType="sku" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} className='hover:bg-gray-100 transition duration-300' />
                                     <UpdateTableField tdClassName={index + 1 === paginatedData.length ? "rounded-br-xl" : ""} currentValue={customTag} docId={transactionId} item={order} docType={ordersCol} storeType={order.storeType} keyType="customTag" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} className='hover:bg-gray-100 transition duration-300' />
                                 </tr>
                             );

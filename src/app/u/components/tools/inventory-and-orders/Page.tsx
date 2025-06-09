@@ -11,10 +11,11 @@ import { fetchUserInventoryAndOrdersCount } from '@/utils/extract-user-data';
 
 // External Imports
 import React, { useEffect, useState, useRef } from 'react'
-import { FaShoppingCart } from 'react-icons/fa';
+import { FaSearch, FaShoppingCart } from 'react-icons/fa';
 import { useSession } from 'next-auth/react';
 import { FaBox } from "react-icons/fa";
 import { orderFilters } from './UpdateTableField';
+import Input from '../../dom/ui/Input';
 
 
 const Page = () => {
@@ -35,12 +36,12 @@ const Page = () => {
     const [activeTab, setActiveTab] = useState(initialTab);
     const [fadeIn, setFadeIn] = useState(true);
     const [isOpen, setIsOpen] = useState(false); // Manage dropdown state
+    const [searchText, setSearchText] = useState('');
 
     const dropdownRef = useRef<HTMLDivElement>(null); // Reference for dropdown
 
     const { automaticListings, automaticOrders, manualListings, manualOrders } = fetchUserInventoryAndOrdersCount(session?.user);
     const limits = session?.user.authentication?.subscribed ? subscriptionLimits[session?.user.authentication?.subscribed] : { automatic: 0, manual: 0 }
-    const totalLimit = limits.automatic + limits.manual;
 
     useEffect(() => {
         // Close dropdown if clicked outside
@@ -67,6 +68,10 @@ const Page = () => {
             setActiveTab(tab);
         }, 300);
         setIsOpen(false);
+    };
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchText(e.target.value);
     };
 
     return (
@@ -118,19 +123,29 @@ const Page = () => {
 
                     <div className='flex flex-row items-center'>
                         {activeTab === 'orders' && (
-                            <div className='text-xs flex flex-row'>
-                            {orderFilters.map((filter, index) => (
-                                <button
-                                    key={filter}
-                                    onClick={() => setOrderFilter(filter)}
-                                    className={`px-3 py-1 font-semibold transition-all border duration-150 ${orderFilter === filter ? "text-houseBlue bg-gray-200" : "bg-gray-100 text-gray-700 hover:bg-gray-100"} ${index === 0 ? "rounded-l" : ""} ${index === orderFilters.length - 1 ? "rounded-r": ""}`}
+                            <div className='text-xs flex flex-row px-4'>
+                                {orderFilters.map((filter, index) => (
+                                    <button
+                                        key={filter}
+                                        onClick={() => setOrderFilter(filter)}
+                                        className={`px-3 py-1 font-semibold transition-all border duration-150 ${orderFilter === filter ? "text-houseBlue bg-gray-200" : "bg-gray-100 text-gray-700 hover:bg-gray-100"} ${index === 0 ? "rounded-l" : ""} ${index === orderFilters.length - 1 ? "rounded-r" : ""}`}
                                     >
-                                    {filter}
-                                </button>
-                            ))}
-                        </div>
+                                        {filter}
+                                    </button>
+                                ))}
+                            </div>
                         )}
-                        <div className='px-4 ml-1'>
+
+                        <div className="relative px-4">
+                            <Input
+                                type="text"
+                                placeholder={`Search ${activeTab}`}
+                                value={searchText}
+                                onChange={handleSearchChange}
+                                className="w-full h-9 text-sm"
+                            />
+                        </div>
+                        <div className='px-4'>
                             {activeTab === 'inventory' ?
                                 <span className='text-xs text-gray-500'>You have {automaticListings} / {limits.automatic} listings</span> :
                                 <span className='text-xs text-gray-500'>You have {automaticOrders} / {limits.automatic} orders</span>
@@ -141,7 +156,7 @@ const Page = () => {
 
                 {/* Conditional Content Rendering with Fade Transition */}
                 <div className={`transition-opacity duration-300 rounded-b-xl ${fadeIn ? 'opacity-100' : 'opacity-0'}`}>
-                    {activeTab === "inventory" ? <Inventory /> : <Orders filter={orderFilter} />}
+                    {activeTab === "inventory" ? <Inventory searchText={searchText} /> : <Orders searchText={searchText} filter={orderFilter} />}
                 </div>
             </main>
         </LayoutSubscriptionWrapper>

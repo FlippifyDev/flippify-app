@@ -39,6 +39,7 @@ interface IListing {
     } | null;
     quantity?: number | null;
     recordType?: RecordType | null;
+    sku?: string | null;
     storeType?: StoreType | null;
 }
 
@@ -50,6 +51,13 @@ interface IShipping {
     service?: string | null;
     timeDays?: number | null;
     trackingNumber?: string | null;
+}
+
+interface ITaxes {
+    amount?: number | null;
+    currency?: string | null;
+    type?: string | null;
+    description?: string | null;
 }
 
 interface IPurchase {
@@ -102,10 +110,12 @@ interface IOrder {
     purchase?: IPurchase | null;
     recordType?: RecordType | null;
     refund?: IRefund | null;
+    sku?: string | null;
     sale?: ISale | null;
     shipping?: IShipping | null;
     status?: OrderStatus | null;
     storeType?: StoreType | null;
+    tax?: ITaxes | null;
     transactionId?: string | null;
 }
 
@@ -119,4 +129,4 @@ interface IOrders {
     depop?: Record<string, IOrder> | null;
 }
 
-export type { IListing, IOrder, IInventory, IOrders, IHistory, IShipping, IPurchase, ISale };
+export type { IListing, IOrder, IInventory, IOrders, IHistory, IShipping, IPurchase, ISale, ITaxes };

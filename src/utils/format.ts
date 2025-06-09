@@ -28,9 +28,13 @@ function formatOrdersForCSVExport(orders: IOrder[], timeFrom: string, timeTo: st
         "Sale Price",
         "Sale Quantity",
         "Sale Platform",
+        "Currency",
         "Shipping Fees",
         "Shipping Time (Days)",
         "Tracking Number",
+        "Tax Amount",
+        "Tax Type",
+        "Tax Desciption",
         "Listing Date",
         "Sale Date",
         "Status",
@@ -51,13 +55,13 @@ function formatOrdersForCSVExport(orders: IOrder[], timeFrom: string, timeTo: st
             transactionId,
             orderId,
             name,
-            storeType,
             purchase,
             sale,
             shipping,
             listingDate,
             status,
-            customTag
+            customTag,
+            tax
         } = order;
         
         const salePrice = sale?.price ?? "N/A";
@@ -89,9 +93,13 @@ function formatOrdersForCSVExport(orders: IOrder[], timeFrom: string, timeTo: st
             sale?.price ? sale.price.toFixed(2) : "N/A",
             sale?.quantity ? sale.quantity : "N/A",
             escapeCSVField(sale?.platform ?? "N/A"),
+            sale?.currency ? sale.currency: "N/A",
             shipping?.fees ? shipping.fees : "N/A",
             shipping?.timeDays ? shipping.timeDays : "N/A", 
             shipping?.trackingNumber ? shipping.trackingNumber : "N/A",
+            tax?.amount ? tax.amount : "N/A",
+            tax?.type ? tax.type : "N/A",
+            tax?.description ? tax.description : "N/A",
             listingDate ? formatDate(listingDate): "N/A",
             sale?.date ? formatDate(sale.date): "N/A",   
             status,
@@ -126,6 +134,10 @@ export function formatSalesForCSVExport(
         "Sale Price",
         "Quantity",
         "Shipping Fees",
+        "Additional Fees",
+        "Tax Amount",
+        "Tax Type",
+        "Tax Desciption",
         "Buyer",
         "Currency",
     ];
@@ -143,8 +155,12 @@ export function formatSalesForCSVExport(
         o.sale!.price?.toFixed(2) ?? "N/A",
         o.sale!.quantity?.toString() ?? "N/A",
         o.shipping?.fees?.toFixed(2) ?? "0.00",
-        o.sale!.buyerUsername ?? "N/A",
-        o.sale!.currency ?? "N/A",
+        o.additionalFees?.toFixed(2) ?? "0.00",
+        o.tax?.amount?.toFixed(2) ?? "N/A",
+        o.tax?.type ?? "N/A",
+        o.tax?.description ?? "N/A",
+        o.sale?.buyerUsername ?? "N/A",
+        o.sale?.currency ?? "N/A",
     ].join(","));
 
     return [header.join(","), ...rows].join("\n");

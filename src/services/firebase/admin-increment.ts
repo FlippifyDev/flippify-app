@@ -11,9 +11,9 @@ import { firestoreAdmin } from "@/lib/firebase/config-admin";
 import { IUser } from "@/models/user";
 
 
-export async function incrementItemCountFields({ item, rootCol, isNegated, isNewItem }: { item: ItemType, rootCol: RootColType, isNegated?: boolean, isNewItem?: boolean }) {
+export async function incrementItemCountFields({ item, rootCol, isNegated, isNewItem, amount = 1 }: { item: ItemType, rootCol: RootColType, isNegated?: boolean, isNewItem?: boolean, amount?: number }) {
     const countType = rootColToUserCount[rootCol];
-    const amount = isNegated ? FieldValue.increment(-1) : FieldValue.increment(1);
+    const value = isNegated ? FieldValue.increment(-amount) : FieldValue.increment(amount);
 
     let createdThisMonth = undefined;
     if (item.createdAt) {
@@ -31,11 +31,11 @@ export async function incrementItemCountFields({ item, rootCol, isNegated, isNew
             const expense = item as ISubscriptionExpense | IOneTimeExpense;
             if (expense.type === "one-time") {
                 if (isNewItem || createdThisMonth) {
-                    updateFields.numExpenses.oneTime = amount;
+                    updateFields.numExpenses.oneTime = value;
                 }
-                updateFields.numExpenses.totalOneTime = amount;
+                updateFields.numExpenses.totalOneTime = value;
             } else if (expense.type === "subscription") {
-                updateFields.numExpenses.subscriptions = amount;
+                updateFields.numExpenses.subscriptions = value;
             }
             break;
         case "numOrders":
@@ -45,16 +45,16 @@ export async function incrementItemCountFields({ item, rootCol, isNegated, isNew
             const orderCounterField = isOrderAuto ? 'automatic' : 'manual';
             const totalCounterField = isOrderAuto ? 'totalAutomatic' : 'totalManual';
             if (isNewItem || createdThisMonth) {
-                updateFields.numOrders[orderCounterField] = amount;
+                updateFields.numOrders[orderCounterField] = value;
             }
-            updateFields.numOrders[totalCounterField] = amount;
+            updateFields.numOrders[totalCounterField] = value;
             break;
         case "numListings":
             updateFields.numListings = {};
             const listing = item as IListing;
             const isListingAuto = listing.recordType === "automatic";
             const listingCounterField = isListingAuto ? 'automatic' : 'manual';
-            updateFields.numListings[listingCounterField] = amount;
+            updateFields.numListings[listingCounterField] = value;
             break;
     }
 

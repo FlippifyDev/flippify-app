@@ -78,8 +78,6 @@ export async function createItemsBatch({
                 .doc(uid)
                 .collection(subCol)
                 .doc(id);
-            // If you really need to check existence, you could do a get() first—
-            // but that defeats the point of a batch. We'll just upsert:
             batch.set(docRef, item, { merge: true });
         } catch (e) {
             errors.push(e);
@@ -88,6 +86,10 @@ export async function createItemsBatch({
 
     // Fire the batch
     await batch.commit();
+
+    // Step 6: Update item count
+    await updateItemCount({ idToken, item: items[0], rootCol, isNewItem: true })
+
     return { successCount: items.length - errors.length, errors };
 }
   

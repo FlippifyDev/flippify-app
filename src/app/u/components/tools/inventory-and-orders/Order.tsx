@@ -1,7 +1,7 @@
 "use client"
 
 // Local Imports
-import { IOrder, StoreType } from '@/models/store-data';
+import { IOrder, ITaxes, StoreType } from '@/models/store-data';
 import IconButton from '../../dom/ui/IconButton';
 import ImageModal from '@/app/components/ImageModal';
 import ImageUpload from '../../dom/ui/ImageUpload';
@@ -23,6 +23,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { useSession } from 'next-auth/react';
 import { set } from 'lodash';
 import { ordersCol } from '@/services/firebase/constants';
+import Card from '../../dom/ui/Card';
 
 
 const Order = () => {
@@ -168,32 +169,38 @@ const Order = () => {
                     </div>
                 </div>
 
-                {/* History */}
-                <div className='relative md:w-3/5 bg-white shadow rounded-md'>
-                    <OrderHistory order={order} />
-                    <div className="absolute top-4 right-4 z-10">
-                        <div className="dropdown dropdown-bottom">
-                            <label
-                                tabIndex={0}
-                                className="btn btn-sm px-2 rounded-md min-h-0 h-8 bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center"
-                            >
-                                &#x2026;
-                            </label>
-                            <ul
-                                tabIndex={0}
-                                className="dropdown-content mt-2 right-0 menu bg-white space-y-1 rounded-lg w-40 border border-gray-200"
-                            >
-                                <button
-                                    onClick={handleDeleteOrder}
-                                    disabled={deleting}
-                                    className='flex items-center gap-3 disabled:bg-muted text-red-500 font-semibold py-2 px-3 rounded-md hover:bg-gray-100 active:bg-gray-200 transition duration-200'
-
+                <div className='md:w-3/5 flex flex-col gap-4'>
+                    {/* History */}
+                    <div className='relative bg-white shadow rounded-md'>
+                        <OrderHistory order={order} />
+                        <div className="absolute top-4 right-4 z-10">
+                            <div className="dropdown dropdown-bottom">
+                                <label
+                                    tabIndex={0}
+                                    className="btn btn-sm px-2 rounded-md min-h-0 h-8 bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center"
                                 >
-                                    <span><FaRegTrashAlt /></span>
-                                    <span className=''>Delete</span>
-                                </button>
-                            </ul>
+                                    &#x2026;
+                                </label>
+                                <ul
+                                    tabIndex={0}
+                                    className="dropdown-content mt-2 right-0 menu bg-white space-y-1 rounded-lg w-40 border border-gray-200"
+                                >
+                                    <button
+                                        onClick={handleDeleteOrder}
+                                        disabled={deleting}
+                                        className='flex items-center gap-3 disabled:bg-muted text-red-500 font-semibold py-2 px-3 rounded-md hover:bg-gray-100 active:bg-gray-200 transition duration-200'
+
+                                    >
+                                        <span><FaRegTrashAlt /></span>
+                                        <span className=''>Delete</span>
+                                    </button>
+                                </ul>
+                            </div>
                         </div>
+                    </div>
+
+                    <div className=''>
+                        <TaxCard order={order} cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
                     </div>
                 </div>
             </section>
@@ -221,7 +228,7 @@ interface OrderInfoTableProps {
 }
 
 const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, triggerUpdate }) => {
-    const { transactionId, sale, purchase, shipping, additionalFees, customTag, storeType, listingDate, storageLocation, condition } = order;
+    const { transactionId, sale, purchase, shipping, additionalFees, customTag, storeType, listingDate, storageLocation, condition, sku } = order;
 
     let soldFor: number, profit: number | "N/A", roi: number | "N/A";
     const quantity = sale?.quantity ?? 0
@@ -288,6 +295,24 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         docType='orders'
                         storeType={order.storeType}
                         keyType="storageLocation"
+                        cacheKey={cacheKey}
+                        triggerUpdate={triggerUpdate}
+                        tdClassName='px-3'
+                        className='max-w-64 bg-gray-100 hover:bg-gray-200 text-gray-600 !text-base transition duration-300'
+                    />
+                </tr>
+                <tr className='border-b'>
+                    <td className="py-4 px-6 font-medium text-gray-800">
+                        SKU
+                    </td>
+                    <UpdateTableField
+                        type="text"
+                        currentValue={sku}
+                        docId={transactionId}
+                        item={order}
+                        docType='orders'
+                        storeType={order.storeType}
+                        keyType="sku"
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
                         tdClassName='px-3'
@@ -709,5 +734,76 @@ const OrderHistory = ({ order }: { order: IOrder }) => {
         </div>
     );
 };
+
+
+const TaxCard = ({ order, cacheKey, triggerUpdate }: { order: IOrder, cacheKey: string, triggerUpdate: () => void; }) => {
+    const tax = order?.tax;
+    return (
+        <Card title="Tax">
+            <div className='grid grid-rows-4 bg-gray-100'>
+                <div className='row-span-1 grid grid-cols-2 py-4 px-6 border-b'>
+                    <span className='col-span-1 font-medium text-gray-800'>Type</span>
+                    <UpdateTableField
+                        currentValue={tax?.type}
+                        docId={order?.transactionId}
+                        item={order}
+                        docType='orders'
+                        storeType={order.storeType}
+                        keyType="tax.type"
+                        cacheKey={cacheKey}
+                        triggerUpdate={triggerUpdate}
+                        tdClassName='px-3'
+                        className='bg-gray-100 hover:bg-gray-200 text-gray-600 !text-base transition duration-300'
+                    />
+                </div>
+                <div className='row-span-1 grid grid-cols-2 py-4 px-6 border-b'>
+                    <span className='col-span-1 font-medium text-gray-800'>Description</span>
+                    <UpdateTableField
+                        currentValue={tax?.description}
+                        docId={order?.transactionId}
+                        item={order}
+                        docType='orders'
+                        storeType={order.storeType}
+                        keyType="tax.description"
+                        cacheKey={cacheKey}
+                        triggerUpdate={triggerUpdate}
+                        tdClassName='px-3'
+                        className='bg-gray-100 hover:bg-gray-200 text-gray-600 !text-base transition duration-300'
+                    />
+                </div>
+                <div className='row-span-1 grid grid-cols-2 py-4 px-6 border-b'>
+                    <span className='col-span-1 font-medium text-gray-800'>Amount</span>
+                    <UpdateTableField
+                        currentValue={tax?.amount?.toFixed(2)}
+                        docId={order?.transactionId}
+                        item={order}
+                        docType='orders'
+                        storeType={order.storeType}
+                        keyType="tax.amount"
+                        cacheKey={cacheKey}
+                        triggerUpdate={triggerUpdate}
+                        tdClassName='px-3'
+                        className='bg-gray-100 hover:bg-gray-200 text-gray-600 !text-base transition duration-300'
+                    />
+                </div>
+                <div className='row-span-1 grid grid-cols-2 py-4 px-6 border-b'>
+                    <span className='col-span-1 font-medium text-gray-800'>Currency</span>
+                    <UpdateTableField
+                        currentValue={tax?.currency}
+                        docId={order?.transactionId}
+                        item={order}
+                        docType='orders'
+                        storeType={order.storeType}
+                        keyType="tax.currency"
+                        cacheKey={cacheKey}
+                        triggerUpdate={triggerUpdate}
+                        tdClassName='px-3'
+                        className='bg-gray-100 hover:bg-gray-200 text-gray-600 !text-base transition duration-300'
+                    />
+                </div>
+            </div>
+        </Card>
+    )
+}
 
 export default Order

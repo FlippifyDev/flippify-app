@@ -6,7 +6,7 @@ import { updateCacheData } from '@/utils/cache-helpers';
 import { retrieveIdToken } from '@/services/firebase/retrieve';
 import { updateMovedItem } from '@/services/firebase/admin-update';
 import { IListing, IOrder, StoreType } from '@/models/store-data';
-import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput } from '@/utils/input-validation';
+import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput, validateSafeInput } from '@/utils/input-validation';
 
 // External Imports
 import React, { useState } from 'react'
@@ -18,7 +18,7 @@ export const orderFilters = ["All", "Active", "Missing data"] as const;
 type ExtraKey = "customTag" | "storeType" | "listingDate" | "storageLocation" | "condition"
 type PurchaseKey = "purchase.platform" | "purchase.price" | "purchase.date" | "purchase.quantity"
 type InventoryKey = "customTag"
-type OrderKey = "sale.price" | "shipping.fees" | "shipping.date" | "sale.date" | "additionalFees" | "sale.quantity" | "sale.buyerUsername"
+type OrderKey = "sale.price" | "shipping.fees" | "shipping.date" | "sale.date" | "additionalFees" | "sale.quantity" | "sale.buyerUsername" | "tax.type" | "tax.description" | "tax.amount" | "tax.currency" | "sku"
 
 
 interface UpdateTableFieldProps {
@@ -71,6 +71,10 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
                 case "customTag":
                 case "storageLocation":
                 case "condition":
+                case "tax.type":
+                case "tax.description":
+                case "tax.currency":
+                case "sku":
                     set(item, keyType, value);
                     break;
                 case "sale.quantity":
@@ -81,6 +85,7 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
                 case "purchase.price":
                 case "shipping.fees":
                 case "sale.price":
+                case "tax.amount":
                     setValue(Number(value).toFixed(2))
                     set(item, keyType, Number(value));
                     break;
@@ -116,7 +121,13 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
             case "storageLocation":
             case "condition":
             case "sale.buyerUsername":
+            case "tax.type":
+            case "tax.description":
+            case "tax.currency":
                 validateAlphaNumericInput(input, setValue);
+                break;
+            case "sku":
+                validateSafeInput(input, setValue);
                 break;
             case "sale.quantity":
                 validateIntegerInput(input, setValue)
@@ -125,6 +136,7 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
             case "purchase.price":
             case "shipping.fees":
             case "sale.price":
+            case "tax.amount":
                 validatePriceInput(input, setValue);
                 break;
             case "purchase.date":

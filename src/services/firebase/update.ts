@@ -86,10 +86,12 @@ interface UpdateCachedItemsProps {
     timeFrom: string;
     timeTo?: string;
     update?: boolean;
+    searchFields?: string[];
+    searchText?: string;   
     pagenate?: boolean;
     nextPage?: boolean;
 }
-export async function updateCachedItems({ uid, rootCol, subCol, cacheKey, filterKey, timeFrom, timeTo, update, pagenate, nextPage }: UpdateCachedItemsProps): Promise<ItemType[]> {
+export async function updateCachedItems({ uid, rootCol, subCol, searchFields, searchText, cacheKey, filterKey, timeFrom, timeTo, update, pagenate, nextPage }: UpdateCachedItemsProps): Promise<ItemType[]> {
     try {
         // Step 1: Retrieve cache
         const cacheData = getCachedData(cacheKey, true);

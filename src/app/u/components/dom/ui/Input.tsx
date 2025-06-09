@@ -17,12 +17,28 @@ interface InputProps {
 
 
 const Input: React.FC<InputProps> = ({ type, placeholder, value, className, readOnly, title, titleClassName, onKeyDown, onChange, onBlur, onFocus }) => {
+    if (!title) {
+        return (
+            <input
+                type={type}
+                placeholder={placeholder || "Enter text"}
+                value={value}
+                onChange={onChange}
+                onBlur={onBlur}
+                onFocus={onFocus}
+                onKeyDown={onKeyDown}
+                readOnly={readOnly}
+                className={`${className} input input-bordered w-full h-10`}
+            />
+        );
+    }
+
     return (
-        <div className='flex flex-col gap-2 w-full'>
+        <div className="flex flex-col gap-2 w-full justify-center">
             <span className={`${titleClassName} text-gray-700`}>{title}</span>
             <input
                 type={type}
-                placeholder={placeholder ? placeholder : "Enter text"}
+                placeholder={placeholder || "Enter text"}
                 value={value}
                 onChange={onChange}
                 onBlur={onBlur}
@@ -32,7 +48,6 @@ const Input: React.FC<InputProps> = ({ type, placeholder, value, className, read
                 className={`${className} input input-bordered`}
             />
         </div>
-    )
-}
-
+    );
+};
 export default Input

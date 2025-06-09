@@ -33,13 +33,13 @@ export const FREE_SUBSCRIPTION_EXPENSES = 3;
 
 // Standard
 export const STANDARD_MAX_AUTOMATIC_LISTINGS = 48;
-export const STANDARD_MAX_MANUAL_LISTINGS = 48;
 export const STANDARD_SUBSCRIPTION_EXPENSES = 6;
-
+export const STANDARD_UPLOAD_LIMIT = 100;
 
 // Pro
 export const PRO_MAX_AUTOMATIC_LISTINGS = 96;
-export const PRO_MAX_MANUAL_LISTINGS = 96;
+export const PRO_UPLOAD_LIMIT = 200;
+
 
 // Product IDs
 export const FREE_MONTHLY_PID = "price_1R6umYJJRepiHZ8duYSajDvz";
@@ -70,32 +70,34 @@ export const subscriptionLimits = {
         "automatic": FREE_MAX_AUTOMATIC_LISTINGS,
         "manual": FREE_MAX_MANUAL_LISTINGS,
         "oneTimeExpenses": FREE_ONE_TIME_EXPENSES,
-        "subscriptionExpenses": FREE_SUBSCRIPTION_EXPENSES
+        "subscriptionExpenses": FREE_SUBSCRIPTION_EXPENSES,
+        "upload-limit": 0
     },
     "standard": {
         "automatic": STANDARD_MAX_AUTOMATIC_LISTINGS,
-        "manual": STANDARD_MAX_MANUAL_LISTINGS,
-        "subscriptionExpenses": STANDARD_SUBSCRIPTION_EXPENSES
+        "subscriptionExpenses": STANDARD_SUBSCRIPTION_EXPENSES,
+        "upload-limit": STANDARD_UPLOAD_LIMIT
     },
     "pro": {
         "automatic": PRO_MAX_AUTOMATIC_LISTINGS,
-        "manual": PRO_MAX_MANUAL_LISTINGS,
+        "upload-limit": PRO_UPLOAD_LIMIT
     },
     "enterprise 1": {
         "automatic": 200,
-        "manual": 200,
+        "upload-limit": 300
+
     },
     "enterprise 2": {
         "automatic": 500,
-        "manual": 500,
+        "upload-limit": 400
     },
     "enterprise 3": {
         "automatic": 750,
-        "manual": 750,
+        "upload-limit": 500
     },
     "enterprise 4": {
         "automatic": 1000,
-        "manual": 1000,
+        "upload-limit": 600
     },
 }
 

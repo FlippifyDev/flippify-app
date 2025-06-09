@@ -9,9 +9,10 @@ import { ItemType, RootColType } from "./models";
 import { IOneTimeExpense, ISubscriptionExpense } from "@/models/expenses";
 import { firestoreAdmin } from "@/lib/firebase/config-admin";
 import { IUser } from "@/models/user";
+import { formatDateToISO } from "@/utils/format-dates";
 
 
-export async function incrementItemCountFields({ item, rootCol, isNegated, isNewItem, amount = 1 }: { item: ItemType, rootCol: RootColType, isNegated?: boolean, isNewItem?: boolean, amount?: number }) {
+export async function incrementItemCountFields({ item, rootCol, isNegated, isNewItem, isUpload, amount = 1 }: { item: ItemType, rootCol: RootColType, isNegated?: boolean, isNewItem?: boolean, isUpload?: boolean, amount?: number }) {
     const countType = rootColToUserCount[rootCol];
     const value = isNegated ? FieldValue.increment(-amount) : FieldValue.increment(amount);
 
@@ -46,6 +47,9 @@ export async function incrementItemCountFields({ item, rootCol, isNegated, isNew
             const totalCounterField = isOrderAuto ? 'totalAutomatic' : 'totalManual';
             if (isNewItem || createdThisMonth) {
                 updateFields.numOrders[orderCounterField] = value;
+            }
+            if (isUpload) {
+                updateFields.numOrders["lastUploaded"] = formatDateToISO(new Date());
             }
             updateFields.numOrders[totalCounterField] = value;
             break;

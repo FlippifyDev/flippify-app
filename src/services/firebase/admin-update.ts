@@ -21,9 +21,10 @@ interface UpdateUserItemCountProps {
     rootCol: RootColType;
     isNegated?: boolean;
     isNewItem?: boolean;
+    isUpload?: boolean;
     amount?: number;
 }
-export async function updateItemCount({ idToken, item, rootCol, isNegated, isNewItem, amount }: UpdateUserItemCountProps) {
+export async function updateItemCount({ idToken, item, rootCol, isNegated, isNewItem, isUpload, amount }: UpdateUserItemCountProps) {
     try {
         // Step 1: Extract Item ID
         const id = extractItemId({ item });
@@ -37,7 +38,7 @@ export async function updateItemCount({ idToken, item, rootCol, isNegated, isNew
         const userRef = firestoreAdmin.collection(usersCol).doc(uid);
 
         // Step 4: Get update fields
-        const updateFields = await incrementItemCountFields({ item, rootCol, isNegated, isNewItem, amount });
+        const updateFields = await incrementItemCountFields({ item, rootCol, isNegated, isNewItem, isUpload, amount });
 
         // Step 5: Update the counts
         await userRef.set({ store: updateFields }, { merge: true });

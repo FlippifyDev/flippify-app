@@ -5,7 +5,6 @@ export const storePlatforms: Record<string, StoreType> = {
     "stockx": "stockx",
 }
 
-
 export const storeTokenKeys: Record<string, string> = {
     "ebay": "ebayAccessToken",
     "stockx": "stockxAccessToken"

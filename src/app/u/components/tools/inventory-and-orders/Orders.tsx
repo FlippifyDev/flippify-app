@@ -1,7 +1,7 @@
 "use client"
 
 // Local Imports
-import { IOrder } from '@/models/store-data';
+import { IOrder, StoreType } from '@/models/store-data';
 import LoadingSpinner from '@/app/components/LoadingSpinner';
 import { shortenText } from '@/utils/format';
 import { retrieveOrders } from '@/services/bridges/retrieve';
@@ -18,6 +18,10 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import NoResultsFound from '../../dom/ui/NoResultsFound';
 import { ordersCol } from '@/services/firebase/constants';
+import { retrieveIdToken } from '@/services/firebase/retrieve';
+import { deleteItem } from '@/services/firebase/delete';
+import { removeCacheData } from '@/utils/cache-helpers';
+import EditExtra from '../navbar-tools/EditExtra';
 
 
 interface OrdersProps {
@@ -38,7 +42,7 @@ const Orders: React.FC<OrdersProps> = ({ filter, searchText }) => {
     // Page Config
     const itemsPerPage = 12;
     const [currentPage, setCurrentPage] = useState(1);
-    const totalOrders = fetchUserOrdersCount(session?.user)
+    const totalOrders = fetchUserOrdersCount(session?.user);
     const totalPages = Math.ceil(totalOrders / itemsPerPage);
 
     const paginatedData = filteredOrderData.slice(
@@ -51,54 +55,49 @@ const Orders: React.FC<OrdersProps> = ({ filter, searchText }) => {
     const [loading, setLoading] = useState(false);
     const [slowLoading, setSlowLoading] = useState(false);
 
-    useEffect(() => {
-        function filterOrders() {
-            if (filter === "All") {
-                setFilteredOrderData(orderData);
-            } else if (filter === "Missing data") {
-                const filtered = orderData.filter(order => {
-                    return !order.purchase?.date || !order.purchase.price;
-                });
-                setFilteredOrderData(filtered);
-            } else if (filter === "Active") {
-                const filtered = orderData.filter(order => {
-                    return order.status === "Active";
-                });
-                setFilteredOrderData(filtered);
-            }
-        }
+    const [contextMenu, setContextMenu] = useState<{ mouseX: number; mouseY: number; item: any } | null>(null);
+    const [editExtraModalOpen, setEditExtraModalOpen] = useState(false);
+    const [fillItem, setFillItem] = useState<IOrder>();
 
-        filterOrders()
-    }, [filter, orderData])
+    useEffect(() => {
+        let filtered = orderData;
+        if (filter === "Missing data") {
+            filtered = orderData.filter((order) => !order.purchase?.date || !order.purchase.price);
+        } else if (filter === "Active") {
+            filtered = orderData.filter((order) => order.status === "Active");
+        }
+        setFilteredOrderData(filtered);
+    }, [filter, orderData]);
 
     useEffect(() => {
         setTriggerUpdate(true);
-        console.log("Triggering?")
-    }, [searchText])
+    }, [searchText]);
+
+    useEffect(() => {
+        const handleClick = () => {
+            handleCloseContextMenu();
+        };
+        window.addEventListener("click", handleClick);
+        return () => window.removeEventListener("click", handleClick);
+    }, []);
 
     useEffect(() => {
         const fetchOrders = async () => {
-            // Already fetched enough for this page
-            
-            if (!searchText && (!session?.user.authentication?.subscribed || orderData.length >= currentPage * itemsPerPage)) return;
-
-            console.log(searchText)
-
+            if (!triggerUpdate && !searchText && (!session?.user.authentication?.subscribed || filteredOrderData.length >= currentPage * itemsPerPage)) return;
             setLoading(true);
 
             const items = await retrieveOrders({ uid, timeFrom: defaultTimeFrom, searchText, searchFields: ["customTag", "itemId", "storeType", "name", "orderId", "status", "transactionId", "storageLocation", "sku"], pagenate: true, nextPage });
-            setOrderData(items ?? [])
+            setOrderData(items ?? []);
+
             setLoading(false);
             setTriggerUpdate(false);
+            setNextPage(false);
         };
 
         if ((session?.user.authentication?.subscribed && triggerUpdate) || nextPage) {
             fetchOrders();
-            setTriggerUpdate(false);
-            setNextPage(false);
-
         }
-    }, [session?.user, currentPage, orderData, triggerUpdate, cacheKey, filter, nextPage, uid, searchText]);
+    }, [session?.user, currentPage, filteredOrderData, triggerUpdate, filter, uid, nextPage,searchText]);
 
     useEffect(() => {
         let timer: NodeJS.Timeout;
@@ -132,6 +131,46 @@ const Orders: React.FC<OrdersProps> = ({ filter, searchText }) => {
         router.push(`./inventory-and-orders/order-info?tid=${encodeURIComponent(order.transactionId ?? "no-id-found")}`);
     }
 
+    const handleContextMenu = (event: React.MouseEvent, item: IOrder) => {
+        let x = 50;
+        let y = 50;
+        // Suppress the browser’s own menu on right‐click
+        if (event.type === "contextmenu") {
+            event.preventDefault();
+        } else {
+            // Stop this click from reaching the window 'click' listener
+            event.stopPropagation()
+
+            x = - 20
+        }
+
+        setContextMenu({
+            mouseX: event.clientX - x,
+            mouseY: event.clientY - y,
+            item,
+        });
+    };
+
+    const handleCloseContextMenu = () => {
+        setContextMenu(null);
+    };
+
+    function handleDisplayEditExtraModal(item: IOrder) {
+        setFillItem(item);
+        setEditExtraModalOpen(true);
+    }
+
+    async function handleDeleteItem(item: IOrder, storeType: StoreType) {
+        const idToken = await retrieveIdToken();
+        if (!idToken) return;
+
+        setOrderData((prev) => prev.filter((order) => order.transactionId !== item.transactionId));
+        await deleteItem({ idToken, rootCol: ordersCol, subCol: storeType, item })
+
+        removeCacheData(cacheKey, item.transactionId as string);
+        setTriggerUpdate(true);
+    }
+
     return (
         <div className="w-full h-full  rounded-b-sm overflow-x-auto">
             <table className="table w-full">
@@ -153,16 +192,18 @@ const Orders: React.FC<OrdersProps> = ({ filter, searchText }) => {
                 <tbody>
                     {paginatedData.length > 0 ? (
                         paginatedData.map((order, index) => {
-                            const { transactionId, sale, purchase, customTag, status, storageLocation, sku } = order;
+                            const { transactionId, sale, purchase, customTag, status, storageLocation, sku, shipping } = order;
 
                             let soldFor: number, profit: number | "N/A", roi: number | "N/A";
                             const purchasePrice = purchase?.price ?? 0;
                             const quantity = sale?.quantity ?? 0;
+                            const sellerCosts = (order.additionalFees ?? 0) + (shipping?.sellerFees ?? 0);
+
 
                             soldFor = sale?.price ?? 0;
 
                             if (purchasePrice) {
-                                profit = (soldFor - purchasePrice) * quantity;
+                                profit = ((soldFor - purchasePrice) * quantity) - sellerCosts;
                                 roi = (profit / purchasePrice) * 100;
                             } else {
                                 profit = "N/A";
@@ -172,6 +213,7 @@ const Orders: React.FC<OrdersProps> = ({ filter, searchText }) => {
                             return (
                                 <tr
                                     key={`${order.transactionId}-${index}`}
+                                    onContextMenu={(e) => handleContextMenu(e, order)}
                                     className='hover:bg-gray-50'
                                 >
                                     <td
@@ -192,8 +234,8 @@ const Orders: React.FC<OrdersProps> = ({ filter, searchText }) => {
                                         onClick={() => handleRouteToOrderPage(order)}>
                                         {shortenText(order.name ?? "N/A")}
                                     </td>
-                                    <UpdateTableField currentValue={order?.storeType} docId={transactionId} item={order} docType={ordersCol} storeType={order.storeType} keyType="storeType" cacheKey={cacheKey} tooltip='Warning! Editing this may count towards your monthly orders.' triggerUpdate={() => setTriggerUpdate(true)} className='max-w-32 hover:bg-gray-100 transition duration-300' />
-                                    <td className="w-32">{formatTableDate(order.sale?.date)}</td>
+                                    <UpdateTableField currentValue={order?.storeType} docId={transactionId} item={order} docType={ordersCol} storeType={order.storeType} keyType="storeType" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} className='max-w-32 hover:bg-gray-100 transition duration-300' />
+                                    <td className="min-w-32">{formatTableDate(order.sale?.date)}</td>
                                     <UpdateTableField currentValue={purchasePrice.toFixed(2)} docId={transactionId} item={order} docType={ordersCol} storeType={order.storeType} keyType="purchase.price" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} className='max-w-32 hover:bg-gray-100 transition duration-300' />
                                     <UpdateTableField currentValue={soldFor.toFixed(2)} docId={transactionId} item={order} docType={ordersCol} storeType={order.storeType} keyType="sale.price" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} className='max-w-32 hover:bg-gray-100 transition duration-300' />
                                     <td>
@@ -263,6 +305,36 @@ const Orders: React.FC<OrdersProps> = ({ filter, searchText }) => {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {contextMenu && (
+                <ul
+                    className="menu menu-sm absolute z-50 bg-black text-white rounded-lg shadow-md text-sm w-48"
+                    style={{ top: contextMenu.mouseY, left: contextMenu.mouseX }}
+                >
+                    <li
+                        className="px-2 py-1 rounded-sm hover:bg-muted/10 cursor-pointer"
+                        onClick={() => {
+                            handleDisplayEditExtraModal(contextMenu.item);
+                            handleCloseContextMenu();
+                        }}
+                    >
+                        View Extra
+                    </li>
+                    <li
+                        className="px-2 py-1 rounded-sm hover:bg-muted/10 text-white cursor-pointer"
+                        onClick={() => {
+                            handleDeleteItem(contextMenu.item, contextMenu.item.storeType);
+                            handleCloseContextMenu();
+                        }}
+                    >
+                        Delete Item
+                    </li>
+                </ul>
+            )}
+
+            {(editExtraModalOpen && fillItem) && (
+                <EditExtra fillItem={fillItem} setDisplayModal={setEditExtraModalOpen} setTriggerUpdate={setTriggerUpdate} />
             )}
         </div>
     )

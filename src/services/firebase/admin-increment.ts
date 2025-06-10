@@ -58,6 +58,9 @@ export async function incrementItemCountFields({ item, rootCol, isNegated, isNew
             const listing = item as IListing;
             const isListingAuto = listing.recordType === "automatic";
             const listingCounterField = isListingAuto ? 'automatic' : 'manual';
+            if (isUpload) {
+                updateFields.numListings["lastUploaded"] = formatDateToISO(new Date());
+            }
             updateFields.numListings[listingCounterField] = value;
             break;
     }

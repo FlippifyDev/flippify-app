@@ -20,18 +20,18 @@ export type HardcodedStoreType = typeof STORES[number];
 export type StoreType = HardcodedStoreType | string;
 
 interface IListing {
+    condition?: Condition | null;
     createdAt?: string | null;
-    currency?: string | null;
     customTag?: string | null;
+    currency?: string | null;
     dateListed?: string | null;
+    extra?: Record<string, string>;
     image?: string[] | null;
     initialQuantity?: number | null;
     itemId?: string | null;
     lastModified?: string | null;
     name?: string | null;
     price?: number | null;
-    condition?: Condition | null;
-    storageLocation?: string | null;
     purchase?: {
         date?: string | null;
         platform?: string | null;
@@ -40,12 +40,14 @@ interface IListing {
     quantity?: number | null;
     recordType?: RecordType | null;
     sku?: string | null;
+    storageLocation?: string | null;
     storeType?: StoreType | null;
 }
 
 
 interface IShipping {
     fees?: number | null;
+    sellerFees?: number | null;
     date?: string | null;
     paymentToShipped?: number | null;
     service?: string | null;
@@ -95,10 +97,12 @@ interface IRefund {
 }
 
 interface IOrder {
+    buyerAdditionalFees?: number | null;
     additionalFees?: number | null;
     createdAt?: string | null;
     customTag?: string | null;
     condition?: Condition | null;
+    extra?: Record<string, string>;
     storageLocation?: string | null;
     history?: IHistory[] | null;
     image?: string[] | null;

@@ -21,6 +21,7 @@ import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput } f
 import { FormEvent, useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
+import Button from "../../dom/ui/Button"
 
 
 
@@ -247,13 +248,11 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal, setTriggerUpda
                             )}
                         </div>
                         <div>
-                            <button
+                            <Button
                                 type="submit"
+                                text={successMessage ? successMessage : loading ? "Adding..." : "Add Listing"}
                                 disabled={loading || !itemName || !itemId || !listingPrice || !quantity || !dateListed || !storeType}
-                                className="disabled:bg-muted disabled:pointer-events-none bg-houseBlue text-white text-sm py-2 px-4 rounded-md hover:bg-houseHoverBlue transition duration-200"
-                            >
-                                {successMessage ? successMessage : loading ? "Adding..." : "Add Listing"}
-                            </button>
+                            />
                         </div>
                     </div>
                     <hr />

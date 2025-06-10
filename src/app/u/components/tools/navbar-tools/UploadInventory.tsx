@@ -3,38 +3,58 @@
 // Local Imports
 import Modal from '../../dom/ui/Modal'
 import Dropdown from '../../dom/ui/Dropdown';
-import { ordersCol } from '@/services/firebase/constants';
+import { inventoryCol } from '@/services/firebase/constants';
 import LoadingSpinner from '@/app/components/LoadingSpinner';
+import { createItemsBatch } from '@/services/firebase/admin-create';
 import { shortenText } from '@/utils/format';
 import { addCacheData } from '@/utils/cache-helpers';
 import { formatDateToISO } from '@/utils/format-dates';
 import { retrieveIdToken } from '@/services/firebase/retrieve';
-import { createItemsBatch } from '@/services/firebase/admin-create';
-import { ItemType, SubColType } from '@/services/firebase/models';
+import { IListing, IPurchase, ISale, IShipping } from '@/models/store-data';
+import { importCSVAllowedSubscriptionPlans, inventoryCacheKey, subscriptionLimits } from '@/utils/constants';
 import { fetchUserInventoryAndOrdersCount, fetchUserSubscription } from '@/utils/extract-user-data';
-import { IOrder, IPurchase, ISale, IShipping, OrderStatus, StoreType } from '@/models/store-data';
-import { importCSVAllowedSubscriptionPlans, orderCacheKey, subscriptionLimits } from '@/utils/constants';
-import { generateRandomFlippifyListingId, generateRandomFlippifyOrderId, generateRandomFlippifyTransactionId } from '@/utils/generate-random';
+import { generateRandomFlippifyListingId, generateRandomFlippifyTransactionId } from '@/utils/generate-random';
 
 // External Imports
 import { useEffect, useRef, useState } from 'react'
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import Papa from 'papaparse';
+import { ItemType, SubColType } from '@/services/firebase/models';
 import Button from '../../dom/ui/Button';
 
 
-interface UploadOrdersProps {
+interface UploadInventoryProps {
     setDisplayModal: (value: boolean) => void;
     handleDisplayModal: (display: boolean, type: string) => void;
 }
 
-const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal, handleDisplayModal }) => {
+
+const defaultColumns = [
+    "Title",
+    "Item ID",
+    "Purchase Price",
+    "Purchase Quantity",
+    "Purchase Date",
+    "Purchase Marketplace",
+    "Currency",
+    "Listing Date",
+    "Listing Price",
+    "Listing Quantity",
+    "Listing Marketplace",
+    "Custom Tag",
+    "SKU",
+    "Condition",
+    "Image",
+    "Storage"
+];
+
+const UploadInventory: React.FC<UploadInventoryProps> = ({ setDisplayModal, handleDisplayModal }) => {
     const { data: session, update: updateSession } = useSession();
     const [message, setMessage] = useState<string>();
     const subscribed = session?.user.authentication?.subscribed;
     const plan = session?.user.authentication?.subscribed;
-    const lastUploaded = session?.user.store?.numOrders?.lastUploaded;
+    const lastUploaded = session?.user.store?.numListings?.lastUploaded;
 
     const [uploadType, setUploadType] = useState<string>("custom");
     const [uploading, setUploading] = useState(false);
@@ -73,18 +93,17 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal, handleDisp
     useEffect(() => {
         const checkLimit = () => {
             if (!plan) {
-                setErrorMessage("Please subscribe to a plan to add orders.");
+                setErrorMessage("Please subscribe to a plan to add inventory.");
                 setAboveLimit(true);
                 return;
             }
             const count = fetchUserInventoryAndOrdersCount(session.user);
-            if (plan === "free" && count.manualOrders >= subscriptionLimits[plan].manual) {
-                setErrorMessage(`You have reached the maximum number of manual orders for your plan. Please upgrade your plan to add more or wait till next month.`);
+            if (plan === "free" && count.manualListings >= subscriptionLimits[plan].manual) {
+                setErrorMessage(`You have reached the maximum number of manual inventory for your plan. Please upgrade your plan to add more or wait till next month.`);
                 setAboveLimit(true);
                 return;
             }
-
-
+            
             if (lastUploaded) {
                 const last = new Date(lastUploaded).getTime();
                 const now = Date.now();
@@ -104,65 +123,60 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal, handleDisp
     }, [session?.user, plan, lastUploaded]);
 
 
-    const transformRowToOrder = (row: Record<string, string>): { order?: IOrder, error?: string } => {
+    const transformRowToInventory = (row: Record<string, string>): { listing?: IListing, error?: string } => {
         if (!row["Title"]) return {};
-        if (uploadType === "custom" && !row["Sale Marketplace"]) return {}
+        if (uploadType === "custom" && !row["Listing Marketplace"]) return {}
 
         const purchaseDate = row["Purchase Date"] ? formatDateToISO(new Date(row["Purchase Date"]), true) : null;
-        const saleDate = row["Sale Date"] ? formatDateToISO(new Date(row["Sale Date"]), true) : formatDateToISO(new Date());
         const listingDate = row["Listing Date"] ? formatDateToISO(new Date(row["Listing Date"]), true) : null;
 
-        if (saleDate?.includes("NaN")) {
-            return { error: `Transaction ID -> ${row["Transaction ID"]} | Invalid sale date | ${row["Sale Date"]} interpreted as ${saleDate}` };
+        if (listingDate?.includes("NaN")) {
+            return { error: `Item ID -> ${row["Item ID"]} | Invalid sale date | ${row["Listing Date"]} interpreted as ${listingDate}` };
         };
 
         const currency = session?.user.preferences?.currency
 
-        const sale: ISale = {
-            price: row["Sale Price"] ? parseFloat(row["Sale Price"]) : null,
-            quantity: row["Sale Quantity"] ? parseInt(row["Sale Quantity"], 10) : 1,
-            date: saleDate || null,
-            platform: row["Sale Marketplace"] || null,
-            currency: row["Sale Currency"] || currency,
-            buyerUsername: null,
-        };
+
         const purchase: IPurchase = {
             price: row["Purchase Price"] ? parseFloat(row["Purchase Price"]) : null,
             quantity: row["Purchase Quantity"] ? parseInt(row["Purchase Quantity"], 10) : 1,
             date: purchaseDate || null,
             platform: row["Purchase Marketplace"] || null,
-            currency: row["Purchase Currency"] || currency,
-        };
-        const shipping: IShipping = {
-            fees: row["Shipping Fees"] ? parseFloat(row["Shipping Fees"]) : null,
-            service: row["Shipping Service"] || null,
-            paymentToShipped: null,
-            timeDays: null,
-            trackingNumber: null,
+            currency: row["Currency"] || currency,
         };
 
-        const order: IOrder = {
-            name: row["Title"],
-            itemId: row["Item ID"] || generateRandomFlippifyListingId(20),
-            transactionId: row["Transaction ID"] || generateRandomFlippifyTransactionId(20),
-            orderId: row["Order ID"] || generateRandomFlippifyOrderId(20),
-            listingDate: listingDate || null,
-            storeType: row["Sale Marketplace"].toLowerCase(),
-            status: row["Sale Status"] as OrderStatus || "Completed",
-            additionalFees: row["Additional Fees"] ? parseFloat(row["Additional Fees"]) : null,
-            customTag: row["Custom Tag"] || null,
+        // Collect up to 5 extra fields not in defaultColumns
+        const extra: Record<string, string> = {};
+        let extraCount = 0;
+        for (const key in row) {
+            if (!defaultColumns.includes(key) && extraCount < 5) {
+                extra[key] = row[key];
+                extraCount++;
+            }
+        }
+        
+        const listing: IListing = {
+            condition: row["Condition"],
             createdAt: formatDateToISO(new Date()),
-            sale,
-            purchase,
-            shipping,
-            refund: null,
-            history: null,
-            image: null,
-            lastModified: new Date().toISOString(),
+            currency: row["Currency"] || currency,
+            customTag: row["Custom Tag"],
+            extra: Object.keys(extra).length > 0 ? extra : undefined,
+            dateListed: row["Listing Date"],
+            image: [row["Image"]],
+            initialQuantity: row["Purchase Quantity"] ? parseInt(row["Purchase Quantity"], 10) : 1,
+            itemId: row["Item ID"] || generateRandomFlippifyListingId(20),
+            lastModified: formatDateToISO(new Date()),
+            name: row["Title"],
+            price: row["Listing Price"] ? parseInt(row["Listing Price"], 10) : null,
+            purchase: purchase,
+            quantity: row["Listing Quantity"] ? parseInt(row["Listing Quantity"], 10) : 1,
             recordType: "manual",
+            sku: row["SKU"],
+            storageLocation: row["Storage"],
+            storeType: row["Listing Marketplace"].toLowerCase(),
         };
 
-        return { order: order };
+        return { listing: listing };
     };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -171,22 +185,20 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal, handleDisp
     }
 
 
-    async function handleCacheAndSessionUpdate(orderItems: IOrder[]) {
+    async function handleCacheAndSessionUpdate(listingItems: IListing[]) {
         if (!session) return;
 
-        const orderCache = `${orderCacheKey}-${session.user.id}`;
+        const inventoryCache = `${inventoryCacheKey}-${session.user.id}`;
 
-        orderItems.forEach(item => addCacheData(orderCache, { [item.transactionId as string]: item }));
+        listingItems.forEach(item => addCacheData(inventoryCache, { [item.itemId as string]: item }));
 
-        const count = orderItems.length;
+        const count = listingItems.length;
 
-        const manual = session.user.store?.numOrders?.manual ?? 0;
-        const totalManual = session.user.store?.numOrders?.totalManual ?? 0;
+        const manual = session.user.store?.numListings?.manual ?? 0;
 
-        const updatedNumOrders = {
-            ...session.user.store?.numOrders,
+        const updatedNumListings = {
+            ...session.user.store?.numListings,
             manual: manual + count,
-            totalManual: totalManual + count,
         };
 
         // Commit session update
@@ -194,7 +206,7 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal, handleDisp
             ...session,
             user: {
                 ...session.user,
-                numOrders: updatedNumOrders,
+                numListings: updatedNumListings,
             },
         });
     }
@@ -210,22 +222,22 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal, handleDisp
             complete: async ({ data }) => {
                 try {
                     // 1. Transform & limit
-                    const allOrders = data.map(transformRowToOrder);
+                    const allListings = data.map(transformRowToInventory);
                     const idToken = await retrieveIdToken();
                     if (!idToken) throw new Error("Not authenticated");
 
                     // 2. Filter valid & enforce plan limit
-                    const validOrders = allOrders
-                        .filter(r => r.order && !r.error)
-                        .map(r => r.order!)   // now guaranteed ItemType
+                    const validListings = allListings
+                        .filter(r => r.listing && !r.error)
+                        .map(r => r.listing!)   // now guaranteed ItemType
                         .slice(0, uploadLimit);
 
                     // 3. Group by subCol (storeType)
                     const byStore: Record<string, ItemType[]> = {};
-                    validOrders.forEach(order => {
-                        const sub = order.storeType as SubColType;
+                    validListings.forEach(listing => {
+                        const sub = listing.storeType as SubColType;
                         byStore[sub] = byStore[sub] || [];
-                        byStore[sub].push(order);
+                        byStore[sub].push(listing);
                     });
 
                     // 4. For each group, fire a batch
@@ -235,7 +247,7 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal, handleDisp
                         Object.entries(byStore).map(async ([subCol, items]) => {
                             const { successCount, errors } = await createItemsBatch({
                                 idToken,
-                                rootCol: ordersCol,
+                                rootCol: inventoryCol,
                                 subCol: subCol as SubColType,
                                 items,
                             });
@@ -245,10 +257,10 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal, handleDisp
                     );
 
                     // 5. Update session/cache & UI
-                    await handleCacheAndSessionUpdate(validOrders.slice(0, totalUploaded));
+                    await handleCacheAndSessionUpdate(validListings.slice(0, totalUploaded));
                     setUploaded(true);
                     setMessage(
-                        `Uploaded ${totalUploaded} of ${allOrders.length}.` +
+                        `Uploaded ${totalUploaded} of ${allListings.length}.` +
                         (batchErrors.length
                             ? ` ${batchErrors.length} failed.`
                             : "")
@@ -265,11 +277,11 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal, handleDisp
                 setUploading(false);
             },
         });
-    };
+      };
 
 
     return (
-        <Modal title="Upload Sales" className="relative max-w-[21rem] sm:max-w-xl flex-grow" setDisplayModal={setDisplayModal}>
+        <Modal title="Upload Inventory" className="relative max-w-[21rem] sm:max-w-xl flex-grow" setDisplayModal={setDisplayModal}>
             {subscribed && importCSVAllowedSubscriptionPlans.includes(subscribed) ? (
                 <>
                     {aboveLimit && (
@@ -284,11 +296,10 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal, handleDisp
                                 <div className='w-full flex flex-row justify-between items-center'>
                                     <div>
                                         <Dropdown
-                                            value="upload-orders"
+                                            value="upload-inventory"
                                             onChange={handleUploadSwitch}
                                             options={uploadOptions}
                                         />
-
                                     </div>
 
                                     {/* Hidden file input for CSV import */}
@@ -312,13 +323,13 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal, handleDisp
                                 <hr />
                                 <div className='w-full flex items-end justify-between'>
                                     <div className='text-sm'>
-                                        View required <Link href={`/l/blog/how-to-upload-sales#${uploadType}`} target="_blank" className='text-blue-500 hover:underline'>format</Link>
+                                        View required <Link href={`/l/blog/how-to-upload-inventory#${uploadType}`} target="_blank" className='text-blue-500 hover:underline'>format</Link>
                                     </div>
                                     {/* Button to trigger CSV import */}
                                     <Button
                                         type="button"
                                         onClick={handleFileUpload}
-                                        text={uploadLater ? errorMessage : !uploading ? "Upload" : "Uploading..."}
+                                        text={uploadLater ? errorMessage: !uploading ? "Upload" : "Uploading..."}
                                         disabled={uploaded || uploading || uploadLater}
                                     />
                                 </div>
@@ -360,4 +371,4 @@ const UploadOrders: React.FC<UploadOrdersProps> = ({ setDisplayModal, handleDisp
     )
 }
 
-export default UploadOrders;
+export default UploadInventory;

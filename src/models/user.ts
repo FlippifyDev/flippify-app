@@ -19,6 +19,7 @@ interface IUser {
 interface INumListings {
     automatic?: number | null;
     manual?: number | null;
+    lastUploaded?: string | null;
 }
 
 interface INumOrders {

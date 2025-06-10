@@ -13,6 +13,7 @@ import UploadOrders from "../tools/navbar-tools/UploadOrders";
 import DarkHamburgerButton from "@/app/components/DarkHamburgerButton";
 import NewOneTimeExpense from "../tools/navbar-tools/NewOneTimeExpense";
 import NewSubscriptionExpense from "../tools/navbar-tools/NewSubscriptionExpense";
+import UploadInventory from "../tools/navbar-tools/UploadInventory";
 
 
 interface LayoutProps {
@@ -45,8 +46,11 @@ const LayoutContent = ({ removePadding, children }: { removePadding?: boolean, c
                 setModal(<NewOrder setDisplayModal={setIsModalOpen} />)
                 break;
             case "upload-orders":
-                setModal(<UploadOrders setDisplayModal={setIsModalOpen} />)
+                setModal(<UploadOrders setDisplayModal={setIsModalOpen} handleDisplayModal={handleDisplayModal} />)
                 break;
+            case "upload-inventory":
+                setModal(<UploadInventory setDisplayModal={setIsModalOpen} handleDisplayModal={handleDisplayModal} />)
+                    break;
             case "add-one-time-expense":
                 setModal(<NewOneTimeExpense setDisplayModal={setIsModalOpen} />)
                 break;

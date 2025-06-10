@@ -53,7 +53,7 @@ const Navbar: React.FC<NavbarProps> = ({ handleDisplayModal }) => {
                     />
                     <div className="h-6 sm:mx-2 border-r border-uiBorder"></div>
                     <NabarItem
-                        title="Upload Sales"
+                        title="Upload"
                         isSubscribed={isSubscribed}
                         icon={<RiFolderUploadLine className="p-2 hover:bg-muted/10 rounded" onClick={() => handleOnClick("upload-orders")} />}
                     />

@@ -36,6 +36,12 @@ const Page = () => {
                         link="how-to-upload-sales"
                         date="May 11, 2025"
                     />
+                    <BlogItem
+                        title="How To Upload Inventory Data"
+                        description="A step‑by‑step guide to importing your inventory records into Flippify—get up and running in minutes."
+                        link="how-to-upload-inventory"
+                        date="June 11, 2025"
+                    />
                 </div>
             </div>
         </div>

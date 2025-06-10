@@ -21,6 +21,7 @@ import Image from 'next/image';
 import { MdImageNotSupported } from 'react-icons/md';
 import { retrieveIdToken } from '@/services/firebase/retrieve';
 import { createNewOrder } from '@/services/bridges/create';
+import Button from '../../dom/ui/Button';
 
 
 
@@ -335,8 +336,8 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
 
                     {(shippingStatus === "InProcess" || shippingStatus === "Completed") && (
                         <div className="flex flex-col sm:flex-row items-center w-full gap-4">
-                            <Input type="text" placeholder="Enter shipping fees" title="Shipping Fees" value={shippingFees} onChange={(e) => handleChange(e.target.value, "shippingFees", setShippingFees)} />
-                            <Input type="text" placeholder="Enter shipping company" title="Shipping Company" className="w-full" value={shippingCompany} onChange={(e) => handleChange(e.target.value, "shippingCompany", setShippingCompany)} />
+                            <Input type="text" placeholder="Enter shipping fees" title="Buyer Shipping Fees (Optional)" value={shippingFees} onChange={(e) => handleChange(e.target.value, "shippingFees", setShippingFees)} />
+                            <Input type="text" placeholder="Enter shipping company" title="Shipping Company (Optional)" className="w-full" value={shippingCompany} onChange={(e) => handleChange(e.target.value, "shippingCompany", setShippingCompany)} />
                         </div>
                     )}
 
@@ -361,13 +362,11 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
                             )}
                         </div>
                         <div>
-                            <button
+                            <Button
                                 type="submit"
+                                text={successMessage ? successMessage : loading ? "Adding..." : "Add Sale"}
                                 disabled={loading || !saleDate || !salePrice || !quantity || !itemName || !storeType}
-                                className="disabled:bg-muted disabled:pointer-events-none bg-houseBlue text-white text-sm py-2 px-4 rounded-md hover:bg-houseHoverBlue transition duration-200"
-                            >
-                                {successMessage ? successMessage : loading ? "Adding..." : "Add Sale"}
-                            </button>
+                            />
                         </div>
                     </div>
                     <hr />

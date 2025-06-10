@@ -18,6 +18,7 @@ import { useSession } from 'next-auth/react';
 import { createItem } from '@/services/firebase/admin-create';
 import { expensesCol, oneTimeCol } from '@/services/firebase/constants';
 import { retrieveIdToken } from '@/services/firebase/retrieve';
+import Button from '../../dom/ui/Button';
 
 interface NewOneTimeExpenseProps {
     setDisplayModal: (value: boolean) => void;
@@ -154,13 +155,11 @@ const NewOneTimeExpense: React.FC<NewOneTimeExpenseProps> = ({ setDisplayModal }
 
                     <hr />
                     <div className="w-full flex flex-row gap-4 justify-end items-center">
-                        <button
+                        <Button
                             type="submit"
+                            text={ successMessage? successMessage: loading ? "Adding..." : "Add Expense" }
                             disabled={loading || !provider || !name || !amount || !date}
-                            className="disabled:bg-muted disabled:pointer-events-none bg-houseBlue text-white text-sm py-2 px-4 rounded-md hover:bg-houseHoverBlue transition duration-200"
-                        >
-                            {successMessage ? successMessage : loading ? "Adding..." : "Add Expense"}
-                        </button>
+                        />
                     </div>
                     <hr />
                     {errorMessage && (

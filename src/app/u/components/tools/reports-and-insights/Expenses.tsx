@@ -17,7 +17,7 @@ const Expenses: React.FC<ExpensesProps> = ({ sales, expenses, formatter }) => {
 
     // Sum of all shipping expenses you paid
     const totalShippingExpenses = sales.reduce(
-        (sum, order) => sum + (order.shipping?.fees ?? 0),
+        (sum, order) => sum + (order.shipping?.sellerFees ?? 0),
         0
     );
 
@@ -29,9 +29,6 @@ const Expenses: React.FC<ExpensesProps> = ({ sales, expenses, formatter }) => {
         (sum, exp) => sum + (exp.amount ?? 0),
         0
     );
-
-    // Grand total of these “extra” expenses
-    const totalExpenses = totalAdditionalFees + totalShippingExpenses;
 
     // Overall business expenses (sales extras + one-time)
     const grandTotalExpenses = totalSalesExpenses + totalOneTimeExpenses;

@@ -121,7 +121,7 @@ const Page = () => {
                         )}
                     </div>
 
-                    <div className='flex flex-row items-center'>
+                    <div className='flex flex-col gap-2 md:gap-0 md:flex-row md:items-center'>
                         {activeTab === 'orders' && (
                             <div className='text-xs flex flex-row px-4'>
                                 {orderFilters.map((filter, index) => (
@@ -136,20 +136,22 @@ const Page = () => {
                             </div>
                         )}
 
-                        <div className="relative px-4">
-                            <Input
-                                type="text"
-                                placeholder={`Search ${activeTab}`}
-                                value={searchText}
-                                onChange={handleSearchChange}
-                                className="w-full h-9 text-sm"
-                            />
-                        </div>
-                        <div className='px-4'>
-                            {activeTab === 'inventory' ?
-                                <span className='text-xs text-gray-500'>You have {automaticListings} / {limits.automatic} listings</span> :
-                                <span className='text-xs text-gray-500'>You have {automaticOrders} / {limits.automatic} orders</span>
-                            }
+                        <div className='flex flex-col md:flex-row md:items-center'>
+                            <div className="relative px-4">
+                                <Input
+                                    type="text"
+                                    placeholder={`Search ${activeTab}`}
+                                    value={searchText}
+                                    onChange={handleSearchChange}
+                                    className="w-full h-9 text-sm"
+                                />
+                            </div>
+                            <div className='px-4 ml-1 md:ml-0'>
+                                {activeTab === 'inventory' ?
+                                    <span className='text-xs text-gray-500'>You have {automaticListings} / {limits.automatic} listings</span> :
+                                    <span className='text-xs text-gray-500'>You have {automaticOrders} / {limits.automatic} orders</span>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>

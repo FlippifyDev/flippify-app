@@ -1,4 +1,4 @@
-import { IListing, IOrder, StoreType } from "@/models/store-data";
+import { StoreType } from "@/models/store-data";
 import { cacheExpirationTime } from "./constants";
 import { ItemType } from "@/services/firebase/models";
 import { extractItemDate, extractItemId } from "@/services/firebase/extract";

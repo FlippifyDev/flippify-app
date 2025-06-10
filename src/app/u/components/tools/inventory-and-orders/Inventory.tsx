@@ -22,6 +22,7 @@ import { retrieveIdToken } from "@/services/firebase/retrieve";
 import { inventoryCol } from "@/services/firebase/constants";
 import { removeCacheData } from "@/utils/cache-helpers";
 import NoResultsFound from "../../dom/ui/NoResultsFound";
+import EditExtra from "../navbar-tools/EditExtra";
 
 
 const Inventory = ({ searchText }: { searchText?: string }) => {
@@ -32,6 +33,7 @@ const Inventory = ({ searchText }: { searchText?: string }) => {
     const currency = session?.user.preferences?.currency || "USD";
     const [addNewOrderModalOpen, setAddNewOrderModalOpen] = useState(false);
     const [editListingModalOpen, setEditListingModalOpen] = useState(false);
+    const [editExtraModalOpen, setEditExtraModalOpen] = useState(false);
 
     const [fillItem, setFillItem] = useState<IListing>();
 
@@ -61,7 +63,7 @@ const Inventory = ({ searchText }: { searchText?: string }) => {
 
     useEffect(() => {
         const fetchInventory = async () => {
-            if (!searchText && (!session?.user.authentication?.subscribed || listedData.length >= currentPage * itemsPerPage)) return;
+            if (!triggerUpdate && !searchText && (!session?.user.authentication?.subscribed || listedData.length >= currentPage * itemsPerPage)) return;
 
             setLoading(true);
 
@@ -70,13 +72,12 @@ const Inventory = ({ searchText }: { searchText?: string }) => {
 
             setLoading(false);
             setTriggerUpdate(false);
+            setNextPage(false);
         };
 
 
         if ((session?.user.authentication?.subscribed && triggerUpdate) || nextPage) {
             fetchInventory();
-            setTriggerUpdate(false);
-            setNextPage(false);
         }
     }, [session?.user, currentPage, listedData, triggerUpdate, uid, nextPage, searchText]);
 
@@ -100,6 +101,11 @@ const Inventory = ({ searchText }: { searchText?: string }) => {
     function handleDisplayEditModal(item: IListing) {
         setFillItem(item);
         setEditListingModalOpen(true);
+    }
+
+    function handleDisplayEditExtraModal(item: IListing) {
+        setFillItem(item);
+        setEditExtraModalOpen(true);
     }
 
     useEffect(() => {
@@ -150,10 +156,11 @@ const Inventory = ({ searchText }: { searchText?: string }) => {
         setContextMenu(null);
     };
 
-    async function handleDeleteListing(item: IListing, storeType: StoreType, isAuto: boolean, createdAt?: string | null) {
+    async function handleDeleteItem(item: IListing, storeType: StoreType) {
         const idToken = await retrieveIdToken();
         if (!idToken) return;
 
+        setListedData((prev) => prev.filter((order) => order.itemId !== item.itemId));
         await deleteItem({ idToken, rootCol: inventoryCol, subCol: storeType, item })
 
         removeCacheData(cacheKey, item.itemId as string);
@@ -194,8 +201,6 @@ const Inventory = ({ searchText }: { searchText?: string }) => {
                                 >
                                     <td className={`min-w-20 ${index + 1 === paginatedData.length ? "rounded-bl-xl" : ""}`}>
                                         <div
-                                            onContextMenu={(e) => handleContextMenu(e, item)}
-                                            onClick={(e) => handleContextMenu(e, item)}
                                             className="inline-block"
                                             style={{ cursor: "context-menu" }}
                                         >
@@ -211,7 +216,7 @@ const Inventory = ({ searchText }: { searchText?: string }) => {
                                         </div>
                                     </td>
                                     <td onClick={() => handleDisplayOrderModal(item)}>{shortenText(item.name ?? "N/A")}</td>
-                                    <UpdateTableField currentValue={item?.storeType} docId={item.itemId} item={item} docType={inventoryCol} storeType={item.storeType} keyType="storeType" cacheKey={cacheKey} tooltip='Warning! Editing this may count towards your monthly inventory.' triggerUpdate={() => setTriggerUpdate(true)} />
+                                    <UpdateTableField currentValue={item?.storeType} docId={item.itemId} item={item} docType={inventoryCol} storeType={item.storeType} keyType="storeType" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
 
                                     <td onClick={() => handleDisplayOrderModal(item)}>{item.quantity}</td>
                                     <UpdateTableField currentValue={purchase?.platform} docId={item.itemId} item={item} docType={inventoryCol} storeType={item.storeType} keyType="purchase.platform" cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
@@ -266,6 +271,15 @@ const Inventory = ({ searchText }: { searchText?: string }) => {
                     <li
                         className="px-2 py-1 rounded-sm hover:bg-muted/10 cursor-pointer"
                         onClick={() => {
+                            handleDisplayEditExtraModal(contextMenu.item);
+                            handleCloseContextMenu();
+                        }}
+                    >
+                        View Extra
+                    </li>
+                    <li
+                        className="px-2 py-1 rounded-sm hover:bg-muted/10 cursor-pointer"
+                        onClick={() => {
                             handleDisplayOrderModal(contextMenu.item);
                             handleCloseContextMenu();
                         }}
@@ -275,7 +289,7 @@ const Inventory = ({ searchText }: { searchText?: string }) => {
                     <li
                         className="px-2 py-1 rounded-sm hover:bg-muted/10 text-white cursor-pointer"
                         onClick={() => {
-                            handleDeleteListing(contextMenu.item, contextMenu.item.storeType, contextMenu.item.recordType === "automatic", contextMenu.item.createdAt);
+                            handleDeleteItem(contextMenu.item, contextMenu.item.storeType);
                             handleCloseContextMenu();
                         }}
                     >
@@ -329,6 +343,10 @@ const Inventory = ({ searchText }: { searchText?: string }) => {
 
             {(editListingModalOpen && fillItem) && (
                 <EditListing fillItem={fillItem} setDisplayModal={setEditListingModalOpen} setTriggerUpdate={setTriggerUpdate} />
+            )}
+
+            {(editExtraModalOpen && fillItem) && (
+                <EditExtra fillItem={fillItem} setDisplayModal={setEditExtraModalOpen} setTriggerUpdate={setTriggerUpdate} />
             )}
         </div>
     );

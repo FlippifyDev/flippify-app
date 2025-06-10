@@ -9,7 +9,7 @@ import { firestore } from '@/lib/firebase/config';
 import { deleteItem } from '@/services/firebase/delete';
 import LoadingSpinner from '@/app/components/LoadingSpinner';
 import UpdateTableField from './UpdateTableField';
-import { orderCacheKey } from '@/utils/constants';
+import { inventoryCacheKey, orderCacheKey } from '@/utils/constants';
 import { formatTableDate } from '@/utils/format-dates';
 import { retrieveIdToken } from '@/services/firebase/retrieve';
 import { getCachedItem, removeCacheData, updateCacheData } from '@/utils/cache-helpers';
@@ -17,13 +17,15 @@ import { getCachedItem, removeCacheData, updateCacheData } from '@/utils/cache-h
 // External Imports
 import { useRouter, useSearchParams } from 'next/navigation';
 import { FaCamera, FaRegTrashAlt } from "react-icons/fa";
-import { useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import getSymbolFromCurrency from 'currency-symbol-map'
 import { doc, updateDoc } from 'firebase/firestore';
 import { useSession } from 'next-auth/react';
 import { set } from 'lodash';
-import { ordersCol } from '@/services/firebase/constants';
+import { inventoryCol, ordersCol } from '@/services/firebase/constants';
 import Card from '../../dom/ui/Card';
+import Input from '../../dom/ui/Input';
+import { updateItem } from '@/services/firebase/update';
 
 
 const Order = () => {
@@ -202,6 +204,10 @@ const Order = () => {
                     <div className=''>
                         <TaxCard order={order} cacheKey={cacheKey} triggerUpdate={() => setTriggerUpdate(true)} />
                     </div>
+
+                    <div className=''>
+                        <EditExtra fillItem={order} setTriggerUpdate={setTriggerUpdate} />
+                    </div>
                 </div>
             </section>
 
@@ -228,23 +234,23 @@ interface OrderInfoTableProps {
 }
 
 const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, triggerUpdate }) => {
-    const { transactionId, sale, purchase, shipping, additionalFees, customTag, storeType, listingDate, storageLocation, condition, sku } = order;
+    const { transactionId, sale, purchase, shipping, additionalFees, buyerAdditionalFees, customTag, storeType, listingDate, storageLocation, condition, sku, tax } = order;
 
     let soldFor: number, profit: number | "N/A", roi: number | "N/A";
     const quantity = sale?.quantity ?? 0
     const purchasePrice = (purchase?.price ?? 0) * quantity;
 
     soldFor = (sale?.price ?? 0) * quantity;
+    const sellerCosts = purchasePrice + (order.additionalFees ?? 0) + (shipping?.sellerFees ?? 0);
 
     if (purchasePrice) {
-        profit = soldFor - purchasePrice;
+        profit = soldFor - sellerCosts;
         roi = (profit / purchasePrice) * 100;
     } else {
         profit = "N/A";
         roi = "N/A";
     }
 
-    const sellerCosts = (order.additionalFees ?? 0) + (order.shipping?.fees ?? 0);
     const currencySymbol = getSymbolFromCurrency(order.sale?.currency ?? "$")
 
     return (
@@ -279,7 +285,6 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
                         tdClassName='px-3'
-                        tooltip="Warning! Editing this may count towards your monthly orders."
                         className='max-w-64 bg-gray-100 hover:bg-gray-200 text-gray-600 !text-base transition duration-300'
                     />
                 </tr>
@@ -515,7 +520,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                 </tr>
                 <tr className='border-b'>
                     <td className="py-4 px-6 font-medium text-gray-800">
-                        Shipping Costs ({currencySymbol})
+                        Buyer Shipping Costs ({currencySymbol})
                     </td>
                     <UpdateTableField
                         currentValue={shipping?.fees?.toFixed(2)}
@@ -524,6 +529,23 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         docType='orders'
                         storeType={order.storeType}
                         keyType="shipping.fees"
+                        cacheKey={cacheKey}
+                        triggerUpdate={triggerUpdate}
+                        tdClassName='px-3'
+                        className='max-w-64 bg-gray-100 hover:bg-gray-200 text-gray-600 !text-base transition duration-300'
+                    />
+                </tr>
+                <tr className='border-b'>
+                    <td className="py-4 px-6 font-medium text-gray-800">
+                        Seller Shipping Costs ({currencySymbol})
+                    </td>
+                    <UpdateTableField
+                        currentValue={shipping?.sellerFees?.toFixed(2)}
+                        docId={transactionId}
+                        item={order}
+                        docType='orders'
+                        storeType={order.storeType}
+                        keyType="shipping.sellerFees"
                         cacheKey={cacheKey}
                         triggerUpdate={triggerUpdate}
                         tdClassName='px-3'
@@ -552,7 +574,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         Total Costs
                     </td>
                     <td className="py-4 px-6 ">
-                        <span className="text-gray-600">{currencySymbol}{(sellerCosts + purchasePrice).toFixed(2)}</span>
+                        <span className="text-gray-600">{currencySymbol}{sellerCosts.toFixed(2)}</span>
                     </td>
                 </tr>
                 <tr className='border-b'>
@@ -560,7 +582,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         Order Total
                     </td>
                     <td className="py-4 px-6 ">
-                        <span className="text-gray-600">{currencySymbol}{(soldFor + (additionalFees ?? 0) + (shipping?.fees ?? 0)).toFixed(2)}</span>
+                        <span className="text-gray-600">{currencySymbol}{(soldFor + (buyerAdditionalFees ?? 0) + (shipping?.fees ?? 0) + (tax?.amount ?? 0)).toFixed(2)}</span>
                     </td>
                 </tr>
                 <tr className='border-b'>
@@ -805,5 +827,138 @@ const TaxCard = ({ order, cacheKey, triggerUpdate }: { order: IOrder, cacheKey: 
         </Card>
     )
 }
+
+
+interface EditExtraProps {
+    fillItem: IOrder;
+    setTriggerUpdate: (value: boolean) => void;
+}
+const EditExtra: React.FC<EditExtraProps> = ({ fillItem, setTriggerUpdate }) => {
+    const { data: session } = useSession();
+    const uid = session?.user.id as string;
+
+    const cacheKey = `${orderCacheKey}-${session?.user.id}`;
+
+
+    // General Info
+    const [extra, setExtra] = useState<Record<string, string>>({});
+
+    // Messages
+    const [errorMessage, setErrorMessage] = useState<string>("")
+    const [successMessage, setSuccessMessage] = useState<string>("")
+
+    const [loading, setLoading] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (!fillItem) return;
+
+        handleItemClick(fillItem);
+    }, [fillItem])
+
+    function handleCacheUpdate(item: IOrder) {
+        updateCacheData(cacheKey, item);
+    }
+
+    function handleItemClick(item: IOrder) {
+        if (item.extra) {
+            setExtra(item.extra);
+        }
+    }
+
+    const handleExtraChange = (index: number, field: 'key' | 'value', newValue: string) => {
+        setExtra((prev) => {
+            const newExtra = { ...prev };
+            const currentKeys = Object.keys(newExtra);
+            const currentKey = currentKeys[index] || `extra${index + 1}`; // Default key if not set
+
+            if (field === 'key') {
+                // If key changes, move the value to the new key
+                if (currentKeys[index] && newValue && newValue !== currentKey) {
+                    const value = newExtra[currentKey];
+                    delete newExtra[currentKey];
+                    newExtra[newValue] = value || '';
+                } else if (newValue) {
+                    newExtra[newValue] = newExtra[currentKey] || '';
+                } else {
+                    delete newExtra[currentKey]; // Remove if key is cleared
+                }
+            } else {
+                // Update value for the current key
+                newExtra[currentKey] = newValue;
+            }
+
+            return newExtra;
+        });
+    };
+
+    async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        setErrorMessage("");
+        setLoading(true);
+
+        const item: IOrder = {
+            ...fillItem,
+            extra: Object.keys(extra).length > 0 ? extra : undefined,
+        };
+
+        try {
+            await updateItem({ uid, item: item, rootCol: ordersCol, subCol: item.storeType as string, cacheKey });
+            setSuccessMessage("Item Edited!");
+            handleCacheUpdate(item);
+        } catch (error) {
+            setErrorMessage("Error editing item");
+        }
+
+        setTriggerUpdate(true);
+        setLoading(false);
+    }
+
+
+    const extraInputs = Array.from({ length: 5 }, (_, index) => {
+        const currentKeys = Object.keys(extra);
+        const key = currentKeys[index] || '';
+        const value = extra[key] || '';
+
+        return (
+            <div key={index} className="flex gap-2">
+                <Input
+                    type="text"
+                    placeholder={`Enter key`}
+                    value={key}
+                    onChange={(e) => handleExtraChange(index, 'key', e.target.value)}
+                    className="w-1/2"
+                />
+                <Input
+                    type="text"
+                    placeholder={`Enter value`}
+                    value={value}
+                    onChange={(e) => handleExtraChange(index, 'value', e.target.value)}
+                    className="w-1/2"
+                />
+            </div>
+        );
+    });
+
+    return (
+        <Card title="Extra Info">
+            <form onSubmit={handleSubmit} className="w-full max-w-xl flex flex-col gap-4">
+                {errorMessage && (
+                    <div>
+                        <p className="text-red-500 text-sm">{errorMessage}</p>
+                    </div>
+                )}
+                {extraInputs}
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className={`btn border-0 bg-houseBlue bg-opacity-10 text-houseBlue hover:bg-houseHoverBlue hover:text-white transition duration-300 text-opacity-100 w-2/3 mx-auto rounded-lg shadow-lg ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                    {loading ? 'Saving...' : 'Save Changes'}
+                </button>
+            </form>
+        </Card>
+    )
+}
+
 
 export default Order

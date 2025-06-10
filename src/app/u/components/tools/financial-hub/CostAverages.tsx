@@ -24,7 +24,7 @@ const calculateCostAverages = (orders: IOrder[]) => {
 
     orders.forEach((order) => {
         totalPurchasePrice += order.purchase?.price ?? 0;
-        totalShippingCost += order.shipping?.fees ?? 0;
+        totalShippingCost += (order.shipping?.fees ?? 0) + (order.shipping?.sellerFees ?? 0);
         totalAdditionalFees += order.additionalFees ?? 0;
     });
 

@@ -16,7 +16,7 @@ function calculateMonthlyIncomeAndExpense(orders: IOrder[]) {
         const saleDate = new Date(order.sale.date)
         const month = months[saleDate.getMonth()] // Get the month name
 
-        const expenseAmount = order.purchase.price + (order.shipping?.fees ?? 0) + (order.additionalFees ?? 0);
+        const expenseAmount = order.purchase.price + (order.shipping?.sellerFees ?? 0) + (order.additionalFees ?? 0);
 
         // Accumulate income and expense by month
         income[month] = (income[month] || 0) + order.sale.price

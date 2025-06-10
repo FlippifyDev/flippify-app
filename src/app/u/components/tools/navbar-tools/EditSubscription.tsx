@@ -14,6 +14,7 @@ import { billingCycleOptions, monthlyRenewalOptions, oneTimeExpensesCacheKey, su
 import { formatDateToISO } from '@/utils/format-dates';
 import { updateItem } from '@/services/firebase/update';
 import { expensesCol, oneTimeCol, subscriptionsExpenseCol } from '@/services/firebase/constants';
+import Button from '../../dom/ui/Button';
 
 
 interface EditSubscriptionProps {
@@ -103,7 +104,7 @@ const EditSubscription: React.FC<EditSubscriptionProps> = ({ fillItem, setDispla
         }
 
         try {
-            await updateItem({ uid, item, rootCol: expensesCol, subCol: subscriptionsExpenseCol, cacheKey: oneTimeExpensesCacheKey })
+            await updateItem({ uid, item, rootCol: expensesCol, subCol: subscriptionsExpenseCol, cacheKey: subscriptionsExpensesCacheKey })
             setSuccessMessage("Item Edited!");
         } catch (error) {
             setErrorMessage("Error editing item")
@@ -187,15 +188,11 @@ const EditSubscription: React.FC<EditSubscriptionProps> = ({ fillItem, setDispla
                 </div>
                 <hr />
                 <div className="w-full flex flex-row gap-4 justify-end items-center">
-                    <div>
-                        <button
-                            type="submit"
-                            disabled={loading || !name || !provider || !startDate || !amount || !billingCycle || !renewalDate}
-                            className="disabled:bg-muted disabled:pointer-events-none bg-houseBlue text-white text-sm py-2 px-4 rounded-md hover:bg-houseHoverBlue transition duration-200"
-                        >
-                            {successMessage ? successMessage : loading ? "Updating..." : "Edit Subscription"}
-                        </button>
-                    </div>
+                    <Button
+                        type="submit"
+                        text={successMessage ? successMessage : loading ? "Updating..." : "Edit Subscription"}
+                        disabled={loading || !name || !provider || !startDate || !amount || !billingCycle || !renewalDate}
+                    />
                 </div>
                 <hr />
                 {errorMessage && (

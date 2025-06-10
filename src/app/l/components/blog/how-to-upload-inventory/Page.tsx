@@ -12,9 +12,9 @@ const Page = () => {
                     text={[
                         { text: "How to " },
                         { text: "upload", isGradient: true },
-                        { text: "sales" }
+                        { text: "inventory" }
                     ]}
-                    description="Learn how to upload your sales data step-by-step using our CSV import tool. This guide walks you through formatting your spreadsheet, selecting the correct store type, and resolving common upload issues."
+                    description="Learn how to upload your inventory data step-by-step using our CSV import tool. This guide walks you through formatting your spreadsheet, selecting the correct store type, and resolving common upload issues."
                     image="/blog/HowToUploadSales.svg"
                     imageAlt="Illustration showing the process of uploading sales data from a CSV file"
                     imageContainerClassName='pb-20 scale-125'
@@ -24,7 +24,7 @@ const Page = () => {
 
             <div className='w-full max-w-6.5xl mx-auto px-6 sm:px-6 md:px-8 lg:px-10 xl:px-12 animate-fadeInBounce mt-[250px] xs:mt-[200px] sm:mt-[200px] md:mt-[250px] lg:mt-[270px] 2xl:mt-[320px] mb-12'>
                 <Link href="#custom" scroll className='text-3xl mb-5 font-semibold'>Custom Upload</Link>
-                <p className='my-5'>Think of the table below as a direct representation of a spreadsheet or CSV file you’ll be uploading. Each row corresponds to a column in your file—like "Title" or "Sale Price"—and each column in this table explains whether that field is required, what kind of data it should contain, and what value is used if it's left blank or not included. Use this guide to structure your spreadsheet correctly before uploading it.</p>
+                <p className='my-5'>Think of the table below as a direct representation of a spreadsheet or CSV file you’ll be uploading. Each row corresponds to a column in your file—like "Title" or "Listing Price"—and each column in this table explains whether that field is required, what kind of data it should contain, and what value is used if it's left blank or not included. Use this guide to structure your spreadsheet correctly before uploading it.</p>
                 <div className="bg-white flex flex-col border">
                     <table className="w-full">
                         {/* Table Header */}
@@ -61,23 +61,23 @@ const Page = () => {
                             </tr>
                             <tr className="border-b">
                                 <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
+                                    Listing Marketplace
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">Yes</span>
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">Text</span>
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">None</span>
+                                </td>
+                            </tr>
+                            <tr className="border-b">
+                                <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
                                     Item ID
                                 </td>
                                 <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">No</span>
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">Text</span>
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">Random</span>
-                                </td>
-                            </tr>
-                            <tr className="border-b">
-                                <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
-                                    Transaction ID
-                                </td>
-                                <td className="py-4 px-6 text-center">
                                     <span className="text-gray-600">No (Recommended)</span>
                                 </td>
                                 <td className="py-4 px-6 text-center">
@@ -85,104 +85,6 @@ const Page = () => {
                                 </td>
                                 <td className="py-4 px-6 text-center">
                                     <span className="text-gray-600">Random</span>
-                                </td>
-                            </tr>
-                            <tr className="border-b">
-                                <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
-                                    Order ID
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">No</span>
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">Text</span>
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">Random</span>
-                                </td>
-                            </tr>
-                            <tr className="border-b">
-                                <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
-                                    Sale Price
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">No</span>
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">Number</span>
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">null</span>
-                                </td>
-                            </tr>
-                            <tr className="border-b">
-                                <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
-                                    Sale Quantity
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">No</span>
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">Number</span>
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">1</span>
-                                </td>
-                            </tr>
-                            <tr className="border-b">
-                                <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
-                                    Sale Date
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">No (Recommended)</span>
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">Date</span>
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">Time of upload</span>
-                                </td>
-                            </tr>
-                            <tr className="border-b">
-                                <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
-                                    Sale Status
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">No</span>
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">Active | InProcess | Completed</span>
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">Completed</span>
-                                </td>
-                            </tr>
-                            <tr className="border-b">
-                                <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
-                                    Sale Marketplace
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">No</span>
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">Text</span>
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">null</span>
-                                </td>
-                            </tr>
-                            <tr className="border-b">
-                                <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
-                                    Sale Currency
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">No</span>
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">Text</span>
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">Your settings preference</span>
                                 </td>
                             </tr>
                             <tr className="border-b">
@@ -197,6 +99,20 @@ const Page = () => {
                                 </td>
                                 <td className="py-4 px-6 text-center">
                                     <span className="text-gray-600">null</span>
+                                </td>
+                            </tr>
+                            <tr className="border-b">
+                                <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
+                                    Purchase Quantity
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">No</span>
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">Number</span>
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">1</span>
                                 </td>
                             </tr>
                             <tr className="border-b">
@@ -243,7 +159,7 @@ const Page = () => {
                             </tr>
                             <tr className="border-b">
                                 <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
-                                    Purchase Currency
+                                    Currency
                                 </td>
                                 <td className="py-4 px-6 text-center">
                                     <span className="text-gray-600">No</span>
@@ -253,48 +169,6 @@ const Page = () => {
                                 </td>
                                 <td className="py-4 px-6 text-center">
                                     <span className="text-gray-600">Your settings preference</span>
-                                </td>
-                            </tr>
-                            <tr className="border-b">
-                                <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
-                                    Shipping Fees
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">No</span>
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">Number</span>
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">null</span>
-                                </td>
-                            </tr>
-                            <tr className="border-b">
-                                <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
-                                    Shipping Service
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">No</span>
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">Text</span>
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">null</span>
-                                </td>
-                            </tr>
-                            <tr className="border-b">
-                                <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
-                                    Shipped At
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">No</span>
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">Date</span>
-                                </td>
-                                <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">null</span>
                                 </td>
                             </tr>
                             <tr className="border-b">
@@ -313,7 +187,7 @@ const Page = () => {
                             </tr>
                             <tr className="border-b">
                                 <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
-                                    Additional Fees
+                                    Listing Price
                                 </td>
                                 <td className="py-4 px-6 text-center">
                                     <span className="text-gray-600">No</span>
@@ -325,7 +199,21 @@ const Page = () => {
                                     <span className="text-gray-600">null</span>
                                 </td>
                             </tr>
-                            <tr className="">
+                            <tr className="border-b">
+                                <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
+                                    Listing Quantity
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">No</span>
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">Number</span>
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">null</span>
+                                </td>
+                            </tr>
+                            <tr className="border-b">
                                 <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
                                     Custom Tag
                                 </td>
@@ -339,7 +227,76 @@ const Page = () => {
                                     <span className="text-gray-600">null</span>
                                 </td>
                             </tr>
-
+                            <tr className="border-b">
+                                <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
+                                    SKU
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">No</span>
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">Text</span>
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">null</span>
+                                </td>
+                            </tr>
+                            <tr className="border-b">
+                                <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
+                                    Condition
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">No</span>
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">Text</span>
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">null</span>
+                                </td>
+                            </tr>
+                            <tr className="border-b">
+                                <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
+                                    Image
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">No</span>
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">URL</span>
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">null</span>
+                                </td>
+                            </tr>
+                            <tr className="border-b">
+                                <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
+                                    Storage
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">No</span>
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">Text</span>
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">null</span>
+                                </td>
+                            </tr>
+                            <tr className="border-b">
+                                <td className="py-4 px-6 font-medium text-gray-800 bg-gray-100">
+                                    * Extra Fields (5 max)
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">No</span>
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">Text</span>
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <span className="text-gray-600">null</span>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -349,7 +306,7 @@ const Page = () => {
                 <div className="border-2 border-white bg-gray-100/80 p-3 rounded-4xl shadow-lg">
                     <figure>
                         <Image
-                            src="https://i.imgur.com/krM3B8i.png"
+                            src="https://i.imgur.com/1cA6CKr.png"
                             alt="Spreadsheet image of data to upload"
                             width={1500}
                             height={750}

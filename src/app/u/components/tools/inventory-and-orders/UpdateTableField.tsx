@@ -18,7 +18,7 @@ export const orderFilters = ["All", "Active", "Missing data"] as const;
 type ExtraKey = "customTag" | "storeType" | "listingDate" | "storageLocation" | "condition"
 type PurchaseKey = "purchase.platform" | "purchase.price" | "purchase.date" | "purchase.quantity"
 type InventoryKey = "customTag"
-type OrderKey = "sale.price" | "shipping.fees" | "shipping.date" | "sale.date" | "additionalFees" | "sale.quantity" | "sale.buyerUsername" | "tax.type" | "tax.description" | "tax.amount" | "tax.currency" | "sku"
+type OrderKey = "sale.price" | "shipping.fees" | "shipping.sellerFees" | "shipping.date" | "sale.date" | "additionalFees" | "sale.quantity" | "sale.buyerUsername" | "tax.type" | "tax.description" | "tax.amount" | "tax.currency" | "sku"
 
 
 interface UpdateTableFieldProps {
@@ -84,6 +84,7 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
                 case "additionalFees":
                 case "purchase.price":
                 case "shipping.fees":
+                case "shipping.sellerFees":
                 case "sale.price":
                 case "tax.amount":
                     setValue(Number(value).toFixed(2))
@@ -135,6 +136,7 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
             case "additionalFees":
             case "purchase.price":
             case "shipping.fees":
+            case "shipping.sellerFees":
             case "sale.price":
             case "tax.amount":
                 validatePriceInput(input, setValue);

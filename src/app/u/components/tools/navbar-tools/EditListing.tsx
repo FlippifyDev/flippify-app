@@ -20,6 +20,7 @@ import { FormEvent, useEffect, useState } from "react"
 import { MdImageNotSupported } from "react-icons/md"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
+import Button from "../../dom/ui/Button"
 
 
 
@@ -106,6 +107,7 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal, se
             condition: condition,
             currency: session?.user.preferences?.currency ?? "USD",
             customTag: customTag,
+            extra: fillItem.extra,
             dateListed: formatDateToISO(new Date(dateListed), true),
             image: [imageUrl],
             initialQuantity: Number(quantity),
@@ -225,13 +227,11 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal, se
                         )}
                     </div>
                     <div>
-                        <button
+                        <Button
                             type="submit"
+                            text={successMessage ? successMessage : loading ? "Updating..." : "Edit Listing"}
                             disabled={loading || !itemName || !itemId || !listingPrice || !quantity || !dateListed}
-                            className="disabled:bg-muted disabled:pointer-events-none bg-houseBlue text-white text-sm py-2 px-4 rounded-md hover:bg-houseHoverBlue transition duration-200"
-                        >
-                            {successMessage ? successMessage : loading ? "Updating..." : "Edit Listing"}
-                        </button>
+                        />
                     </div>
                 </div>
                 <hr />

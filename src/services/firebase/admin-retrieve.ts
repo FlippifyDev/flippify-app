@@ -1,14 +1,14 @@
 "use server";
 
 // Local Imports
+import { IUser } from "@/models/user";
 import { usersCol } from "./constants";
+import { StoreType } from "@/models/store-data";
 import { RootColType } from "./models";
 import { firestoreAdmin } from "@/lib/firebase/config-admin";
 
 // External Imports
 import { getAuth } from "firebase-admin/auth";
-import { IUser } from "@/models/user";
-import { StoreType } from "@/models/store-data";
 
 
 export async function retrieveUIDAdmin({ idToken }: { idToken: string }) {

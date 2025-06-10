@@ -25,7 +25,7 @@ const DashboardRecentSalesCard: React.FC<DashboardRecentSalesCardProps> = ({ sal
 		const salesArray: IHistoryGrid[] = salesData.map((order) => {
 			const salePrice = order.sale?.price || 0;
 			const purchasePrice = order.purchase?.price || 0;
-			const shippingCost = order.shipping?.fees || 0;
+			const shippingCost = order.shipping?.sellerFees || 0;
 			const otherCosts = order.additionalFees || 0;
             const quantity = order.sale?.quantity || 0;
 

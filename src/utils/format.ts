@@ -66,7 +66,7 @@ function formatOrdersForCSVExport(orders: IOrder[], timeFrom: string, timeTo: st
         
         const salePrice = sale?.price ?? "N/A";
         const purchasePrice = purchase?.price ?? "N/A";
-        const shippingFees = shipping?.fees ?? 0;
+        const shippingFees = shipping?.sellerFees ?? 0;
 
         // Calculate Profit
         let profit: number | "N/A" = "N/A";
@@ -94,7 +94,7 @@ function formatOrdersForCSVExport(orders: IOrder[], timeFrom: string, timeTo: st
             sale?.quantity ? sale.quantity : "N/A",
             escapeCSVField(sale?.platform ?? "N/A"),
             sale?.currency ? sale.currency: "N/A",
-            shipping?.fees ? shipping.fees : "N/A",
+            shipping?.sellerFees ? shipping.sellerFees : "N/A",
             shipping?.timeDays ? shipping.timeDays : "N/A", 
             shipping?.trackingNumber ? shipping.trackingNumber : "N/A",
             tax?.amount ? tax.amount : "N/A",
@@ -154,7 +154,7 @@ export function formatSalesForCSVExport(
         escapeCSVField(o.storeType ?? "N/A"),
         o.sale!.price?.toFixed(2) ?? "N/A",
         o.sale!.quantity?.toString() ?? "N/A",
-        o.shipping?.fees?.toFixed(2) ?? "0.00",
+        o.shipping?.sellerFees?.toFixed(2) ?? "0.00",
         o.additionalFees?.toFixed(2) ?? "0.00",
         o.tax?.amount?.toFixed(2) ?? "N/A",
         o.tax?.type ?? "N/A",

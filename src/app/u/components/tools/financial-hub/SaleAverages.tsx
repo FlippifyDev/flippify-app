@@ -20,7 +20,7 @@ const calculateAverages = (orders: IOrder[]) => {
     orders.forEach((order) => {
         const salePrice = order.sale?.price;
         const purchasePrice = order.purchase?.price;
-        const shippingFees = order.shipping?.fees ?? 0;
+        const shippingFees = order.shipping?.sellerFees ?? 0;
         const additionalFees = order.additionalFees ?? 0;
 
         if (!salePrice || !purchasePrice) return;

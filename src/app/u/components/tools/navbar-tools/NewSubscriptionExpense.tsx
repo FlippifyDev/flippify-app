@@ -19,6 +19,7 @@ import { billingCycleOptions, monthlyRenewalOptions, subscriptionLimits, subscri
 // External Imports
 import React, { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react';
+import Button from '../../dom/ui/Button';
 
 
 interface NewSubscriptionExpenseProps {
@@ -209,13 +210,11 @@ const NewSubscriptionExpense: React.FC<NewSubscriptionExpenseProps> = ({ setDisp
 
                     <hr />
                     <div className="w-full flex flex-row gap-4 justify-end items-center">
-                        <button
+                        <Button
                             type="submit"
+                            text={successMessage ? successMessage : loading ? "Adding..." : "Add Expense"}
                             disabled={loading || !provider || !name || !amount}
-                            className="disabled:bg-muted disabled:pointer-events-none bg-houseBlue text-white text-sm py-2 px-4 rounded-md hover:bg-houseHoverBlue transition duration-200"
-                        >
-                            {successMessage ? successMessage : loading ? "Adding..." : "Add Expense"}
-                        </button>
+                        />
                     </div>
                     <hr />
                     {errorMessage && (

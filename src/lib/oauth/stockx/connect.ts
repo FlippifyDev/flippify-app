@@ -6,7 +6,7 @@ function handleConnectStockX() {
         throw new Error("Missing stockx credentials");
     }
 
-    const authUrl = `https://accounts.stockx.com/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=offline_access openid&audience=gateway.stockx.com`;
+    const authUrl = `https://accounts.stockx.com/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=offline_access openid profile&audience=gateway.stockx.com`;
 
     window.location.href = authUrl;
 }

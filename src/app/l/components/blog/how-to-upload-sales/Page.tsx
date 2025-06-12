@@ -137,7 +137,7 @@ const Page = () => {
                                     <span className="text-gray-600">No (Recommended)</span>
                                 </td>
                                 <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">Date</span>
+                                    <span className="text-gray-600">Date (dd/mm/yyyy)</span>
                                 </td>
                                 <td className="py-4 px-6 text-center">
                                     <span className="text-gray-600">Time of upload</span>
@@ -221,7 +221,7 @@ const Page = () => {
                                     <span className="text-gray-600">No</span>
                                 </td>
                                 <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">Date</span>
+                                    <span className="text-gray-600">Date (dd/mm/yyyy)</span>
                                 </td>
                                 <td className="py-4 px-6 text-center">
                                     <span className="text-gray-600">null</span>
@@ -305,7 +305,7 @@ const Page = () => {
                                     <span className="text-gray-600">No</span>
                                 </td>
                                 <td className="py-4 px-6 text-center">
-                                    <span className="text-gray-600">Date</span>
+                                    <span className="text-gray-600">Date (dd/mm/yyyy)</span>
                                 </td>
                                 <td className="py-4 px-6 text-center">
                                     <span className="text-gray-600">null</span>

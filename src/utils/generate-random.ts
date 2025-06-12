@@ -9,22 +9,22 @@ export const generateRandomChars = (numChar: number) => {
 };
 
 
-export const generateRandomFlippifyTransactionId = (numChar: number) => {
+export const generateRandomFlippifyTransactionId = (numChar: number = 20) => {
     return `ftid-${generateRandomChars(numChar)}`;
 }
 
-export const generateRandomFlippifyOrderId = (numChar: number) => {
+export const generateRandomFlippifyOrderId = (numChar: number = 20) => {
     return `foid-${generateRandomChars(numChar)}`;
 }
 
-export const generateRandomFlippifyListingId = (numChar: number) => {
+export const generateRandomFlippifyListingId = (numChar: number = 20) => {
     return `flid-${generateRandomChars(numChar)}`;
 }
 
-export const generateRandomFlippifyOneTimeExpenseId = (numChar: number) => {
+export const generateRandomFlippifyOneTimeExpenseId = (numChar: number = 20) => {
     return `foteid-${generateRandomChars(numChar)}`;
 }
 
-export const generateRandomFlippifySubscriptionExpenseId = (numChar: number) => {
+export const generateRandomFlippifySubscriptionExpenseId = (numChar: number = 20) => {
     return `fseid-${generateRandomChars(numChar)}`;
 }

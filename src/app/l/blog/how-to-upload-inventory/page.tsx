@@ -18,7 +18,7 @@ export const metadata: Metadata = {
         url: root.concat('/blog/how-to-upload-inventory'),
         images: [
             {
-                url: "https://i.imgur.com/1momgPu.png",
+                url: "https://i.imgur.com/qvntJ6D.png",
                 width: 2600,
                 height: 1440,
                 alt: "Flippify How To Upload Inventory Overview"

@@ -107,7 +107,7 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal, se
             condition: condition,
             currency: session?.user.preferences?.currency ?? "USD",
             customTag: customTag,
-            extra: fillItem.extra,
+            extra: fillItem.extra ?? {},
             dateListed: formatDateToISO(new Date(dateListed), true),
             image: [imageUrl],
             initialQuantity: Number(quantity),

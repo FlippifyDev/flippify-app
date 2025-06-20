@@ -1,4 +1,5 @@
 export const validGroupCouponCodes = [
     "TAKARA",
-    "SYN20"
+    "SYN20",
+    "RESELLMETHOD"
 ]

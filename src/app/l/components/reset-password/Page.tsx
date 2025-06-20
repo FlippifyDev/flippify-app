@@ -28,7 +28,7 @@ const Page = () => {
 
     return (
         <div className="min-h-screen flex flex-col md:flex-row items-center justify-center p-4 -mt-24 gap-16">
-            <div className="bg-white rounded-3xl shadow-lg w-full max-w-md p-8">
+            <div className="bg-white rounded-3xl shadow-lg w-full min-w-sm max-w-md p-8">
                 <h1 className="text-2xl font-semibold mb-4">Reset Password</h1>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <input

@@ -1,6 +1,5 @@
 "use client"
 
-
 // Local Imports
 import Modal from "../../dom/ui/Modal"
 import Input from "../../dom/ui/Input"
@@ -22,7 +21,6 @@ interface EditExtraProps {
     setTriggerUpdate: (value: boolean) => void;
 }
 
-
 const EditExtra: React.FC<EditExtraProps> = ({ fillItem, setDisplayModal, setTriggerUpdate }) => {
     const { data: session } = useSession();
     const uid = session?.user.id as string;
@@ -31,9 +29,10 @@ const EditExtra: React.FC<EditExtraProps> = ({ fillItem, setDisplayModal, setTri
     const cache = "transactionId" in fillItem ? orderCacheKey : inventoryCacheKey;
     const cacheKey = `${cache}-${session?.user.id}`;
 
-
     // General Info
-    const [extra, setExtra] = useState<Record<string, string>>({});
+    const [extra, setExtra] = useState<Array<{ key: string, value: string }>>(
+        Array(5).fill({ key: '', value: '' })
+    );
 
     // Messages
     const [errorMessage, setErrorMessage] = useState<string>("")
@@ -43,42 +42,36 @@ const EditExtra: React.FC<EditExtraProps> = ({ fillItem, setDisplayModal, setTri
 
     useEffect(() => {
         if (!fillItem) return;
-
-        handleItemClick(fillItem);
-    }, [fillItem])
+        if (fillItem.extra) {
+            const extraArray = Object.entries(fillItem.extra).map(([key, value]) => ({ key, value }));
+            while (extraArray.length < 5) {
+                extraArray.push({ key: '', value: '' });
+            }
+            setExtra(extraArray);
+        } else {
+            setExtra(Array(5).fill({ key: '', value: '' }));
+        }
+    }, [fillItem]);
 
     function handleCacheUpdate(item: IItem) {
         updateCacheData(cacheKey, item);
     }
 
-    function handleItemClick(item: IItem) {
-        if (item.extra) {
-            setExtra(item.extra);
-        }
-    }
 
     const handleExtraChange = (index: number, field: 'key' | 'value', newValue: string) => {
         setExtra((prev) => {
-            const newExtra = { ...prev };
-            const currentKeys = Object.keys(newExtra);
-            const currentKey = currentKeys[index] || `extra${index + 1}`; // Default key if not set
-
+            const newExtra = [...prev];
             if (field === 'key') {
-                // If key changes, move the value to the new key
-                if (currentKeys[index] && newValue && newValue !== currentKey) {
-                    const value = newExtra[currentKey];
-                    delete newExtra[currentKey];
-                    newExtra[newValue] = value || '';
-                } else if (newValue) {
-                    newExtra[newValue] = newExtra[currentKey] || '';
-                } else {
-                    delete newExtra[currentKey]; // Remove if key is cleared
+                // Optional: Prevent duplicate keys
+                const keyExists = newExtra.some((item, i) => i !== index && item.key === newValue);
+                if (keyExists) {
+                    console.error(`Key "${newValue}" already exists.`);
+                    return prev; // Don't allow the change
                 }
+                newExtra[index] = { ...newExtra[index], key: newValue };
             } else {
-                // Update value for the current key
-                newExtra[currentKey] = newValue;
+                newExtra[index] = { ...newExtra[index], value: newValue };
             }
-
             return newExtra;
         });
     };
@@ -88,13 +81,20 @@ const EditExtra: React.FC<EditExtraProps> = ({ fillItem, setDisplayModal, setTri
         setErrorMessage("");
         setLoading(true);
 
+        const extraObj = extra.reduce((obj, item) => {
+            if (item.key) {
+                obj[item.key] = item.value;
+            }
+            return obj;
+        }, {} as Record<string, string>);
+
         const item: IItem = {
             ...fillItem,
-            extra: Object.keys(extra).length > 0 ? extra : undefined,
+            extra: Object.keys(extraObj).length > 0 ? extraObj : undefined,
         };
 
         try {
-            await updateItem({ uid, item: item, rootCol: collection, subCol: item.storeType as string, cacheKey });
+            await updateItem({ uid, item, rootCol: collection, subCol: item.storeType as string, cacheKey });
             setSuccessMessage("Item Edited!");
             handleCacheUpdate(item);
         } catch (error) {
@@ -106,31 +106,24 @@ const EditExtra: React.FC<EditExtraProps> = ({ fillItem, setDisplayModal, setTri
         setDisplayModal(false);
     }
 
-
-    const extraInputs = Array.from({ length: 5 }, (_, index) => {
-        const currentKeys = Object.keys(extra);
-        const key = currentKeys[index] || '';
-        const value = extra[key] || '';
-
-        return (
-            <div key={index} className="flex gap-2">
-                <Input
-                    type="text"
-                    placeholder={`Enter key`}
-                    value={key}
-                    onChange={(e) => handleExtraChange(index, 'key', e.target.value)}
-                    className="w-1/2"
-                />
-                <Input
-                    type="text"
-                    placeholder={`Enter value`}
-                    value={value}
-                    onChange={(e) => handleExtraChange(index, 'value', e.target.value)}
-                    className="w-1/2"
-                />
-            </div>
-        );
-    });
+    const extraInputs = extra.map((item, index) => (
+        <div key={index} className="flex gap-2">
+            <Input
+                type="text"
+                placeholder={`Enter key`}
+                value={item.key}
+                onChange={(e) => handleExtraChange(index, 'key', e.target.value)}
+                className="w-1/2"
+            />
+            <Input
+                type="text"
+                placeholder={`Enter value`}
+                value={item.value}
+                onChange={(e) => handleExtraChange(index, 'value', e.target.value)}
+                className="w-1/2"
+            />
+        </div>
+    ));
 
     return (
         <Modal title="Extra Info" className="max-w-[21rem] sm:max-w-xl flex-grow" setDisplayModal={setDisplayModal}>

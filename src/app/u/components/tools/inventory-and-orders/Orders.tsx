@@ -194,7 +194,7 @@ const Orders: React.FC<OrdersProps> = ({ filter, searchText }) => {
                         paginatedData.map((order, index) => {
                             const { transactionId, sale, purchase, customTag, status, storageLocation, sku, shipping } = order;
 
-                            let soldFor: number, profit: number | "N/A", roi: number | "N/A";
+                            let soldFor: number, profit: number | "N/A";
                             const purchasePrice = purchase?.price ?? 0;
                             const quantity = sale?.quantity ?? 0;
                             const sellerCosts = (order.additionalFees ?? 0) + (shipping?.sellerFees ?? 0);
@@ -203,11 +203,9 @@ const Orders: React.FC<OrdersProps> = ({ filter, searchText }) => {
                             soldFor = sale?.price ?? 0;
 
                             if (purchasePrice) {
-                                profit = ((soldFor - purchasePrice) * quantity) - sellerCosts;
-                                roi = (profit / purchasePrice) * 100;
+                                profit = (soldFor - purchasePrice) - sellerCosts;
                             } else {
                                 profit = "N/A";
-                                roi = "N/A";
                             }
 
                             return (

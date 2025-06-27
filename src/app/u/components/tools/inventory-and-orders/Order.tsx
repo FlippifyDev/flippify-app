@@ -238,9 +238,9 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
 
     let soldFor: number, profit: number | "N/A", roi: number | "N/A";
     const quantity = sale?.quantity ?? 0
-    const purchasePrice = (purchase?.price ?? 0) * quantity;
+    const purchasePrice = (purchase?.price ?? 0);
 
-    soldFor = (sale?.price ?? 0) * quantity;
+    soldFor = (sale?.price ?? 0);
     const sellerCosts = purchasePrice + (order.additionalFees ?? 0) + (shipping?.sellerFees ?? 0);
 
     if (purchasePrice) {
@@ -489,7 +489,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         Purchased price ({currencySymbol}) / unit
                     </td>
                     <UpdateTableField
-                        currentValue={purchase?.price?.toFixed(2)}
+                        currentValue={((purchase?.price ?? 0) / quantity).toFixed(2)}
                         docId={transactionId}
                         item={order}
                         docType='orders'
@@ -499,6 +499,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         triggerUpdate={triggerUpdate}
                         tdClassName='px-3'
                         className='max-w-64 bg-gray-100 hover:bg-gray-200 text-gray-600 !text-base transition duration-300'
+                        extra={{ quantity }}
                     />
                 </tr>
                 <tr className='border-b'>
@@ -506,7 +507,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         Sale price ({currencySymbol}) / unit
                     </td>
                     <UpdateTableField
-                        currentValue={sale?.price?.toFixed(2)}
+                        currentValue={(soldFor / quantity).toFixed(2)}
                         docId={transactionId}
                         item={order}
                         docType='orders'
@@ -516,6 +517,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
                         triggerUpdate={triggerUpdate}
                         tdClassName='px-3'
                         className='max-w-64 bg-gray-100 hover:bg-gray-200 text-gray-600 !text-base transition duration-300'
+                        extra={{ quantity }}
                     />
                 </tr>
                 <tr className='border-b'>

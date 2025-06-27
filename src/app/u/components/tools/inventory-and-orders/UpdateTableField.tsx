@@ -34,9 +34,12 @@ interface UpdateTableFieldProps {
     storeType?: StoreType | null;
     tooltip?: string;
     triggerUpdate: () => void;
+    extra?: {
+        quantity?: number
+    }
 }
 
-const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue, docId, docType, item, keyType, cacheKey, tdClassName, className, storeType, tooltip, triggerUpdate }) => {
+const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue, docId, docType, item, keyType, cacheKey, tdClassName, className, storeType, tooltip, triggerUpdate, extra }) => {
     const { data: session } = useSession();
 
     const [value, setValue] = useState(currentValue);
@@ -82,13 +85,20 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
                     set(item, keyType, Number(value));
                     break;
                 case "additionalFees":
-                case "purchase.price":
                 case "shipping.fees":
                 case "shipping.sellerFees":
-                case "sale.price":
                 case "tax.amount":
                     setValue(Number(value).toFixed(2))
                     set(item, keyType, Number(value));
+                    break;
+                case "purchase.price":
+                case "sale.price":
+                    let salePrice = Number(value);
+                    if (extra?.quantity) {
+                        salePrice = salePrice * extra.quantity;
+                    }
+                    setValue(Number(value).toFixed(2))
+                    set(item, keyType, Number(salePrice));
                     break;
                 case "purchase.date":
                 case "sale.date":

@@ -196,9 +196,7 @@ const Orders: React.FC<OrdersProps> = ({ filter, searchText }) => {
 
                             let soldFor: number, profit: number | "N/A";
                             const purchasePrice = purchase?.price ?? 0;
-                            const quantity = sale?.quantity ?? 0;
                             const sellerCosts = (order.additionalFees ?? 0) + (shipping?.sellerFees ?? 0);
-
 
                             soldFor = sale?.price ?? 0;
 

@@ -42,10 +42,21 @@ export async function incrementItemCountFields({ item, rootCol, isNegated, isNew
         case "numOrders":
             updateFields.numOrders = {};
             const order = item as IOrder;
+
+            let soldThisMonth = undefined;
+            const saleDate = order.sale?.date;
+
+            if (saleDate) {
+                const date = new Date(saleDate);
+                const now = new Date();
+
+                soldThisMonth = date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth();
+            }
+
             const isOrderAuto = order.recordType === "automatic";
             const orderCounterField = isOrderAuto ? 'automatic' : 'manual';
             const totalCounterField = isOrderAuto ? 'totalAutomatic' : 'totalManual';
-            if (isNewItem || createdThisMonth) {
+            if (isNewItem || (createdThisMonth && soldThisMonth)) {
                 updateFields.numOrders[orderCounterField] = value;
             }
             if (isUpload) {

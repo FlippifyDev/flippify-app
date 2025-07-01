@@ -73,12 +73,7 @@ export const validateMarketComparisonInput = (
     if (value.length > maxLength) {
         return;
     }
-
-    const safeRegex = /^[\p{L}\p{N}\s:()\-—–&]+$/u;
-
-    if (safeRegex.test(value)) {
-        setFunction(value);
-    }
+    setFunction(value);
 };
 
 

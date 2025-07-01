@@ -4,7 +4,7 @@
 import { handleSignOut } from "@/services/sign-out";
 import LayoutSubscriptionWrapper from "../../layout/LayoutSubscriptionWrapper";
 import { createBillingPortalUrl } from "@/services/stripe/create";
-import { discordLink, discordSupportLink } from "@/utils/constants";
+import { discordLink, discordSupportLink, userProfileImages } from "@/utils/constants";
 
 // External Imports
 import { MdOutlineAdminPanelSettings, MdOutlineBubbleChart, MdOutlineKeyboardArrowDown, MdOutlinePrivacyTip, MdPersonOutline } from "react-icons/md";
@@ -17,6 +17,8 @@ import { useSession } from "next-auth/react";
 import { TbTestPipe } from "react-icons/tb";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import ProfileLetters from "../ui/ProfileLetters";
+import { formatUsername } from "@/utils/format";
 
 
 
@@ -29,12 +31,15 @@ const NavbarProfileAvatar = () => {
     const root = process.env.ROOT as string;
 
     // Default avatar
-    let avatar = "https://i.imgur.com/uOCy7MN.jpeg";
+    let avatar: string | null = "https://i.imgur.com/uOCy7MN.jpeg";
     let referral_code = "None";
 
     if (session) {
         if (session.user?.metaData?.image) {
             avatar = session.user.metaData.image;
+            if (userProfileImages.includes(avatar)) {
+                avatar = null;
+            }
         }
         if (session?.user.referral?.referralCode) {
             referral_code = session.user.referral.referralCode;
@@ -144,14 +149,19 @@ const NavbarProfileAvatar = () => {
                 onClick={toggleDropdown}
             >
                 <div className="w-6 rounded-full mr-2">
-                    <Image
-                        alt="Avatar"
-                        src={avatar}
-                        width={50}
-                        height={50}
-                        loading="lazy"
-                        className="rounded-full"
-                    />
+                    {avatar && (
+                        <Image
+                            alt="Avatar"
+                            src={avatar}
+                            width={50}
+                            height={50}
+                            loading="lazy"
+                            className="rounded-full"
+                        />
+                    )}
+                    {!avatar && (
+                        <ProfileLetters text={formatUsername(session?.user.username ?? "N/A")} containerClassName='border border-uiBorder w-6 h-6' className='text-[0.60rem] text-white' />
+                    )}
                 </div>
                 <div className="text-sm text-white inline-flex items-center select-none">
                     <span className="mr-2">{session?.user.username}</span>
@@ -166,14 +176,19 @@ const NavbarProfileAvatar = () => {
                     >
                         <div className="border-b border-uiBorder p-4 flex items-center">
                             <div className="w-10 rounded-full mr-2 border border-uiBorder">
-                                <Image
-                                    alt="Avatar"
-                                    src={avatar}
-                                    width={50}
-                                    height={50}
-                                    loading="lazy"
-                                    className="rounded-full"
-                                />
+                                {avatar && (
+                                    <Image
+                                        alt="Avatar"
+                                        src={avatar}
+                                        width={50}
+                                        height={50}
+                                        loading="lazy"
+                                        className="rounded-full"
+                                    />
+                                )}
+                                {!avatar && (
+                                    <ProfileLetters text={formatUsername(session?.user.username ?? "N/A")} containerClassName='border border-uiBorder w-10 h-10 ' className='text-sm text-white' />
+                                )}
                             </div>
                             <div className="text-sm flex flex-col">
                                 <span className="mr-2 text-white">{session?.user.username}</span>

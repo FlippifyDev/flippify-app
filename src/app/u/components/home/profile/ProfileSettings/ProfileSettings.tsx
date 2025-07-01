@@ -16,6 +16,8 @@ import { validateEmailInput } from "@/utils/input-validation";
 import CurrencySelector from "./CurrencySelector";
 import Modal from "../../../dom/ui/Modal";
 import { updateUserPreferences } from "@/services/firebase/update";
+import Input from "../../../dom/ui/Input";
+import Button from "../../../dom/ui/Button";
 
 type Currency = "GBP" | "USD" | "EUR" | "AUD" | "CAD" | "JPY" | "NZD";
 
@@ -132,37 +134,20 @@ const UpdateEmail = ({ onClose }: { onClose: () => void }) => {
             <label className="block text-gray-700 font-semibold mb-2" htmlFor="password">
                 Current Password
             </label>
-            <input
-                type="password"
-                placeholder="Current Password"
-                value={password}
-                onChange={(e) => handleInput(e.target.value, "password")}
-                className="w-full p-3 bg-gray-50 rounded-xl outline-none border border-gray-500 placeholder-gray-400 mb-4"
-            />
-            <label className="block text-gray-700 font-semibold mb-2" htmlFor="email">
+            <Input type="text" placeholder="Current Password" value={password} onChange={(e) => handleInput(e.target.value, "password")} />
+            <label className="block text-gray-700 font-semibold my-2" htmlFor="email">
                 New Email
             </label>
-            <input
-                type="email"
-                placeholder="New Email Address"
-                value={newEmail}
-                onChange={(e) => handleInput(e.target.value, "email")}
-                className="w-full p-3 bg-gray-50 rounded-xl outline-none border border-gray-500 placeholder-gray-400 mb-4"
-            />
+            <Input type="text" placeholder="New Email Address" value={newEmail} onChange={(e) => handleInput(e.target.value, "email")} />
             <span className="text-sm text-gray-500">{message}</span>
             <span className="text-red-500 text-sm">{errorMessage}</span>
             <div className="flex justify-end gap-4 mt-6">
-                <button
+                <Button
+                    text="Update Email"
                     type="button"
                     onClick={handleUpdate}
                     disabled={!isValidEmail || !isValidPassword}
-                    className={`px-4 py-2 text-white rounded-md transition ${isValidEmail && isValidPassword
-                        ? "bg-blue-600 hover:bg-blue-700"
-                        : "bg-gray-300 cursor-not-allowed"
-                        }`}
-                >
-                    Update Email
-                </button>
+                />
             </div>
         </div>
     );
@@ -210,45 +195,24 @@ const UpdatePassword = ({ onClose }: { onClose: () => void }) => {
             <label className="block text-gray-700 font-semibold mb-2" htmlFor="currentPassword">
                 Current Password
             </label>
-            <input
-                type="password"
-                placeholder="Current Password"
-                value={currentPassword}
-                onChange={(e) => handleInput(e.target.value, "currentPassword")}
-                className="w-full p-3 bg-gray-50 rounded-xl outline-none border border-gray-500 placeholder-gray-400 mb-4"
-            />
-            <label className="block text-gray-700 font-semibold mb-2" htmlFor="newPassword">
+            <Input type="text" placeholder="Current Password" value={currentPassword} onChange={(e) => handleInput(e.target.value, "currentPassword")} />
+            <label className="block text-gray-700 font-semibold my-2" htmlFor="newPassword">
                 New Password
             </label>
-            <input
-                type="password"
-                placeholder="New Password"
-                value={newPassword}
-                onChange={(e) => handleInput(e.target.value, "newPassword")}
-                className="w-full p-3 bg-gray-50 rounded-xl outline-none border border-gray-500 placeholder-gray-400 mb-4"
-            />
-            <label className="block text-gray-700 font-semibold mb-2" htmlFor="confirmedPassword">
+            <Input type="text" placeholder="New Password" value={newPassword} onChange={(e) => handleInput(e.target.value, "newPassword")} />
+            <label className="block text-gray-700 font-semibold my-2" htmlFor="confirmedPassword">
                 Confirm New Password
             </label>
-            <input
-                type="password"
-                placeholder="Confirm New Password"
-                value={confirmedPassword}
-                onChange={(e) => handleInput(e.target.value, "confirmedPassword")}
-                className="w-full p-3 bg-gray-50 rounded-xl outline-none border border-gray-500 placeholder-gray-400 mb-4"
-            />
+            <Input type="text" placeholder="Confirm New Password" value={confirmedPassword} onChange={(e) => handleInput(e.target.value, "confirmedPassword")} />
             <span className="text-sm text-gray-500">{message}</span>
             <span className="text-red-500 text-sm">{errorMessage}</span>
             <div className="flex justify-end gap-4 mt-6">
-                <button
+                <Button
+                    text="Update Password"
                     type="button"
                     onClick={handleUpdate}
                     disabled={!isChanged}
-                    className={`px-4 py-2 text-white rounded-md transition ${isChanged ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-300 cursor-not-allowed"
-                        }`}
-                >
-                    Update Password
-                </button>
+                />
             </div>
         </div>
     );

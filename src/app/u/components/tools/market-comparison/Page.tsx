@@ -98,21 +98,21 @@ const Page = () => {
                     <div className="absolute -top-2 right-2 bg-houseBlue text-white text-xs font-semibold px-2 py-1 rounded-full shadow-sm z-10">
                         Beta
                     </div>
-                    <div className="relative w-full max-w-md flex items-center bg-white rounded-t-lg px-4 pt-2 pb-4">
+                    <div className="relative w-full max-w-md flex items-center bg-white rounded-t-lg px-4 py-4">
                         <Input
                             type="text"
                             placeholder="Enter keyword, sku, query"
                             value={query}
                             onChange={(e) => handleInput(e.target.value)}
                             onKeyDown={handleKeyDown}
-                            className="w-full pr-24"
+                            className="w-full pr-24 h-12"
                         />
                         <button
                             type="button"
                             onClick={handleRun}
                             className="absolute right-5 top-5 text-sm w-20 bg-houseBlue hover:bg-houseHoverBlue transition duration-100 text-white px-3 rounded-lg h-10 flex items-center justify-center"
                         >
-                            {loading ? <LoadingSpinner /> : "Submit"}
+                            Submit
                         </button>
                     </div>
                     <div className='hidden lg:display lg:flex items-center'>

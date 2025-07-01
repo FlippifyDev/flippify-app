@@ -2,6 +2,25 @@ import { IListing, IOrder } from "@/models/store-data";
 import { filterOrdersByDateRange } from "./filters";
 import { IOneTimeExpense } from "@/models/expenses";
 
+
+export function formatUsername(username: string): string {
+    // Split the username into words by uppercase letters
+    const words = username.match(/[A-Z][a-z]*/g);
+
+    if (!words) {
+        // If no match (e.g., username is all lowercase), return first two letters
+        return username.slice(0, 2).toUpperCase();
+    }
+
+    if (words.length === 1) {
+        // Only one word - return first two letters
+        return words[0].slice(0, 2).toUpperCase();
+    }
+
+    // Multiple words - return first letter of first two words
+    return (words[0][0] + words[1][0]).toUpperCase();
+  }
+
 // Helper function to format dates to readable format
 export const formatDate = (date: string) => {
     const dateObj = new Date(date);

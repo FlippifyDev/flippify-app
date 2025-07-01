@@ -11,6 +11,9 @@ import { useSession } from "next-auth/react";
 import { FaCamera } from "react-icons/fa";
 import { useState } from "react";
 import { updateUser } from '@/services/firebase/update';
+import { userProfileImages } from '@/utils/constants';
+import ProfileLetters from '../../dom/ui/ProfileLetters';
+import { formatUsername } from '@/utils/format';
 
 
 const ProfileOverview = () => {
@@ -19,13 +22,16 @@ const ProfileOverview = () => {
     const [url, setUrl] = useState("");
 
     // Default avatar
-    let avatar = "https://i.imgur.com/uOCy7MN.jpeg";
+    let avatar: string | null = "https://i.imgur.com/uOCy7MN.jpeg";
     let username = "User";
     let email = "N/A";
 
     if (session) {
         if (session.user?.metaData?.image) {
             avatar = session.user.metaData.image;
+            if (userProfileImages.includes(avatar)) {
+                avatar = null;
+            }
         }
         if (session.user?.username) {
             username = session.user.username;
@@ -72,7 +78,12 @@ const ProfileOverview = () => {
         <div className="w-full bg-white rounded-xl shadow p-4 md:p-6 justify-start items-start">
             <div className="w-full flex flex-row items-center gap-2 sm:gap-4">
                 <div className='w-28 h-full relative'>
-                    <ImageModal src={avatar} alt={"Avatar"} width={80} height={80} className="rounded-full" />
+                    {avatar && (
+                        <ImageModal src={avatar} alt={"Avatar"} width={80} height={80} className="rounded-full" />
+                    )}
+                    {!avatar && (
+                        <ProfileLetters text={formatUsername(session?.user.username ?? "N/A")} containerClassName='w-[110px] h-[110px] border' className='text-3xl'/>
+                    )}
                     <div
                         className='absolute bottom-1 right-1 h-7 w-7 rounded-full bg-gray-500 bg-opacity-50 flex items-center justify-center cursor-pointer z-10'
                         onClick={handleCameraClick} // Open the modal when clicked

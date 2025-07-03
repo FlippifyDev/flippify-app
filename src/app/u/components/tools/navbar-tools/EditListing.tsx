@@ -12,8 +12,8 @@ import { retrieveIdToken } from "@/services/firebase/retrieve"
 import { updateMovedItem } from "@/services/firebase/admin-update"
 import { inventoryCacheKey } from "@/utils/constants"
 import { Condition, IListing } from "@/models/store-data"
-import { addCacheData, updateCacheData } from "@/utils/cache-helpers"
-import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput } from "@/utils/input-validation"
+import { updateCacheData } from "@/utils/cache-helpers"
+import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput, validateSafeInput } from "@/utils/input-validation"
 
 // External Imports
 import { FormEvent, useEffect, useState } from "react"
@@ -153,7 +153,7 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal, se
             case "customTag":
             case "storageLocation":
             case "condition":
-                validateAlphaNumericInput(value, setFunction)
+                validateSafeInput(value, setFunction)
                 break
             case "storeType":
                 validateAlphaNumericInput(value.toLowerCase(), setFunction) // Must be lowercase

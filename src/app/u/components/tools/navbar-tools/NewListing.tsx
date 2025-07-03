@@ -15,7 +15,7 @@ import { Condition, IListing, StoreType } from "@/models/store-data"
 import { generateRandomFlippifyListingId } from "@/utils/generate-random"
 import { fetchUserInventoryAndOrdersCount } from "@/utils/extract-user-data"
 import { inventoryCacheKey, subscriptionLimits } from "@/utils/constants"
-import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput } from "@/utils/input-validation"
+import { validateAlphaNumericInput, validateIntegerInput, validatePriceInput, validateSafeInput } from "@/utils/input-validation"
 
 // External Imports
 import { FormEvent, useEffect, useState } from "react"
@@ -167,7 +167,7 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal, setTriggerUpda
             case "customTag":
             case "storageLocation":
             case "condition":
-                validateAlphaNumericInput(value, setFunction)
+                validateSafeInput(value, setFunction)
                 break
             case "storeType":
                 validateAlphaNumericInput(value.toLowerCase(), setFunction) // Must be lowercase

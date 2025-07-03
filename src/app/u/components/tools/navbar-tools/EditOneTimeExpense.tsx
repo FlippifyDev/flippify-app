@@ -5,7 +5,7 @@ import { IOneTimeExpense } from '@/models/expenses';
 import { addCacheData, updateCacheData } from '@/utils/cache-helpers';
 import { oneTimeExpensesCacheKey } from '@/utils/constants';
 import { formatDateToISO } from '@/utils/format-dates';
-import { validateAlphaNumericInput, validatePriceInput } from '@/utils/input-validation';
+import { validatePriceInput, validateSafeInput } from '@/utils/input-validation';
 import { useSession } from 'next-auth/react';
 import React, { FormEvent, useEffect, useState } from 'react'
 import Modal from '../../dom/ui/Modal';
@@ -57,7 +57,7 @@ const EditOneTimeExpense: React.FC<EditOneTimeExpenseProps> = ({ fillItem, setDi
                 break;
             case "name":
             case "provider":
-                validateAlphaNumericInput(value, setFunction);
+                validateSafeInput(value, setFunction);
                 break;
             case "date":
                 setFunction(value);

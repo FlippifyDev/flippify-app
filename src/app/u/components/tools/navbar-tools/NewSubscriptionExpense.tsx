@@ -13,7 +13,7 @@ import { fetchUserExpensesCount } from '@/utils/extract-user-data';
 import { expensesCol, subscriptionsExpenseCol } from '@/services/firebase/constants';
 import { BillingCycle, ISubscriptionExpense, Renewal } from '@/models/expenses';
 import { generateRandomFlippifySubscriptionExpenseId } from '@/utils/generate-random';
-import { validateAlphaNumericInput, validatePriceInput } from '@/utils/input-validation';
+import { validatePriceInput, validateSafeInput } from '@/utils/input-validation';
 import { billingCycleOptions, monthlyRenewalOptions, subscriptionLimits, subscriptionsExpensesCacheKey, weeklyRenewalOptions } from '@/utils/constants';
 
 // External Imports
@@ -138,7 +138,7 @@ const NewSubscriptionExpense: React.FC<NewSubscriptionExpenseProps> = ({ setDisp
                 break;
             case "name":
             case "provider":
-                validateAlphaNumericInput(value, setFunction);
+                validateSafeInput(value, setFunction);
                 break;
             case "startDate":
             case "endDate":

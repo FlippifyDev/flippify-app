@@ -11,7 +11,7 @@ import { Condition, IListing, IOrder, OrderStatus, StoreType } from '@/models/st
 import { fetchUserInventoryAndOrdersCount } from '@/utils/extract-user-data';
 import { inventoryCacheKey, orderCacheKey, subscriptionLimits } from '@/utils/constants';
 import { addCacheData, getCachedData, removeCacheData, updateCacheData } from '@/utils/cache-helpers';
-import { validateAlphaNumericInput, validateNumberInput, validateTextInput } from '@/utils/input-validation';
+import { validateAlphaNumericInput, validateNumberInput, validateSafeInput, validateTextInput } from '@/utils/input-validation';
 import { generateRandomFlippifyOrderId, generateRandomFlippifyTransactionId } from '@/utils/generate-random';
 
 // External Imports
@@ -268,7 +268,7 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
             case "condition":
             case "itemName":
             case "shippingCompany":
-                validateAlphaNumericInput(value, setFunction)
+                validateSafeInput(value, setFunction)
                 break
             case "storeType":
                 validateAlphaNumericInput(value.toLowerCase(), setFunction) // Must be lowercase

@@ -10,7 +10,7 @@ import { IOneTimeExpense } from '@/models/expenses';
 import { fetchUserExpensesCount } from '@/utils/extract-user-data';
 import { generateRandomFlippifyOneTimeExpenseId } from '@/utils/generate-random';
 import { oneTimeExpensesCacheKey, subscriptionLimits } from '@/utils/constants';
-import { validateAlphaNumericInput, validatePriceInput } from '@/utils/input-validation';
+import { validatePriceInput, validateSafeInput } from '@/utils/input-validation';
 
 // External Imports
 import { useEffect, useState } from 'react';
@@ -125,7 +125,7 @@ const NewOneTimeExpense: React.FC<NewOneTimeExpenseProps> = ({ setDisplayModal }
                 break;
             case "name":
             case "provider":
-                validateAlphaNumericInput(value, setFunction);
+                validateSafeInput(value, setFunction);
                 break;
             case "date":
                 setFunction(value);

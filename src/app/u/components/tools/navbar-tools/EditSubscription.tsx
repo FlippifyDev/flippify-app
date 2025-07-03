@@ -8,12 +8,12 @@ import { BillingCycle, ISubscriptionExpense, Renewal } from '@/models/expenses';
 import { useSession } from 'next-auth/react';
 import Input from '../../dom/ui/Input';
 import { FormEvent, useEffect, useState } from 'react';
-import { validateAlphaNumericInput, validatePriceInput } from '@/utils/input-validation';
+import { validatePriceInput, validateSafeInput } from '@/utils/input-validation';
 import Dropdown from '../../dom/ui/Dropdown';
 import { billingCycleOptions, monthlyRenewalOptions, oneTimeExpensesCacheKey, subscriptionsExpensesCacheKey, weeklyRenewalOptions } from '@/utils/constants';
 import { formatDateToISO } from '@/utils/format-dates';
 import { updateItem } from '@/services/firebase/update';
-import { expensesCol, oneTimeCol, subscriptionsExpenseCol } from '@/services/firebase/constants';
+import { expensesCol, subscriptionsExpenseCol } from '@/services/firebase/constants';
 import Button from '../../dom/ui/Button';
 
 
@@ -122,7 +122,7 @@ const EditSubscription: React.FC<EditSubscriptionProps> = ({ fillItem, setDispla
                 break;
             case "name":
             case "provider":
-                validateAlphaNumericInput(value, setFunction);
+                validateSafeInput(value, setFunction);
                 break;
             case "startDate":
             case "endDate":

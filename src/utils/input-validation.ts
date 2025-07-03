@@ -50,9 +50,8 @@ export const validateSafeInput = (
         return;
     }
 
-    // Only permit letters, numbers, spaces, hyphens, and underscores.
-    // This regex disallows typical "injection" characters like < > ' " ; \ / & etc.
-    const safeRegex = /^[\p{L}\p{N}\s_-]*$/u;
+    // Allow letters, numbers, spaces, hyphens, underscores, periods, apostrophes, and parentheses.
+    const safeRegex = /^[\p{L}\p{N}\s._'()\-]*$/u;
 
     if (safeRegex.test(value)) {
         setFunction(value);

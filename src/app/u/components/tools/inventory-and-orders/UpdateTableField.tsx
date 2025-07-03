@@ -127,7 +127,6 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
     function handleChange(input: string) {
         switch (keyType) {
             case "purchase.platform":
-            case "storeType":
             case "customTag":
             case "storageLocation":
             case "condition":
@@ -135,11 +134,12 @@ const UpdateTableField: React.FC<UpdateTableFieldProps> = ({ type, currentValue,
             case "tax.type":
             case "tax.description":
             case "tax.currency":
-                validateAlphaNumericInput(input, setValue);
-                break;
             case "sku":
                 validateSafeInput(input, setValue);
                 break;
+            case "storeType":
+                validateAlphaNumericInput(input.toLowerCase(), setValue) // Must be lowercase
+                break
             case "sale.quantity":
                 validateIntegerInput(input, setValue)
                 break;

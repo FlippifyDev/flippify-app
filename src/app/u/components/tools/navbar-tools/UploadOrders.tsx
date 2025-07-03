@@ -11,8 +11,8 @@ import { formatDateToISO } from '@/utils/format-dates';
 import { retrieveIdToken } from '@/services/firebase/retrieve';
 import { createItemsBatch } from '@/services/firebase/admin-create';
 import { ItemType, SubColType } from '@/services/firebase/models';
-import { fetchUserInventoryAndOrdersCount, fetchUserSubscription } from '@/utils/extract-user-data';
-import { IOrder, IPurchase, ISale, IShipping, OrderStatus, StoreType } from '@/models/store-data';
+import { fetchUserInventoryAndOrdersCount } from '@/utils/extract-user-data';
+import { IOrder, IPurchase, ISale, IShipping, OrderStatus } from '@/models/store-data';
 import { importCSVAllowedSubscriptionPlans, orderCacheKey, subscriptionLimits } from '@/utils/constants';
 import { generateRandomFlippifyListingId, generateRandomFlippifyOrderId, generateRandomFlippifyTransactionId } from '@/utils/generate-random';
 

@@ -36,13 +36,6 @@ const PlansCardProWhatsIncluded = () => {
             <ul className={rootClass}>
                 <li className="w-full">
                     <PlansClickableBulletPoint
-                        text="Access To Flippify App"
-                        tooltip="Track Inventory & Orders directly on your phone. Look up or scan barcodes to gain live market data on products."
-                        comingSoon
-                    />
-                </li>
-                <li className="w-full">
-                    <PlansClickableBulletPoint
                         text="50 AI Automated Listings"
                         tooltip="Provide a product link, and our AI will create, list, and manage 100 listings for you, tracking them through to sale."
                         comingSoon

@@ -64,6 +64,12 @@ const PlansCardFreeWhatsIncluded = () => {
 						tooltip="Link and manage one eBay store, syncing your sales and tracking data effortlessly."
 					/>
                 </li>
+                <li className="w-full">
+                    <PlansClickableBulletPoint
+                        text="Access To Flippify App"
+                        tooltip="Track Inventory & Orders directly on your phone. Look up or scan barcodes to gain live market data on products."
+                    />
+                </li>
 			</ul>
 		</div>
 	);

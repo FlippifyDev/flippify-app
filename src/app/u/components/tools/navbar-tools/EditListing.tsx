@@ -40,7 +40,7 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal, se
     const [itemId, setItemId] = useState<string>("")
     const [itemName, setItemName] = useState<string>("")
     const [imageUrl, setImageUrl] = useState<string>("");
-    const [customTag, setCustomTag] = useState<string>("");
+    const [sku, setSku] = useState<string>("");
     const [storeOldType, setStoreOldType] = useState<string>("");
     const [storeType, setStoreType] = useState<string>("");
     const [condition, setCondition] = useState<Condition>("")
@@ -80,7 +80,7 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal, se
         setItemId(item.itemId ?? "N/A");
         setItemName(item.name ?? "N/A");
         setImageUrl(item.image ? item.image[0] : "");
-        setCustomTag(item.customTag || "");
+        setSku(item.sku || "");
         setStoreType(item.storeType || "");
         setStoreOldType(item.storeType || "");
         setStorageLocation(item.storageLocation || "");
@@ -106,7 +106,7 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal, se
         const inventoryItem: IListing = {
             condition: condition,
             currency: session?.user.preferences?.currency ?? "USD",
-            customTag: customTag,
+            sku: sku,
             extra: fillItem.extra ?? {},
             dateListed: formatDateToISO(new Date(dateListed), true),
             image: [imageUrl],
@@ -147,10 +147,9 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal, se
 
     function handleChange(value: string, type: string, setFunction: (value: any) => void) {
         switch (type) {
-            case "customTag":
+            case "sku":
             case "itemName":
             case "purchasePlatform":
-            case "customTag":
             case "storageLocation":
             case "condition":
                 validateSafeInput(value, setFunction)
@@ -196,7 +195,7 @@ const EditListing: React.FC<EditListingProps> = ({ fillItem, setDisplayModal, se
                 </div>
                 <div className="flex flex-col sm:flex-row items-center w-full gap-4">
                     <Input type="text" placeholder="Enter purchase platform" title="Purchase Platform (Optional)" value={purchasePlatform} onChange={(e) => handleChange(e.target.value, "purchasePlatform", setPurchasePlatform)} />
-                    <Input type="text" placeholder="Enter custom tag" title="Custom Tag (Optional)" value={customTag} onChange={(e) => handleChange(e.target.value, "customTag", setCustomTag)} />
+                    <Input type="text" placeholder="Enter sku" title="SKU (Optional)" value={sku} onChange={(e) => handleChange(e.target.value, "sku", setSku)} />
                 </div>
                 <div className="flex flex-col sm:flex-row items-center w-full gap-4">
                     <Input type="text" placeholder="Enter storage location" title="Storage Location (Optional)" value={storageLocation} onChange={(e) => handleChange(e.target.value, "storageLocation", setStorageLocation)} />

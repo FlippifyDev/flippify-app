@@ -16,6 +16,7 @@ import { enGB } from 'date-fns/locale';
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { IOneTimeExpense } from "@/models/expenses";
+import { calculateOrderProfit } from "@/utils/calculate";
 
 const Chart = dynamic(() => import("./DashboardProfitsChart"), { ssr: false });
 
@@ -160,7 +161,7 @@ const DashboardProfitsGraph: React.FC<DashboardProfitsGraphProps> = ({
 				const saleCost = (order.purchase.price * quantity) + (order.additionalFees ?? 0);
 
 				// Calculate profit for the order
-				const saleProfit = saleRevenue - saleCost;
+                const saleProfit = calculateOrderProfit({ item: order });
 
 				// Check if order falls within the current range
 				if (isWithinInterval(saleDate, { start: currentRangeStartDate, end: currentRangeEndDate })) {

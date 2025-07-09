@@ -38,7 +38,7 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal, setTriggerUpda
     const [itemId, setItemId] = useState<string>(generateRandomFlippifyListingId(20))
     const [itemName, setItemName] = useState<string>("");
     const [imageUrl, setImageUrl] = useState<string>("");
-    const [customTag, setCustomTag] = useState<string>("");
+    const [sku, setSku] = useState<string>("");
     const [storeType, setStoreType] = useState<string>("");
     const [condition, setCondition] = useState<Condition>("");
     const [storageLocation, setStorageLocation] = useState<string>("");
@@ -123,7 +123,7 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal, setTriggerUpda
             createdAt: formatDateToISO(new Date()),
             currency: session?.user.preferences?.currency ?? "USD",
             condition: condition,
-            customTag: customTag,
+            sku: sku,
             dateListed: formatDateToISO(new Date(dateListed), true),
             image: [imageUrl],
             initialQuantity: Number(quantity),
@@ -161,10 +161,9 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal, setTriggerUpda
 
     function handleChange(value: string, type: string, setFunction: (value: any) => void) {
         switch (type) {
-            case "customTag":
             case "itemName":
             case "purchasePlatform":
-            case "customTag":
+            case "sku":
             case "storageLocation":
             case "condition":
                 validateSafeInput(value, setFunction)
@@ -217,7 +216,7 @@ const NewListing: React.FC<NewListingProps> = ({ setDisplayModal, setTriggerUpda
                     </div>
                     <div className="flex flex-col sm:flex-row items-center w-full gap-4">
                         <Input type="text" placeholder="Enter purchase platform" title="Purchase Platform (Optional)" value={purchasePlatform} onChange={(e) => handleChange(e.target.value, "purchasePlatform", setPurchasePlatform)} />
-                        <Input type="text" placeholder="Enter custom tag" title="Custom Tag (Optional)" value={customTag} onChange={(e) => handleChange(e.target.value, "customTag", setCustomTag)} />
+                        <Input type="text" placeholder="Enter sku" title="SKU (Optional)" value={sku} onChange={(e) => handleChange(e.target.value, "sku", setSku)} />
                     </div>
                     <div className="flex flex-col sm:flex-row items-center w-full gap-4">
                         <Input type="text" placeholder="Enter storage location" title="Storage Location (Optional)" value={storageLocation} onChange={(e) => handleChange(e.target.value, "storageLocation", setStorageLocation)} />

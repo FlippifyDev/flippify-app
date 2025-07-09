@@ -43,6 +43,7 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
     const [itemId, setItemId] = useState<string>("");
     const [itemName, setItemName] = useState<string>("");
     const [fileName, setFileName] = useState("Upload Image");
+    const [sku, setSku] = useState<string>("");
     const [customTag, setCustomTag] = useState<string>("");
     const [imageUrl, setImageUrl] = useState<string>("");
     const [storeType, setStoreType] = useState<string>("");
@@ -162,7 +163,8 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
         const orderItem: IOrder = {
             additionalFees: 0,
             createdAt: formatDateToISO(new Date()),
-            customTag: customTag,
+            sku,
+            customTag,
             condition: condition,
             image: [imageUrl],
             name: itemName,
@@ -235,6 +237,7 @@ const NewOrder: React.FC<NewOrderProps> = ({ fillItem, setDisplayModal, setTrigg
         setItemName(item.name ?? "N/A");
         setStoreType(item.storeType ?? "");
         setImageUrl(item.image ? item.image[0] : "");
+        setSku(item.sku || "");
         setCustomTag(item.customTag || "");
         setStorageLocation(item.storageLocation || "");
         setCondition(item.condition || "");

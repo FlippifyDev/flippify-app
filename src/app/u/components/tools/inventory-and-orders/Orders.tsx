@@ -22,6 +22,7 @@ import { retrieveIdToken } from '@/services/firebase/retrieve';
 import { deleteItem } from '@/services/firebase/delete';
 import { removeCacheData } from '@/utils/cache-helpers';
 import EditExtra from '../navbar-tools/EditExtra';
+import { calculateOrderProfit } from '@/utils/calculate';
 
 
 interface OrdersProps {
@@ -97,7 +98,7 @@ const Orders: React.FC<OrdersProps> = ({ filter, searchText }) => {
         if ((session?.user.authentication?.subscribed && triggerUpdate) || nextPage) {
             fetchOrders();
         }
-    }, [session?.user, currentPage, filteredOrderData, triggerUpdate, filter, uid, nextPage,searchText]);
+    }, [session?.user, currentPage, filteredOrderData, triggerUpdate, filter, uid, nextPage, searchText]);
 
     useEffect(() => {
         let timer: NodeJS.Timeout;
@@ -196,12 +197,11 @@ const Orders: React.FC<OrdersProps> = ({ filter, searchText }) => {
 
                             let soldFor: number, profit: number | "N/A";
                             const purchasePrice = purchase?.price ?? 0;
-                            const sellerCosts = (order.additionalFees ?? 0) + (shipping?.sellerFees ?? 0);
 
                             soldFor = sale?.price ?? 0;
 
                             if (purchasePrice) {
-                                profit = (soldFor - purchasePrice) - sellerCosts;
+                                profit = calculateOrderProfit({ item: order });
                             } else {
                                 profit = "N/A";
                             }

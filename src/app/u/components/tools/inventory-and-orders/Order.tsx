@@ -13,6 +13,10 @@ import { inventoryCacheKey, orderCacheKey } from '@/utils/constants';
 import { formatTableDate } from '@/utils/format-dates';
 import { retrieveIdToken } from '@/services/firebase/retrieve';
 import { getCachedItem, removeCacheData, updateCacheData } from '@/utils/cache-helpers';
+import { ordersCol } from '@/services/firebase/constants';
+import Card from '../../dom/ui/Card';
+import Input from '../../dom/ui/Input';
+import { updateItem } from '@/services/firebase/update';
 
 // External Imports
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -22,10 +26,7 @@ import getSymbolFromCurrency from 'currency-symbol-map'
 import { doc, updateDoc } from 'firebase/firestore';
 import { useSession } from 'next-auth/react';
 import { set } from 'lodash';
-import { inventoryCol, ordersCol } from '@/services/firebase/constants';
-import Card from '../../dom/ui/Card';
-import Input from '../../dom/ui/Input';
-import { updateItem } from '@/services/firebase/update';
+import { calculateOrderProfit } from '@/utils/calculate';
 
 
 const Order = () => {
@@ -244,7 +245,7 @@ const OrderInfoTable: React.FC<OrderInfoTableProps> = ({ order, cacheKey, trigge
     const sellerCosts = purchasePrice + (order.additionalFees ?? 0) + (shipping?.sellerFees ?? 0);
 
     if (purchasePrice) {
-        profit = soldFor - sellerCosts;
+        profit = calculateOrderProfit({ item: order });
         roi = (profit / purchasePrice) * 100;
     } else {
         profit = "N/A";

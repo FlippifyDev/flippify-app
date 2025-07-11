@@ -3,15 +3,15 @@
 // Local Imports
 import { FREE_MONTHLY_PID } from '@/utils/constants';
 import { retrieveRefereeUser } from '../firebase/admin-retrieve';
+import { validGroupCouponCodes } from './contants.server'
 import { updateStripeUserSubscription } from './update';
 import { retrieveCouponCodeOrPromotionCode } from './retrieve';
 
 // External Imports
 import Stripe from 'stripe';
-import { validGroupCouponCodes } from './valid-group-coupon-codes.server';
 
 
-const createBillingPortalUrl = async (username: string, customerId: string) => {
+async function createBillingPortalUrl(username: string, customerId: string) {
     const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
     const root = process.env.ROOT as string;
 
@@ -35,13 +35,13 @@ const createBillingPortalUrl = async (username: string, customerId: string) => {
 };
 
 
-const createCheckoutSession = async (
+async function createCheckoutSession(
     username: string,
     customerId: string,
     priceId: string,
     referredBy?: string | null,
     code?: string
-): Promise<{ url?: string | null, error?: string | null }> => {
+): Promise<{ url?: string | null, error?: string | null }> {
     const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
     const root = process.env.ROOT as string;
 
@@ -123,7 +123,7 @@ const createCheckoutSession = async (
 };
 
 
-const createAndApplyCoupon = async (subscriptionName: string | null, customerId: string, percentOff: number) => {
+async function createAndApplyCoupon(subscriptionName: string | null, customerId: string, percentOff: number) {
     const stripeAPIKey = process.env.LIVE_STRIPE_SECRET_KEY as string;
 
     if (!stripeAPIKey) {
@@ -252,6 +252,7 @@ export async function createRefund(customerId: string): Promise<{ success?: bool
         return { error: `${error}` }
     }
 }
+
 
 
 export { createBillingPortalUrl, createCheckoutSession, createAndApplyCoupon };

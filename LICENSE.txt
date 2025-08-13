@@ -1,0 +1,7 @@
+Copyright (c) 2025 FLIPPIFY LTD. All rights reserved.
+
+This source code and associated files are the property of FLIPPIFY LTD and may not be copied, modified, distributed, or used without prior written permission from FLIPPIFY LTD.
+
+Unauthorized use of this code, in whole or in part, is strictly prohibited and may result in legal action.
+
+For licensing inquiries, contact: inquiries@flippify.io
